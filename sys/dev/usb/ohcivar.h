@@ -113,6 +113,12 @@ name|usbd_bus
 name|sc_bus
 decl_stmt|;
 comment|/* base device */
+name|bus_space_tag_t
+name|iot
+decl_stmt|;
+name|bus_space_handle_t
+name|ioh
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -124,32 +130,20 @@ modifier|*
 name|sc_ih
 decl_stmt|;
 comment|/* interrupt vectoring */
-name|bus_space_tag_t
-name|iot
-decl_stmt|;
-name|bus_space_handle_t
-name|ioh
-decl_stmt|;
 name|bus_dma_tag_t
 name|sc_dmatag
 decl_stmt|;
 comment|/* DMA tag */
 comment|/* XXX should keep track of all DMA memory */
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
+endif|#
+directive|endif
+comment|/* __FreeBSD__ */
 name|bus_space_tag_t
 name|iot
 decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 name|usb_dma_t
 name|sc_hccadma
 decl_stmt|;
