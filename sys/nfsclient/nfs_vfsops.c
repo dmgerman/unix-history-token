@@ -5014,15 +5014,16 @@ argument_list|,
 name|v_nmntvnodes
 argument_list|)
 expr_stmt|;
+comment|/* XXX Not obeying XLOCK.  */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
 name|mntvnode_mtx
-argument_list|)
-expr_stmt|;
-name|VI_LOCK
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 if|if
