@@ -1,12 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|UPECCDEBUG
-end_define
-
 begin_comment
-comment|/*	up.c	4.43	82/03/24	*/
+comment|/*	up.c	4.44	82/03/29	*/
 end_comment
 
 begin_include
@@ -337,15 +331,19 @@ begin_comment
 comment|/* END OF STUFF WHICH SHOULD BE READ IN PER DISK */
 end_comment
 
+begin_comment
+comment|/*  * On a 780 upSDIST could be 2, but  * in the interest of 750's...  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_upSDIST
-value|2
+value|3
 end_define
 
 begin_comment
-comment|/* 1.0 msec */
+comment|/* 1.5 msec */
 end_comment
 
 begin_define
@@ -549,7 +547,7 @@ literal|1024
 block|,
 name|am_sizes
 block|,
-comment|/* fujitsu 160m */
+comment|/* ampex capricorn */
 block|}
 struct|;
 end_struct
@@ -2203,6 +2201,14 @@ name|um
 operator|->
 name|um_addr
 decl_stmt|;
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
+operator|++
+expr_stmt|;
+comment|/* should now be 2 */
 name|upaddr
 operator|->
 name|upba
@@ -2349,8 +2355,13 @@ operator|->
 name|um_tab
 operator|.
 name|b_active
-operator|==
-literal|0
+operator|!=
+literal|2
+operator|&&
+operator|!
+name|sc
+operator|->
+name|sc_recal
 condition|)
 block|{
 if|if
@@ -3543,7 +3554,8 @@ operator|->
 name|um_tab
 operator|.
 name|b_active
-operator|++
+operator|=
+literal|2
 expr_stmt|;
 comment|/* Either complete or continuing... */
 if|if
@@ -3835,6 +3847,15 @@ name|sc21
 index|]
 operator|.
 name|sc_recal
+operator|=
+literal|0
+expr_stmt|;
+name|up_softc
+index|[
+name|sc21
+index|]
+operator|.
+name|sc_wticks
 operator|=
 literal|0
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.40	82/03/14	*/
+comment|/*	uba.c	4.41	82/03/29	*/
 end_comment
 
 begin_include
@@ -275,6 +275,29 @@ literal|1
 operator|<<
 name|unit
 expr_stmt|;
+name|dk_xfer
+index|[
+name|unit
+index|]
+operator|++
+expr_stmt|;
+name|dk_wds
+index|[
+name|unit
+index|]
+operator|+=
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|->
+name|b_actf
+operator|->
+name|b_bcount
+operator|>>
+literal|6
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -304,39 +327,6 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ui
-operator|->
-name|ui_dk
-operator|>=
-literal|0
-condition|)
-block|{
-name|dk_xfer
-index|[
-name|unit
-index|]
-operator|++
-expr_stmt|;
-name|dk_wds
-index|[
-name|unit
-index|]
-operator|+=
-name|um
-operator|->
-name|um_tab
-operator|.
-name|b_actf
-operator|->
-name|b_actf
-operator|->
-name|b_bcount
-operator|>>
-literal|6
-expr_stmt|;
-block|}
 return|return
 operator|(
 literal|1
@@ -2235,11 +2225,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|notdef
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * This routine allows remapping of previously  * allocated UNIBUS bdp and map resources  * onto different memory addresses.  * It should only be used by routines which need  * small fixed length mappings for long periods of time  * (like the ARPANET ACC IMP interface).  * It only maps kernel addresses.  */
