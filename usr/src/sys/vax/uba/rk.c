@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3560,8 +3560,12 @@ expr_stmt|;
 else|else
 name|npf
 operator|=
-name|btop
+name|btodb
 argument_list|(
+name|bp
+operator|->
+name|b_bcount
+operator|+
 operator|(
 name|rk
 operator|->
@@ -3573,9 +3577,7 @@ name|short
 argument_list|)
 operator|)
 operator|+
-name|bp
-operator|->
-name|b_bcount
+literal|511
 argument_list|)
 expr_stmt|;
 name|reg
@@ -3775,7 +3777,7 @@ operator|&&
 operator|(
 name|int
 operator|)
-name|ptob
+name|dbtob
 argument_list|(
 name|npf
 argument_list|)
@@ -4059,6 +4061,25 @@ operator|&=
 operator|~
 name|B_BAD
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|dbtob
+argument_list|(
+name|npf
+argument_list|)
+operator|>=
+name|bp
+operator|->
+name|b_bcount
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|rk
 operator|->
 name|rkwc
@@ -4073,7 +4094,7 @@ operator|-
 operator|(
 name|int
 operator|)
-name|ptob
+name|dbtob
 argument_list|(
 name|npf
 argument_list|)
@@ -4085,19 +4106,6 @@ name|short
 argument_list|)
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|rk
-operator|->
-name|rkwc
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 break|break;
 block|}
 name|rk
