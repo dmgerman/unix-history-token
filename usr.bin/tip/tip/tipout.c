@@ -47,6 +47,12 @@ directive|include
 file|"tip.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_comment
 comment|/*  * tip  *  * lower fork of tip -- handles passive side  *  reading from the remote host  */
 end_comment
@@ -374,10 +380,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|cnt
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|int
 name|omask

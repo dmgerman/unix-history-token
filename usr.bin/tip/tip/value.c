@@ -812,6 +812,10 @@ name|vassign
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|atoi
 argument_list|(
 name|cp
@@ -1665,6 +1669,10 @@ name|vassign
 argument_list|(
 name|p
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|atoi
 argument_list|(
 name|v

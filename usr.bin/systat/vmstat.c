@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -4872,10 +4878,6 @@ literal|2
 index|]
 decl_stmt|,
 name|size
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 name|NREAD
 argument_list|(

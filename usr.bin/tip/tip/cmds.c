@@ -3719,7 +3719,7 @@ comment|/*  * Fork a program with:  *  0<-> remote tty in  *  1<-> remote tty ou
 end_comment
 
 begin_function
-name|void
+name|int
 name|consh
 parameter_list|(
 name|c
@@ -3760,6 +3760,9 @@ operator||
 name|TL_VERBOSE
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
