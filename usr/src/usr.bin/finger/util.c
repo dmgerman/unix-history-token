@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.2 (Berkeley) %G%"
+literal|"@(#)util.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -693,11 +693,14 @@ name|w
 decl_stmt|;
 specifier|static
 name|int
-name|fd
+name|opened
 decl_stmt|;
 name|struct
 name|lastlog
 name|ll
+decl_stmt|;
+name|int
+name|fd
 decl_stmt|;
 name|char
 name|doit
@@ -708,13 +711,13 @@ name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
-comment|/* 	 * Some systems may choose not to keep lastlog, 	 * so we don't report any errors. 	 * Not only that, we leave fd at -1 so lseek and read 	 * will fail and act like there were no last logins. 	 * Not the fastest way to do it, but what the hell. 	 */
+comment|/* some systems may not maintain lastlog, don't report errors. */
 if|if
 condition|(
-name|fd
-operator|==
-literal|0
+operator|!
+name|opened
 condition|)
+block|{
 name|fd
 operator|=
 name|open
@@ -726,30 +729,49 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|opened
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fd
+operator|==
+operator|-
+literal|1
+operator|||
 name|lseek
 argument_list|(
 name|fd
 argument_list|,
-call|(
+operator|(
 name|long
-call|)
-argument_list|(
+operator|)
 name|pn
 operator|->
 name|uid
 operator|*
 sizeof|sizeof
+argument_list|(
 name|ll
 argument_list|)
 argument_list|,
 name|L_SET
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|!=
+operator|(
+name|long
+operator|)
+name|pn
+operator|->
+name|uid
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ll
+argument_list|)
+operator|||
 name|read
 argument_list|(
 name|fd
@@ -762,14 +784,18 @@ operator|&
 name|ll
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|ll
+argument_list|)
 argument_list|)
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|ll
+argument_list|)
 condition|)
 block|{
-comment|/* same as never logged in */
+comment|/* as if never logged in */
 name|ll
 operator|.
 name|ll_line
@@ -777,8 +803,6 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
-expr_stmt|;
 name|ll
 operator|.
 name|ll_host
@@ -786,7 +810,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ll
 operator|.
