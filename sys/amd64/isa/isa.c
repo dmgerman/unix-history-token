@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.58 1995/12/07 12:46:01 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.59 1995/12/19 14:30:48 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2592,9 +2592,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* slave on line 2 */
-ifdef|#
-directive|ifdef
-name|AUTO_EOI_1
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -2606,21 +2603,7 @@ operator||
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* auto EOI, 8086 mode */
-else|#
-directive|else
-name|outb
-argument_list|(
-name|IO_ICU1
-operator|+
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* 8086 mode */
-endif|#
-directive|endif
+comment|/* (master) auto EOI, 8086 mode */
 name|outb
 argument_list|(
 name|IO_ICU1
@@ -3816,7 +3799,7 @@ block|{
 comment|/* DON'T BOTHER FOR NOW! */
 comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
 comment|/* 	 * Well the reason you got bursts of intr #7 is because someone 	 * raised an interrupt line and dropped it before the 8259 could 	 * prioritize it.  This is documented in the intel data book.  This 	 * means you have BAD hardware!  I have changed this so that only 	 * the first 5 get logged, then it quits logging them, and puts 	 * out a special message. rgrimes 3/25/1993 	 */
-comment|/* 	 * XXX TODO print a different message for #7 if it is for a 	 * glitch.  Glitches can be distinguished from real #7's by 	 * testing that the in-service bit is _not_ set.  The test 	 * must be done before sending an EOI so it can't be done if 	 * we are using AUTO_EOI_1. 	 */
+comment|/* 	 * XXX TODO print a different message for #7 if it is for a 	 * glitch.  Glitches can be distinguished from real #7's by 	 * testing that the in-service bit is _not_ set.  The test 	 * must be done before sending an EOI so it can't be done if 	 * we are using AUTO_EOI_1. 	 * 	 * XXX AUTO_EOI_1 is now standard. 	 */
 if|if
 condition|(
 name|intrcnt
