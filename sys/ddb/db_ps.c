@@ -182,7 +182,7 @@ if|if
 condition|(
 name|nl
 operator|++
-operator|==
+operator|>=
 literal|20
 condition|)
 block|{
@@ -293,7 +293,7 @@ expr_stmt|;
 else|else
 name|state
 operator|=
-literal|"norm"
+literal|""
 expr_stmt|;
 break|break;
 case|case
@@ -321,7 +321,7 @@ break|break;
 block|}
 name|db_printf
 argument_list|(
-literal|"%5d %8p %8p %4d %5d %5d %07x %-4s"
+literal|"%5d %8p %8p %4d %5d %5d %07x %s"
 argument_list|,
 name|p
 operator|->
@@ -412,6 +412,9 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|nl
+operator|++
+expr_stmt|;
 block|}
 comment|/* PROC_UNLOCK(p); */
 name|p
@@ -499,20 +502,46 @@ name|td_flags
 operator|&
 name|TDF_CVWAITQ
 condition|)
+if|if
+condition|(
+name|TD_IS_SLEEPING
+argument_list|(
+name|td
+argument_list|)
+condition|)
 name|db_printf
 argument_list|(
-literal|"[CVQ "
+literal|"[CV]"
 argument_list|)
 expr_stmt|;
 else|else
 name|db_printf
 argument_list|(
-literal|"[SLPQ "
+literal|"[CVQ"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|TD_IS_SLEEPING
+argument_list|(
+name|td
+argument_list|)
+condition|)
+name|db_printf
+argument_list|(
+literal|"[SLP]"
+argument_list|)
+expr_stmt|;
+else|else
+name|db_printf
+argument_list|(
+literal|"[SLPQ"
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|" %6s %8p]"
+literal|"%s %p]"
 argument_list|,
 name|td
 operator|->
@@ -564,20 +593,13 @@ name|td_blocked
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|TD_IS_SLEEPING
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-name|db_printf
-argument_list|(
-literal|"[SLP]"
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+comment|/* covered above */
+block|if (TD_IS_SLEEPING(td)) { 			db_printf("[SLP]"); 		}
+endif|#
+directive|endif
 if|if
 condition|(
 name|TD_IS_SWAPPED
