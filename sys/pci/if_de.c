@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.56 1997/10/20 14:32:46 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.73 1997/10/25 14:32:15 phk Exp $ */
+comment|/*	$Id: if_de.c,v 1.74 1997/11/08 14:46:53 peter Exp $ */
 end_comment
 
 begin_comment
@@ -180,11 +180,22 @@ directive|include
 file|<net/if_dl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TULIP_USE_SOFTINTR
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<net/netisr.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -25060,6 +25071,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|dedevice
