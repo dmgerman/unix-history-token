@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	1.5 (Berkeley) %G%"
+literal|"@(#)library.c	1.6 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: library.c,v 1.5 84/12/26 10:39:52 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1675,6 +1685,45 @@ expr_stmt|;
 name|initErrInfo
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Turn off the error catching mechanism completely by having all errors  * ignored.  This is most useful between a fork and an exec.  */
+end_comment
+
+begin_function
+name|public
+name|nocatcherrs
+parameter_list|()
+block|{
+name|integer
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|sys_nerr
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|errinfo
+index|[
+name|i
+index|]
+operator|.
+name|func
+operator|=
+name|ERR_IGNORE
+expr_stmt|;
+block|}
 block|}
 end_function
 

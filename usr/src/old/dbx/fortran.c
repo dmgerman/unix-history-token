@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	1.5 (Berkeley) %G%"
+literal|"@(#)fortran.c	1.6 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: fortran.c,v 1.5 84/12/26 10:39:37 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1258,7 +1268,11 @@ name|i
 decl_stmt|,
 name|len
 decl_stmt|;
-comment|/* printf("fortran_printval with class %s \n",classname(s)); OUT*/
+name|double
+name|d1
+decl_stmt|,
+name|d2
+decl_stmt|;
 switch|switch
 condition|(
 name|s
@@ -1407,6 +1421,20 @@ literal|"complex"
 argument_list|)
 condition|)
 block|{
+name|d2
+operator|=
+name|pop
+argument_list|(
+name|float
+argument_list|)
+expr_stmt|;
+name|d1
+operator|=
+name|pop
+argument_list|(
+name|float
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"("
@@ -1414,10 +1442,7 @@ argument_list|)
 expr_stmt|;
 name|prtreal
 argument_list|(
-name|pop
-argument_list|(
-name|float
-argument_list|)
+name|d1
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1427,10 +1452,7 @@ argument_list|)
 expr_stmt|;
 name|prtreal
 argument_list|(
-name|pop
-argument_list|(
-name|float
-argument_list|)
+name|d2
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1440,6 +1462,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|prtreal
 argument_list|(
 name|pop
@@ -1448,6 +1471,7 @@ name|double
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|panic
@@ -2195,15 +2219,19 @@ end_comment
 
 begin_function
 name|public
-name|int
 name|fortran_evalaref
 parameter_list|(
 name|s
+parameter_list|,
+name|base
 parameter_list|,
 name|i
 parameter_list|)
 name|Symbol
 name|s
+decl_stmt|;
+name|Address
+name|base
 decl_stmt|;
 name|long
 name|i
@@ -2211,18 +2239,24 @@ decl_stmt|;
 block|{
 name|Symbol
 name|r
+decl_stmt|,
+name|t
 decl_stmt|;
 name|long
 name|lb
 decl_stmt|,
 name|ub
 decl_stmt|;
-name|r
+name|t
 operator|=
 name|rtype
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|t
 operator|->
 name|chain
 expr_stmt|;
@@ -2251,7 +2285,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|not
 name|getbound
 argument_list|(
 name|s
@@ -2276,13 +2310,16 @@ operator|&
 name|lb
 argument_list|)
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"dynamic bounds not currently available"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|lb
 operator|=
 name|r
@@ -2293,6 +2330,7 @@ name|rangev
 operator|.
 name|lower
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|r
@@ -2318,7 +2356,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
+name|not
 name|getbound
 argument_list|(
 name|s
@@ -2343,13 +2381,16 @@ operator|&
 name|ub
 argument_list|)
 condition|)
+block|{
 name|error
 argument_list|(
 literal|"dynamic bounds not currently available"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
+block|{
 name|ub
 operator|=
 name|r
@@ -2360,6 +2401,7 @@ name|rangev
 operator|.
 name|upper
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -2377,13 +2419,26 @@ literal|"subscript out of range"
 argument_list|)
 expr_stmt|;
 block|}
-return|return
+name|push
+argument_list|(
+name|long
+argument_list|,
+name|base
+operator|+
 operator|(
 name|i
 operator|-
 name|lb
 operator|)
-return|;
+operator|*
+name|size
+argument_list|(
+name|t
+operator|->
+name|type
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)names.c	1.4 (Berkeley) %G%"
+literal|"@(#)names.c	1.5 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: names.c,v 1.4 84/12/26 10:40:47 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -448,10 +458,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the identifier associated with a name.  *  * Currently compiled inline.  *  *  * public String ident(n) Name n; {     return (n == nil) ? "(noname)" : n->identifier; }  *  */
-end_comment
-
-begin_comment
 comment|/*  * Deallocate the name table.  */
 end_comment
 
@@ -460,16 +466,42 @@ name|public
 name|names_free
 parameter_list|()
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|Name
+name|Namepool
 name|n
 decl_stmt|,
-name|next
+name|m
 decl_stmt|;
+specifier|register
+name|integer
+name|i
+decl_stmt|;
+name|n
+operator|=
+name|namepool
+expr_stmt|;
+while|while
+condition|(
+name|n
+operator|!=
+name|nil
+condition|)
+block|{
+name|m
+operator|=
+name|n
+operator|->
+name|prevpool
+expr_stmt|;
+name|dispose
+argument_list|(
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|m
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -484,36 +516,6 @@ name|i
 operator|++
 control|)
 block|{
-name|n
-operator|=
-name|nametable
-index|[
-name|i
-index|]
-expr_stmt|;
-while|while
-condition|(
-name|n
-operator|!=
-name|nil
-condition|)
-block|{
-name|next
-operator|=
-name|n
-operator|->
-name|chain
-expr_stmt|;
-name|dispose
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|next
-expr_stmt|;
-block|}
 name|nametable
 index|[
 name|i

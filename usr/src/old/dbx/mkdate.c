@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkdate.c	1.3 (Berkeley) %G%"
+literal|"@(#)mkdate.c	1.4 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: mkdate.c,v 1.5 84/12/26 10:40:30 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 

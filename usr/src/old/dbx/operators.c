@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c	1.8 (Berkeley) %G%"
+literal|"@(#)operators.c	1.9 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: operators.c,v 1.5 84/12/26 10:41:01 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +74,8 @@ block|,
 name|O_SYM
 block|,
 name|O_LCON
+block|,
+name|O_CCON
 block|,
 name|O_FCON
 block|,
@@ -185,9 +197,6 @@ comment|/* print symbol information */
 name|O_RUN
 block|,
 comment|/* start up program */
-name|O_SEARCH
-block|,
-comment|/* regular expression search of source file */
 name|O_SKIP
 block|,
 comment|/* skip the current line */
@@ -253,7 +262,7 @@ block|,
 comment|/* print out the current source position */
 name|O_PROCRTN
 block|,
-comment|/* CALLPROC completed */
+comment|/* call completed */
 name|O_QLINE
 block|,
 comment|/* filename, line number */
@@ -284,6 +293,21 @@ comment|/* move current function up the call stack */
 name|O_DOWN
 block|,
 comment|/* move current function down the call stack */
+name|O_CALLPROC
+block|,
+comment|/* call command */
+name|O_SEARCH
+block|,
+comment|/* regular expression pattern search through source */
+name|O_SET
+block|,
+comment|/* set a debugger variable */
+name|O_UNSET
+block|,
+comment|/* unset a debugger variable */
+name|O_UNALIAS
+block|,
+comment|/* remove an alias */
 name|O_LASTOP
 block|}
 name|Operator
@@ -482,6 +506,14 @@ name|LEAF
 block|,
 literal|0
 block|,
+comment|/* O_CCON */
+operator|-
+literal|1
+block|,
+name|LEAF
+block|,
+literal|0
+block|,
 comment|/* O_FCON */
 operator|-
 literal|1
@@ -508,7 +540,7 @@ block|,
 comment|/* O_INDEX */
 literal|2
 block|,
-name|BINARY
+name|null
 block|,
 literal|0
 block|,
@@ -529,7 +561,7 @@ block|,
 comment|/* O_COMMA */
 literal|2
 block|,
-name|BINARY
+name|null
 block|,
 literal|","
 block|,
@@ -777,7 +809,7 @@ block|,
 comment|/* O_ASSIGN */
 literal|2
 block|,
-name|BINARY
+name|null
 block|,
 literal|" := "
 block|,
@@ -789,7 +821,7 @@ block|,
 literal|"call"
 block|,
 comment|/* O_CATCH */
-literal|1
+literal|0
 block|,
 name|null
 block|,
@@ -824,7 +856,7 @@ block|,
 literal|"delete"
 block|,
 comment|/* O_DUMP */
-literal|0
+literal|1
 block|,
 name|null
 block|,
@@ -859,7 +891,7 @@ block|,
 literal|"help"
 block|,
 comment|/* O_IGNORE */
-literal|1
+literal|0
 block|,
 name|null
 block|,
@@ -892,13 +924,6 @@ block|,
 name|null
 block|,
 literal|"run"
-block|,
-comment|/* O_SEARCH */
-literal|2
-block|,
-name|null
-block|,
-literal|"search"
 block|,
 comment|/* O_SKIP */
 literal|0
@@ -1094,7 +1119,7 @@ literal|2
 block|,
 name|UNARY
 block|,
-literal|"typerename"
+literal|"type rename"
 block|,
 comment|/* O_RERUN */
 literal|0
@@ -1123,6 +1148,41 @@ block|,
 name|UNARY
 block|,
 literal|"down"
+block|,
+comment|/* O_CALLPROC */
+literal|2
+block|,
+name|null
+block|,
+literal|"call"
+block|,
+comment|/* O_SEARCH */
+literal|2
+block|,
+name|null
+block|,
+literal|"search"
+block|,
+comment|/* O_SET */
+literal|2
+block|,
+name|null
+block|,
+literal|"set"
+block|,
+comment|/* O_UNSET */
+literal|1
+block|,
+name|null
+block|,
+literal|"unset"
+block|,
+comment|/* O_UNALIAS */
+literal|1
+block|,
+name|null
+block|,
+literal|"unalias"
 block|, }
 decl_stmt|;
 end_decl_stmt

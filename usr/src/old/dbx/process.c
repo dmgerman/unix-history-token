@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	1.16 (Berkeley) %G%"
+literal|"@(#)process.c	1.17 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: process.c,v 1.5 84/12/26 10:41:37 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,12 +109,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ptrace.h>
 end_include
 
 begin_include
@@ -268,7 +272,7 @@ comment|/* signal that stopped process */
 name|short
 name|sigcode
 decl_stmt|;
-comment|/* auxiliary signal info code */
+comment|/* extra signal information */
 name|int
 name|exitval
 decl_stmt|;
@@ -336,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|MAXNCMDARGS
-value|100
+value|1000
 end_define
 
 begin_comment
@@ -718,6 +722,17 @@ operator|=
 name|nil
 expr_stmt|;
 block|}
+name|pstart
+argument_list|(
+name|process
+argument_list|,
+name|argv
+argument_list|,
+name|infile
+argument_list|,
+name|outfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|remade
@@ -736,17 +751,6 @@ name|outfile
 argument_list|)
 expr_stmt|;
 block|}
-name|pstart
-argument_list|(
-name|process
-argument_list|,
-name|argv
-argument_list|,
-name|infile
-argument_list|,
-name|outfile
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|process
@@ -1191,20 +1195,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|succeeds
-value|== true
-end_define
-
-begin_define
-define|#
-directive|define
-name|fails
-value|== false
-end_define
-
 begin_function
 name|public
 name|cont
@@ -1297,9 +1287,13 @@ name|DEFSIG
 expr_stmt|;
 if|if
 condition|(
+name|not
+name|isbperr
+argument_list|()
+name|or
+name|not
 name|bpact
 argument_list|()
-name|fails
 condition|)
 block|{
 name|printstatus
@@ -1316,7 +1310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called if we get an interrupt while "running" px  * but actually in the debugger.  Could happen, for example, while  * processing breakpoints.  *  * We basically just want to keep going; the assumption is  * that when the process resumes it will get the interrupt  * which will then be handled.  */
+comment|/*  * This routine is called if we get an interrupt while "running"  * but actually in the debugger.  Could happen, for example, while  * processing breakpoints.  *  * We basically just want to keep going; the assumption is  * that when the process resumes it will get the interrupt,  * which will then be handled.  */
 end_comment
 
 begin_function
@@ -1422,15 +1416,33 @@ name|not
 name|runfirst
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|exitval
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 argument_list|(
-literal|"program unexpectedly exited with %d"
+literal|"program exited"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+argument_list|(
+literal|"program exited with code %d"
 argument_list|,
 name|p
 operator|->
 name|exitval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1683,9 +1695,9 @@ block|}
 block|}
 if|if
 condition|(
+name|not
 name|bpact
 argument_list|()
-name|fails
 condition|)
 block|{
 name|isstopped
@@ -1784,7 +1796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Resume execution up to the given address.  It is assumed that  * no breakpoints exist between the current address and the one  * we're stepping to.  This saves us from setting all the breakpoints.  */
+comment|/*  * Resume execution up to the given address.  We can either ignore  * breakpoints (stepto) or catch them (contto).  */
 end_comment
 
 begin_function
@@ -2176,12 +2188,71 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the signal number which stopped the process.  */
+comment|/*  * Predicate to test if the reason the process stopped was because  * of a breakpoint.  If so, as a side effect clear the local copy of  * signal handler associated with process.  We must do this so as to  * not confuse future stepping or continuing by possibly concluding  * the process should continue with a SIGTRAP handler.  */
 end_comment
 
 begin_function
 name|public
-name|Integer
+name|boolean
+name|isbperr
+parameter_list|()
+block|{
+name|Process
+name|p
+decl_stmt|;
+name|boolean
+name|b
+decl_stmt|;
+name|p
+operator|=
+name|process
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|status
+operator|==
+name|STOPPED
+name|and
+name|p
+operator|->
+name|signo
+operator|==
+name|SIGTRAP
+condition|)
+block|{
+name|b
+operator|=
+name|true
+expr_stmt|;
+name|p
+operator|->
+name|sigstatus
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|b
+operator|=
+name|false
+expr_stmt|;
+block|}
+return|return
+name|b
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return the signal number that stopped the process.  */
+end_comment
+
+begin_function
+name|public
+name|integer
 name|errnum
 parameter_list|(
 name|p
@@ -2198,9 +2269,13 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Return the signal code associated with the signal.  */
+end_comment
+
 begin_function
 name|public
-name|Integer
+name|integer
 name|errcode
 parameter_list|(
 name|p
@@ -2223,7 +2298,7 @@ end_comment
 
 begin_function
 name|public
-name|Integer
+name|integer
 name|exitcode
 parameter_list|(
 name|p
@@ -2461,15 +2536,6 @@ name|Intfunc
 modifier|*
 name|f
 decl_stmt|;
-name|f
-operator|=
-name|onsyserr
-argument_list|(
-name|EIO
-argument_list|,
-name|read_err
-argument_list|)
-expr_stmt|;
 name|badaddr
 operator|=
 name|addr
@@ -2479,6 +2545,15 @@ condition|(
 name|coredump
 condition|)
 block|{
+name|f
+operator|=
+name|onsyserr
+argument_list|(
+name|EFAULT
+argument_list|,
+name|read_err
+argument_list|)
+expr_stmt|;
 name|coredump_readdata
 argument_list|(
 name|buff
@@ -2488,9 +2563,25 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
+name|onsyserr
+argument_list|(
+name|EFAULT
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
+name|f
+operator|=
+name|onsyserr
+argument_list|(
+name|EIO
+argument_list|,
+name|read_err
+argument_list|)
+expr_stmt|;
 name|pio
 argument_list|(
 name|process
@@ -2506,7 +2597,6 @@ argument_list|,
 name|nbytes
 argument_list|)
 expr_stmt|;
-block|}
 name|onsyserr
 argument_list|(
 name|EIO
@@ -2514,6 +2604,7 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2687,7 +2778,7 @@ define|#
 directive|define
 name|traceme
 parameter_list|()
-value|ptrace(PT_TRACE_ME, 0, 0, 0)
+value|ptrace(0, 0, 0, 0)
 end_define
 
 begin_define
@@ -2709,6 +2800,109 @@ name|p
 parameter_list|)
 value|(p->sigset&setrep(p->signo))
 end_define
+
+begin_comment
+comment|/*  * Ptrace options (specified in first argument).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UREAD
+value|3
+end_define
+
+begin_comment
+comment|/* read from process's user structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UWRITE
+value|6
+end_define
+
+begin_comment
+comment|/* write to process's user structure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IREAD
+value|1
+end_define
+
+begin_comment
+comment|/* read from process's instruction space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IWRITE
+value|4
+end_define
+
+begin_comment
+comment|/* write to process's instruction space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DREAD
+value|2
+end_define
+
+begin_comment
+comment|/* read from process's data space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWRITE
+value|5
+end_define
+
+begin_comment
+comment|/* write to process's data space */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONT
+value|7
+end_define
+
+begin_comment
+comment|/* continue stopped process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSTEP
+value|9
+end_define
+
+begin_comment
+comment|/* continue for approximately one instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKILL
+value|8
+end_define
+
+begin_comment
+comment|/* terminate the process */
+end_comment
 
 begin_comment
 comment|/*  * Start up a new process by forking and exec-ing the  * given argument list, returning when the process is loaded  * and ready to execute.  The PROCESS information (pointed to  * by the first argument) is appropriately filled.  *  * If the given PROCESS structure is associated with an already running  * process, we terminate it.  */
@@ -2761,7 +2955,17 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|cacheflush
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 name|psigtrace
 argument_list|(
 name|p
@@ -2804,6 +3008,9 @@ name|pid
 argument_list|)
 condition|)
 block|{
+name|nocatcherrs
+argument_list|()
+expr_stmt|;
 name|traceme
 argument_list|()
 expr_stmt|;
@@ -2843,42 +3050,6 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|"can't exec "
-argument_list|,
-literal|11
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|_exit
 argument_list|(
 literal|1
@@ -2911,12 +3082,24 @@ operator|!=
 name|STOPPED
 condition|)
 block|{
-name|error
+name|beginerrmsg
+argument_list|()
+expr_stmt|;
+name|fprintf
 argument_list|(
-literal|"program could not begin execution"
+name|stderr
+argument_list|,
+literal|"warning: cannot execute %s\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|ptraced
 argument_list|(
 name|p
@@ -2924,6 +3107,7 @@ operator|->
 name|pid
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -2959,7 +3143,7 @@ condition|)
 block|{
 name|ptrace
 argument_list|(
-name|PT_KILL
+name|PKILL
 argument_list|,
 name|p
 operator|->
@@ -3026,7 +3210,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"program not active"
+literal|"program is not active"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3079,7 +3263,7 @@ if|if
 condition|(
 name|ptrace
 argument_list|(
-name|PT_CONTINUE
+name|CONT
 argument_list|,
 name|p
 operator|->
@@ -3130,6 +3314,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|status
+operator|==
+name|STOPPED
+name|and
 name|traceexec
 name|and
 name|not
@@ -3233,13 +3423,21 @@ name|signo
 decl_stmt|;
 block|{
 name|int
+name|s
+decl_stmt|,
 name|status
 decl_stmt|;
+name|s
+operator|=
+name|signo
+expr_stmt|;
+do|do
+block|{
 name|setinfo
 argument_list|(
 name|p
 argument_list|,
-name|signo
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -3249,7 +3447,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"!! pstep from pc 0x%x with signal %d (%d)\n"
+literal|"!! pstep from 0x%x with signal %d (%d)\n"
 argument_list|,
 name|p
 operator|->
@@ -3258,7 +3456,7 @@ index|[
 name|PROGCTR
 index|]
 argument_list|,
-name|signo
+name|s
 argument_list|,
 name|p
 operator|->
@@ -3278,7 +3476,7 @@ if|if
 condition|(
 name|ptrace
 argument_list|(
-name|PT_STEP
+name|SSTEP
 argument_list|,
 name|p
 operator|->
@@ -3329,12 +3527,73 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|status
+operator|==
+name|STOPPED
+name|and
+name|traceexec
+name|and
+name|not
+name|istraced
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"!! pstep ignored signal %d at 0x%x\n"
+argument_list|,
+name|p
+operator|->
+name|signo
+argument_list|,
+name|p
+operator|->
+name|reg
+index|[
+name|PROGCTR
+index|]
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+block|}
+name|s
+operator|=
+name|p
+operator|->
+name|signo
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|p
+operator|->
+name|status
+operator|==
+name|STOPPED
+name|and
+name|not
+name|istraced
+argument_list|(
+name|p
+argument_list|)
+condition|)
+do|;
+if|if
+condition|(
 name|traceexec
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"!! pstep to pc 0x%x on signal %d\n"
+literal|"!! pstep to 0x%x on signal %d\n"
 argument_list|,
 name|p
 operator|->
@@ -3363,15 +3622,33 @@ operator|!=
 name|STOPPED
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|exitval
+operator|==
+literal|0
+condition|)
+block|{
 name|error
 argument_list|(
-literal|"program unexpectedly exited with %d\n"
+literal|"program exited\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+argument_list|(
+literal|"program exited with code %d\n"
 argument_list|,
 name|p
 operator|->
 name|exitval
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -3714,7 +3991,7 @@ name|sigcode
 operator|=
 name|ptrace
 argument_list|(
-name|PT_READ_U
+name|UREAD
 argument_list|,
 name|p
 operator|->
@@ -3747,7 +4024,7 @@ name|mask
 operator|=
 name|ptrace
 argument_list|(
-name|PT_READ_U
+name|UREAD
 argument_list|,
 name|p
 operator|->
@@ -3784,7 +4061,7 @@ index|]
 operator|=
 name|ptrace
 argument_list|(
-name|PT_READ_U
+name|UREAD
 argument_list|,
 name|p
 operator|->
@@ -3861,7 +4138,7 @@ name|Address
 operator|)
 name|ptrace
 argument_list|(
-name|PT_READ_U
+name|UREAD
 argument_list|,
 name|p
 operator|->
@@ -3980,7 +4257,7 @@ condition|)
 block|{
 name|ptrace
 argument_list|(
-name|PT_WRITE_U
+name|UWRITE
 argument_list|,
 name|p
 operator|->
@@ -4581,7 +4858,7 @@ name|w
 operator|=
 name|ptrace
 argument_list|(
-name|PT_READ_I
+name|IREAD
 argument_list|,
 name|p
 operator|->
@@ -4622,7 +4899,7 @@ name|w
 operator|=
 name|ptrace
 argument_list|(
-name|PT_READ_D
+name|DREAD
 argument_list|,
 name|p
 operator|->
@@ -4722,7 +4999,7 @@ name|data
 expr_stmt|;
 name|ptrace
 argument_list|(
-name|PT_WRITE_I
+name|IWRITE
 argument_list|,
 name|p
 operator|->
@@ -4739,7 +5016,7 @@ name|DATASEG
 case|:
 name|ptrace
 argument_list|(
-name|PT_WRITE_D
+name|DWRITE
 argument_list|,
 name|p
 operator|->
@@ -4761,6 +5038,37 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Flush the instruction cache associated with a process.  */
+end_comment
+
+begin_function
+name|private
+name|cacheflush
+parameter_list|(
+name|p
+parameter_list|)
+name|Process
+name|p
+decl_stmt|;
+block|{
+name|bzero
+argument_list|(
+name|p
+operator|->
+name|word
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|word
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4988,22 +5296,12 @@ block|}
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|i
-parameter_list|)
-value|(1<< ((i)-1))
-end_define
-
 begin_comment
-comment|/*  * Signal manipulation routines.  */
+comment|/*  * Signal name manipulation.  */
 end_comment
 
 begin_decl_stmt
-specifier|static
+name|private
 name|String
 name|signames
 index|[
@@ -5067,12 +5365,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Map a signal name to a number.  */
+comment|/*  * Get the signal number associated with a given name.  * The name is first translated to upper case if necessary.  */
 end_comment
 
 begin_function
 name|public
-name|signalname
+name|integer
+name|siglookup
 parameter_list|(
 name|s
 parameter_list|)
@@ -5081,74 +5380,193 @@ name|s
 decl_stmt|;
 block|{
 specifier|register
-name|String
+name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|q
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|integer
+name|i
+decl_stmt|;
+name|p
+operator|=
+name|s
+expr_stmt|;
+name|q
+operator|=
+name|buf
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|p
+operator|!=
+literal|'\0'
+condition|)
+block|{
 if|if
 condition|(
-name|strneq
-argument_list|(
-name|s
-argument_list|,
-literal|"SIG"
-argument_list|,
-literal|3
-argument_list|)
+operator|*
+name|p
+operator|>=
+literal|'a'
+name|and
+operator|*
+name|p
+operator|<=
+literal|'z'
 condition|)
-name|s
+block|{
+operator|*
+name|q
+operator|=
+operator|(
+operator|*
+name|p
+operator|-
+literal|'a'
+operator|)
+operator|+
+literal|'A'
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|q
+operator|=
+operator|*
+name|p
+expr_stmt|;
+block|}
+operator|++
+name|p
+expr_stmt|;
+operator|++
+name|q
+expr_stmt|;
+block|}
+operator|*
+name|q
+operator|=
+literal|'\0'
+expr_stmt|;
+name|p
+operator|=
+name|buf
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'S'
+name|and
+name|buf
+index|[
+literal|1
+index|]
+operator|==
+literal|'I'
+name|and
+name|buf
+index|[
+literal|2
+index|]
+operator|==
+literal|'G'
+condition|)
+block|{
+name|p
 operator|+=
 literal|3
 expr_stmt|;
+block|}
+name|i
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
-name|p
-operator|=
-name|signames
 init|;
-name|p
-operator|<
-operator|&
-name|signames
-index|[
-name|NSIG
-index|]
 condition|;
-name|p
-operator|++
 control|)
+block|{
 if|if
 condition|(
-operator|*
-name|p
-operator|&&
-name|streq
-argument_list|(
-operator|*
-name|p
-argument_list|,
-name|s
-argument_list|)
-condition|)
-return|return
+name|i
+operator|>=
+expr|sizeof
 operator|(
-name|p
-operator|-
 name|signames
 operator|)
-return|;
+name|div
+sizeof|sizeof
+argument_list|(
+name|signames
+index|[
+literal|0
+index|]
+argument_list|)
+condition|)
+block|{
 name|error
 argument_list|(
-literal|"%s: Unknown signal."
+literal|"signal \"%s\" unknown"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|i
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|signames
+index|[
+name|i
+index|]
+operator|!=
+name|nil
+name|and
+name|streq
+argument_list|(
+name|signames
+index|[
+name|i
+index|]
+argument_list|,
+name|p
+argument_list|)
+condition|)
+block|{
+break|break;
+block|}
+operator|++
+name|i
+expr_stmt|;
+block|}
+return|return
+name|i
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Print all signals being ignored by the  * debugger.  These signals are auotmatically  * passed on to the debugged process.  */
+comment|/*  * Print all signals being ignored by the debugger.  * These signals are auotmatically  * passed on to the debugged process.  */
 end_comment
 
 begin_function
@@ -5200,22 +5618,28 @@ begin_function
 name|private
 name|printsigs
 parameter_list|(
-name|vec
+name|set
 parameter_list|)
-specifier|register
-name|Integer
-name|vec
+name|integer
+name|set
 decl_stmt|;
 block|{
-specifier|register
-name|Integer
+name|integer
 name|s
 decl_stmt|;
-name|String
-name|sep
-init|=
-literal|""
+name|char
+name|separator
+index|[
+literal|2
+index|]
 decl_stmt|;
+name|separator
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 name|s
@@ -5224,31 +5648,48 @@ literal|1
 init|;
 name|s
 operator|<
-name|NSIG
+expr|sizeof
+operator|(
+name|signames
+operator|)
+name|div
+sizeof|sizeof
+argument_list|(
+name|signames
+index|[
+literal|0
+index|]
+argument_list|)
 condition|;
 name|s
 operator|++
 control|)
+block|{
 if|if
 condition|(
-name|vec
+name|set
 operator|&
-name|bit
+name|setrep
 argument_list|(
 name|s
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|signames
 index|[
 name|s
 index|]
+operator|!=
+name|nil
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"%s%s"
 argument_list|,
-name|sep
+name|separator
 argument_list|,
 name|signames
 index|[
@@ -5256,27 +5697,36 @@ name|s
 index|]
 argument_list|)
 expr_stmt|;
-name|sep
+name|separator
+index|[
+literal|0
+index|]
 operator|=
-literal|" "
+literal|' '
 expr_stmt|;
+name|separator
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
-operator|*
-name|sep
-operator|!=
-literal|'\0'
+name|separator
+index|[
+literal|0
+index|]
+operator|==
+literal|' '
 condition|)
 block|{
 name|putchar
 argument_list|(
 literal|'\n'
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
 argument_list|)
 expr_stmt|;
 block|}

@@ -9,7 +9,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.10 (Berkeley) %G%"
+literal|"@(#)main.c	1.11 (Berkeley) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Header: main.c,v 1.5 84/12/26 10:40:16 linton Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"eval.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"symbols.h"
 end_include
 
@@ -57,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"scanner.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"keywords.h"
 end_include
 
 begin_include
@@ -87,6 +115,12 @@ begin_include
 include|#
 directive|include
 file|"mappings.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coredump.h"
 end_include
 
 begin_ifndef
@@ -136,15 +170,15 @@ name|ltchars
 name|ltc
 decl_stmt|;
 comment|/* local special characters */
-name|int
+name|integer
 name|ldisc
 decl_stmt|;
 comment|/* line discipline */
-name|int
+name|integer
 name|local
 decl_stmt|;
 comment|/* TIOCLGET */
-name|int
+name|integer
 name|fcflags
 decl_stmt|;
 comment|/* fcntl(2) F_GETFL, F_SETFL */
@@ -160,7 +194,7 @@ end_endif
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|coredump
 decl_stmt|;
 end_decl_stmt
@@ -171,7 +205,7 @@ end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|runfirst
 decl_stmt|;
 end_decl_stmt
@@ -182,7 +216,7 @@ end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|interactive
 decl_stmt|;
 end_decl_stmt
@@ -193,18 +227,18 @@ end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|lexdebug
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* trace yylex return values */
+comment|/* trace scanner return values */
 end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|tracebpts
 decl_stmt|;
 end_decl_stmt
@@ -215,35 +249,46 @@ end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|traceexec
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* trace process execution */
+comment|/* trace execution */
 end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|tracesyms
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* print symbols as their read */
+comment|/* print symbols are they are read */
 end_comment
 
 begin_decl_stmt
 name|public
-name|Boolean
+name|boolean
 name|traceblocks
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* trace blocks while reading symbols */
+end_comment
+
+begin_decl_stmt
+name|public
+name|boolean
+name|vaddrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* map addresses through page tables */
 end_comment
 
 begin_decl_stmt
@@ -295,6 +340,20 @@ end_comment
 begin_decl_stmt
 name|private
 name|char
+name|outbuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* standard output buffer */
+end_comment
+
+begin_decl_stmt
+name|private
+name|char
 name|namebuf
 index|[
 literal|512
@@ -323,6 +382,17 @@ name|Ttyinfo
 name|ttyinfo
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|private
+name|String
+name|corename
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of core file */
+end_comment
 
 begin_function_decl
 name|private
@@ -379,14 +449,16 @@ argument_list|,
 name|nil
 argument_list|)
 expr_stmt|;
-name|setlinebuf
+name|setbuf
 argument_list|(
-name|stderr
+name|stdout
+argument_list|,
+name|outbuf
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"dbx version %d of %s.\nType 'help' for help.\n"
+literal|"dbx version 3.%d of %s.\nType 'help' for help.\n"
 argument_list|,
 name|versionNumber
 argument_list|,
@@ -406,6 +478,9 @@ name|argv
 argument_list|)
 expr_stmt|;
 name|language_init
+argument_list|()
+expr_stmt|;
+name|symbols_init
 argument_list|()
 expr_stmt|;
 name|process_init
@@ -496,34 +571,6 @@ name|SIGINT
 argument_list|,
 name|catchintr
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isterm
-argument_list|(
-name|stdin
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"(%s) "
-argument_list|,
-name|cmdname
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-block|}
-name|endshellmode
-argument_list|()
-expr_stmt|;
-comment|/* after an error longjmp */
-name|startaliasing
-argument_list|()
 expr_stmt|;
 name|yyparse
 argument_list|()
@@ -630,6 +677,22 @@ condition|(
 name|coredump
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"[using memory image in %s]\n"
+argument_list|,
+name|corename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vaddrs
+condition|)
+block|{
+name|coredump_getkerinfo
+argument_list|()
+expr_stmt|;
+block|}
 name|setcurfunc
 argument_list|(
 name|whatblock
@@ -795,8 +858,12 @@ expr_stmt|;
 name|status
 argument_list|()
 expr_stmt|;
-name|print_alias
+name|alias
 argument_list|(
+name|nil
+argument_list|,
+name|nil
+argument_list|,
 name|nil
 argument_list|)
 expr_stmt|;
@@ -885,6 +952,9 @@ expr_stmt|;
 name|objfree
 argument_list|()
 expr_stmt|;
+name|symbols_init
+argument_list|()
+expr_stmt|;
 name|process_init
 argument_list|()
 expr_stmt|;
@@ -937,7 +1007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * After a non-fatal error we jump back to command parsing.  */
+comment|/*  * After a non-fatal error we skip the rest of the current input line, and  * jump back to command parsing.  */
 end_comment
 
 begin_function
@@ -973,6 +1043,21 @@ name|private
 name|catchintr
 parameter_list|()
 block|{
+if|if
+condition|(
+name|isredirected
+argument_list|()
+condition|)
+block|{
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+name|unsetout
+argument_list|()
+expr_stmt|;
+block|}
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1054,6 +1139,10 @@ name|traceblocks
 operator|=
 name|false
 expr_stmt|;
+name|vaddrs
+operator|=
+name|false
+expr_stmt|;
 name|foundfile
 operator|=
 name|false
@@ -1094,7 +1183,7 @@ operator|<
 name|argc
 name|and
 argument_list|(
-argument|not foundfile or corefile == nil
+argument|not foundfile or (coredump and corefile == nil)
 argument_list|)
 condition|)
 block|{
@@ -1154,6 +1243,44 @@ name|nil
 argument_list|,
 name|sourcepath
 argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|streq
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"-c"
+argument_list|)
+condition|)
+block|{
+operator|++
+name|i
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+name|argc
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"missing command file name for -c"
+argument_list|)
+expr_stmt|;
+block|}
+name|initfile
+operator|=
+name|argv
+index|[
+name|i
+index|]
 expr_stmt|;
 block|}
 else|else
@@ -1232,6 +1359,13 @@ index|]
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+name|corename
+operator|=
+name|argv
+index|[
+name|i
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1404,6 +1538,40 @@ operator|==
 name|nil
 condition|)
 block|{
+if|if
+condition|(
+name|vaddrs
+condition|)
+block|{
+name|corefile
+operator|=
+name|fopen
+argument_list|(
+literal|"/dev/mem"
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+name|corename
+operator|=
+literal|"/dev/mem"
+expr_stmt|;
+if|if
+condition|(
+name|corefile
+operator|==
+name|nil
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"can't open /dev/mem"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
 name|corefile
 operator|=
 name|fopen
@@ -1412,6 +1580,10 @@ literal|"core"
 argument_list|,
 literal|"r"
 argument_list|)
+expr_stmt|;
+name|corename
+operator|=
+literal|"core"
 expr_stmt|;
 if|if
 condition|(
@@ -1424,6 +1596,7 @@ name|coredump
 operator|=
 name|false
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -1502,12 +1675,32 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'k'
+case|:
+name|vaddrs
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
+ifdef|#
+directive|ifdef
+name|LEXDEBUG
 name|lexdebug
 operator|=
 name|true
 expr_stmt|;
+else|#
+directive|else
+name|fatal
+argument_list|(
+literal|"\"-l\" only applicable when compiled with LEXDEBUG"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|fatal
