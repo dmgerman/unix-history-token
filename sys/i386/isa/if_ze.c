@@ -12,18 +12,12 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.48 1998/01/08 23:41:06 eivind Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.49 1998/02/04 04:41:37 eivind Exp $  */
 end_comment
 
 begin_comment
-comment|/* XXX - Don't mix different PCCARD support code */
+comment|/* XXX don't mix different PCCARD support code. */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_lint.h"
-end_include
 
 begin_include
 include|#
@@ -49,28 +43,39 @@ operator|>
 literal|0
 end_if
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPILING_LINT
-end_ifndef
+begin_include
+include|#
+directive|include
+file|"opt_lint.h"
+end_include
 
-begin_error
-error|#
-directive|error
-literal|"Dedicated PCMCIA drivers and generic PCMCIA support can't be mixed"
-end_error
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPILING_LINT
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|zedummy
+index|[]
+init|=
+literal|"code to use the includes of card.h and pcic.h"
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_warning
-warning|#
-directive|warning
+begin_error
+error|#
+directive|error
 literal|"Dedicated PCMCIA drivers and generic PCMCIA support can't be mixed"
-end_warning
+end_error
 
 begin_endif
 endif|#
