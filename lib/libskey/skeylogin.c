@@ -82,31 +82,13 @@ file|"pathnames.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|skipspace
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|skeylookup
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|skey
-operator|*
-name|mp
-operator|,
-name|char
-operator|*
-name|name
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1461,6 +1443,7 @@ block|}
 end_block
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|skipspace

@@ -116,6 +116,7 @@ comment|/* Dictionary for integer-word translations */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|Wp
 index|[
