@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.40 1997/05/12 12:56:50 kato Exp $  */
+comment|/*-  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)machdep.c	7.4 (Berkeley) 6/3/91  *	$Id: machdep.c,v 1.41 1997/05/23 10:17:05 kato Exp $  */
 end_comment
 
 begin_include
@@ -377,6 +377,16 @@ include|#
 directive|include
 file|<machine/smp.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smptests.h>
+end_include
+
+begin_comment
+comment|/** LATE_START */
+end_comment
 
 begin_endif
 endif|#
@@ -1066,11 +1076,25 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LATE_START
+argument_list|)
+name|mp_start
+argument_list|()
+expr_stmt|;
+comment|/* fire up the APs and APICs */
+endif|#
+directive|endif
+comment|/* LATE_START */
 name|mp_announce
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SMP */
 name|earlysetcpuclass
 argument_list|()
 expr_stmt|;
@@ -5701,15 +5725,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
-comment|/* fire up the APs and APICs */
-name|mp_start
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Size up each available chunk of physical memory. 	 */
 comment|/* 	 * We currently don't bother testing base memory. 	 * XXX  ...but we probably should. 	 */
 name|pa_indx
@@ -6206,6 +6221,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
+comment|/* look for the MP hardware */
+name|mp_probe
+argument_list|()
+expr_stmt|;
+comment|/* make the initial tss so cpu can get interrupt stack on syscall! */
 for|for
 control|(
 name|x
@@ -6220,7 +6240,6 @@ name|x
 operator|++
 control|)
 block|{
-comment|/* make an initial tss so cpu can get interrupt stack on syscall! */
 name|SMPcommon_tss
 index|[
 name|x
@@ -6271,18 +6290,26 @@ operator|<<
 literal|16
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/** XXX FIXME: 	 *   We can't access the LOCAL APIC till mp_enable() runs.  Since 	 *   this is run by the BSP, cpunumber() should always equal 0 anyway. 	 */
+block|gsel_tss = GSEL(NGDT + cpunumber(), SEL_KPL);
+else|#
+directive|else
 name|gsel_tss
 operator|=
 name|GSEL
 argument_list|(
 name|NGDT
-operator|+
-name|cpunumber
-argument_list|()
+comment|/** + 0 */
 argument_list|,
 name|SEL_KPL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/** 0 */
 name|ltr
 argument_list|(
 name|gsel_tss
@@ -6344,6 +6371,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SMP */
 name|dblfault_tss
 operator|.
 name|tss_esp
@@ -6619,6 +6647,26 @@ name|pcb_mpnest
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|LATE_START
+argument_list|)
+name|mp_start
+argument_list|()
+expr_stmt|;
+comment|/* fire up the APs and APICs */
+endif|#
+directive|endif
+comment|/* LATE_START */
+endif|#
+directive|endif
+comment|/* SMP */
 block|}
 name|int
 name|ptrace_set_pc
