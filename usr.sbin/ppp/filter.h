@@ -60,6 +60,24 @@ name|P_IGMP
 value|5
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPPROTO_GRE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P_GRE
+value|6
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Operations - f_srcop, f_dstop */
 end_comment
