@@ -812,7 +812,6 @@ modifier|*
 name|mapp
 parameter_list|)
 block|{
-comment|/* Not much to do...? */
 operator|*
 name|mapp
 operator|=
@@ -844,6 +843,12 @@ name|ddmat
 operator|->
 name|dt_map_count
 operator|++
+expr_stmt|;
+name|sparc64_dmamap_init
+argument_list|(
+operator|*
+name|mapp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1379,6 +1384,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|map
+operator|->
+name|dm_loaded
+operator|=
+literal|1
+expr_stmt|;
 block|}
 else|else
 call|(
@@ -1601,6 +1612,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|map
+operator|->
+name|dm_loaded
+operator|=
+literal|1
+expr_stmt|;
 call|(
 modifier|*
 name|callback
@@ -1883,6 +1900,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|map
+operator|->
+name|dm_loaded
+operator|=
+literal|1
+expr_stmt|;
 call|(
 modifier|*
 name|callback
@@ -1931,7 +1954,12 @@ name|bus_dmamap_t
 name|map
 parameter_list|)
 block|{
-comment|/* Nothing to do...? */
+name|map
+operator|->
+name|dm_loaded
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -2050,6 +2078,12 @@ name|dmat
 operator|->
 name|dt_map_count
 operator|++
+expr_stmt|;
+name|sparc64_dmamap_init
+argument_list|(
+operator|*
+name|mapp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
