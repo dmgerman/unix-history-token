@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.8	81/08/14	*/
+comment|/*	tty_pty.c	4.9	81/10/11	*/
 end_comment
 
 begin_comment
@@ -69,16 +69,24 @@ directive|include
 file|"../h/file.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|NPTY
+end_undef
+
 begin_define
 define|#
 directive|define
 name|NPTY
 value|16
 end_define
-
-begin_comment
-comment|/* Number of pseudo-teletypes */
-end_comment
 
 begin_define
 define|#
@@ -91,15 +99,8 @@ begin_comment
 comment|/* Chunk size iomoved from user */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ALLDELAYS
-value|(NLDELAY|TBDELAY|XTABS|CRDELAY|VTDELAY)
-end_define
-
 begin_comment
-comment|/*  * A pseudo-teletype is a special device which is not unlike a pipe.  * It is used to communicate between two processes.  However, it allows  * one to simulate a teletype, including mode setting, interrupt, and  * multiple end of files (all not possible on a pipe).	There are  * really two drivers here.  One is the device which looks like a TTY  * and can be thought of as the slave device, and hence its routines  * are prefixed with 'pts' (PTY Slave).	 The other driver can be  * thought of as the controlling device, and its routines are prefixed  * by 'ptc' (PTY Controller).  To type on the simulated keyboard of the  * PTY, one does a 'write' to the controlling device.  To get the  * simulated printout from the PTY, one does a 'read' on the controlling  * device.  Normally, the controlling device is called 'ptyx' and the  * slave device is called 'ttyx' (to make programs like 'who' happy).  */
+comment|/*  * pts == /dev/tty[pP]?  * ptc == /dev/ptp[pP]?  */
 end_comment
 
 begin_decl_stmt
@@ -112,9 +113,41 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* TTY headers for PTYs */
-end_comment
+begin_struct
+struct|struct
+name|pt_ioctl
+block|{
+name|int
+name|pti_flags
+decl_stmt|;
+name|struct
+name|clist
+name|pti_ioctl
+decl_stmt|,
+name|pti_ioans
+decl_stmt|;
+name|int
+name|pti_gensym
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|pti_selr
+decl_stmt|;
+block|}
+name|pt_ioctl
+index|[
+name|NPTY
+index|]
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|PTCRCOLL
+value|0x01
+end_define
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -137,7 +170,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Open for PTY Slave */
 specifier|register
 name|struct
 name|tty
@@ -356,7 +388,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Read from PTY, i.e. from data written by controlling device */
 specifier|register
 name|struct
 name|tty
@@ -396,7 +427,6 @@ operator|(
 name|tp
 operator|)
 expr_stmt|;
-comment|/* Wakeup other half if sleeping */
 name|wakeup
 argument_list|(
 operator|(
@@ -429,7 +459,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Write on PTY, i.e. to be read from 			   controlling device */
 specifier|register
 name|struct
 name|tty
@@ -447,7 +476,6 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* Wait for controlling device to be opened */
 if|if
 condition|(
 name|tp
@@ -489,7 +517,22 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Called by 'ttstart' to output a character. 			   Merely wakes up controlling half, which 			   does actual work */
+name|struct
+name|pt_ioctl
+modifier|*
+name|pti
+init|=
+operator|&
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|tp
+operator|->
+name|t_dev
+argument_list|)
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|tp
@@ -499,6 +542,40 @@ operator|&
 name|TTSTOP
 condition|)
 return|return;
+if|if
+condition|(
+name|pti
+operator|->
+name|pti_selr
+condition|)
+block|{
+name|selwakeup
+argument_list|(
+name|pti
+operator|->
+name|pti_selr
+argument_list|,
+name|pti
+operator|->
+name|pti_flags
+operator|&
+name|PTCRCOLL
+argument_list|)
+expr_stmt|;
+name|pti
+operator|->
+name|pti_selr
+operator|=
+literal|0
+expr_stmt|;
+name|pti
+operator|->
+name|pti_flags
+operator|&=
+operator|~
+name|PTCRCOLL
+expr_stmt|;
+block|}
 name|wakeup
 argument_list|(
 operator|(
@@ -534,9 +611,14 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
-comment|/* Open for PTY Controller */
 specifier|register
 name|struct
 name|tty
@@ -593,13 +675,6 @@ name|t_oproc
 operator|=
 name|ptsstart
 expr_stmt|;
-comment|/* Set address of start routine */
-name|tp
-operator|->
-name|t_iproc
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|tp
@@ -643,7 +718,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Close controlling part of PTY */
 specifier|register
 name|struct
 name|tty
@@ -685,7 +759,7 @@ operator|&=
 operator|~
 name|CARR_ON
 expr_stmt|;
-comment|/* Virtual carrier is gone */
+comment|/* virtual carrier gone */
 name|flushtty
 argument_list|(
 name|tp
@@ -695,14 +769,13 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
-comment|/* Clean things up */
 name|tp
 operator|->
 name|t_oproc
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Mark as closed */
+comment|/* mark closed */
 block|}
 end_block
 
@@ -721,7 +794,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Read from PTY's output buffer */
 specifier|register
 name|struct
 name|tty
@@ -766,7 +838,6 @@ name|c_cc
 operator|==
 literal|0
 operator|||
-comment|/* Wait for something to arrive */
 operator|(
 name|tp
 operator|->
@@ -775,7 +846,6 @@ operator|&
 name|TTSTOP
 operator|)
 condition|)
-comment|/* (Woken by ptsstart) */
 name|sleep
 argument_list|(
 operator|(
@@ -842,28 +912,6 @@ operator|&=
 operator|~
 name|ASLEEP
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_chan
-condition|)
-name|mcstart
-argument_list|(
-name|tp
-operator|->
-name|t_chan
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-expr_stmt|;
-else|else
 name|wakeup
 argument_list|(
 operator|(
@@ -876,6 +924,133 @@ name|t_outq
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|ptcselect
+argument_list|(
+argument|dev
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|tty
+modifier|*
+name|tp
+init|=
+operator|&
+name|pt_tty
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+decl_stmt|;
+name|struct
+name|pt_ioctl
+modifier|*
+name|pti
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+operator|(
+name|CARR_ON
+operator||
+name|ISOPEN
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|tp
+operator|->
+name|t_outq
+operator|.
+name|c_cc
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|pti
+operator|=
+operator|&
+name|pt_ioctl
+index|[
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
+name|pti
+operator|->
+name|pti_selr
+operator|)
+operator|&&
+name|p
+operator|->
+name|p_wchan
+operator|==
+operator|(
+name|caddr_t
+operator|)
+name|select
+condition|)
+name|pti
+operator|->
+name|pti_flags
+operator||=
+name|PTCRCOLL
+expr_stmt|;
+else|else
+name|pti
+operator|->
+name|pti_selr
+operator|=
+name|u
+operator|.
+name|u_procp
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -894,7 +1069,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Stuff characters into PTY's input buffer */
 specifier|register
 name|struct
 name|tty
@@ -1072,14 +1246,6 @@ block|}
 end_block
 
 begin_comment
-comment|/* Note: Both slave and controlling device have the same routine for */
-end_comment
-
-begin_comment
-comment|/* 'ioctl' (but note check for controller - 4/12/78:mob)*/
-end_comment
-
-begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
@@ -1110,7 +1276,6 @@ end_decl_stmt
 
 begin_block
 block|{
-comment|/* Read and write status bits */
 specifier|register
 name|struct
 name|tty
@@ -1121,15 +1286,6 @@ specifier|register
 name|int
 name|tbd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BLAND
-specifier|register
-name|int
-name|nld
-decl_stmt|;
-endif|#
-directive|endif
 name|tp
 operator|=
 operator|&
@@ -1141,7 +1297,7 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* if controller stty then must flush to prevent a hang */
+comment|/* IF CONTROLLER STTY THEN MUST FLUSH TO PREVENT A HANG ??? */
 if|if
 condition|(
 name|cdevsw
@@ -1185,81 +1341,9 @@ name|addr
 argument_list|,
 name|dev
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|cmd
 operator|==
-name|TIOCSETP
-operator|||
-name|cmd
-operator|==
-name|TIOCSETN
+literal|0
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|BLAND
-name|nld
-operator|=
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|NLDELAY
-expr_stmt|;
-endif|#
-directive|endif
-name|tbd
-operator|=
-name|tp
-operator|->
-name|t_flags
-operator|&
-name|TBDELAY
-expr_stmt|;
-name|tp
-operator|->
-name|t_flags
-operator|&=
-operator|~
-name|ALLDELAYS
-expr_stmt|;
-if|if
-condition|(
-name|tbd
-operator|==
-name|TBDELAY
-condition|)
-comment|/* Wants tab expansion */
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|tbd
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|BLAND
-if|if
-condition|(
-name|nld
-operator|==
-name|NLDELAY
-condition|)
-comment|/* Allow ANN ARBOR mode. */
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|nld
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-block|}
-else|else
 name|u
 operator|.
 name|u_error

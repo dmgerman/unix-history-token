@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.10	81/05/09	*/
+comment|/*	cons.c	4.11	81/10/11	*/
 end_comment
 
 begin_comment
@@ -53,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mx.h"
 end_include
 
 begin_include
@@ -132,12 +126,6 @@ operator|->
 name|t_oproc
 operator|=
 name|cnstart
-expr_stmt|;
-name|tp
-operator|->
-name|t_iproc
-operator|=
-name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -754,28 +742,6 @@ operator|&=
 operator|~
 name|ASLEEP
 expr_stmt|;
-if|if
-condition|(
-name|tp
-operator|->
-name|t_chan
-condition|)
-name|mcstart
-argument_list|(
-name|tp
-operator|->
-name|t_chan
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|tp
-operator|->
-name|t_outq
-argument_list|)
-expr_stmt|;
-else|else
 name|wakeup
 argument_list|(
 operator|(
