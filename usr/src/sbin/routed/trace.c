@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	4.3 (Berkeley) %G%"
+literal|"@(#)trace.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -713,15 +713,28 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"dst %x, router %x, metric %d, flags"
+literal|"dst %s, "
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|dst
 operator|->
 name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fd
 argument_list|,
+literal|"router %s, metric %d, flags"
+argument_list|,
+name|inet_ntoa
+argument_list|(
 name|gate
 operator|->
 name|sin_addr
+argument_list|)
 argument_list|,
 name|rt
 operator|->
@@ -1297,7 +1310,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %s %x.%d"
+literal|"%s %s %s.%d"
 argument_list|,
 name|ripcmds
 index|[
@@ -1308,9 +1321,12 @@ index|]
 argument_list|,
 name|dir
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|who
 operator|->
 name|sin_addr
+argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
@@ -1334,9 +1350,12 @@ name|rip_cmd
 argument_list|,
 name|dir
 argument_list|,
+name|inet_ntoa
+argument_list|(
 name|who
 operator|->
 name|sin_addr
+argument_list|)
 argument_list|,
 name|ntohs
 argument_list|(
@@ -1430,25 +1449,33 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"\tdst %x metric %d\n"
+literal|"\tdst %s metric %d\n"
 argument_list|,
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)&sa)
+name|inet_ntoa
+argument_list|(
+name|satosin
+argument_list|(
 name|n
 operator|->
 name|rip_dst
-operator|)
+argument_list|)
 operator|->
 name|sin_addr
+argument_list|)
 argument_list|,
+name|ntohl
+argument_list|(
 name|n
 operator|->
 name|rip_metric
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
