@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.3 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -170,6 +170,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -284,6 +291,9 @@ case|case
 literal|'n'
 case|:
 name|nflag
+operator|++
+expr_stmt|;
+name|verbose
 operator|++
 expr_stmt|;
 break|break;
@@ -411,6 +421,9 @@ index|]
 operator|!=
 literal|'/'
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|name
@@ -424,6 +437,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|name
@@ -956,6 +972,10 @@ block|{
 comment|/* 		 * Sort the new bad sectors into the list. 		 * Then shuffle the replacement sectors so that 		 * the previous bad sectors get the same replacement data. 		 */
 name|qsort
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|dkbad
 operator|.
 name|bt_bad
@@ -1081,6 +1101,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|msg
@@ -1222,6 +1245,10 @@ name|read
 argument_list|(
 name|f
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|bad
 argument_list|,
 sizeof|sizeof
@@ -1259,6 +1286,9 @@ name|sn
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|msg
@@ -1288,6 +1318,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_function
 
@@ -1778,6 +1809,9 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|dp
 operator|->
 name|d_secsize
@@ -1854,27 +1888,24 @@ name|f
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 argument_list|)
 operator|)
 operator|==
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 condition|)
 break|break;
 if|if
 condition|(
 name|n
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 condition|)
 block|{
 name|fprintf
@@ -1894,6 +1925,10 @@ literal|0
 condition|)
 name|perror
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1950,16 +1985,14 @@ name|f
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 condition|)
 block|{
 name|fprintf
@@ -1973,6 +2006,10 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2029,6 +2066,9 @@ name|zbuf
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|dp
 operator|->
 name|d_secsize
@@ -2104,16 +2144,14 @@ name|f
 argument_list|,
 name|zbuf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|zbuf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|zbuf
-argument_list|)
+name|dp
+operator|->
+name|d_secsize
 condition|)
 block|{
 name|fprintf
@@ -2127,6 +2165,10 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2467,6 +2509,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|hpupformat
 argument_list|(
@@ -2484,7 +2530,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|format
+name|formats
 modifier|*
 name|fp
 decl_stmt|;
@@ -2622,6 +2668,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|rp06format
 argument_list|(
@@ -2639,7 +2689,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|format
+name|formats
 modifier|*
 name|fp
 decl_stmt|;
@@ -2647,7 +2697,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|disklabel
+name|disktab
 modifier|*
 name|dp
 decl_stmt|;
@@ -2836,6 +2886,9 @@ name|buf
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|fp
 operator|->
 name|f_bufsize
@@ -2912,6 +2965,10 @@ name|fd
 argument_list|,
 name|DKIOCHDR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -3046,6 +3103,10 @@ name|fd
 argument_list|,
 name|DKIOCHDR
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -3080,6 +3141,9 @@ index|[
 literal|80
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|msg
