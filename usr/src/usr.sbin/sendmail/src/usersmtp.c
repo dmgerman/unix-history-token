@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.26 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.27 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.26 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.27 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +256,11 @@ modifier|*
 name|stab
 parameter_list|()
 function_decl|;
+specifier|extern
+name|void
+name|helo_options
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|tTd
@@ -391,6 +396,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_initial
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -410,6 +417,59 @@ goto|goto
 name|tempfail1
 goto|;
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself. 	*/
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_ESMTP
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_ESMTP
+expr_stmt|;
+name|tryhelo
+label|:
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_ESMTP
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+name|smtpmessage
+argument_list|(
+literal|"EHLO %s"
+argument_list|,
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+name|SmtpPhase
+operator|=
+name|mci
+operator|->
+name|mci_phase
+operator|=
+literal|"EHLO wait"
+expr_stmt|;
+block|}
+else|else
+block|{
 name|smtpmessage
 argument_list|(
 literal|"HELO %s"
@@ -429,6 +489,7 @@ name|mci_phase
 operator|=
 literal|"HELO wait"
 expr_stmt|;
+block|}
 name|setproctitle
 argument_list|(
 literal|"%s %s: %s"
@@ -457,6 +518,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_helo
+argument_list|,
+name|helo_options
 argument_list|)
 expr_stmt|;
 if|if
@@ -478,9 +541,35 @@ argument_list|)
 operator|==
 literal|5
 condition|)
+block|{
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_ESMTP
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+block|{
+comment|/* try old SMTP instead */
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_ESMTP
+expr_stmt|;
+goto|goto
+name|tryhelo
+goto|;
+block|}
 goto|goto
 name|unavailable
 goto|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -601,6 +690,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_miscshort
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -689,6 +780,163 @@ return|return;
 block|}
 end_block
 
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  HELO_OPTIONS -- process the options on a HELO line. ** **	Parameters: **		line -- the response line. **		m -- the mailer. **		mci -- the mailer connection info. **		e -- the envelope. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|helo_options
+parameter_list|(
+name|line
+parameter_list|,
+name|m
+parameter_list|,
+name|mci
+parameter_list|,
+name|e
+parameter_list|)
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|MAILER
+modifier|*
+name|m
+decl_stmt|;
+specifier|register
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+operator|<
+literal|5
+condition|)
+return|return;
+name|line
+operator|+=
+literal|4
+expr_stmt|;
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|line
+argument_list|,
+literal|' '
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|line
+argument_list|,
+literal|"size"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_SIZE
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|mci
+operator|->
+name|mci_maxsize
+operator|=
+name|atol
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|line
+argument_list|,
+literal|"8bitmime"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_8BITMIME
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|line
+argument_list|,
+literal|"expn"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_EXPN
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SMTPMAILFROM -- send MAIL command ** **	Parameters: **		m -- the mailer. **		mci -- the mailer connection structure. **		e -- the envelope (including the sender to specify). */
+end_comment
+
 begin_macro
 name|smtpmailfrom
 argument_list|(
@@ -733,6 +981,12 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+name|char
+name|optbuf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -747,6 +1001,37 @@ argument_list|(
 literal|"smtpmailfrom: CurHost=%s\n"
 argument_list|,
 name|CurHostName
+argument_list|)
+expr_stmt|;
+comment|/* set up appropriate options to include */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|MCIF_SIZE
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+condition|)
+name|sprintf
+argument_list|(
+name|optbuf
+argument_list|,
+literal|" SIZE=%ld"
+argument_list|,
+name|e
+operator|->
+name|e_msgsize
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|optbuf
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
@@ -820,13 +1105,15 @@ condition|)
 block|{
 name|smtpmessage
 argument_list|(
-literal|"MAIL From:<%s>"
+literal|"MAIL From:<%s>%s"
 argument_list|,
 name|m
 argument_list|,
 name|mci
 argument_list|,
 name|buf
+argument_list|,
+name|optbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -834,7 +1121,7 @@ else|else
 block|{
 name|smtpmessage
 argument_list|(
-literal|"MAIL From:<@%s%c%s>"
+literal|"MAIL From:<@%s%c%s>%s"
 argument_list|,
 name|m
 argument_list|,
@@ -854,6 +1141,8 @@ else|:
 literal|':'
 argument_list|,
 name|buf
+argument_list|,
+name|optbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -893,6 +1182,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_mail
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1132,6 +1423,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_rcpt
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1332,6 +1625,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datainit
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1539,6 +1834,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_datafinal
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1734,6 +2031,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_quit
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1848,6 +2147,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_rset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1958,6 +2259,8 @@ argument_list|,
 name|TimeOuts
 operator|.
 name|to_miscshort
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1992,7 +2295,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
+comment|/* **  REPLY -- read arpanet reply ** **	Parameters: **		m -- the mailer we are reading the reply from. **		mci -- the mailer connection info structure. **		e -- the current envelope. **		timeout -- the timeout for reads. **		pfunc -- processing function for second and subsequent **			lines of response -- if null, no special **			processing is done. ** **	Returns: **		reply code it reads. ** **	Side Effects: **		flushes the mail file. */
 end_comment
 
 begin_macro
@@ -2005,6 +2308,8 @@ argument_list|,
 argument|e
 argument_list|,
 argument|timeout
+argument_list|,
+argument|pfunc
 argument_list|)
 end_macro
 
@@ -2029,6 +2334,22 @@ name|e
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|time_t
+name|timeout
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|pfunc
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_block
 block|{
 specifier|register
@@ -2039,6 +2360,11 @@ decl_stmt|;
 specifier|register
 name|int
 name|r
+decl_stmt|;
+name|bool
+name|firstline
+init|=
+name|TRUE
 decl_stmt|;
 name|char
 name|junkbuf
@@ -2383,6 +2709,34 @@ literal|"%s"
 argument_list|,
 name|bufp
 argument_list|)
+expr_stmt|;
+comment|/* process the line */
+if|if
+condition|(
+name|pfunc
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|firstline
+condition|)
+call|(
+modifier|*
+name|pfunc
+call|)
+argument_list|(
+name|bufp
+argument_list|,
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|firstline
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* if continuation is required, we can go on */
 if|if
