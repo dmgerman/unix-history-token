@@ -115,7 +115,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|putc
+name|__sputc
 argument_list|(
 name|c
 argument_list|,
