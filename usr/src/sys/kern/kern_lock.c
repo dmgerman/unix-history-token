@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.13 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)kern_lock.c	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1761,6 +1761,15 @@ name|lock_data
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|curproc
+condition|)
+name|curproc
+operator|->
+name|p_simple_locks
+operator|++
+expr_stmt|;
 block|}
 end_function
 
@@ -1806,6 +1815,15 @@ operator|->
 name|lock_data
 operator|=
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|curproc
+condition|)
+name|curproc
+operator|->
+name|p_simple_locks
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -1932,6 +1950,15 @@ operator|->
 name|lock_data
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|curproc
+condition|)
+name|curproc
+operator|->
+name|p_simple_locks
+operator|--
 expr_stmt|;
 block|}
 end_function
