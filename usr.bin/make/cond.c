@@ -143,6 +143,19 @@ name|Token
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|Boolean
+name|CondProc
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*-  * Structures to handle elegantly the different forms of #if's. The  * last two fields are stored in condInvert and condDefProc, respectively.  */
 end_comment
@@ -179,57 +192,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|Boolean
+name|CondProc
 name|CondDoDefined
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|Boolean
+name|CondProc
 name|CondDoMake
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|Boolean
+name|CondProc
 name|CondDoExists
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|Boolean
+name|CondProc
 name|CondDoTarget
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -304,18 +293,10 @@ name|Boolean
 name|doNot
 decl_stmt|;
 comment|/* TRUE if default function should be negated */
-name|Boolean
-function_decl|(
+name|CondProc
 modifier|*
 name|defProc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
 comment|/* Default function to apply */
 block|}
 name|ifs
@@ -2635,18 +2616,10 @@ break|break;
 block|}
 default|default:
 block|{
-name|Boolean
-function_decl|(
+name|CondProc
 modifier|*
 name|evalProc
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
+decl_stmt|;
 name|Boolean
 name|invert
 init|=
