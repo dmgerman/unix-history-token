@@ -48,6 +48,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|use_kenv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|hintp
@@ -128,8 +135,6 @@ literal|0
 decl_stmt|,
 name|hit
 decl_stmt|,
-name|use_kenv
-decl_stmt|,
 name|i
 init|=
 literal|0
@@ -167,10 +172,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|use_kenv
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|checkmethod
@@ -609,6 +610,7 @@ if|if
 condition|(
 name|use_kenv
 condition|)
+block|{
 name|cp
 operator|=
 name|kenvp
@@ -617,6 +619,14 @@ operator|++
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+break|break;
+block|}
 else|else
 block|{
 while|while
@@ -632,7 +642,6 @@ expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -646,6 +655,7 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 if|if
