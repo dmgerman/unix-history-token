@@ -149,13 +149,6 @@ name|amrd_strategy
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|d_ioctl_t
-name|amrd_ioctl
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -183,7 +176,7 @@ comment|/* write */
 name|physwrite
 block|,
 comment|/* ioctl */
-name|amrd_ioctl
+name|noioctl
 block|,
 comment|/* poll */
 name|nopoll
@@ -630,36 +623,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|amrd_ioctl
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|u_long
-name|cmd
-parameter_list|,
-name|caddr_t
-name|addr
-parameter_list|,
-name|int32_t
-name|flag
-parameter_list|,
-name|d_thread_t
-modifier|*
-name|td
-parameter_list|)
-block|{
-return|return
-operator|(
-name|ENOTTY
 operator|)
 return|;
 block|}
