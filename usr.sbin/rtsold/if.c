@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: if.c,v 1.15 2001/05/22 06:04:17 jinmei Exp $	*/
+comment|/*	$KAME: if.c,v 1.26 2003/05/15 14:38:56 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -181,7 +181,6 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|name
 operator|)
 argument_list|)
 decl_stmt|;
@@ -195,18 +194,15 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|addrs
 operator|,
 expr|struct
 name|sockaddr
 operator|*
-name|sa
 operator|,
 expr|struct
 name|sockaddr
 operator|*
 operator|*
-name|rti_info
 operator|)
 argument_list|)
 decl_stmt|;
@@ -709,6 +705,9 @@ condition|)
 block|{
 case|case
 name|IFM_ETHER
+case|:
+case|case
+name|IFM_IEEE80211
 case|:
 if|if
 condition|(
@@ -1576,13 +1575,20 @@ name|ifr6
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strncpy
 argument_list|(
 name|ifr6
 operator|.
 name|ifr_name
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifr6
+operator|.
+name|ifr_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|memcpy

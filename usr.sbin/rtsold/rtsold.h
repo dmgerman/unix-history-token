@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rtsold.h,v 1.11 2000/10/10 06:18:04 itojun Exp $	*/
+comment|/*	$KAME: rtsold.h,v 1.19 2003/04/16 09:48:15 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -30,6 +30,10 @@ name|IF_NAMESIZE
 index|]
 decl_stmt|;
 comment|/* interface name */
+name|u_int32_t
+name|linkid
+decl_stmt|;
+comment|/* link ID of this interface */
 name|int
 name|active
 decl_stmt|;
@@ -146,9 +150,43 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|aflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|otherconf_script
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ifconfig
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|iflist_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +249,21 @@ literal|3
 argument_list|,
 literal|4
 argument_list|)
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|autoifprobe
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -394,7 +447,9 @@ name|defrouter_probe
 name|__P
 argument_list|(
 operator|(
-name|int
+expr|struct
+name|ifinfo
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
