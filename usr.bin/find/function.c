@@ -2519,9 +2519,9 @@ argument_list|,
 literal|1
 argument_list|)
 condition|?
-literal|1
-else|:
 literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
@@ -2590,9 +2590,9 @@ argument_list|,
 literal|1
 argument_list|)
 condition|?
-literal|1
-else|:
 literal|0
+else|:
+literal|1
 operator|)
 return|;
 block|}
