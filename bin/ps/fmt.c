@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fmt.c,v 1.11 1998/05/15 06:29:15 charnier Exp $"
+literal|"$Id: fmt.c,v 1.12 1998/06/17 11:33:10 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,13 +44,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslimits.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -63,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
