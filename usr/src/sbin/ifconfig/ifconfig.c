@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.5 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -566,6 +566,42 @@ name|Perror
 argument_list|(
 literal|"ioctl (SIOCSIFADDR)"
 argument_list|)
+expr_stmt|;
+comment|/*  	 * SIFADDR ioctl above can change the flags value if it is 	 * the first time the address has been set.  Must get the 	 * new flags so that we don't store outdated ones later on. 	 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFFLAGS
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ifr
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|Perror
+argument_list|(
+literal|"ioctl (SIOCGIFFLAGS) 2"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|flags
+operator|=
+name|ifr
+operator|.
+name|ifr_flags
 expr_stmt|;
 block|}
 end_block
