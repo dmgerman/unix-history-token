@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: $ */
+comment|/* $Id: isp_freebsd.h,v 1.7 1998/12/28 19:22:26 mjacob Exp $ */
 end_comment
 
 begin_comment
-comment|/* release_12_28_98_A */
+comment|/* release_12_28_98_A+ */
 end_comment
 
 begin_comment
@@ -228,6 +228,13 @@ define|#
 directive|define
 name|DFLT_DBLEVEL
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MEMZERO
+value|BZERO
 end_define
 
 begin_define
