@@ -378,13 +378,25 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_struct_decl
+struct_decl|struct
+name|timehands
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|timecounter
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
 name|pps_state
 block|{
 comment|/* capture information */
 name|struct
-name|timecounter
+name|timehands
 modifier|*
 name|captc
 decl_stmt|;
