@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * OMRON: $Id: cpu.h,v 1.2 92/06/14 06:27:54 moti Exp $  *  * from: hp300/include/cpu.h   7.12 (Berkeley) 7/8/92  *  *	@(#)cpu.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1982, 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  * from: hp300/include/cpu.h	7.13 (Berkeley) 12/27/92  *  *	@(#)cpu.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Exported definitions unique to luna/68k cpu support, taken from:  * hp300/68k.  */
+comment|/*  * Exported definitions unique to luna/68k cpu support,  * taken from hp300/68k.  */
 end_comment
 
 begin_comment
@@ -68,10 +68,6 @@ begin_struct
 struct|struct
 name|clockframe
 block|{
-name|u_short
-name|pad
-decl_stmt|;
-comment|/* pad to get stack aligned */
 name|u_short
 name|sr
 decl_stmt|;
