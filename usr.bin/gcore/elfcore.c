@@ -2646,7 +2646,7 @@ operator|+
 name|pos
 argument_list|,
 literal|"%x %x %*d %*d %*x %3[-rwx]"
-literal|" %*d %*d %*x %*s %*s %16s%*[\n]%n"
+literal|" %*d %*d %*x %*s %*s %16s %*s%*[\n]%n"
 argument_list|,
 operator|&
 name|start
@@ -2667,14 +2667,22 @@ condition|(
 name|n
 operator|!=
 literal|4
+operator|||
+name|len
+operator|==
+literal|0
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"ill-formed line in %s"
+literal|"ill-formed line in %s starting at character %d"
 argument_list|,
 name|mapname
+argument_list|,
+name|pos
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|pos
