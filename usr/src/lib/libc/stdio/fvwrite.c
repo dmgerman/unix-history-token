@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fvwrite.c	5.3 (Berkeley) %G%"
+literal|"@(#)fvwrite.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,7 +165,7 @@ name|COPY
 parameter_list|(
 name|n
 parameter_list|)
-value|(void) bcopy((void *)p, (void *)fp->_p, (size_t)(n));
+value|(void)memcpy((void *)fp->_p, (void *)p, (size_t)(n))
 name|iov
 operator|=
 name|uio

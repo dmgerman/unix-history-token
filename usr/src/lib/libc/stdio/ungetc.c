@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	5.6 (Berkeley) %G%"
+literal|"@(#)ungetc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,17 +227,12 @@ operator|(
 name|EOF
 operator|)
 return|;
+comment|/* no overlap (hence can use memcpy) because we doubled the size */
 operator|(
 name|void
 operator|)
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|p
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -247,6 +242,12 @@ name|p
 operator|+
 name|i
 operator|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|p
 argument_list|,
 operator|(
 name|size_t

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tmpfile.c	5.4 (Berkeley) %G%"
+literal|"@(#)tmpfile.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,11 +111,14 @@ name|TRAILER
 argument_list|)
 index|]
 decl_stmt|;
-name|bcopy
+operator|(
+name|void
+operator|)
+name|memcpy
 argument_list|(
-name|_PATH_TMP
-argument_list|,
 name|buf
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -125,10 +128,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|bcopy
+operator|(
+name|void
+operator|)
+name|memcpy
 argument_list|(
-name|TRAILER
-argument_list|,
 name|buf
 operator|+
 sizeof|sizeof
@@ -137,6 +141,8 @@ name|_PATH_TMP
 argument_list|)
 operator|-
 literal|1
+argument_list|,
+name|TRAILER
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -213,7 +219,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 operator|(
 name|fp
 operator|=
@@ -224,6 +229,8 @@ argument_list|,
 literal|"w+"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
 name|sverrno

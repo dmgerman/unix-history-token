@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgetln.c	5.3 (Berkeley) %G%"
+literal|"@(#)fgetln.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,16 +356,8 @@ goto|;
 operator|(
 name|void
 operator|)
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|fp
-operator|->
-name|_p
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -379,6 +371,14 @@ name|_base
 operator|+
 name|off
 operator|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|fp
+operator|->
+name|_p
 argument_list|,
 name|len
 operator|-
@@ -455,16 +455,8 @@ goto|;
 operator|(
 name|void
 operator|)
-name|bcopy
+name|memcpy
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|fp
-operator|->
-name|_p
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -478,6 +470,14 @@ name|_base
 operator|+
 name|off
 operator|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|fp
+operator|->
+name|_p
 argument_list|,
 name|diff
 argument_list|)
