@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)dterm.c	1.3	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c to allow for   *		extra-wide printouts on the printer.  */
+comment|/* @(#)dterm.c	1.4	(Berkeley)	%G%"  *  *	Converts ditroff output to text on a terminal.  It is NOT meant to  *	produce readable output, but is to show one how one's paper is (in  *	general) formatted - what will go where on which page.  *  *	options:  *  *	  -hn	set horizontal resolution to n (in characters per inch;  *		default is 10.0).  *  *	  -vn	set vertical resolution (default is 6.0).  *  *	  -ln	set maximum output line-length to n (default is 79).  *  *	-olist	output page list - as in troff.  *  *	  -c	continue at end of page.  Default is to stop at the end  *		of each page, print "dterm:" and wait for a command.  *		Type ? to get a list of available commands.  *  *	  -w	sets h = 20, v = 12, l = 131, also sets -c to allow for   *		extra-wide printouts on the printer.  *  *	-fxxx	get special character definition file "xxx".  Default is  *		/usr/lib/font/devter/specfile.  */
 end_comment
 
 begin_include
@@ -47,6 +47,13 @@ define|#
 directive|define
 name|LINELEN
 value|78
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPECFILE
+value|"/usr/lib/font/devter/specfile"
 end_define
 
 begin_define
@@ -160,107 +167,42 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)dterm.c	1.3	(Berkeley)	%G%"
+literal|"@(#)dterm.c	1.4	(Berkeley)	%G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|spectab
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* here're the special characters... */
+comment|/* here go the special characters */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|spectab
-index|[]
+name|specfile
 init|=
-block|{
-literal|"em"
-block|,
-literal|"-"
-block|,
-literal|"hy"
-block|,
-literal|"-"
-block|,
-literal|"en"
-block|,
-literal|"-"
-block|,
-literal|"ru"
-block|,
-literal|"_"
-block|,
-literal|"l."
-block|,
-literal|"."
-block|,
-literal|"L."
-block|,
-literal|"."
-block|,
-literal|"br"
-block|,
-literal|"|"
-block|,
-literal|"vr"
-block|,
-literal|"|"
-block|,
-literal|"fm"
-block|,
-literal|"'"
-block|,
-literal|"or"
-block|,
-literal|"|"
-block|,
-literal|"ga"
-block|,
-literal|"`"
-block|,
-literal|"aa"
-block|,
-literal|"'"
-block|,
-literal|"ul"
-block|,
-literal|"_"
-block|,
-literal|"\\_"
-block|,
-literal|"_"
-block|,
-literal|"pl"
-block|,
-literal|"+"
-block|,
-literal|"mi"
-block|,
-literal|"-"
-block|,
-literal|"eq"
-block|,
-literal|"="
-block|,
-literal|"ap"
-block|,
-literal|"~"
-block|,
-literal|"sl"
-block|,
-literal|"/"
-block|,
-literal|"bv"
-block|,
-literal|"|"
-block|,
-literal|0
-block|,
-literal|0
-block|}
+name|SPECFILE
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* place to look up special characters */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -271,7 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* flag:  Do we not stop at the end of each page? */
+comment|/* flag:  Don't stop at the end of each page? */
 end_comment
 
 begin_decl_stmt
@@ -320,7 +262,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* characters and lines per inch for output device */
+comment|/* characters and lines per inch for output */
 end_comment
 
 begin_decl_stmt
@@ -332,7 +274,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*	(defaults are for printer) */
+comment|/*	device (defaults are for printer) */
 end_comment
 
 begin_decl_stmt
@@ -469,8 +411,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|DP
-init|=
-literal|10
 decl_stmt|;
 end_decl_stmt
 
@@ -488,18 +428,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* draw with this character */
-end_comment
-
-begin_decl_stmt
-name|int
-name|drawsize
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* shrink by this factor when drawing */
 end_comment
 
 begin_decl_stmt
@@ -557,8 +485,20 @@ operator|)
 condition|)
 block|{
 case|case
+literal|'f'
+case|:
+comment|/* special character filepath */
+name|specfile
+operator|=
+operator|++
+operator|*
+name|argv
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
+comment|/* output line length */
 name|linelen
 operator|=
 name|atoi
@@ -574,6 +514,7 @@ break|break;
 case|case
 literal|'h'
 case|:
+comment|/* horizontal scale (char/inch) */
 name|hscale
 operator|=
 name|atof
@@ -587,6 +528,7 @@ break|break;
 case|case
 literal|'v'
 case|:
+comment|/* vertical scale (char/inch) */
 name|vscale
 operator|=
 name|atof
@@ -600,6 +542,7 @@ break|break;
 case|case
 literal|'o'
 case|:
+comment|/* output list */
 name|outlist
 argument_list|(
 operator|++
@@ -611,6 +554,7 @@ break|break;
 case|case
 literal|'c'
 case|:
+comment|/* continue (^L too) at endofpage */
 name|keepon
 operator|=
 literal|1
@@ -619,6 +563,7 @@ break|break;
 case|case
 literal|'w'
 case|:
+comment|/* "wide" format */
 name|hscale
 operator|=
 literal|16.0
@@ -1614,7 +1559,27 @@ name|n
 operator|/
 name|vscale
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|DP
+operator|=
+name|n
+operator|/
+literal|10
+operator|-
+literal|6
+operator|)
+operator|<
+literal|1
+condition|)
+name|DP
+operator|=
+literal|1
+expr_stmt|;
+comment|/* guess the drawing */
 break|break;
+comment|/* resolution */
 case|case
 literal|'f'
 case|:
@@ -1746,11 +1711,40 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|j
 decl_stmt|;
+specifier|register
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
+comment|/* file to look up special characters */
+specifier|register
+name|char
+modifier|*
+name|charptr
+decl_stmt|;
+comment|/* string pointer to step through specials */
+specifier|register
+name|char
+modifier|*
+name|tabptr
+decl_stmt|;
+comment|/* string pointer for spectab setting */
+name|char
+name|specials
+index|[
+literal|5000
+index|]
+decl_stmt|;
+comment|/* intermediate input buffer (made bigger */
+comment|/*   than we'll EVER use... */
 name|fflush
 argument_list|(
 name|stdout
@@ -1814,6 +1808,263 @@ name|maxv
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|reinit
+condition|)
+return|return;
+comment|/* if this is the first time, read */
+comment|/* special character table file. */
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|fopen
+argument_list|(
+name|specfile
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|charptr
+operator|=
+operator|&
+name|specials
+index|[
+literal|0
+index|]
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|2
+init|;
+name|fscanf
+argument_list|(
+name|fp
+argument_list|,
+literal|"%s"
+argument_list|,
+name|charptr
+argument_list|)
+operator|!=
+name|EOF
+condition|;
+name|i
+operator|+=
+literal|2
+control|)
+block|{
+name|charptr
+operator|+=
+name|strlen
+argument_list|(
+name|charptr
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+operator|*
+name|charptr
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* ending strings */
+operator|*
+name|charptr
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* allocate table */
+name|spectab
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|spectab
+index|[
+literal|0
+index|]
+operator|=
+name|tabptr
+operator|=
+name|malloc
+argument_list|(
+name|j
+operator|=
+call|(
+name|int
+call|)
+argument_list|(
+name|charptr
+operator|-
+operator|&
+name|specials
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* copy whole table */
+for|for
+control|(
+name|charptr
+operator|=
+operator|&
+name|specials
+index|[
+literal|0
+index|]
+init|;
+name|j
+operator|--
+condition|;
+operator|*
+name|tabptr
+operator|++
+operator|=
+operator|*
+name|charptr
+operator|++
+control|)
+empty_stmt|;
+name|tabptr
+operator|=
+name|spectab
+index|[
+name|j
+index|]
+expr_stmt|;
+comment|/* set up pointers to table */
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|i
+operator|--
+condition|;
+name|j
+operator|++
+control|)
+block|{
+name|spectab
+index|[
+name|j
+index|]
+operator|=
+name|tabptr
+expr_stmt|;
+name|tabptr
+operator|+=
+name|strlen
+argument_list|(
+name|tabptr
+argument_list|)
+operator|+
+literal|1
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+comment|/* didn't find table - allocate a null one */
+name|error
+argument_list|(
+operator|!
+name|FATAL
+argument_list|,
+literal|"Can't open special character file: %s"
+argument_list|,
+name|specfile
+argument_list|)
+expr_stmt|;
+name|spectab
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|2
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|spectab
+index|[
+literal|0
+index|]
+operator|=
+name|malloc
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+name|spectab
+index|[
+literal|1
+index|]
+operator|=
+name|spectab
+index|[
+literal|0
+index|]
+operator|+
+literal|1
+expr_stmt|;
+operator|*
+name|spectab
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+operator|*
+name|spectab
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2521,12 +2772,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|spectab
-index|[]
-decl_stmt|;
 specifier|static
 name|char
 name|prev
@@ -2569,12 +2814,13 @@ name|i
 operator|=
 literal|0
 init|;
+operator|*
 name|spectab
 index|[
 name|i
 index|]
 operator|!=
-literal|0
+literal|'\0'
 condition|;
 name|i
 operator|+=
@@ -2646,7 +2892,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 end_block
@@ -3165,15 +3411,6 @@ argument_list|(
 name|xd
 argument_list|)
 expr_stmt|;
-name|numdots
-operator|=
-name|min
-argument_list|(
-name|numdots
-argument_list|,
-name|maxdots
-argument_list|)
-expr_stmt|;
 name|dirmot
 operator|=
 literal|'h'
@@ -3221,15 +3458,6 @@ argument_list|(
 name|yd
 argument_list|)
 expr_stmt|;
-name|numdots
-operator|=
-name|min
-argument_list|(
-name|numdots
-argument_list|,
-name|maxdots
-argument_list|)
-expr_stmt|;
 name|dirmot
 operator|=
 literal|'v'
@@ -3257,6 +3485,15 @@ name|xd
 argument_list|)
 expr_stmt|;
 block|}
+name|numdots
+operator|=
+name|min
+argument_list|(
+name|numdots
+argument_list|,
+name|maxdots
+argument_list|)
+expr_stmt|;
 name|incrway
 operator|=
 name|sgn
