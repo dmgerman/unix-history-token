@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_synch.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -702,6 +702,10 @@ decl_stmt|;
 specifier|register
 name|s
 expr_stmt|;
+specifier|extern
+name|int
+name|cold
+decl_stmt|;
 name|rp
 operator|=
 name|u
@@ -715,10 +719,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|cold
+operator|||
 name|panicstr
 condition|)
 block|{
-comment|/* 		 * After a panic, just give interrupts a chance, 		 * then just return; don't run any other procs  		 * or panic below, in case this is the idle process 		 * and already asleep. 		 * The splnet should be spl0 if the network was being used 		 * by the filesystem, but for now avoid network interrupts 		 * that might cause another panic. 		 */
+comment|/* 		 * After a panic, or during autoconfiguration, 		 * just give interrupts a chance, then just return; 		 * don't run any other procs or panic below, 		 * in case this is the idle process and already asleep. 		 * The splnet should be spl0 if the network was being used 		 * by the filesystem, but for now avoid network interrupts 		 * that might cause another panic. 		 */
 operator|(
 name|void
 operator|)
