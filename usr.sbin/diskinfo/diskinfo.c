@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libutil.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -490,6 +496,38 @@ block|}
 block|}
 else|else
 block|{
+name|humanize_number
+argument_list|(
+name|buf
+argument_list|,
+literal|6
+operator|-
+operator|(
+name|mediasize
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+literal|1
+operator|)
+argument_list|,
+operator|(
+name|int64_t
+operator|)
+name|mediasize
+argument_list|,
+literal|""
+argument_list|,
+name|HN_AUTOSCALE
+argument_list|,
+name|HN_B
+operator||
+name|HN_NOSPACE
+operator||
+name|HN_DECIMAL
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -509,12 +547,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t%-12jd\t# mediasize in bytes\n"
+literal|"\t%-12jd\t# mediasize in bytes (%s)\n"
 argument_list|,
 operator|(
 name|intmax_t
 operator|)
 name|mediasize
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 name|printf
