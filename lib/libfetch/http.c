@@ -3746,6 +3746,8 @@ decl_stmt|,
 name|verbose
 decl_stmt|;
 name|int
+name|e
+decl_stmt|,
 name|i
 decl_stmt|,
 name|n
@@ -3846,6 +3848,10 @@ expr_stmt|;
 name|i
 operator|=
 literal|0
+expr_stmt|;
+name|e
+operator|=
+name|HTTP_PROTOCOL_ERROR
 expr_stmt|;
 name|need_auth
 operator|=
@@ -4824,6 +4830,12 @@ operator|==
 name|HTTP_NEED_AUTH
 condition|)
 block|{
+name|e
+operator|=
+name|conn
+operator|->
+name|err
+expr_stmt|;
 name|need_auth
 operator|=
 literal|1
@@ -4840,6 +4852,12 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* all other cases: we got a redirect */
+name|e
+operator|=
+name|conn
+operator|->
+name|err
+expr_stmt|;
 name|need_auth
 operator|=
 literal|0
@@ -4905,9 +4923,7 @@ condition|)
 block|{
 name|_http_seterr
 argument_list|(
-name|conn
-operator|->
-name|err
+name|e
 argument_list|)
 expr_stmt|;
 goto|goto
