@@ -889,17 +889,15 @@ argument_list|,
 name|PSM_AUX_TEST
 argument_list|)
 expr_stmt|;
+name|psm_poll_status
+argument_list|(
+name|ioport
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|psm_poll_status(ioport); 	outb(ioport+PSM_CNTRL, 0xaa);
-else|#
-directive|else
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
+block|outb(ioport+PSM_CNTRL, 0xaa);
 endif|#
 directive|endif
 name|c
