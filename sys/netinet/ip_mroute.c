@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.38 1997/02/21 18:34:58 wollman Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.39 1997/03/24 11:33:28 bde Exp $  */
 end_comment
 
 begin_include
@@ -7744,41 +7744,6 @@ name|ip_sum
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LBL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-name|ip
-operator|->
-name|ip_sum
-operator|=
-operator|~
-name|oc_cksum
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ip
-argument_list|,
-name|ip
-operator|->
-name|ip_hl
-operator|<<
-literal|2
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|mb_copy
 operator|->
 name|m_data
@@ -7812,8 +7777,6 @@ argument_list|(
 name|multicast_encap_iphdr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|vifp
