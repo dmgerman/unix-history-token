@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.28 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.29 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4093,6 +4093,11 @@ condition|(
 name|error
 condition|)
 block|{
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|simple_lock
 argument_list|(
 operator|&
@@ -4413,28 +4418,6 @@ name|inode
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-comment|/* 	 * Set two second timeout, after which die assuming a hung lock. 	 */
-name|lockinit
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|i_lock
-argument_list|,
-name|PINOD
-argument_list|,
-literal|"inode"
-argument_list|,
-literal|200
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|lockinit
 argument_list|(
 operator|&
@@ -4451,8 +4434,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vp
 operator|->
 name|v_data
