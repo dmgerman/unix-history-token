@@ -26,17 +26,17 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|u_int64_t	pc_pending_ipis;
-comment|/* pending IPIs */
+value|struct pcb	*pc_pcb;
+comment|/* Used by IPI_STOP */
 value|\ 	struct pmap	*pc_current_pmap;
 comment|/* active pmap */
-value|\ 	u_int32_t	pc_next_asn;
-comment|/* next ASN to alloc */
-value|\ 	u_int32_t	pc_current_asngen
+value|\ 	u_int64_t	pc_lid;
+comment|/* local CPU ID */
+value|\ 	u_int32_t	pc_awake:1;
 end_define
 
 begin_comment
-comment|/* ASN rollover check */
+comment|/* CPU is awake? */
 end_comment
 
 begin_struct_decl
