@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.9 1995/11/03 09:30:13 peter Exp $"
+literal|"$Id: inetd.c,v 1.10 1996/01/01 08:42:23 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3757,6 +3757,26 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 literal|"setsockopt (SO_REUSEADDR): %m"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|turnon
+argument_list|(
+name|sep
+operator|->
+name|se_fd
+argument_list|,
+name|SO_PRIVSTATE
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"setsockopt (SO_PRIVSTATE): %m"
 argument_list|)
 expr_stmt|;
 undef|#
