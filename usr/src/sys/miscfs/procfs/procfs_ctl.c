@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_ctl.c	8.1 (Berkeley) %G%  *  * From:  *	$Id: procfs_ctl.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993 The Regents of the University of California.  * Copyright (c) 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_ctl.c	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs_ctl.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_include
@@ -873,22 +873,10 @@ name|p
 decl_stmt|;
 block|{
 name|int
-name|len
-init|=
-name|uio
-operator|->
-name|uio_resid
-decl_stmt|;
-name|int
 name|xlen
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|struct
-name|sigmap
-modifier|*
-name|sm
 decl_stmt|;
 name|char
 name|msg
@@ -897,12 +885,6 @@ name|PROCFS_CTLLEN
 operator|+
 literal|1
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|cp
-init|=
-name|msg
 decl_stmt|;
 name|vfs_namemap_t
 modifier|*
