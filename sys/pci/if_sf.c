@@ -1114,7 +1114,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-return|return;
 block|}
 end_function
 
@@ -1768,7 +1767,6 @@ name|SF_IPGT_HDX
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -1996,7 +1994,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-return|return;
 block|}
 end_function
 
@@ -2157,7 +2154,6 @@ name|mii
 operator|->
 name|mii_media_status
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -2542,7 +2538,6 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -3679,7 +3674,6 @@ name|sf_tx_cnt
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4166,7 +4160,6 @@ operator||
 name|bufprodidx
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4390,7 +4383,6 @@ literal|0xFFFF0000
 operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -4476,7 +4468,6 @@ name|txfctl
 argument_list|)
 expr_stmt|;
 block|}
-return|return;
 block|}
 end_function
 
@@ -4703,7 +4694,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5277,7 +5267,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -5986,7 +5975,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6262,7 +6250,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6508,7 +6495,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6590,7 +6576,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -6622,7 +6607,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
