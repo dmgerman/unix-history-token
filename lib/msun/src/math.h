@@ -4,7 +4,7 @@ comment|/*  * ====================================================  * Copyright 
 end_comment
 
 begin_comment
-comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.1.1.1 1994/08/19 09:39:57 jkh Exp $  */
+comment|/*  * from: @(#)fdlibm.h 5.1 93/09/24  * $Id: math.h,v 1.5 1997/08/31 22:12:19 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -296,6 +296,12 @@ name|_POSIX_
 value|fdlibm_posix
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_struct
 struct|struct
 name|exception
@@ -319,6 +325,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1030,6 +1041,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1044,6 +1061,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * IEEE Test Vector  */
