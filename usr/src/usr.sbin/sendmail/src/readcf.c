@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.17 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3738,6 +3738,11 @@ literal|"dnsrch"
 block|,
 name|RES_DNSRCH
 block|,
+literal|"true"
+block|,
+literal|0
+block|,
+comment|/* to avoid error on old syntax */
 name|NULL
 block|,
 literal|0
