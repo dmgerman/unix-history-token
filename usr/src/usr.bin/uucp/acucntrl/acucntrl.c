@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.7 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,12 +33,6 @@ include|#
 directive|include
 file|"uucp.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIALINOUT
-end_ifdef
 
 begin_include
 include|#
@@ -4163,12 +4157,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-endif|DIALINOUT
-end_endif
 
 end_unit
 
