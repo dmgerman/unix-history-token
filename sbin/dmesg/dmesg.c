@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dmesg.c,v 1.6 1997/02/22 14:32:13 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,7 +280,8 @@ literal|"M:N:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

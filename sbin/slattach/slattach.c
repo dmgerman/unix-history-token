@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: slattach.c,v 1.25 1997/02/22 14:33:19 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,7 +620,8 @@ literal|"ace:fhlnr:s:u:zLK:O:S:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_std.c,v 1.5 1997/02/22 14:32:59 peter Exp $"
+literal|"$Id: mount_std.c,v 1.6 1997/03/11 12:38:16 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -245,7 +245,8 @@ literal|"o:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.7 1997/02/22 14:32:30 peter Exp $"
+literal|"$Id: mount_msdos.c,v 1.8 1997/03/03 13:23:54 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -283,7 +283,8 @@ literal|"u:g:m:o:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 block|{
 switch|switch

@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dumpon.c,v 1.4 1997/02/22 14:32:22 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,7 +206,8 @@ literal|"v"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
