@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.11 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,6 +625,13 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|bufhead
+operator|.
+name|b_size
+operator|=
+name|i
+expr_stmt|;
+comment|/* save number of buffers */
 block|}
 end_block
 
@@ -1182,6 +1189,11 @@ name|BUFAREA
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|cnt
+init|=
+literal|0
+decl_stmt|;
 name|flush
 argument_list|(
 operator|&
@@ -1261,6 +1273,10 @@ name|bp
 operator|->
 name|b_prev
 control|)
+block|{
+name|cnt
+operator|++
+expr_stmt|;
 name|flush
 argument_list|(
 operator|&
@@ -1269,25 +1285,39 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|bufhead
+operator|.
+name|b_size
+operator|!=
+name|cnt
+condition|)
+name|errexit
+argument_list|(
+literal|"Panic: lost %d buffers\n"
+argument_list|,
+name|bufhead
+operator|.
+name|b_size
+operator|-
+name|cnt
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"cache hit %d of %d (%d%%)\n"
+literal|"cache missed %d of %d (%d%%)\n"
 argument_list|,
-name|totalreads
-operator|-
 name|diskreads
 argument_list|,
 name|totalreads
 argument_list|,
-operator|(
-name|totalreads
-operator|-
 name|diskreads
-operator|)
 operator|*
 literal|100
 operator|/
