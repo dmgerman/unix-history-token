@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)file.c	4.4 (Berkeley) 4.4"
+literal|"@(#)file.c	4.5 (Berkeley) 4.5"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,20 @@ include|#
 directive|include
 file|<a.out.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -286,10 +300,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"Can't open %s\n"
-argument_list|,
 name|argv
 index|[
 literal|2
@@ -472,7 +484,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot stat\n"
+literal|"%s\n"
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
 argument_list|)
 expr_stmt|;
 return|return;
