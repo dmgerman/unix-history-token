@@ -3912,6 +3912,12 @@ if|if
 condition|(
 name|bp
 operator|->
+name|mt_resid
+operator|==
+literal|0
+operator|&&
+name|bp
+operator|->
 name|mt_fileno
 operator|==
 operator|(
@@ -3919,7 +3925,7 @@ name|daddr_t
 operator|)
 operator|-
 literal|1
-operator|||
+operator|&&
 name|bp
 operator|->
 name|mt_blkno
@@ -3938,7 +3944,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"File Number: %ld\tRecord Number: %ld\n"
+literal|"File Number: %ld\tRecord Number: %ld\tResidual Count %d\n"
 argument_list|,
 name|bp
 operator|->
@@ -3947,6 +3953,10 @@ argument_list|,
 name|bp
 operator|->
 name|mt_blkno
+argument_list|,
+name|bp
+operator|->
+name|mt_resid
 argument_list|)
 expr_stmt|;
 block|}
