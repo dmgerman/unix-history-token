@@ -316,12 +316,6 @@ name|ipatm_vc_zone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|uma_zone_t
-name|ipatm_nif_zone
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Local functions  */
 end_comment
@@ -918,42 +912,6 @@ condition|)
 name|panic
 argument_list|(
 literal|"ipatm_start: unable to create ipatm_vc_zone"
-argument_list|)
-expr_stmt|;
-name|ipatm_nif_zone
-operator|=
-name|uma_zcreate
-argument_list|(
-literal|"ipatm nif"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip_nif
-argument_list|)
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|UMA_ALIGN_PTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ipatm_nif_zone
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"ipatm_start: unable to create ipatm_nif_zone"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Register ourselves as a network convergence module 	 */
@@ -1703,11 +1661,6 @@ comment|/* 	 * Free up our storage pools 	 */
 name|uma_zdestroy
 argument_list|(
 name|ipatm_vc_zone
-argument_list|)
-expr_stmt|;
-name|uma_zdestroy
-argument_list|(
-name|ipatm_nif_zone
 argument_list|)
 expr_stmt|;
 name|done
