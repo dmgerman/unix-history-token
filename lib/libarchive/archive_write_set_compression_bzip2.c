@@ -9,6 +9,16 @@ directive|include
 file|"archive_platform.h"
 end_include
 
+begin_comment
+comment|/* Don't compile this if we don't have bzlib. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_BZLIB_H
+end_if
+
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
@@ -1258,6 +1268,15 @@ block|}
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_BZLIB_H */
+end_comment
 
 end_unit
 
