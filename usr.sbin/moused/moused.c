@@ -196,11 +196,11 @@ begin_define
 define|#
 directive|define
 name|DFLT_BUTTON2TIMEOUT
-value|500
+value|200
 end_define
 
 begin_comment
-comment|/* 0.5 second */
+comment|/* 0.2 second */
 end_comment
 
 begin_define
