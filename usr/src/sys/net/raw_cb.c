@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.16	83/02/10	*/
+comment|/*	raw_cb.c	4.17	83/05/27	*/
 end_comment
 
 begin_include
@@ -49,6 +49,18 @@ begin_include
 include|#
 directive|include
 file|"../net/raw_cb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netinet/in.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../netpup/pup.h"
 end_include
 
 begin_include
@@ -375,16 +387,6 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
-block|{
-include|#
-directive|include
-file|"../h/domain.h"
-include|#
-directive|include
-file|"../netinet/in.h"
-include|#
-directive|include
-file|"../netinet/in_systm.h"
 comment|/* BEGIN DUBIOUS */
 comment|/* 	 * Should we verify address not already in use? 	 * Some say yes, others no. 	 */
 switch|switch
@@ -394,12 +396,16 @@ operator|->
 name|sa_family
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|AF_IMPLINK
 case|:
 case|case
 name|AF_INET
 case|:
+block|{
 if|if
 condition|(
 operator|(
@@ -428,6 +434,9 @@ name|EADDRNOTAVAIL
 operator|)
 return|;
 break|break;
+block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PUP
@@ -436,9 +445,6 @@ case|case
 name|AF_PUP
 case|:
 block|{
-include|#
-directive|include
-file|"../netpup/pup.h"
 name|struct
 name|sockaddr_pup
 modifier|*
@@ -534,7 +540,6 @@ operator|(
 name|EAFNOSUPPORT
 operator|)
 return|;
-block|}
 block|}
 comment|/* END DUBIOUS */
 name|rp

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.27	83/03/19	*/
+comment|/*	if.c	4.28	83/05/27	*/
 end_comment
 
 begin_include
@@ -863,11 +863,16 @@ name|ifr
 operator|->
 name|ifr_name
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|cp
 operator|-
 name|ifr
 operator|->
 name|ifr_name
+argument_list|)
 argument_list|)
 condition|)
 continue|continue;
@@ -1094,6 +1099,10 @@ end_block
 
 begin_comment
 comment|/*  * Return interface configuration  * of system.  List may be used  * in later ioctl's (above) to get  * other information.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
