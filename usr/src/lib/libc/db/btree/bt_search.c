@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_search.c	5.5 (Berkeley) %G%"
+literal|"@(#)bt_search.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,21 +250,6 @@ name|lim
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * No match found.  Base is the smallest index greater than 		 * key but may be an illegal index.  Use base if it's a leaf 		 * page, decrement it by one if it's an internal page.  This 		 * is safe because internal pages can't be empty. 		 */
-name|index
-operator|=
-name|h
-operator|->
-name|flags
-operator|&
-name|P_BLEAF
-condition|?
-name|base
-else|:
-name|base
-operator|-
-literal|1
-expr_stmt|;
 comment|/* If it's a leaf page, we're done. */
 if|if
 condition|(
@@ -279,7 +264,7 @@ name|e
 operator|.
 name|index
 operator|=
-name|index
+name|base
 expr_stmt|;
 operator|*
 name|exactp
@@ -293,6 +278,17 @@ name|e
 operator|)
 return|;
 block|}
+comment|/* 		 * No match found.  Base is the smallest index greater than 		 * key and may be zero or a last + 1 index.  If it's non-zero, 		 * decrement by one, and record the internal page which should 		 * be a parent page for the key.  If a split later occurs, the 		 * inserted page will be to the right of the saved page. 		 */
+name|index
+operator|=
+name|base
+condition|?
+name|base
+operator|-
+literal|1
+else|:
+name|base
+expr_stmt|;
 name|next
 label|:
 if|if
