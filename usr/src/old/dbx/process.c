@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.5 %G%"
+literal|"@(#)process.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,14 +211,14 @@ comment|/* process being traced */
 name|int
 name|mask
 decl_stmt|;
-comment|/* ps */
+comment|/* process status word */
 name|Word
 name|reg
 index|[
 name|NREG
 index|]
 decl_stmt|;
-comment|/* process's registers */
+comment|/* process' registers */
 name|Word
 name|oreg
 index|[
@@ -249,6 +249,10 @@ name|CSIZE
 index|]
 decl_stmt|;
 comment|/* text segment cache */
+name|Ttyinfo
+name|ttyinfo
+decl_stmt|;
+comment|/* process' terminal characteristics */
 block|}
 struct|;
 end_struct
@@ -3214,6 +3218,18 @@ name|i
 index|]
 expr_stmt|;
 block|}
+name|savetty
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+operator|(
+name|p
+operator|->
+name|ttyinfo
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -3312,6 +3328,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|restoretty
+argument_list|(
+name|stdout
+argument_list|,
+operator|&
+operator|(
+name|p
+operator|->
+name|ttyinfo
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
