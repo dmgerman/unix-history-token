@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ntfs_inode.h,v 1.2 1999/05/06 15:43:19 christos Exp $	*/
+comment|/*	$NetBSD: ntfs_inode.h,v 1.8 1999/10/31 19:45:26 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -280,6 +280,16 @@ begin_struct
 struct|struct
 name|ntnode
 block|{
+name|struct
+name|vnode
+modifier|*
+name|i_devvp
+decl_stmt|;
+comment|/* vnode of blk dev we live on */
+name|dev_t
+name|i_dev
+decl_stmt|;
+comment|/* Device associated with the inode. */
 name|LIST_ENTRY
 argument_list|(
 argument|ntnode
@@ -305,35 +315,21 @@ decl_stmt|;
 name|ino_t
 name|i_number
 decl_stmt|;
-name|dev_t
-name|i_dev
-decl_stmt|;
 name|u_int32_t
 name|i_flag
 decl_stmt|;
-name|int
+comment|/* locking */
+name|struct
+name|lock
 name|i_lock
+decl_stmt|;
+name|struct
+name|simplelock
+name|i_interlock
 decl_stmt|;
 name|int
 name|i_usecount
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-name|pid_t
-name|i_lockholder
-decl_stmt|;
-name|pid_t
-name|i_lockwaiter
-decl_stmt|;
-name|int
-name|i_lockcount
-decl_stmt|;
-endif|#
-directive|endif
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -360,15 +356,6 @@ name|u_int32_t
 name|i_frflag
 decl_stmt|;
 comment|/* MFR */
-name|uid_t
-name|i_uid
-decl_stmt|;
-name|gid_t
-name|i_gid
-decl_stmt|;
-name|mode_t
-name|i_mode
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -402,11 +389,16 @@ begin_struct
 struct|struct
 name|fnode
 block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|struct
 name|lock
 name|f_lock
 decl_stmt|;
-comment|/* Must be first */
+comment|/* fnode lock>Keep this first< */
+endif|#
+directive|endif
 name|LIST_ENTRY
 argument_list|(
 argument|fnode
@@ -424,25 +416,9 @@ name|ntnode
 modifier|*
 name|f_ip
 decl_stmt|;
+comment|/* Associated ntnode */
 name|u_long
 name|f_flag
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|f_devvp
-decl_stmt|;
-name|struct
-name|ntfsmount
-modifier|*
-name|f_mp
-decl_stmt|;
-name|dev_t
-name|f_dev
-decl_stmt|;
-name|enum
-name|vtype
-name|f_type
 decl_stmt|;
 name|ntfs_times_t
 name|f_times
@@ -490,6 +466,34 @@ decl_stmt|;
 name|u_int32_t
 name|f_dirblsz
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* This overlays the fid structure (see<sys/mount.h>) */
+end_comment
+
+begin_struct
+struct|struct
+name|ntfid
+block|{
+name|u_int16_t
+name|ntfid_len
+decl_stmt|;
+comment|/* Length of structure. */
+name|u_int16_t
+name|ntfid_pad
+decl_stmt|;
+comment|/* Force 32-bit alignment. */
+name|ino_t
+name|ntfid_ino
+decl_stmt|;
+comment|/* File number (ino). */
+name|int32_t
+name|ntfid_gen
+decl_stmt|;
+comment|/* Generation number. */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ntfs_ihash.c,v 1.2 1999/05/06 15:43:19 christos Exp $	*/
+comment|/*	$NetBSD: ntfs_ihash.c,v 1.5 1999/09/30 16:56:40 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -138,6 +144,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|struct
+name|lock
+name|ntfs_hashlock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize inode hash table.  */
 end_comment
@@ -147,6 +160,20 @@ name|void
 name|ntfs_nthashinit
 parameter_list|()
 block|{
+name|lockinit
+argument_list|(
+operator|&
+name|ntfs_hashlock
+argument_list|,
+name|PINOD
+argument_list|,
+literal|"ntfs_nthashlock"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ntfs_nthashtbl
 operator|=
 name|HASHINIT

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ntfs.h,v 1.2 1999/05/06 15:43:17 christos Exp $	*/
+comment|/*	$NetBSD: ntfs.h,v 1.9 1999/10/31 19:45:26 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -10,6 +10,37 @@ end_comment
 begin_comment
 comment|/*#define NTFS_DEBUG 1*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_ntfs.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -882,6 +913,7 @@ name|mount
 modifier|*
 name|ntm_mountp
 decl_stmt|;
+comment|/* filesystem vfs structure */
 name|struct
 name|bootfile
 name|ntm_bootfile
@@ -889,11 +921,13 @@ decl_stmt|;
 name|dev_t
 name|ntm_dev
 decl_stmt|;
+comment|/* device mounted */
 name|struct
 name|vnode
 modifier|*
 name|ntm_devvp
 decl_stmt|;
+comment|/* block device mounted vnode */
 name|struct
 name|vnode
 modifier|*
@@ -901,10 +935,6 @@ name|ntm_sysvn
 index|[
 name|NTFS_SYSNODESNUM
 index|]
-decl_stmt|;
-name|wchar
-modifier|*
-name|ntm_upcase
 decl_stmt|;
 name|u_int32_t
 name|ntm_bpmftrec
@@ -932,6 +962,11 @@ decl_stmt|;
 name|int
 name|ntm_adnum
 decl_stmt|;
+name|struct
+name|netexport
+name|ntm_export
+decl_stmt|;
+comment|/* export information */
 block|}
 struct|;
 end_struct
@@ -1188,63 +1223,63 @@ begin_define
 define|#
 directive|define
 name|M_NTFSNTHASH
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSNTVATTR
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSRDATA
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSRUN
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSDECOMP
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSMNT
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSNTNODE
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSFNODE
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_define
 define|#
 directive|define
 name|M_NTFSDIR
-value|M_TEMP
+value|M_NTFS
 end_define
 
 begin_typedef
@@ -1292,20 +1327,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VOP__LOCK
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|VOP_LOCK((a), (b) ? LK_EXCLUSIVE : LK_SHARED)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VOP__UNLOCK
 parameter_list|(
 name|a
@@ -1314,7 +1335,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|VOP_UNLOCK((a), 0)
+value|VOP_UNLOCK((a), (b))
 end_define
 
 begin_define
@@ -1328,7 +1349,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|vget((a), LK_EXCLUSIVE)
+value|vget((a), (b))
 end_define
 
 begin_define
@@ -1342,13 +1363,31 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|vn_lock((a), LK_EXCLUSIVE)
+value|vn_lock((a), (b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKMGR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|lockmgr((a), (b), (c))
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* !NetBSD */
+end_comment
 
 begin_define
 define|#
@@ -1364,20 +1403,6 @@ parameter_list|,
 name|d
 parameter_list|)
 value|hashinit((a), (b), (d))
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP__LOCK
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|VOP_LOCK((a), (b), (c))
 end_define
 
 begin_define
@@ -1422,10 +1447,39 @@ parameter_list|)
 value|vn_lock((a), (b), (c))
 end_define
 
+begin_define
+define|#
+directive|define
+name|LOCKMGR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|lockmgr((a), (b), (c), NULL)
+end_define
+
+begin_comment
+comment|/* PDIRUNLOCK is used by NetBSD to mark if vfs_lookup() unlocked parent dir;  * on FreeBSD, it's not defined and nothing similar exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PDIRUNLOCK
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* NetBSD */
+end_comment
 
 begin_if
 if|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ntfs_vfsops.h,v 1.2 1999/05/06 15:43:20 christos Exp $	*/
+comment|/*	$NetBSD: ntfs_vfsops.h,v 1.4 1999/10/10 14:20:33 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ comment|/* Tells ntfs_vgetex to do not call */
 end_comment
 
 begin_comment
-comment|/* ntfs_loadnode on ntnode, even if */
+comment|/* ntfs_loadntnode() on ntnode, even if */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ntfs_compr.c,v 1.2 1999/05/06 15:43:18 christos Exp $	*/
+comment|/*	$NetBSD: ntfs_compr.c,v 1.3 1999/07/26 14:02:31 jdolecek Exp $	*/
 end_comment
 
 begin_comment
@@ -67,16 +67,19 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_endif
