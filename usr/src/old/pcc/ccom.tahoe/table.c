@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.19 (Berkeley) %G%"
+literal|"@(#)table.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,15 +658,72 @@ name|RESCC
 block|,
 literal|"	cmpl	AL,AR\nZP"
 block|,
-comment|/* tahoe won't handle uns char/short equality/inequality with mem and const */
-name|EQ
+comment|/* more grot: constants in unsigned char/short comparisons sign-extend */
+comment|/* optim2() ensures that SCCON/SSCON iff high bit is not set */
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|TUCHAR
+block|,
+name|SCCON
+block|,
+name|TANY
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpZL	AL,AR\nZP"
+block|,
+name|OPLOG
 block|,
 name|FORCC
 block|,
 name|AWD
 block|,
 name|TUCHAR
+block|,
+name|SCON
+block|,
+name|TANY
+block|,
+name|NAREG
+block|,
+name|RESCC
+block|,
+literal|"	movzZLl	AL,A1\n	cmpl	A1,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|SAREG
 operator||
+name|AWD
+block|,
+name|TUSHORT
+block|,
+name|SSCON
+block|,
+name|TANY
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	cmpZL	AL,AR\nZP"
+block|,
+name|OPLOG
+block|,
+name|FORCC
+block|,
+name|AWD
+block|,
 name|TUSHORT
 block|,
 name|SCON
@@ -677,27 +734,7 @@ name|NAREG
 block|,
 name|RESCC
 block|,
-literal|"	movzZLl	AL,A1\n	cmpZL	A1,AR\nZP"
-block|,
-name|NE
-block|,
-name|FORCC
-block|,
-name|AWD
-block|,
-name|TUCHAR
-operator||
-name|TUSHORT
-block|,
-name|SCON
-block|,
-name|TANY
-block|,
-name|NAREG
-block|,
-name|RESCC
-block|,
-literal|"	movzZLl	AL,A1\n	cmpZL	A1,AR\nZP"
+literal|"	movzZLl	AL,A1\n	cmpl	A1,AR\nZP"
 block|,
 comment|/* optim2() handles degenerate comparisons with constants */
 name|OPLOG
@@ -710,11 +747,7 @@ name|AWD
 block|,
 name|TCHAR
 operator||
-name|TUCHAR
-operator||
 name|TSHORT
-operator||
-name|TUSHORT
 block|,
 name|SCON
 block|,
