@@ -15,6 +15,12 @@ directive|define
 name|_SYS_DISKMBR_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/ioccom.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -205,6 +211,20 @@ end_define
 begin_comment
 comment|/* and those that are cylinder */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGMBR
+value|_IOR('M', 128, u_char[512])
+end_define
+
+begin_define
+define|#
+directive|define
+name|DIOCSMBR
+value|_IOW('M', 129, u_char[512])
+end_define
 
 begin_endif
 endif|#
