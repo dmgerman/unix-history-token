@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"card_if.h"
+file|<dev/pccard/pccardvar.h>
 end_include
 
 begin_decl_stmt

@@ -29,12 +29,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"card_if.h"
-end_include
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -852,6 +846,12 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"card_if.h"
+end_include
 
 begin_define
 define|#
