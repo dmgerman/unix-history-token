@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,17 +171,6 @@ comment|/* Our invocation name */
 end_comment
 
 begin_decl_stmt
-specifier|static
-name|Boolean
-name|lockSet
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* TRUE if we set the lock file */
-end_comment
-
-begin_decl_stmt
 name|Lst
 name|create
 decl_stmt|;
@@ -242,17 +231,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -r flag */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|Boolean
-name|noLocking
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -l flag */
 end_comment
 
 begin_decl_stmt
@@ -503,7 +481,7 @@ begin_define
 define|#
 directive|define
 name|OPTSTR
-value|"BCD:I:J:L:MPSVWXd:ef:iklnp:qrstvxh"
+value|"BCD:I:J:L:MPSVWXd:ef:iknp:qrstvxh"
 end_define
 
 begin_else
@@ -515,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|OPTSTR
-value|"BCD:I:J:L:MPSVWd:ef:iklnp:qrstvh"
+value|"BCD:I:J:L:MPSVWd:ef:iknp:qrstvh"
 end_define
 
 begin_endif
@@ -575,17 +553,6 @@ literal|"-i		Ignore errors from executed commands."
 block|,
 literal|"-k		On error, continue working on targets that do not depend on\n\ 		the one for which an error was detected."
 block|,
-ifdef|#
-directive|ifdef
-name|DONT_LOCK
-literal|"-l	    	Turn on locking of the current directory."
-block|,
-else|#
-directive|else
-literal|"-l	    	Turn off locking of the current directory."
-block|,
-endif|#
-directive|endif
 literal|"-n	    	Don't execute commands, just print them."
 block|,
 literal|"-p<num>    	Tell when to print the input graph: 1 (before processing),\n\ 		2 (after processing), or 3 (both)."
@@ -598,7 +565,7 @@ literal|"-s	    	Don't print commands as they are executed."
 block|,
 literal|"-t	    	Update targets by \"touching\" them (see touch(1))."
 block|,
-literal|"-v	    	Be compatible with System V make. Implies -B, -V and no\n\ 		directory locking."
+literal|"-v	    	Be compatible with System V make. Implies -B, -V."
 block|,
 ifdef|#
 directive|ifdef
@@ -1149,34 +1116,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'l'
-case|:
-ifdef|#
-directive|ifdef
-name|DONT_LOCK
-name|noLocking
-operator|=
-name|FALSE
-expr_stmt|;
-else|#
-directive|else
-name|noLocking
-operator|=
-name|TRUE
-expr_stmt|;
-endif|#
-directive|endif
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-l"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'n'
 case|:
 name|noExecute
@@ -1281,8 +1220,6 @@ operator|=
 name|oldVars
 operator|=
 name|backwards
-operator|=
-name|noLocking
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1457,9 +1394,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *----------------------------------------------------------------------  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  *-----------------------------------------------------------------------  */
 end_comment
@@ -1533,33 +1467,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * MainUnlock --  *	Unlock the current directory. Called as an ExitHandler.  *  * Results:  *	None.  *  * Side Effects:  *	The locking file LOCKFILE is removed.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|MainUnlock
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|LOCKFILE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *----------------------------------------------------------------------  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  *  *----------------------------------------------------------------------  */
@@ -1656,23 +1563,6 @@ operator|=
 name|TRUE
 expr_stmt|;
 comment|/* Catch child output in pipes */
-ifndef|#
-directive|ifndef
-name|DONT_LOCK
-name|noLocking
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Lock the current directory against other 				 * pmakes */
-else|#
-directive|else
-name|noLocking
-operator|=
-name|TRUE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DONT_LOCK */
 name|debug
 operator|=
 literal|0
@@ -1806,8 +1696,6 @@ name|oldVars
 operator|=
 name|backwards
 operator|=
-name|noLocking
-operator|=
 name|TRUE
 expr_stmt|;
 block|}
@@ -1926,251 +1814,20 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*      * If the user didn't tell us not to lock the directory, attempt to create      * the lock file. Complain if we can't, otherwise set up an exit handler      * to remove the lock file...      */
-if|if
-condition|(
-operator|!
-name|noLocking
-condition|)
-block|{
-name|int
-name|oldMask
-decl_stmt|;
-comment|/* Previous signal mask */
-name|int
-name|lockID
-decl_stmt|;
-comment|/* Stream ID of opened lock file */
-ifndef|#
-directive|ifndef
-name|SYSV
-name|oldMask
-operator|=
-name|sigblock
-argument_list|(
-name|sigmask
-argument_list|(
-name|SIGINT
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|oldMask
-operator|=
-name|sighold
-argument_list|(
-name|SIGINT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|lockID
-operator|=
-name|open
-argument_list|(
-name|LOCKFILE
-argument_list|,
-name|O_CREAT
-operator||
-name|O_EXCL
-argument_list|,
-literal|0666
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|lockID
-operator|<
-literal|0
-operator|&&
-name|errno
-operator|==
-name|EEXIST
-condition|)
-block|{
-comment|/* 	     * Find out who owns the file. If the user who called us 	     * owns it, then we ignore the lock file. Note that we also 	     * do not install an exit handler to remove the file -- if the 	     * lockfile is there from a previous make, it'll still be there 	     * when we leave. 	     */
-name|struct
-name|stat
-name|fsa
-decl_stmt|;
-comment|/* Attributes of the lock file */
-operator|(
-name|void
-operator|)
-name|stat
-argument_list|(
-name|LOCKFILE
-argument_list|,
-operator|&
-name|fsa
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fsa
-operator|.
-name|st_uid
-operator|==
-name|getuid
-argument_list|()
-condition|)
-block|{
-name|Error
-argument_list|(
-literal|"Lockfile owned by you -- ignoring it"
-argument_list|)
-expr_stmt|;
-name|lockSet
-operator|=
-name|FALSE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|char
-name|lsCmd
-index|[
-literal|40
-index|]
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sprintf
-argument_list|(
-name|lsCmd
-argument_list|,
-literal|"ls -l %s"
-argument_list|,
-name|LOCKFILE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|system
-argument_list|(
-name|lsCmd
-argument_list|)
-expr_stmt|;
-name|Fatal
-argument_list|(
-literal|"This directory is already locked (%s exists)"
-argument_list|,
-name|LOCKFILE
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|lockID
-operator|<
-literal|0
-condition|)
-block|{
-name|Fatal
-argument_list|(
-literal|"Could not create lock file %s"
-argument_list|,
-name|LOCKFILE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-extern|extern exit(
-block|)
-empty_stmt|;
-name|lockSet
-operator|=
-name|TRUE
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|sun
-name|on_exit
-argument_list|(
-name|MainUnlock
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* (void) Proc_SetExitHandler (MainUnlock, (ClientData)0); */
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|exit
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|lockID
-argument_list|)
-expr_stmt|;
-block|}
-ifndef|#
-directive|ifndef
-name|SYSV
-operator|(
-name|void
-operator|)
-name|sigsetmask
-argument_list|(
-name|oldMask
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-operator|(
-name|void
-operator|)
-name|sigrelse
-argument_list|(
-name|SIGINT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-end_function
-
-begin_comment
 comment|/*      * Initialize archive, target and suffix modules in preparation for      * parsing the makefile(s)       */
-end_comment
-
-begin_expr_stmt
 name|Arch_Init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Targ_Init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|Suff_Init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|DEFAULT
 operator|=
 name|NILGNODE
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|now
 operator|=
 name|time
@@ -2178,13 +1835,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*      * Set up the .TARGETS variable to contain the list of targets to be      * created. If none specified, make the variable empty -- the parser      * will fill the thing in with the default or .MAIN target.      */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2254,13 +1905,7 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/*      * Read in the built-in rules first, followed by the specified makefile,      * if it was (makefile != (char *) NULL), or the default Makefile and      * makefile, in that order, if it wasn't.       */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2281,9 +1926,6 @@ name|DEFSYSMK
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2393,13 +2035,7 @@ block|}
 endif|#
 directive|endif
 block|}
-end_if
-
-begin_comment
 comment|/*      * Figure "noExport" out based on the current mode. Since exporting each      * command in make mode is rather inefficient, we only export if the -x      * flag was given. In regular mode though, we only refuse to export if      * -X was given. In case the operative flag was given in the environment,      * however, the opposite one may be given on the command line and cancel      * the action.      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|amMake
@@ -2423,9 +2059,6 @@ operator|!
 name|xFlag
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|Var_Append
 argument_list|(
 literal|"MFLAGS"
@@ -2440,19 +2073,10 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*      * Install all the flags into the PMAKE envariable.      */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|POSIX
-end_ifdef
-
-begin_expr_stmt
 name|setenv
 argument_list|(
 literal|"MAKEFLAGS"
@@ -2465,14 +2089,8 @@ name|VAR_GLOBAL
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|setenv
 argument_list|(
 literal|"PMAKE"
@@ -2485,18 +2103,9 @@ name|VAR_GLOBAL
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*      * For compatibility, look at the directories in the VPATH variable      * and add them to the search path, if the variable is defined. The      * variable's value is in the same format as the PATH envariable, i.e.      *<directory>:<directory>:<directory>...      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|Var_Exists
@@ -2617,23 +2226,11 @@ name|vpath
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/*      * Now that all search paths have been read for suffixes et al, it's      * time to add the default search path to their lists...      */
-end_comment
-
-begin_expr_stmt
 name|Suff_DoPaths
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*      * Print the initial graph, if the user requested it      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|printGraph
@@ -2647,19 +2244,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|Rmt_Init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*      * Have now read the entire graph and need to make a list of targets to      * create. If none was given on the command line, we consult the parsing      * module to find the main target(s) to create.      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -2686,9 +2274,6 @@ name|TARG_CREATE
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -2745,13 +2330,7 @@ name|targs
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/*      * Print the graph now it's been processed if the user requested it      */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|printGraph
@@ -2765,9 +2344,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|queryFlag
@@ -2789,18 +2365,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_escape
-unit|}
-end_escape
+block|}
+end_function
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ReadMakefile  --  *	Open and parse the given makefile.  *  * Results:  *	TRUE if ok. FALSE if couldn't open file.  *  * Side Effects:  *	lots  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|Boolean
 name|ReadMakefile
 parameter_list|(
@@ -2984,9 +2557,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Error --  *	Print an error message given its format and 0, 1, 2 or 3 arguments.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3090,9 +2660,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Fatal --  *	Produce a Fatal error message. If jobs are running, waits for them  *	to finish.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  *-----------------------------------------------------------------------  */
 end_comment
@@ -3165,9 +2732,6 @@ comment|/* Not 1 so -q can distinguish error */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*  *-----------------------------------------------------------------------  * Punt --  *	Major exception once jobs are being created. Kills all jobs, prints  *	a message and exits.  *  * Results:  *	None   *  * Side Effects:  *	All children are killed indiscriminately and the program Lib_Exits  *-----------------------------------------------------------------------  */
 end_comment
@@ -3215,9 +2779,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DieHorribly --  *	Exit without giving a message.  *  * Results:  *	None  *  * Side Effects:  *	A big one...  *-----------------------------------------------------------------------  */
 end_comment
@@ -3257,9 +2818,6 @@ expr_stmt|;
 comment|/* Not 1, so -q can distinguish error */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  *-----------------------------------------------------------------------  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.   *  * Results:  *	None   *  * Side Effects:  *	The program exits  * -----------------------------------------------------------------------  */
@@ -3323,15 +2881,6 @@ end_macro
 
 begin_block
 block|{
-if|if
-condition|(
-name|lockSet
-condition|)
-block|{
-name|MainUnlock
-argument_list|()
-expr_stmt|;
-block|}
 name|_cleanup
 argument_list|()
 expr_stmt|;
