@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)abort.c	5.3 (Berkeley) %G%"
+literal|"@(#)abort.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ block|{
 name|sigblock
 argument_list|(
 operator|~
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 name|signal
