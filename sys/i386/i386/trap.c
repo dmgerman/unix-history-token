@@ -854,12 +854,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|addupc_task
 argument_list|(
 name|p
@@ -884,6 +878,7 @@ name|psratio
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|mtx_unlock_spin
 argument_list|(
 operator|&
