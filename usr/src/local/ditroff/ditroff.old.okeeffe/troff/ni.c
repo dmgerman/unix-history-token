@@ -37,29 +37,15 @@ directive|ifndef
 name|MACROLIB
 end_ifndef
 
+begin_comment
+comment|/* MACROLIB is the prefix of the macro filenames */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MACROLIB
-value|"/usr/lib/tmac/tmac.xxxxx"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MACROINDEX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MACROINDEX
-value|19
+value|"/usr/lib/tmac/tmac."
 end_define
 
 begin_endif
@@ -107,7 +93,7 @@ begin_decl_stmt
 name|char
 name|devname
 index|[
-literal|10
+literal|20
 index|]
 init|=
 literal|"va"
@@ -300,8 +286,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nfi
-init|=
-name|MACROINDEX
 decl_stmt|;
 end_decl_stmt
 
