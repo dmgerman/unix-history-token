@@ -5378,8 +5378,7 @@ name|dk_skip
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Update device stats */
-name|devstat_end_transaction
+name|devstat_end_transaction_buf
 argument_list|(
 operator|&
 name|du
@@ -5387,26 +5386,6 @@ operator|->
 name|dk_stats
 argument_list|,
 name|bp
-operator|->
-name|b_bcount
-operator|-
-name|bp
-operator|->
-name|b_resid
-argument_list|,
-name|DEVSTAT_TAG_NONE
-argument_list|,
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-condition|?
-name|DEVSTAT_READ
-else|:
-name|DEVSTAT_WRITE
 argument_list|)
 expr_stmt|;
 name|biodone

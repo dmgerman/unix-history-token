@@ -3991,9 +3991,7 @@ argument|; 		bp->b_resid = bp->b_bcount - du->dk_skip * DEV_BSIZE; 		wdutab[du->
 literal|0
 argument|; 		du->dk_skip =
 literal|0
-argument|;
-comment|/* Update device stats */
-argument|devstat_end_transaction(&du->dk_stats, 					bp->b_bcount - bp->b_resid, 					DEVSTAT_TAG_NONE, 					(bp->b_flags& B_READ) ? DEVSTAT_READ : DEVSTAT_WRITE);  		biodone(bp); 	}
+argument|; 		devstat_end_transaction_buf(&du->dk_stats, bp); 		biodone(bp); 	}
 comment|/* controller idle */
 argument|wdtab[unit].b_active =
 literal|0

@@ -11351,8 +11351,7 @@ name|bp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Tell devstat we have finished with the transaction */
-name|devstat_end_transaction
+name|devstat_end_transaction_buf
 argument_list|(
 operator|&
 name|fd
@@ -11360,26 +11359,6 @@ operator|->
 name|device_stats
 argument_list|,
 name|bp
-operator|->
-name|b_bcount
-operator|-
-name|bp
-operator|->
-name|b_resid
-argument_list|,
-name|DEVSTAT_TAG_NONE
-argument_list|,
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-condition|?
-name|DEVSTAT_READ
-else|:
-name|DEVSTAT_WRITE
 argument_list|)
 expr_stmt|;
 name|biodone
