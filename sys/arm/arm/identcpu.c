@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -77,6 +89,26 @@ init|=
 literal|"arm"
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_STRING
+argument_list|(
+name|_hw
+argument_list|,
+name|HW_MACHINE
+argument_list|,
+name|machine
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|machine
+argument_list|,
+literal|0
+argument_list|,
+literal|"Machine class"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_enum
 enum|enum
