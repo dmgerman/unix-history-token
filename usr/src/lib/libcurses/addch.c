@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine adds the character to the current position  *  * %G% (Berkeley) @(#)addch.c	1.2  */
+comment|/*  *	This routine adds the character to the current position  *  * %G% (Berkeley) @(#)addch.c	1.3  */
 end_comment
 
 begin_macro
@@ -299,21 +299,17 @@ operator|->
 name|_maxx
 condition|)
 block|{
-name|newline
-label|:
 name|x
 operator|=
 literal|0
 expr_stmt|;
-name|nonewline
+name|newline
 label|:
 if|if
 condition|(
 operator|++
 name|y
-operator|+
-literal|1
-operator|==
+operator|>=
 name|win
 operator|->
 name|_maxy
@@ -385,12 +381,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|NONL
 condition|)
-goto|goto
-name|nonewline
-goto|;
-else|else
+name|x
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|newline
 goto|;
