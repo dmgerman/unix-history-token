@@ -14512,7 +14512,7 @@ decl_stmt|;
 name|int
 name|rv
 decl_stmt|;
-comment|/* 		 * First catch people who try to do things like: 		 * camcontrol tur /dev/rsd0.ctl 		 * camcontrol doesn't take device nodes as arguments. 		 */
+comment|/* 		 * First catch people who try to do things like: 		 * camcontrol tur /dev/da0  		 * camcontrol doesn't take device nodes as arguments. 		 */
 if|if
 condition|(
 name|argv
