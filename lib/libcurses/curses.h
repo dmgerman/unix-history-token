@@ -1627,11 +1627,9 @@ define|\
 value|((w)->lines[(w)->cury]->line[(w)->curx].ch& 0377)
 end_define
 
-begin_comment
-comment|/* Public function prototypes. */
-end_comment
-
 begin_decl_stmt
+name|__BEGIN_DECLS
+comment|/* Public function prototypes. */
 name|int
 name|box
 name|__P
@@ -3044,6 +3042,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
