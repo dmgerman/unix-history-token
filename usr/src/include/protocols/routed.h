@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	routed.h	82/05/22	4.1	*/
+comment|/*	routed.h	82/05/24	4.2	*/
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ comment|/* max broadcast size */
 end_comment
 
 begin_comment
-comment|/*  * Timer values used in managing the routing table "cache".  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  */
+comment|/*  * Timer values used in managing the routing table "cache".  * Every update forces an entry's timer to be reset.  After  * EXPIRE_TIME without updates, the entry is marked invalid,  * but held onto until GARBAGE_TIME so that others may  * see it "be deleted".  If there's a reason to look for network  * interface transitions do so every CHECK_INTERVAL seconds.  */
 end_comment
 
 begin_define
@@ -152,6 +152,17 @@ end_define
 
 begin_comment
 comment|/* time to supply tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHECK_INTERVAL
+value|300
+end_define
+
+begin_comment
+comment|/* time to check for new interfaces */
 end_comment
 
 end_unit
