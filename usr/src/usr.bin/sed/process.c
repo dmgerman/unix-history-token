@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	8.5 (Berkeley) %G%"
+literal|"@(#)process.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -372,9 +372,6 @@ name|tspace
 decl_stmt|;
 name|size_t
 name|len
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 name|char
 name|oldc
@@ -742,8 +739,9 @@ argument_list|)
 name|flush_appends
 argument_list|()
 expr_stmt|;
-name|r
-operator|=
+if|if
+condition|(
+operator|!
 name|mf_fgets
 argument_list|(
 operator|&
@@ -751,22 +749,12 @@ name|PS
 argument_list|,
 name|REPLACE
 argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HISTORIC_PRACTICE
-if|if
-condition|(
-operator|!
-name|r
 condition|)
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|pd
 operator|=
 literal|0
