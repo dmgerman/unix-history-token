@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.16 2000/03/29 01:46:27 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.17 2000/04/01 09:27:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1315,6 +1315,24 @@ define|#
 directive|define
 name|OHCI_CC_NOT_ACCESSED
 value|15
+end_define
+
+begin_comment
+comment|/* Some delay needed when changing certain registers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_ENABLE_POWER_DELAY
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_READ_DESC_DELAY
+value|5
 end_define
 
 begin_endif

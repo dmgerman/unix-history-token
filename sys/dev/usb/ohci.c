@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.83 2000/03/29 01:46:26 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.85 2000/04/01 09:27:35 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -4363,7 +4363,7 @@ name|sc
 operator|->
 name|sc_bus
 argument_list|,
-literal|5
+name|OHCI_ENABLE_POWER_DELAY
 argument_list|)
 expr_stmt|;
 name|OWRITE4
@@ -4373,6 +4373,17 @@ argument_list|,
 name|OHCI_RH_DESCRIPTOR_A
 argument_list|,
 name|desca
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The AMD756 requires a delay before re-reading the register, 	 * otherwise it will occasionally report 0 ports. 	 */
+name|usb_delay_ms
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+argument_list|,
+name|OHCI_READ_DESC_DELAY
 argument_list|)
 expr_stmt|;
 name|sc
