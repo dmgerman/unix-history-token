@@ -374,7 +374,7 @@ begin_define
 define|#
 directive|define
 name|KTR_CRITICAL
-value|0010000000
+value|0x10000000
 end_define
 
 begin_comment
@@ -384,8 +384,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_SCHED
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Machine parsed sched info. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x1fffffff
+value|0x3fffffff
 end_define
 
 begin_comment
