@@ -1218,6 +1218,14 @@ operator|&
 name|led_mtx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|spec
+operator|!=
+name|NULL
+condition|)
 name|sbuf_delete
 argument_list|(
 name|sc
