@@ -4529,6 +4529,9 @@ operator|+
 literal|1
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|hdr
 operator|.
 name|dirlistlen

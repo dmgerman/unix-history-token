@@ -134,9 +134,10 @@ block|}
 name|u
 union|;
 name|int
-name|nbytes
-decl_stmt|,
 name|i
+decl_stmt|;
+name|ssize_t
+name|nbytes
 decl_stmt|;
 name|Elf_Phdr
 modifier|*
@@ -265,6 +266,9 @@ if|if
 condition|(
 name|nbytes
 operator|<
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|Elf_Ehdr
@@ -492,6 +496,9 @@ argument_list|(
 name|Elf_Phdr
 argument_list|)
 operator|>
+operator|(
+name|size_t
+operator|)
 name|nbytes
 condition|)
 block|{

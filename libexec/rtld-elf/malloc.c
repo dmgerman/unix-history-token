@@ -628,6 +628,9 @@ literal|8
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|unsigned
+operator|)
 name|pagesz
 operator|>
 name|amt
@@ -651,7 +654,11 @@ if|if
 condition|(
 name|nbytes
 operator|<=
-operator|(
+call|(
+name|unsigned
+name|long
+call|)
+argument_list|(
 name|n
 operator|=
 name|pagesz
@@ -663,7 +670,7 @@ name|op
 argument_list|)
 operator|-
 name|RSLOP
-operator|)
+argument_list|)
 condition|)
 block|{
 ifndef|#
@@ -1387,6 +1394,9 @@ if|if
 condition|(
 name|onb
 operator|<
+operator|(
+name|u_int
+operator|)
 name|pagesz
 condition|)
 name|onb
@@ -1471,6 +1481,9 @@ name|onb
 operator|&&
 name|nbytes
 operator|>
+operator|(
+name|size_t
+operator|)
 name|i
 condition|)
 block|{
