@@ -390,10 +390,6 @@ decl_stmt|;
 comment|/* Line number doing locking */
 endif|#
 directive|endif
-name|ino_t
-name|v_cachedid
-decl_stmt|;
-comment|/* cached file id */
 block|}
 struct|;
 end_struct
