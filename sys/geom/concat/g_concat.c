@@ -2614,6 +2614,12 @@ name|access
 operator|=
 name|g_concat_access
 expr_stmt|;
+name|gp
+operator|->
+name|orphan
+operator|=
+name|g_concat_orphan
+expr_stmt|;
 name|cp
 operator|=
 name|g_new_consumer
