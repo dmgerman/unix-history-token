@@ -168,33 +168,14 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pnp.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NPNP
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
+file|"isa.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/pnp.h>
+file|<isa/isavar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|device_t
@@ -825,25 +806,21 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
-name|NPNP
+name|NISA
 operator|>
 literal|0
-comment|/* Activate PNP. If no drivers are found, let ISA probe them.. */
-name|pnp_configure
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Explicitly probe and attach ISA last.  The isa bus saves 	 * it's device node at attach time for us here. 	 */
 if|if
 condition|(
 name|isa_bus_device
 condition|)
-name|bus_generic_attach
+name|isa_probe_children
 argument_list|(
 name|isa_bus_device
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Now we're ready to handle (pending) interrupts. 	 * XXX this is slightly misplaced. 	 */
 name|spl0
 argument_list|()

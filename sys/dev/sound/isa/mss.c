@@ -2875,27 +2875,6 @@ argument_list|)
 expr_stmt|;
 name|no
 label|:
-if|if
-condition|(
-name|setres
-condition|)
-name|ISA_DELETE_RESOURCE
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|dev
-argument_list|,
-name|SYS_RES_IOPORT
-argument_list|,
-name|mss
-operator|->
-name|io_rid
-argument_list|)
-expr_stmt|;
-comment|/* XXX ? */
 name|mss_release_resources
 argument_list|(
 name|mss
@@ -2903,6 +2882,13 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (setres) ISA_DELETE_RESOURCE(device_get_parent(dev), dev,     				    	SYS_RES_IOPORT, mss->io_rid);
+comment|/* XXX ? */
+endif|#
+directive|endif
 return|return
 name|result
 return|;

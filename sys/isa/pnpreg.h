@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Sujal M. Patel  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  *      from: pnp.h,v 1.7 1998/09/13 22:15:44 eivind Exp  */
+comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Sujal M. Patel  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  *      from: pnp.h,v 1.7 1998/09/13 22:15:44 eivind Exp  */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ISA_PNP_H_
+name|_ISA_PNPREG_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ISA_PNP_H_
+name|_ISA_PNPREG_H_
 end_define
 
 begin_comment
@@ -22,9 +22,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_PNP_CARDS
+name|PNP_MAX_CARDS
 value|8
 end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_comment
 comment|/*  * the following is the maximum number of PnP Logical devices that  * userconfig can handle.  */
@@ -36,6 +42,11 @@ directive|define
 name|MAX_PNP_LDN
 value|20
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Static ports to access PnP state machine */
@@ -104,7 +115,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SET_RD_DATA
+name|PNP_SET_RD_DATA
 value|0x00
 end_define
 
@@ -115,7 +126,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SERIAL_ISOLATION
+name|PNP_SERIAL_ISOLATION
 value|0x01
 end_define
 
@@ -126,8 +137,29 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONFIG_CONTROL
+name|PNP_CONFIG_CONTROL
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_CONFIG_CONTROL_RESET_CSN
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_CONFIG_CONTROL_WAIT_FOR_KEY
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_CONFIG_CONTROL_RESET
+value|0x01
 end_define
 
 begin_comment
@@ -137,7 +169,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WAKE
+name|PNP_WAKE
 value|0x03
 end_define
 
@@ -148,7 +180,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RESOURCE_DATA
+name|PNP_RESOURCE_DATA
 value|0x04
 end_define
 
@@ -159,7 +191,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STATUS
+name|PNP_STATUS
 value|0x05
 end_define
 
@@ -170,7 +202,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SET_CSN
+name|PNP_SET_CSN
 value|0x06
 end_define
 
@@ -181,7 +213,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SET_LDN
+name|PNP_SET_LDN
 value|0x07
 end_define
 
@@ -200,7 +232,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ACTIVATE
+name|PNP_ACTIVATE
 value|0x30
 end_define
 
@@ -211,8 +243,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_RANGE_CHECK
+name|PNP_IO_RANGE_CHECK
 value|0x31
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_IO_RANGE_CHECK_ENABLE
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_IO_RANGE_CHECK_READ_AS_55
+value|0x01
 end_define
 
 begin_comment
@@ -230,8 +276,65 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MEM_CONFIG
-value|0x40
+name|PNP_MEM_BASE_HIGH
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x40 + 8*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_BASE_LOW
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x41 + 8*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_CONTROL
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x42 * 8*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_CONTROL_16BIT
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_CONTROL_LIMIT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_RANGE_HIGH
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x43 + 8*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MEM_RANGE_LOW
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x44 + 8*(i))
 end_define
 
 begin_comment
@@ -241,8 +344,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IO_CONFIG_BASE
-value|0x60
+name|PNP_IO_BASE_HIGH
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x60 + 2*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_IO_BASE_LOW
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x61 + 2*(i))
 end_define
 
 begin_comment
@@ -252,8 +368,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IRQ_CONFIG
-value|0x70
+name|PNP_IRQ_LEVEL
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x70 + 2*(i))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_IRQ_TYPE
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x71 + 2*(i))
 end_define
 
 begin_comment
@@ -263,8 +392,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DRQ_CONFIG
-value|0x74
+name|PNP_DMA_CHANNEL
+parameter_list|(
+name|i
+parameter_list|)
+value|(0x74 + 1*(i))
 end_define
 
 begin_comment
@@ -326,84 +458,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PNP_VERSION
+name|PNP_TAG_VERSION
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOG_DEVICE_ID
+name|PNP_TAG_LOGIGAL_DEVICE
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|COMP_DEVICE_ID
+name|PNP_TAG_COMPAT_DEVICE
 value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|IRQ_FORMAT
+name|PNP_TAG_IRQ_FORMAT
 value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|DMA_FORMAT
+name|PNP_TAG_DMA_FORMAT
 value|0x5
 end_define
 
 begin_define
 define|#
 directive|define
-name|START_DEPEND_FUNC
+name|PNP_TAG_START_DEPENDANT
 value|0x6
 end_define
 
 begin_define
 define|#
 directive|define
-name|END_DEPEND_FUNC
+name|PNP_TAG_END_DEPENDANT
 value|0x7
 end_define
 
 begin_define
 define|#
 directive|define
-name|IO_PORT_DESC
+name|PNP_TAG_IO_RANGE
 value|0x8
 end_define
 
 begin_define
 define|#
 directive|define
-name|FIXED_IO_PORT_DESC
+name|PNP_TAG_IO_FIXED
 value|0x9
 end_define
 
 begin_define
 define|#
 directive|define
-name|SM_RES_RESERVED
+name|PNP_TAG_RESERVED
 value|0xa-0xd
 end_define
 
 begin_define
 define|#
 directive|define
-name|SM_VENDOR_DEFINED
+name|PNP_TAG_VENDOR
 value|0xe
 end_define
 
 begin_define
 define|#
 directive|define
-name|END_TAG
+name|PNP_TAG_END
 value|0xf
 end_define
 
@@ -414,267 +546,59 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MEMORY_RANGE_DESC
+name|PNP_TAG_MEMORY_RANGE
 value|0x1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_STRING_ANSI
+name|PNP_TAG_ID_ANSI
 value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
-name|ID_STRING_UNICODE
+name|PNP_TAG_ID_UNICODE
 value|0x3
 end_define
 
 begin_define
 define|#
 directive|define
-name|LG_VENDOR_DEFINED
+name|PNP_TAG_LARGE_VENDOR
 value|0x4
 end_define
 
 begin_define
 define|#
 directive|define
-name|_32BIT_MEM_RANGE_DESC
+name|PNP_TAG_MEMORY32_RANGE
 value|0x5
 end_define
 
 begin_define
 define|#
 directive|define
-name|_32BIT_FIXED_LOC_DESC
+name|PNP_TAG_MEMORY32_FIXED
 value|0x6
 end_define
 
 begin_define
 define|#
 directive|define
-name|LG_RES_RESERVED
+name|PNP_TAG_LARGE_RESERVED
 value|0x7-0x7f
 end_define
 
-begin_comment
-comment|/*  * pnp_cinfo contains Configuration Information. They are used  * to communicate to the device driver the actual configuration  * of the device, and also by the userconfig menu to let the  * operating system override any configuration set by the bios.  *  */
-end_comment
-
-begin_struct
-struct|struct
-name|pnp_cinfo
-block|{
-name|u_int
-name|vendor_id
-decl_stmt|;
-comment|/* board id */
-name|u_int
-name|serial
-decl_stmt|;
-comment|/* Board's Serial Number */
-name|u_long
-name|flags
-decl_stmt|;
-comment|/* OS-reserved flags */
-name|u_char
-name|csn
-decl_stmt|;
-comment|/* assigned Card Select Number */
-name|u_char
-name|ldn
-decl_stmt|;
-comment|/* Logical Device Number */
-name|u_char
-name|enable
-decl_stmt|;
-comment|/* pnp enable */
-name|u_char
-name|override
-decl_stmt|;
-comment|/* override bios parms (in userconfig) */
-name|u_char
-name|irq
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* IRQ Number */
-name|u_char
-name|irq_type
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* IRQ Type */
-name|u_char
-name|drq
-index|[
-literal|2
-index|]
-decl_stmt|;
-name|u_short
-name|port
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* The Base Address of the Port */
-struct|struct
-block|{
-name|u_int32_t
-name|base
-decl_stmt|;
-comment|/* Memory Base Address */
-name|int
-name|control
-decl_stmt|;
-comment|/* Memory Control Register */
-name|u_int32_t
-name|range
-decl_stmt|;
-comment|/* Memory Range *OR* Upper Limit */
-block|}
-name|mem
-index|[
-literal|4
-index|]
-struct|;
-block|}
-struct|;
-end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_comment
-comment|/*  * Used by userconfig  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pnp_cinfo
-name|pnp_ldn_overrides
-index|[
-name|MAX_PNP_LDN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * The following definitions are for use in drivers  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|linker_set
-name|pnpdevice_set
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_pnpid_t
-block|{
-name|u_int32_t
-name|vend_id
-decl_stmt|;
-comment|/* Not anly a Vendor ID, also a Compatible Device ID */
-name|char
-modifier|*
-name|id_str
-decl_stmt|;
-block|}
-name|pnpid_t
-typedef|;
-end_typedef
-
-begin_function_decl
-name|void
-name|pnp_write
-parameter_list|(
-name|int
-name|d
-parameter_list|,
-name|u_char
-name|r
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* used by Luigi's sound driver */
-end_comment
-
-begin_function_decl
-name|u_char
-name|pnp_read
-parameter_list|(
-name|int
-name|d
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* currently unused, but who knows... */
-end_comment
-
-begin_function_decl
-name|int
-name|enable_pnp_card
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|PNP_HEXTONUM
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)>= 'a'		\ 			 ? (c) - 'a' + 10	\ 			 : ((c)>= 'A'		\ 			    ? (c) - 'A' + 10	\ 			    : (c) - '0'))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PNP_EISAID
-parameter_list|(
-name|s
-parameter_list|)
-define|\
-value|((((s[0] - '@')& 0x1f)<< 2)		\ 	 | (((s[1] - '@')& 0x18)>> 3)		\ 	 | (((s[1] - '@')& 0x07)<< 13)	\ 	 | (((s[2] - '@')& 0x1f)<< 8)		\ 	 | (PNP_HEXTONUM(s[4])<< 16)		\ 	 | (PNP_HEXTONUM(s[3])<< 20)		\ 	 | (PNP_HEXTONUM(s[6])<< 24)		\ 	 | (PNP_HEXTONUM(s[5])<< 28))
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_ISA_PNP_H_ */
+comment|/* !_ISA_PNPREG_H_ */
 end_comment
 
 end_unit

@@ -224,6 +224,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_include
+include|#
+directive|include
+file|"isa.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
+end_include
+
 begin_decl_stmt
 name|device_t
 name|isa_bus_device
@@ -231,6 +251,11 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
@@ -625,15 +650,22 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Probe ISA devices after everything. 		 */
+if|#
+directive|if
+name|NISA
+operator|>
+literal|0
 if|if
 condition|(
 name|isa_bus_device
 condition|)
-name|bus_generic_attach
+name|isa_probe_children
 argument_list|(
 name|isa_bus_device
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|configure_finish
 argument_list|()

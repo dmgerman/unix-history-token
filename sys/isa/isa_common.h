@@ -16,6 +16,41 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/*  * PNP configurations are kept in a tailq.  */
+end_comment
+
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|isa_config_list
+argument_list|,
+name|isa_config_entry
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|isa_config_entry
+block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|isa_config_entry
+argument_list|)
+name|ice_link
+expr_stmt|;
+name|int
+name|ice_priority
+decl_stmt|;
+name|struct
+name|isa_config
+name|ice_config
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * The structure used to attach devices to the isa bus.  */
 end_comment
 
@@ -46,6 +81,21 @@ name|u_int32_t
 name|id_compatid
 decl_stmt|;
 comment|/* pnp compat device id */
+name|struct
+name|isa_config_list
+name|id_configs
+decl_stmt|;
+comment|/* pnp config alternatives */
+name|isa_config_cb
+modifier|*
+name|id_config_cb
+decl_stmt|;
+comment|/* callback function */
+name|void
+modifier|*
+name|id_config_arg
+decl_stmt|;
+comment|/* callback argument */
 block|}
 struct|;
 end_struct

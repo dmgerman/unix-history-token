@@ -361,6 +361,49 @@ operator|>
 literal|0
 end_if
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|ata_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x0006d041
+block|,
+literal|"Generic ESDI/IDE/ATA controller"
+block|}
+block|,
+comment|/* PNP0600 */
+block|{
+literal|0x0106d041
+block|,
+literal|"Plus Hardcard II"
+block|}
+block|,
+comment|/* PNP0601 */
+block|{
+literal|0x0206d041
+block|,
+literal|"Plus Hardcard IIXL/EZ"
+block|}
+block|,
+comment|/* PNP0602 */
+block|{
+literal|0x0306d041
+block|,
+literal|"Generic ATA"
+block|}
+block|,
+comment|/* PNP0603 */
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -386,7 +429,29 @@ decl_stmt|;
 name|int32_t
 name|lun
 decl_stmt|;
-comment|/* allocate the port range */
+comment|/* Check isapnp ids */
+if|if
+condition|(
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|ata_ids
+argument_list|)
+operator|==
+name|ENXIO
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+comment|/* Allocate the port range */
 name|rid
 operator|=
 literal|0

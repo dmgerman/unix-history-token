@@ -2638,6 +2638,56 @@ parameter_list|)
 value|isa_set_flags(dev, isa_get_flags(dev)& ~(bit))
 end_define
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|isa_pnp_id
+name|sio_ids
+index|[]
+init|=
+block|{
+block|{
+literal|0x0005d041
+block|,
+literal|"Standard PC COM port"
+block|}
+block|,
+comment|/* PNP0500 */
+block|{
+literal|0x0105d041
+block|,
+literal|"16550A-compatible COM port"
+block|}
+block|,
+comment|/* PNP0501 */
+block|{
+literal|0x0205d041
+block|,
+literal|"Multiport serial device (non-intelligent 16550)"
+block|}
+block|,
+comment|/* PNP0502 */
+block|{
+literal|0x1005d041
+block|,
+literal|"Generic IRDA-compatible device"
+block|}
+block|,
+comment|/* PNP0510 */
+block|{
+literal|0x1105d041
+block|,
+literal|"Generic IRDA-compatible device"
+block|}
+block|,
+comment|/* PNP0511 */
+block|{
+literal|0
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2705,40 +2755,19 @@ decl_stmt|;
 comment|/* Check isapnp ids */
 if|if
 condition|(
-name|isa_get_vendorid
+name|ISA_PNP_PROBE
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
 argument_list|)
-operator|&&
-name|isa_get_compatid
-argument_list|(
+argument_list|,
 name|dev
+argument_list|,
+name|sio_ids
 argument_list|)
-operator|!=
-name|PNP_EISAID
-argument_list|(
-literal|"PNP0500"
-argument_list|)
-operator|&&
-name|isa_get_compatid
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|PNP_EISAID
-argument_list|(
-literal|"PNP0501"
-argument_list|)
-operator|&&
-name|isa_get_compatid
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|PNP_EISAID
-argument_list|(
-literal|"PNP0502"
-argument_list|)
+operator|==
+name|ENXIO
 condition|)
 return|return
 operator|(
@@ -12401,6 +12430,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* To get the GDB related variables */
 end_comment
@@ -12418,11 +12452,6 @@ include|#
 directive|include
 file|<ddb/ddb.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -13228,12 +13257,6 @@ name|COM_DEBUGGER
 argument_list|(
 name|flags
 argument_list|)
-operator|&&
-operator|!
-name|COM_LLCONSOLE
-argument_list|(
-name|flags
-argument_list|)
 condition|)
 block|{
 name|printf
@@ -13251,9 +13274,6 @@ name|siogdbunit
 operator|=
 name|unit
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__i386__
 if|#
 directive|if
 name|DDB
@@ -13276,8 +13296,6 @@ name|gdb_putc
 operator|=
 name|siocnputc
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
