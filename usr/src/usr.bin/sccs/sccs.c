@@ -63,7 +63,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.59 %G%"
+literal|"@(#)sccs.c	1.60 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,6 +733,14 @@ block|,
 literal|0
 block|,
 literal|"prt -e/get -p -m -s"
+block|,
+literal|"branch"
+block|,
+name|CMACRO
+block|,
+name|NO_SDOT
+block|,
+literal|"get:ixrc -e -b/delta: -s -n -ybranch-place-holder/get:pl -e -t -g"
 block|,
 name|NULL
 block|,
