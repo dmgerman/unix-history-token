@@ -1191,6 +1191,9 @@ return|;
 case|case
 name|Am79C972
 case|:
+case|case
+name|Am79C973
+case|:
 return|return
 operator|(
 name|PCnet_FASTplus
