@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.5 1993/11/25 01:30:57 wollman Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.6 1993/12/19 00:50:05 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Limited emulation 27.12.91 - mostly loads/stores, which gcc wants 
 end_comment
 
 begin_comment
-comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  *  */
+comment|/*  * This file is full of ugly macros etc: one problem was that gcc simply  * didn't want to make the structures as they should be: it has to try to  * align them. Sickening code, but at least I've hidden the ugly things  * in this one file: the other files don't need to know about these things.  *  * The other files also don't care about ST(x) etc - they just get addresses  * to 80-bit temporary reals, and do with them as they please. I wanted to  * hide most of the 387-specific things here.  */
 end_comment
 
 begin_include
@@ -1161,17 +1161,7 @@ operator|&
 literal|7
 argument_list|)
 argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
-name|real_to_real
-argument_list|(
-operator|&
-name|tmp
-argument_list|,
-operator|&
-name|ST
+name|PST
 argument_list|(
 literal|0
 argument_list|)
@@ -1194,17 +1184,7 @@ operator|&
 literal|7
 argument_list|)
 argument_list|,
-operator|&
-name|tmp
-argument_list|)
-expr_stmt|;
-name|real_to_real
-argument_list|(
-operator|&
-name|tmp
-argument_list|,
-operator|&
-name|ST
+name|PST
 argument_list|(
 literal|0
 argument_list|)
