@@ -1650,7 +1650,7 @@ name|iobase
 operator|+
 name|REG3
 argument_list|)
-operator||
+operator|&
 literal|0x3f
 comment|/* XXX constants. */
 argument_list|)
@@ -1880,7 +1880,7 @@ argument_list|,
 name|sc
 operator|->
 name|rx_upper_limit
-operator|&
+operator||
 literal|0xfe
 argument_list|)
 expr_stmt|;
