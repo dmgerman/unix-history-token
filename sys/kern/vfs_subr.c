@@ -2793,7 +2793,7 @@ operator|++
 expr_stmt|;
 name|tsleep
 argument_list|(
-name|vnlru_proc
+name|vnlruproc
 argument_list|,
 name|PPAUSE
 argument_list|,
