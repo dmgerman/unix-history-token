@@ -80,6 +80,10 @@ decl_stmt|;
 name|ehci_physaddr_t
 name|physaddr
 decl_stmt|;
+name|int
+name|islot
+decl_stmt|;
+comment|/* Interrupt list slot. */
 block|}
 name|ehci_soft_qh_t
 typedef|;
@@ -146,6 +150,71 @@ parameter_list|(
 name|xfer
 parameter_list|)
 value|((struct ehci_xfer *)(xfer))
+end_define
+
+begin_comment
+comment|/*  * Information about an entry in the interrupt list.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ehci_soft_islot
+block|{
+name|ehci_soft_qh_t
+modifier|*
+name|sqh
+decl_stmt|;
+comment|/* Queue Head. */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|EHCI_FRAMELIST_MAXCOUNT
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_IPOLLRATES
+value|8
+end_define
+
+begin_comment
+comment|/* Poll rates (1ms, 2, 4, 8 ... 128) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHCI_INTRQHS
+value|((1<< EHCI_IPOLLRATES) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_IQHIDX
+parameter_list|(
+name|lev
+parameter_list|,
+name|pos
+parameter_list|)
+define|\
+value|((((pos)& ((1<< (lev)) - 1)) | (1<< (lev))) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHCI_ILEV_IVAL
+parameter_list|(
+name|lev
+parameter_list|)
+value|(1<< (lev))
 end_define
 
 begin_define
@@ -258,8 +327,19 @@ decl_stmt|;
 name|usb_dma_t
 name|sc_fldma
 decl_stmt|;
+name|ehci_link_t
+modifier|*
+name|sc_flist
+decl_stmt|;
 name|u_int
 name|sc_flsize
+decl_stmt|;
+name|struct
+name|ehci_soft_islot
+name|sc_islots
+index|[
+name|EHCI_INTRQHS
+index|]
 decl_stmt|;
 name|LIST_HEAD
 argument_list|(
