@@ -143,7 +143,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * First, figure out what he intends as a field separtor. 	 * Despite the way this routine is written, the prefered 	 * form  2-272.AA001234H.01777, i.e. XDE standard. 	 * Great efforts are made to insure backward compatibility. 	 */
+comment|/* 	 * First, figure out what he intends as a field separator. 	 * Despite the way this routine is written, the preferred 	 * form  2-272.AA001234H.01777, i.e. XDE standard. 	 * Great efforts are made to ensure backwards compatibility. 	 */
 if|if
 condition|(
 operator|(
@@ -587,7 +587,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * This is REALLY stretching it but there was a 	 * comma notation separting shorts -- definitely non standard 	 */
+comment|/* 	 * This is REALLY stretching it but there was a 	 * comma notation separating shorts -- definitely non-standard 	 */
 if|if
 condition|(
 literal|1
