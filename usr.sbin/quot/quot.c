@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
@@ -2221,14 +2227,22 @@ index|]
 condition|)
 name|printf
 argument_list|(
-literal|"%d\t%d\t%d\n"
+literal|"%jd\t%jd\t%d\n"
 argument_list|,
+call|(
+name|intmax_t
+call|)
+argument_list|(
 name|fp
 operator|->
 name|fsz_first
 operator|+
 name|i
+argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|fp
 operator|->
 name|fsz_count
