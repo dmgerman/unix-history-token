@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 16:36:11 1995 ylo  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu> in Canada.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 16:36:11 1995 ylo  * Ssh client program.  This program can be used to log into a remote machine.  * The software supports strong authentication, encryption, and forwarding  * of X11, TCP/IP, and authentication connections.  *  * Modified to work with SSL by Niels Provos<provos@citi.umich.edu> in Canada.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -458,6 +458,15 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|_PATH_RSH
+define|#
+directive|define
+name|_PATH_RSH
+value|"/usr/bin/rsh"
+endif|#
+directive|endif
 name|args
 index|[
 name|i

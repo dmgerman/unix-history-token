@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * pty.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 04:37:25 1995 ylo  *   * Allocating a pseudo-terminal, and making it the controlling tty.  *   */
+comment|/*  *   * pty.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 04:37:25 1995 ylo  *   * Allocating a pseudo-terminal, and making it the controlling tty.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -17,11 +17,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<util.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

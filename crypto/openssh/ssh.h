@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * ssh.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 17:09:37 1995 ylo  *   * Generic header file for ssh.  *   */
+comment|/*  *   * ssh.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 17 17:09:37 1995 ylo  *   * Generic header file for ssh.  *   * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|ETCDIR
-value|"/etc"
+value|"__PREFIX__/etc"
 end_define
 
 begin_define
@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SSH_PROGRAM
-value|"/usr/bin/ssh"
+value|"__PREFIX__/bin/ssh"
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * servconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Aug 21 15:35:03 1995 ylo  *   * Definitions for server configuration data and for the functions reading it.  *   */
+comment|/*  *   * servconf.h  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Aug 21 15:35:03 1995 ylo  *   * Definitions for server configuration data and for the functions reading it.  *   * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -271,6 +271,15 @@ name|deny_groups
 index|[
 name|MAX_DENY_GROUPS
 index|]
+decl_stmt|;
+name|unsigned
+name|int
+name|connections_per_period
+decl_stmt|;
+comment|/* 						 * If not 0, number of sshd 						 * connections accepted per 						 * connections_period. 						 */
+name|unsigned
+name|int
+name|connections_period
 decl_stmt|;
 block|}
 name|ServerOptions

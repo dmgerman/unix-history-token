@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Created: Sat Mar 18 22:15:47 1995 ylo  * Code to connect to a remote host, and to perform the client side of the  * login (authentication) dialog.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -4753,6 +4753,9 @@ operator|==
 name|IN_LOOPBACKNET
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|INET6
 case|case
 name|AF_INET6
 case|:
@@ -4776,6 +4779,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
 default|default:
 name|local
 operator|=

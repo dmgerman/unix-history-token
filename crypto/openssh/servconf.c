@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * servconf.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Aug 21 15:48:58 1995 ylo  *   */
+comment|/*  *   * servconf.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Mon Aug 21 15:48:58 1995 ylo  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -328,6 +328,18 @@ expr_stmt|;
 name|options
 operator|->
 name|num_deny_groups
+operator|=
+literal|0
+expr_stmt|;
+name|options
+operator|->
+name|connections_per_period
+operator|=
+literal|0
+expr_stmt|;
+name|options
+operator|->
+name|connections_period
 operator|=
 literal|0
 expr_stmt|;
@@ -923,6 +935,8 @@ block|,
 name|sDenyGroups
 block|,
 name|sIgnoreUserKnownHosts
+block|,
+name|sConnectionsPerPeriod
 block|}
 name|ServerOpCodes
 typedef|;
@@ -1166,6 +1180,12 @@ block|{
 literal|"denygroups"
 block|,
 name|sDenyGroups
+block|}
+block|,
+block|{
+literal|"connectionsperperiod"
+block|,
+name|sConnectionsPerPeriod
 block|}
 block|,
 block|{
@@ -1754,13 +1774,38 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|value
-operator|=
-name|atoi
+if|if
+condition|(
+name|sscanf
 argument_list|(
 name|cp
+argument_list|,
+literal|" %d "
+argument_list|,
+operator|&
+name|value
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s line %d: invalid integer value.\n"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -2585,24 +2630,15 @@ name|num_allow_users
 operator|>=
 name|MAX_ALLOW_USERS
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s line %d: too many allow users.\n"
+literal|"%.200s line %d: too many allow users.\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|options
 operator|->
 name|allow_users
@@ -2645,24 +2681,15 @@ name|num_deny_users
 operator|>=
 name|MAX_DENY_USERS
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s line %d: too many deny users.\n"
+literal|"%.200s line %d: too many deny users.\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|options
 operator|->
 name|deny_users
@@ -2705,24 +2732,15 @@ name|num_allow_groups
 operator|>=
 name|MAX_ALLOW_GROUPS
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s line %d: too many allow groups.\n"
+literal|"%.200s line %d: too many allow groups.\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|options
 operator|->
 name|allow_groups
@@ -2765,24 +2783,15 @@ name|num_deny_groups
 operator|>=
 name|MAX_DENY_GROUPS
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s line %d: too many deny groups.\n"
+literal|"%.200s line %d: too many deny groups.\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|options
 operator|->
 name|deny_groups
@@ -2800,12 +2809,91 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-default|default:
-name|fprintf
+case|case
+name|sConnectionsPerPeriod
+case|:
+name|cp
+operator|=
+name|strtok
 argument_list|(
-name|stderr
+name|NULL
 argument_list|,
-literal|"%s line %d: Missing handler for opcode %s (%d)\n"
+name|WHITESPACE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: missing (>= 0) number argument.\n"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|cp
+argument_list|,
+literal|" %u/%u "
+argument_list|,
+operator|&
+name|options
+operator|->
+name|connections_per_period
+argument_list|,
+operator|&
+name|options
+operator|->
+name|connections_period
+argument_list|)
+operator|!=
+literal|2
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: invalid numerical argument(s).\n"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|->
+name|connections_per_period
+operator|!=
+literal|0
+operator|&&
+name|options
+operator|->
+name|connections_period
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%.200s line %d: invalid connections period.\n"
+argument_list|,
+name|filename
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|fatal
+argument_list|(
+literal|"%.200s line %d: Missing handler for opcode %s (%d)\n"
 argument_list|,
 name|filename
 argument_list|,
@@ -2814,11 +2902,6 @@ argument_list|,
 name|cp
 argument_list|,
 name|opcode
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2833,24 +2916,15 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s line %d: garbage at end of line.\n"
+literal|"%.200s line %d: garbage at end of line.\n"
 argument_list|,
 name|filename
 argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|fclose
 argument_list|(
@@ -2863,24 +2937,15 @@ name|bad_options
 operator|>
 literal|0
 condition|)
-block|{
-name|fprintf
+name|fatal
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: terminating, %d bad configuration options\n"
+literal|"%.200s: terminating, %d bad configuration options\n"
 argument_list|,
 name|filename
 argument_list|,
 name|bad_options
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 

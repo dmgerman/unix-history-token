@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * login.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 24 14:51:08 1995 ylo  *   * This file performs some of the things login(1) normally does.  We cannot  * easily use something like login -p -h host -f user, because there are  * several different logins around, and it is hard to determined what kind of  * login the current system has.  Also, we want to be able to execute commands  * on a tty.  *   */
+comment|/*  *   * login.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar 24 14:51:08 1995 ylo  *   * This file performs some of the things login(1) normally does.  We cannot  * easily use something like login -p -h host -f user, because there are  * several different logins around, and it is hard to determined what kind of  * login the current system has.  Also, we want to be able to execute commands  * on a tty.  *   * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -17,11 +17,37 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<util.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_include
 include|#
