@@ -856,8 +856,6 @@ name|vmspace
 modifier|*
 name|vm
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm
 operator|=
 name|uma_zalloc
