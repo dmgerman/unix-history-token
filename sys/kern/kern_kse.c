@@ -274,7 +274,7 @@ specifier|static
 name|int
 name|max_threads_per_proc
 init|=
-literal|150
+literal|1500
 decl_stmt|;
 end_decl_stmt
 
@@ -304,7 +304,7 @@ specifier|static
 name|int
 name|max_groups_per_proc
 init|=
-literal|50
+literal|500
 decl_stmt|;
 end_decl_stmt
 
