@@ -3168,7 +3168,7 @@ literal|2
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__GNU_G__
+name|__GNUG__
 name|map_pointer
 name|tmp
 init|=
