@@ -317,7 +317,7 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|stats
+name|sflag
 init|=
 literal|0
 decl_stmt|;
@@ -337,6 +337,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* wait for completion */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|objectname
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name to be passed for -n flag */
 end_comment
 
 begin_comment
@@ -1083,26 +1094,6 @@ endif|#
 directive|endif
 name|FUNKEY
 argument_list|(
-name|volume
-argument_list|)
-block|,
-name|FUNKEY
-argument_list|(
-name|plex
-argument_list|)
-block|,
-name|FUNKEY
-argument_list|(
-name|sd
-argument_list|)
-block|,
-name|FUNKEY
-argument_list|(
-name|drive
-argument_list|)
-block|,
-name|FUNKEY
-argument_list|(
 name|modify
 argument_list|)
 block|,
@@ -1214,6 +1205,21 @@ block|,
 name|FUNKEY
 argument_list|(
 name|quit
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|concat
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|stripe
+argument_list|)
+block|,
+name|FUNKEY
+argument_list|(
+name|mirror
 argument_list|)
 block|,
 name|FUNKEY
@@ -1378,12 +1384,17 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* initialize flags */
-name|stats
+name|sflag
 operator|=
 literal|0
 expr_stmt|;
 comment|/* initialize flags */
-comment|/* First handle generic options */
+name|objectname
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* no name yet */
+comment|/*      * first handle generic options      * We don't use getopt(3) because      * getopt doesn't allow merging flags      * (for example, -fr).      */
 for|for
 control|(
 name|i
@@ -1467,6 +1478,70 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* -n: get name */
+if|if
+condition|(
+name|i
+operator|==
+name|args
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* last arg */
+name|printf
+argument_list|(
+literal|"-n requires a name parameter\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|objectname
+operator|=
+name|argv
+index|[
+operator|++
+name|i
+index|]
+expr_stmt|;
+comment|/* pick it up */
+name|j
+operator|=
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* skip the next parm */
+break|break;
+case|case
+literal|'r'
+case|:
+comment|/* -r: recurse */
+name|recurse
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+comment|/* -s: show statistics */
+name|sflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 comment|/* -v: verbose */
@@ -1483,24 +1558,6 @@ operator|++
 expr_stmt|;
 name|Verbose
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-comment|/* -r: recurse */
-name|recurse
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-comment|/* -s: show statistics */
-name|stats
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1946,6 +2003,105 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|struct
+name|drive
+modifier|*
+name|find_drive_by_devname
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+name|int
+name|driveno
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_GETCONFIG
+argument_list|,
+operator|&
+name|vinum_conf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't get vinum config"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+for|for
+control|(
+name|driveno
+operator|=
+literal|0
+init|;
+name|driveno
+operator|<
+name|vinum_conf
+operator|.
+name|drives_allocated
+condition|;
+name|driveno
+operator|++
+control|)
+block|{
+name|get_drive_info
+argument_list|(
+operator|&
+name|drive
+argument_list|,
+name|driveno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|drive
+operator|.
+name|state
+operator|!=
+name|drive_unallocated
+operator|)
+comment|/* real drive */
+operator|&&
+operator|(
+operator|!
+name|strcmp
+argument_list|(
+name|drive
+operator|.
+name|devicename
+argument_list|,
+name|name
+argument_list|)
+operator|)
+condition|)
+comment|/* and the name's right, */
+return|return
+operator|&
+name|drive
+return|;
+comment|/* found it */
+block|}
+return|return
+name|NULL
+return|;
+comment|/* no drive of that name */
 block|}
 end_function
 
