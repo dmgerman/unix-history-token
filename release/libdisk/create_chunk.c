@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.7 1995/05/03 06:30:50 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.8 1995/05/03 22:36:50 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -345,6 +345,10 @@ name|oname
 argument_list|)
 condition|)
 block|{
+goto|goto
+name|newname
+goto|;
+block|}
 name|strcpy
 argument_list|(
 name|c1
@@ -356,8 +360,8 @@ operator|->
 name|oname
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
+name|newname
+label|:
 block|}
 comment|/* Allocate the rest sequentially */
 for|for
@@ -382,7 +386,7 @@ name|char
 name|order
 index|[]
 init|=
-literal|"defghab"
+literal|"efghabd"
 decl_stmt|;
 if|if
 condition|(

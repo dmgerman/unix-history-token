@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.4 1995/04/30 06:09:27 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: rules.c,v 1.5 1995/05/03 06:30:59 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -329,7 +329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Rule#0:  *	Chunks of type 'whole' can have max NDOSPART children.  */
+comment|/*  *  Rule#0:  *	Chunks of type 'whole' can have max NDOSPART children.  *	Only one of them can have the "active" flag  */
 end_comment
 
 begin_function
@@ -353,6 +353,12 @@ parameter_list|)
 block|{
 name|int
 name|i
+init|=
+literal|0
+decl_stmt|,
+name|j
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|chunk
@@ -370,10 +376,6 @@ condition|)
 return|return;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|c1
 operator|=
 name|c
@@ -395,7 +397,7 @@ name|c1
 operator|->
 name|type
 operator|!=
-name|reserved
+name|unused
 condition|)
 continue|continue;
 if|if
@@ -407,6 +409,17 @@ operator|!=
 name|reserved
 condition|)
 continue|continue;
+if|if
+condition|(
+name|c1
+operator|->
+name|flags
+operator|&
+name|CHUNK_ACTIVE
+condition|)
+name|j
+operator|++
+expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
@@ -414,10 +427,9 @@ block|}
 if|if
 condition|(
 name|i
-operator|<=
+operator|>
 name|NDOSPART
 condition|)
-return|return;
 name|sprintf
 argument_list|(
 name|msg
@@ -434,11 +446,29 @@ argument_list|,
 name|NDOSPART
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+literal|1
+condition|)
+name|sprintf
+argument_list|(
+name|msg
+operator|+
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+literal|"Too many active children of 'whole'"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#1:  *	All children of 'whole' must be track-aligned.  *	Exception: the end can be unaligned if it matches the end of 'whole'  */
+comment|/*   * Rule#1:  *	All children of 'whole' and 'extended'  must be track-aligned.  *	Exception: the end can be unaligned if it matches the end of 'whole'  */
 end_comment
 
 begin_function
@@ -475,6 +505,12 @@ operator|->
 name|type
 operator|!=
 name|whole
+operator|&&
+name|c
+operator|->
+name|type
+operator|!=
+name|extended
 condition|)
 return|return;
 for|for
@@ -516,6 +552,12 @@ operator|==
 name|unused
 condition|)
 continue|continue;
+name|c1
+operator|->
+name|flags
+operator||=
+name|CHUNK_ALIGN
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -554,15 +596,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|c
+operator|->
+name|type
+operator|==
+name|whole
+operator|||
 name|c
 operator|->
 name|end
-operator|!=
+operator|==
 name|c1
 operator|->
 name|end
-operator|&&
-operator|!
+operator|)
+operator|||
 name|Cyl_Aligned
 argument_list|(
 name|d
@@ -574,6 +623,8 @@ operator|+
 literal|1
 argument_list|)
 condition|)
+empty_stmt|;
+else|else
 name|sprintf
 argument_list|(
 name|msg
@@ -797,7 +848,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Rule#4:  *	Max seven 'part' as children of 'freebsd'  */
+comment|/*   * Rule#4:  *	Max seven 'part' as children of 'freebsd'  *	Max one FS_SWAP child per 'freebsd'  *	Max one CHUNK_IS_ROOT child per 'freebsd'  */
 end_comment
 
 begin_function
@@ -1059,7 +1110,36 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-return|return;
+if|if
+condition|(
+name|c
+operator|->
+name|end
+operator|>=
+literal|1024
+operator|*
+name|d
+operator|->
+name|bios_hd
+operator|*
+name|d
+operator|->
+name|bios_sect
+condition|)
+name|c
+operator|->
+name|flags
+operator||=
+name|CHUNK_PAST_1024
+expr_stmt|;
+else|else
+name|c
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CHUNK_PAST_1024
+expr_stmt|;
 block|}
 end_function
 

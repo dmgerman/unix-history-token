@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.4 1995/04/30 11:04:16 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.6 1995/05/01 04:05:27 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -1079,6 +1079,9 @@ operator|>>
 literal|2
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"S:%lu = (%x/%x/%x)"
@@ -1109,6 +1112,8 @@ operator|.
 name|dp_ssect
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|i
 operator|=
 name|c1
@@ -1211,6 +1216,9 @@ name|i
 operator|>>
 literal|2
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 name|printf
 argument_list|(
 literal|"  E:%lu = (%x/%x/%x)\n"
@@ -1241,6 +1249,8 @@ operator|.
 name|dp_esect
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|dp
 index|[
 name|j
@@ -1251,6 +1261,33 @@ operator|=
 name|c1
 operator|->
 name|subtype
+expr_stmt|;
+if|if
+condition|(
+name|c1
+operator|->
+name|flags
+operator|&
+name|CHUNK_ACTIVE
+condition|)
+name|dp
+index|[
+name|j
+index|]
+operator|.
+name|dp_flag
+operator|=
+literal|0x80
+expr_stmt|;
+else|else
+name|dp
+index|[
+name|j
+index|]
+operator|.
+name|dp_flag
+operator|=
+literal|0
 expr_stmt|;
 block|}
 for|for
