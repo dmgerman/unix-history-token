@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2857,6 +2857,52 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|union_lease
+argument_list|(
+argument|ap
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vop_lease_args
+comment|/* { 		struct vnode *a_vp; 		struct proc *a_p; 		struct ucred *a_cred; 		int a_flag; 	} */
+modifier|*
+name|ap
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|VOP_LEASE
+argument_list|(
+name|OTHERVP
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+argument_list|,
+name|ap
+operator|->
+name|a_p
+argument_list|,
+name|ap
+operator|->
+name|a_cred
+argument_list|,
+name|ap
+operator|->
+name|a_flag
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
 
 begin_function
 name|int
@@ -5858,6 +5904,14 @@ name|union_write
 block|}
 block|,
 comment|/* write */
+block|{
+operator|&
+name|vop_lease_desc
+block|,
+name|union_lease
+block|}
+block|,
+comment|/* lease */
 block|{
 operator|&
 name|vop_ioctl_desc
