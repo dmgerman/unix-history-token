@@ -652,10 +652,23 @@ name|td_oncpu
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
-name|panic
+case|case
+name|TDS_INACTIVE
+case|:
+name|db_printf
 argument_list|(
-literal|"unknown thread state"
+literal|"[INACTIVE]"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|db_printf
+argument_list|(
+literal|"[UNK: %#x]"
+argument_list|,
+name|td
+operator|->
+name|td_state
 argument_list|)
 expr_stmt|;
 block|}
