@@ -875,15 +875,6 @@ name|dev
 argument_list|)
 operator|!=
 name|PCIC_STORAGE
-operator|||
-operator|(
-name|pci_get_subclass
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|PCIS_STORAGE_IDE
-operator|)
 condition|)
 return|return
 name|NULL
