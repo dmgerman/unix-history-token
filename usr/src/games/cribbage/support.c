@@ -916,6 +916,9 @@ argument_list|,
 name|myturn
 argument_list|)
 expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
 block|}
 return|return
 operator|(
