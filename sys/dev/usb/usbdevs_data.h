@@ -704,6 +704,18 @@ literal|"Speakers"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ASAHIOPTICAL
+block|,
+name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
+block|,
+literal|0
+block|,
+literal|"Asahi Optical"
+block|,
+literal|"Digital camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ATEN
 block|,
 name|USB_PRODUCT_ATEN_UC1284

@@ -3780,6 +3780,21 @@ comment|/* Speakers */
 end_comment
 
 begin_comment
+comment|/* Asahi Optical products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ASAHIOPTICAL_OPTIO230
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Digital camera */
+end_comment
+
+begin_comment
 comment|/* ATen products */
 end_comment
 
