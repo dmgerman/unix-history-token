@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	1.7	87/02/19	*/
+comment|/*	conf.c	1.8	87/03/26	*/
 end_comment
 
 begin_include
@@ -72,6 +72,9 @@ name|int
 name|vdopen
 argument_list|()
 decl_stmt|,
+name|vdclose
+argument_list|()
+decl_stmt|,
 name|vdstrategy
 argument_list|()
 decl_stmt|,
@@ -83,7 +86,11 @@ argument_list|()
 decl_stmt|,
 name|vdioctl
 argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vddump
 argument_list|()
 decl_stmt|,
@@ -101,6 +108,13 @@ begin_define
 define|#
 directive|define
 name|vdopen
+value|nodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|vdclose
 value|nodev
 end_define
 
@@ -289,6 +303,8 @@ block|,
 name|nodev
 block|,
 comment|/*0*/
+name|nodev
+block|,
 literal|0
 block|,
 literal|0
@@ -297,13 +313,15 @@ block|,
 block|{
 name|vdopen
 block|,
-name|nulldev
+name|vdclose
 block|,
 name|vdstrategy
 block|,
-name|vddump
+name|vdioctl
 block|,
 comment|/*1*/
+name|vddump
+block|,
 name|vdsize
 block|,
 literal|0
@@ -319,6 +337,8 @@ block|,
 name|nodev
 block|,
 comment|/*2*/
+name|nodev
+block|,
 literal|0
 block|,
 literal|0
@@ -331,9 +351,11 @@ name|cyclose
 block|,
 name|cystrategy
 block|,
-name|cydump
+name|cyioctl
 block|,
 comment|/*3*/
+name|cydump
+block|,
 literal|0
 block|,
 name|B_TAPE
@@ -349,6 +371,8 @@ block|,
 name|nodev
 block|,
 comment|/*4*/
+name|nodev
+block|,
 literal|0
 block|,
 literal|0
