@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c	5.5 (Berkeley) %G%"
+literal|"@(#)lookup.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -93,21 +93,16 @@ begin_comment
 comment|/*  * Define a variable from a command line argument.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|define
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -365,7 +360,7 @@ name|value
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lookup name in the table and return a pointer to it.  * LOOKUP - just do lookup, return NULL if not found.  * INSERT - insert name with value, error if already defined.  * REPLACE - insert or replace name with value.  */
