@@ -3005,6 +3005,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The signal stack. */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|struct
+name|sigaltstack
+name|_thread_sigstack
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Thread switch hook. */
 end_comment
 
@@ -4016,7 +4028,7 @@ name|sigaltstack
 modifier|*
 parameter_list|,
 name|struct
-name|sigstack
+name|sigaltstack
 modifier|*
 parameter_list|)
 function_decl|;

@@ -207,6 +207,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|called_from_handler
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is called when a signal handler finishes and wants to  * return to a previous frame.  */
 end_comment
@@ -267,34 +276,15 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * The signal handler should have saved the state of 		 * the current thread.  Restore the process signal 		 * mask. 		 */
-if|if
-condition|(
-name|_thread_sys_sigprocmask
-argument_list|(
-name|SIG_SETMASK
-argument_list|,
-operator|&
-name|_process_sigmask
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Unable to restore process mask after signal"
-argument_list|)
+name|called_from_handler
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 		 * We're running on the signal stack; just call the 		 * kernel scheduler directly. 		 */
 name|DBG_MSG
 argument_list|(
 literal|"Entering scheduler due to signal\n"
 argument_list|)
-expr_stmt|;
-name|_thread_kern_scheduler
-argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -400,6 +390,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+block|}
 comment|/* Switch to the thread scheduler: */
 name|___longjmp
 argument_list|(
@@ -408,7 +399,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -477,6 +467,56 @@ name|_last_user_thread
 operator|=
 name|_thread_run
 expr_stmt|;
+if|if
+condition|(
+name|called_from_handler
+operator|!=
+literal|0
+condition|)
+block|{
+name|called_from_handler
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * The signal handler should have saved the state of 		 * the current thread.  Restore the process signal 		 * mask. 		 */
+if|if
+condition|(
+name|_thread_sys_sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|_process_sigmask
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Unable to restore process mask after signal"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Since the signal handler didn't return normally, we 		 * have to tell the kernel to reuse the signal stack. 		 */
+if|if
+condition|(
+name|_thread_sys_sigaltstack
+argument_list|(
+operator|&
+name|_thread_sigstack
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Unable to restore alternate signal stack"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Are there pending signals for this thread? */
 if|if
 condition|(

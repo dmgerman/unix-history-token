@@ -309,10 +309,6 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-name|struct
-name|sigaltstack
-name|alt
-decl_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
 condition|(
@@ -1123,8 +1119,8 @@ name|_thread_sigq
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Create and install an alternate signal stack: */
-name|alt
+comment|/* 		 * Create and install an alternate signal stack of 		 * the recommended size: 		 */
+name|_thread_sigstack
 operator|.
 name|ss_sp
 operator|=
@@ -1133,14 +1129,13 @@ argument_list|(
 name|SIGSTKSZ
 argument_list|)
 expr_stmt|;
-comment|/* recommended stack size */
-name|alt
+name|_thread_sigstack
 operator|.
 name|ss_size
 operator|=
 name|SIGSTKSZ
 expr_stmt|;
-name|alt
+name|_thread_sigstack
 operator|.
 name|ss_flags
 operator|=
@@ -1148,15 +1143,25 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|_thread_sigstack
+operator|.
+name|ss_sp
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
 name|_thread_sys_sigaltstack
 argument_list|(
 operator|&
-name|alt
+name|_thread_sigstack
 argument_list|,
 name|NULL
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 name|PANIC
 argument_list|(
