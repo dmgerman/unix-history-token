@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signalvar.h>
 end_include
 
@@ -496,23 +502,6 @@ name|cvp
 operator|->
 name|cv_description
 expr_stmt|;
-name|td
-operator|->
-name|td_ksegrp
-operator|->
-name|kg_slptime
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXXKSE */
-name|td
-operator|->
-name|td_base_pri
-operator|=
-name|td
-operator|->
-name|td_priority
-expr_stmt|;
 name|CTR3
 argument_list|(
 name|KTR_PROC
@@ -544,6 +533,15 @@ argument_list|,
 name|td
 argument_list|,
 name|td_slpq
+argument_list|)
+expr_stmt|;
+name|sched_sleep
+argument_list|(
+name|td
+argument_list|,
+name|td
+operator|->
+name|td_priority
 argument_list|)
 expr_stmt|;
 block|}
