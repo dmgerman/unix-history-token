@@ -2468,7 +2468,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"init: not found\n"
+literal|"init: not found in path %s\n"
+argument_list|,
+name|init_path
 argument_list|)
 expr_stmt|;
 name|panic
