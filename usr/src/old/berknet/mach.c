@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mach.c	4.1	(Berkeley)	%G%"
+literal|"@(#)mach.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,13 +84,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|SRC
 end_endif
 
 begin_endif
 endif|#
 directive|endif
-endif|CC
 end_endif
 
 begin_ifdef
@@ -115,7 +113,6 @@ end_empty_stmt
 begin_endif
 endif|#
 directive|endif
-endif|FUID
 end_endif
 
 begin_comment
@@ -168,7 +165,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|V6
 ifndef|#
 directive|ifndef
 name|FUID
@@ -199,7 +195,6 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|FUID
 name|chown
 argument_list|(
 name|sfn
@@ -226,7 +221,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|V6
 block|}
 end_block
 
@@ -313,7 +307,6 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|HPASSWD
 name|pwd
 operator|=
 name|getpwuid
@@ -394,7 +387,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|HPASSWD
 if|if
 condition|(
 name|him
@@ -455,14 +447,6 @@ argument|gid
 argument_list|)
 end_macro
 
-begin_decl_stmt
-name|unsigned
-name|uid
-decl_stmt|,
-name|gid
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 name|uid
@@ -492,7 +476,6 @@ operator|)
 return|;
 else|#
 directive|else
-else|FUID
 return|return
 operator|(
 name|uid
@@ -500,7 +483,6 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|FUID
 block|}
 end_block
 
@@ -582,7 +564,6 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|OLDTTY
 end_endif
 
 begin_ifdef
@@ -671,7 +652,6 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|CCTTY
 end_endif
 
 begin_comment
@@ -954,10 +934,8 @@ expr_stmt|;
 comment|/* 	debug("user %s passwd %s %s",pwd->pw_name,pwd->pw_passwd); 	*/
 endif|#
 directive|endif
-endif|TESTING
 endif|#
 directive|endif
-endif|PASSWDF
 block|}
 end_block
 
@@ -1007,7 +985,6 @@ name|v6utmpstr
 struct|;
 endif|#
 directive|endif
-endif|OLDTTY
 specifier|static
 name|struct
 name|utmp
@@ -1111,7 +1088,6 @@ return|;
 block|}
 else|#
 directive|else
-else|OLDTTY
 while|while
 condition|(
 name|fread
@@ -1195,7 +1171,6 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|OLDTTY
 name|fclose
 argument_list|(
 name|fdutmp
@@ -1481,7 +1456,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|OLDTTY
 ifdef|#
 directive|ifdef
 name|CCTTY
@@ -1534,10 +1508,8 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-endif|OLDTTY
 endif|#
 directive|endif
-endif|BERKELEY
 if|if
 condition|(
 name|shdir
@@ -2861,71 +2833,12 @@ block|{}
 end_block
 
 begin_comment
-comment|/*  * Return the ptr in sp at which the character c appears;  * NULL if not found  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_function
-name|char
-modifier|*
-name|index
-parameter_list|(
-name|sp
-parameter_list|,
-name|c
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-name|c
-decl_stmt|;
-block|{
-do|do
-block|{
-if|if
-condition|(
-operator|*
-name|sp
-operator|==
-name|c
-condition|)
-return|return
-operator|(
-name|sp
-operator|)
-return|;
-block|}
-do|while
-condition|(
-operator|*
-name|sp
-operator|++
-condition|)
-do|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* end of non-vax v7 routines */
 end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|V6
 end_endif
 
 begin_comment
@@ -3000,7 +2913,6 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|MULTNAMS
 return|return
 operator|(
 name|getpwuid
