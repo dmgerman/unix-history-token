@@ -1589,12 +1589,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VCHR
-operator|||
 name|dev
 operator|==
 name|NODEV
