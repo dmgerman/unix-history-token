@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)master.c	2.3 (Berkeley) %G%"
+literal|"@(#)master.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,7 +373,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|TSP_DATE
+name|TSP_SETDATE
 case|:
 name|saveaddr
 operator|=
@@ -414,12 +414,22 @@ expr_stmt|;
 name|time
 operator|.
 name|tv_sec
-operator|+=
+operator|=
 name|msg
 operator|->
 name|tsp_time
 operator|.
 name|tv_sec
+expr_stmt|;
+name|time
+operator|.
+name|tv_usec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_usec
 expr_stmt|;
 name|time
 operator|.
@@ -531,7 +541,7 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
-name|TSP_DATEREQ
+name|TSP_SETDATEREQ
 case|:
 name|ind
 operator|=
@@ -618,12 +628,22 @@ expr_stmt|;
 name|time
 operator|.
 name|tv_sec
-operator|+=
+operator|=
 name|msg
 operator|->
 name|tsp_time
 operator|.
 name|tv_sec
+expr_stmt|;
+name|time
+operator|.
+name|tv_usec
+operator|=
+name|msg
+operator|->
+name|tsp_time
+operator|.
+name|tv_usec
 expr_stmt|;
 name|time
 operator|.
@@ -1273,7 +1293,7 @@ name|tack
 operator|.
 name|tv_usec
 operator|=
-literal|100000
+literal|500000
 expr_stmt|;
 if|if
 condition|(
@@ -1292,8 +1312,6 @@ name|i
 index|]
 operator|.
 name|addr
-argument_list|,
-name|ON
 argument_list|)
 operator|)
 operator|<
@@ -1495,17 +1513,6 @@ name|rmmach
 argument_list|(
 name|i
 argument_list|)
-expr_stmt|;
-name|hp
-index|[
-name|i
-index|]
-operator|=
-name|hp
-index|[
-operator|--
-name|slvcount
-index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
