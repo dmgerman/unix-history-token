@@ -31,10 +31,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|orig_rcsid
+index|[]
+init|=
+literal|"From: Id: res_comp.c,v 8.11 1996/12/02 09:17:22 vixie Exp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 8.8 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: res_comp.c,v 1.7 1996/08/30 21:13:27 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1598,7 +1608,10 @@ index|[
 literal|0
 index|]
 argument_list|)
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|periodchar
 argument_list|(
 name|dn
@@ -1607,10 +1620,31 @@ literal|1
 index|]
 argument_list|)
 condition|)
+return|return
+operator|(
+name|res_hnok
+argument_list|(
 name|dn
-operator|+=
+operator|+
 literal|2
-expr_stmt|;
+argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|dn
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|res_hnok

@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsap_addr.c,v 8.3 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: nsap_addr.c,v 1.1 1996/08/29 20:08:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -229,11 +229,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|ascii
 operator|++
+operator|)
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|c

@@ -63,16 +63,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ALLOW_UPDATES
-end_define
-
-begin_comment
-comment|/* compile recognition for update REQUESTS - harmless */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MULTI_PTRS_ARE_ALIASES
 value|1
 end_define

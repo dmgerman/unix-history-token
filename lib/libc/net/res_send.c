@@ -31,10 +31,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|orig_rcsid
+index|[]
+init|=
+literal|"From: Id: res_send.c,v 8.12 1996/10/08 04:51:06 vixie Exp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.9 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: res_send.c,v 1.10 1996/08/30 21:13:42 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,18 +158,6 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-name|void
-name|_res_close
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|s
@@ -198,6 +196,13 @@ end_decl_stmt
 begin_comment
 comment|/* is the socket a virtual ciruit? */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CAN_RECONNECT
+value|1
+end_define
 
 begin_ifndef
 ifndef|#
@@ -1214,7 +1219,7 @@ name|ns
 operator|)
 condition|)
 block|{
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1280,7 +1285,7 @@ break|break;
 case|case
 name|res_nextns
 case|:
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1407,7 +1412,7 @@ name|s
 operator|>=
 literal|0
 condition|)
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 name|s
@@ -1499,7 +1504,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1609,7 +1614,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1688,7 +1693,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 comment|/* 				 * A long running process might get its TCP 				 * connection reset if the remote server was 				 * restarted.  Requery the server instead of 				 * trying a new one.  When there is only one 				 * server, this means that a query might work 				 * instead of failing.  We only allow one reset 				 * per query to prevent looping. 				 */
@@ -1706,14 +1711,14 @@ name|connreset
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
 name|same_ns
 goto|;
 block|}
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1825,7 +1830,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1992,7 +1997,7 @@ if|if
 condition|(
 name|vc
 condition|)
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 name|s
@@ -2013,6 +2018,14 @@ operator|<
 literal|0
 condition|)
 block|{
+if|#
+directive|if
+operator|!
+name|CAN_RECONNECT
+name|bad_dg_sock
+label|:
+endif|#
+directive|endif
 name|terrno
 operator|=
 name|errno
@@ -2108,7 +2121,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2157,7 +2170,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2173,6 +2186,9 @@ condition|(
 name|connected
 condition|)
 block|{
+if|#
+directive|if
+name|CAN_RECONNECT
 name|struct
 name|sockaddr_in
 name|no_addr
@@ -2218,6 +2234,57 @@ name|no_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|int
+name|s1
+init|=
+name|socket
+argument_list|(
+name|PF_INET
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|s1
+operator|<
+literal|0
+condition|)
+goto|goto
+name|bad_dg_sock
+goto|;
+operator|(
+name|void
+operator|)
+name|dup2
+argument_list|(
+name|s1
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s1
+argument_list|)
+expr_stmt|;
+name|Dprint
+argument_list|(
+argument|_res.options& RES_DEBUG
+argument_list|,
+argument|(stdout,
+literal|";; new DG socket\n"
+argument|)
+argument_list|)
+endif|#
+directive|endif
 name|connected
 operator|=
 literal|0
@@ -2280,7 +2347,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2406,7 +2473,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2440,7 +2507,7 @@ name|gotsomewhere
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2503,7 +2570,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2759,7 +2826,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 comment|/* don't retry if called from dig */
@@ -2810,7 +2877,7 @@ name|v_circuit
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2923,7 +2990,7 @@ name|RES_STAYOPEN
 operator|)
 condition|)
 block|{
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 block|}
@@ -2986,7 +3053,7 @@ break|break;
 case|case
 name|res_nextns
 case|:
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -3038,7 +3105,7 @@ block|}
 comment|/*foreach ns*/
 block|}
 comment|/*foreach retry*/
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 if|if
@@ -3082,7 +3149,7 @@ end_comment
 
 begin_function
 name|void
-name|_res_close
+name|res_close
 parameter_list|()
 block|{
 if|if

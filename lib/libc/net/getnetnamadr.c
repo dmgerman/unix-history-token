@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetnamadr.c,v 1.5 1996/07/12 18:54:40 jkh Exp $"
+literal|"@(#)$Id: getnetnamadr.c,v 1.6 1996/08/29 20:08:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 1.5 1996/07/12 18:54:40 jkh Exp $"
+literal|"$Id: getnetnamadr.c,v 1.6 1996/08/29 20:08:04 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,7 +642,7 @@ name|addr
 parameter_list|,
 name|af
 parameter_list|)
-name|long
+name|u_long
 name|addr
 decl_stmt|;
 name|int
