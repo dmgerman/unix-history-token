@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.10	%G%"
+literal|"@(#)bibargs.c	2.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4336,7 +4336,7 @@ name|fullaabet
 argument_list|()
 decl_stmt|,
 modifier|*
-name|astro
+name|multfull
 argument_list|()
 decl_stmt|;
 name|getfield
@@ -4517,11 +4517,32 @@ condition|)
 comment|/* Astrophysical Journal style*/
 name|cp
 operator|=
-name|astro
+name|multfull
 argument_list|(
 name|cp
 argument_list|,
 name|ref
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|c
+operator|==
+literal|'4'
+condition|)
+comment|/* Computing Surveys style*/
+name|cp
+operator|=
+name|multfull
+argument_list|(
+name|cp
+argument_list|,
+name|ref
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -5083,17 +5104,19 @@ block|}
 end_block
 
 begin_comment
-comment|/* Astrophysical Journal style         if 1 author - last name date         if 2 authors - last name and last name date         if 3 authors - last name, last name and last name date         if 4 or more authors - last name et al. date */
+comment|/*    Multiple full authors last names (1, 2 or 3 full names).    If maxauthors<3         if 1 author - last name date         if 2 authors - last name and last name date         if 3 or more authors - last name et al. date   If maxauthors>=3         if 1 author - last name date         if 2 authors - last name and last name date         if 3 authors - last name, last name and last name date         if 4 or more authors - last name et al. date */
 end_comment
 
 begin_decl_stmt
 name|char
 modifier|*
-name|astro
+name|multfull
 argument_list|(
 name|cp
 argument_list|,
 name|ref
+argument_list|,
+name|maxauthors
 argument_list|)
 name|char
 modifier|*
@@ -5101,6 +5124,12 @@ name|cp
 decl_stmt|,
 name|ref
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|maxauthors
 decl_stmt|;
 end_decl_stmt
 
@@ -5170,6 +5199,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|maxauthors
+operator|>=
+literal|3
+operator|)
+operator|&&
+operator|(
 name|getname
 argument_list|(
 literal|4
@@ -5180,13 +5216,14 @@ name|temp
 argument_list|,
 name|ref
 argument_list|)
+operator|)
 condition|)
 block|{
 for|for
 control|(
 name|fp
 operator|=
-literal|" et al."
+literal|" \\*(e]"
 init|;
 operator|*
 name|fp
@@ -7049,6 +7086,22 @@ name|numeds
 decl_stmt|,
 name|maxeds
 decl_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|ref
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ref not found */
+else|else
+block|{
 name|rdref
 argument_list|(
 operator|&
@@ -7347,6 +7400,7 @@ argument_list|,
 literal|".][\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
