@@ -631,6 +631,15 @@ literal|"Intel 82562EZ (ICH6)"
 block|}
 block|,
 block|{
+literal|0x1068
+block|,
+operator|-
+literal|1
+block|,
+literal|"Intel 82801FBM (ICH6-M) Pro/100 VE Ethernet"
+block|}
+block|,
+block|{
 literal|0x1209
 block|,
 operator|-
