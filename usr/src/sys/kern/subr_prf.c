@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.17	81/05/11	*/
+comment|/*	subr_prf.c	4.18	81/06/11	*/
 end_comment
 
 begin_include
@@ -489,6 +489,10 @@ operator|++
 control|)
 empty_stmt|;
 block|}
+if|if
+condition|(
+name|any
+condition|)
 name|putchar
 argument_list|(
 literal|'>'
