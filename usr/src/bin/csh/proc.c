@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.16 (Berkeley) %G%"
+literal|"@(#)proc.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4351,9 +4351,8 @@ name|cont
 goto|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|killpg
 argument_list|(
 name|pp
@@ -4362,7 +4361,31 @@ name|p_jobid
 argument_list|,
 name|signum
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|cp
+argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|sys_errlist
+index|[
+name|errno
+index|]
+argument_list|)
+expr_stmt|;
+name|err
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|signum
