@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uusnap.c	5.10 (Berkeley) %G%"
+literal|"@(#)uusnap.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +289,7 @@ name|curtime
 decl_stmt|,
 name|t
 decl_stmt|;
-name|scandir
+name|dodir
 argument_list|(
 name|CMDSDIR
 argument_list|,
@@ -297,12 +297,12 @@ literal|"C."
 argument_list|,
 name|CMDSLEN
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|,
 name|CMDTYPE
 argument_list|)
 expr_stmt|;
-name|scandir
+name|dodir
 argument_list|(
 name|DATADIR
 argument_list|,
@@ -310,12 +310,12 @@ literal|"D."
 argument_list|,
 name|DATALEN
 argument_list|,
-name|NULL
+literal|'\0'
 argument_list|,
 name|DATTYPE
 argument_list|)
 expr_stmt|;
-name|scandir
+name|dodir
 argument_list|(
 name|XEQTDIR
 argument_list|,
@@ -634,7 +634,7 @@ index|]
 operator|.
 name|stst
 operator|==
-name|NULL
+literal|'\0'
 operator|||
 name|sys
 index|[
@@ -942,7 +942,7 @@ block|}
 end_function
 
 begin_macro
-name|scandir
+name|dodir
 argument_list|(
 argument|dnam
 argument_list|,
@@ -963,8 +963,24 @@ name|dnam
 decl_stmt|,
 modifier|*
 name|prfx
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|fchr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|type
 decl_stmt|;
 end_decl_stmt
 
@@ -1141,13 +1157,13 @@ index|[
 name|fnamlen
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 name|fnamlen
 operator|=
 name|MAXBASENAME
 expr_stmt|;
-comment|/* yes, after = NULL*/
+comment|/* yes, after = '\0'*/
 block|}
 else|else
 block|{
@@ -1177,7 +1193,7 @@ index|[
 name|fnamlen
 index|]
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 break|break;
 block|}
@@ -1815,7 +1831,7 @@ condition|)
 operator|*
 name|tp
 operator|=
-name|NULL
+literal|'\0'
 expr_stmt|;
 comment|/* drop system name */
 else|else
