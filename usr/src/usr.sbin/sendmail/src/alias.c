@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.51 (Berkeley) %G%"
+literal|"@(#)alias.c	6.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1685,11 +1685,6 @@ name|ADDRESS
 name|al
 decl_stmt|,
 name|bl
-decl_stmt|;
-specifier|register
-name|STAB
-modifier|*
-name|s
 decl_stmt|;
 name|char
 name|line

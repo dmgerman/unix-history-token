@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.33 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.34 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.33 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.34 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -604,7 +604,7 @@ name|NULL
 condition|)
 operator|*
 name|p
-operator|==
+operator|=
 literal|'\0'
 expr_stmt|;
 if|if

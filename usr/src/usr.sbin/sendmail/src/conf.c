@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.62 (Berkeley) %G%"
+literal|"@(#)conf.c	6.63 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4144,9 +4144,6 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-name|long
-name|blocksneeded
-decl_stmt|;
 specifier|extern
 name|int
 name|errno

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.59 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,15 +733,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|MAILER
-modifier|*
-name|m
-init|=
-name|a
-operator|->
-name|q_mailer
-decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -4371,10 +4362,6 @@ name|xpvp
 decl_stmt|;
 name|int
 name|trsize
-decl_stmt|;
-name|char
-modifier|*
-name|olddelimchar
 decl_stmt|;
 name|char
 modifier|*

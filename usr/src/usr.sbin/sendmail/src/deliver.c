@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.81 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6761,10 +6761,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|LOG
-name|char
-modifier|*
-name|curhost
-decl_stmt|;
 name|char
 name|buf
 index|[

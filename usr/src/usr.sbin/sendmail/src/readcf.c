@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.42 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.43 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,11 +103,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|q
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|pv
 decl_stmt|;
 name|struct
 name|rewrite

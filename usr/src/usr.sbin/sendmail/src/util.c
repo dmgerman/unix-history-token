@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.20 (Berkeley) %G%"
+literal|"@(#)util.c	6.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1360,10 +1360,6 @@ specifier|register
 name|int
 name|tries
 decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -1611,19 +1607,26 @@ name|p
 operator|=
 name|l
 init|;
+operator|(
 name|svchar
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
 control|)
 if|if
 condition|(
-name|svchar
-operator|&
+name|bitset
+argument_list|(
 literal|0200
+argument_list|,
+name|svchar
+argument_list|)
 condition|)
 operator|*
 name|p

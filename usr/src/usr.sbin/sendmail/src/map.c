@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.27 (Berkeley) %G%"
+literal|"@(#)map.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3790,6 +3790,10 @@ parameter_list|(
 name|map
 parameter_list|,
 name|name
+parameter_list|,
+name|av
+parameter_list|,
+name|pstat
 parameter_list|)
 specifier|register
 name|MAP
@@ -3799,6 +3803,15 @@ decl_stmt|;
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|av
+decl_stmt|;
+name|int
+modifier|*
+name|pstat
 decl_stmt|;
 block|{
 specifier|register
@@ -3931,10 +3944,6 @@ name|int
 name|mode
 decl_stmt|;
 block|{
-name|FILE
-modifier|*
-name|af
-decl_stmt|;
 if|if
 condition|(
 name|tTd

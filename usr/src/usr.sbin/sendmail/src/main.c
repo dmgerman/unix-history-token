@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.69 (Berkeley) %G%"
+literal|"@(#)main.c	6.70 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6006,11 +6006,15 @@ name|ap
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|ap
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 comment|/* Return if "--" or not an option of any form. */

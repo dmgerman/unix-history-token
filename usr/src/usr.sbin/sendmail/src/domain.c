@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.21 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.22 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.21 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.22 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1374,8 +1374,6 @@ name|querybuf
 name|answer
 decl_stmt|;
 name|int
-name|first
-decl_stmt|,
 name|ancount
 decl_stmt|,
 name|qdcount
