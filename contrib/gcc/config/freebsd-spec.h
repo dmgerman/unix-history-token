@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Base configuration file for all FreeBSD targets.    Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ directive|define
 name|FBSD_TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do									\     {									\ 	if (FBSD_MAJOR == 6)						\ 	  builtin_define ("__FreeBSD__=6");			       	\ 	else if (FBSD_MAJOR == 5)	       				\ 	  builtin_define ("__FreeBSD__=5");			       	\ 	else if (FBSD_MAJOR == 4)			       		\ 	  builtin_define ("__FreeBSD__=4");			       	\ 	else if (FBSD_MAJOR == 3)	       				\ 	  builtin_define ("__FreeBSD__=3");			       	\ 	else								\ 	  builtin_define ("__FreeBSD__");			       	\ 	builtin_define_std ("unix");					\ 	builtin_define ("__ELF__");					\ 	builtin_define ("__KPRINTF_ATTRIBUTE__");		       	\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=bsd");					\ 	builtin_assert ("system=FreeBSD");				\ 	FBSD_NATIVE_TARGET_OS_CPP_BUILTINS();				\ 	FBSD_TARGET_CPU_CPP_BUILTINS();					\     }									\   while (0)
+value|do									\     {									\ 	if (FBSD_MAJOR == 6)						\ 	  builtin_define ("__FreeBSD__=6");			       	\ 	else if (FBSD_MAJOR == 5)	       				\ 	  builtin_define ("__FreeBSD__=5");			       	\ 	else if (FBSD_MAJOR == 4)			       		\ 	  builtin_define ("__FreeBSD__=4");			       	\ 	else if (FBSD_MAJOR == 3)	       				\ 	  builtin_define ("__FreeBSD__=3");			       	\ 	else								\ 	  builtin_define ("__FreeBSD__");			       	\ 	builtin_define_std ("unix");					\ 	builtin_define ("__KPRINTF_ATTRIBUTE__");		       	\ 	builtin_assert ("system=unix");					\ 	builtin_assert ("system=bsd");					\ 	builtin_assert ("system=FreeBSD");				\ 	FBSD_NATIVE_TARGET_OS_CPP_BUILTINS();				\ 	FBSD_TARGET_CPU_CPP_BUILTINS();					\     }									\   while (0)
 end_define
 
 begin_comment
@@ -87,7 +87,7 @@ directive|define
 name|FBSD_NATIVE_TARGET_OS_CPP_BUILTINS
 parameter_list|()
 define|\
-value|do {									\ 	builtin_define_std ("__FreeBSD_cc_version=510002");		\   } while (0)
+value|do {									\ 	builtin_define_std ("__FreeBSD_cc_version=520001");		\   } while (0)
 end_define
 
 begin_else
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|FBSD_CPP_SPEC
-value|"							\   %(cpp_cpu)								\   %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__}		\   %{!ansi:%{!std=c89:%{!std=iso9899.1990:%{!std=iso9899.199409:-D_LONGLONG}}}} \   %{posix:-D_POSIX_SOURCE}"
+value|"							\   %(cpp_cpu)								\   %{fPIC|fpic|fPIE|fpie:-D__PIC__ -D__pic__}				\   %{!ansi:%{!std=c89:%{!std=iso9899.1990:%{!std=iso9899.199409:-D_LONGLONG}}}} \   %{posix:-D_POSIX_SOURCE}"
 end_define
 
 begin_comment
@@ -205,6 +205,38 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|FBSD_MAJOR
+operator|<
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|FBSD_DYNAMIC_LINKER
+value|"/usr/libexec/ld-elf.so.1"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FBSD_DYNAMIC_LINKER
+value|"/libexec/ld-elf.so.1"
+end_define
 
 begin_endif
 endif|#
