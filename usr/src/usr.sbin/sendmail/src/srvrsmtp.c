@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.23 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.24 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.23 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.24 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -616,7 +616,11 @@ name|TopFrame
 argument_list|)
 operator|>
 literal|0
-operator|&&
+condition|)
+block|{
+comment|/* if() nesting is necessary for Cray UNICOS */
+if|if
+condition|(
 name|InChild
 condition|)
 block|{
@@ -631,6 +635,7 @@ expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 name|QuickAbort
 operator|=

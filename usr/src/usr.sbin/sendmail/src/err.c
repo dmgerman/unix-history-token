@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.19 (Berkeley) %G%"
+literal|"@(#)err.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1319,7 +1319,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ERRSTRING -- return string description of error code ** **	Parameters: **		errno -- the error number to translate ** **	Returns: **		A string description of errno. ** **	Side Effects: **		none. */
+comment|/* **  ERRSTRING -- return string description of error code ** **	Parameters: **		errnum -- the error number to translate ** **	Returns: **		A string description of errnum. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -1328,10 +1328,10 @@ name|char
 modifier|*
 name|errstring
 parameter_list|(
-name|errno
+name|errnum
 parameter_list|)
 name|int
-name|errno
+name|errnum
 decl_stmt|;
 block|{
 name|char
@@ -1378,7 +1378,7 @@ name|NULL
 expr_stmt|;
 switch|switch
 condition|(
-name|errno
+name|errnum
 condition|)
 block|{
 if|#
@@ -1407,7 +1407,7 @@ name|buf
 argument_list|,
 name|sys_errlist
 index|[
-name|errno
+name|errnum
 index|]
 argument_list|)
 expr_stmt|;
@@ -1648,11 +1648,11 @@ return|;
 block|}
 if|if
 condition|(
-name|errno
+name|errnum
 operator|>
 literal|0
 operator|&&
-name|errno
+name|errnum
 operator|<
 name|sys_nerr
 condition|)
@@ -1660,7 +1660,7 @@ return|return
 operator|(
 name|sys_errlist
 index|[
-name|errno
+name|errnum
 index|]
 operator|)
 return|;
@@ -1673,7 +1673,7 @@ name|buf
 argument_list|,
 literal|"Error %d"
 argument_list|,
-name|errno
+name|errnum
 argument_list|)
 expr_stmt|;
 return|return

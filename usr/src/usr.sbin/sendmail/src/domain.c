@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.10 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.11 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.10 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.11 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +176,24 @@ define|#
 directive|define
 name|NO_DATA
 value|NO_ADDRESS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEADERSZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HEADERSZ
+value|sizeof(HEADER)
 end_define
 
 begin_endif
@@ -613,10 +631,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-sizeof|sizeof
-argument_list|(
-name|HEADER
-argument_list|)
+name|HEADERSZ
 expr_stmt|;
 name|eom
 operator|=
@@ -2151,10 +2166,7 @@ operator|)
 operator|&
 name|answer
 operator|+
-sizeof|sizeof
-argument_list|(
-name|HEADER
-argument_list|)
+name|HEADERSZ
 expr_stmt|;
 name|eom
 operator|=

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.46 (Berkeley) %G%"
+literal|"@(#)main.c	8.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +63,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
 end_include
 
 begin_ifdef
