@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	3.2 83/08/18"
+literal|"@(#)cmd4.c	3.3 83/08/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,7 +138,7 @@ name|ww_w
 operator|.
 name|l
 operator|+
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 for|for
