@@ -634,7 +634,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_BUSY
 operator||
 name|B_READ
@@ -1183,7 +1183,7 @@ comment|/* 	 * We read the label first to see if it's there, 	 * in which case w
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_BUSY
 operator||
 name|B_READ
@@ -1302,7 +1302,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_BUSY
 operator||
 name|B_WRITE
@@ -1366,7 +1366,7 @@ expr_stmt|;
 name|bp
 operator|->
 name|b_flags
-operator|=
+operator||=
 name|B_BUSY
 operator||
 name|B_WRITE
