@@ -704,7 +704,7 @@ name|c
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|i386
+name|__i386__
 name|int
 name|s
 decl_stmt|;
@@ -886,7 +886,7 @@ break|break;
 block|}
 ifndef|#
 directive|ifndef
-name|i386
+name|__i386__
 name|splx
 argument_list|(
 name|s

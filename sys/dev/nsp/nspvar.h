@@ -246,7 +246,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|i386
+name|__i386__
 argument_list|)
 end_if
 
@@ -266,7 +266,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !i386 */
+comment|/* !__i386__ */
 end_comment
 
 begin_define
@@ -284,7 +284,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !i386 */
+comment|/* !__i386__ */
 end_comment
 
 begin_endif
