@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -484,15 +484,11 @@ name|mp
 operator|->
 name|mnt_flag
 operator||=
-operator|(
 name|vfsp
 operator|->
 name|vfc_flags
 operator|&
 name|MNT_VISFLAGMASK
-operator|)
-operator||
-name|MNT_ROOTFS
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -3425,25 +3421,10 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
-block|{
-if|if
-condition|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_ROOTFS
-condition|)
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|error
@@ -3634,10 +3615,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|int
-name|doforce
-decl_stmt|;
 specifier|register
 name|struct
 name|ufsmount
@@ -3649,16 +3626,6 @@ name|i
 decl_stmt|,
 name|error
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|doforce
-condition|)
-name|flags
-operator|&=
-operator|~
-name|FORCECLOSE
-expr_stmt|;
 name|ump
 operator|=
 name|VFSTOUFS
@@ -4065,6 +4032,12 @@ name|um_fs
 expr_stmt|;
 if|if
 condition|(
+name|fs
+operator|->
+name|fs_fmod
+operator|!=
+literal|0
+operator|&&
 name|fs
 operator|->
 name|fs_ronly
