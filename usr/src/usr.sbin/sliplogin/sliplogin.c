@@ -39,25 +39,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stropts.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/termios.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ttold.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sockio.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
@@ -70,12 +58,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/slip.h>
 end_include
 
 begin_include
@@ -132,24 +114,32 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD
-name|>=
-name|43
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<ttyent.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SLIPIFNAME
+value|"sl"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ADDR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MASK
+value|2
+end_define
 
 begin_define
 define|#
@@ -393,6 +383,8 @@ decl_stmt|,
 name|s
 decl_stmt|,
 name|unit
+decl_stmt|,
+name|ldisc
 decl_stmt|;
 name|struct
 name|termios
@@ -589,7 +581,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* ensure that the slip line is our controlling terminal */
+comment|/* disassociate from current controlling terminal */
 if|if
 condition|(
 operator|(
@@ -628,34 +620,8 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|fd
-operator|=
-name|open
-argument_list|(
-name|ttyname
-argument_list|(
-literal|0
-argument_list|)
-argument_list|,
-name|O_RDWR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|fd
-operator|>=
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
+block|}
+comment|/* ensure that the slip line is our new controlling terminal */
 operator|(
 name|void
 operator|)
@@ -667,7 +633,18 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCSCTTY
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|fchmod
 argument_list|(
 literal|0
@@ -675,21 +652,6 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-comment|/* pop all streams modules */
-while|while
-condition|(
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|I_POP
-argument_list|,
-literal|0
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 comment|/* set up the line parameters */
 if|if
 condition|(
@@ -697,7 +659,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCGETS
+name|TCGETA
 argument_list|,
 operator|(
 name|caddr_t
@@ -713,7 +675,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TCGETS): %m"
+literal|"ioctl (TCGETA): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -745,13 +707,23 @@ name|c_iflag
 operator|=
 name|IGNBRK
 expr_stmt|;
+name|tios
+operator|.
+name|c_oflag
+operator|=
+name|tios
+operator|.
+name|c_lflag
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|TCSETS
+name|TCSETA
 argument_list|,
 operator|(
 name|caddr_t
@@ -767,7 +739,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (TCSETS): %m"
+literal|"ioctl (TCSETA): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -776,16 +748,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* push the SLIP module */
+name|ldisc
+operator|=
+name|SLIPDISC
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|I_PUSH
+name|TIOCSETD
 argument_list|,
-literal|"slip"
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ldisc
 argument_list|)
 operator|<
 literal|0
@@ -795,7 +774,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (I_PUSH): %m"
+literal|"ioctl(TIOCSETD): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -811,7 +790,7 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
-name|SLIOGUNIT
+name|TIOCGETD
 argument_list|,
 operator|(
 name|caddr_t
@@ -827,7 +806,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ioctl (SLIOGUNIT): %m"
+literal|"ioctl (TIOCGETD): %m"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -840,7 +819,9 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"attaching slip%d: local %s remote %s mask %s\n"
+literal|"attaching %s%d: local %s remote %s mask %s\n"
+argument_list|,
+name|SLIPIFNAME
 argument_list|,
 name|unit
 argument_list|,
@@ -851,6 +832,9 @@ argument_list|,
 name|netmask
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* set the local and remote interface addresses */
 name|s
 operator|=
@@ -899,6 +883,8 @@ operator|&
 name|ifr
 operator|.
 name|ifr_addr
+argument_list|,
+name|MASK
 argument_list|)
 expr_stmt|;
 if|if
@@ -957,6 +943,8 @@ operator|&
 name|ifr
 operator|.
 name|ifr_addr
+argument_list|,
+name|ADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -1014,6 +1002,8 @@ operator|&
 name|ifr
 operator|.
 name|ifr_addr
+argument_list|,
+name|ADDR
 argument_list|)
 expr_stmt|;
 comment|/* this has the side-effect of marking the interface up */
@@ -1048,6 +1038,41 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* XXX -- give up for now and just invoke ifconfig XXX */
+block|{
+name|char
+name|cmd
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"/sbin/ifconfig %s%d inet %s %s netmask %s"
+argument_list|,
+name|SLIPIFNAME
+argument_list|,
+name|unit
+argument_list|,
+name|localaddr
+argument_list|,
+name|dstaddr
+argument_list|,
+name|netmask
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* set up signal handlers */
 if|#
 directive|if
@@ -1433,6 +1458,8 @@ argument_list|(
 argument|s
 argument_list|,
 argument|saddr
+argument_list|,
+argument|which
 argument_list|)
 end_macro
 
@@ -1448,6 +1475,12 @@ name|struct
 name|sockaddr
 modifier|*
 name|saddr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|which
 decl_stmt|;
 end_decl_stmt
 
@@ -1497,11 +1530,36 @@ expr|*
 name|saddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|which
+operator|==
+name|ADDR
+condition|)
+block|{
+name|sin
+operator|->
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|sin
+argument_list|)
+expr_stmt|;
 name|sin
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
+expr_stmt|;
+block|}
+else|else
+name|sin
+operator|->
+name|sin_len
+operator|=
+literal|8
 expr_stmt|;
 name|val
 operator|=
