@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c.c	5.5 (Berkeley) %G%"
+literal|"@(#)c.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1297,17 +1297,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%s {\n"
-argument_list|,
-name|t
-operator|->
-name|class
-operator|==
-name|RECORD
-condition|?
-literal|"struct"
-else|:
-literal|"union"
+literal|"{\n"
 argument_list|)
 expr_stmt|;
 for|for
