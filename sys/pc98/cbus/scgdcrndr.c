@@ -24,19 +24,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/consio.h>
+file|<sys/fbio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fbio.h>
+file|<sys/consio.h>
 end_include
 
 begin_include
