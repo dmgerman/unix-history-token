@@ -4260,6 +4260,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* 		 * It should not be possible to have all bits set; the 		 * FXP_SCB_INTR_SWI bit always returns 0 on a read.  If  		 * all bits are set, this may indicate that the card has 		 * been physically ejected, so ignore it. 		 */
+if|if
+condition|(
+name|statack
+operator|==
+literal|0xff
+condition|)
+return|return;
 comment|/* 		 * First ACK all the interrupts in this pass. 		 */
 name|CSR_WRITE_1
 argument_list|(
