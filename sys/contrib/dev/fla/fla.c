@@ -509,11 +509,6 @@ name|doc2k_stat
 name|ds
 decl_stmt|;
 name|struct
-name|diskslices
-modifier|*
-name|dk_slices
-decl_stmt|;
-name|struct
 name|buf_queue_head
 name|buf_queue
 decl_stmt|;
