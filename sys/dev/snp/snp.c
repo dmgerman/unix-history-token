@@ -3007,6 +3007,12 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
+comment|/* XXX: temporarily prevent unload due to bugs in unloading. */
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 if|if
 condition|(
 operator|!
