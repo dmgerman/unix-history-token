@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.51	83/02/20	*/
+comment|/*	ufs_vnops.c	4.52	83/03/21	*/
 end_comment
 
 begin_include
@@ -4218,7 +4218,7 @@ name|namei
 argument_list|(
 name|uchar
 argument_list|,
-name|LOOKUP
+name|DELETE
 operator||
 name|LOCKPARENT
 argument_list|,
@@ -4272,9 +4272,16 @@ name|u
 operator|.
 name|u_dent
 expr_stmt|;
-comment|/* 		 * Avoid "." and ".." for obvious reasons. 		 */
+comment|/* 		 * Avoid ".", "..", and aliases of "." for obvious reasons. 		 */
 if|if
 condition|(
+operator|(
+name|d
+operator|->
+name|d_namlen
+operator|==
+literal|1
+operator|&&
 name|d
 operator|->
 name|d_name
@@ -4283,15 +4290,7 @@ literal|0
 index|]
 operator|==
 literal|'.'
-condition|)
-block|{
-if|if
-condition|(
-name|d
-operator|->
-name|d_namlen
-operator|==
-literal|1
+operator|)
 operator|||
 operator|(
 name|d
@@ -4300,17 +4299,44 @@ name|d_namlen
 operator|==
 literal|2
 operator|&&
+name|bcmp
+argument_list|(
 name|d
 operator|->
 name|d_name
-index|[
-literal|1
-index|]
+argument_list|,
+literal|".."
+argument_list|,
+literal|2
+argument_list|)
 operator|==
-literal|'.'
+literal|0
+operator|)
+operator|||
+operator|(
+name|dp
+operator|==
+name|ip
 operator|)
 condition|)
 block|{
+name|iput
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|==
+name|ip
+condition|)
+name|irele
+argument_list|(
+name|ip
+argument_list|)
+expr_stmt|;
+else|else
 name|iput
 argument_list|(
 name|ip
@@ -4324,7 +4350,6 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
-block|}
 name|oldparent
 operator|=
 name|dp
@@ -4335,7 +4360,7 @@ name|doingdirectory
 operator|++
 expr_stmt|;
 block|}
-name|irele
+name|iput
 argument_list|(
 name|dp
 argument_list|)
@@ -4418,7 +4443,7 @@ name|u
 operator|.
 name|u_pdir
 expr_stmt|;
-comment|/* 	 * 2) If target doesn't exist, link the target 	 *    to the source and unlink the source.  	 *    Otherwise, rewrite the target directory 	 *    entry to reference the source inode and 	 *    expunge the original entry's existence. 	 */
+comment|/* 	 * If ".." must be changed (ie the directory gets a new 	 * parent) then the user must have write permission. 	 */
 name|parentdifferent
 operator|=
 name|oldparent
@@ -4427,6 +4452,21 @@ name|dp
 operator|->
 name|i_number
 expr_stmt|;
+if|if
+condition|(
+name|parentdifferent
+operator|&&
+name|access
+argument_list|(
+name|ip
+argument_list|,
+name|IWRITE
+argument_list|)
+condition|)
+goto|goto
+name|bad
+goto|;
+comment|/* 	 * 2) If target doesn't exist, link the target 	 *    to the source and unlink the source.  	 *    Otherwise, rewrite the target directory 	 *    entry to reference the source inode and 	 *    expunge the original entry's existence. 	 */
 if|if
 condition|(
 name|xp
