@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -24,6 +24,17 @@ end_define
 begin_comment
 comment|/* LFS superblock size */
 end_comment
+
+begin_comment
+comment|/*  * XXX  * This is a kluge and NEEDS to go away.  *  * Right now, ufs code handles most of the calls for directory operations  * such as create, mkdir, link, etc.  As a result VOP_UPDATE is being  * called with waitfor set (since ffs does these things synchronously).  * Since LFS does not want to do these synchronously, we treat the last  * argument to lfs_update as a set of flags.  If LFS_SYNC is set, then  * the update should be synchronous, if not, do it asynchronously.  * Unfortunately, this means that LFS won't work with NFS yet because  * NFS goes through paths that will make normal calls to ufs which will  * call lfs with a last argument of 1.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_SYNC
+value|0x02
+end_define
 
 begin_comment
 comment|/* On-disk and in-memory checkpoint segment usage structure. */
