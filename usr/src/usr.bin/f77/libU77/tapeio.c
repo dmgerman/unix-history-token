@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char	id_tapeio[] = "@(#)tapeio.c	1.1";  *  * tapeio - tape device specific I/O routines  *  *	ierr = topen  (tlu, name, labelled)  *	ierr = tclose (tlu)  *	nbytes = tread  (tlu, buffer)  *	nbytes = twrite (tlu, buffer)  *	ierr = trewin (tlu)  *	ierr = tskipf (tlu, nfiles, nrecs)  *	ierr = tstate (tlu, fileno, recno, err, eof, eot, tcsr)  */
+comment|/* char	id_tapeio[] = "@(#)tapeio.c	1.2";  *  * tapeio - tape device specific I/O routines  *  *	ierr = topen  (tlu, name, labelled)  *	ierr = tclose (tlu)  *	nbytes = tread  (tlu, buffer)  *	nbytes = twrite (tlu, buffer)  *	ierr = trewin (tlu)  *	ierr = tskipf (tlu, nfiles, nrecs)  *	ierr = tstate (tlu, fileno, recno, err, eof, eot, tcsr)  */
 end_comment
 
 begin_include
@@ -14,6 +14,33 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MTIOCGET
+end_ifndef
+
+begin_comment
+comment|/* 4.1+ defines this in ... */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mtio.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -125,6 +152,32 @@ directive|define
 name|TU_RDATA
 value|0x80
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MTWEOF
+end_ifdef
+
+begin_comment
+comment|/* this implies 4.1+ ... */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mtget
+name|mtget
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* controller status */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Open a tape unit for I/O  *  * calling format:  *	integer topen, tlu  *	character*(*) devnam  *	logical labled  *	ierror = topen(tlu, devnam, labled)  * where:  *	ierror will be 0 for successful open; an error number otherwise.  *	devnam is a character string  *	labled should be .true. if the tape is labelled.  */
@@ -1798,6 +1851,36 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MTWEOF
+comment|/* implies 4.1+ system */
+name|ioctl
+argument_list|(
+name|tu
+operator|->
+name|tu_fd
+argument_list|,
+name|MTIOCGET
+argument_list|,
+operator|&
+name|mtget
+argument_list|)
+expr_stmt|;
+operator|*
+name|tcsr
+operator|=
+operator|(
+name|long
+operator|)
+name|mtget
+operator|.
+name|mt_dsreg
+operator|&
+literal|0xffff
+expr_stmt|;
+else|#
+directive|else
 name|ioctl
 argument_list|(
 name|tu
@@ -1818,6 +1901,8 @@ name|long
 operator|)
 name|csr
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0L
