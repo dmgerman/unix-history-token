@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.21 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PARENT_DOES_UTMP
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -71,6 +96,18 @@ include|#
 directive|include
 file|<initreq.h>
 end_include
+
+begin_decl_stmt
+name|int
+name|utmp_len
+init|=
+name|MAXHOSTNAMELEN
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sizeof(init_request.host) */
+end_comment
 
 begin_else
 else|#
@@ -136,7 +173,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CRAY
+name|PARENT_DOES_UTMP
 end_ifndef
 
 begin_decl_stmt
@@ -163,7 +200,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 end_comment
 
 begin_decl_stmt
@@ -174,6 +211,21 @@ init|=
 literal|"/etc/wtmp"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PARENT_DOES_UTMP */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
 
 begin_include
 include|#
@@ -186,6 +238,36 @@ include|#
 directive|include
 file|<sys/wait.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SC_CRAY_SECURE_SYS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCM_SECURITY
+argument_list|)
+end_if
+
+begin_comment
+comment|/*     * UNICOS 6.0/6.1 do not have SCM_SECURITY defined, so we can     * use it to tell us to turn off all the socket security code,     * since that is only used in UNICOS 7.0 and later.     */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_SC_CRAY_SECURE_SYS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -307,6 +389,29 @@ begin_include
 include|#
 directive|include
 file|<sys/stream.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_endif
@@ -2323,7 +2428,13 @@ end_comment
 begin_function
 name|int
 name|getpty
-parameter_list|()
+parameter_list|(
+name|ptynum
+parameter_list|)
+name|int
+modifier|*
+name|ptynum
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -2423,6 +2534,9 @@ name|dummy
 decl_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|__hpux
 operator|(
 name|void
 operator|)
@@ -2449,6 +2563,36 @@ index|[
 literal|9
 index|]
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|line
+argument_list|,
+literal|"/dev/ptym/ptyXX"
+argument_list|)
+expr_stmt|;
+name|p1
+operator|=
+operator|&
+name|line
+index|[
+literal|13
+index|]
+expr_stmt|;
+name|p2
+operator|=
+operator|&
+name|line
+index|[
+literal|14
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|cp
@@ -2529,6 +2673,9 @@ operator|>
 literal|0
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|__hpux
 name|line
 index|[
 literal|5
@@ -2536,6 +2683,43 @@ index|]
 operator|=
 literal|'t'
 expr_stmt|;
+else|#
+directive|else
+for|for
+control|(
+name|p1
+operator|=
+operator|&
+name|line
+index|[
+literal|8
+index|]
+init|;
+operator|*
+name|p1
+condition|;
+name|p1
+operator|++
+control|)
+operator|*
+name|p1
+operator|=
+operator|*
+operator|(
+name|p1
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|line
+index|[
+literal|9
+index|]
+operator|=
+literal|'t'
+expr_stmt|;
+endif|#
+directive|endif
 name|chown
 argument_list|(
 name|line
@@ -2621,10 +2805,6 @@ block|}
 else|#
 directive|else
 comment|/* CRAY */
-specifier|register
-name|int
-name|npty
-decl_stmt|;
 extern|extern lowpty
 operator|,
 extern|highpty;
@@ -2634,15 +2814,20 @@ name|sb
 decl_stmt|;
 for|for
 control|(
-name|npty
+operator|*
+name|ptynum
 operator|=
 name|lowpty
 init|;
-name|npty
+operator|*
+name|ptynum
 operator|<=
 name|highpty
 condition|;
-name|npty
+operator|(
+operator|*
+name|ptynum
+operator|)
 operator|++
 control|)
 block|{
@@ -2655,7 +2840,8 @@ name|myline
 argument_list|,
 literal|"/dev/pty/%03d"
 argument_list|,
-name|npty
+operator|*
+name|ptynum
 argument_list|)
 expr_stmt|;
 name|p
@@ -2683,7 +2869,8 @@ name|line
 argument_list|,
 literal|"/dev/ttyp%03d"
 argument_list|,
-name|npty
+operator|*
+name|ptynum
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Here are some shenanigans to make sure that there 		 * are no listeners lurking on the line. 		 */
@@ -4353,7 +4540,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CRAY
+name|PARENT_DOES_UTMP
 end_ifdef
 
 begin_ifndef
@@ -4428,7 +4615,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 end_comment
 
 begin_ifndef
@@ -4440,7 +4627,7 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CRAY
+name|PARENT_DOES_UTMP
 end_ifdef
 
 begin_decl_stmt
@@ -4499,6 +4686,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* PARENT_DOES_UTMP */
+end_comment
 
 begin_endif
 endif|#
@@ -4623,7 +4814,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|CRAY
+name|PARENT_DOES_UTMP
 comment|/* 	 * Wait for our parent to get the utmp stuff to get done. 	 */
 name|utmp_sig_wait
 argument_list|()
@@ -4826,10 +5017,18 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_TERMIO */
-comment|/* 	 * Settings for UNICOS 	 */
-ifdef|#
-directive|ifdef
+comment|/* 	 * Settings for UNICOS (and HPUX) 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
 name|termbuf
 operator|.
 name|c_oflag
@@ -4887,10 +5086,17 @@ name|USE_TERMIO
 argument_list|)
 operator|&&
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|CRAY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|BSD
@@ -5290,10 +5496,17 @@ comment|/* 	 * Hangup anybody else using this ttyp, then reopen it for 	 * ourse
 if|#
 directive|if
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|CRAY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|)
 operator|&&
 operator|(
 name|BSD
@@ -5897,13 +6110,13 @@ directive|ifndef
 name|NEWINIT
 ifdef|#
 directive|ifdef
-name|CRAY
+name|PARENT_DOES_UTMP
 name|utmp_sig_init
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 if|if
 condition|(
 operator|(
@@ -5929,7 +6142,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|CRAY
+name|PARENT_DOES_UTMP
 comment|/* 		 * Cray parent will create utmp entry for child and send 		 * signal to child to tell when done.  Child waits for signal 		 * before doing anything important. 		 */
 specifier|register
 name|int
@@ -6011,6 +6224,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__hpux
 name|SCPYN
 argument_list|(
 name|wtmp
@@ -6024,6 +6240,23 @@ operator|+
 literal|3
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|SCPYN
+argument_list|(
+name|wtmp
+operator|.
+name|ut_id
+argument_list|,
+name|wtmp
+operator|.
+name|ut_line
+operator|+
+literal|7
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pututline
 argument_list|(
 operator|&
@@ -6081,6 +6314,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|CRAY
 operator|(
 name|void
 operator|)
@@ -6091,6 +6327,8 @@ argument_list|,
 name|sigjob
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|utmp_sig_notify
 argument_list|(
 name|pid
@@ -6098,7 +6336,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 block|}
 else|else
 block|{
@@ -6511,9 +6749,17 @@ operator|++
 operator|-=
 literal|3
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CRAY
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
 else|else
 operator|*
 name|envp
@@ -6745,6 +6991,13 @@ argument_list|,
 literal|"login"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_LOGIN_H
+argument_list|)
 name|argv
 operator|=
 name|addarg
@@ -6763,6 +7016,8 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__svr4__
@@ -6973,10 +7228,17 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|CRAY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|)
 operator|&&
 name|defined
 argument_list|(
@@ -7291,7 +7553,7 @@ decl_stmt|;
 block|{
 ifndef|#
 directive|ifndef
-name|CRAY
+name|PARENT_DOES_UTMP
 if|#
 directive|if
 operator|(
@@ -7431,7 +7693,7 @@ endif|#
 directive|endif
 else|#
 directive|else
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 ifdef|#
 directive|ifdef
 name|NEWINIT
@@ -7453,6 +7715,9 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* NEWINIT */
+ifdef|#
+directive|ifdef
+name|CRAY
 specifier|static
 name|int
 name|incleanup
@@ -7517,6 +7782,28 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|secflag
+condition|)
+block|{
+comment|/* 		 *	We need to set ourselves back to a null 		 *	label to clean up. 		 */
+name|setulvl
+argument_list|(
+name|sysv
+operator|.
+name|sy_minlvl
+argument_list|)
+expr_stmt|;
+name|setucmp
+argument_list|(
+operator|(
+name|long
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 name|t
 operator|=
 name|cleantmp
@@ -7529,6 +7816,9 @@ name|setutent
 argument_list|()
 expr_stmt|;
 comment|/* just to make sure */
+endif|#
+directive|endif
+comment|/* CRAY */
 name|rmut
 argument_list|(
 name|line
@@ -7549,6 +7839,9 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CRAY
 if|if
 condition|(
 name|t
@@ -7561,6 +7854,9 @@ operator|&
 name|wtmp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CRAY */
 name|exit
 argument_list|(
 literal|1
@@ -7571,7 +7867,7 @@ directive|endif
 comment|/* NEWINT */
 endif|#
 directive|endif
-comment|/* CRAY */
+comment|/* PARENT_DOES_UTMP */
 block|}
 end_function
 
@@ -7580,7 +7876,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CRAY
+name|PARENT_DOES_UTMP
 argument_list|)
 operator|&&
 operator|!
@@ -7703,6 +7999,39 @@ comment|/* reset handler to default */
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sigoff
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* do nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|sigon
+parameter_list|()
+end_define
+
+begin_comment
+comment|/* do nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|utmp_sig_wait
@@ -7751,6 +8080,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CRAY
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -8256,7 +8591,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(CRAY)&& !defined(NEWINIT) */
+comment|/* CRAY */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(PARENT_DOES_UTMP)&& !defined(NEWINIT) */
 end_comment
 
 begin_comment
@@ -8410,10 +8754,17 @@ name|UTMPX
 argument_list|)
 operator|&&
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|CRAY
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|)
 operator|&&
 name|BSD
 operator|<=
@@ -8830,6 +9181,272 @@ end_endif
 begin_comment
 comment|/* CRAY */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_macro
+name|rmut
+argument_list|(
+argument|line
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|line
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|utmp
+name|utmp
+decl_stmt|;
+name|struct
+name|utmp
+modifier|*
+name|utptr
+decl_stmt|;
+name|int
+name|fd
+decl_stmt|;
+comment|/* for /etc/wtmp */
+name|utmp
+operator|.
+name|ut_type
+operator|=
+name|USER_PROCESS
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strncpy
+argument_list|(
+name|utmp
+operator|.
+name|ut_id
+argument_list|,
+name|line
+operator|+
+literal|12
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+operator|.
+name|ut_id
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setutent
+argument_list|()
+expr_stmt|;
+name|utptr
+operator|=
+name|getutid
+argument_list|(
+operator|&
+name|utmp
+argument_list|)
+expr_stmt|;
+comment|/* write it out only if it exists */
+if|if
+condition|(
+name|utptr
+condition|)
+block|{
+name|utptr
+operator|->
+name|ut_type
+operator|=
+name|DEAD_PROCESS
+expr_stmt|;
+name|utptr
+operator|->
+name|ut_time
+operator|=
+name|time
+argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pututline
+argument_list|(
+name|utptr
+argument_list|)
+expr_stmt|;
+comment|/* set wtmp entry if wtmp file exists */
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|open
+argument_list|(
+name|wtmpf
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_APPEND
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|fd
+argument_list|,
+name|utptr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|utmp
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+operator|(
+name|void
+operator|)
+name|endutent
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|line
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chown
+argument_list|(
+name|line
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|line
+index|[
+literal|14
+index|]
+operator|=
+name|line
+index|[
+literal|13
+index|]
+expr_stmt|;
+name|line
+index|[
+literal|13
+index|]
+operator|=
+name|line
+index|[
+literal|12
+index|]
+expr_stmt|;
+name|line
+index|[
+literal|8
+index|]
+operator|=
+literal|'m'
+expr_stmt|;
+name|line
+index|[
+literal|9
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
+name|line
+index|[
+literal|10
+index|]
+operator|=
+literal|'p'
+expr_stmt|;
+name|line
+index|[
+literal|11
+index|]
+operator|=
+literal|'t'
+expr_stmt|;
+name|line
+index|[
+literal|12
+index|]
+operator|=
+literal|'y'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|line
+argument_list|,
+literal|0666
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chown
+argument_list|(
+name|line
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

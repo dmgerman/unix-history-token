@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utility.c	5.11 (Berkeley) %G%"
+literal|"@(#)utility.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,12 +557,9 @@ parameter_list|(
 name|p
 parameter_list|)
 value|((nfrontp> p)&& ((*p&0xff) == IAC)&& \ 				((*(p+1)&0xff) != EC)&& ((*(p+1)&0xff) != EL))
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|thisitem
 operator|=
 name|nclearto
@@ -575,12 +572,14 @@ name|netobuf
 expr_stmt|;
 else|#
 directive|else
+comment|/* ENCRYPTION */
 name|thisitem
 operator|=
 name|netobuf
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 while|while
 condition|(
 operator|(
@@ -601,12 +600,9 @@ name|next
 expr_stmt|;
 block|}
 comment|/* Now, thisitem is first before/at boundary. */
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|good
 operator|=
 name|nclearto
@@ -619,6 +615,7 @@ name|netobuf
 expr_stmt|;
 else|#
 directive|else
+comment|/* ENCRYPTION */
 name|good
 operator|=
 name|netobuf
@@ -626,6 +623,7 @@ expr_stmt|;
 comment|/* where the good bytes go */
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 while|while
 condition|(
 name|nfrontp
@@ -769,12 +767,9 @@ comment|/* then move pointer */
 argument|}
 argument_list|)
 empty_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|encrypt_output
@@ -824,6 +819,7 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 comment|/* 	 * if no urgent data, or if the other side appears to be an 	 * old 4.2 client (and thus unable to survive TCP urgent data), 	 * write the entire buffer in non-OOB mode. 	 */
 if|if
 condition|(
@@ -933,12 +929,9 @@ name|nbackp
 operator|+=
 name|n
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|nbackp
@@ -951,6 +944,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 if|if
 condition|(
 name|nbackp
@@ -976,18 +970,16 @@ name|nfrontp
 operator|=
 name|netobuf
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|nclearto
 operator|=
 literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|}
 return|return;
 block|}
@@ -1099,12 +1091,9 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|encrypt_output
@@ -1120,6 +1109,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 operator|(
 name|void
 operator|)
@@ -4763,12 +4753,9 @@ block|}
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -5216,6 +5203,7 @@ block|}
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 default|default:
 if|if
 condition|(

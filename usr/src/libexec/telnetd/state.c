@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	5.13 (Berkeley) %G%"
+literal|"@(#)state.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -417,12 +417,9 @@ operator|,
 name|ncc
 operator|--
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -439,6 +436,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 switch|switch
 condition|(
 name|state
@@ -507,12 +505,9 @@ init|=
 operator|*
 name|netip
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -531,6 +526,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 ifdef|#
 directive|ifdef
 name|LINEMODE
@@ -580,12 +576,9 @@ else|else
 endif|#
 directive|endif
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 if|if
 condition|(
 name|decrypt_input
@@ -604,6 +597,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 name|state
 operator|=
 name|TS_CR
@@ -1468,6 +1462,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ENCRYPTION */
+end_comment
+
 begin_function
 name|void
 name|willoption
@@ -1783,6 +1781,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 default|default:
 break|break;
 block|}
@@ -1898,6 +1897,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 case|case
 name|TELOPT_LFLOW
 case|:
@@ -2782,12 +2782,9 @@ argument_list|)
 expr_stmt|;
 comment|/* NOT REACHED */
 break|break;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -2797,6 +2794,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 case|case
 name|TELOPT_LINEMODE
 case|:
@@ -4085,24 +4083,14 @@ goto|goto
 name|env_var_wrong
 goto|;
 block|}
-comment|/* 		 * Ok, the first thing was a USERVAR, and there 		 * are not two consecutive VAR or VALUE commands, 		 * and none of the VAR or VALUE commands are empty. 		 * If the client has sent us a well-formed option, 		 * then the number of VALUEs received should always 		 * be less than or equal to the number of VARs and 		 * USERVARs received. 		 * 		 * If we got exactly as many VALUEs as VARs and 		 * USERVARs, the client has the same definitions. 		 * 		 * If we get more VARs than the total number of VALUEs 		 * and USERVARs, the client has the same definitions. 		 * 		 * If we got exactly as many VARs as VALUEs and 		 * USERVARS, the client has reversed definitions. 		 * 		 * If we get more VALUEs than the total number of VARs 		 * and USERVARs, the client has reversed definitions 		 */
+comment|/* 		 * Ok, the first thing was a USERVAR, and there 		 * are not two consecutive VAR or VALUE commands, 		 * and none of the VAR or VALUE commands are empty. 		 * If the client has sent us a well-formed option, 		 * then the number of VALUEs received should always 		 * be less than or equal to the number of VARs and 		 * USERVARs received. 		 * 		 * If we got exactly as many VALUEs as VARs and 		 * USERVARs, the client has the same definitions. 		 * 		 * If we got exactly as many VARs as VALUEs and 		 * USERVARS, the client has reversed definitions. 		 */
 if|if
 condition|(
-operator|(
 name|got_uservar
 operator|+
 name|got_var
 operator|==
 name|got_value
-operator|)
-operator|||
-operator|(
-name|got_var
-operator|>
-name|got_uservar
-operator|+
-name|got_value
-operator|)
 condition|)
 block|{
 name|env_var_ok
@@ -4119,21 +4107,11 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
 name|got_uservar
 operator|+
 name|got_value
 operator|==
 name|got_var
-operator|)
-operator|||
-operator|(
-name|got_value
-operator|>
-name|got_uservar
-operator|+
-name|got_var
-operator|)
 condition|)
 block|{
 name|env_var_wrong
@@ -4432,12 +4410,9 @@ block|}
 break|break;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 case|case
 name|TELOPT_ENCRYPT
 case|:
@@ -4558,6 +4533,7 @@ block|}
 break|break;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 default|default:
 break|break;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)authenc.c	5.2 (Berkeley) %G%"
+literal|"@(#)authenc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,12 +33,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|ENCRYPTION
+name|AUTHENTICATION
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|AUTHENTICATION
+name|ENCRYPTION
 argument_list|)
 end_if
 
@@ -122,12 +122,9 @@ name|void
 name|net_encrypt
 parameter_list|()
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|ENCRYPTION
-argument_list|)
 name|char
 modifier|*
 name|s
@@ -175,6 +172,7 @@ name|nfrontp
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* ENCRYPTION */
 block|}
 end_function
 
@@ -267,6 +265,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* defined(AUTHENTICATION) || defined(ENCRYPTION) */
+end_comment
 
 end_unit
 
