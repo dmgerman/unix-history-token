@@ -569,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"sqdghmpAtT:F:P:"
+literal|"sqdghmAtT:F:P:"
 argument_list|)
 operator|)
 operator|!=
@@ -959,7 +959,7 @@ argument_list|(
 literal|0
 argument_list|,
 literal|"usage: routed [-sqdghmpAt] [-T tracefile]"
-literal|" [-F net[,metric]] [-P parms]"
+literal|" [-F net[/mask[,metric]]] [-P parms]"
 argument_list|)
 expr_stmt|;
 block|}
