@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)extern.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -71,21 +71,6 @@ operator|*
 operator|,
 name|VARENT
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|devname
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-operator|,
-name|mode_t
 operator|)
 argument_list|)
 decl_stmt|;
