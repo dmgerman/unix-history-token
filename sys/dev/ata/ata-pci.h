@@ -153,7 +153,7 @@ index|[
 literal|4
 index|]
 struct|;
-comment|/* XXX SOS max ch# for now */
+comment|/* SOS max ch# for now XXX */
 block|}
 struct|;
 end_struct
@@ -490,6 +490,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_NATIONAL_ID
+value|0x100b
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_SC1100
+value|0x0502100b
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_NVIDIA_ID
 value|0x10de
 end_define
@@ -695,6 +709,13 @@ define|#
 directive|define
 name|ATA_SERVERWORKS_ID
 value|0x1166
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_ROSB4_ISA
+value|0x02001166
 end_define
 
 begin_define
@@ -1552,6 +1573,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|ata_intel_ident
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ata_national_ident
 parameter_list|(
 name|device_t
 parameter_list|)

@@ -509,6 +509,11 @@ name|blksize
 decl_stmt|;
 comment|/* block size (512 | 1024) */
 name|struct
+name|mtx
+name|queue_mtx
+decl_stmt|;
+comment|/* queue lock */
+name|struct
 name|bio_queue_head
 name|queue
 decl_stmt|;

@@ -4,306 +4,426 @@ comment|/*-  * Copyright (c) 1998 - 2003 Søren Schmidt<sos@FreeBSD.org>  * All 
 end_comment
 
 begin_comment
-comment|/* ATAPI misc defines */
+comment|/* ATA commands */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_MAGIC_LSB
-value|0x14
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_MAGIC_MSB
-value|0xeb
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_READ
-value|(ATA_S_DRQ | ATA_I_IN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_WRITE
-value|(ATA_S_DRQ)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_CMDOUT
-value|(ATA_S_DRQ | ATA_I_CMD)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_DONEDRQ
-value|(ATA_S_DRQ | ATA_I_CMD | ATA_I_IN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_DONE
-value|(ATA_I_CMD | ATA_I_IN)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ATAPI_P_ABORT
-value|0
-end_define
-
-begin_comment
-comment|/* error register bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_E_MASK
-value|0x0f
-end_define
-
-begin_comment
-comment|/* error mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_E_ILI
-value|0x01
-end_define
-
-begin_comment
-comment|/* illegal length indication */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_E_EOM
-value|0x02
-end_define
-
-begin_comment
-comment|/* end of media detected */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_E_ABRT
-value|0x04
-end_define
-
-begin_comment
-comment|/* command aborted */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_E_MCR
-value|0x08
-end_define
-
-begin_comment
-comment|/* media change requested */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_SK_MASK
-value|0xf0
-end_define
-
-begin_comment
-comment|/* sense key mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_SK_NO_SENSE
+name|ATA_NOP
 value|0x00
 end_define
 
 begin_comment
-comment|/* no specific sense key info */
+comment|/* NOP command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_RECOVERED_ERROR
-value|0x10
+name|ATA_NF_FLUSHQUEUE
+value|0x00
 end_define
 
 begin_comment
-comment|/* command OK, data recovered */
+comment|/* flush queued cmd's */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_NOT_READY
+name|ATA_NF_AUTOPOLL
+value|0x01
+end_define
+
+begin_comment
+comment|/* start autopoll function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_ATAPI_RESET
+value|0x08
+end_define
+
+begin_comment
+comment|/* reset ATAPI device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ
 value|0x20
 end_define
 
 begin_comment
-comment|/* no access to drive */
+comment|/* read command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_MEDIUM_ERROR
+name|ATA_READ48
+value|0x24
+end_define
+
+begin_comment
+comment|/* read command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_DMA48
+value|0x25
+end_define
+
+begin_comment
+comment|/* read w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_DMA_QUEUED48
+value|0x26
+end_define
+
+begin_comment
+comment|/* read w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_MUL48
+value|0x29
+end_define
+
+begin_comment
+comment|/* read multi command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WRITE
 value|0x30
 end_define
 
 begin_comment
-comment|/* non-recovered data error */
+comment|/* write command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_HARDWARE_ERROR
-value|0x40
+name|ATA_WRITE48
+value|0x34
 end_define
 
 begin_comment
-comment|/* non-recoverable HW failure */
+comment|/* write command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_ILLEGAL_REQUEST
-value|0x50
+name|ATA_WRITE_DMA48
+value|0x35
 end_define
 
 begin_comment
-comment|/* invalid command param(s) */
+comment|/* write w/DMA command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_UNIT_ATTENTION
-value|0x60
+name|ATA_WRITE_DMA_QUEUED48
+value|0x36
 end_define
 
 begin_comment
-comment|/* media changed */
+comment|/* write w/DMA QUEUED command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_DATA_PROTECT
-value|0x70
+name|ATA_WRITE_MUL48
+value|0x39
 end_define
 
 begin_comment
-comment|/* write protect */
+comment|/* write multi command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_BLANK_CHECK
-value|0x80
-end_define
-
-begin_comment
-comment|/* blank check */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_SK_VENDOR_SPECIFIC
-value|0x90
-end_define
-
-begin_comment
-comment|/* vendor specific skey */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ATAPI_SK_COPY_ABORTED
+name|ATA_PACKET_CMD
 value|0xa0
 end_define
 
 begin_comment
-comment|/* copy aborted */
+comment|/* packet command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_ABORTED_COMMAND
-value|0xb0
+name|ATA_ATAPI_IDENTIFY
+value|0xa1
 end_define
 
 begin_comment
-comment|/* command aborted, try again */
+comment|/* get ATAPI params*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_EQUAL
-value|0xc0
+name|ATA_SERVICE
+value|0xa2
 end_define
 
 begin_comment
-comment|/* equal */
+comment|/* service command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_VOLUME_OVERFLOW
-value|0xd0
+name|ATA_READ_MUL
+value|0xc4
 end_define
 
 begin_comment
-comment|/* volume overflow */
+comment|/* read multi command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_MISCOMPARE
-value|0xe0
+name|ATA_WRITE_MUL
+value|0xc5
 end_define
 
 begin_comment
-comment|/* data dont match the medium */
+comment|/* write multi command */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATAPI_SK_RESERVED
-value|0xf0
+name|ATA_SET_MULTI
+value|0xc6
 end_define
+
+begin_comment
+comment|/* set multi size command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_DMA_QUEUED
+value|0xc7
+end_define
+
+begin_comment
+comment|/* read w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_READ_DMA
+value|0xc8
+end_define
+
+begin_comment
+comment|/* read w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WRITE_DMA
+value|0xca
+end_define
+
+begin_comment
+comment|/* write w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_WRITE_DMA_QUEUED
+value|0xcc
+end_define
+
+begin_comment
+comment|/* write w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SLEEP
+value|0xe6
+end_define
+
+begin_comment
+comment|/* sleep command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_FLUSHCACHE
+value|0xe7
+end_define
+
+begin_comment
+comment|/* flush cache to disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_FLUSHCACHE48
+value|0xea
+end_define
+
+begin_comment
+comment|/* flush cache to disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_ATA_IDENTIFY
+value|0xec
+end_define
+
+begin_comment
+comment|/* get ATA params */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SETFEATURES
+value|0xef
+end_define
+
+begin_comment
+comment|/* features command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_SETXFER
+value|0x03
+end_define
+
+begin_comment
+comment|/* set transfer mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_ENAB_WCACHE
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable write cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_DIS_WCACHE
+value|0x82
+end_define
+
+begin_comment
+comment|/* disable write cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_ENAB_RCACHE
+value|0xaa
+end_define
+
+begin_comment
+comment|/* enable readahead cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_DIS_RCACHE
+value|0x55
+end_define
+
+begin_comment
+comment|/* disable readahead cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_ENAB_RELIRQ
+value|0x5d
+end_define
+
+begin_comment
+comment|/* enable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_DIS_RELIRQ
+value|0xdd
+end_define
+
+begin_comment
+comment|/* disable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_ENAB_SRVIRQ
+value|0x5e
+end_define
+
+begin_comment
+comment|/* enable service interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SF_DIS_SRVIRQ
+value|0xde
+end_define
+
+begin_comment
+comment|/* disable service interrupt */
+end_comment
 
 begin_comment
 comment|/* ATAPI commands */
@@ -389,7 +509,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WF_WRITE
+name|ATAPI_WF_WRITE
 value|0x01
 end_define
 
@@ -407,14 +527,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SP_FM
+name|ATAPI_SP_FM
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|SP_EOD
+name|ATAPI_SP_EOD
 value|0x03
 end_define
 
@@ -465,21 +585,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SS_LOAD
+name|ATAPI_SS_LOAD
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|SS_RETENSION
+name|ATAPI_SS_RETENSION
 value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
-name|SS_EJECT
+name|ATAPI_SS_EJECT
 value|0x04
 end_define
 
@@ -900,504 +1020,6 @@ end_define
 begin_comment
 comment|/* poll DSC status bit */
 end_comment
-
-begin_comment
-comment|/* ATAPI request sense structure */
-end_comment
-
-begin_struct
-struct|struct
-name|atapi_reqsense
-block|{
-name|u_int8_t
-name|error_code
-range|:
-literal|7
-decl_stmt|;
-comment|/* current or deferred errors */
-name|u_int8_t
-name|valid
-range|:
-literal|1
-decl_stmt|;
-comment|/* follows ATAPI spec */
-name|u_int8_t
-name|segment
-decl_stmt|;
-comment|/* Segment number */
-name|u_int8_t
-name|sense_key
-range|:
-literal|4
-decl_stmt|;
-comment|/* sense key */
-name|u_int8_t
-name|reserved2_4
-range|:
-literal|1
-decl_stmt|;
-comment|/* reserved */
-name|u_int8_t
-name|ili
-range|:
-literal|1
-decl_stmt|;
-comment|/* incorrect length indicator */
-name|u_int8_t
-name|eom
-range|:
-literal|1
-decl_stmt|;
-comment|/* end of medium */
-name|u_int8_t
-name|filemark
-range|:
-literal|1
-decl_stmt|;
-comment|/* filemark */
-comment|/* cmd information */
-name|u_int32_t
-name|cmd_info
-name|__packed
-decl_stmt|;
-name|u_int8_t
-name|sense_length
-decl_stmt|;
-comment|/* additional sense len (n-7) */
-comment|/* additional cmd spec info */
-name|u_int32_t
-name|cmd_specific_info
-name|__packed
-decl_stmt|;
-name|u_int8_t
-name|asc
-decl_stmt|;
-comment|/* additional sense code */
-name|u_int8_t
-name|ascq
-decl_stmt|;
-comment|/* additional sense code qual */
-name|u_int8_t
-name|replaceable_unit_code
-decl_stmt|;
-comment|/* replaceable unit code */
-name|u_int8_t
-name|sk_specific
-range|:
-literal|7
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sksv
-range|:
-literal|1
-decl_stmt|;
-comment|/* sense key specific info OK */
-name|u_int8_t
-name|sk_specific1
-decl_stmt|;
-comment|/* sense key specific */
-name|u_int8_t
-name|sk_specific2
-decl_stmt|;
-comment|/* sense key specific */
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|int
-name|atapi_callback_t
-parameter_list|(
-name|struct
-name|atapi_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_struct
-struct|struct
-name|atapi_request
-block|{
-name|struct
-name|ata_device
-modifier|*
-name|device
-decl_stmt|;
-comment|/* ptr to parent softc */
-name|u_int8_t
-name|ccb
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* command control block */
-name|int
-name|ccbsize
-decl_stmt|;
-comment|/* size of ccb (12 | 16) */
-name|u_int32_t
-name|bytecount
-decl_stmt|;
-comment|/* bytes to transfer */
-name|u_int32_t
-name|donecount
-decl_stmt|;
-comment|/* bytes transferred */
-name|int
-name|timeout
-decl_stmt|;
-comment|/* timeout for this cmd */
-name|struct
-name|callout_handle
-name|timeout_handle
-decl_stmt|;
-comment|/* handle for untimeout */
-name|int
-name|retries
-decl_stmt|;
-comment|/* retry count */
-name|int
-name|result
-decl_stmt|;
-comment|/* result of this cmd */
-name|int
-name|error
-decl_stmt|;
-comment|/* result translated to errno */
-name|struct
-name|atapi_reqsense
-name|sense
-decl_stmt|;
-comment|/* sense data if error */
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ATPR_F_READ
-value|0x0001
-define|#
-directive|define
-name|ATPR_F_DMA_USED
-value|0x0002
-define|#
-directive|define
-name|ATPR_F_AT_HEAD
-value|0x0004
-define|#
-directive|define
-name|ATPR_F_INTERNAL
-value|0x0008
-define|#
-directive|define
-name|ATPR_F_QUIET
-value|0x0010
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* pointer to data buf */
-name|atapi_callback_t
-modifier|*
-name|callback
-decl_stmt|;
-comment|/* ptr to callback func */
-name|void
-modifier|*
-name|driver
-decl_stmt|;
-comment|/* driver specific */
-name|TAILQ_ENTRY
-argument_list|(
-argument|atapi_request
-argument_list|)
-name|chain
-expr_stmt|;
-comment|/* list management */
-block|}
-struct|;
-end_struct
-
-begin_function_decl
-name|void
-name|atapi_attach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_attach_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_detach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_detach_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_cam_reinit_bus
-parameter_list|(
-name|struct
-name|ata_channel
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_reinit
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_start
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atapi_transfer
-parameter_list|(
-name|struct
-name|atapi_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atapi_interrupt
-parameter_list|(
-name|struct
-name|atapi_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atapi_queue_cmd
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|,
-name|int8_t
-index|[]
-parameter_list|,
-name|caddr_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|,
-name|atapi_callback_t
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atapi_test_ready
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|atapi_wait_dsc
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_request_sense
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|,
-name|struct
-name|atapi_reqsense
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|atapi_dump
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|acdattach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|acddetach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|acd_start
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|afdattach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|afddetach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|afd_start
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|astattach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|astdetach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ast_start
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

@@ -4,97 +4,6 @@ comment|/*-  * Copyright (c) 1998 - 2003 Søren Schmidt<sos@FreeBSD.org>  * All 
 end_comment
 
 begin_comment
-comment|/* structure describing an ATA disk request */
-end_comment
-
-begin_struct
-struct|struct
-name|ad_request
-block|{
-name|struct
-name|ad_softc
-modifier|*
-name|softc
-decl_stmt|;
-comment|/* ptr to parent device */
-name|u_int32_t
-name|blockaddr
-decl_stmt|;
-comment|/* block number */
-name|u_int32_t
-name|bytecount
-decl_stmt|;
-comment|/* bytes to transfer */
-name|u_int32_t
-name|donecount
-decl_stmt|;
-comment|/* bytes transferred */
-name|u_int32_t
-name|currentsize
-decl_stmt|;
-comment|/* size of current transfer */
-name|struct
-name|callout_handle
-name|timeout_handle
-decl_stmt|;
-comment|/* handle for untimeout */
-name|int
-name|retries
-decl_stmt|;
-comment|/* retry count */
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|ADR_F_READ
-value|0x0001
-define|#
-directive|define
-name|ADR_F_ERROR
-value|0x0002
-define|#
-directive|define
-name|ADR_F_DMA_USED
-value|0x0004
-define|#
-directive|define
-name|ADR_F_QUEUED
-value|0x0008
-define|#
-directive|define
-name|ADR_F_FORCE_PIO
-value|0x0010
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* pointer to data buf */
-name|struct
-name|bio
-modifier|*
-name|bp
-decl_stmt|;
-comment|/* associated bio ptr */
-name|u_int8_t
-name|tag
-decl_stmt|;
-comment|/* tag ID of this request */
-name|int
-name|serv
-decl_stmt|;
-comment|/* request had service */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ad_request
-argument_list|)
-name|chain
-expr_stmt|;
-comment|/* list management */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* structure describing an ATA disk */
 end_comment
 
@@ -133,7 +42,7 @@ comment|/* number of tags supported */
 name|int
 name|max_iosize
 decl_stmt|;
-comment|/* max size of transfer */
+comment|/* max transfer HW supports */
 name|int
 name|flags
 decl_stmt|;
@@ -159,18 +68,10 @@ directive|define
 name|AD_F_RAID_SUBDISK
 value|0x0010
 name|struct
-name|ad_request
-modifier|*
-name|tags
-index|[
-literal|32
-index|]
+name|mtx
+name|queue_mtx
 decl_stmt|;
-comment|/* tag array of requests */
-name|int
-name|outstanding
-decl_stmt|;
-comment|/* tags not serviced yet */
+comment|/* queue lock */
 name|struct
 name|bio_queue_head
 name|queue
@@ -184,96 +85,6 @@ comment|/* disklabel/slice stuff */
 block|}
 struct|;
 end_struct
-
-begin_function_decl
-name|void
-name|ad_attach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ad_detach
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ad_reinit
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ad_start
-parameter_list|(
-name|struct
-name|ata_device
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ad_transfer
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ad_interrupt
-parameter_list|(
-name|struct
-name|ad_request
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ad_service
-parameter_list|(
-name|struct
-name|ad_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ad_print
-parameter_list|(
-name|struct
-name|ad_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 end_unit
 

@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -103,6 +109,18 @@ begin_include
 include|#
 directive|include
 file|<geom/geom_disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcireg.h>
 end_include
 
 begin_include
@@ -544,15 +562,19 @@ return|;
 block|}
 switch|switch
 condition|(
+name|pci_get_vendor
+argument_list|(
+name|device_get_parent
+argument_list|(
 name|adp
 operator|->
 name|device
 operator|->
 name|channel
 operator|->
-name|chiptype
-operator|&
-literal|0xffff
+name|dev
+argument_list|)
+argument_list|)
 condition|)
 block|{
 case|case
@@ -1498,7 +1520,7 @@ operator|)
 operator|(
 name|atadev
 operator|->
-name|driver
+name|softc
 operator|)
 operator|)
 operator|->
@@ -1821,6 +1843,10 @@ return|;
 block|}
 switch|switch
 condition|(
+name|pci_get_vendor
+argument_list|(
+name|device_get_parent
+argument_list|(
 name|rdp
 operator|->
 name|disks
@@ -1832,9 +1858,9 @@ name|device
 operator|->
 name|channel
 operator|->
-name|chiptype
-operator|&
-literal|0xffff
+name|dev
+argument_list|)
+argument_list|)
 condition|)
 block|{
 case|case
@@ -2524,20 +2550,7 @@ operator|&=
 operator|~
 name|AD_F_RAID_SUBDISK
 expr_stmt|;
-name|ata_enclosure_leds
-argument_list|(
-name|rdp
-operator|->
-name|disks
-index|[
-name|disk
-index|]
-operator|.
-name|device
-argument_list|,
-name|ATA_LED_GREEN
-argument_list|)
-expr_stmt|;
+comment|/* SOS 	    ata_enclosure_leds(rdp->disks[disk].device, ATA_LED_GREEN);    XXX */
 name|rdp
 operator|->
 name|disks
@@ -4466,7 +4479,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 condition|)
 block|{
 name|rdp
@@ -4670,7 +4683,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 condition|)
 block|{
 name|rdp
@@ -4739,7 +4752,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 condition|)
 block|{
 name|rdp
@@ -6159,48 +6172,7 @@ operator|.
 name|device
 condition|)
 block|{
-if|if
-condition|(
-name|rdp
-operator|->
-name|disks
-index|[
-name|disk
-index|]
-operator|.
-name|flags
-operator|&
-name|AR_DF_ONLINE
-condition|)
-name|ata_enclosure_leds
-argument_list|(
-name|rdp
-operator|->
-name|disks
-index|[
-name|disk
-index|]
-operator|.
-name|device
-argument_list|,
-name|ATA_LED_GREEN
-argument_list|)
-expr_stmt|;
-else|else
-name|ata_enclosure_leds
-argument_list|(
-name|rdp
-operator|->
-name|disks
-index|[
-name|disk
-index|]
-operator|.
-name|device
-argument_list|,
-name|ATA_LED_RED
-argument_list|)
-expr_stmt|;
+comment|/* SOS 	    if (rdp->disks[disk].flags& AR_DF_ONLINE) 		ata_enclosure_leds(rdp->disks[disk].device, ATA_LED_GREEN); 	    else 		ata_enclosure_leds(rdp->disks[disk].device, ATA_LED_RED);    XXX */
 block|}
 block|}
 if|if
@@ -6403,20 +6375,7 @@ endif|#
 directive|endif
 continue|continue;
 block|}
-name|ata_enclosure_leds
-argument_list|(
-name|rdp
-operator|->
-name|disks
-index|[
-name|disk
-index|]
-operator|.
-name|device
-argument_list|,
-name|ATA_LED_ORANGE
-argument_list|)
-expr_stmt|;
+comment|/* SOS 	    ata_enclosure_leds(rdp->disks[disk].device, ATA_LED_ORANGE);    XXX */
 name|count
 operator|++
 expr_stmt|;
@@ -8327,7 +8286,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 operator|&&
 operator|!
 operator|(
@@ -8777,13 +8736,19 @@ continue|continue;
 name|magic
 operator|=
 operator|(
+name|pci_get_device
+argument_list|(
+name|device_get_parent
+argument_list|(
 name|adp
 operator|->
 name|device
 operator|->
 name|channel
 operator|->
-name|chiptype
+name|dev
+argument_list|)
+argument_list|)
 operator|>>
 literal|16
 operator|)
@@ -9753,7 +9718,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 condition|)
 name|config
 operator|->
@@ -10364,7 +10329,7 @@ index|]
 operator|.
 name|device
 operator|->
-name|driver
+name|softc
 operator|&&
 operator|!
 operator|(
@@ -10886,7 +10851,7 @@ index|[
 name|MASTER
 index|]
 operator|.
-name|driver
+name|softc
 operator|&&
 operator|(
 operator|(
@@ -10902,7 +10867,7 @@ index|[
 name|MASTER
 index|]
 operator|.
-name|driver
+name|softc
 operator|)
 operator|)
 operator|->
@@ -10936,7 +10901,7 @@ index|[
 name|SLAVE
 index|]
 operator|.
-name|driver
+name|softc
 operator|&&
 operator|(
 operator|(
@@ -10952,7 +10917,7 @@ index|[
 name|SLAVE
 index|]
 operator|.
-name|driver
+name|softc
 operator|)
 operator|)
 operator|->
@@ -11034,7 +10999,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"total_disks	%d\n"
+literal|"total_disks %d\n"
 argument_list|,
 name|config
 operator|->
@@ -11198,7 +11163,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"	sectors	%lld\n"
+literal|"	sectors %lld\n"
 argument_list|,
 operator|(
 name|long

@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -175,10 +181,8 @@ name|atadev
 operator|->
 name|mode
 operator|=
-name|ata_limit_mode
+name|min
 argument_list|(
-name|atadev
-argument_list|,
 name|mode
 argument_list|,
 name|ATA_PIO_MAX

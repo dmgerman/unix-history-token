@@ -66,7 +66,7 @@ name|AD_SOFTC
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct ad_softc *)(x.device->driver))
+value|((struct ad_softc *)(x.device->softc))
 end_define
 
 begin_define

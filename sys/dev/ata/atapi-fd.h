@@ -168,6 +168,11 @@ name|lun
 decl_stmt|;
 comment|/* logical device unit */
 name|struct
+name|mtx
+name|queue_mtx
+decl_stmt|;
+comment|/* queue lock */
+name|struct
 name|bio_queue_head
 name|queue
 decl_stmt|;

@@ -54,13 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pci/pcivar.h>
+file|<sys/bus.h>
 end_include
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcivar.h>
 end_include
 
 begin_include
@@ -246,7 +252,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|ata_dma_data
+name|ata_dma
 argument_list|)
 argument_list|,
 name|M_ATADMA
@@ -307,6 +313,16 @@ operator|->
 name|alignment
 operator|=
 literal|2
+expr_stmt|;
+name|ch
+operator|->
+name|dma
+operator|->
+name|max_iosize
+operator|=
+literal|64
+operator|*
+literal|1024
 expr_stmt|;
 return|return
 literal|0
@@ -425,10 +441,9 @@ name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 literal|0
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|ch
@@ -439,9 +454,14 @@ name|dmatag
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ata_printf
 argument_list|(
-literal|"DMA tag allocation failed, disabling DMA\n"
+name|ch
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|"WARNING - DMA tag allocation failed, disabling DMA\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -489,10 +509,9 @@ name|MAXTABSZ
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|ch
@@ -554,10 +573,9 @@ name|MAXSEGSZ
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
-name|busdma_lock_mutex
+name|NULL
 argument_list|,
-operator|&
-name|Giant
+name|NULL
 argument_list|,
 operator|&
 name|ch
@@ -1202,7 +1220,7 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"non aligned DMA transfer attempted\n"
+literal|"FAILURE - non aligned DMA transfer attempted\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1220,7 +1238,38 @@ name|ata_prtdev
 argument_list|(
 name|atadev
 argument_list|,
-literal|"zero length DMA transfer attempted\n"
+literal|"FAILURE - zero length DMA transfer attempted\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|count
+operator|>
+name|ch
+operator|->
+name|dma
+operator|->
+name|max_iosize
+condition|)
+block|{
+name|ata_prtdev
+argument_list|(
+name|atadev
+argument_list|,
+literal|"FAILURE - oversized DMA transfer attempted %d> %d\n"
+argument_list|,
+name|count
+argument_list|,
+name|ch
+operator|->
+name|dma
+operator|->
+name|max_iosize
 argument_list|)
 expr_stmt|;
 return|return
@@ -1341,23 +1390,6 @@ name|ch
 operator|->
 name|dma
 operator|->
-name|cdmatag
-argument_list|,
-name|ch
-operator|->
-name|dma
-operator|->
-name|cdmamap
-argument_list|,
-name|BUS_DMASYNC_POSTWRITE
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|ch
-operator|->
-name|dma
-operator|->
 name|ddmatag
 argument_list|,
 name|ch
@@ -1405,6 +1437,23 @@ modifier|*
 name|ch
 parameter_list|)
 block|{
+name|bus_dmamap_sync
+argument_list|(
+name|ch
+operator|->
+name|dma
+operator|->
+name|cdmatag
+argument_list|,
+name|ch
+operator|->
+name|dma
+operator|->
+name|cdmamap
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|ch

@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -102,8 +108,6 @@ name|ata_pccard_products
 index|[]
 init|=
 block|{
-comment|/* NetBSD has a few others that need to migrate into pccarddevs */
-comment|/* XXX */
 name|PCMCIA_CARD
 argument_list|(
 name|FREECOM
@@ -232,7 +236,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Match other devices here, primarily cdrom/dvd rom */
+comment|/* match other devices here, primarily cdrom/dvd rom */
 if|if
 condition|(
 operator|(
