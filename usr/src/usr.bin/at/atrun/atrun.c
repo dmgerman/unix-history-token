@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	8.1 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,7 +547,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# owner: %127s%*[^\n]\n"
+literal|"# owner: %127s\n"
 argument_list|,
 name|owner
 argument_list|)
@@ -560,7 +560,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# jobname: %127s%*[^\n]\n"
+literal|"# jobname: %127s\n"
 argument_list|,
 name|jobname
 argument_list|)
@@ -573,7 +573,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# shell: %3s%*[^\n]\n"
+literal|"# shell: %3s\n"
 argument_list|,
 name|shell
 argument_list|)
@@ -586,7 +586,7 @@ name|fscanf
 argument_list|(
 name|infile
 argument_list|,
-literal|"# notify by mail: %3s%*[^\n]\n"
+literal|"# notify by mail: %3s\n"
 argument_list|,
 name|mailvar
 argument_list|)
