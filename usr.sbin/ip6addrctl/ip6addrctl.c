@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: ip6addrctl.c,v 1.1 2001/12/27 12:45:24 jinmei Exp $	*/
+comment|/*	$KAME: ip6addrctl.c,v 1.3 2003/12/16 08:14:28 suz Exp $	*/
 end_comment
 
 begin_comment
@@ -593,6 +593,20 @@ literal|"sysctl(IPV6CTL_ADDRCTLPOLICY)"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|l
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no source-address-selection policy is installed\n"
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 if|if
 condition|(
