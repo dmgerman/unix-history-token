@@ -41,6 +41,13 @@ name|_POSIX_ACL_PATH_MAX
 value|MAX_ACL_ENTRIES
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACL_MAX_ENTRIES
+value|MAX_ACL_ENTRIES
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
