@@ -780,6 +780,16 @@ operator|.
 name|s_addr
 operator|!=
 name|INADDR_NONE
+operator|&&
+name|bundle
+operator|->
+name|radius
+operator|.
+name|ip
+operator|.
+name|s_addr
+operator|!=
+name|RADIUS_INADDR_POOL
 condition|)
 block|{
 comment|/* We've got a radius IP - it overrides everything */

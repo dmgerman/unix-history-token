@@ -290,5 +290,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Get address from NAS pool */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIUS_INADDR_POOL
+value|htonl(0xfffffffe)
+end_define
+
+begin_comment
+comment|/* 255.255.255.254 */
+end_comment
+
 end_unit
 
