@@ -408,7 +408,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be though of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of   * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE  when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *   * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should threfore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The KSE  * keeps a cached thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inherritance schemes.  */
+comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be though of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of   * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE  when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *   * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should therefore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The KSE  * keeps a cached thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inherritance schemes.  */
 end_comment
 
 begin_struct_decl
@@ -428,7 +428,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * Its KSEs, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
+comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * its KSEs, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
 end_comment
 
 begin_struct_decl
@@ -452,7 +452,7 @@ comment|/***************  * In pictures:  With a single run queue used by all pr
 end_comment
 
 begin_comment
-comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When waing to be run, threads are hung off the KSEGRP in priority order.  * with N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
+comment|/*  * Kernel runnable context (thread).  * This is what is put to sleep and reactivated.  * The first KSE available in the correct group will run this thread.  * If several are available, use the one on the same CPU as last time.  * When wating to be run, threads are hung off the KSEGRP in priority order.  * with N runnable and queued KSEs in the KSEGRP, the first N threads  * are linked to them. Other threads are not yet assigned.  */
 end_comment
 
 begin_struct
