@@ -113,7 +113,7 @@ begin_decl_stmt
 name|int
 name|ftsoptions
 init|=
-name|FTS_PHYSICAL
+name|FTS_LOGICAL
 decl_stmt|;
 end_decl_stmt
 
