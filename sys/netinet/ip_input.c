@@ -1042,7 +1042,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * XXX this is ugly -- the following two global variables are  * used to store packet state while it travels through the stack.  * Note that the code even makes assumptions on the size and  * alignment of fields inside struct ip_srcrt so e.g. adding some  * fields will break the code. This needs to be fixed.  *  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  */
+comment|/*  * XXX this is ugly -- the following two global variables are  * used to store packet state while it travels through the stack.  * Note that the code even makes assumptions on the size and  * alignment of fields inside struct ip_srcrt so e.g. adding some  * fields will break the code. This needs to be fixed.  *  * We need to save the IP options in case a protocol wants to respond  * to an incoming packet over the same route if the packet got here  * using IP source routing.  This allows connection establishment and  * maintenance when the remote end is on a network that is not known  * to us.  * XXX: Broken on SMP and possibly preemption!  */
 end_comment
 
 begin_decl_stmt
