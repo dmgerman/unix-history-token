@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mac.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -25,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mac.h>
 end_include
 
 begin_include
@@ -817,6 +829,31 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|mac_check_sysarch_ioperm
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
