@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.17 (Berkeley) %G%"
+literal|"@(#)alias.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1591,9 +1591,15 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|xfclose
 argument_list|(
 name|af
+argument_list|,
+literal|"rebuildaliases1"
+argument_list|,
+name|map
+operator|->
+name|map_file
 argument_list|)
 expr_stmt|;
 name|errno
@@ -1718,9 +1724,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* close the file, thus releasing locks */
-name|fclose
+name|xfclose
 argument_list|(
 name|af
+argument_list|,
+literal|"rebuildaliases2"
+argument_list|,
+name|map
+operator|->
+name|map_file
 argument_list|)
 expr_stmt|;
 comment|/* add distinguished entries and close the database */
