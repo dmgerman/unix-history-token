@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 Nan Yang Computer Services Limited  * All right
 end_comment
 
 begin_comment
-comment|/* $Id: vext.h,v 1.9 1998/08/11 03:06:02 grog Exp grog $ */
+comment|/* $Id: vext.h,v 1.1.1.1 1998/09/16 05:57:36 grog Exp $ */
 end_comment
 
 begin_define
@@ -688,7 +688,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|VINUMDEBUG
 end_ifdef
 
 begin_function_decl

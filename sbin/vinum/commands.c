@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.2 1998/11/02 04:12:28 grog Exp $ */
+comment|/* $Id: commands.c,v 1.3 1998/12/28 16:32:39 peter Exp $ */
 end_comment
 
 begin_include
@@ -1096,7 +1096,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|VINUMDEBUG
 end_ifdef
 
 begin_function
