@@ -247,7 +247,7 @@ operator|*
 operator|)
 name|Info
 expr_stmt|;
-name|panic
+name|printf
 argument_list|(
 literal|"ACPI fatal signal, type 0x%x  code 0x%x  argument 0x%x"
 argument_list|,
@@ -262,6 +262,11 @@ argument_list|,
 name|fatal
 operator|->
 name|Argument
+argument_list|)
+expr_stmt|;
+name|Debugger
+argument_list|(
+literal|"AcpiOsSignal"
 argument_list|)
 expr_stmt|;
 break|break;

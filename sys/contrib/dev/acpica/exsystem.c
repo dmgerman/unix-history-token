@@ -74,6 +74,8 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+decl_stmt|,
+name|Status2
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
@@ -142,23 +144,24 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reacquire the interpreter */
-name|Status
+name|Status2
 operator|=
 name|AcpiExEnterInterpreter
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
-name|Status
+name|Status2
 argument_list|)
 condition|)
 block|{
-comment|/* Restore the timeout exception */
-name|Status
-operator|=
-name|AE_TIME
+comment|/* Report fatal error, could not acquire interpreter */
+name|return_ACPI_STATUS
+argument_list|(
+name|Status2
+argument_list|)
 expr_stmt|;
 block|}
 block|}

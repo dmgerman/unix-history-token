@@ -351,6 +351,12 @@ operator|=
 name|AcpiAcquireGlobalLock
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|==
+name|AE_OK
+condition|)
 operator|(
 name|sc
 operator|)

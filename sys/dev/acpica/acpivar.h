@@ -1018,6 +1018,22 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|ACPI_STATUS
+name|acpi_ConvertBufferToInteger
+parameter_list|(
+name|ACPI_BUFFER
+modifier|*
+name|bufp
+parameter_list|,
+name|int
+modifier|*
+name|number
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|ACPI_STATUS
 name|acpi_ForeachPackageObject
 parameter_list|(
 name|ACPI_OBJECT
@@ -1812,6 +1828,31 @@ name|powerprofile_change_hook
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_NO_THREADS
+end_ifndef
+
+begin_comment
+comment|/*  * ACPI task kernel thread initialization.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_task_thread_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
