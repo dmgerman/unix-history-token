@@ -505,6 +505,17 @@ begin_comment
 comment|/* ucode is loaded */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_DEFERRED_RNR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* DEVICE_POLLING deferred RNR */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment
