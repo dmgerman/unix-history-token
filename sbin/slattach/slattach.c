@@ -934,6 +934,8 @@ name|CLOCAL
 operator|)
 condition|)
 block|{
+if|if
+condition|(
 name|ioctl
 argument_list|(
 name|fd
@@ -942,6 +944,15 @@ name|TIOCMGET
 argument_list|,
 operator|&
 name|comstate
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"cannot get carrier state: %m"
 argument_list|)
 expr_stmt|;
 if|if
@@ -965,6 +976,10 @@ name|SIGHUP
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|configure_network
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 name|configure_network
