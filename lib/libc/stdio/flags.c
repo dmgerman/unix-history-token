@@ -65,28 +65,23 @@ begin_comment
 comment|/*  * Return the (stdio) flags for a given mode.  Store the flags  * to be passed to an open() syscall through *optr.  * Return 0 on error.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__sflags
-argument_list|(
+parameter_list|(
 name|mode
-argument_list|,
+parameter_list|,
 name|optr
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|mode
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 modifier|*
 name|optr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -215,7 +210,7 @@ name|ret
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
