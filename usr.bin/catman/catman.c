@@ -875,6 +875,10 @@ while|while
 condition|(
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -943,6 +947,10 @@ condition|(
 operator|!
 name|isalnum
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|n
 argument_list|)
