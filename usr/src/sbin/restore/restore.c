@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.1 (Berkeley) %G%"
+literal|"@(#)restore.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1387,6 +1387,20 @@ operator|=
 name|FAIL
 expr_stmt|;
 break|break;
+comment|/* 	 * If we find a directory entry for a file that is not on 	 * the tape, then we must have found a file that was created 	 * while the dump was in progress. Since we have no contents 	 * for it, we discard the name knowing that it will be on the 	 * next incremental tape. 	 */
+case|case
+name|NIL
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: not found on tape\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* 	 * If any of these arise, something is grievously wrong with 	 * the current state of the symbol table. 	 */
 case|case
 name|INOFND
@@ -1404,9 +1418,6 @@ case|case
 name|INOFND
 operator||
 name|MODECHG
-case|:
-case|case
-name|NIL
 case|:
 name|panic
 argument_list|(
