@@ -430,6 +430,33 @@ operator|==
 name|lines
 condition|)
 block|{
+name|wrefresh
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|back_color_erase
+condition|)
+block|{
+name|T
+argument_list|(
+operator|(
+literal|"back_color_erase, turning attributes off"
+operator|)
+argument_list|)
+expr_stmt|;
+name|vidattr
+argument_list|(
+name|curscr
+operator|->
+name|_attrs
+operator|=
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* at the moment this relies on scroll_reverse and scroll_forward 		   or parm_rindex and parm_index. 		   we should add idl support as an alternative */
 if|if
 condition|(

@@ -429,6 +429,11 @@ operator|==
 name|TRUE
 condition|)
 block|{
+name|wrefresh
+argument_list|(
+name|win
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|back_color_erase
