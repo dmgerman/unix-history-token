@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.19 (Berkeley) %G%"
+literal|"@(#)main.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2503,7 +2503,7 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"\001j"
+literal|"\201j"
 argument_list|,
 name|jbuf
 argument_list|,
