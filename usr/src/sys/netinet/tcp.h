@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp.h	6.1	83/07/29	*/
+comment|/*	tcp.h	6.2	84/11/01	*/
 end_comment
 
 begin_typedef
@@ -112,6 +112,17 @@ define|#
 directive|define
 name|TCPOPT_MAXSEG
 value|2
+end_define
+
+begin_comment
+comment|/*  *  Default maximum segment size for TCP.  *  With an IP MSS of 576, this is 536,  *  but 512 is probably more convenient.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_MSS
+value|MIN(512, IP_MSS - sizeof (struct tcpiphdr))
 end_define
 
 end_unit

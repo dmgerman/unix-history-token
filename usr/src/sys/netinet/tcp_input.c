@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.6	84/10/19	*/
+comment|/*	tcp_input.c	6.7	84/11/01	*/
 end_comment
 
 begin_include
@@ -2402,6 +2402,19 @@ operator|=
 name|TCPS_FIN_WAIT_2
 expr_stmt|;
 comment|/* 				 * This is contrary to the specification, 				 * but if we haven't gotten our FIN in  				 * 5 minutes, it's not forthcoming. 				 */
+name|tp
+operator|->
+name|t_timer
+index|[
+name|TCPT_2MSL
+index|]
+operator|=
+literal|5
+operator|*
+literal|60
+operator|*
+name|PR_SLOWHZ
+expr_stmt|;
 block|}
 break|break;
 comment|/* 		 * In CLOSING STATE in addition to the processing for 		 * the ESTABLISHED state if the ACK acknowledges our FIN 		 * then enter the TIME-WAIT state, otherwise ignore 		 * the segment. 		 */
@@ -4240,18 +4253,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|MIN
-argument_list|(
-name|IP_MSS
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcpiphdr
-argument_list|)
-argument_list|,
-literal|512
-argument_list|)
+name|TCP_MSS
 operator|)
 return|;
 block|}
@@ -4335,18 +4337,7 @@ name|MIN
 argument_list|(
 name|mss
 argument_list|,
-name|MIN
-argument_list|(
-name|IP_MSS
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcpiphdr
-argument_list|)
-argument_list|,
-literal|512
-argument_list|)
+name|TCP_MSS
 argument_list|)
 operator|)
 return|;
