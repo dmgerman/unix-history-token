@@ -13303,6 +13303,13 @@ block|}
 block|,
 comment|/* PNP0313, XXX */
 block|{
+literal|0x02002e4f
+block|,
+literal|"Dell PS/2 mouse port"
+block|}
+block|,
+comment|/* Lat. X200, Dell */
+block|{
 literal|0x80374d24
 block|,
 literal|"IBM PS/2 mouse port"
