@@ -76,7 +76,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * Appends src to string dst of size siz (unlike strncat, siz is the  * full size of dst, not space left).  At most siz-1 characters  * will be copied.  Always NUL terminates (unless siz<= strlen(dst)).  * Returns strlen(initial dst) + strlen(src); if retval>= siz,  * truncation occurred.  */
+comment|/*  * Appends src to string dst of size siz (unlike strncat, siz is the  * full size of dst, not space left).  At most siz-1 characters  * will be copied.  Always NUL terminates (unless siz<= strlen(dst)).  * Returns strlen(src) + MIN(siz, strlen(initial dst)).  * If retval>= siz, truncation occurred.  */
 end_comment
 
 begin_function
