@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  * This program repeatedly encrypts and decrypts a buffer with the built-in  * iv and key, using hardware crypto.  At the end, it computes the data rate  * achieved.  invoke with the number of times to encrypt and the buffer size.  *  * For a test of how fast a crypto card is, use something like:  *	cryptotest -z 1024  * This will run a series of tests using the available crypto/cipher  * algorithms over a variety of buffer sizes.  The 1024 says to do 1024  * iterations.  Extra arguments can be used to specify one or more buffer  * sizes to use in doing tests.  *  * To fork multiple processes all doing the same work, specify -t X on the  * command line to get X "threads" running simultaneously.  No effort is made  * synchronize the threads or otherwise maximize load.  *  * If the kernel crypto code is built with CRYPTO_TIMING and you run as root,  * then you can specify the -p option to get a "profile" of the time spent  * processing crypto operations.  At present this data is only meaningful for  * symmetric operations.  To get meaningful numbers you must run on an idle  * machine.  *  * Expect ~400 Mb/s for a Broadcom 582x for 16K buffers on a reasonable CPU.  * Hifn 7811 parts top out at ~110 Mb/s.  *  * This code originally came from openbsd; give them all the credit.  */
+comment|/*  * This program repeatedly encrypts and decrypts a buffer with the built-in  * iv and key, using hardware crypto.  At the end, it computes the data rate  * achieved.  invoke with the number of times to encrypt and the buffer size.  *  * For a test of how fast a crypto card is, use something like:  *	cryptotest -z 1024  * This will run a series of tests using the available crypto/cipher  * algorithms over a variety of buffer sizes.  The 1024 says to do 1024  * iterations.  Extra arguments can be used to specify one or more buffer  * sizes to use in doing tests.  *  * To fork multiple processes all doing the same work, specify -t X on the  * command line to get X "threads" running simultaneously.  No effort is made  * synchronize the threads or otherwise maximize load.  *  * If the kernel crypto code is built with CRYPTO_TIMING and you run as root,  * then you can specify the -p option to get a "profile" of the time spent  * processing crypto operations.  At present this data is only meaningful for  * symmetric operations.  To get meaningful numbers you must run on an idle  * machine.  *  * Expect ~400 Mb/s for a Broadcom 582x for 8K buffers on a reasonable CPU  * (64-bit PCI helps).  Hifn 7811 parts top out at ~110 Mb/s.  *  * This code originally came from openbsd; give them all the credit.  */
 end_comment
 
 begin_include
@@ -164,6 +164,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|verbose
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|opflags
 init|=
 literal|0
 decl_stmt|;
@@ -843,7 +851,7 @@ name|cryptop
 operator|.
 name|flags
 operator|=
-literal|0
+name|opflags
 expr_stmt|;
 name|cryptop
 operator|.
@@ -921,7 +929,7 @@ name|cryptop
 operator|.
 name|flags
 operator|=
-literal|0
+name|opflags
 expr_stmt|;
 name|cryptop
 operator|.
@@ -1057,6 +1065,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
 
 begin_function
 specifier|static
@@ -1340,6 +1354,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -1472,6 +1491,9 @@ operator|*
 operator|)
 name|region
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 if|if
 condition|(
 name|profile
@@ -1522,6 +1544,8 @@ literal|"debug.crypto_timing"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|threads
@@ -1707,6 +1731,9 @@ literal|1024
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 if|if
 condition|(
 name|profile
@@ -1825,6 +1852,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|fflush
 argument_list|(
 name|stdout
@@ -1904,7 +1933,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pzsva:t:"
+literal|"pzsva:bt:"
 argument_list|)
 operator|)
 operator|!=
@@ -2006,6 +2035,14 @@ case|:
 name|profile
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|opflags
+operator||=
+name|COP_F_BATCH
 expr_stmt|;
 break|break;
 default|default:
