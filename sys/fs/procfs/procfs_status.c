@@ -628,10 +628,11 @@ argument_list|)
 operator|-
 name|ps
 argument_list|,
-literal|" %lld,%ld %lld,%ld %lld,%ld"
+literal|" %lld,%ld %ld,%ld %ld,%ld"
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|p
 operator|->
@@ -650,7 +651,7 @@ operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|quad_t
+name|long
 operator|)
 name|ut
 operator|.
@@ -661,7 +662,7 @@ operator|.
 name|tv_usec
 argument_list|,
 operator|(
-name|quad_t
+name|long
 operator|)
 name|st
 operator|.
