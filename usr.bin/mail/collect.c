@@ -211,8 +211,8 @@ name|cp
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempMail
-index|[]
 decl_stmt|;
 name|char
 name|getsub
@@ -1891,8 +1891,8 @@ argument_list|)
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempEdit
-index|[]
 decl_stmt|;
 name|char
 modifier|*
@@ -2093,8 +2093,8 @@ name|msgvec
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempMail
-index|[]
 decl_stmt|;
 name|struct
 name|ignoretab

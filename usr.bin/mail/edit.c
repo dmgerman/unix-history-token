@@ -492,8 +492,8 @@ name|statb
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempEdit
-index|[]
 decl_stmt|;
 if|if
 condition|(

@@ -129,11 +129,11 @@ name|c
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempQuit
-index|[]
 decl_stmt|,
+modifier|*
 name|tempResid
-index|[]
 decl_stmt|;
 name|struct
 name|stat

@@ -120,8 +120,8 @@ name|shudclob
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempMesg
-index|[]
 decl_stmt|;
 specifier|extern
 name|int
@@ -144,6 +144,15 @@ return|return
 operator|-
 literal|1
 return|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|">%s\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(

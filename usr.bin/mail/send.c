@@ -1826,8 +1826,8 @@ decl_stmt|;
 block|{
 specifier|extern
 name|char
+modifier|*
 name|tempMail
-index|[]
 decl_stmt|;
 specifier|register
 name|FILE

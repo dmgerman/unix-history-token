@@ -845,8 +845,8 @@ name|ispipe
 decl_stmt|;
 specifier|extern
 name|char
+modifier|*
 name|tempEdit
-index|[]
 decl_stmt|;
 name|top
 operator|=
