@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)ip_mroute.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 Stephen Deering  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Stephen Deering of Stanford University.  *  * %sccs.include.redist.c%  *  *	@(#)ip_mroute.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Procedures for the kernel part of DVMRP,  * a Distance-Vector Multicast Routing Protocol.  * (See RFC-1075.)  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  *  * MROUTING 1.1  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ip_mroute.c	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
