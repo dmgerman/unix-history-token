@@ -986,6 +986,12 @@ literal|"Solaris x86 boot"
 block|}
 block|,
 block|{
+literal|0xBF
+block|,
+literal|"Solaris x86 (new)"
+block|}
+block|,
+block|{
 literal|0xC1
 block|,
 literal|"DRDOS/sec with 12-bit FAT"
