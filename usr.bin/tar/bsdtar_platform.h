@@ -70,6 +70,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_DIRENT_D_NAMLEN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_DIRENT_H
 value|1
 end_define
