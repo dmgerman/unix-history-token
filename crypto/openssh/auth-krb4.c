@@ -9,6 +9,34 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: auth-krb4.c,v 1.23 2001/01/22 08:15:00 markus Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_include
+include|#
+directive|include
+file|"ssh.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh1.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -24,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"log.h"
 end_include
 
 begin_include
@@ -33,21 +61,28 @@ directive|include
 file|"servconf.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: auth-krb4.c,v 1.19 2000/10/03 18:03:02 markus Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$FreeBSD$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"radix.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -101,8 +136,7 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|faddr
 decl_stmt|;
 name|char

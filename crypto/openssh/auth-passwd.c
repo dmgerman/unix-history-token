@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Password authentication.  This file contains the functions to check whether  * the password is valid for the user.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  *  * Copyright (c) 1999 Dug Song.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Password authentication.  This file contains the functions to check whether  * the password is valid for the user.  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  *  * Copyright (c) 1999 Dug Song.  All rights reserved.  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-passwd.c,v 1.18 2000/10/03 18:03:03 markus Exp $"
+literal|"$OpenBSD: auth-passwd.c,v 1.22 2001/03/20 18:57:04 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,7 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -46,8 +52,15 @@ end_include
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|"auth.h"
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|ServerOptions
+name|options
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Tries to authenticate the user using password.  Returns true if  * authentication succeeds.  */
@@ -57,10 +70,9 @@ begin_function
 name|int
 name|auth_password
 parameter_list|(
-name|struct
-name|passwd
+name|Authctxt
 modifier|*
-name|pw
+name|authctxt
 parameter_list|,
 specifier|const
 name|char
@@ -68,9 +80,14 @@ modifier|*
 name|password
 parameter_list|)
 block|{
-specifier|extern
-name|ServerOptions
-name|options
+name|struct
+name|passwd
+modifier|*
+name|pw
+init|=
+name|authctxt
+operator|->
+name|pw
 decl_stmt|;
 name|char
 modifier|*
@@ -97,8 +114,8 @@ operator|&&
 name|options
 operator|.
 name|permit_root_login
-operator|==
-literal|2
+operator|!=
+name|PERMIT_YES
 condition|)
 return|return
 literal|0
@@ -121,41 +138,37 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|SKEY_VIA_PASSWD_IS_DISABLED
+name|BSD_AUTH
 if|if
 condition|(
-name|options
-operator|.
-name|skey_authentication
-operator|==
-literal|1
-condition|)
-block|{
-name|int
-name|ret
-init|=
-name|auth_skey_password
+name|auth_userokay
 argument_list|(
 name|pw
+operator|->
+name|pw_name
 argument_list|,
+name|authctxt
+operator|->
+name|style
+argument_list|,
+literal|"auth-ssh"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|password
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-literal|1
-operator|||
-name|ret
 operator|==
 literal|0
 condition|)
 return|return
-name|ret
+literal|0
 return|;
-comment|/* Fall back to ordinary passwd authentication. */
-block|}
+else|else
+return|return
+literal|1
+return|;
 endif|#
 directive|endif
 ifdef|#

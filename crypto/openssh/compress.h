@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: compress.h,v 1.6 2000/09/07 20:27:50 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: compress.h,v 1.8 2001/04/05 10:39:02 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -25,10 +25,19 @@ end_comment
 
 begin_function_decl
 name|void
-name|buffer_compress_init
+name|buffer_compress_init_send
 parameter_list|(
 name|int
 name|level
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_compress_init_recv
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -40,7 +49,9 @@ end_comment
 begin_function_decl
 name|void
 name|buffer_compress_uninit
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 

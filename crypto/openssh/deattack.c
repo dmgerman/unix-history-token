@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: deattack.c,v 1.10 2000/10/31 13:18:53 markus Exp $	*/
+comment|/*	$OpenBSD: deattack.c,v 1.13 2001/03/01 02:45:10 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"log.h"
 end_include
 
 begin_include
@@ -166,8 +166,7 @@ operator|=
 name|ssh_crc32
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -190,21 +189,18 @@ begin_function
 name|int
 name|check_crc
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|S
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
 name|u_int32_t
 name|len
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|IV
 parameter_list|)
@@ -212,8 +208,7 @@ block|{
 name|u_int32_t
 name|crc
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|c
 decl_stmt|;
@@ -334,16 +329,14 @@ begin_function
 name|int
 name|detect_attack
 parameter_list|(
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
 name|u_int32_t
 name|len
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|IV
 parameter_list|)
@@ -377,13 +370,11 @@ name|u_int32_t
 name|l
 decl_stmt|;
 specifier|register
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|c
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|d
 decl_stmt|;

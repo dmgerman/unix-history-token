@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Versions of malloc and friends that check their results, and never return  * failure (they call fatal if they encounter an error).  *   * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
+comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  * Versions of malloc and friends that check their results, and never return  * failure (they call fatal if they encounter an error).  *  * As far as I am concerned, the code I have written for this software  * can be used freely for any purpose.  Any derived versions of this  * software must be clearly marked as such, and if the derived work is  * incompatible with the protocol description in the RFC file, it must be  * called by a name other than "ssh" or "Secure Shell".  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: xmalloc.c,v 1.8 2000/09/07 20:27:55 deraadt Exp $"
+literal|"$OpenBSD: xmalloc.c,v 1.15 2001/04/16 08:05:34 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"xmalloc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_function
@@ -35,12 +41,25 @@ block|{
 name|void
 modifier|*
 name|ptr
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"xmalloc: zero size"
+argument_list|)
+expr_stmt|;
+name|ptr
+operator|=
 name|malloc
 argument_list|(
 name|size
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ptr
@@ -49,10 +68,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xmalloc: out of memory (allocating %d bytes)"
+literal|"xmalloc: out of memory (allocating %lu bytes)"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|size
 argument_list|)
@@ -82,15 +101,29 @@ name|new_ptr
 decl_stmt|;
 if|if
 condition|(
+name|new_size
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"xrealloc: zero size"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ptr
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|new_ptr
+operator|=
+name|malloc
 argument_list|(
-literal|"xrealloc: NULL pointer given as argument"
+name|new_size
 argument_list|)
 expr_stmt|;
+else|else
 name|new_ptr
 operator|=
 name|realloc
@@ -108,10 +141,10 @@ name|NULL
 condition|)
 name|fatal
 argument_list|(
-literal|"xrealloc: out of memory (new_size %d bytes)"
+literal|"xrealloc: out of memory (new_size %lu bytes)"
 argument_list|,
 operator|(
-name|int
+name|u_long
 operator|)
 name|new_size
 argument_list|)
@@ -161,7 +194,7 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|strlen
@@ -174,12 +207,25 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|len
+operator|==
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"xstrdup: zero size"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
 name|xmalloc
 argument_list|(
 name|len
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|cp

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: radix.c,v 1.13 2000/09/07 20:27:52 deraadt Exp $"
+literal|"$OpenBSD: radix.c,v 1.15 2001/01/16 23:58:09 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -37,24 +37,21 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|char
+name|u_char
 name|my_u_char
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|int
+name|u_int
 name|my_u_int32_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|short
+name|u_short
 name|my_u_short
 typedef|;
 end_typedef
@@ -72,7 +69,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_char *t_cp = (my_u_char*)(cp); \ 	(s) = (((my_u_short)t_cp[0])<< 8) \ 	    | (((my_u_short)t_cp[1])) \ 	    ; \ 	(cp) += 2; \ }
+value|{ \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	(s) = (((my_u_short)t_cp[0])<< 8) \ 	    | (((my_u_short)t_cp[1])) \ 	    ; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -84,7 +81,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_char *t_cp = (my_u_char*)(cp); \ 	(l) = (((my_u_int32_t)t_cp[0])<< 24) \ 	    | (((my_u_int32_t)t_cp[1])<< 16) \ 	    | (((my_u_int32_t)t_cp[2])<< 8) \ 	    | (((my_u_int32_t)t_cp[3])) \ 	    ; \ 	(cp) += 4; \ }
+value|{ \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	(l) = (((my_u_int32_t)t_cp[0])<< 24) \ 	    | (((my_u_int32_t)t_cp[1])<< 16) \ 	    | (((my_u_int32_t)t_cp[2])<< 8) \ 	    | (((my_u_int32_t)t_cp[3])) \ 	    ; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -96,7 +93,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_short t_s = (my_u_short)(s); \ 	register my_u_char *t_cp = (my_u_char*)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
+value|{ \ 	register my_u_short t_s = (my_u_short)(s); \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_s>> 8; \ 	*t_cp   = t_s; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -108,7 +105,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register my_u_int32_t t_l = (my_u_int32_t)(l); \ 	register my_u_char *t_cp = (my_u_char*)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
+value|{ \ 	register my_u_int32_t t_l = (my_u_int32_t)(l); \ 	register my_u_char *t_cp = (my_u_char *)(cp); \ 	*t_cp++ = t_l>> 24; \ 	*t_cp++ = t_l>> 16; \ 	*t_cp++ = t_l>> 8; \ 	*t_cp   = t_l; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
@@ -122,7 +119,7 @@ name|p
 parameter_list|,
 name|p_l
 parameter_list|)
-value|{			\     register char* p_targ = (p) + p_l;		\     register char* s_c = (s);			\     register char* p_c = (p);			\     while (*p_c&& (p_c< p_targ)) {		\ 	*s_c++ = *p_c++;			\     }						\     if (p_c == p_targ) {			\ 	return 1;				\     }						\     *s_c = *p_c++;				\     (p_l) = (p_l) - (p_c - (p));		\     (p) = p_c;					\ }
+value|{			\     register char *p_targ = (p) + p_l;		\     register char *s_c = (s);			\     register char *p_c = (p);			\     while (*p_c&& (p_c< p_targ)) {		\ 	*s_c++ = *p_c++;			\     }						\     if (p_c == p_targ) {			\ 	return 1;				\     }						\     *s_c = *p_c++;				\     (p_l) = (p_l) - (p_c - (p));		\     (p) = p_c;					\ }
 end_define
 
 begin_function
@@ -133,8 +130,7 @@ name|CREDENTIALS
 modifier|*
 name|creds
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
@@ -316,15 +312,13 @@ name|p
 argument_list|)
 expr_stmt|;
 block|{
-name|unsigned
-name|int
+name|u_int
 name|endTime
 decl_stmt|;
 name|endTime
 operator|=
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|)
 name|krb_life_to_time
 argument_list|(
@@ -427,8 +421,7 @@ operator|(
 name|uuencode
 argument_list|(
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|temp
@@ -487,8 +480,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|temp
@@ -656,8 +648,7 @@ operator|-=
 literal|4
 expr_stmt|;
 block|{
-name|unsigned
-name|int
+name|u_int
 name|endTime
 decl_stmt|;
 name|GETLONG

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dispatch.c,v 1.5 2000/09/21 11:25:34 markus Exp $"
+literal|"$OpenBSD: dispatch.c,v 1.10 2001/02/18 18:33:53 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh2.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_include
@@ -33,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|"packet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"compat.h"
 end_include
 
 begin_define
@@ -81,6 +99,19 @@ argument_list|,
 name|type
 argument_list|,
 name|plen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|compat20
+operator|&&
+name|type
+operator|==
+name|SSH2_MSG_KEXINIT
+condition|)
+name|fatal
+argument_list|(
+literal|"dispatch_protocol_error: rekeying is not supported"
 argument_list|)
 expr_stmt|;
 block|}

@@ -8,11 +8,11 @@ comment|/*  * Copyright (c) 2000 Markus Friedl.  All rights reserved.  *  * Redi
 end_comment
 
 begin_comment
-comment|/* RCSID("$FreeBSD$"); */
+comment|/* RCSID("$OpenBSD: channels.h,v 1.31 2001/04/13 22:46:53 beck Exp $"); */
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: channels.h,v 1.22 2000/10/27 07:48:22 markus Exp $"); */
+comment|/* RCSID("$FreeBSD$"); */
 end_comment
 
 begin_ifndef
@@ -26,6 +26,12 @@ define|#
 directive|define
 name|CHANNELS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"buffer.h"
+end_include
 
 begin_comment
 comment|/* Definitions for channel types. */
@@ -155,8 +161,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SSH_CHANNEL_MAX_TYPE
+name|SSH_CHANNEL_RPORT_LISTENER
 value|11
+end_define
+
+begin_comment
+comment|/* Listening to a R-style port  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_CONNECTING
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_DYNAMIC
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_CHANNEL_MAX_TYPE
+value|14
 end_define
 
 begin_comment
@@ -792,23 +823,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|channel_input_open
-parameter_list|(
-name|int
-name|type
-parameter_list|,
-name|int
-name|plen
-parameter_list|,
-name|void
-modifier|*
-name|ctxt
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/* Sets specific protocol options. */
 end_comment
@@ -859,7 +873,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Add any bits relevant to channels in select bitmasks. */
+comment|/*  * Allocate/update select bitmasks and add any bits relevant to channels in  * select bitmasks.  */
 end_comment
 
 begin_function_decl
@@ -868,11 +882,20 @@ name|channel_prepare_select
 parameter_list|(
 name|fd_set
 modifier|*
-name|readset
+modifier|*
+name|readsetp
 parameter_list|,
 name|fd_set
 modifier|*
-name|writeset
+modifier|*
+name|writesetp
+parameter_list|,
+name|int
+modifier|*
+name|maxfdp
+parameter_list|,
+name|int
+name|rekeying
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -949,19 +972,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Returns the maximum file descriptor number used by the channels. */
-end_comment
-
-begin_function_decl
-name|int
-name|channel_max_fd
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Returns true if there is still an open channel over the connection. */
 end_comment
 
@@ -989,26 +999,55 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initiate forwarding of connections to local port "port" through the secure  * channel to host:port from remote side.  This never returns if there was an  * error.  */
+comment|/*  * Initiate forwarding of connections to local port "port" through the secure  * channel to host:port from remote side.  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|channel_request_local_forwarding
 parameter_list|(
 name|u_short
-name|port
+name|listen_port
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|host
+name|host_to_connect
 parameter_list|,
 name|u_short
-name|remote_port
+name|port_to_connect
 parameter_list|,
 name|int
 name|gateway_ports
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_request_forwarding
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|listen_address
+parameter_list|,
+name|u_short
+name|listen_port
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|host_to_connect
+parameter_list|,
+name|u_short
+name|port_to_connect
+parameter_list|,
+name|int
+name|gateway_ports
+parameter_list|,
+name|int
+name|remote_fwd
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1036,12 +1075,43 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Permits opening to any host/port in SSH_MSG_PORT_OPEN.  This is usually  * called by the server, because the user could connect to any port anyway,  * and the server has no way to know but to trust the client anyway.  */
+comment|/*  * Permits opening to any host/port if permitted_opens[] is empty.  This is  * usually called by the server, because the user could connect to any port  * anyway, and the server has no way to know but to trust the client anyway.  */
 end_comment
 
 begin_function_decl
 name|void
 name|channel_permit_all_opens
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Add host/port to list of allowed targets for port forwarding */
+end_comment
+
+begin_function_decl
+name|void
+name|channel_add_permitted_opens
+parameter_list|(
+name|char
+modifier|*
+name|host
+parameter_list|,
+name|int
+name|port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Flush list */
+end_comment
+
+begin_function_decl
+name|void
+name|channel_clear_permitted_opens
 parameter_list|(
 name|void
 parameter_list|)
@@ -1225,6 +1295,17 @@ comment|/* XXX */
 end_comment
 
 begin_function_decl
+name|void
+name|auth_sock_cleanup_proc
+parameter_list|(
+name|void
+modifier|*
+name|pw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|channel_connect_to
 parameter_list|(
@@ -1241,7 +1322,26 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|channel_connect_by_listen_adress
+parameter_list|(
+name|u_short
+name|listen_port
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|x11_connect_display
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|channel_find_open
 parameter_list|(
 name|void
 parameter_list|)

@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"packet.h"
 end_include
 

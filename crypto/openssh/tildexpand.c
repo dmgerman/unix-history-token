@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: tildexpand.c,v 1.8 2000/09/07 20:27:55 deraadt Exp $"
+literal|"$OpenBSD: tildexpand.c,v 1.11 2001/02/08 19:30:53 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -26,7 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tildexpand.h"
 end_include
 
 begin_comment
@@ -52,8 +58,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|unsigned
-name|int
+name|u_int
 name|userlen
 decl_stmt|;
 name|char

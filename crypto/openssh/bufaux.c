@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: bufaux.c,v 1.13 2000/09/07 20:27:50 deraadt Exp $"
+literal|"$OpenBSD: bufaux.c,v 1.17 2001/01/21 19:05:45 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -24,12 +24,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_include
-include|#
-directive|include
-file|"ssh.h"
-end_include
 
 begin_include
 include|#
@@ -53,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"getput.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
 end_include
 
 begin_comment
@@ -91,8 +91,7 @@ operator|)
 operator|/
 literal|8
 decl_stmt|;
-name|char
-name|unsigned
+name|u_char
 modifier|*
 name|buf
 init|=
@@ -205,8 +204,7 @@ name|bits
 decl_stmt|,
 name|bytes
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|buf
 index|[
 literal|2
@@ -264,8 +262,7 @@ expr_stmt|;
 name|bin
 operator|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|buffer_ptr
@@ -324,8 +321,7 @@ argument_list|)
 operator|+
 literal|1
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|buf
 init|=
@@ -406,8 +402,7 @@ name|i
 decl_stmt|,
 name|carry
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|uc
 init|=
@@ -507,14 +502,12 @@ comment|/**XXX should be two's-complement */
 name|int
 name|len
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|bin
 init|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|buffer_get_string
@@ -522,8 +515,7 @@ argument_list|(
 name|buffer
 argument_list|,
 operator|(
-name|unsigned
-name|int
+name|u_int
 operator|*
 operator|)
 operator|&
@@ -555,8 +547,7 @@ comment|/*  * Returns an integer from the buffer (4 bytes, msb first).  */
 end_comment
 
 begin_function
-name|unsigned
-name|int
+name|u_int
 name|buffer_get_int
 parameter_list|(
 name|Buffer
@@ -564,8 +555,7 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
-name|unsigned
-name|char
+name|u_char
 name|buf
 index|[
 literal|4
@@ -593,6 +583,43 @@ return|;
 block|}
 end_function
 
+begin_function
+name|u_int64_t
+name|buffer_get_int64
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|)
+block|{
+name|u_char
+name|buf
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|buffer_get
+argument_list|(
+name|buffer
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+return|return
+name|GET_64BIT
+argument_list|(
+name|buf
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Stores an integer in the buffer in 4 bytes, msb first.  */
 end_comment
@@ -605,8 +632,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|value
 parameter_list|)
 block|{
@@ -635,6 +661,43 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|buffer_put_int64
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|u_int64_t
+name|value
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|PUT_64BIT
+argument_list|(
+name|buf
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+name|buffer_append
+argument_list|(
+name|buffer
+argument_list|,
+name|buf
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Returns an arbitrary binary string from the buffer.  The string cannot  * be longer than 256k.  The returned value points to memory allocated  * with xmalloc; it is the responsibility of the calling function to free  * the data.  If length_ptr is non-NULL, the length of the returned data  * will be stored there.  A null character will be automatically appended  * to the returned string, and is not counted in length.  */
 end_comment
@@ -648,14 +711,12 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|length_ptr
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|char
@@ -746,8 +807,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 block|{
@@ -827,8 +887,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|)
 name|ch
 return|;

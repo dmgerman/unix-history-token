@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: cipher.c,v 1.37 2000/10/23 19:31:54 markus Exp $"
+literal|"$OpenBSD: cipher.c,v 1.43 2001/02/04 15:32:23 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -28,13 +28,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"xmalloc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"xmalloc.h"
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cipher.h"
 end_include
 
 begin_include
@@ -809,7 +815,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|src
 argument_list|,
@@ -831,21 +837,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-operator|&
-name|iv1
-argument_list|,
-name|dest
-operator|+
-name|len
-operator|-
-literal|8
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|dest
 argument_list|,
@@ -866,18 +858,7 @@ argument_list|,
 name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-name|iv2
-argument_list|,
-operator|&
-name|iv1
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-comment|/* Note how iv1 == iv2 on entry and exit. */
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|dest
 argument_list|,
@@ -896,19 +877,6 @@ argument_list|,
 name|iv3
 argument_list|,
 name|DES_ENCRYPT
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|iv3
-argument_list|,
-name|dest
-operator|+
-name|len
-operator|-
-literal|8
-argument_list|,
-literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -974,7 +942,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|src
 argument_list|,
@@ -995,20 +963,7 @@ argument_list|,
 name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-name|iv3
-argument_list|,
-name|src
-operator|+
-name|len
-operator|-
-literal|8
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|dest
 argument_list|,
@@ -1029,20 +984,7 @@ argument_list|,
 name|DES_ENCRYPT
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-name|iv2
-argument_list|,
-name|dest
-operator|+
-name|len
-operator|-
-literal|8
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-name|des_cbc_encrypt
+name|des_ncbc_encrypt
 argument_list|(
 name|dest
 argument_list|,
@@ -1064,8 +1006,6 @@ argument_list|,
 name|DES_DECRYPT
 argument_list|)
 expr_stmt|;
-comment|/* memcpy(&iv1, iv2, 8); */
-comment|/* Note how iv1 == iv2 on entry and exit. */
 block|}
 end_function
 
@@ -1104,8 +1044,7 @@ argument_list|,
 name|keylen
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|key
@@ -1297,13 +1236,11 @@ name|void
 name|swap_bytes
 parameter_list|(
 specifier|const
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|src
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|dst
 parameter_list|,
@@ -1679,8 +1616,7 @@ argument_list|,
 name|keylen
 argument_list|,
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|key
@@ -2729,16 +2665,14 @@ comment|/*--*/
 end_comment
 
 begin_function
-name|unsigned
-name|int
+name|u_int
 name|cipher_mask_ssh1
 parameter_list|(
 name|int
 name|client
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|u_int
 name|mask
 init|=
 literal|0
@@ -3358,8 +3292,7 @@ block|{
 name|MD5_CTX
 name|md
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 name|digest
 index|[
 literal|16

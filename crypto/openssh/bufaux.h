@@ -4,7 +4,7 @@ comment|/*  * Author: Tatu Ylonen<ylo@cs.hut.fi>  * Copyright (c) 1995 Tatu Ylon
 end_comment
 
 begin_comment
-comment|/* RCSID("$OpenBSD: bufaux.h,v 1.8 2000/09/07 20:27:50 deraadt Exp $"); */
+comment|/* RCSID("$OpenBSD: bufaux.h,v 1.11 2001/01/21 19:05:45 markus Exp $"); */
 end_comment
 
 begin_ifndef
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"buffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
 end_include
 
 begin_comment
@@ -98,9 +104,19 @@ comment|/* Returns an integer from the buffer (4 bytes, msb first). */
 end_comment
 
 begin_function_decl
-name|unsigned
-name|int
+name|u_int
 name|buffer_get_int
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_int64_t
+name|buffer_get_int64
 parameter_list|(
 name|Buffer
 modifier|*
@@ -121,8 +137,21 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_put_int64
+parameter_list|(
+name|Buffer
+modifier|*
+name|buffer
+parameter_list|,
+name|u_int64_t
 name|value
 parameter_list|)
 function_decl|;
@@ -174,8 +203,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 modifier|*
 name|length_ptr
 parameter_list|)
@@ -199,8 +227,7 @@ name|void
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 function_decl|;

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: nchan.c,v 1.19 2000/09/07 20:27:52 deraadt Exp $"
+literal|"$OpenBSD: nchan.c,v 1.23 2001/02/28 08:54:55 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh2.h"
 end_include
 
 begin_include
@@ -50,13 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh2.h"
+file|"compat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"compat.h"
+file|"log.h"
 end_include
 
 begin_comment
@@ -180,19 +186,6 @@ name|c
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* channel cleanup */
-end_comment
-
-begin_decl_stmt
-name|chan_event_fn
-modifier|*
-name|chan_delete_if_full_closed
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* helper */
@@ -1071,51 +1064,6 @@ block|}
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|chan_delete_if_full_closed1
-parameter_list|(
-name|Channel
-modifier|*
-name|c
-parameter_list|)
-block|{
-if|if
-condition|(
-name|c
-operator|->
-name|istate
-operator|==
-name|CHAN_INPUT_CLOSED
-operator|&&
-name|c
-operator|->
-name|ostate
-operator|==
-name|CHAN_OUTPUT_CLOSED
-condition|)
-block|{
-name|debug
-argument_list|(
-literal|"channel %d: full closed"
-argument_list|,
-name|c
-operator|->
-name|self
-argument_list|)
-expr_stmt|;
-name|channel_free
-argument_list|(
-name|c
-operator|->
-name|self
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * the same for SSH2  */
 end_comment
@@ -1764,10 +1712,13 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/* shared */
+end_comment
+
 begin_function
-specifier|static
-name|void
-name|chan_delete_if_full_closed2
+name|int
+name|chan_is_dead
 parameter_list|(
 name|Channel
 modifier|*
@@ -1779,15 +1730,100 @@ condition|(
 name|c
 operator|->
 name|istate
-operator|==
+operator|!=
 name|CHAN_INPUT_CLOSED
-operator|&&
+operator|||
 name|c
 operator|->
 name|ostate
-operator|==
+operator|!=
 name|CHAN_OUTPUT_CLOSED
 condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|compat20
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"channel %d: is dead"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+comment|/* 	 * we have to delay the close message if the efd (for stderr) is 	 * still active 	 */
+if|if
+condition|(
+operator|(
+operator|(
+name|c
+operator|->
+name|extended_usage
+operator|!=
+name|CHAN_EXTENDED_IGNORE
+operator|)
+operator|&&
+name|buffer_len
+argument_list|(
+operator|&
+name|c
+operator|->
+name|extended
+argument_list|)
+operator|>
+literal|0
+operator|)
+if|#
+directive|if
+literal|0
+condition||| ((c->extended_usage == CHAN_EXTENDED_READ)&& 	    c->efd != -1)
+endif|#
+directive|endif
+condition|)
+block|{
+name|debug2
+argument_list|(
+literal|"channel %d: active efd: %d len %d type %s"
+argument_list|,
+name|c
+operator|->
+name|self
+argument_list|,
+name|c
+operator|->
+name|efd
+argument_list|,
+name|buffer_len
+argument_list|(
+operator|&
+name|c
+operator|->
+name|extended
+argument_list|)
+argument_list|,
+name|c
+operator|->
+name|extended_usage
+operator|==
+name|CHAN_EXTENDED_READ
+condition|?
+literal|"read"
+else|:
+literal|"write"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 if|if
 condition|(
@@ -1828,28 +1864,23 @@ condition|)
 block|{
 name|debug
 argument_list|(
-literal|"channel %d: full closed2"
+literal|"channel %d: is dead"
 argument_list|,
 name|c
 operator|->
 name|self
 argument_list|)
 expr_stmt|;
-name|channel_free
-argument_list|(
-name|c
-operator|->
-name|self
-argument_list|)
-expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
-
-begin_comment
-comment|/* shared */
-end_comment
 
 begin_function
 name|void
@@ -1921,10 +1952,6 @@ name|chan_obuf_empty
 operator|=
 name|chan_obuf_empty2
 expr_stmt|;
-name|chan_delete_if_full_closed
-operator|=
-name|chan_delete_if_full_closed2
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1951,10 +1978,6 @@ expr_stmt|;
 name|chan_obuf_empty
 operator|=
 name|chan_obuf_empty1
-expr_stmt|;
-name|chan_delete_if_full_closed
-operator|=
-name|chan_delete_if_full_closed1
 expr_stmt|;
 block|}
 block|}

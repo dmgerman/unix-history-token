@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.8 2000/09/07 20:27:50 deraadt Exp $"
+literal|"$OpenBSD: buffer.c,v 1.13 2001/04/12 19:15:24 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,7 +32,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ssh.h"
+file|"log.h"
 end_include
 
 begin_comment
@@ -161,8 +161,7 @@ name|char
 modifier|*
 name|data
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 block|{
@@ -209,8 +208,7 @@ modifier|*
 modifier|*
 name|datap
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 block|{
@@ -364,8 +362,7 @@ comment|/* Returns the number of bytes of data in the buffer. */
 end_comment
 
 begin_function
-name|unsigned
-name|int
+name|u_int
 name|buffer_len
 parameter_list|(
 name|Buffer
@@ -401,8 +398,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|len
 parameter_list|)
 block|{
@@ -420,7 +416,17 @@ name|offset
 condition|)
 name|fatal
 argument_list|(
-literal|"buffer_get: trying to get more bytes than in buffer"
+literal|"buffer_get: trying to get more bytes %d than in buffer %d"
+argument_list|,
+name|len
+argument_list|,
+name|buffer
+operator|->
+name|end
+operator|-
+name|buffer
+operator|->
+name|offset
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -459,8 +465,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|bytes
 parameter_list|)
 block|{
@@ -502,8 +507,7 @@ name|Buffer
 modifier|*
 name|buffer
 parameter_list|,
-name|unsigned
-name|int
+name|u_int
 name|bytes
 parameter_list|)
 block|{
@@ -575,14 +579,12 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|ucp
 init|=
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|buffer
@@ -606,11 +608,12 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" %02x"
+literal|"%02x"
 argument_list|,
 name|ucp
 index|[
@@ -618,11 +621,55 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|-
+name|buffer
+operator|->
+name|offset
+operator|)
+operator|%
+literal|16
+operator|==
+literal|15
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\n"
+literal|"\r\n"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|i
+operator|-
+name|buffer
+operator|->
+name|offset
+operator|)
+operator|%
+literal|2
+operator|==
+literal|1
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
+block|}
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 block|}

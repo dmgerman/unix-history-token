@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect.c,v 1.79 2000/09/17 15:52:51 markus Exp $"
+literal|"$OpenBSD: sshconnect.c,v 1.104 2001/04/12 19:15:25 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -34,13 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/dsa.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<openssl/rsa.h>
+file|"ssh.h"
 end_include
 
 begin_include
@@ -53,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|"rsa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ssh.h"
 end_include
 
 begin_include
@@ -88,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"readconf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"key.h"
 end_include
 
@@ -107,6 +89,48 @@ begin_include
 include|#
 directive|include
 file|"hostfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"log.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"readconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"atomicio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh1.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"canohost.h"
 end_include
 
 begin_decl_stmt
@@ -143,6 +167,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* AF_UNSPEC or AF_INET or AF_INET6 */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|IPv4or6
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Connect to the given ssh server using a proxy command.  */
 end_comment
 
@@ -158,8 +193,10 @@ parameter_list|,
 name|u_short
 name|port
 parameter_list|,
-name|uid_t
-name|original_real_uid
+name|struct
+name|passwd
+modifier|*
+name|pw
 parameter_list|,
 specifier|const
 name|char
@@ -421,7 +458,7 @@ decl_stmt|;
 comment|/* Child.  Permanently give up superuser privileges. */
 name|permanently_set_uid
 argument_list|(
-name|original_real_uid
+name|pw
 argument_list|)
 expr_stmt|;
 comment|/* Redirect stdin and stdout. */
@@ -513,7 +550,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 name|argv
 index|[
@@ -539,14 +576,20 @@ expr_stmt|;
 comment|/* Execute the proxy command.  Note that we gave up any 		   extra privileges above. */
 name|execv
 argument_list|(
-literal|"/bin/sh"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"/bin/sh"
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 name|exit
@@ -624,8 +667,10 @@ begin_function
 name|int
 name|ssh_create_socket
 parameter_list|(
-name|uid_t
-name|original_real_uid
+name|struct
+name|passwd
+modifier|*
+name|pw
 parameter_list|,
 name|int
 name|privileged
@@ -692,7 +737,7 @@ block|{
 comment|/* 		 * Just create an ordinary socket on arbitrary port.  We use 		 * the user's uid to create the socket. 		 */
 name|temporarily_use_uid
 argument_list|(
-name|original_real_uid
+name|pw
 argument_list|)
 expr_stmt|;
 name|sock
@@ -733,15 +778,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The canonical host name used to connect will be returned in *host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
+comment|/*  * Opens a TCP/IP connection to the remote server on the given host.  * The address of the remote host will be returned in hostaddr.  * If port is 0, the default port will be used.  If anonymous is zero,  * a privileged port will be allocated to make the connection.  * This requires super-user privileges if anonymous is false.  * Connection_attempts specifies the maximum number of tries (one per  * second).  If proxy_command is non-NULL, it specifies the command (with %h  * and %p substituted for host and port, respectively) to use to contact  * the daemon.  */
 end_comment
 
 begin_function
 name|int
 name|ssh_connect
 parameter_list|(
+specifier|const
 name|char
-modifier|*
 modifier|*
 name|host
 parameter_list|,
@@ -759,8 +804,10 @@ parameter_list|,
 name|int
 name|anonymous
 parameter_list|,
-name|uid_t
-name|original_real_uid
+name|struct
+name|passwd
+modifier|*
+name|pw
 parameter_list|,
 specifier|const
 name|char
@@ -769,27 +816,20 @@ name|proxy_command
 parameter_list|)
 block|{
 name|int
+name|gaierr
+decl_stmt|;
+name|int
+name|on
+init|=
+literal|1
+decl_stmt|;
+name|int
 name|sock
 init|=
 operator|-
 literal|1
 decl_stmt|,
 name|attempt
-decl_stmt|;
-name|struct
-name|servent
-modifier|*
-name|sp
-decl_stmt|;
-name|struct
-name|addrinfo
-name|hints
-decl_stmt|,
-modifier|*
-name|ai
-decl_stmt|,
-modifier|*
-name|aitop
 decl_stmt|;
 name|char
 name|ntop
@@ -802,12 +842,24 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
-name|int
-name|gaierr
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|,
+modifier|*
+name|ai
+decl_stmt|,
+modifier|*
+name|aitop
 decl_stmt|;
 name|struct
 name|linger
 name|linger
+decl_stmt|;
+name|struct
+name|servent
+modifier|*
+name|sp
 decl_stmt|;
 name|debug
 argument_list|(
@@ -874,12 +926,11 @@ condition|)
 return|return
 name|ssh_proxy_connect
 argument_list|(
-operator|*
 name|host
 argument_list|,
 name|port
 argument_list|,
-name|original_real_uid
+name|pw
 argument_list|,
 name|proxy_command
 argument_list|)
@@ -910,12 +961,6 @@ name|ai_socktype
 operator|=
 name|SOCK_STREAM
 expr_stmt|;
-name|hints
-operator|.
-name|ai_flags
-operator|=
-name|AI_CANONNAME
-expr_stmt|;
 name|snprintf
 argument_list|(
 name|strport
@@ -935,7 +980,6 @@ name|gaierr
 operator|=
 name|getaddrinfo
 argument_list|(
-operator|*
 name|host
 argument_list|,
 name|strport
@@ -956,7 +1000,6 @@ literal|"%s: %.100s: %s"
 argument_list|,
 name|__progname
 argument_list|,
-operator|*
 name|host
 argument_list|,
 name|gai_strerror
@@ -1067,9 +1110,7 @@ name|debug
 argument_list|(
 literal|"Connecting to %.200s [%.100s] port %s."
 argument_list|,
-name|ai
-operator|->
-name|ai_canonname
+name|host
 argument_list|,
 name|ntop
 argument_list|,
@@ -1081,7 +1122,7 @@ name|sock
 operator|=
 name|ssh_create_socket
 argument_list|(
-name|original_real_uid
+name|pw
 argument_list|,
 operator|!
 name|anonymous
@@ -1090,10 +1131,6 @@ name|geteuid
 argument_list|()
 operator|==
 literal|0
-operator|&&
-name|port
-operator|<
-name|IPPORT_RESERVED
 argument_list|,
 name|ai
 operator|->
@@ -1110,7 +1147,7 @@ continue|continue;
 comment|/* Connect to the host.  We use the user's uid in the 			 * hope that it will help with tcp_wrappers showing 			 * the remote uid as root. 			 */
 name|temporarily_use_uid
 argument_list|(
-name|original_real_uid
+name|pw
 argument_list|)
 expr_stmt|;
 if|if
@@ -1184,16 +1221,8 @@ if|if
 condition|(
 name|ai
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-block|if (ai->ai_canonname != NULL) 				*host = xstrdup(ai->ai_canonname);
-endif|#
-directive|endif
 break|break;
 comment|/* Successful connection. */
-block|}
 comment|/* Sleep a moment before retrying. */
 name|sleep
 argument_list|(
@@ -1256,6 +1285,46 @@ name|linger
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Set keepalives if requested. */
+if|if
+condition|(
+name|options
+operator|.
+name|keepalives
+operator|&&
+name|setsockopt
+argument_list|(
+name|sock
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_KEEPALIVE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"setsockopt SO_KEEPALIVE: %.100s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Set the connection. */
 name|packet_set_connection
 argument_list|(
@@ -1277,7 +1346,9 @@ end_comment
 begin_function
 name|void
 name|ssh_exchange_identification
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -1311,6 +1382,11 @@ name|connection_out
 init|=
 name|packet_get_connection_out
 argument_list|()
+decl_stmt|;
+name|int
+name|minor1
+init|=
+name|PROTOCOL_MINOR_1
 decl_stmt|;
 comment|/* Read other side\'s version identification. */
 for|for
@@ -1596,11 +1672,19 @@ condition|(
 name|remote_minor
 operator|==
 literal|3
+operator|||
+name|remote_minor
+operator|==
+literal|4
 condition|)
 block|{
 comment|/* We speak 1.3, too. */
 name|enable_compat13
 argument_list|()
+expr_stmt|;
+name|minor1
+operator|=
+literal|3
 expr_stmt|;
 if|if
 condition|(
@@ -1698,7 +1782,7 @@ name|compat20
 condition|?
 name|PROTOCOL_MINOR_2
 else|:
-name|PROTOCOL_MINOR_1
+name|minor1
 argument_list|,
 name|SSH_VERSION
 argument_list|)
@@ -1761,6 +1845,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* defaults to 'no' */
+end_comment
+
 begin_function
 name|int
 name|read_yes_or_no
@@ -1792,9 +1880,18 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
+name|options
+operator|.
+name|batch_mode
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|isatty
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|)
 condition|)
 name|f
@@ -1806,7 +1903,7 @@ name|f
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"rw"
 argument_list|)
@@ -2033,6 +2130,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|hostp
+decl_stmt|,
+modifier|*
+name|fp
 decl_stmt|;
 name|HostStatus
 name|host_status
@@ -2054,6 +2154,23 @@ name|ntop
 index|[
 name|NI_MAXHOST
 index|]
+decl_stmt|;
+name|int
+name|host_line
+decl_stmt|,
+name|ip_line
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|host_file
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|ip_file
+init|=
+name|NULL
 decl_stmt|;
 comment|/* 	 * Force accepting of the host key for loopback/localhost. The 	 * problem is that if the home directory is NFS-mounted to multiple 	 * machines, localhost will refer to a different machine in each of 	 * them, and the user will get bogus HOST_CHANGED warnings.  This 	 * essentially disables host authentication for localhost; however, 	 * this is probably not a real problem. 	 */
 comment|/**  hostaddr == 0! */
@@ -2125,39 +2242,30 @@ block|}
 if|if
 condition|(
 name|local
+operator|&&
+name|options
+operator|.
+name|host_key_alias
+operator|==
+name|NULL
 condition|)
 block|{
 name|debug
 argument_list|(
-literal|"Forcing accepting of host key for loopback/localhost."
+literal|"Forcing accepting of host key for "
+literal|"loopback/localhost."
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Turn off check_host_ip for proxy connects, since 	 * we don't have the remote ip-address 	 */
+comment|/* 	 * We don't have the remote ip-address for connections 	 * using a proxy command 	 */
 if|if
 condition|(
 name|options
 operator|.
 name|proxy_command
-operator|!=
+operator|==
 name|NULL
-operator|&&
-name|options
-operator|.
-name|check_host_ip
-condition|)
-name|options
-operator|.
-name|check_host_ip
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|.
-name|check_host_ip
 condition|)
 block|{
 if|if
@@ -2199,6 +2307,72 @@ name|ntop
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|ip
+operator|=
+name|xstrdup
+argument_list|(
+literal|"<no hostip for proxy command>"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Turn off check_host_ip if the connection is to localhost, via proxy 	 * command or if we don't have a hostname to compare with 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|check_host_ip
+operator|&&
+operator|(
+name|local
+operator|||
+name|strcmp
+argument_list|(
+name|host
+argument_list|,
+name|ip
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|options
+operator|.
+name|proxy_command
+operator|!=
+name|NULL
+operator|)
+condition|)
+name|options
+operator|.
+name|check_host_ip
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Allow the user to record the key under a different name. This is 	 * useful for ssh tunneling over forwarded connections or if you run 	 * multiple sshd's on different ports on the same machine. 	 */
+if|if
+condition|(
+name|options
+operator|.
+name|host_key_alias
+operator|!=
+name|NULL
+condition|)
+block|{
+name|host
+operator|=
+name|options
+operator|.
+name|host_key_alias
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"using hostkeyalias: %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Store the host key from the known host file in here so that we can 	 * compare it with the key for the IP address. 	 */
 name|file_key
 operator|=
@@ -2210,17 +2384,24 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if the host key is present in the user\'s list of known 	 * hosts or in the systemwide list. 	 */
+name|host_file
+operator|=
+name|user_hostfile
+expr_stmt|;
 name|host_status
 operator|=
 name|check_host_in_hostfile
 argument_list|(
-name|user_hostfile
+name|host_file
 argument_list|,
 name|host
 argument_list|,
 name|host_key
 argument_list|,
 name|file_key
+argument_list|,
+operator|&
+name|host_line
 argument_list|)
 expr_stmt|;
 if|if
@@ -2229,35 +2410,34 @@ name|host_status
 operator|==
 name|HOST_NEW
 condition|)
+block|{
+name|host_file
+operator|=
+name|system_hostfile
+expr_stmt|;
 name|host_status
 operator|=
 name|check_host_in_hostfile
 argument_list|(
-name|system_hostfile
+name|host_file
 argument_list|,
 name|host
 argument_list|,
 name|host_key
 argument_list|,
 name|file_key
+argument_list|,
+operator|&
+name|host_line
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Also perform check for the ip address, skip the check if we are 	 * localhost or the hostname was an ip address to begin with 	 */
 if|if
 condition|(
 name|options
 operator|.
 name|check_host_ip
-operator|&&
-operator|!
-name|local
-operator|&&
-name|strcmp
-argument_list|(
-name|host
-argument_list|,
-name|ip
-argument_list|)
 condition|)
 block|{
 name|Key
@@ -2271,17 +2451,24 @@ operator|->
 name|type
 argument_list|)
 decl_stmt|;
+name|ip_file
+operator|=
+name|user_hostfile
+expr_stmt|;
 name|ip_status
 operator|=
 name|check_host_in_hostfile
 argument_list|(
-name|user_hostfile
+name|ip_file
 argument_list|,
 name|ip
 argument_list|,
 name|host_key
 argument_list|,
 name|ip_key
+argument_list|,
+operator|&
+name|ip_line
 argument_list|)
 expr_stmt|;
 if|if
@@ -2290,19 +2477,28 @@ name|ip_status
 operator|==
 name|HOST_NEW
 condition|)
+block|{
+name|ip_file
+operator|=
+name|system_hostfile
+expr_stmt|;
 name|ip_status
 operator|=
 name|check_host_in_hostfile
 argument_list|(
-name|system_hostfile
+name|ip_file
 argument_list|,
 name|ip
 argument_list|,
 name|host_key
 argument_list|,
 name|ip_key
+argument_list|,
+operator|&
+name|ip_line
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|host_status
@@ -2361,15 +2557,21 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|debug
+argument_list|(
+literal|"Found key in %s:%d"
+argument_list|,
+name|host_file
+argument_list|,
+name|host_line
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|options
 operator|.
 name|check_host_ip
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|ip_status
 operator|==
 name|HOST_NEW
@@ -2389,7 +2591,7 @@ argument_list|)
 condition|)
 name|log
 argument_list|(
-literal|"Failed to add the %s host key for IP address '%.30s' to the list of known hosts (%.30s)."
+literal|"Failed to add the %s host key for IP address '%.128s' to the list of known hosts (%.30s)."
 argument_list|,
 name|type
 argument_list|,
@@ -2401,28 +2603,9 @@ expr_stmt|;
 else|else
 name|log
 argument_list|(
-literal|"Warning: Permanently added the %s host key for IP address '%.30s' to the list of known hosts."
+literal|"Warning: Permanently added the %s host key for IP address '%.128s' to the list of known hosts."
 argument_list|,
 name|type
-argument_list|,
-name|ip
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ip_status
-operator|!=
-name|HOST_OK
-condition|)
-name|log
-argument_list|(
-literal|"Warning: the %s host key for '%.200s' differs from the key for the IP address '%.30s'"
-argument_list|,
-name|type
-argument_list|,
-name|host
 argument_list|,
 name|ip
 argument_list|)
@@ -2470,15 +2653,17 @@ index|[
 literal|1024
 index|]
 decl_stmt|;
-name|char
-modifier|*
 name|fp
-init|=
+operator|=
 name|key_fingerprint
 argument_list|(
 name|host_key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|snprintf
 argument_list|(
 name|prompt
@@ -2488,14 +2673,21 @@ argument_list|(
 name|prompt
 argument_list|)
 argument_list|,
-literal|"The authenticity of host '%.200s' can't be established.\n"
+literal|"The authenticity of host '%.200s (%s)' can't be established.\n"
 literal|"%s key fingerprint is %s.\n"
 literal|"Are you sure you want to continue connecting (yes/no)? "
 argument_list|,
 name|host
 argument_list|,
+name|ip
+argument_list|,
 name|type
 argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
@@ -2512,7 +2704,7 @@ argument_list|)
 condition|)
 name|fatal
 argument_list|(
-literal|"Aborted by user!\n"
+literal|"Aborted by user!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2525,13 +2717,6 @@ operator|&&
 name|ip_status
 operator|==
 name|HOST_NEW
-operator|&&
-name|strcmp
-argument_list|(
-name|host
-argument_list|,
-name|ip
-argument_list|)
 condition|)
 block|{
 name|snprintf
@@ -2678,11 +2863,37 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
-literal|"and its host key have changed at the same time"
+literal|"and its host key have changed at the same time."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip_status
+operator|!=
+name|HOST_NEW
+condition|)
+name|error
+argument_list|(
+literal|"Offending key for IP in %s:%d"
+argument_list|,
+name|ip_file
+argument_list|,
+name|ip_line
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* The host key has changed. */
+name|fp
+operator|=
+name|key_fingerprint
+argument_list|(
+name|host_key
+argument_list|,
+name|SSH_FP_MD5
+argument_list|,
+name|SSH_FP_HEX
+argument_list|)
+expr_stmt|;
 name|error
 argument_list|(
 literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
@@ -2717,6 +2928,15 @@ argument_list|)
 expr_stmt|;
 name|error
 argument_list|(
+literal|"The fingerprint for the %s key sent by the remote host is\n%s."
+argument_list|,
+name|type
+argument_list|,
+name|fp
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
 literal|"Please contact your system administrator."
 argument_list|)
 expr_stmt|;
@@ -2725,6 +2945,20 @@ argument_list|(
 literal|"Add correct host key in %.100s to get rid of this message."
 argument_list|,
 name|user_hostfile
+argument_list|)
+expr_stmt|;
+name|error
+argument_list|(
+literal|"Offending key in %s:%d"
+argument_list|,
+name|host_file
+argument_list|,
+name|host_line
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|fp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If strict host key checking is in use, the user will have 		 * to edit the key manually and we can only abort. 		 */
@@ -2782,6 +3016,56 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|options
+operator|.
+name|forward_x11
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"X11 forwarding is disabled to avoid trojan horses."
+argument_list|)
+expr_stmt|;
+name|options
+operator|.
+name|forward_x11
+operator|=
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|options
+operator|.
+name|num_local_forwards
+operator|>
+literal|0
+operator|||
+name|options
+operator|.
+name|num_remote_forwards
+operator|>
+literal|0
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Port forwarding is disabled to avoid trojan horses."
+argument_list|)
+expr_stmt|;
+name|options
+operator|.
+name|num_local_forwards
+operator|=
+name|options
+operator|.
+name|num_remote_forwards
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 		 * XXX Should permit the user to change to use the new id. 		 * This could be done by converting the host key to an 		 * identifying sentence, tell that the host identifies itself 		 * by that sentence, and ask the user if he/she whishes to 		 * accept the authentication. 		 */
 break|break;
 block|}
@@ -2790,7 +3074,97 @@ condition|(
 name|options
 operator|.
 name|check_host_ip
+operator|&&
+name|host_status
+operator|!=
+name|HOST_CHANGED
+operator|&&
+name|ip_status
+operator|==
+name|HOST_CHANGED
 condition|)
+block|{
+name|log
+argument_list|(
+literal|"Warning: the %s host key for '%.200s' "
+literal|"differs from the key for the IP address '%.128s'"
+argument_list|,
+name|type
+argument_list|,
+name|host
+argument_list|,
+name|ip
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|host_status
+operator|==
+name|HOST_OK
+condition|)
+name|log
+argument_list|(
+literal|"Matching host key in %s:%d"
+argument_list|,
+name|host_file
+argument_list|,
+name|host_line
+argument_list|)
+expr_stmt|;
+name|log
+argument_list|(
+literal|"Offending key for IP in %s:%d"
+argument_list|,
+name|ip_file
+argument_list|,
+name|ip_line
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|.
+name|strict_host_key_checking
+operator|==
+literal|1
+condition|)
+block|{
+name|fatal
+argument_list|(
+literal|"Exiting, you have requested strict checking."
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|options
+operator|.
+name|strict_host_key_checking
+operator|==
+literal|2
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|read_yes_or_no
+argument_list|(
+literal|"Are you sure you want "
+expr|\
+literal|"to continue connecting (yes/no)? "
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"Aborted by user!"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|xfree
 argument_list|(
 name|ip
@@ -2975,7 +3349,9 @@ block|}
 name|remotehost
 operator|=
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|problem
 operator|=
@@ -3261,7 +3637,9 @@ modifier|*
 name|remotehost
 init|=
 name|get_canonical_hostname
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 decl_stmt|;
 name|memset
 argument_list|(
@@ -3609,12 +3987,13 @@ begin_function
 name|void
 name|ssh_login
 parameter_list|(
-name|int
-name|host_key_valid
-parameter_list|,
-name|RSA
+name|Key
 modifier|*
-name|own_host_key
+modifier|*
+name|keys
+parameter_list|,
+name|int
+name|nkeys
 parameter_list|,
 specifier|const
 name|char
@@ -3626,15 +4005,12 @@ name|sockaddr
 modifier|*
 name|hostaddr
 parameter_list|,
-name|uid_t
-name|original_real_uid
-parameter_list|)
-block|{
 name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|host
@@ -3649,26 +4025,6 @@ decl_stmt|,
 modifier|*
 name|local_user
 decl_stmt|;
-comment|/* Get local user name.  Use it as server user if no user name was given. */
-name|pw
-operator|=
-name|getpwuid
-argument_list|(
-name|original_real_uid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|pw
-condition|)
-name|fatal
-argument_list|(
-literal|"User id %u not found from user database."
-argument_list|,
-name|original_real_uid
-argument_list|)
-expr_stmt|;
 name|local_user
 operator|=
 name|xstrdup
@@ -3751,9 +4107,15 @@ argument_list|)
 expr_stmt|;
 name|ssh_userauth2
 argument_list|(
+name|local_user
+argument_list|,
 name|server_user
 argument_list|,
 name|host
+argument_list|,
+name|keys
+argument_list|,
+name|nkeys
 argument_list|)
 expr_stmt|;
 block|}
@@ -3766,7 +4128,7 @@ argument_list|,
 name|hostaddr
 argument_list|)
 expr_stmt|;
-name|ssh_userauth
+name|ssh_userauth1
 argument_list|(
 name|local_user
 argument_list|,
@@ -3774,9 +4136,9 @@ name|server_user
 argument_list|,
 name|host
 argument_list|,
-name|host_key_valid
+name|keys
 argument_list|,
-name|own_host_key
+name|nkeys
 argument_list|)
 expr_stmt|;
 block|}
@@ -3799,6 +4161,25 @@ name|char
 modifier|*
 name|padded
 decl_stmt|;
+if|if
+condition|(
+name|datafellows
+operator|&
+name|SSH_BUG_PASSWORDPAD
+condition|)
+block|{
+name|packet_put_string
+argument_list|(
+name|password
+argument_list|,
+name|strlen
+argument_list|(
+name|password
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|size
 operator|=
 name|roundup
