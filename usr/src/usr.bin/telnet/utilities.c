@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.8 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -921,6 +921,29 @@ name|Finish3270
 argument_list|()
 expr_stmt|;
 block|}
+else|#
+directive|else
+comment|/* defined(TN3270) */
+do|do
+block|{
+name|telrcv
+argument_list|()
+expr_stmt|;
+comment|/* Process any incoming data */
+name|EmptyTerminal
+argument_list|()
+expr_stmt|;
+block|}
+do|while
+condition|(
+name|ring_full_count
+argument_list|(
+operator|&
+name|netiring
+argument_list|)
+condition|)
+do|;
+comment|/* While there is any */
 endif|#
 directive|endif
 comment|/* defined(TN3270) */
