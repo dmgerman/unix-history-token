@@ -8820,14 +8820,28 @@ condition|(
 name|rule
 operator|.
 name|fw_logamount
-operator|<=
+operator|<
 literal|0
 condition|)
 name|show_usage
 argument_list|(
-literal|"``logamount'' argument must be greater "
-literal|"than 0"
+literal|"``logamount'' argument must be positive"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_logamount
+operator|==
+literal|0
+condition|)
+name|rule
+operator|.
+name|fw_logamount
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 name|ac
 operator|--
@@ -10574,6 +10588,22 @@ literal|"net.inet.ip.fw.verbose_limit"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|rule
+operator|.
+name|fw_logamount
+operator|==
+operator|-
+literal|1
+condition|)
+name|rule
+operator|.
+name|fw_logamount
+operator|=
+literal|0
+expr_stmt|;
 name|rule
 operator|.
 name|fw_loghighest
