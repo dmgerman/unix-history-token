@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_de.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)if_de.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -377,11 +377,6 @@ comment|/* hardware Ethernet address */
 name|int
 name|ds_flags
 decl_stmt|;
-define|#
-directive|define
-name|DSF_LOCK
-value|1
-comment|/* lock out destart */
 define|#
 directive|define
 name|DSF_RUNNING
@@ -1880,9 +1875,6 @@ operator|=
 name|PCSR0_INTE
 expr_stmt|;
 comment|/* avoid interlock */
-operator|(
-name|void
-operator|)
 name|destart
 argument_list|(
 operator|&
@@ -1933,7 +1925,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Setup output on interface.  * Get another datagram to send off of the interface queue,  * and map it to the interface before starting the output.  */
+comment|/*  * Setup output on interface.  * Get another datagram to send off of the interface queue,  * and map it to the interface before starting the output.  * Must be called from ipl>= our interrupt level.  */
 end_comment
 
 begin_macro
@@ -2025,11 +2017,7 @@ name|if_flags
 operator|&
 name|IFF_OACTIVE
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 for|for
 control|(
 name|nxmit
@@ -2216,11 +2204,6 @@ operator||
 name|CMD_PDMD
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
@@ -2575,9 +2558,6 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|destart
 argument_list|(
 operator|&
@@ -3101,7 +3081,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * Pull packet off interface.  Off is nonzero if packet 	 * has trailing header; if_ubaget will then force this header 	 * information to be at the front, but we still have to drop 	 * the type and length which are at the front of any trailer data. 	 */
+comment|/* 	 * Pull packet off interface.  Off is nonzero if packet 	 * has trailing header; if_ubaget will then force this header 	 * information to be at the front. 	 */
 name|m
 operator|=
 name|if_ubaget
@@ -3126,10 +3106,7 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
-literal|0
 condition|)
-return|return;
 name|ether_input
 argument_list|(
 operator|&
@@ -3140,43 +3117,6 @@ argument_list|,
 name|eh
 argument_list|,
 name|m
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|IF_QFULL
-argument_list|(
-name|inq
-argument_list|)
-condition|)
-block|{
-name|IF_DROP
-argument_list|(
-name|inq
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|IF_ENQUEUE
-argument_list|(
-name|inq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
