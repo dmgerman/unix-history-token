@@ -7227,6 +7227,14 @@ operator|)
 return|;
 comment|/* Texas Instruments -- vendor 0x104c */
 case|case
+literal|0x8009104c
+case|:
+return|return
+operator|(
+literal|"Texas Instruments TSB12LV22 OHCI IEEE 1394 Host Controller"
+operator|)
+return|;
+case|case
 literal|0xac1c104c
 case|:
 return|return
