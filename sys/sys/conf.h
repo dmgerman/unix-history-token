@@ -1302,6 +1302,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|dev_t
+name|getdiskbyname
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * XXX: This included for when DEVFS resurfaces   */
 end_comment
