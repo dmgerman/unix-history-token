@@ -2299,7 +2299,7 @@ name|OF_getprop_alloc
 argument_list|(
 name|node
 argument_list|,
-literal|"compat"
+literal|"compatible"
 argument_list|,
 literal|1
 argument_list|,
