@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)mount.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|M_RDONLY
-value|0x0001
+value|0x00000001
 end_define
 
 begin_comment
@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|M_SYNCHRONOUS
-value|0x0002
+value|0x00000002
 end_define
 
 begin_comment
@@ -267,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|M_NOEXEC
-value|0x0004
+value|0x00000004
 end_define
 
 begin_comment
@@ -278,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|M_NOSUID
-value|0x0008
+value|0x00000008
 end_define
 
 begin_comment
@@ -289,7 +289,7 @@ begin_define
 define|#
 directive|define
 name|M_NODEV
-value|0x0010
+value|0x00000010
 end_define
 
 begin_comment
@@ -304,7 +304,7 @@ begin_define
 define|#
 directive|define
 name|M_EXPORTED
-value|0x0100
+value|0x00000100
 end_define
 
 begin_comment
@@ -315,11 +315,37 @@ begin_define
 define|#
 directive|define
 name|M_EXRDONLY
-value|0x0200
+value|0x00000200
 end_define
 
 begin_comment
 comment|/* exported read only */
+end_comment
+
+begin_comment
+comment|/*  * Flags set by internal operations.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_LOCAL
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* filesystem is stored locally */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_QUOTA
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* quotas are enabled on filesystem */
 end_comment
 
 begin_comment
@@ -330,7 +356,7 @@ begin_define
 define|#
 directive|define
 name|M_VISFLAGMASK
-value|0x0fff
+value|0x0000ffff
 end_define
 
 begin_comment
@@ -340,8 +366,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_UPDATE
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* not a real mount, just an update */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MLOCK
-value|0x1000
+value|0x00100000
 end_define
 
 begin_comment
@@ -352,7 +389,7 @@ begin_define
 define|#
 directive|define
 name|M_MWAIT
-value|0x2000
+value|0x00200000
 end_define
 
 begin_comment
@@ -362,12 +399,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_UPDATE
-value|0x4000
+name|M_MPBUSY
+value|0x00400000
 end_define
 
 begin_comment
-comment|/* not a real mount, just an update */
+comment|/* scan of mount point in progress */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_MPWANT
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* waiting for mount point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_UNMOUNT
+value|0x01000000
+end_define
+
+begin_comment
+comment|/* unmount in progress */
 end_comment
 
 begin_comment
@@ -412,6 +471,15 @@ name|vfs_root
 function_decl|)
 parameter_list|(
 comment|/* mp, vpp */
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|vfs_quotactl
+function_decl|)
+parameter_list|(
+comment|/* mp, cmd, uid, arg */
 parameter_list|)
 function_decl|;
 name|int
@@ -514,6 +582,22 @@ parameter_list|,
 name|VPP
 parameter_list|)
 value|(*(MP)->m_op->vfs_root)(MP, VPP)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_QUOTACTL
+parameter_list|(
+name|MP
+parameter_list|,
+name|C
+parameter_list|,
+name|U
+parameter_list|,
+name|A
+parameter_list|)
+value|(*(MP)->m_op->vfs_quotactl)(MP, C, U, A)
 end_define
 
 begin_define
