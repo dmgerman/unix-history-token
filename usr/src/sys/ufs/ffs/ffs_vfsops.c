@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.66 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.67 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -259,6 +259,24 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mount
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_op
@@ -271,12 +289,6 @@ operator|->
 name|mnt_flag
 operator|=
 name|MNT_RDONLY
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_mounth
-operator|=
-name|NULLVP
 expr_stmt|;
 if|if
 condition|(
@@ -1776,6 +1788,17 @@ literal|1
 index|]
 operator|=
 name|MOUNT_UFS
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|mp
+operator|->
+name|mnt_maxsymlinklen
+operator|=
+name|fs
+operator|->
+name|fs_maxsymlinklen
 expr_stmt|;
 end_expr_stmt
 
