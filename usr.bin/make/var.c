@@ -127,6 +127,12 @@ specifier|const
 name|input
 decl_stmt|;
 comment|/* pointer to input string */
+specifier|const
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+comment|/* current parser pos in input str */
 name|GNode
 modifier|*
 name|ctxt
@@ -145,10 +151,6 @@ name|char
 modifier|*
 name|VarParse
 parameter_list|(
-specifier|const
-name|char
-index|[]
-parameter_list|,
 name|VarParser
 modifier|*
 parameter_list|,
@@ -7493,11 +7495,6 @@ name|char
 modifier|*
 name|VarParse
 parameter_list|(
-specifier|const
-name|char
-name|input
-index|[]
-parameter_list|,
 name|VarParser
 modifier|*
 name|vp
@@ -7511,20 +7508,23 @@ modifier|*
 name|freeResult
 parameter_list|)
 block|{
-comment|/* assert(input[0] == '$'); */
-operator|*
-name|consumed
+name|char
+modifier|*
+name|value
+decl_stmt|;
+comment|/* assert(vp->ptr[0] == '$'); */
+name|vp
+operator|->
+name|ptr
 operator|+=
 literal|1
 expr_stmt|;
 comment|/* consume '$' */
-name|input
-operator|+=
-literal|1
-expr_stmt|;
 if|if
 condition|(
-name|input
+name|vp
+operator|->
+name|ptr
 index|[
 literal|0
 index|]
@@ -7532,14 +7532,20 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+operator|*
+name|consumed
+operator|+=
+literal|1
+expr_stmt|;
+comment|/* consume '$' */
 comment|/* Error, there is only a dollar sign in the input string. */
 operator|*
 name|freeResult
 operator|=
 name|FALSE
 expr_stmt|;
-return|return
-operator|(
+name|value
+operator|=
 name|vp
 operator|->
 name|err
@@ -7547,20 +7553,23 @@ condition|?
 name|var_Error
 else|:
 name|varNoError
-operator|)
-return|;
+expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
-name|input
+name|vp
+operator|->
+name|ptr
 index|[
 literal|0
 index|]
 operator|==
 name|OPEN_PAREN
 operator|||
-name|input
+name|vp
+operator|->
+name|ptr
 index|[
 literal|0
 index|]
@@ -7568,12 +7577,20 @@ operator|==
 name|OPEN_BRACE
 condition|)
 block|{
+operator|*
+name|consumed
+operator|+=
+literal|1
+expr_stmt|;
+comment|/* consume '$' */
 comment|/* multi letter variable name */
-return|return
-operator|(
+name|value
+operator|=
 name|VarParseLong
 argument_list|(
-name|input
+name|vp
+operator|->
+name|ptr
 argument_list|,
 name|vp
 argument_list|,
@@ -7581,17 +7598,24 @@ name|consumed
 argument_list|,
 name|freeResult
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 else|else
 block|{
+operator|*
+name|consumed
+operator|+=
+literal|1
+expr_stmt|;
+comment|/* consume '$' */
 comment|/* single letter variable name */
-return|return
-operator|(
+name|value
+operator|=
 name|VarParseShort
 argument_list|(
-name|input
+name|vp
+operator|->
+name|ptr
 argument_list|,
 name|vp
 argument_list|,
@@ -7599,9 +7623,13 @@ name|consumed
 argument_list|,
 name|freeResult
 argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|value
 operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -7641,6 +7669,8 @@ init|=
 block|{
 name|input
 block|,
+name|input
+block|,
 name|ctxt
 block|,
 name|err
@@ -7649,8 +7679,6 @@ decl_stmt|;
 return|return
 name|VarParse
 argument_list|(
-name|input
-argument_list|,
 operator|&
 name|vp
 argument_list|,
