@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.An
 end_comment
 
 begin_comment
-comment|/*  * Format of an IP firewall descriptor  *  * src, dst, src_mask, dst_mask are always stored in network byte order.  * flags and num_*_ports are stored in host byte order (of course).  * Port numbers are stored in HOST byte order.  */
+comment|/*  * Format of an IP firewall descriptor  *  * fw_src, fw_dst, fw_smsk, fw_dmsk are always stored in network byte order.  * fw_flg and fw_n*p are stored in host byte order (of course).  * Port numbers are stored in HOST byte order.  */
 end_comment
 
 begin_ifndef
@@ -26,38 +26,38 @@ block|{
 name|struct
 name|ip_fw
 modifier|*
-name|next
+name|fw_next
 decl_stmt|;
 comment|/* Next firewall on chain */
 name|struct
 name|in_addr
-name|src
+name|fw_src
 decl_stmt|,
-name|dst
+name|fw_dst
 decl_stmt|;
 comment|/* Source and destination IP addr */
 name|struct
 name|in_addr
-name|src_mask
+name|fw_smsk
 decl_stmt|,
-name|dst_mask
+name|fw_dmsk
 decl_stmt|;
 comment|/* Mask for src and dest IP addr */
 name|struct
 name|in_addr
-name|via
+name|fw_via
 decl_stmt|;
 comment|/* IP addr of interface "via" */
 name|u_short
-name|flags
+name|fw_flg
 decl_stmt|;
 comment|/* Flags word */
 name|u_short
-name|n_src_p
+name|fw_nsp
 decl_stmt|,
-name|n_dst_p
+name|fw_ndp
 decl_stmt|;
-comment|/* # of src ports and # of dst ports */
+comment|/* N'of src ports and # of dst ports */
 comment|/* in ports array (dst ports follow */
 comment|/* src ports; max of 10 ports in all; */
 comment|/* count of 0 means match all ports) */
@@ -67,16 +67,16 @@ name|IP_FW_MAX_PORTS
 value|10
 comment|/* A reasonable maximum */
 name|u_short
-name|ports
+name|fw_pts
 index|[
 name|IP_FW_MAX_PORTS
 index|]
 decl_stmt|;
 comment|/* Array of port numbers to match */
 name|u_long
-name|p_cnt
+name|fw_pcnt
 decl_stmt|,
-name|b_cnt
+name|fw_bcnt
 decl_stmt|;
 comment|/* Packet and byte counters */
 block|}
@@ -309,6 +309,13 @@ define|#
 directive|define
 name|IP_ACCT_ZERO
 value|(IP_FW_BASE_CTL+13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_ACCT_CLR
+value|(IP_FW_BASE_CTL+14)
 end_define
 
 begin_comment
