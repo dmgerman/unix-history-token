@@ -1557,7 +1557,7 @@ argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"NOTICE: The PPP command is now started on VTY3 (type ALT-F3 to\n"
+literal|"NOTICE: The PPP command is now started on VTY2 (type ALT-F3 to\n"
 literal|"interact with it, ALT-F1 to switch back here). If you are using\n"
 literal|"a PAP or CHAP login simply enter \"dial\", otherwise you'll need\n"
 literal|"to use the \"term\" command which starts a terminal emulator\n"
