@@ -2842,6 +2842,11 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+else|else
+name|i
+operator|=
+name|DITEM_FAILURE
+expr_stmt|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
