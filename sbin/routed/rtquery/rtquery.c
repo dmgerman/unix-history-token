@@ -69,7 +69,7 @@ directive|endif
 end_endif
 
 begin_empty
-empty|#ident "$Revision: 1.9 $"
+empty|#ident "$Revision: 1.1.1.2 $"
 end_empty
 
 begin_include
@@ -197,86 +197,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_define
-define|#
-directive|define
-name|MD5_DIGEST_LEN
-value|16
-end_define
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int32_t
-name|state
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* state (ABCD) */
-name|u_int32_t
-name|count
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* # of bits, modulo 2^64 (LSB 1st) */
-name|unsigned
-name|char
-name|buffer
-index|[
-literal|64
-index|]
-decl_stmt|;
-comment|/* input buffer */
-block|}
-name|MD5_CTX
-typedef|;
-end_typedef
-
-begin_function_decl
-specifier|extern
-name|void
-name|MD5Init
-parameter_list|(
-name|MD5_CTX
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|MD5Update
-parameter_list|(
-name|MD5_CTX
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|MD5Final
-parameter_list|(
-name|u_char
-index|[
-name|MD5_DIGEST_LEN
-index|]
-parameter_list|,
-name|MD5_CTX
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<md5.h>
+end_include
 
 begin_define
 define|#
