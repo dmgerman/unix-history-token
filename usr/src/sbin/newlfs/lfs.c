@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.19 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +278,12 @@ block|,
 comment|/* lfs_nfiles */
 literal|0
 block|,
+comment|/* lfs_avail */
+literal|0
+block|,
+comment|/* lfs_uinodes */
+literal|0
+block|,
 comment|/* lfs_idaddr */
 literal|0
 block|,
@@ -409,6 +415,9 @@ comment|/* lfs_dirops */
 literal|0
 block|,
 comment|/* lfs_doifile */
+literal|0
+block|,
+comment|/* lfs_nactive */
 literal|0
 block|,
 comment|/* lfs_fmod */
@@ -1081,20 +1090,23 @@ name|lfsp
 operator|->
 name|lfs_bshift
 expr_stmt|;
-comment|/*  	 * The number of free blocks is set from the total data size (lfs_dsize) 	 * minus one sector for each segment (for the segment summary).  Then  	 * we'll subtract off the room for the superblocks, ifile entries and 	 * segment usage table. 	 */
+comment|/*  	 * The number of free blocks is set from the number of segments times 	 * the segment size.  Then we'll subtract off the room for the 	 * superblocks ifile entries and segment usage table. 	 */
 name|lfsp
 operator|->
 name|lfs_bfree
 operator|=
+name|fsbtodb
+argument_list|(
 name|lfsp
-operator|->
-name|lfs_dsize
-operator|*
-name|db_per_fb
-operator|-
+argument_list|,
 name|lfsp
 operator|->
 name|lfs_nseg
+operator|*
+name|lfsp
+operator|->
+name|lfs_ssize
+argument_list|)
 expr_stmt|;
 name|lfsp
 operator|->
@@ -1385,11 +1397,27 @@ name|segp
 operator|->
 name|su_nbytes
 operator|=
+operator|(
+operator|(
 name|blocks_used
+operator|-
+literal|1
+operator|)
 operator|<<
 name|lfsp
 operator|->
 name|lfs_bshift
+operator|)
+operator|+
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dinode
+argument_list|)
+operator|+
+name|LFS_SUMMARY_SIZE
 expr_stmt|;
 name|segp
 operator|->
@@ -1425,9 +1453,20 @@ name|lfsp
 operator|->
 name|lfs_bfree
 operator|-=
-name|db_per_fb
-operator|*
-operator|(
+name|LFS_SUMMARY_SIZE
+operator|/
+name|lp
+operator|->
+name|d_secsize
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_bfree
+operator|-=
+name|fsbtodb
+argument_list|(
+name|lfsp
+argument_list|,
 name|lfsp
 operator|->
 name|lfs_cleansz
@@ -1437,7 +1476,7 @@ operator|->
 name|lfs_segtabsz
 operator|+
 literal|4
-operator|)
+argument_list|)
 expr_stmt|;
 comment|/*  	 * Now figure out the address of the ifile inode. The inode block 	 * appears immediately after the segment summary. 	 */
 name|lfsp
@@ -1543,6 +1582,36 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/*  	 * Initialize dynamic accounting.  The blocks available for 	 * writing are the bfree blocks minus 1 segment summary for 	 * each segment since you can't write any new data without 	 * creating a segment summary - 2 segments that the cleaner 	 * needs. 	 */
+name|lfsp
+operator|->
+name|lfs_avail
+operator|=
+name|lfsp
+operator|->
+name|lfs_bfree
+operator|-
+name|lfsp
+operator|->
+name|lfs_nseg
+operator|-
+name|fsbtodb
+argument_list|(
+name|lfsp
+argument_list|,
+literal|2
+operator|*
+name|lfsp
+operator|->
+name|lfs_ssize
+argument_list|)
+expr_stmt|;
+name|lfsp
+operator|->
+name|lfs_uinodes
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Ready to start writing segments.  The first segment is different 	 * because it contains the segment usage table and the ifile inode 	 * as well as a superblock.  For the rest of the segments, set the  	 * time stamp to be 0 so that the first segment is the most recent. 	 * For each segment that is supposed to contain a copy of the super 	 * block, initialize its first few blocks and its segment summary  	 * to indicate this. 	 */
 name|lfsp
 operator|->
