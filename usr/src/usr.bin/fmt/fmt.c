@@ -16,7 +16,7 @@ file|<ctype.h>
 end_include
 
 begin_comment
-comment|/*  * fmt -- format the concatenation of input files or standard input  * onto standard output.  Designed for use with Mail ~|  *  * Syntax: fmt [ name ... ]  * Author: Kurt Shoens (UCB) 12/7/78  */
+comment|/*  * fmt -- format the concatenation of input files or standard input  * onto standard output.  Designed for use with Mail ~|  *  * Syntax: fmt [ -width ] [ name ... ]  * Author: Kurt Shoens (UCB) 12/7/78  */
 end_comment
 
 begin_decl_stmt
@@ -25,20 +25,9 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fmt.c	1.2 %G%"
+literal|"@(#)fmt.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|LENGTH
-value|72
-end_define
-
-begin_comment
-comment|/* Max line length in output */
-end_comment
 
 begin_define
 define|#
@@ -79,6 +68,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Last place we saw a head line */
+end_comment
+
+begin_decl_stmt
+name|int
+name|width
+init|=
+literal|72
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Width that we will not exceed */
 end_comment
 
 begin_function_decl
@@ -139,6 +140,20 @@ name|errs
 init|=
 literal|0
 decl_stmt|;
+name|char
+name|sobuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|nofile
+decl_stmt|;
 name|setout
 argument_list|()
 expr_stmt|;
@@ -155,12 +170,7 @@ name|setbuf
 argument_list|(
 name|stdout
 argument_list|,
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|BUFSIZ
-argument_list|)
+name|sobuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -170,18 +180,8 @@ operator|<
 literal|2
 condition|)
 block|{
-name|setbuf
-argument_list|(
-name|stdin
-argument_list|,
-name|calloc
-argument_list|(
-literal|1
-argument_list|,
-name|BUFSIZ
-argument_list|)
-argument_list|)
-expr_stmt|;
+name|single
+label|:
 name|fmt
 argument_list|(
 name|stdin
@@ -196,12 +196,73 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|nofile
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|--
 name|argc
 condition|)
 block|{
+name|cp
+operator|=
+operator|*
+operator|++
+name|argv
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'-'
+condition|)
+block|{
+name|width
+operator|=
+name|atoi
+argument_list|(
+name|cp
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|width
+operator|<=
+literal|0
+operator|||
+name|width
+operator|>=
+name|BUFSIZ
+operator|-
+literal|2
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"fmt:  bad width: %d\n"
+argument_list|,
+name|width
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+continue|continue;
+block|}
+name|nofile
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -209,9 +270,7 @@ name|fi
 operator|=
 name|fopen
 argument_list|(
-operator|*
-operator|++
-name|argv
+name|cp
 argument_list|,
 literal|"r"
 argument_list|)
@@ -222,8 +281,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-operator|*
-name|argv
+name|cp
 argument_list|)
 expr_stmt|;
 name|errs
@@ -242,6 +300,13 @@ name|fi
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|nofile
+condition|)
+goto|goto
+name|single
+goto|;
 name|oflush
 argument_list|()
 expr_stmt|;
@@ -1030,7 +1095,7 @@ name|t
 operator|+
 name|s
 operator|<=
-name|LENGTH
+name|width
 condition|)
 block|{
 comment|/* 		 * In like flint! 		 */
