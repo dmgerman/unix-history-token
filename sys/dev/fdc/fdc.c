@@ -7114,9 +7114,11 @@ comment|/* set drive type */
 if|if
 condition|(
 operator|!
+operator|(
 name|fflag
 operator|&
 name|FWRITE
+operator|)
 condition|)
 return|return
 operator|(
@@ -7217,9 +7219,11 @@ comment|/* set drive options */
 if|if
 condition|(
 operator|!
+operator|(
 name|fflag
 operator|&
 name|FWRITE
+operator|)
 condition|)
 return|return
 operator|(
@@ -7354,9 +7358,11 @@ case|:
 if|if
 condition|(
 operator|!
+operator|(
 name|fflag
 operator|&
 name|FWRITE
+operator|)
 condition|)
 return|return
 operator|(
