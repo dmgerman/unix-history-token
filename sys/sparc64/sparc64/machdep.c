@@ -453,6 +453,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|realmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|pcpu0
 index|[
@@ -937,6 +943,13 @@ operator|*
 literal|1024
 operator|)
 argument_list|)
+expr_stmt|;
+name|realmem
+operator|=
+operator|(
+name|long
+operator|)
+name|physsz
 expr_stmt|;
 name|vm_ksubmap_init
 argument_list|(

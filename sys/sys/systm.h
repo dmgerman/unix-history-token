@@ -195,6 +195,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|long
+name|realmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 'real' memory */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|cdev
 modifier|*

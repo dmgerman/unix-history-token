@@ -668,6 +668,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|realmem
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|vm_offset_t
 name|phys_avail
 index|[
@@ -1099,7 +1107,7 @@ operator|/
 literal|1048576
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Display any holes after the first chunk of extended memory. 	 */
+comment|/* 	 * Display any holes after the first chunk of extended memory. 	realmem = ia64_ptob(Maxmem); 	 */
 if|if
 condition|(
 name|bootverbose
