@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sym.c 4.1 %G%"
+literal|"@(#)sym.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -512,6 +512,11 @@ operator|>=
 name|maxoff
 operator|||
 operator|(
+name|INKERNEL
+argument_list|(
+name|v
+argument_list|)
+operator|&&
 name|KVTOPH
 argument_list|(
 name|v
