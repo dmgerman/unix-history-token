@@ -268,6 +268,10 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'\001'
+case|:
+comment|/* ^A */
+case|case
 name|KEY_HOME
 case|:
 if|if
@@ -309,6 +313,10 @@ expr_stmt|;
 block|}
 empty_stmt|;
 break|break;
+case|case
+literal|'\005'
+case|:
+comment|/* ^E */
 case|case
 name|KEY_END
 case|:
@@ -354,6 +362,10 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'\002'
+case|:
+comment|/* ^B */
 case|case
 name|KEY_LEFT
 case|:
@@ -411,6 +423,10 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+literal|'\006'
+case|:
+comment|/* ^F */
 case|case
 name|KEY_RIGHT
 case|:
@@ -892,19 +908,11 @@ literal|"Sorry!"
 argument_list|,
 name|buf
 argument_list|,
-name|strheight
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|4
+operator|-
+literal|1
 argument_list|,
-name|strwidth
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|4
+operator|-
+literal|1
 argument_list|,
 literal|1
 argument_list|)

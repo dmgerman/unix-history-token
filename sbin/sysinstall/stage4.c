@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.4 1994/11/02 06:19:49 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage4.c,v 1.5 1994/11/02 07:15:55 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -408,6 +408,25 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+literal|"/stand/cpio_floppy_done"
+argument_list|,
+name|R_OK
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|Fatal
+argument_list|(
+literal|"CPIO floppy was bad!  Please check media for defects."
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|TellEm
 argument_list|(
 literal|"unlink /stand/need_cpio_floppy"
@@ -418,6 +437,12 @@ argument_list|(
 literal|"/stand/need_cpio_floppy"
 argument_list|)
 expr_stmt|;
+name|unlink
+argument_list|(
+literal|"/stand/cpio_floppy_done"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

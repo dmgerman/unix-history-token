@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.26 1994/11/07 13:48:54 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.27 1994/11/16 14:42:22 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -329,19 +329,11 @@ literal|"Progress"
 argument_list|,
 name|p
 argument_list|,
-name|strheight
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|2
+operator|-
+literal|1
 argument_list|,
-name|strwidth
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|4
+operator|-
+literal|1
 argument_list|,
 literal|0
 argument_list|)
@@ -417,19 +409,11 @@ literal|"Fatal"
 argument_list|,
 name|p
 argument_list|,
-name|strheight
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|4
+operator|-
+literal|1
 argument_list|,
-name|strwidth
-argument_list|(
-name|p
-argument_list|)
-operator|+
-literal|4
+operator|-
+literal|1
 argument_list|,
 literal|1
 argument_list|)
