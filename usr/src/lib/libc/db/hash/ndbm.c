@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ndbm.c	5.11 (Berkeley) %G%"
+literal|"@(#)ndbm.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,21 +644,17 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|extern
+name|int
 name|dbm_dirfno
-argument_list|(
-argument|db
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|db
+parameter_list|)
 name|DBM
 modifier|*
 name|db
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -676,7 +672,7 @@ name|fp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
