@@ -169,9 +169,9 @@ name|struct
 name|vnode
 modifier|*
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 parameter_list|,
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 parameter_list|,
 name|int

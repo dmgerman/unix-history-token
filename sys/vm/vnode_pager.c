@@ -642,7 +642,7 @@ name|object
 operator|->
 name|handle
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|bn
 decl_stmt|;
 name|int
@@ -1204,7 +1204,7 @@ decl_stmt|;
 name|int
 name|bsize
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|block
 decl_stmt|;
 name|struct

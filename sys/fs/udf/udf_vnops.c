@@ -309,7 +309,7 @@ modifier|*
 parameter_list|,
 name|uint32_t
 parameter_list|,
-name|daddr64_t
+name|daddr_t
 modifier|*
 parameter_list|,
 name|uint32_t
@@ -3870,7 +3870,7 @@ decl_stmt|;
 name|uint32_t
 name|max_size
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|lsector
 decl_stmt|;
 name|int
@@ -5117,7 +5117,7 @@ decl_stmt|;
 name|uint32_t
 name|max_size
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|sector
 decl_stmt|;
 name|int
@@ -5314,7 +5314,7 @@ parameter_list|,
 name|uint32_t
 name|offset
 parameter_list|,
-name|daddr64_t
+name|daddr_t
 modifier|*
 name|sector
 parameter_list|,
@@ -5347,7 +5347,7 @@ name|icblen
 init|=
 literal|0
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|lsector
 decl_stmt|;
 name|int

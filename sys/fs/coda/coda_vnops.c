@@ -7468,7 +7468,7 @@ operator|->
 name|a_vpp
 decl_stmt|;
 comment|/* RETURN vp of device */
-name|daddr64_t
+name|daddr_t
 modifier|*
 name|bnp
 name|__attribute__

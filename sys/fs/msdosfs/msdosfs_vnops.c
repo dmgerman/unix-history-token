@@ -7692,7 +7692,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* { 		struct vnode *a_vp; 		daddr64_t a_bn; 		struct vnode **a_vpp; 		daddr64_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr_t a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;

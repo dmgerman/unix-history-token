@@ -102,7 +102,7 @@ name|dev_t
 name|bio_dev
 decl_stmt|;
 comment|/* Device to do I/O on. */
-name|daddr64_t
+name|daddr_t
 name|bio_blkno
 decl_stmt|;
 comment|/* Underlying physical block number. */
@@ -175,7 +175,7 @@ name|bio_queue
 expr_stmt|;
 comment|/* Disksort queue. */
 comment|/* XXX: these go away when bio chaining is introduced */
-name|daddr64_t
+name|daddr_t
 name|bio_pblkno
 decl_stmt|;
 comment|/* physical block number */
@@ -452,7 +452,7 @@ argument|bio
 argument_list|)
 name|queue
 expr_stmt|;
-name|daddr64_t
+name|daddr_t
 name|last_pblkno
 decl_stmt|;
 name|struct

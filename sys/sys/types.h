@@ -445,7 +445,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int32_t
+name|int64_t
 name|daddr_t
 typedef|;
 end_typedef
@@ -456,18 +456,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int64_t
-name|daddr64_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* 64-bit disk address */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
+name|u_int64_t
 name|u_daddr_t
 typedef|;
 end_typedef

@@ -200,7 +200,7 @@ parameter_list|,
 name|daddr_t
 name|lbn
 parameter_list|,
-name|daddr64_t
+name|daddr_t
 name|blkno
 parameter_list|,
 name|long
@@ -347,7 +347,7 @@ decl_stmt|,
 modifier|*
 name|reqbp
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|blkno
 decl_stmt|,
 name|origblkno
@@ -1345,7 +1345,7 @@ decl_stmt|;
 name|daddr_t
 name|lbn
 decl_stmt|;
-name|daddr64_t
+name|daddr_t
 name|blkno
 decl_stmt|;
 name|long
