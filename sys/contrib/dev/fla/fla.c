@@ -334,6 +334,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|fladisk_cdevsw
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 modifier|*
@@ -1620,6 +1628,9 @@ literal|0
 argument_list|,
 operator|&
 name|fla_cdevsw
+argument_list|,
+operator|&
+name|fladisk_cdevsw
 argument_list|)
 expr_stmt|;
 name|sc

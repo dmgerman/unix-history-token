@@ -245,7 +245,23 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
+name|addisk_cdevsw
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
 name|fakewd_cdevsw
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|fakewddisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
@@ -1287,6 +1303,9 @@ literal|0
 argument_list|,
 operator|&
 name|ad_cdevsw
+argument_list|,
+operator|&
+name|addisk_cdevsw
 argument_list|)
 expr_stmt|;
 name|dev1
@@ -1312,6 +1331,9 @@ literal|0
 argument_list|,
 operator|&
 name|fakewd_cdevsw
+argument_list|,
+operator|&
+name|fakewddisk_cdevsw
 argument_list|)
 expr_stmt|;
 name|dev1
