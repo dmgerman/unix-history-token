@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	3.1	%H%	*/
+comment|/*	ffs_inode.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -900,7 +900,7 @@ name|i_number
 argument_list|)
 expr_stmt|;
 block|}
-name|iupdat
+name|IUPDAT
 argument_list|(
 name|ip
 argument_list|,
