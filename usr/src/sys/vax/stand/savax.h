@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)savax.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)savax.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,14 +21,14 @@ begin_define
 define|#
 directive|define
 name|MAXNMBA
-value|4
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|MAXNUBA
-value|4
+value|8
 end_define
 
 begin_decl_stmt
@@ -131,35 +131,7 @@ name|unit
 parameter_list|,
 name|off
 parameter_list|)
-value|((umaddr[UNITTOUBA(unit)]+ubdevreg(off)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSUBA0
-value|0x20006000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSMBA0
-value|0x20010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSMBA1
-value|0x20012000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSUMEM
-value|0x2013e000
+value|(umaddr[UNITTOUBA(unit)] + \ 					(0760000 | ubdevreg(off)))
 end_define
 
 begin_comment

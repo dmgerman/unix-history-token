@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -474,7 +474,27 @@ index|[
 name|mbanum
 index|]
 decl_stmt|;
-comment|/* SHOULD BADADDR IT */
+if|if
+condition|(
+name|badaddr
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mba
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|long
+argument_list|)
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|mbaact
@@ -485,7 +505,11 @@ operator|<<
 name|mbanum
 operator|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|mba
 operator|->
 name|mba_cr
@@ -498,6 +522,11 @@ literal|1
 operator|<<
 name|mbanum
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)saio.h	6.4 (Berkeley) 11/8/85  */
 end_comment
 
 begin_comment
@@ -290,38 +290,11 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Drive description table.  * Returned from SAIODEVDATA call.  */
-end_comment
-
-begin_struct
-struct|struct
-name|st
-block|{
-name|short
-name|nsect
+begin_decl_stmt
+name|int
+name|ndevs
 decl_stmt|;
-comment|/* # sectors/track */
-name|short
-name|ntrak
-decl_stmt|;
-comment|/* # tracks/surfaces/heads */
-name|short
-name|nspc
-decl_stmt|;
-comment|/* # sectors/cylinder */
-name|short
-name|ncyl
-decl_stmt|;
-comment|/* # cylinders */
-name|short
-modifier|*
-name|off
-decl_stmt|;
-comment|/* partition offset table (cylinders) */
-block|}
-struct|;
-end_struct
+end_decl_stmt
 
 begin_comment
 comment|/*  * Request codes. Must be the same a F_XXX above  */
@@ -622,7 +595,7 @@ value|(('d'<<8)|8)
 end_define
 
 begin_comment
-comment|/* get device data */
+comment|/* get pointer to pack label */
 end_comment
 
 begin_define
