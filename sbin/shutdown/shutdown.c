@@ -42,7 +42,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static char sccsid[] = "@(#)shutdown.c	8.2 (Berkeley) 2/16/94";
+unit|static char sccsid[] = "@(#)shutdown.c	8.4 (Berkeley) 4/28/95";
 endif|#
 directive|endif
 end_endif
@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.14 1998/12/10 23:54:02 msmith Exp $"
+literal|"$Id: shutdown.c,v 1.15 1998/12/11 11:04:19 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -731,12 +731,12 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|p
+argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|p
 argument_list|,
 name|arglen
 argument_list|)
@@ -2391,6 +2391,11 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+if|if
+condition|(
+operator|!
+name|killflg
+condition|)
 operator|(
 name|void
 operator|)
