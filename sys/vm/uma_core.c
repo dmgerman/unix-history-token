@@ -7197,6 +7197,12 @@ name|pages
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+name|VM_OBJECT_LOCK_INIT
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 name|_vm_object_allocate
 argument_list|(
 name|OBJT_DEFAULT
@@ -7206,6 +7212,7 @@ argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
+block|}
 name|ZONE_LOCK
 argument_list|(
 name|zone
