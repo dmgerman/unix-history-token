@@ -37,7 +37,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.1 %G%"
+literal|"@(#)aux.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1965,33 +1965,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|(
-name|pid
-operator|=
-name|fork
-argument_list|()
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return;
-name|clrbuf
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|clrbuf
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|clrbuf
-argument_list|(
-name|stdin
-argument_list|)
-expr_stmt|;
 name|sleep
 argument_list|(
 literal|1
@@ -2012,11 +1985,7 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
+return|return;
 name|read
 argument_list|(
 name|f
