@@ -34,7 +34,7 @@ file|<sys/signal.h>
 end_include
 
 begin_comment
-comment|/*  * Returned by aio_cancel:  *  (Note that FreeBSD's aio is not cancellable -- yet.)  */
+comment|/*  * Returned by aio_cancel:  */
 end_comment
 
 begin_define
