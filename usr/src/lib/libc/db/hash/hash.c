@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.3 (Berkeley) %G%"
+literal|"@(#)hash.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,6 +862,10 @@ argument_list|,
 name|error1
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|OLDHASHVERSION
+value|1
 if|if
 condition|(
 name|hashp
@@ -869,6 +873,12 @@ operator|->
 name|VERSION
 operator|!=
 name|HASHVERSION
+operator|&&
+name|hashp
+operator|->
+name|VERSION
+operator|!=
+name|OLDHASHVERSION
 condition|)
 name|RETURN_ERROR
 argument_list|(
