@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.5 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ block|{
 case|case
 literal|'\t'
 case|:
-name|SYNCH_IN
+name|SYNCH_OUT
 expr_stmt|;
 if|if
 condition|(
@@ -166,7 +166,7 @@ operator|(
 name|ERR
 operator|)
 return|;
-name|SYNCH_OUT
+name|SYNCH_IN
 expr_stmt|;
 break|break;
 default|default:
@@ -320,7 +320,7 @@ name|newx
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__TRACE
+name|DEBUG
 name|__TRACE
 argument_list|(
 literal|"ADDBYTES: change gives f/l: %d/%d [%d/%d]\n"
@@ -381,7 +381,7 @@ expr_stmt|;
 if|if
 condition|(
 name|x
-operator|>=
+operator|>
 name|win
 operator|->
 name|_maxx
@@ -397,7 +397,7 @@ if|if
 condition|(
 operator|++
 name|y
-operator|>=
+operator|>
 name|win
 operator|->
 name|_maxy
