@@ -7714,7 +7714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Just like if_promisc(), but for all-multicast-reception mode.  */
+comment|/*  * Just like ifpromisc(), but for all-multicast-reception mode.  */
 end_comment
 
 begin_function
