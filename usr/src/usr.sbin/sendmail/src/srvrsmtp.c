@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.82 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.83 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.82 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.83 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3209,6 +3209,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+elseif|else
 if|if
 condition|(
 name|strcasecmp
@@ -3224,12 +3225,6 @@ block|{
 name|SevenBitInput
 operator|=
 name|FALSE
-expr_stmt|;
-name|e
-operator|->
-name|e_flags
-operator||=
-name|EF_NL_NOT_EOL
 expr_stmt|;
 block|}
 elseif|else
