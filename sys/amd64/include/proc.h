@@ -74,7 +74,7 @@ name|proc_ldt
 modifier|*
 name|md_ldt
 decl_stmt|;
-comment|/* per-process ldt */
+comment|/* (j) per-process ldt */
 block|}
 struct|;
 end_struct
