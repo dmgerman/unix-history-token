@@ -2682,11 +2682,6 @@ modifier|*
 name|v
 decl_stmt|;
 comment|/* Variable in invocation */
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* Secondary pointer into str (place marker 				 * for tstr) */
 name|Boolean
 name|haveModifier
 decl_stmt|;
@@ -2699,25 +2694,14 @@ name|char
 name|startc
 decl_stmt|;
 comment|/* Starting character when variable in parens 				 * or braces */
-name|int
-name|cnt
-decl_stmt|;
-comment|/* Used to count brace pairs when variable in 				 * in parens or braces */
 name|char
 modifier|*
 name|start
-decl_stmt|;
-name|char
-name|delim
 decl_stmt|;
 name|Boolean
 name|dynamic
 decl_stmt|;
 comment|/* TRUE if the variable is local and we're 				 * expanding it in a non-local context. This 				 * is done to support dynamic sources. The 				 * result is just the invocation, unaltered */
-name|int
-name|vlen
-decl_stmt|;
-comment|/* length of variable name, after embedded 				 * variable expansion */
 operator|*
 name|freePtr
 operator|=
@@ -2775,6 +2759,10 @@ name|OPEN_BRACE
 condition|)
 block|{
 comment|/* 	 * Check if brackets contain a variable name. 	 */
+name|int
+name|vlen
+decl_stmt|;
+comment|/* length of variable name, after embedded variable 			 * expansion */
 comment|/* build up expanded variable name in this buffer */
 name|Buffer
 modifier|*
@@ -3810,6 +3798,10 @@ operator|&&
 name|haveModifier
 condition|)
 block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 comment|/* 	 * Skip initial colon while putting it back. 	 */
 operator|*
 name|tstr
@@ -4740,6 +4732,9 @@ case|case
 literal|'C'
 case|:
 block|{
+name|int
+name|delim
+decl_stmt|;
 name|VarREPattern
 name|pattern
 decl_stmt|;
@@ -5708,6 +5703,9 @@ decl_stmt|;
 name|Boolean
 name|eqFound
 decl_stmt|;
+name|int
+name|cnt
+decl_stmt|;
 name|pattern
 operator|.
 name|flags
@@ -5791,6 +5789,9 @@ operator|&&
 name|eqFound
 condition|)
 block|{
+name|int
+name|delim
+decl_stmt|;
 comment|/* 			 * Now we break this sucker into the lhs and 			 * rhs. We must null terminate them of course. 			 */
 name|cp
 operator|=
