@@ -2677,6 +2677,13 @@ block|}
 block|,
 comment|/* GVC0303 - MaxTech 33.6 PnP D/F/V */
 block|{
+literal|0x0505c31e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* GVC0505 - GVC 56k Faxmodem */
+block|{
 literal|0x0050c31e
 block|,
 name|NULL
