@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.9	82/03/13	*/
+comment|/*	if_acc.c	4.10	82/03/19	*/
 end_comment
 
 begin_include
@@ -822,7 +822,7 @@ name|OUT_BBACK
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|1000
+literal|5000
 argument_list|)
 expr_stmt|;
 comment|/* reset host master ready */
@@ -848,7 +848,7 @@ expr_stmt|;
 comment|/* close the relay */
 name|DELAY
 argument_list|(
-literal|5000
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* YECH!!! */
@@ -899,7 +899,7 @@ name|IN_WEN
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|5000
+literal|10000
 argument_list|)
 expr_stmt|;
 comment|/* keep turning IN_RMR off */
