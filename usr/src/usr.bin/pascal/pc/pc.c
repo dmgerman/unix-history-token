@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pc.c 3.15 %G%"
+literal|"@(#)pc.c 3.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,6 +338,82 @@ literal|"as"
 block|,
 literal|0
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|mesg
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|"Hangup"
+block|,
+literal|"Interrupt"
+block|,
+literal|"Quit"
+block|,
+literal|"Illegal instruction"
+block|,
+literal|"Trace/BPT trap"
+block|,
+literal|"IOT trap"
+block|,
+literal|"EMT trap"
+block|,
+literal|"Floating exception"
+block|,
+literal|"Killed"
+block|,
+literal|"Bus error"
+block|,
+literal|"Segmentation fault"
+block|,
+literal|"Bad system call"
+block|,
+literal|"Broken pipe"
+block|,
+literal|"Alarm clock"
+block|,
+literal|"Terminated"
+block|,
+literal|"Signal 16"
+block|,
+literal|"Stopped (signal)"
+block|,
+literal|"Stopped"
+block|,
+literal|"Continued"
+block|,
+literal|"Child exited"
+block|,
+literal|"Stopped (tty input)"
+block|,
+literal|"Stopped (tty output)"
+block|,
+literal|"Tty input interrupt"
+block|,
+literal|"Cputime limit exceeded"
+block|,
+literal|"Filesize limit exceeded"
+block|,
+literal|"Signal 26"
+block|,
+literal|"Signal 27"
+block|,
+literal|"Signal 28"
+block|,
+literal|"Signal 29"
+block|,
+literal|"Signal 30"
+block|,
+literal|"Signal 31"
+block|,
+literal|"Signal 32"
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -2310,15 +2386,44 @@ name|w_termsig
 operator|!=
 name|SIGINT
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Fatal error in %s\n"
+literal|"%s: %s"
 argument_list|,
 name|cmd
+argument_list|,
+name|mesg
+index|[
+name|status
+operator|.
+name|w_termsig
+index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|.
+name|w_coredump
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" (core dumped)"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|errs
 operator|=
 literal|100
