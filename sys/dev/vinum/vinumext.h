@@ -197,10 +197,10 @@ name|int
 name|give_plex_to_volume
 parameter_list|(
 name|int
-name|volno
 parameter_list|,
 name|int
-name|plexno
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
