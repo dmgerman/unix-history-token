@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	5.1 (Berkeley) %G%"
+literal|"@(#)newfs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* free space threshold */
+end_comment
+
+begin_decl_stmt
+name|int
+name|opt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* optimization preference (space or time) */
 end_comment
 
 begin_decl_stmt
@@ -567,6 +577,73 @@ literal|"%s: bad total tracks"
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'o'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-o: missing optimization preference"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"space"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|opt
+operator|=
+name|FS_OPTSPACE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"time"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|opt
+operator|=
+name|FS_OPTTIME
+expr_stmt|;
+else|else
+name|fatal
+argument_list|(
+literal|"%s: bad optimization preference %s"
+argument_list|,
+operator|*
+name|argv
+argument_list|,
+literal|"(options are `space' or `time')"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -985,6 +1062,15 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-m minimum free space %%\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-o optimization preference %s\n"
+argument_list|,
+literal|"(`space' or `time')"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1447,6 +1533,36 @@ literal|10
 expr_stmt|;
 if|if
 condition|(
+name|minfree
+operator|<
+literal|10
+operator|&&
+name|opt
+operator|!=
+name|FS_OPTSPACE
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"setting optimization for space "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"with minfree less than 10%\n"
+argument_list|)
+expr_stmt|;
+name|opt
+operator|=
+name|FS_OPTSPACE
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|cpg
 operator|==
 literal|0
@@ -1615,6 +1731,20 @@ literal|"%d"
 argument_list|,
 name|density
 argument_list|)
+expr_stmt|;
+name|av
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|opt
+operator|==
+name|FS_OPTSPACE
+condition|?
+literal|"s"
+else|:
+literal|"t"
 expr_stmt|;
 name|av
 index|[

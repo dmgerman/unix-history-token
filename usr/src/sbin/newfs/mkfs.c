@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	5.2 (Berkeley) %G%"
+literal|"@(#)mkfs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,7 +47,7 @@ endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * make file system for cylinder-group style file systems  *  * usage: mkfs -N special size [ nsect ntrak bsize fsize cpg minfree rps nbpi ]  */
+comment|/*  * make file system for cylinder-group style file systems  *  * usage:  *    mkfs -N special size [ nsect ntrak bsize fsize cpg minfree rps nbpi opt ]  */
 end_comment
 
 begin_comment
@@ -102,7 +102,7 @@ comment|/* desired fs_cpg */
 end_comment
 
 begin_comment
-comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 90% and 100% full; thus the default value of  * fs_minfree is 10%.  */
+comment|/*  * MINFREE gives the minimum acceptable percentage of file system  * blocks which may be free. If the freelist drops below this level  * only the superuser may continue to allocate blocks. This may  * be set to 0 if no reserve of free blocks is deemed necessary,  * however throughput drops by fifty percent if the file system  * is run at between 90% and 100% full; thus the default value of  * fs_minfree is 10%. With 10% free space, fragmentation is not a  * problem, so we choose to optimize for time.  */
 end_comment
 
 begin_define
@@ -110,6 +110,13 @@ define|#
 directive|define
 name|MINFREE
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULTOPT
+value|FS_OPTTIME
 end_define
 
 begin_comment
@@ -2872,6 +2879,73 @@ operator|.
 name|fs_rps
 operator|=
 name|DEFHZ
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|10
+condition|)
+if|if
+condition|(
+operator|*
+name|argv
+index|[
+literal|10
+index|]
+operator|==
+literal|'s'
+condition|)
+name|sblock
+operator|.
+name|fs_optim
+operator|=
+name|FS_OPTSPACE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|*
+name|argv
+index|[
+literal|10
+index|]
+operator|==
+literal|'t'
+condition|)
+name|sblock
+operator|.
+name|fs_optim
+operator|=
+name|FS_OPTTIME
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"%s: bogus optimization preference %s\n"
+argument_list|,
+name|argv
+index|[
+literal|10
+index|]
+argument_list|,
+literal|"reset to time"
+argument_list|)
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_optim
+operator|=
+name|FS_OPTTIME
+expr_stmt|;
+block|}
+else|else
+name|sblock
+operator|.
+name|fs_optim
+operator|=
+name|DEFAULTOPT
 expr_stmt|;
 name|sblock
 operator|.
