@@ -192,6 +192,7 @@ decl_stmt|;
 name|off_t
 name|bio_length
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|bio_attribute
