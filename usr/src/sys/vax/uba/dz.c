@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.46	82/10/17	*/
+comment|/*	dz.c	4.47	82/12/05	*/
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ioctl.h"
 end_include
 
 begin_include
@@ -2115,8 +2121,8 @@ expr_stmt|;
 else|else
 name|c
 operator|=
-name|tun
-operator|.
+name|tp
+operator|->
 name|t_intrc
 expr_stmt|;
 if|if
@@ -2908,20 +2914,14 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LLITOUT
-operator|)
-operator|||
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|RAW
+operator||
+name|LITOUT
 operator|)
 condition|)
 name|lpr
@@ -3366,20 +3366,14 @@ name|out
 goto|;
 if|if
 condition|(
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
-name|RAW
-operator|)
-operator|||
 operator|(
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LLITOUT
+name|RAW
+operator||
+name|LITOUT
 operator|)
 condition|)
 name|cc
@@ -4116,9 +4110,9 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_local
+name|t_flags
 operator|&
-name|LNOHANG
+name|NOHANG
 operator|)
 operator|==
 literal|0

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.53	82/10/17	*/
+comment|/*	dh.c	4.54	82/12/05	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ioctl.h"
 end_include
 
 begin_include
@@ -2152,8 +2158,8 @@ expr_stmt|;
 else|else
 name|c
 operator|=
-name|tun
-operator|.
+name|tp
+operator|->
 name|t_intrc
 expr_stmt|;
 if|#
@@ -2565,20 +2571,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
-name|RAW
-operator|)
-operator|||
 operator|(
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LLITOUT
+name|RAW
+operator||
+name|LITOUT
 operator|)
 condition|)
 name|lpar
@@ -3085,13 +3085,11 @@ name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|RAW
-operator|||
-name|tp
-operator|->
-name|t_local
-operator|&
-name|LLITOUT
+operator||
+name|LITOUT
+operator|)
 condition|)
 name|nch
 operator|=
@@ -4133,9 +4131,9 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_local
+name|t_mode
 operator|&
-name|LMDMBUF
+name|MDMBUF
 operator|)
 condition|)
 block|{
@@ -4219,9 +4217,9 @@ operator|&&
 operator|(
 name|tp
 operator|->
-name|t_local
+name|t_mode
 operator|&
-name|LNOHANG
+name|NOHANG
 operator|)
 operator|==
 literal|0

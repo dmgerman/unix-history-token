@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ps.c	4.7	82/10/17	*/
+comment|/*	ps.c	4.8	82/12/05	*/
 end_comment
 
 begin_comment
@@ -46,7 +46,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/tty.h"
+file|"../h/ioctl.h"
 end_include
 
 begin_include
