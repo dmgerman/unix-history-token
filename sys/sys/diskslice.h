@@ -182,31 +182,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_comment
-comment|/* Flags for dsopen(). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSO_NOLABELS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSO_ONESLICE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSO_COMPATLABEL
-value|4
-end_define
-
 begin_define
 define|#
 directive|define
