@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pathnames.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,28 +13,28 @@ begin_define
 define|#
 directive|define
 name|_PATH_AS
-value|"/usr/bin/as"
+value|"/usr/old/bin/as"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_C2
-value|"/usr/libexec/c2"
+value|"/usr/old/libexec/c2"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_CCOM
-value|"/usr/libexec/ccom"
+value|"/usr/old/libexec/ccom"
 end_define
 
 begin_define
 define|#
 directive|define
 name|_PATH_CPP
-value|"/usr/bin/cpp"
+value|"/usr/old/bin/cpp"
 end_define
 
 begin_define
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SCCOM
-value|"/usr/libexec/sccom"
+value|"/usr/old/libexec/sccom"
 end_define
 
 begin_define
