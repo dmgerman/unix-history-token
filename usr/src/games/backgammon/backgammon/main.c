@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	main.c	4.1	82/05/11	"
+literal|"	main.c	4.2	82/11/22	"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,13 +364,10 @@ name|char
 name|c
 decl_stmt|;
 comment|/* non-descript character storage */
-name|int
+name|long
 name|t
-index|[
-literal|2
-index|]
 decl_stmt|;
-comment|/* time vector */
+comment|/* time for random num generator */
 comment|/* initialization */
 name|bflag
 operator|=
@@ -509,22 +506,16 @@ name|begscr
 operator|=
 literal|0
 expr_stmt|;
+name|t
+operator|=
 name|time
 argument_list|(
-name|t
+literal|0
 argument_list|)
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
 name|t
-index|[
-literal|0
-index|]
-operator|^
-name|t
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 comment|/* 'random' seed */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	back.h	4.1	82/05/11  */
+comment|/*  *	back.h	4.2	82/11/22  */
 end_comment
 
 begin_include
@@ -16,7 +16,7 @@ name|rnum
 parameter_list|(
 name|r
 parameter_list|)
-value|(rand(0)/(32767/r+1))
+value|(random()%r)
 end_define
 
 begin_define
