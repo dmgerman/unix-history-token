@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	1.4 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	1.5 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -146,6 +146,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* Print headers when possible */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cond
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Current state of conditional exc. */
 end_comment
 
 begin_decl_stmt
