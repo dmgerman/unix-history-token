@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)date.c	4.2 (Berkeley) %G%"
+literal|"@(#)date.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -20,15 +20,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Date - print and set date  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_comment
-comment|/*  * date : print date  * date YYMMDDHHMM[.SS] : set date, if allowed  * date -u ... : date in GMT  */
-end_comment
 
 begin_include
 include|#
@@ -41,6 +41,13 @@ include|#
 directive|include
 file|<utmp.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|WTMP
+value|"/usr/adm/wtmp"
+end_define
 
 begin_decl_stmt
 name|struct
@@ -116,6 +123,16 @@ literal|30
 block|,
 literal|31
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|usage
+init|=
+literal|"usage: date [-u] [yymmddhhmm[.ss]]\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -226,25 +243,17 @@ name|argc
 operator|>
 literal|1
 operator|&&
+name|strcmp
+argument_list|(
 name|argv
 index|[
 literal|1
 index|]
-index|[
+argument_list|,
+literal|"-u"
+argument_list|)
+operator|==
 literal|0
-index|]
-operator|==
-literal|'-'
-operator|&&
-name|argv
-index|[
-literal|1
-index|]
-index|[
-literal|1
-index|]
-operator|==
-literal|'u'
 condition|)
 block|{
 name|argc
@@ -279,7 +288,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"date: bad conversion\n"
+name|usage
 argument_list|)
 expr_stmt|;
 name|exit
@@ -371,9 +380,9 @@ block|{
 name|rc
 operator|++
 expr_stmt|;
-name|printf
+name|perror
 argument_list|(
-literal|"date: no permission\n"
+literal|"Failed to set date"
 argument_list|)
 expr_stmt|;
 block|}
@@ -385,7 +394,7 @@ name|wf
 operator|=
 name|open
 argument_list|(
-literal|"/usr/adm/wtmp"
+name|WTMP
 argument_list|,
 literal|1
 argument_list|)
