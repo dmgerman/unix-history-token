@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: libdisk.h,v 1.19.2.2 1995/10/13 08:19:12 jkh Exp $  *  */
+comment|/* * ---------------------------------------------------------------------------- * "THE BEER-WARE LICENSE" (Revision 42): *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you * can do whatever you want with this stuff. If we meet some day, and you think * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp * ---------------------------------------------------------------------------- * * $Id: libdisk.h,v 1.20 1995/12/07 10:33:21 peter Exp $ * */
 end_comment
 
 begin_define
@@ -31,19 +31,14 @@ block|,
 name|part
 block|,
 name|unused
-block|, 	}
+block|, }
 name|chunk_e
 typedef|;
 end_typedef
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|chunk_n
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|__BEGIN_DECLS
+end_macro
 
 begin_struct
 struct|struct
@@ -132,7 +127,7 @@ name|char
 modifier|*
 name|oname
 decl_stmt|;
-comment|/* Used during Fixup_Names() to avoid renaming more than 		 * absolutely needed. 		 */
+comment|/* Used during Fixup_Names() to avoid renaming more than 	 * absolutely needed. 	 */
 name|chunk_e
 name|type
 decl_stmt|;
@@ -146,12 +141,12 @@ define|#
 directive|define
 name|CHUNK_PAST_1024
 value|1
-comment|/* this chunk cannot be booted from because it 			 * extends past cylinder 1024 			 */
+comment|/* this chunk cannot be booted from because it 		 * extends past cylinder 1024 		 */
 define|#
 directive|define
 name|CHUNK_BSD_COMPAT
 value|2
-comment|/* this chunk is in the BSD-compatibility, and has a 			 * short name too, ie wd0s4f -> wd0f          		*/
+comment|/* this chunk is in the BSD-compatibility, and has a 		 * short name too, ie wd0s4f -> wd0f 		*/
 define|#
 directive|define
 name|CHUNK_BAD144
@@ -176,7 +171,7 @@ define|#
 directive|define
 name|CHUNK_FORCE_ALL
 value|64
-comment|/* Force a dedicated disk for FreeBSD, bypassing 			 * all BIOS geometry considerations 			 */
+comment|/* Force a dedicated disk for FreeBSD, bypassing 		 * all BIOS geometry considerations 		 */
 name|void
 function_decl|(
 modifier|*
@@ -200,12 +195,34 @@ parameter_list|)
 function_decl|;
 name|void
 modifier|*
-name|private
+name|private_data
 decl_stmt|;
-comment|/* For data private to the application, and the management 		 * thereof.  If the functions are not provided, no storage 		 * management is done, Cloning will just copy the pointer 		 * and freeing will just forget it. 		 */
+comment|/* For data private to the application, and the management 	 * thereof.  If the functions are not provided, no storage 	 * management is done, Cloning will just copy the pointer 	 * and freeing will just forget it. 	 */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|chunk_n
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|u_char
+modifier|*
+name|boot1
+decl_stmt|,
+modifier|*
+name|boot2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|struct
@@ -213,6 +230,7 @@ name|disk
 modifier|*
 name|Open_Disk
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|devname
@@ -221,7 +239,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Will open the named disk, and return populated tree. 	 */
+comment|/* Will open the named disk, and return populated tree.  */
 end_comment
 
 begin_function_decl
@@ -239,7 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Clone a copy of a tree.  Useful for "Undo" functionality 	 */
+comment|/* Clone a copy of a tree.  Useful for "Undo" functionality  */
 end_comment
 
 begin_function_decl
@@ -255,7 +273,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a tree made with Open_Disk() or Clone_Disk() 	 */
+comment|/* Free a tree made with Open_Disk() or Clone_Disk()  */
 end_comment
 
 begin_function_decl
@@ -271,7 +289,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Print the content of the tree to stdout 	 */
+comment|/* Print the content of the tree to stdout  */
 end_comment
 
 begin_if
@@ -282,7 +300,7 @@ end_if
 
 begin_comment
 unit|struct disk * Set_Phys_Geom(struct disk *disk, u_long cyl, u_long heads, u_long sects);
-comment|/* Use a different physical geometry.  Makes sense for ST506 disks only. 	 * The tree returned is read from the disk, using this geometry. 	 */
+comment|/* Use a different physical geometry.  Makes sense for ST506 disks only.  * The tree returned is read from the disk, using this geometry.  */
 end_comment
 
 begin_endif
@@ -312,7 +330,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Set the geometry the bios uses. 	 */
+comment|/* Set the geometry the bios uses.  */
 end_comment
 
 begin_function_decl
@@ -332,7 +350,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Free a chunk of disk_space 	 */
+comment|/* Free a chunk of disk_space  */
 end_comment
 
 begin_function_decl
@@ -348,7 +366,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Experimental, do not use. 	 */
+comment|/* Experimental, do not use.  */
 end_comment
 
 begin_function_decl
@@ -369,7 +387,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Experimental, do not use. 	 */
+comment|/* Experimental, do not use.  */
 end_comment
 
 begin_function_decl
@@ -400,7 +418,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Create a chunk with the specified paramters 	 */
+comment|/* Create a chunk with the specified paramters  */
 end_comment
 
 begin_function_decl
@@ -419,7 +437,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Make one FreeBSD chunk covering the entire disk; 	 * if force_all is set, bypass all BIOS geometry 	 * considerations. 	 */
+comment|/* Make one FreeBSD chunk covering the entire disk;  * if force_all is set, bypass all BIOS geometry  * considerations.  */
 end_comment
 
 begin_function_decl
@@ -435,7 +453,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return char* to warnings about broken design rules in this disklayout 	 */
+comment|/* Return char* to warnings about broken design rules in this disklayout  */
 end_comment
 
 begin_function_decl
@@ -448,7 +466,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return char** with all disk's names (wd0, wd1 ...).  You must free 	 * each pointer, as well as the array by hand 	 */
+comment|/* Return char** with all disk's names (wd0, wd1 ...).  You must free  * each pointer, as well as the array by hand  */
 end_comment
 
 begin_function_decl
@@ -460,6 +478,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|bootmgr
@@ -468,7 +487,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Use this boot-manager on this disk.  Gets written when Write_Disk() 	 * is called 	 */
+comment|/* Use this boot-manager on this disk.  Gets written when Write_Disk()  * is called  */
 end_comment
 
 begin_function_decl
@@ -480,10 +499,12 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|boot1
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|boot2
@@ -492,7 +513,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Use these boot-blocks on this disk.  Gets written when Write_Disk() 	 * is called 	 */
+comment|/* Use these boot-blocks on this disk.  Gets written when Write_Disk()  * is called  */
 end_comment
 
 begin_function_decl
@@ -508,7 +529,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Write all the MBRs, disklabels, bootblocks and boot managers 	 */
+comment|/* Write all the MBRs, disklabels, bootblocks and boot managers  */
 end_comment
 
 begin_function_decl
@@ -527,7 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Check if offset is aligned on a cylinder according to the 	 * bios geometry 	 */
+comment|/* Check if offset is aligned on a cylinder according to the  * bios geometry  */
 end_comment
 
 begin_function_decl
@@ -546,7 +567,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset up to next cylinder according to the bios-geometry 	 */
+comment|/* Round offset up to next cylinder according to the bios-geometry  */
 end_comment
 
 begin_function_decl
@@ -565,7 +586,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset down to previous cylinder according to the bios- 	 * geometry 	 */
+comment|/* Round offset down to previous cylinder according to the bios-  * geometry  */
 end_comment
 
 begin_function_decl
@@ -584,7 +605,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Check if offset is aligned on a track according to the 	 * bios geometry 	 */
+comment|/* Check if offset is aligned on a track according to the  * bios geometry  */
 end_comment
 
 begin_function_decl
@@ -603,7 +624,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Round offset up to next track according to the bios-geometry 	 */
+comment|/* Round offset up to next track according to the bios-geometry  */
 end_comment
 
 begin_function_decl
@@ -622,7 +643,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Check if offset is aligned on a track according to the 	 * bios geometry 	 */
+comment|/* Check if offset is aligned on a track according to the  * bios geometry  */
 end_comment
 
 begin_function_decl
@@ -657,7 +678,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* This one creates a partition inside the given parent of the given 	 * size, and returns a pointer to it.  The first unused chunk big 	 * enough is used. 	 */
+comment|/* This one creates a partition inside the given parent of the given  * size, and returns a pointer to it.  The first unused chunk big  * enough is used.  */
 end_comment
 
 begin_function_decl
@@ -669,6 +690,7 @@ name|chunk
 modifier|*
 name|c
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -685,6 +707,7 @@ name|disk
 modifier|*
 name|d
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -781,6 +804,7 @@ name|long
 parameter_list|,
 name|u_long
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -884,6 +908,7 @@ name|disk
 modifier|*
 name|Int_Open_Disk
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -904,6 +929,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_define
 define|#
