@@ -958,7 +958,7 @@ name|char
 name|s1
 index|[]
 init|=
-literal|"usage: %s [-adfhkmotw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
+literal|"usage: %s [-adfhkotw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
 decl_stmt|;
 else|#
 directive|else
@@ -967,7 +967,7 @@ name|char
 name|s1
 index|[]
 init|=
-literal|"usage: %s [-adfhkmtw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
+literal|"usage: %s [-adfhktw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
 decl_stmt|;
 endif|#
 directive|endif
@@ -981,7 +981,7 @@ name|char
 name|s1
 index|[]
 init|=
-literal|"usage: %s [-adfhkmow] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
+literal|"usage: %s [-adfhkow] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
 decl_stmt|;
 else|#
 directive|else
@@ -990,7 +990,7 @@ name|char
 name|s1
 index|[]
 init|=
-literal|"usage: %s [-adfhkmw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
+literal|"usage: %s [-adfhkw] [section] [-M path] [-P pager] [-S list]\n\            [-m machine] [-p string] name ...\n\n"
 decl_stmt|;
 endif|#
 directive|endif
