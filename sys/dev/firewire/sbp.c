@@ -334,7 +334,7 @@ value|(SBP_QUEUE_LEN * SBP_NUM_TARGETS)
 end_define
 
 begin_comment
-comment|/*   * STATUS FIFO addressing  *   bit  * -----------------------  *  0- 1( 2): 0 (alingment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-31( 8): reserved  * 32-47(16): SBP_BIND_HI   * 48-64(16): bus_id, node_id   */
+comment|/*   * STATUS FIFO addressing  *   bit  * -----------------------  *  0- 1( 2): 0 (alignment)  *  2- 7( 6): target  *  8-15( 8): lun  * 16-31( 8): reserved  * 32-47(16): SBP_BIND_HI   * 48-64(16): bus_id, node_id   */
 end_comment
 
 begin_define
@@ -4220,7 +4220,7 @@ comment|/*arg*/
 block|NULL);
 endif|#
 directive|endif
-comment|/* Gabage Collection */
+comment|/* Garbage Collection */
 for|for
 control|(
 name|i
