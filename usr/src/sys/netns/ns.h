@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ns.h	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -343,6 +343,18 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(*(long *)& ((a).x_net))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ns_neteq
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(ns_netof(a) == ns_netof(b))
 end_define
 
 begin_define
