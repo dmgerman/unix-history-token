@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.5 1994/11/02 09:05:49 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage5.c,v 1.7 1994/11/03 00:30:27 ache Exp $  *  */
 end_comment
 
 begin_include
@@ -76,7 +76,7 @@ name|char
 name|msg
 index|[]
 init|=
-literal|" You are now done with the first phase of the installation.  We will, for now, dump you rather unceremoniously into a shell where you can then ftp, SLIP, DOS floppy or carrier pigeon the bindist over.  This will NOT be so unfriendly in the BETA installation, and will lead instead to a menu offering you various helpful ways of getting the bindist.  This is all we had time for in the ALPHA, however.  Sorry! Thank you for your patience!"
+literal|" You are now done with the second phase of the installation.  At this point, FreeBSD is on your hard disk and now we need to go on to the 3rd level installation, which is to ftp, SLIP, DOS floppy, parallel port or carrier pigeon the bindist over.  Select OK to proceed with this phase, or CANCEL to simply drop into the shell."
 decl_stmt|;
 end_decl_stmt
 
@@ -85,9 +85,17 @@ name|void
 name|stage5
 parameter_list|()
 block|{
-name|dialog_msgbox
+name|int
+name|exec_sh
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dialog_yesno
 argument_list|(
-name|TITLE
+literal|"End of stage 2"
 argument_list|,
 name|msg
 argument_list|,
@@ -104,9 +112,11 @@ name|msg
 argument_list|)
 operator|+
 literal|4
-argument_list|,
-literal|1
 argument_list|)
+condition|)
+name|exec_sh
+operator|=
+literal|1
 expr_stmt|;
 name|end_dialog
 argument_list|()
@@ -129,6 +139,11 @@ control|(
 init|;
 condition|;
 control|)
+block|{
+if|if
+condition|(
+name|exec_sh
+condition|)
 name|exec
 argument_list|(
 literal|2
@@ -140,6 +155,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+name|exec
+argument_list|(
+literal|2
+argument_list|,
+literal|"/stand/bininst"
+argument_list|,
+literal|"/stand/-bininst"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
