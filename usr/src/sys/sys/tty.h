@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.8	82/01/20	*/
+comment|/*	tty.h	4.9	82/01/30	*/
 end_comment
 
 begin_ifdef
