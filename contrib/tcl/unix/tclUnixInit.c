@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixInit.c --  *  *	Contains the Unix-specific interpreter initialization functions.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixInit.c 1.10 96/03/12 09:05:59  */
+comment|/*   * tclUnixInit.c --  *  *	Contains the Unix-specific interpreter initialization functions.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixInit.c 1.14 96/07/10 15:45:24  */
 end_comment
 
 begin_include
@@ -52,6 +52,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|_BSDI_VERSION
+operator|>
+literal|199501
+end_if
+
+begin_include
+include|#
+directive|include
+file|<dlfcn.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Default directory in which to look for libraries:  */
 end_comment
@@ -75,10 +114,10 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|initScript
+index|[]
 init|=
-literal|"proc init {} {\n\     global tcl_library tcl_version tcl_patchLevel env\n\     rename init {}\n\     set dirs {}\n\     if [info exists env(TCL_LIBRARY)] {\n\ 	lappend dirs $env(TCL_LIBRARY)\n\     }\n\     lappend dirs [info library]\n\     lappend dirs [file dirname [file dirname [info nameofexecutable]]]/lib/tcl$tcl_version\n\     if [string match {*[ab]*} $tcl_patchLevel] {\n\ 	set lib tcl$tcl_patchLevel\n\     } else {\n\ 	set lib tcl$tcl_version\n\     }\n\     lappend dirs [file dirname [file dirname [pwd]]]/$lib/library\n\     lappend dirs [file dirname [pwd]]/library\n\     foreach i $dirs {\n\ 	set tcl_library $i\n\ 	if ![catch {uplevel #0 source $i/init.tcl}] {\n\ 	    return\n\ 	}\n\     }\n\     set msg \"Can't find a usable init.tcl in the following directories: \n\"\n\     append msg \"    $dirs\n\"\n\     append msg \"This probably means that Tcl wasn't installed properly.\n\"\n\     error $msg\n\ }\n\ init"
+literal|"proc init {} {\n\     global tcl_library tcl_version tcl_patchLevel env\n\     rename init {}\n\     set dirs {}\n\     if [info exists env(TCL_LIBRARY)] {\n\ 	lappend dirs $env(TCL_LIBRARY)\n\     }\n\     lappend dirs [info library]\n\     set parentDir [file dirname [file dirname [info nameofexecutable]]]\n\     lappend dirs $parentDir/lib/tcl$tcl_version\n\     if [string match {*[ab]*} $tcl_patchLevel] {\n\ 	set lib tcl$tcl_patchLevel\n\     } else {\n\ 	set lib tcl$tcl_version\n\     }\n\     lappend dirs [file dirname $parentDir]/$lib/library\n\     lappend dirs $parentDir/library\n\     foreach i $dirs {\n\ 	set tcl_library $i\n\ 	if ![catch {uplevel #0 source $i/init.tcl}] {\n\ 	    return\n\ 	}\n\     }\n\     set msg \"Can't find a usable init.tcl in the following directories: \n\"\n\     append msg \"    $dirs\n\"\n\     append msg \"This probably means that Tcl wasn't installed properly.\n\"\n\     error $msg\n\ }\n\ init"
 decl_stmt|;
 end_decl_stmt
 
@@ -296,6 +335,31 @@ expr_stmt|;
 name|fpsetmask
 argument_list|(
 literal|0L
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+operator|&&
+operator|(
+name|_BSDI_VERSION
+operator|>
+literal|199501
+operator|)
+comment|/* 	 * Find local symbols. Don't report an error if we fail. 	 */
+operator|(
+name|void
+operator|)
+name|dlopen
+argument_list|(
+name|NULL
+argument_list|,
+name|RTLD_NOW
 argument_list|)
 expr_stmt|;
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclBasic.c --  *  *	Contains the basic facilities for TCL command interpretation,  *	including interpreter creation and deletion, command creation  *	and deletion, and command parsing and execution.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclBasic.c 1.210 96/03/25 17:17:54  */
+comment|/*   * tclBasic.c --  *  *	Contains the basic facilities for TCL command interpretation,  *	including interpreter creation and deletion, command creation  *	and deletion, and command parsing and execution.  *  * Copyright (c) 1987-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclBasic.c 1.211 96/05/10 17:48:04  */
 end_comment
 
 begin_include
@@ -31,6 +31,18 @@ include|#
 directive|include
 file|"patchlevel.h"
 end_include
+
+begin_comment
+comment|/*  * This variable indicates to the close procedures of channel drivers that  * we are in the middle of an interpreter deletion, and hence in "implicit"  * close mode. In that mode, the close procedures should not close the  * OS handle for standard IO channels. Since interpreter deletion may be  * recursive, this variable is actually a counter of the levels of nesting.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|tclInInterpreterDeletion
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Static procedures in this file:  */
@@ -2125,6 +2137,10 @@ literal|"DeleteInterpProc called on interpreter not marked deleted"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Increment the interp deletion counter, so that close procedures      * for channel drivers can notice that we are in "implicit" close mode.      */
+name|tclInInterpreterDeletion
+operator|++
+expr_stmt|;
 comment|/*      * First delete all the commands.  There's a special hack here      * because "tkerror" is just a synonym for "bgerror" (they share      * a Command structure).  Just delete the hash table entry for      * "tkerror" without invoking its callback or cleaning up its      * Command structure.      */
 name|hPtr
 operator|=
@@ -2678,6 +2694,22 @@ operator|->
 name|tracePtr
 operator|=
 name|nextPtr
+expr_stmt|;
+block|}
+comment|/*      * Finally decrement the nested interpreter deletion counter.      */
+name|tclInInterpreterDeletion
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|tclInInterpreterDeletion
+operator|<
+literal|0
+condition|)
+block|{
+name|tclInInterpreterDeletion
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|ckfree

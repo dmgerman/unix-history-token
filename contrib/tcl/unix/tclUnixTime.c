@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.10 96/02/15 11:58:41  */
+comment|/*   * tclUnixTime.c --  *  *	Contains Unix specific versions of Tcl functions that  *	obtain time values from the operating system.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixTime.c 1.11 96/07/23 16:17:21  */
 end_comment
 
 begin_include
@@ -19,13 +19,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------------  *  * TclGetSeconds --  *  *	This procedure returns the number of seconds from the epoch.  On  *	most Unix systems the epoch is Midnight Jan 1, 1970 GMT.  *  * Results:  *	Number of seconds from the epoch.  *  * Side effects:  *	None.  *  *-----------------------------------------------------------------------------  */
+comment|/*  *-----------------------------------------------------------------------------  *  * TclpGetSeconds --  *  *	This procedure returns the number of seconds from the epoch.  On  *	most Unix systems the epoch is Midnight Jan 1, 1970 GMT.  *  * Results:  *	Number of seconds from the epoch.  *  * Side effects:  *	None.  *  *-----------------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|unsigned
 name|long
-name|TclGetSeconds
+name|TclpGetSeconds
 parameter_list|()
 block|{
 return|return
@@ -45,13 +45,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------------  *  * TclGetClicks --  *  *	This procedure returns a value that represents the highest resolution  *	clock available on the system.  There are no garantees on what the  *	resolution will be.  In Tcl we will call this value a "click".  The  *	start time is also system dependant.  *  * Results:  *	Number of clicks from some start time.  *  * Side effects:  *	None.  *  *-----------------------------------------------------------------------------  */
+comment|/*  *-----------------------------------------------------------------------------  *  * TclpGetClicks --  *  *	This procedure returns a value that represents the highest resolution  *	clock available on the system.  There are no garantees on what the  *	resolution will be.  In Tcl we will call this value a "click".  The  *	start time is also system dependant.  *  * Results:  *	Number of clicks from some start time.  *  * Side effects:  *	None.  *  *-----------------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|unsigned
 name|long
-name|TclGetClicks
+name|TclpGetClicks
 parameter_list|()
 block|{
 name|unsigned
@@ -127,12 +127,12 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * TclGetTimeZone --  *  *	Determines the current timezone.  The method varies wildly  *	between different platform implementations, so its hidden in  *	this function.  *  * Results:  *	Hours east of GMT.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * TclpGetTimeZone --  *  *	Determines the current timezone.  The method varies wildly  *	between different platform implementations, so its hidden in  *	this function.  *  * Results:  *	Hours east of GMT.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
 name|int
-name|TclGetTimeZone
+name|TclpGetTimeZone
 parameter_list|(
 name|currentTime
 parameter_list|)
@@ -392,9 +392,9 @@ operator|.
 endif|#
 directive|endif
 expr|}
-comment|/*  *----------------------------------------------------------------------  *  * TclGetTime --  *  *	Gets the current system time in seconds and microseconds  *	since the beginning of the epoch: 00:00 UCT, January 1, 1970.  *  * Results:  *	Returns the current time in timePtr.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * TclpGetTime --  *  *	Gets the current system time in seconds and microseconds  *	since the beginning of the epoch: 00:00 UCT, January 1, 1970.  *  * Results:  *	Returns the current time in timePtr.  *  * Side effects:  *	None.  *  *----------------------------------------------------------------------  */
 name|void
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 argument|timePtr
 argument_list|)

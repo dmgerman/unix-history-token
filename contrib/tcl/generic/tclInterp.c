@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.66 96/04/15 17:26:10  */
+comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.73 96/06/11 18:14:22  */
 end_comment
 
 begin_include
@@ -604,7 +604,7 @@ literal|"expr"
 block|,
 literal|"fblocked"
 block|,
-literal|"fconfigure"
+literal|"fileevent"
 block|,
 literal|"flush"
 block|,
@@ -678,13 +678,19 @@ literal|"split"
 block|,
 literal|"string"
 block|,
+literal|"subst"
+block|,
 literal|"switch"
 block|,
 literal|"tell"
 block|,
+literal|"time"
+block|,
 literal|"trace"
 block|,
 literal|"unset"
+block|,
+literal|"unsupported0"
 block|,
 literal|"update"
 block|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclEvent.c --  *  *	This file provides basic event-managing facilities for Tcl,  *	including an event queue, and mechanisms for attaching  *	callbacks to certain events.  *  *	It also contains the command procedures for the commands  *	"after", "vwait", and "update".  *  * Copyright (c) 1990-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEvent.c 1.127 96/03/22 12:12:33  */
+comment|/*   * tclEvent.c --  *  *	This file provides basic event-managing facilities for Tcl,  *	including an event queue, and mechanisms for attaching  *	callbacks to certain events.  *  *	It also contains the command procedures for the commands  *	"after", "vwait", and "update".  *  * Copyright (c) 1990-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEvent.c 1.128 96/07/23 16:12:34  */
 end_comment
 
 begin_include
@@ -1543,7 +1543,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Compute when the event should fire.      */
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|timerHandlerPtr
@@ -1923,7 +1923,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*      * Compute when the timeout should fire and fill in the other fields      * of the handler.      */
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|timerHandlerPtr
@@ -2228,7 +2228,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|blockTime
@@ -2383,7 +2383,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|curTime
@@ -2457,7 +2457,7 @@ operator|!
 name|gotTime
 condition|)
 block|{
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|curTime
@@ -6449,7 +6449,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|now
@@ -6667,7 +6667,7 @@ condition|)
 block|{
 break|break;
 block|}
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|now

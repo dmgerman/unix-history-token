@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIOUtil.c --  *  *	This file contains a collection of utility procedures that  *	are shared by the platform specific IO drivers.  *  *	Parts of this file are based on code contributed by Karl  *	Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOUtil.c 1.122 96/04/02 18:46:40  */
+comment|/*   * tclIOUtil.c --  *  *	This file contains a collection of utility procedures that  *	are shared by the platform specific IO drivers.  *  *	Parts of this file are based on code contributed by Karl  *	Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOUtil.c 1.123 96/04/29 14:08:24  */
 end_comment
 
 begin_include
@@ -1859,7 +1859,7 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-name|pid_t
+name|int
 name|pid
 decl_stmt|;
 for|for
@@ -1880,6 +1880,9 @@ control|)
 block|{
 name|pid
 operator|=
+operator|(
+name|int
+operator|)
 name|Tcl_WaitPid
 argument_list|(
 name|detPtr

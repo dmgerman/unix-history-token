@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIOCmd.c --  *  *	Contains the definitions of most of the Tcl commands relating to IO.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOCmd.c 1.94 96/04/15 06:40:02  */
+comment|/*   * tclIOCmd.c --  *  *	Contains the definitions of most of the Tcl commands relating to IO.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOCmd.c 1.96 96/05/10 15:20:56  */
 end_comment
 
 begin_include

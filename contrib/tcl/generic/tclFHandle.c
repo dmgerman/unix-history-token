@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclFHandle.c --  *  *	This file contains functions for manipulating Tcl file handles.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFHandle.c 1.6 96/02/13 16:29:55  */
+comment|/*   * tclFHandle.c --  *  *	This file contains functions for manipulating Tcl file handles.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclFHandle.c 1.8 96/06/27 15:31:34  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"tcl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tclInt.h"
 end_include
 
 begin_include
@@ -317,6 +323,12 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Tcl_File structures may be freed as a result of running the      * channel table exit handler. The file table is freed by the file      * table exit handler, which may run before the channel table exit      * handler. The file table exit handler sets the "initialized"      * variable back to zero, so that the Tcl_FreeFile (when invoked      * from the channel table exit handler) can notice that the file      * table has already been destroyed. Otherwise, accessing a      * deleted hash table would cause a panic.      */
+if|if
+condition|(
+name|initialized
+condition|)
+block|{
 name|entryPtr
 operator|=
 name|Tcl_FindHashEntry
@@ -344,6 +356,8 @@ argument_list|(
 name|entryPtr
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 name|ckfree
 argument_list|(
 operator|(
@@ -353,7 +367,6 @@ operator|)
 name|handlePtr
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -544,51 +557,15 @@ name|clientData
 decl_stmt|;
 comment|/* Not used. */
 block|{
-name|Tcl_HashSearch
-name|search
-decl_stmt|;
-name|Tcl_HashEntry
-modifier|*
-name|entryPtr
-decl_stmt|;
-name|entryPtr
-operator|=
-name|Tcl_FirstHashEntry
-argument_list|(
-operator|&
-name|fileTable
-argument_list|,
-operator|&
-name|search
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|entryPtr
-condition|)
-block|{
-name|ckfree
-argument_list|(
-name|Tcl_GetHashValue
-argument_list|(
-name|entryPtr
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|entryPtr
-operator|=
-name|Tcl_NextHashEntry
-argument_list|(
-operator|&
-name|search
-argument_list|)
-expr_stmt|;
-block|}
 name|Tcl_DeleteHashTable
 argument_list|(
 operator|&
 name|fileTable
 argument_list|)
+expr_stmt|;
+name|initialized
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

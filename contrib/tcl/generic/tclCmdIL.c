@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCmdIL.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	I through L.  It contains only commands in the generic core  *	(i.e. those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdIL.c 1.119 96/03/22 12:10:14  */
+comment|/*   * tclCmdIL.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	I through L.  It contains only commands in the generic core  *	(i.e. those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdIL.c 1.120 96/07/10 17:16:03  */
 end_comment
 
 begin_include
@@ -5187,6 +5187,13 @@ block|}
 comment|/*      * Chop off trailing spaces.      */
 while|while
 condition|(
+operator|(
+name|end
+operator|!=
+name|begin
+operator|)
+operator|&&
+operator|(
 name|isspace
 argument_list|(
 name|UCHAR
@@ -5198,6 +5205,29 @@ literal|1
 index|]
 argument_list|)
 argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|end
+operator|-
+literal|1
+operator|)
+operator|==
+name|begin
+operator|)
+operator|||
+operator|(
+name|end
+index|[
+operator|-
+literal|2
+index|]
+operator|!=
+literal|'\\'
+operator|)
+operator|)
 condition|)
 block|{
 name|end
@@ -5730,7 +5760,7 @@ name|result
 return|;
 block|}
 block|}
-comment|/*      * Add the elements before "first" to the result.  Drop any terminating      * white space, since a separator will be added below, if needed.      */
+comment|/*      * Add the elements before "first" to the result. Remove any      * trailing white space, to make the result look as clean as      * possible (this matters primarily if the replacement string is      * empty).      */
 while|while
 condition|(
 operator|(
@@ -5754,6 +5784,31 @@ literal|1
 index|]
 argument_list|)
 argument_list|)
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|p1
+operator|-
+literal|1
+operator|)
+operator|==
+name|argv
+index|[
+literal|1
+index|]
+operator|)
+operator|||
+operator|(
+name|p1
+index|[
+operator|-
+literal|2
+index|]
+operator|!=
+literal|'\\'
+operator|)
 operator|)
 condition|)
 block|{

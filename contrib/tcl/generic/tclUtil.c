@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUtil.c --  *  *	This file contains utility procedures that are used by many Tcl  *	commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUtil.c 1.112 96/02/15 11:42:52  */
+comment|/*   * tclUtil.c --  *  *	This file contains utility procedures that are used by many Tcl  *	commands.  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUtil.c 1.114 96/06/06 13:48:58  */
 end_comment
 
 begin_include
@@ -2720,27 +2720,6 @@ operator|->
 name|freeProc
 operator|=
 literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|freeProc
-operator|==
-name|TCL_DYNAMIC
-condition|)
-block|{
-name|iPtr
-operator|->
-name|result
-operator|=
-name|string
-expr_stmt|;
-name|iPtr
-operator|->
-name|freeProc
-operator|=
-name|TCL_DYNAMIC
 expr_stmt|;
 block|}
 elseif|else

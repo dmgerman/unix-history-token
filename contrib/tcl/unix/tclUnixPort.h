@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclUnixPort.h --  *  *	This header file handles porting issues that occur because  *	of differences between systems.  It reads in UNIX-related  *	header files and sets up UNIX-related macros for Tcl's UNIX  *	core.  It should be the only file that contains #ifdefs to  *	handle different flavors of UNIX.  This file sets up the  *	union of all UNIX-related things needed by any of the Tcl  *	core files.  This file depends on configuration #defines such  *	as NO_DIRENT_H that are set up by the "configure" script.  *  *	Much of the material in this file was originally contributed  *	by Karl Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPort.h 1.33 96/03/25 17:15:21  */
+comment|/*  * tclUnixPort.h --  *  *	This header file handles porting issues that occur because  *	of differences between systems.  It reads in UNIX-related  *	header files and sets up UNIX-related macros for Tcl's UNIX  *	core.  It should be the only file that contains #ifdefs to  *	handle different flavors of UNIX.  This file sets up the  *	union of all UNIX-related things needed by any of the Tcl  *	core files.  This file depends on configuration #defines such  *	as NO_DIRENT_H that are set up by the "configure" script.  *  *	Much of the material in this file was originally contributed  *	by Karl Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPort.h 1.34 96/07/23 16:17:47  */
 end_comment
 
 begin_ifndef
@@ -1623,6 +1623,38 @@ name|strtod
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * The following macros define time related functions in terms of  * standard Unix routines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TclpGetDate
+parameter_list|(
+name|t
+parameter_list|,
+name|u
+parameter_list|)
+value|((u) ? gmtime((t)) : localtime((t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TclStrftime
+parameter_list|(
+name|s
+parameter_list|,
+name|m
+parameter_list|,
+name|f
+parameter_list|,
+name|t
+parameter_list|)
+value|(strftime((s),(m),(f),(t)))
+end_define
 
 begin_endif
 endif|#

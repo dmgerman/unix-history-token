@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCmdMZ.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	M to Z.  It contains only commands in the generic core (i.e.  *	those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdMZ.c 1.65 96/02/09 14:59:52  */
+comment|/*   * tclCmdMZ.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	M to Z.  It contains only commands in the generic core (i.e.  *	those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1994-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdMZ.c 1.66 96/07/23 16:15:55  */
 end_comment
 
 begin_include
@@ -8373,7 +8373,7 @@ return|return
 name|TCL_ERROR
 return|;
 block|}
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|start
@@ -8449,7 +8449,7 @@ name|result
 return|;
 block|}
 block|}
-name|TclGetTime
+name|TclpGetTime
 argument_list|(
 operator|&
 name|stop
