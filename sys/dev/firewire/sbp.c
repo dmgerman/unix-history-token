@@ -10180,7 +10180,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|", %x:%d"
+literal|", %tx:%zd"
 argument_list|,
 name|segments
 index|[
@@ -10240,7 +10240,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"sbp_execute_ocb: warning, "
-literal|"segment length(%d) is less than 16."
+literal|"segment length(%zd) is less than 16."
 literal|"(seg=%d/%d)\n"
 argument_list|,
 name|s
@@ -10444,7 +10444,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"orb: 0x%x next: 0x%x, flags %x\n"
+literal|"orb: 0x%tx next: 0x%x, flags %x\n"
 argument_list|,
 name|vtophys
 argument_list|(
@@ -10714,7 +10714,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_enqueue_ocb orb=0x%x in physical memory\n"
+literal|"sbp_enqueue_ocb orb=0x%tx in physical memory\n"
 argument_list|,
 name|vtophys
 argument_list|(
@@ -10832,7 +10832,7 @@ literal|1
 argument_list|)
 name|printf
 argument_list|(
-literal|"linking chain 0x%x -> 0x%x\n"
+literal|"linking chain 0x%tx -> 0x%tx\n"
 argument_list|,
 name|vtophys
 argument_list|(

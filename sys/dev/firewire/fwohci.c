@@ -13351,7 +13351,7 @@ name|OHCI_KEY_MASK
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%08x %s %s %s %s %5d %08x %08x %04x:%04x"
+literal|"%08tx %s %s %s %s %5d %08x %08x %04x:%04x"
 argument_list|,
 name|vtophys
 argument_list|(
