@@ -2650,8 +2650,8 @@ operator|->
 name|sp
 operator|->
 name|state
-operator|!=
-name|VALID
+operator|==
+name|IO
 condition|)
 continue|continue;
 if|if
