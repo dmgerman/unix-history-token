@@ -9486,6 +9486,25 @@ operator|->
 name|dc_stat_ch
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DC_IS_ADMTEK
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Set automatic TX underrun recovery for the ADMtek chips 		 */
+name|DC_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|DC_AL_CR
+argument_list|,
+name|DC_AL_CR_ATUR
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Tell the upper layer(s) we support long frames. 	 */
 name|ifp
 operator|->
