@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vfsops.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -126,6 +132,17 @@ comment|/* size of mini-root in bytes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|int
+name|mfs_minor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* used for building internal dev_t */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|struct
 name|vnodeops
@@ -174,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|ROOTNAME
-value|"root_device"
+value|"mfs_root"
 end_define
 
 begin_macro
@@ -288,6 +305,12 @@ name|v_op
 operator|=
 operator|&
 name|mfs_vnodeops
+expr_stmt|;
+name|rootvp
+operator|->
+name|v_tag
+operator|=
+name|VT_MFS
 expr_stmt|;
 name|mfsp
 operator|->
@@ -644,6 +667,16 @@ name|fs
 operator|->
 name|fs_size
 expr_stmt|;
+name|rootdev
+operator|=
+name|makedev
+argument_list|(
+literal|255
+argument_list|,
+name|mfs_minor
+operator|++
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|mfs_rootsize
@@ -723,10 +756,6 @@ name|struct
 name|mfsnode
 modifier|*
 name|mfsp
-decl_stmt|;
-specifier|static
-name|int
-name|mfs_minor
 decl_stmt|;
 name|u_int
 name|size
