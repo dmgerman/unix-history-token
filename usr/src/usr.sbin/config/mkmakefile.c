@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.4 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,7 +84,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Lookup a file, by make.  */
+comment|/*  * Lookup a file, by name.  */
 end_comment
 
 begin_function
@@ -900,6 +900,9 @@ name|struct
 name|file_list
 modifier|*
 name|tp
+decl_stmt|,
+modifier|*
+name|pf
 decl_stmt|;
 specifier|register
 name|struct
@@ -1135,7 +1138,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|tp
+name|pf
 operator|=
 name|fl_lookup
 argument_list|(
@@ -1144,13 +1147,13 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|tp
+name|pf
 operator|->
 name|f_type
 operator|!=
 name|INVISIBLE
 operator|||
-name|tp
+name|pf
 operator|->
 name|f_flags
 operator|)
@@ -1673,6 +1676,23 @@ name|f_needs
 operator|=
 name|needs
 expr_stmt|;
+if|if
+condition|(
+name|pf
+operator|&&
+name|pf
+operator|->
+name|f_type
+operator|==
+name|INVISIBLE
+condition|)
+name|pf
+operator|->
+name|f_flags
+operator|=
+literal|1
+expr_stmt|;
+comment|/* mark as duplicate */
 goto|goto
 name|next
 goto|;
