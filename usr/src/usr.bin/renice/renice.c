@@ -87,14 +87,14 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|1
+literal|2
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: renice priority [ who ... ]\n"
+literal|"usage: renice priority who ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -136,24 +136,6 @@ condition|)
 name|prio
 operator|=
 name|PRIO_MIN
-expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|==
-literal|0
-condition|)
-name|exit
-argument_list|(
-name|donice
-argument_list|(
-name|which
-argument_list|,
-literal|0
-argument_list|,
-name|prio
-argument_list|)
-argument_list|)
 expr_stmt|;
 for|for
 control|(
