@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * XXX replace all the checks on object validity with  * calls to valid<object>   */
+comment|/*  * XXX replace all the checks on object validity with  * calls to valid<object>  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.8 1999/03/23 02:46:39 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumioctl.c,v 1.8 1999/03/23 02:46:39 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -464,11 +464,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -514,11 +514,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -564,11 +564,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -614,11 +614,11 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* can't do it */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -679,7 +679,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 comment|/* plex doesn't exist */
 operator|||
@@ -696,7 +696,7 @@ operator|)
 condition|)
 comment|/* or it doesn't have this many subdisks */
 return|return
-name|EFAULT
+name|ENXIO
 return|;
 comment|/* bang */
 name|bcopy
@@ -837,7 +837,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* if the volumes are not active */
-comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow  		 */
+comment|/* 		 * Note the open count.  We may be called from v, so we'll be open. 		 * Keep the count so we don't underflow 		 */
 name|free_vinum
 argument_list|(
 literal|1
@@ -1012,7 +1012,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 operator|)
 comment|/* plex doesn't exist */
 operator|||
@@ -1294,7 +1294,7 @@ name|unsigned
 operator|)
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 comment|/* not a valid volume */
 return|return
@@ -1343,7 +1343,7 @@ name|data
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it.  	     */
+comment|/* 	     * Care!  DIOCGPART returns *pointers* to 	     * the caller, so we need to store this crap as well. 	     * And yes, we need it. 	     */
 case|case
 name|DIOCGPART
 case|:
@@ -1498,7 +1498,7 @@ name|driveno
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 operator|)
 operator|&&
 operator|(
@@ -1508,8 +1508,8 @@ name|driveno
 index|]
 operator|.
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 operator|)
 condition|)
 return|return
@@ -1562,7 +1562,7 @@ name|sdno
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 operator|)
 operator|&&
 operator|(
@@ -1572,8 +1572,8 @@ name|sdno
 index|]
 operator|.
 name|state
-operator|!=
-name|sd_unallocated
+operator|>
+name|sd_referenced
 operator|)
 condition|)
 return|return
@@ -1626,7 +1626,7 @@ name|plexno
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 operator|)
 operator|&&
 operator|(
@@ -1636,8 +1636,8 @@ name|plexno
 index|]
 operator|.
 name|state
-operator|!=
-name|plex_unallocated
+operator|>
+name|plex_referenced
 operator|)
 condition|)
 return|return
@@ -1690,7 +1690,7 @@ name|volno
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 operator|)
 operator|&&
 operator|(
@@ -1700,8 +1700,8 @@ name|volno
 index|]
 operator|.
 name|state
-operator|!=
-name|volume_unallocated
+operator|>
+name|volume_uninit
 operator|)
 condition|)
 return|return
@@ -1776,7 +1776,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|drives_used
+name|drives_allocated
 condition|)
 block|{
 name|struct
@@ -1797,8 +1797,8 @@ condition|(
 name|drive
 operator|->
 name|state
-operator|!=
-name|drive_unallocated
+operator|>
+name|drive_referenced
 condition|)
 block|{
 name|drive
@@ -1856,7 +1856,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|subdisks_used
+name|subdisks_allocated
 condition|)
 block|{
 name|struct
@@ -1877,8 +1877,8 @@ condition|(
 name|sd
 operator|->
 name|state
-operator|!=
-name|sd_unallocated
+operator|>
+name|sd_referenced
 condition|)
 block|{
 name|sd
@@ -1937,7 +1937,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|plexes_used
+name|plexes_allocated
 condition|)
 block|{
 name|struct
@@ -1958,8 +1958,8 @@ condition|(
 name|plex
 operator|->
 name|state
-operator|!=
-name|plex_unallocated
+operator|>
+name|plex_referenced
 condition|)
 block|{
 name|plex
@@ -2031,7 +2031,7 @@ name|index
 operator|<
 name|vinum_conf
 operator|.
-name|volumes_used
+name|volumes_allocated
 condition|)
 block|{
 name|struct
@@ -2052,8 +2052,8 @@ condition|(
 name|vol
 operator|->
 name|state
-operator|!=
-name|volume_unallocated
+operator|>
+name|volume_uninit
 condition|)
 block|{
 name|vol
@@ -3089,7 +3089,7 @@ operator|)
 condition|)
 block|{
 comment|/* and this is the last plex */
-comment|/* 		   * XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex  		 */
+comment|/* 		   * XXX As elsewhere, check whether we will lose 		   * mapping by removing this plex 		 */
 name|reply
 operator|->
 name|error
