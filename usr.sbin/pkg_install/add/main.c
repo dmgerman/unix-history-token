@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.18 1998/09/14 19:22:59 jkh Exp $"
+literal|"$Id: main.c,v 1.19 1999/01/17 01:22:54 billf Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,6 +826,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getpackagesite
@@ -852,9 +853,7 @@ operator|==
 literal|300005
 condition|)
 return|return
-operator|(
 literal|"packages-3.0/Latest/"
-operator|)
 return|;
 elseif|else
 if|if
@@ -862,13 +861,13 @@ condition|(
 literal|30004
 operator|>
 name|reldate
+operator|&&
+name|reldate
 operator|>=
 literal|300000
 condition|)
 return|return
-operator|(
 literal|"packages-current-aout/Latest/"
-operator|)
 return|;
 elseif|else
 if|if
@@ -877,30 +876,19 @@ literal|30004
 operator|<
 name|reldate
 condition|)
-block|{
-if|if
-condition|(
+return|return
+operator|!
 name|strcmp
 argument_list|(
 name|binform
 argument_list|,
 literal|"elf"
 argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-literal|"packages-current-aout/Latest/"
-operator|)
-return|;
-else|else
-return|return
-operator|(
+condition|?
 literal|"packages-current/Latest/"
-operator|)
+else|:
+literal|"packages-current-aout/Latest"
 return|;
-block|}
 return|return
 operator|(
 literal|0
