@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.81 1998/05/21 21:46:56 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.82 1998/05/21 22:55:08 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -4254,14 +4254,8 @@ operator|->
 name|Timer
 argument_list|)
 expr_stmt|;
-name|bundle_SetTtyCommandMode
+name|log_SetTtyCommandMode
 argument_list|(
-name|modem
-operator|->
-name|dl
-operator|->
-name|bundle
-argument_list|,
 name|modem
 operator|->
 name|dl
@@ -5467,14 +5461,8 @@ name|rbuff
 condition|)
 block|{
 comment|/* Get rid of the bit before the HDLC header */
-name|bundle_WriteTermPrompt
+name|log_WritePrompts
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
-name|bundle
-argument_list|,
 name|p
 operator|->
 name|dl
@@ -5486,14 +5474,8 @@ operator|-
 name|rbuff
 argument_list|)
 expr_stmt|;
-name|bundle_WriteTermPrompt
+name|log_WritePrompts
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
-name|bundle
-argument_list|,
 name|p
 operator|->
 name|dl
@@ -5517,14 +5499,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|bundle_WriteTermPrompt
+name|log_WritePrompts
 argument_list|(
-name|p
-operator|->
-name|dl
-operator|->
-name|bundle
-argument_list|,
 name|p
 operator|->
 name|dl
@@ -5740,14 +5716,6 @@ operator|.
 name|Write
 operator|=
 name|modem_DescriptorWrite
-expr_stmt|;
-name|p
-operator|->
-name|desc
-operator|.
-name|next
-operator|=
-name|NULL
 expr_stmt|;
 name|p
 operator|->

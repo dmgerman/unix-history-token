@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.121.2.60 1998/05/15 18:21:38 brian Exp $  *  *	TODO:  */
+comment|/*  *			User Process PPP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: main.c,v 1.123 1998/05/21 21:46:40 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1475,8 +1475,6 @@ name|bundle_Create
 argument_list|(
 name|TUN_PREFIX
 argument_list|,
-name|prompt
-argument_list|,
 name|mode
 argument_list|)
 operator|)
@@ -1499,6 +1497,32 @@ expr_stmt|;
 return|return
 name|EX_START
 return|;
+block|}
+if|if
+condition|(
+name|prompt
+condition|)
+block|{
+name|prompt
+operator|->
+name|bundle
+operator|=
+name|bundle
+expr_stmt|;
+comment|/* couldn't do it earlier */
+name|prompt_Printf
+argument_list|(
+name|prompt
+argument_list|,
+literal|"Using interface: %s\n"
+argument_list|,
+name|bundle
+operator|->
+name|ifp
+operator|.
+name|Name
+argument_list|)
+expr_stmt|;
 block|}
 name|SignalBundle
 operator|=
@@ -2179,6 +2203,7 @@ expr_stmt|;
 name|sig_Handle
 argument_list|()
 expr_stmt|;
+comment|/* All our datalinks, the tun device and the MP socket */
 name|descriptor_UpdateSet
 argument_list|(
 operator|&
@@ -2199,6 +2224,7 @@ operator|&
 name|nfds
 argument_list|)
 expr_stmt|;
+comment|/* All our prompts and the diagnostic socket */
 name|descriptor_UpdateSet
 argument_list|(
 operator|&
@@ -2209,11 +2235,9 @@ argument_list|,
 operator|&
 name|rfds
 argument_list|,
-operator|&
-name|wfds
+name|NULL
 argument_list|,
-operator|&
-name|efds
+name|NULL
 argument_list|,
 operator|&
 name|nfds
