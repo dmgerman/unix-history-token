@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *	$Id: dgm.c,v 1.10 1999/04/28 10:51:58 dt Exp $  *  *  This driver and the associated header files support the ISA PC/Xem  *  Digiboards.  Its evolutionary roots are described below.  *  Jack O'Neill<jack@diamond.xtalwind.net>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
+comment|/*-  *	$Id: dgm.c,v 1.11 1999/05/02 21:39:52 peter Exp $  *  *  This driver and the associated header files support the ISA PC/Xem  *  Digiboards.  Its evolutionary roots are described below.  *  Jack O'Neill<jack@diamond.xtalwind.net>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
 end_comment
 
 begin_include
@@ -1993,13 +1993,61 @@ operator|->
 name|port
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|v
+operator|&
+literal|0x1
+operator|)
+condition|)
+block|{
+name|int
+name|second
+decl_stmt|;
+name|outb
+argument_list|(
+name|sc
+operator|->
+name|port
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|second
+operator|=
+name|inb
+argument_list|(
+name|sc
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"dgm%d: PC/Xem\n"
+literal|"dgm%d: PC/Xem (type %d, %d)\n"
 argument_list|,
 name|dev
 operator|->
 name|id_unit
+argument_list|,
+name|v
+argument_list|,
+name|second
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|printf
+argument_list|(
+literal|"dgm%d: PC/Xem (type %d)\n"
+argument_list|,
+name|dev
+operator|->
+name|id_unit
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 name|sc
@@ -3471,7 +3519,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* HERE */
 name|port
 operator|->
 name|txptr
@@ -10199,7 +10246,6 @@ name|tin
 operator|&
 name|wmask
 expr_stmt|;
-comment|/*HERE*/
 do|do
 block|{
 name|tail
