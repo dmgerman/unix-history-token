@@ -131,9 +131,9 @@ comment|/* consecutive dup acks recd */
 name|struct
 name|tcptemp
 modifier|*
-name|t_template
+name|unused
 decl_stmt|;
-comment|/* skeletal packet for transmit */
+comment|/* unused */
 name|struct
 name|callout
 modifier|*
@@ -1562,12 +1562,32 @@ begin_decl_stmt
 name|struct
 name|tcptemp
 modifier|*
-name|tcp_template
+name|tcp_maketemplate
 name|__P
 argument_list|(
 operator|(
 expr|struct
 name|tcpcb
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tcp_fillheaders
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|tcpcb
+operator|*
+operator|,
+name|void
+operator|*
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)
