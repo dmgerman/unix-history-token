@@ -768,7 +768,7 @@ name|ki_tracep
 operator|=
 name|proc
 operator|.
-name|p_tracep
+name|p_tracevp
 expr_stmt|;
 name|kp
 operator|->
