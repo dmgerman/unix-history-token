@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.10 (Berkeley) %G%"
+literal|"@(#)popen.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -287,9 +293,12 @@ index|[
 literal|1
 index|]
 operator|!=
-literal|1
+name|STDOUT_FILENO
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|pdes
@@ -297,7 +306,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-literal|1
+name|STDOUT_FILENO
 argument_list|)
 expr_stmt|;
 operator|(
@@ -333,9 +342,12 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|0
+name|STDIN_FILENO
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|dup2
 argument_list|(
 name|pdes
@@ -343,7 +355,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|0
+name|STDIN_FILENO
 argument_list|)
 expr_stmt|;
 operator|(
