@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.10 (Berkeley) %G%"
+literal|"@(#)main.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1093,16 +1093,6 @@ operator|&
 name|tc
 argument_list|)
 expr_stmt|;
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|TIOCSETD
-argument_list|,
-operator|&
-name|ldisp
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|HC
@@ -1411,6 +1401,12 @@ name|env
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+comment|/*  			 * this is what login was doing anyway. 			 * soon we rewrite getty completely. 			 */
+name|set_ttydefaults
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|execle
