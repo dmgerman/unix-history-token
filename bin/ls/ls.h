@@ -90,6 +90,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_nonprint
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show unprintables as ? */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_sectime
 decl_stmt|;
 end_decl_stmt
