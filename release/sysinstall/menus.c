@@ -31,6 +31,18 @@ name|SrcDists
 operator|=
 name|DIST_SRC_ALL
 expr_stmt|;
+name|CRYPTODists
+operator||=
+operator|(
+name|DIST_CRYPTO_SCRYPTO
+operator||
+name|DIST_CRYPTO_SSECURE
+operator||
+name|DIST_CRYPTO_SKERBEROS4
+operator||
+name|DIST_CRYPTO_SKERBEROS5
+operator|)
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
 operator||
@@ -58,58 +70,18 @@ name|SrcDists
 operator|=
 literal|0
 expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|setCRYPTO
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|Dists
-operator||=
-name|DIST_CRYPTO
-expr_stmt|;
 name|CRYPTODists
-operator|=
-name|DIST_CRYPTO_ALL
-expr_stmt|;
-return|return
-name|DITEM_SUCCESS
-operator||
-name|DITEM_REDRAW
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|clearCRYPTO
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|self
-parameter_list|)
-block|{
-name|Dists
 operator|&=
 operator|~
-name|DIST_CRYPTO
-expr_stmt|;
-name|CRYPTODists
-operator|=
-literal|0
+operator|(
+name|DIST_CRYPTO_SCRYPTO
+operator||
+name|DIST_CRYPTO_SSECURE
+operator||
+name|DIST_CRYPTO_SKERBEROS4
+operator||
+name|DIST_CRYPTO_SKERBEROS5
+operator|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
@@ -308,7 +280,7 @@ name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|(_IS_SET(dist, _DIST_DEVELOPER | extra) || \ 	_IS_SET(dist, _DIST_DEVELOPER | DIST_CRYPTO | extra))
+value|(_IS_SET(dist, _DIST_DEVELOPER | extra) || \ 	_IS_SET(dist, _DIST_DEVELOPER | extra))
 end_define
 
 begin_define
@@ -320,7 +292,7 @@ name|dist
 parameter_list|,
 name|extra
 parameter_list|)
-value|(_IS_SET(dist, _DIST_USER | extra) || \ 	_IS_SET(dist, _DIST_USER | DIST_CRYPTO | extra))
+value|(_IS_SET(dist, _DIST_USER | extra) || \ 	_IS_SET(dist, _DIST_USER | extra))
 end_define
 
 begin_function
@@ -510,6 +482,11 @@ name|Dists
 operator|==
 name|DIST_ALL
 operator|&&
+name|CRYPTODists
+operator|==
+name|DIST_CRYPTO_ALL
+operator|&&
+expr|\
 name|_IS_SET
 argument_list|(
 name|SrcDists
@@ -540,22 +517,6 @@ name|XF86FontDists
 argument_list|,
 name|DIST_XF86_FONTS_ALL
 argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|CRYPTOFlagCheck
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-return|return
-name|CRYPTODists
 return|;
 block|}
 end_function
@@ -749,21 +710,6 @@ name|NULL
 block|,
 operator|&
 name|MenuSubDistributions
-block|}
-block|,
-block|{
-literal|" Dists, CRYPTO"
-block|,
-literal|"Encryption distribution menu."
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuCRYPTODistributions
 block|}
 block|,
 block|{
@@ -1323,6 +1269,21 @@ block|,
 name|NULL
 block|,
 literal|"router_enable"
+block|}
+block|,
+block|{
+literal|" Security"
+block|,
+literal|"Select a default system security profile."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSecurityProfile
 block|}
 block|,
 block|{
@@ -2283,272 +2244,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|DMenu
-name|MenuXF86Config
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Please select the XFree86 configuration tool you want to use."
-block|,
-ifdef|#
-directive|ifdef
-name|__alpha__
-literal|"Due to problems with the VGA16 server right now, only the\n"
-literal|"text-mode configuration tool (xf86config) is currently supported."
-block|,
-else|#
-directive|else
-literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
-literal|"VGA16 server in order to work (should have been selected by\n"
-literal|"default, but if you de-selected it then you won't be able to\n"
-literal|"use this fancy setup tool).  The second tool, xf86config, is\n"
-literal|"a more simplistic shell-script based tool and less friendly to\n"
-literal|"new users, but it may work in situations where the fancier one\n"
-literal|"does not."
-block|,
-endif|#
-directive|endif
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-ifdef|#
-directive|ifdef
-name|__alpha__
-block|{
-literal|"2 xf86config"
-block|,
-literal|"Shell-script based XFree86 configuration tool."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86config"
-block|}
-block|,
-else|#
-directive|else
-block|{
-literal|"2 XF86Setup"
-block|,
-literal|"Fully graphical XFree86 configuration tool."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=XF86Setup"
-block|}
-block|,
-block|{
-literal|"3 xf86config"
-block|,
-literal|"Shell-script based XFree86 configuration tool."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=xf86config"
-block|}
-block|,
-block|{
-literal|"4 XF98Setup"
-block|,
-literal|"Fully graphical XFree86 configuration tool (PC98)."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_XF86_CONFIG
-literal|"=XF98Setup"
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|"D XDesktop"
-block|,
-literal|"X already set up, just do desktop configuration."
-block|,
-name|NULL
-block|,
-name|dmenuSubmenu
-block|,
-name|NULL
-block|,
-operator|&
-name|MenuXDesktops
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuXDesktops
-init|=
-block|{
-name|DMENU_NORMAL_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Please select the default X desktop to use."
-block|,
-literal|"By default, XFree86 comes with a fairly vanilla desktop which\n"
-literal|"is based around the twm(1) window manager and does not offer\n"
-literal|"much in the way of features.  It does have the advantage of\n"
-literal|"being a standard part of X so you don't need to load anything\n"
-literal|"extra in order to use it.  If, however, you have access to a\n"
-literal|"reasonably full packages collection on your installation media,\n"
-literal|"you can choose any one of the following desktops as alternatives."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|NULL
-block|,
-name|dmenuExit
-block|}
-block|,
-block|{
-literal|"2 KDE"
-block|,
-literal|"The K Desktop Environment."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=kde"
-block|}
-block|,
-block|{
-literal|"3 GNOME + Afterstep"
-block|,
-literal|"GNOME + Afterstep window manager."
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=gnome"
-block|}
-block|,
-block|{
-literal|"4 GNOME + Enlightenment"
-block|,
-literal|"GNOME + The E window manager"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=enlightenment"
-block|}
-block|,
-block|{
-literal|"5 Afterstep"
-block|,
-literal|"The Afterstep window manager"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=afterstep"
-block|}
-block|,
-block|{
-literal|"6 Windowmaker"
-block|,
-literal|"The Windowmaker window manager"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=windowmaker"
-block|}
-block|,
-block|{
-literal|"7 fvwm2"
-block|,
-literal|"The fvwm2 window manager"
-block|,
-name|NULL
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_DESKSTYLE
-literal|"=fvwm2"
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
 name|MenuMediaCDROM
 init|=
 block|{
@@ -3495,6 +3190,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp5.kr.freebsd.org"
+block|}
+block|,
+block|{
+literal|"Lithuania"
+block|,
+literal|"ftp.lt.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.lt.freebsd.org"
 block|}
 block|,
 block|{
@@ -4660,15 +4370,106 @@ directive|endif
 endif|#
 directive|endif
 block|{
-literal|" CRYPTO"
+literal|" crypto"
 block|,
-literal|"Encryption code - NOT FOR EXPORT!"
+literal|"Basic encryption services"
 block|,
-name|CRYPTOFlagCheck
+name|dmenuFlagCheck
 block|,
-name|distSetCRYPTO
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_CRYPTO
+block|, }
+block|,
+if|#
+directive|if
+name|__FreeBSD__
+operator|<=
+literal|3
+block|{
+literal|" krb"
+block|,
+literal|"KerberosIV authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_KERBEROS
 block|}
 block|,
+else|#
+directive|else
+block|{
+literal|" krb4"
+block|,
+literal|"KerberosIV authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_KERBEROS4
+block|}
+block|,
+block|{
+literal|" krb5"
+block|,
+literal|"Kerberos5 authentication services"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_KERBEROS5
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|" dict"
 block|,
@@ -4894,288 +4695,6 @@ block|,
 name|x11FlagCheck
 block|,
 name|distSetXF86
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|DMenu
-name|MenuCRYPTODistributions
-init|=
-block|{
-name|DMENU_CHECKLIST_TYPE
-operator||
-name|DMENU_SELECTION_RETURNS
-block|,
-literal|"Select the encryption facilities you wish to install."
-block|,
-literal|"Please check off any special encryption distributions\n"
-literal|"you would like to install.  Please note that these services are NOT FOR\n"
-literal|"EXPORT from the United States.  For information on non-U.S. FTP\n"
-literal|"distributions of this software, please consult the release notes."
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-block|{
-block|{
-literal|"X Exit"
-block|,
-literal|"Exit this menu (returning to previous)"
-block|,
-name|checkTrue
-block|,
-name|dmenuExit
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|,
-literal|'<'
-block|}
-block|,
-block|{
-literal|"All"
-block|,
-literal|"Select all of the below"
-block|,
-name|NULL
-block|,
-name|setCRYPTO
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|"Reset"
-block|,
-literal|"Reset all of the below"
-block|,
-name|NULL
-block|,
-name|clearCRYPTO
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
-block|}
-block|,
-block|{
-literal|" crypto"
-block|,
-literal|"Basic encryption services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_CRYPTO
-block|, }
-block|,
-if|#
-directive|if
-name|__FreeBSD__
-operator|<=
-literal|3
-block|{
-literal|" krb"
-block|,
-literal|"KerberosIV authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS
-block|}
-block|,
-else|#
-directive|else
-block|{
-literal|" krb4"
-block|,
-literal|"KerberosIV authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS4
-block|}
-block|,
-block|{
-literal|" krb5"
-block|,
-literal|"Kerberos5 authentication services"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_KERBEROS5
-block|}
-block|,
-endif|#
-directive|endif
-block|{
-literal|" skrb4"
-block|,
-literal|"Sources for KerberosIV"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SKERBEROS4
-block|}
-block|,
-block|{
-literal|" skrb5"
-block|,
-literal|"Sources for Kerberos5"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SKERBEROS5
-block|}
-block|,
-block|{
-literal|" ssecure"
-block|,
-literal|"BSD encryption sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SSECURE
-block|}
-block|,
-block|{
-literal|" scrypto"
-block|,
-literal|"Contributed encryption sources"
-block|,
-name|dmenuFlagCheck
-block|,
-name|dmenuSetFlag
-block|,
-name|NULL
-block|,
-operator|&
-name|CRYPTODists
-block|,
-literal|'['
-block|,
-literal|'X'
-block|,
-literal|']'
-block|,
-name|DIST_CRYPTO_SCRYPTO
 block|}
 block|,
 block|{
@@ -5519,6 +5038,29 @@ name|DIST_SRC_SBIN
 block|}
 block|,
 block|{
+literal|" scrypto"
+block|,
+literal|"/usr/src/crypto (contrib encryption sources)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_SCRYPTO
+block|}
+block|,
+block|{
 literal|" share"
 block|,
 literal|"/usr/src/share (documents and shared files)"
@@ -5539,6 +5081,75 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_SHARE
+block|}
+block|,
+block|{
+literal|" skrb4"
+block|,
+literal|"/usr/src/kerberosIV (sources for KerberosIV)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_SKERBEROS4
+block|}
+block|,
+block|{
+literal|" skrb5"
+block|,
+literal|"/usr/src/kerberos5 (sources for Kerberos5)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_SKERBEROS5
+block|}
+block|,
+block|{
+literal|" ssecure"
+block|,
+literal|"/usr/src/secure (BSD encryption sources)"
+block|,
+name|dmenuFlagCheck
+block|,
+name|dmenuSetFlag
+block|,
+name|NULL
+block|,
+operator|&
+name|CRYPTODists
+block|,
+literal|'['
+block|,
+literal|'X'
+block|,
+literal|']'
+block|,
+name|DIST_CRYPTO_SSECURE
 block|}
 block|,
 block|{
@@ -5631,6 +5242,272 @@ block|,
 literal|']'
 block|,
 name|DIST_SRC_USBIN
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuXF86Config
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Please select the XFree86 configuration tool you want to use."
+block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+literal|"Due to problems with the VGA16 server right now, only the\n"
+literal|"text-mode configuration tool (xf86config) is currently supported."
+block|,
+else|#
+directive|else
+literal|"The first tool, XF86Setup, is fully graphical and requires the\n"
+literal|"VGA16 server in order to work (should have been selected by\n"
+literal|"default, but if you de-selected it then you won't be able to\n"
+literal|"use this fancy setup tool).  The second tool, xf86config, is\n"
+literal|"a more simplistic shell-script based tool and less friendly to\n"
+literal|"new users, but it may work in situations where the fancier one\n"
+literal|"does not."
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|__alpha__
+block|{
+literal|"2 xf86config"
+block|,
+literal|"Shell-script based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86config"
+block|}
+block|,
+else|#
+directive|else
+block|{
+literal|"2 XF86Setup"
+block|,
+literal|"Fully graphical XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=XF86Setup"
+block|}
+block|,
+block|{
+literal|"3 xf86config"
+block|,
+literal|"Shell-script based XFree86 configuration tool."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=xf86config"
+block|}
+block|,
+block|{
+literal|"4 XF98Setup"
+block|,
+literal|"Fully graphical XFree86 configuration tool (PC98)."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_XF86_CONFIG
+literal|"=XF98Setup"
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+literal|"D XDesktop"
+block|,
+literal|"X already set up, just do desktop configuration."
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuXDesktops
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuXDesktops
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Please select the default X desktop to use."
+block|,
+literal|"By default, XFree86 comes with a fairly vanilla desktop which\n"
+literal|"is based around the twm(1) window manager and does not offer\n"
+literal|"much in the way of features.  It does have the advantage of\n"
+literal|"being a standard part of X so you don't need to load anything\n"
+literal|"extra in order to use it.  If, however, you have access to a\n"
+literal|"reasonably full packages collection on your installation media,\n"
+literal|"you can choose any one of the following desktops as alternatives."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|dmenuExit
+block|}
+block|,
+block|{
+literal|"2 KDE"
+block|,
+literal|"The K Desktop Environment."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=kde"
+block|}
+block|,
+block|{
+literal|"3 GNOME + Afterstep"
+block|,
+literal|"GNOME + Afterstep window manager."
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=gnome"
+block|}
+block|,
+block|{
+literal|"4 GNOME + Enlightenment"
+block|,
+literal|"GNOME + The E window manager"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=enlightenment"
+block|}
+block|,
+block|{
+literal|"5 Afterstep"
+block|,
+literal|"The Afterstep window manager"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=afterstep"
+block|}
+block|,
+block|{
+literal|"6 Windowmaker"
+block|,
+literal|"The Windowmaker window manager"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=windowmaker"
+block|}
+block|,
+block|{
+literal|"7 fvwm2"
+block|,
+literal|"The fvwm2 window manager"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_DESKSTYLE
+literal|"=fvwm2"
 block|}
 block|,
 block|{
@@ -7679,6 +7556,21 @@ name|MenuNetworking
 block|}
 block|,
 block|{
+literal|" Security"
+block|,
+literal|"Select default system security profile"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuSecurityProfile
+block|}
+block|,
+block|{
 literal|" Startup"
 block|,
 literal|"Configure system startup options"
@@ -8184,6 +8076,20 @@ literal|"gateway_enable=YES"
 block|}
 block|,
 block|{
+literal|" inetd"
+block|,
+literal|"This machine wants to run the inet daemon"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"inetd_enable=YES"
+block|}
+block|,
+block|{
 literal|" NFS client"
 block|,
 literal|"This machine will be an NFS client"
@@ -8246,6 +8152,20 @@ block|,
 name|NULL
 block|,
 literal|"pcnfsd"
+block|}
+block|,
+block|{
+literal|" portmap"
+block|,
+literal|"This machine wants to run the portmapper daemon"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"portmap_enable=YES"
 block|}
 block|,
 block|{
@@ -8349,7 +8269,7 @@ block|{
 block|{
 literal|"None"
 block|,
-literal|"No ntp server"
+literal|"No NTP server"
 block|,
 name|dmenuVarsCheck
 block|,
@@ -9991,6 +9911,74 @@ block|,
 name|NULL
 block|,
 name|userAddGroup
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DMenu
+name|MenuSecurityProfile
+init|=
+block|{
+name|DMENU_NORMAL_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Default system security profile"
+block|,
+literal|"Each item in this list will set what it considers to\n"
+literal|"be \"appropriate\" values in that category for various\n"
+literal|"security-related knobs in /etc/rc.conf."
+block|,
+literal|"Select a canned security profile."
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"X Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|NULL
+block|,
+name|configSecurityModerate
+block|}
+block|,
+block|{
+literal|"Low"
+block|,
+literal|"Fairly wide-open (little) security."
+block|,
+name|NULL
+block|,
+name|configSecurityLiberal
+block|}
+block|,
+block|{
+literal|"Medium"
+block|,
+literal|"Moderate security settings [DEFAULT]."
+block|,
+name|NULL
+block|,
+name|configSecurityModerate
+block|}
+block|,
+block|{
+literal|"High"
+block|,
+literal|"Very restrictive security settings."
+block|,
+name|NULL
+block|,
+name|configSecurityFascist
 block|}
 block|,
 block|{
