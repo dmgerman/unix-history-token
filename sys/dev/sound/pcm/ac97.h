@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|AC97_MUTE
-value|0x8000
+value|0x8080
 end_define
 
 begin_define
