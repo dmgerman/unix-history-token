@@ -322,7 +322,8 @@ specifier|static
 name|int
 name|max_speed
 init|=
-literal|2
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -8441,7 +8442,9 @@ argument|error;  SBP_DEBUG(
 literal|0
 argument|) 	printf(
 literal|"sbp_attach (cold=%d)\n"
-argument|, cold); END_DEBUG  	if (cold) 		sbp_cold ++; 	sbp = ((struct sbp_softc *)device_get_softc(dev)); 	bzero(sbp, sizeof(struct sbp_softc)); 	sbp->fd.dev = dev; 	sbp->fd.fc = device_get_ivars(dev); 	error = bus_dma_tag_create(
+argument|, cold); END_DEBUG  	if (cold) 		sbp_cold ++; 	sbp = ((struct sbp_softc *)device_get_softc(dev)); 	bzero(sbp, sizeof(struct sbp_softc)); 	sbp->fd.dev = dev; 	sbp->fd.fc = device_get_ivars(dev);  	if (max_speed<
+literal|0
+argument|) 		max_speed = sbp->fd.fc->speed;  	error = bus_dma_tag_create(
 comment|/*parent*/
 argument|sbp->fd.fc->dmat,
 comment|/* XXX shoud be 4 for sane backend? */
