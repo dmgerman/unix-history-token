@@ -1233,6 +1233,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PS_ASTPENDING
+value|0x00400
+end_define
+
+begin_comment
+comment|/* Process has a pending ast. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PS_NEEDRESCHED
+value|0x00800
+end_define
+
+begin_comment
+comment|/* Process needs to yield. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_MAGIC
 value|0xbeefface
 end_define
@@ -1469,6 +1491,72 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|need_resched
+parameter_list|()
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	curproc->p_sflag |= PS_NEEDRESCHED;				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|resched_wanted
+parameter_list|()
+value|(curproc->p_sflag& PS_NEEDRESCHED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clear_resched
+parameter_list|()
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	curproc->p_sflag&= ~PS_NEEDRESCHED;				\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|aston
+parameter_list|()
+value|signotify(CURPROC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|signotify
+parameter_list|(
+name|p
+parameter_list|)
+value|do {						\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	(p)->p_sflag |= PS_ASTPENDING;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|astpending
+parameter_list|()
+value|(curproc->p_sflag& PS_ASTPENDING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|astoff
+parameter_list|()
+value|do {							\ 	mtx_assert(&sched_lock, MA_OWNED);				\ 	CURPROC->p_sflag&= ~PS_ASTPENDING;				\ } while (0)
+end_define
 
 begin_comment
 comment|/* Handy macro to determine if p1 can mangle p2. */

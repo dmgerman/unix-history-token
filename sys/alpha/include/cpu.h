@@ -62,12 +62,32 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CLKF_USERMODE
+name|TRAPF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|(((framep)->cf_tf.tf_regs[FRAME_PS]& ALPHA_PSL_USERMODE) != 0)
+value|(((framep)->tf_regs[FRAME_PS]& ALPHA_PSL_USERMODE) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRAPF_PC
+parameter_list|(
+name|framep
+parameter_list|)
+value|((framep)->tf_regs[FRAME_PC])
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLKF_USERMODE
+parameter_list|(
+name|framep
+parameter_list|)
+value|TRAPF_USERMODE(&(framep)->cf_tf)
 end_define
 
 begin_define
@@ -77,7 +97,7 @@ name|CLKF_PC
 parameter_list|(
 name|framep
 parameter_list|)
-value|((framep)->cf_tf.tf_regs[FRAME_PC])
+value|TRAPF_PC(&(framep)->cf_tf)
 end_define
 
 begin_define
@@ -91,27 +111,7 @@ value|(curproc->p_intr_nesting_level>= 2)
 end_define
 
 begin_comment
-comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_resched
-parameter_list|()
-value|do { want_resched = 1; aston(); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|resched_wanted
-parameter_list|()
-value|want_resched
-end_define
-
-begin_comment
-comment|/*  * Give a profiling tick to the current process when the user profiling  * buffer pages are invalid.  On the hp300, request an ast to send us  * through trap, marking the proc as needing a profiling tick.  */
+comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  *  * XXX this is now poorly named and implemented.  It used to handle only a  * single tick and the PS_OWEUPC flag served as a counter.  Now there is a  * counter in the proc table and flag isn't really necessary.  */
 end_comment
 
 begin_define
@@ -121,52 +121,8 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	mtx_lock_spin(&sched_lock);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	mtx_unlock_spin(&sched_lock);				\ 	aston();							\ } while (0)
+value|do {						\ 	mtx_lock_spin(&sched_lock);					\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston();							\ 	mtx_unlock_spin(&sched_lock);					\ } while (0)
 end_define
-
-begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signotify
-parameter_list|(
-name|p
-parameter_list|)
-value|aston()
-end_define
-
-begin_define
-define|#
-directive|define
-name|aston
-parameter_list|()
-value|PCPU_SET(astpending, 1)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|u_int32_t
-name|want_resched
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* resched() was called */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * CTL_MACHDEP definitions.  */

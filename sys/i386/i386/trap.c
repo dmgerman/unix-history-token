@@ -355,7 +355,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|syscall2
+name|syscall
 name|__P
 argument_list|(
 operator|(
@@ -860,9 +860,10 @@ name|addupc_task
 argument_list|(
 name|p
 argument_list|,
+name|TRAPF_PC
+argument_list|(
 name|frame
-operator|->
-name|tf_eip
+argument_list|)
 argument_list|,
 call|(
 name|u_int
@@ -3885,12 +3886,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	syscall2 -	MP aware system call request C handler  *  *	A system call is essentially treated as a trap except that the  *	MP lock is not held on entry or return.  We are responsible for  *	obtaining the MP lock if necessary and for handling ASTs  *	(e.g. a task switch) prior to return.  *  *	In general, only simple access and manipulation of curproc and  *	the current stack is allowed without having to hold MP lock.  */
+comment|/*  *	syscall -	MP aware system call request C handler  *  *	A system call is essentially treated as a trap except that the  *	MP lock is not held on entry or return.  We are responsible for  *	obtaining the MP lock if necessary and for handling ASTs  *	(e.g. a task switch) prior to return.  *  *	In general, only simple access and manipulation of curproc and  *	the current stack is allowed without having to hold MP lock.  */
 end_comment
 
 begin_function
 name|void
-name|syscall2
+name|syscall
 parameter_list|(
 name|frame
 parameter_list|)
@@ -4671,12 +4672,46 @@ decl_stmt|;
 name|u_quad_t
 name|sticks
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|TRAPF_USERMODE
+argument_list|(
+operator|&
+name|frame
+argument_list|)
+argument_list|,
+operator|(
+literal|"ast in kernel mode"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We check for a pending AST here rather than in the assembly as 	 * acquiring and releasing mutexes in assembly is not fun. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|astpending
+argument_list|()
+operator|||
+name|resched_wanted
+argument_list|()
+operator|)
+condition|)
+block|{
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|sticks
 operator|=
 name|p
@@ -4685,6 +4720,12 @@ name|p_sticks
 expr_stmt|;
 name|astoff
 argument_list|()
+expr_stmt|;
+name|mtx_intr_enable
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
 expr_stmt|;
 name|atomic_add_int
 argument_list|(

@@ -95,9 +95,6 @@ name|u_int32_t
 name|gd_current_asngen
 decl_stmt|;
 comment|/* ASN rollover check */
-name|u_int
-name|gd_astpending
-decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata

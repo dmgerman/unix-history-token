@@ -112,9 +112,6 @@ decl_stmt|;
 name|u_int
 name|gd_other_cpus
 decl_stmt|;
-name|u_int
-name|gd_astpending
-decl_stmt|;
 name|SLIST_ENTRY
 argument_list|(
 argument|globaldata

@@ -108,12 +108,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|TRAPF_USERMODE
+parameter_list|(
+name|framep
+parameter_list|)
+define|\
+value|((ISPL((framep)->tf_cs) == SEL_UPL) || ((framep)->tf_eflags& PSL_VM))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRAPF_PC
+parameter_list|(
+name|framep
+parameter_list|)
+value|((framep)->tf_eip)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLKF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
 define|\
-value|((ISPL((framep)->cf_cs) == SEL_UPL) || (framep->cf_eflags& PSL_VM))
+value|((ISPL((framep)->cf_cs) == SEL_UPL) || ((framep)->cf_eflags& PSL_VM))
 end_define
 
 begin_define
@@ -137,44 +158,6 @@ value|((framep)->cf_eip)
 end_define
 
 begin_comment
-comment|/*  * astpending bits  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AST_PENDING
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_RESCHED
-value|0x00000002
-end_define
-
-begin_comment
-comment|/*  * Preempt the current process if in interrupt from user mode,  * or after the current trap/syscall if in system mode.  *  * XXX: if astpending is later changed to an |= here due to more flags being  * added, we will have an atomicy problem.  The type of atomicy we need is  * a non-locked orl.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|need_resched
-parameter_list|()
-value|do {						\ 	PCPU_SET(astpending, AST_RESCHED|AST_PENDING);			\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|resched_wanted
-parameter_list|()
-value|(PCPU_GET(astpending)& AST_RESCHED)
-end_define
-
-begin_comment
 comment|/*  * Arrange to handle pending profiling ticks before returning to user mode.  *  * XXX this is now poorly named and implemented.  It used to handle only a  * single tick and the PS_OWEUPC flag served as a counter.  Now there is a  * counter in the proc table and flag isn't really necessary.  */
 end_comment
 
@@ -185,36 +168,7 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	mtx_lock_spin(&sched_lock);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	mtx_unlock_spin(&sched_lock);				\ 	aston();							\ } while (0)
-end_define
-
-begin_comment
-comment|/*  * Notify the current process (p) that it has a signal pending,  * process as soon as possible.  *  * XXX: aston() really needs to be an atomic (not locked, but an orl),  * in case need_resched() is set by an interrupt.  But with astpending a  * per-cpu variable this is not trivial to do efficiently.  For now we blow  * it off (asynchronous need_resched() conflicts are not critical).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signotify
-parameter_list|(
-name|p
-parameter_list|)
-value|aston()
-end_define
-
-begin_define
-define|#
-directive|define
-name|aston
-parameter_list|()
-value|do {							\ 	PCPU_SET(astpending, PCPU_GET(astpending) | AST_PENDING);	\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|astoff
-parameter_list|()
+value|do {						\ 	mtx_lock_spin(&sched_lock);					\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston();							\ 	mtx_unlock_spin(&sched_lock);					\ } while (0)
 end_define
 
 begin_comment

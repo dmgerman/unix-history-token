@@ -1792,8 +1792,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_syscall2
-value|syscall2
+name|_syscall
+value|syscall
 end_define
 
 begin_define
