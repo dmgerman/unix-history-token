@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$FreeBSD$\n"
+literal|"\n$Id$\n"
 decl_stmt|;
 end_decl_stmt
 

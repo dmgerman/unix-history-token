@@ -16,7 +16,7 @@ comment|/* ANSI C */
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef

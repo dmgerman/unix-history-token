@@ -56,7 +56,7 @@ name|unused
 operator|)
 argument_list|)
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $FreeBSD$  */
+comment|/* Mapper for connections between MRouteD multicast routers.  * Written by Pavel Curtis<Pavel@PARC.Xerox.Com>  *  * $Id$  */
 end_comment
 
 begin_comment

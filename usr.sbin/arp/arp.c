@@ -53,7 +53,7 @@ specifier|const
 name|freebsdid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 

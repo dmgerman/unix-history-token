@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 Joerg Wunsch  *  * All rights reserved.  *  * T
 end_comment
 
 begin_comment
-comment|/*  * MS-DOS (FAT) file system structure definitions.  *  * $FreeBSD$  */
+comment|/*  * MS-DOS (FAT) file system structure definitions.  *  * $Id$  */
 end_comment
 
 begin_ifndef
