@@ -56,7 +56,7 @@ file|<sys/resource.h>
 end_include
 
 begin_comment
-comment|/*  * Convert usec to clock ticks; could do (usec * CLK_TCK) / 1000000,  * but this would overflow if we switch to nanosec.  */
+comment|/*  * Convert usec to clock ticks; could do (usec * CLOCKS_PER_SEC) / 1000000,  * but this would overflow if we switch to nanosec.  */
 end_comment
 
 begin_define
@@ -66,7 +66,7 @@ name|CONVTCK
 parameter_list|(
 name|r
 parameter_list|)
-value|(r.tv_sec * CLK_TCK + r.tv_usec / (1000000 / CLK_TCK))
+value|((r).tv_sec * CLOCKS_PER_SEC \ 			 + (r).tv_usec / (1000000 / CLOCKS_PER_SEC))
 end_define
 
 begin_function
