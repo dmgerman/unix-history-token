@@ -25,9 +25,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_ifndef
 ifndef|#
@@ -35,37 +37,30 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_endif
 unit|static char sccsid[] = "From: @(#)comm.c	8.4 (Berkeley) 5/4/95";
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -123,6 +118,7 @@ value|(LINE_MAX + 1)
 end_define
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|tabs
@@ -138,67 +134,56 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|FILE
 modifier|*
 name|file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|show
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|FILE
-operator|*
-operator|,
+modifier|*
+parameter_list|,
+specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|stricoll
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|usage
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int
@@ -250,6 +235,7 @@ decl_stmt|,
 modifier|*
 name|fp2
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|col1
@@ -261,10 +247,6 @@ modifier|*
 name|col3
 decl_stmt|;
 name|char
-modifier|*
-modifier|*
-name|p
-decl_stmt|,
 name|line1
 index|[
 name|MAXLINELEN
@@ -274,6 +256,12 @@ name|line2
 index|[
 name|MAXLINELEN
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|p
 decl_stmt|;
 name|flag1
 operator|=
@@ -292,7 +280,7 @@ name|void
 operator|)
 name|setlocale
 argument_list|(
-name|LC_CTYPE
+name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
@@ -308,7 +296,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-123i"
+literal|"123i"
 argument_list|)
 operator|)
 operator|!=
@@ -320,15 +308,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'-'
-case|:
-operator|--
-name|optind
-expr_stmt|;
-goto|goto
-name|done
-goto|;
 case|case
 literal|'1'
 case|:
@@ -369,8 +348,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|done
-label|:
 name|argc
 operator|-=
 name|optind
@@ -678,16 +655,15 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|offset
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|buf
 decl_stmt|;
-end_function
-
-begin_block
 block|{
 do|do
 block|{
@@ -717,7 +693,7 @@ argument_list|)
 condition|)
 do|;
 block|}
-end_block
+end_function
 
 begin_function
 name|FILE
