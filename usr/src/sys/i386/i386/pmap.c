@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * This version by William Jolitz for UUNET Technologies, Inc.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	Derived from: hp300/@(#)pmap.c	7.1 (Berkeley) 12/5/90  *	@(#)pmap.c	7.3	%G%  */
+comment|/*   * Copyright (c) 1987 Carnegie-Mellon University  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * The CMU software License Agreement specifies the terms and conditions  * for use and redistribution.  *  * This version by William Jolitz for UUNET Technologies, Inc.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	Derived from: hp300/@(#)pmap.c	7.1 (Berkeley) 12/5/90  *	@(#)pmap.c	7.4	%G%  */
 end_comment
 
 begin_comment
@@ -20,25 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/vm_param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lock.h"
 end_include
 
 begin_include
@@ -50,44 +32,34 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../vm/pmap.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_map.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_kern.h"
+file|"vm/vm_kern.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vm/vm_prot.h"
+file|"vm/vm_page.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"../vm/vm_page.h"
-end_include
+begin_comment
+comment|/*#include "vm/vm_pageout.h"*/
+end_comment
 
-begin_include
-include|#
-directive|include
-file|"../vm/vm_pageout.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/isa.h"
-end_include
+begin_comment
+comment|/*#include "machine/isa.h"*/
+end_comment
 
 begin_comment
 comment|/*  * Allocate various and sundry SYSMAPs used in the days of old VM  * and not yet converted.  XXX.  */
@@ -688,7 +660,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|int
+name|void
 name|pmap_bootstrap
 parameter_list|(
 name|firstaddr
@@ -725,6 +697,11 @@ specifier|extern
 name|int
 name|IdlePTD
 decl_stmt|;
+name|firstaddr
+operator|=
+literal|0x100000
+expr_stmt|;
+comment|/*XXX basemem completely fucked (again) */
 name|avail_start
 operator|=
 name|firstaddr
@@ -1004,11 +981,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/**(int *)PTD = 0; 	load_cr3(rcr3());*/
-return|return
-operator|(
-name|firstaddr
-operator|)
-return|;
 block|}
 end_function
 
@@ -1079,7 +1051,7 @@ name|vm_map_find
 argument_list|(
 name|kernel_map
 argument_list|,
-name|VM_OBJECT_NULL
+name|NULL
 argument_list|,
 operator|(
 name|vm_offset_t
@@ -1366,9 +1338,9 @@ operator||
 name|PDB_CREATE
 operator|)
 condition|)
-name|pg
+name|printf
 argument_list|(
-literal|"pmap_create(%x)"
+literal|"pmap_create(%x)\n"
 argument_list|,
 name|size
 argument_list|)
@@ -1382,9 +1354,10 @@ name|size
 condition|)
 return|return
 operator|(
-name|PMAP_NULL
+name|NULL
 operator|)
 return|;
+comment|/* XXX: is it ok to wait here? */
 name|pmap
 operator|=
 operator|(
@@ -1401,17 +1374,85 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notifwewait
 if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
 literal|"pmap_create: cannot allocate a pmap"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+name|bzero
+argument_list|(
+name|pmap
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|pmap
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pmap_pinit
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|pmap
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Initialize a preallocated and zeroed pmap structure,  * such as one in a vmspace structure.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_pinit
+parameter_list|(
+name|pmap
+parameter_list|)
+specifier|register
+name|struct
+name|pmap
+modifier|*
+name|pmap
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|pmapdebug
+operator|&
+operator|(
+name|PDB_FOLLOW
+operator||
+name|PDB_CREATE
+operator|)
+condition|)
+name|pg
+argument_list|(
+literal|"pmap_pinit(%x)\n"
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * No need to allocate page table space yet but we do need a 	 * valid page directory table. 	 */
 name|pmap
 operator|->
@@ -1428,6 +1469,7 @@ argument_list|,
 name|NBPG
 argument_list|)
 expr_stmt|;
+comment|/* wire in kernel global address entries */
 name|bcopy
 argument_list|(
 name|PTD
@@ -1451,6 +1493,7 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
+comment|/* install self-referential address mapping entry */
 operator|*
 operator|(
 name|int
@@ -1482,12 +1525,6 @@ name|PG_URKW
 expr_stmt|;
 name|pmap
 operator|->
-name|pm_dref
-operator|=
-literal|0
-expr_stmt|;
-name|pmap
-operator|->
 name|pm_count
 operator|=
 literal|1
@@ -1500,33 +1537,6 @@ operator|->
 name|pm_lock
 argument_list|)
 expr_stmt|;
-name|pmap
-operator|->
-name|pm_stats
-operator|.
-name|resident_count
-operator|=
-literal|0
-expr_stmt|;
-name|pmap
-operator|->
-name|pm_stats
-operator|.
-name|wired_count
-operator|=
-literal|0
-expr_stmt|;
-name|pmap
-operator|->
-name|pm_ptpages
-operator|=
-literal|0
-expr_stmt|;
-return|return
-operator|(
-name|pmap
-operator|)
-return|;
 block|}
 end_function
 
@@ -1559,7 +1569,7 @@ name|PDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"pmap_destroy(%x)"
+literal|"pmap_destroy(%x)\n"
 argument_list|,
 name|pmap
 argument_list|)
@@ -1570,7 +1580,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 return|return;
 name|simple_lock
@@ -1581,7 +1591,13 @@ operator|->
 name|pm_lock
 argument_list|)
 expr_stmt|;
-comment|/*count = --pmap->pm_count;*/
+name|count
+operator|=
+operator|--
+name|pmap
+operator|->
+name|pm_count
+expr_stmt|;
 name|simple_unlock
 argument_list|(
 operator|&
@@ -1590,7 +1606,95 @@ operator|->
 name|pm_lock
 argument_list|)
 expr_stmt|;
-comment|/*if (count) 		return;*/
+if|if
+condition|(
+name|count
+operator|==
+literal|0
+condition|)
+block|{
+name|pmap_release
+argument_list|(
+name|pmap
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|pmap
+argument_list|,
+name|M_VMPMAP
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Release any resources held by the given physical map.  * Called when a pmap initialized by pmap_pinit is being released.  * Should only be called if the map contains no valid mappings.  */
+end_comment
+
+begin_function
+name|void
+name|pmap_release
+parameter_list|(
+name|pmap
+parameter_list|)
+specifier|register
+name|struct
+name|pmap
+modifier|*
+name|pmap
+decl_stmt|;
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|pmapdebug
+operator|&
+name|PDB_FOLLOW
+condition|)
+name|pg
+argument_list|(
+literal|"pmap_release(%x)\n"
+argument_list|,
+name|pmap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* DIAGNOSTIC */
+comment|/* count would be 0 from pmap_destroy... */
+name|simple_lock
+argument_list|(
+operator|&
+name|pmap
+operator|->
+name|pm_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pmap
+operator|->
+name|pm_count
+operator|!=
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"pmap_release count"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -1603,16 +1707,6 @@ operator|->
 name|pm_pdir
 argument_list|,
 name|NBPG
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|pmap
-argument_list|,
-name|M_VMPMAP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1654,7 +1748,7 @@ if|if
 condition|(
 name|pmap
 operator|!=
-name|PMAP_NULL
+name|NULL
 condition|)
 block|{
 name|simple_lock
@@ -1697,7 +1791,9 @@ parameter_list|,
 name|eva
 parameter_list|)
 specifier|register
-name|pmap_t
+name|struct
+name|pmap
+modifier|*
 name|pmap
 decl_stmt|;
 name|vm_offset_t
@@ -1783,7 +1879,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 return|return;
 ifdef|#
@@ -1968,13 +2064,12 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|u
-operator|.
-name|u_procp
+operator|&
+name|curproc
 operator|->
-name|p_map
+name|p_vmspace
 operator|->
-name|pmap
+name|vm_pmap
 condition|)
 name|pmap_activate
 argument_list|(
@@ -1985,19 +2080,24 @@ expr|struct
 name|pcb
 operator|*
 operator|)
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_addr
 argument_list|)
 expr_stmt|;
 name|load_cr3
 argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|pcb_ptd
 argument_list|)
 expr_stmt|;
@@ -2089,7 +2189,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|=
-name|PMAP_NULL
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2158,7 +2258,7 @@ if|if
 condition|(
 name|npv
 operator|==
-name|PV_ENTRY_NULL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2323,7 +2423,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|!=
-name|PMAP_NULL
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -2525,7 +2625,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 return|return;
 if|if
@@ -2715,13 +2815,12 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|u
-operator|.
-name|u_procp
+operator|&
+name|curproc
 operator|->
-name|p_map
+name|p_vmspace
 operator|->
-name|pmap
+name|vm_pmap
 condition|)
 name|pmap_activate
 argument_list|(
@@ -2732,9 +2831,7 @@ expr|struct
 name|pcb
 operator|*
 operator|)
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_addr
 argument_list|)
@@ -2836,7 +2933,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 return|return;
 if|if
@@ -3160,7 +3257,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -3189,7 +3286,7 @@ name|pv
 operator|->
 name|pv_next
 operator|=
-name|PV_ENTRY_NULL
+name|NULL
 expr_stmt|;
 name|pv
 operator|->
@@ -3483,10 +3580,17 @@ directive|endif
 comment|/*pads(pmap);*/
 name|load_cr3
 argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|pcb_ptd
 argument_list|)
 expr_stmt|;
@@ -3553,7 +3657,7 @@ if|if
 condition|(
 name|pmap
 operator|==
-name|PMAP_NULL
+name|NULL
 condition|)
 return|return;
 name|pte
@@ -3810,10 +3914,17 @@ index|]
 expr_stmt|;
 name|load_cr3
 argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|pcb_ptd
 argument_list|)
 expr_stmt|;
@@ -4054,10 +4165,17 @@ endif|#
 directive|endif
 name|load_cr3
 argument_list|(
-name|u
-operator|.
-name|u_pcb
-operator|.
+operator|(
+operator|(
+expr|struct
+name|pcb
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_addr
+operator|)
+operator|->
 name|pcb_ptd
 argument_list|)
 expr_stmt|;
@@ -4127,7 +4245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* [ macro again?, should I force u. into user map here? -wfj ] */
+comment|/* [ macro again?, should I force kstack into user map here? -wfj ] */
 end_comment
 
 begin_function
@@ -5054,7 +5172,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|!=
-name|PMAP_NULL
+name|NULL
 condition|)
 block|{
 for|for
@@ -5263,7 +5381,7 @@ name|pv
 operator|->
 name|pv_pmap
 operator|!=
-name|PMAP_NULL
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -5391,13 +5509,12 @@ name|pv
 operator|->
 name|pv_pmap
 operator|==
-name|u
-operator|.
-name|u_procp
+operator|&
+name|curproc
 operator|->
-name|p_map
+name|p_vmspace
 operator|->
-name|pmap
+name|vm_pmap
 condition|)
 name|pmap_activate
 argument_list|(
@@ -5410,9 +5527,7 @@ expr|struct
 name|pcb
 operator|*
 operator|)
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_addr
 argument_list|)
