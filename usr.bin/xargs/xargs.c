@@ -1080,7 +1080,7 @@ block|}
 name|curlen
 operator|++
 expr_stmt|;
-comment|/* 				 * Allocate enough to hold what we will 				 * be holding in a secont, and to append 				 * a space next time through, if we have 				 * to. 				 */
+comment|/* 				 * Allocate enough to hold what we will 				 * be holding in a second, and to append 				 * a space next time through, if we have 				 * to. 				 */
 name|inpline
 operator|=
 name|realloc
