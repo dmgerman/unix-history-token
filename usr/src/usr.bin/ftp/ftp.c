@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.6 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -644,9 +644,7 @@ name|printf
 argument_list|(
 literal|"Connected to %s.\n"
 argument_list|,
-name|hp
-operator|->
-name|h_name
+name|hostname
 argument_list|)
 expr_stmt|;
 if|if
