@@ -1093,7 +1093,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|vlan_input_tag
 parameter_list|(
 name|struct
@@ -2204,8 +2204,13 @@ expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
-operator|=
-literal|0
+operator|&=
+operator|~
+operator|(
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
 expr_stmt|;
 break|break;
 block|}
@@ -2252,6 +2257,12 @@ operator|=
 name|vlr
 operator|.
 name|vlr_tag
+expr_stmt|;
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_RUNNING
 expr_stmt|;
 break|break;
 case|case
