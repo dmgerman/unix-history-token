@@ -20,7 +20,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strtod.c	5.1 (Berkeley) %G%"
+literal|"@(#)strtod.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,11 +49,46 @@ begin_comment
 comment|/*  * #define IEEE_8087 for IEEE-arithmetic machines where the least  *	significant byte has the lowest address.  * #define IEEE_MC68k for IEEE-arithmetic machines where the most  *	significant byte has the lowest address.  * #define Sudden_Underflow for IEEE-format machines without gradual  *	underflow (i.e., that flush to zero on underflow).  * #define IBM for IBM mainframe-style floating-point arithmetic.  * #define VAX for VAX-style floating-point arithmetic.  * #define Unsigned_Shifts if>> does treats its left operand as unsigned.  * #define No_leftright to omit left-right logic in fast floating-point  *	computation of dtoa.  * #define Check_FLT_ROUNDS if FLT_ROUNDS can assume the values 2 or 3.  * #define RND_PRODQUOT to use rnd_prod and rnd_quot (assembly routines  *	that use extended-precision instructions to compute rounded  *	products and quotients) with IBM.  * #define ROUND_BIASED for IEEE-format with biased rounding.  * #define Inaccurate_Divide for IEEE-format with correctly rounded  *	products but inaccurate quotients, e.g., for Intel i860.  * #define Just_16 to store 16 bits per 32-bit long when doing high-precision  *	integer arithmetic.  Whether this speeds things up or slows things  *	down depends on the machine and the number being converted.  * #define KR_headers for old-style C function headers.  * #define Bad_float_h if your system lacks a float.h or if it does not  *	define some or all of DBL_DIG, DBL_MAX_10_EXP, DBL_MAX_EXP,  *	FLT_RADIX, FLT_ROUNDS, and DBL_MAX.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|mips
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|MIPSEL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|IEEE_8087
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|IEEE_MC68k
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
