@@ -273,7 +273,7 @@ if|if
 condition|(
 name|pthread
 operator|->
-name|data
+name|join_status
 operator|.
 name|thread
 operator|!=
@@ -282,7 +282,7 @@ condition|)
 block|{
 name|pthread
 operator|->
-name|data
+name|join_status
 operator|.
 name|thread
 operator|->
@@ -297,7 +297,7 @@ name|pthread_t
 operator|)
 name|pthread
 operator|->
-name|data
+name|join_status
 operator|.
 name|thread
 argument_list|)
