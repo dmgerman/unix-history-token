@@ -514,9 +514,6 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
-name|int
-name|e
-decl_stmt|;
 comment|/* 	 * Remove a file hierarchy.  If forcing removal (-f), or interactive 	 * (-i) or can't ask anyway (stdin_ok), don't stat the file. 	 */
 name|needstat
 operator|=
@@ -918,8 +915,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|rval
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 			 * If we can't read or search the directory, may still be 			 * able to remove it.  Don't print out the un{read,search}able 			 * message unless the remove fails. 			 */
@@ -936,7 +934,7 @@ case|:
 case|case
 name|FTS_DNR
 case|:
-name|e
+name|rval
 operator|=
 name|rmdir
 argument_list|(
@@ -947,7 +945,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|e
+name|rval
 operator|==
 literal|0
 operator|||
@@ -962,7 +960,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|e
+name|rval
 operator|==
 literal|0
 operator|&&
@@ -986,7 +984,7 @@ break|break;
 case|case
 name|FTS_W
 case|:
-name|e
+name|rval
 operator|=
 name|undelete
 argument_list|(
@@ -997,10 +995,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|e
+name|rval
 operator|==
 literal|0
-operator|||
+operator|&&
 operator|(
 name|fflag
 operator|&&
@@ -1012,10 +1010,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|e
-operator|==
-literal|0
-operator|&&
 name|vflag
 condition|)
 operator|(
@@ -1047,7 +1041,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|e
+name|rval
 operator|=
 name|unlink
 argument_list|(
@@ -1058,7 +1052,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|e
+name|rval
 operator|==
 literal|0
 operator|||
@@ -1073,7 +1067,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|e
+name|rval
 operator|==
 literal|0
 operator|&&
@@ -1346,8 +1340,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|rval
+operator|==
+literal|0
 condition|)
 block|{
 if|if
@@ -1435,6 +1430,10 @@ block|}
 if|if
 condition|(
 name|vflag
+operator|&&
+name|rval
+operator|==
+literal|0
 condition|)
 operator|(
 name|void

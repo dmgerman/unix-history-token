@@ -842,6 +842,8 @@ literal|0
 decl_stmt|,
 name|dne
 decl_stmt|,
+name|badcp
+decl_stmt|,
 name|nlen
 decl_stmt|,
 name|rval
@@ -879,6 +881,8 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|0
@@ -894,6 +898,9 @@ operator|)
 operator|!=
 name|NULL
 condition|;
+name|badcp
+operator|=
+literal|0
 control|)
 block|{
 switch|switch
@@ -928,6 +935,8 @@ name|fts_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -946,6 +955,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1119,6 +1130,8 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1216,6 +1229,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1278,6 +1293,8 @@ operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1313,6 +1330,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1351,6 +1370,8 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1436,6 +1457,8 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1485,6 +1508,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1501,6 +1526,8 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1527,6 +1554,8 @@ operator|!
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1543,6 +1572,8 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1559,6 +1590,8 @@ argument_list|,
 name|dne
 argument_list|)
 condition|)
+name|badcp
+operator|=
 name|rval
 operator|=
 literal|1
@@ -1567,10 +1600,10 @@ break|break;
 block|}
 if|if
 condition|(
-operator|!
-name|rval
-operator|&&
 name|vflag
+operator|&&
+operator|!
+name|badcp
 condition|)
 operator|(
 name|void
