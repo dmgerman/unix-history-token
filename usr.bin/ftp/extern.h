@@ -1315,11 +1315,6 @@ name|setpassive
 name|__P
 argument_list|(
 operator|(
-name|int
-operator|,
-name|char
-operator|*
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

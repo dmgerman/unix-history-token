@@ -10008,12 +10008,10 @@ begin_comment
 comment|/*  * Start up passive mode interaction  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setpassive
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|passivemode
 operator|=
@@ -10035,7 +10033,7 @@ operator|=
 name|passivemode
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * get size of file on remote machine  */
