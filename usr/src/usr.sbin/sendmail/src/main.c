@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.91 (Berkeley) %G%"
+literal|"@(#)main.c	8.92 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5664,15 +5664,17 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
+specifier|extern
+name|void
+name|printenvflags
+parameter_list|()
+function_decl|;
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d e_flags %x, e_id=%s\n"
+literal|"\n====finis: stat %d e_id=%s e_flags="
 argument_list|,
 name|ExitStat
-argument_list|,
-name|CurEnv
-operator|->
-name|e_flags
 argument_list|,
 name|CurEnv
 operator|->
@@ -5687,6 +5689,12 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
+name|printenvflags
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tTd
