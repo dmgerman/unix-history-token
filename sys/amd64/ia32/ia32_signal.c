@@ -1230,18 +1230,11 @@ name|sfp
 operator|->
 name|sf_uc
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
 argument_list|(
-name|p
-operator|->
-name|p_sigacts
+name|psp
 operator|->
 name|ps_siginfo
 argument_list|,
@@ -1341,11 +1334,6 @@ operator|&
 name|psp
 operator|->
 name|ps_mtx
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the sigframe out to the user's stack. 	 */
@@ -2087,18 +2075,11 @@ name|sfp
 operator|->
 name|sf_uc
 expr_stmt|;
-name|PROC_LOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SIGISMEMBER
 argument_list|(
-name|p
-operator|->
-name|p_sigacts
+name|psp
 operator|->
 name|ps_siginfo
 argument_list|,
@@ -2198,11 +2179,6 @@ operator|&
 name|psp
 operator|->
 name|ps_mtx
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Copy the sigframe out to the user's stack. 	 */
