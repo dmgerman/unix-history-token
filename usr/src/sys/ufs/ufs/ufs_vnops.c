@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_vnops.c	4.35	82/08/24	*/
+comment|/*	ufs_vnops.c	4.36	82/09/04	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
@@ -1062,9 +1068,13 @@ name|ip
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|1
 argument_list|)
@@ -1595,7 +1605,7 @@ comment|/*  * Seek system call  */
 end_comment
 
 begin_macro
-name|seek
+name|lseek
 argument_list|()
 end_macro
 
@@ -2192,9 +2202,13 @@ name|ip
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|0
 argument_list|)
@@ -4139,9 +4153,13 @@ name|ip
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 operator|&
 name|time
+operator|.
+name|tv_sec
 argument_list|,
 literal|1
 argument_list|)
