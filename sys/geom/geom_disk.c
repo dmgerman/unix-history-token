@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_geom.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_GEOM
+end_ifndef
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1266,78 +1278,6 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_sizeof
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|disklabel
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|disklabel
-argument_list|)
-argument_list|,
-literal|"sizeof(struct disklabel)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_sizeof
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|diskslices
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|diskslices
-argument_list|)
-argument_list|,
-literal|"sizeof(struct diskslices)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_debug_sizeof
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|disk
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|disk
-argument_list|)
-argument_list|,
-literal|"sizeof(struct disk)"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -1532,6 +1472,11 @@ literal|"names of available disks"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
