@@ -102,13 +102,6 @@ name|mount
 modifier|*
 name|mp
 parameter_list|,
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|caddr_t
-name|data
-parameter_list|,
 name|struct
 name|nameidata
 modifier|*
@@ -177,10 +170,6 @@ name|fdesc_mount
 parameter_list|(
 name|mp
 parameter_list|,
-name|path
-parameter_list|,
-name|data
-parameter_list|,
 name|ndp
 parameter_list|,
 name|td
@@ -189,13 +178,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|;
-name|char
-modifier|*
-name|path
-decl_stmt|;
-name|caddr_t
-name|data
 decl_stmt|;
 name|struct
 name|nameidata
@@ -809,7 +791,7 @@ name|vfsops
 name|fdesc_vfsops
 init|=
 block|{
-name|fdesc_mount
+name|NULL
 block|,
 name|vfs_stdstart
 block|,
@@ -836,6 +818,8 @@ block|,
 name|vfs_stduninit
 block|,
 name|vfs_stdextattrctl
+block|,
+name|fdesc_mount
 block|, }
 decl_stmt|;
 end_decl_stmt
