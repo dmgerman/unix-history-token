@@ -11013,14 +11013,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|tcp_output
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|snd_cwnd
