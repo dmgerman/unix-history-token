@@ -576,7 +576,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"NFS serveris not available"
+literal|"NFS server is not available"
 argument_list|)
 expr_stmt|;
 block|}
