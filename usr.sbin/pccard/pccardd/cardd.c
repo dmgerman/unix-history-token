@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.24 1998/02/04 20:19:39 guido Exp $"
+literal|"$Id: cardd.c,v 1.25 1998/02/27 08:19:23 hosokawa Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ include|#
 directive|include
 file|<sys/ioctl.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|EXTERN
-end_define
 
 begin_include
 include|#
