@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	6.2	84/07/26	*/
+comment|/*	raw_usrreq.c	6.3	84/08/20	*/
 end_comment
 
 begin_include
@@ -1155,6 +1155,15 @@ name|so
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PRU_SENSE
+case|:
+comment|/* 		 * stat: don't bother with a blocksize. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Not supported. 	 */
 case|case
 name|PRU_CONTROL
@@ -1164,9 +1173,6 @@ name|PRU_RCVOOB
 case|:
 case|case
 name|PRU_RCVD
-case|:
-case|case
-name|PRU_SENSE
 case|:
 return|return
 operator|(
