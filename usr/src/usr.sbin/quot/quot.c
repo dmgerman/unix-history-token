@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.4 (Berkeley) 83/07/01"
+literal|"@(#)quot.c	4.5 (Berkeley) 83/08/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,11 +769,22 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|!
 name|hflg
 condition|)
 block|{
-comment|/* 		 * Assume that there are no holes in files. 		 */
+comment|/* 		 * Blocks based on number of 512 byte blocks claimed by inode. 		 */
+name|size
+operator|=
+name|ip
+operator|->
+name|di_blocks
+operator|/
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * Estimate based on size of file. 		 */
 name|blks
 operator|=
 name|lblkno
@@ -810,21 +821,6 @@ name|blks
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Actually go out and count the number of allocated blocks. 		 */
-name|printf
-argument_list|(
-literal|"Sorry, hard way not implemented yet...\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|size
 operator|=
 name|frags
@@ -835,6 +831,7 @@ name|fs_fsize
 operator|/
 literal|1024
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|cflg
