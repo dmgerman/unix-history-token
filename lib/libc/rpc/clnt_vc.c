@@ -3761,7 +3761,13 @@ operator|-=
 name|i
 operator|,
 name|buf
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|buf
+operator|+
 name|i
 control|)
 block|{
