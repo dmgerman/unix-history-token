@@ -311,11 +311,19 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-operator|(
-name|MDP_FPUSED
-operator||
-name|MDP_UAC_MASK
-operator|)
+name|MDTD_FPUSED
+expr_stmt|;
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_uac
+operator|=
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_uac
 expr_stmt|;
 comment|/* 	 * Cache the physical address of the pcb, so we can 	 * swap to it easily. 	 */
 name|td2

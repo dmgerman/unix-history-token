@@ -41,6 +41,50 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MDTD_FPUSED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Process used the FPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDTD_STEP1
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Single step normal instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDTD_STEP2
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Single step branch instruction */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDTD_HAEUSED
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Process used the HAE */
+end_comment
+
 begin_struct
 struct|struct
 name|mdthread
@@ -86,50 +130,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MDP_FPUSED
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Process used the FPU */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MDP_STEP1
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Single step normal instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MDP_STEP2
-value|0x0004
-end_define
-
-begin_comment
-comment|/* Single step branch instruction */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MDP_HAEUSED
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Process used the HAE */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MDP_UAC_NOPRINT
 value|0x0010
 end_define
@@ -170,7 +170,12 @@ end_define
 begin_struct
 struct|struct
 name|mdproc
-block|{ }
+block|{
+name|u_int
+name|md_uac
+decl_stmt|;
+comment|/* Unaligned Access Check flags. */
+block|}
 struct|;
 end_struct
 

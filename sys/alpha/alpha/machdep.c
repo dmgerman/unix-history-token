@@ -4871,7 +4871,7 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-name|MDP_FPUSED
+name|MDTD_FPUSED
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -5750,7 +5750,7 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-name|MDP_FPUSED
+name|MDTD_FPUSED
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -7077,7 +7077,7 @@ operator|.
 name|md_flags
 operator|&=
 operator|~
-name|MDP_FPUSED
+name|MDTD_FPUSED
 expr_stmt|;
 name|alpha_fpstate_drop
 argument_list|(
@@ -7567,7 +7567,7 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-name|MDP_STEP2
+name|MDTD_STEP2
 condition|)
 block|{
 name|ptrace_clear_bpt
@@ -7607,7 +7607,7 @@ operator|.
 name|md_flags
 operator|&=
 operator|~
-name|MDP_STEP2
+name|MDTD_STEP2
 expr_stmt|;
 block|}
 elseif|else
@@ -7619,7 +7619,7 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-name|MDP_STEP1
+name|MDTD_STEP1
 condition|)
 block|{
 name|ptrace_clear_bpt
@@ -7644,7 +7644,7 @@ operator|.
 name|md_flags
 operator|&=
 operator|~
-name|MDP_STEP1
+name|MDTD_STEP1
 expr_stmt|;
 block|}
 return|return
@@ -7703,9 +7703,9 @@ operator|.
 name|md_flags
 operator|&
 operator|(
-name|MDP_STEP1
+name|MDTD_STEP1
 operator||
-name|MDP_STEP2
+name|MDTD_STEP2
 operator|)
 condition|)
 name|panic
@@ -7976,7 +7976,7 @@ name|td_md
 operator|.
 name|md_flags
 operator||=
-name|MDP_STEP2
+name|MDTD_STEP2
 expr_stmt|;
 block|}
 else|else
@@ -7986,7 +7986,7 @@ name|td_md
 operator|.
 name|md_flags
 operator||=
-name|MDP_STEP1
+name|MDTD_STEP1
 expr_stmt|;
 return|return
 literal|0
@@ -9451,7 +9451,7 @@ name|td_md
 operator|.
 name|md_flags
 operator||=
-name|MDP_FPUSED
+name|MDTD_FPUSED
 expr_stmt|;
 name|intr_restore
 argument_list|(

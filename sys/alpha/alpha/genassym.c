@@ -463,9 +463,9 @@ end_endif
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|MDP_HAEUSED
+name|MDTD_HAEUSED
 argument_list|,
-name|MDP_HAEUSED
+name|MDTD_HAEUSED
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -3317,7 +3317,7 @@ name|td_md
 operator|.
 name|md_flags
 operator|&
-name|MDP_FPUSED
+name|MDTD_FPUSED
 expr_stmt|;
 name|bcopy
 argument_list|(
