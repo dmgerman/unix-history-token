@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	3.9	%G%	*/
+comment|/*	param.h	3.10	%G%	*/
 end_comment
 
 begin_comment
@@ -1067,6 +1067,38 @@ begin_typedef
 typedef|typedef
 name|int
 name|off_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|u_char
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|u_short
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|u_int
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|u_long
 typedef|;
 end_typedef
 
