@@ -8995,14 +8995,15 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|ciss_report_request
-argument_list|(
-name|cr
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
+operator|(
+name|cc
+operator|->
+name|header
+operator|.
+name|host_tag
+operator|&
+name|CISS_HDR_HOST_TAG_ERROR
+operator|)
 operator|==
 literal|0
 condition|)
@@ -9016,11 +9017,6 @@ operator|*
 name|ce
 argument_list|)
 argument_list|)
-expr_stmt|;
-else|else
-name|error
-operator|=
-name|EIO
 expr_stmt|;
 comment|/*      * Copy the results back to the user.      */
 name|bcopy
