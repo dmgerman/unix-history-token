@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nameser.h	4.1	85/03/01	*/
+comment|/*	nameser.h	4.2	85/03/18	*/
 end_comment
 
 begin_comment
@@ -107,6 +107,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Internet nameserver port number  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NAMESERVER_PORT
+value|53
+end_define
 
 begin_comment
 comment|/*  * Currently defined opcodes  */
