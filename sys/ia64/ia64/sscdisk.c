@@ -602,7 +602,7 @@ operator|(
 name|off_t
 operator|)
 name|sc
-operator|-
+operator|->
 name|nsect
 operator|*
 name|DEV_BSIZE
@@ -734,7 +734,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"sscstrategy(%p) %s %x, %d, %ld, %p)\n"
+literal|"sscstrategy(%p) %s %x, %ld, %ld, %p)\n"
 argument_list|,
 name|bp
 argument_list|,
