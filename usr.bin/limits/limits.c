@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -964,6 +970,18 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{ }
 block|}
 block|}
 struct|;
@@ -1510,7 +1528,7 @@ name|NULL
 condition|)
 block|{
 name|int
-name|rcswhich
+name|rcswhich1
 init|=
 name|p
 operator|-
@@ -1558,7 +1576,7 @@ name|BOTH
 expr_stmt|;
 name|which_limits
 index|[
-name|rcswhich
+name|rcswhich1
 index|]
 operator|=
 name|optarg
@@ -1569,12 +1587,12 @@ name|DISPLAYONLY
 expr_stmt|;
 name|set_limits
 index|[
-name|rcswhich
+name|rcswhich1
 index|]
 operator|=
 name|resource_num
 argument_list|(
-name|rcswhich
+name|rcswhich1
 argument_list|,
 name|optopt
 argument_list|,
@@ -2668,10 +2686,10 @@ name|sprintf
 argument_list|(
 name|numbr
 argument_list|,
-literal|"%qd"
+literal|"%jd"
 argument_list|,
 call|(
-name|quad_t
+name|intmax_t
 call|)
 argument_list|(
 operator|(
@@ -3204,8 +3222,9 @@ name|p
 operator|=
 name|p
 condition|?
-operator|++
 name|p
+operator|+
+literal|1
 else|:
 name|shell
 expr_stmt|;
