@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)conf.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2160,10 +2160,7 @@ decl_stmt|,
 name|crlclose
 argument_list|()
 decl_stmt|,
-name|crlread
-argument_list|()
-decl_stmt|,
-name|crlwrite
+name|crlrw
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -2190,14 +2187,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|crlread
-value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|crlwrite
+name|crlrw
 value|nodev
 end_define
 
@@ -2220,10 +2210,7 @@ decl_stmt|,
 name|rx50close
 argument_list|()
 decl_stmt|,
-name|rx50read
-argument_list|()
-decl_stmt|,
-name|rx50write
+name|rx50rw
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -2250,14 +2237,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|rx50read
-value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|rx50write
+name|rx50rw
 value|nodev
 end_define
 
@@ -2280,10 +2260,7 @@ decl_stmt|,
 name|flclose
 argument_list|()
 decl_stmt|,
-name|flread
-argument_list|()
-decl_stmt|,
-name|flwrite
+name|flrw
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -2310,14 +2287,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|flread
-value|nodev
-end_define
-
-begin_define
-define|#
-directive|define
-name|flwrite
+name|flrw
 value|nodev
 end_define
 
@@ -2526,15 +2496,12 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|int
-name|mmread
-argument_list|()
-decl_stmt|,
-name|mmwrite
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+name|mmrw
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -4282,9 +4249,9 @@ name|nulldev
 block|,
 name|nulldev
 block|,
-name|mmread
+name|mmrw
 block|,
-name|mmwrite
+name|mmrw
 block|,
 comment|/*3*/
 name|nodev
@@ -4397,9 +4364,9 @@ name|flopen
 block|,
 name|flclose
 block|,
-name|flread
+name|flrw
 block|,
-name|flwrite
+name|flrw
 block|,
 comment|/*8*/
 name|nodev
@@ -5019,9 +4986,9 @@ name|crlopen
 block|,
 name|crlclose
 block|,
-name|crlread
+name|crlrw
 block|,
-name|crlwrite
+name|crlrw
 block|,
 comment|/*35*/
 name|nodev
@@ -5388,9 +5355,9 @@ name|rx50open
 block|,
 name|rx50close
 block|,
-name|rx50read
+name|rx50rw
 block|,
-name|rx50write
+name|rx50rw
 block|,
 comment|/*51*/
 name|nodev
