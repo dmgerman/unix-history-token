@@ -6168,7 +6168,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The 'unprivileged_procdebug_permitted' flag may be used to disable  * a variety of unprivileged inter-process debugging services, including  * some procfs functionality, ptrace(), and ktrace().  In the past,  * inter-process debugging has been involved in a variety of security  * problems, and sites not requiring the service might choose to disable it  * when hardening systems.  *  * XXX: Should modifying and reading this variable require locking?  * XXX: data declarations should be together near the beginning of the file.  */
+comment|/*  * The 'unprivileged_proc_debug' flag may be used to disable a variety of  * unprivileged inter-process debugging services, including some procfs  * functionality, ptrace(), and ktrace().  In the past, inter-process  * debugging has been involved in a variety of security problems, and sites  * not requiring the service might choose to disable it when hardening  * systems.  *  * XXX: Should modifying and reading this variable require locking?  * XXX: data declarations should be together near the beginning of the file.  */
 end_comment
 
 begin_decl_stmt
