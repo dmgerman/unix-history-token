@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xsend.c	4.4 %G%"
+literal|"@(#)xsend.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -547,12 +547,6 @@ argument_list|()
 expr_stmt|;
 block|{
 name|char
-modifier|*
-name|tmpname
-init|=
-literal|"/tmp/xsend.XXXXXX"
-decl_stmt|;
-name|char
 name|hostname
 index|[
 literal|32
@@ -561,15 +555,23 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|nf
+decl_stmt|,
+modifier|*
+name|popen
+argument_list|()
 decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|passp
 decl_stmt|;
-name|mktemp
+name|sprintf
 argument_list|(
-name|tmpname
+name|buf
+argument_list|,
+literal|"/bin/mail %s"
+argument_list|,
+name|dest
 argument_list|)
 expr_stmt|;
 if|if
@@ -577,9 +579,9 @@ condition|(
 operator|(
 name|nf
 operator|=
-name|fopen
+name|popen
 argument_list|(
-name|tmpname
+name|buf
 argument_list|,
 literal|"w"
 argument_list|)
@@ -589,7 +591,7 @@ name|NULL
 condition|)
 name|xfatal
 argument_list|(
-literal|"cannot create notice file"
+literal|"cannot pipe to /bin/mail"
 argument_list|)
 expr_stmt|;
 name|passp
@@ -606,11 +608,18 @@ name|passp
 operator|==
 literal|0
 condition|)
+block|{
+name|pclose
+argument_list|(
+name|nf
+argument_list|)
+expr_stmt|;
 name|xfatal
 argument_list|(
 literal|"Who are you?"
 argument_list|)
 expr_stmt|;
+block|}
 name|gethostname
 argument_list|(
 name|hostname
@@ -625,7 +634,7 @@ name|fprintf
 argument_list|(
 name|nf
 argument_list|,
-literal|"Subject: %s@%s sent secret mail\n"
+literal|"Subject: %s@%s sent you secret mail\n"
 argument_list|,
 name|passp
 operator|->
@@ -638,35 +647,14 @@ name|fprintf
 argument_list|(
 name|nf
 argument_list|,
-literal|"Your secret mail can be read on %s using ``xget''.\n"
+literal|"Your secret mail can be read on host %s using ``xget''.\n"
 argument_list|,
 name|hostname
 argument_list|)
 expr_stmt|;
-name|fclose
+name|pclose
 argument_list|(
 name|nf
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"/bin/mail %s< %s"
-argument_list|,
-name|dest
-argument_list|,
-name|tmpname
-argument_list|)
-expr_stmt|;
-name|system
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|unlink
-argument_list|(
-name|tmpname
 argument_list|)
 expr_stmt|;
 block|}
