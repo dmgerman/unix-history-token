@@ -4,7 +4,7 @@ comment|/* cbc.c: This file contains the encryption routines for the ed line edi
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Matt Bishop of Dartmouth College.  *  * The United States Government has rights in this work pursuant  * to contract no. NAG 2-680 between the National Aeronautics and  * Space Administration and Dartmouth College.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 1993 Andrew Moore, Talke Studio.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)bdes.c	5.5 (Berkeley) 6/27/91  */
 end_comment
 
 begin_ifndef
@@ -16,10 +16,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
+modifier|*
+name|rcsid
 init|=
-literal|"@(#)cbc.c	5.5 (Berkeley) 6/27/91"
+literal|"@(#)$Id: cbc.c,v 1.3 1993/12/14 18:01:10 alm Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,32 +32,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/* Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -69,19 +47,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<pwd.h>
 end_include
 
 begin_include
@@ -102,7 +74,7 @@ value|(((unsigned) RAND_MAX + 1)>> 8)
 end_define
 
 begin_comment
-comment|/*  * BSD and System V systems offer special library calls that do  * block moves and fills, so if possible we take advantage of them  */
+comment|/*  * BSD and System V systems offer special library calls that do  * block move_liness and fills, so if possible we take advantage of them  */
 end_comment
 
 begin_define
@@ -143,7 +115,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_setkey(buf)) \ 		err("des_setkey");
+value|if (des_setkey(buf)) \ 		des_error("des_setkey");
 end_define
 
 begin_define
@@ -154,7 +126,7 @@ parameter_list|(
 name|buf
 parameter_list|)
 define|\
-value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		err("des_cipher");
+value|if (des_cipher(buf, buf, 0L, (inverse ? -1 : 1))) \ 		des_error("des_cipher");
 end_define
 
 begin_comment
@@ -324,6 +296,7 @@ comment|/* 1 to preserve parity bits */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|des_buf
 index|[
@@ -333,7 +306,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* shared buffer for desgetc/desputc */
+comment|/* shared buffer for get_des_char/put_des_char */
 end_comment
 
 begin_decl_stmt
@@ -345,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* count for desgetc/desputc */
+comment|/* count for get_des_char/put_des_char */
 end_comment
 
 begin_decl_stmt
@@ -357,16 +330,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* index for desputc/desgetc */
+comment|/* index for put_des_char/get_des_char */
 end_comment
 
 begin_comment
-comment|/* desinit: initialize DES */
+comment|/* init_des_cipher: initialize DES */
 end_comment
 
 begin_function
 name|void
-name|desinit
+name|init_des_cipher
 parameter_list|()
 block|{
 ifdef|#
@@ -441,24 +414,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* desgetc: return next char in an encrypted file */
+comment|/* get_des_char: return next char in an encrypted file */
 end_comment
 
-begin_macro
-name|desgetc
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|get_des_char
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -476,7 +444,7 @@ literal|0
 expr_stmt|;
 name|des_ct
 operator|=
-name|cbcdec
+name|cbc_decode
 argument_list|(
 name|des_buf
 argument_list|,
@@ -502,35 +470,27 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* desputc: write a char to an encrypted file; return char written */
+comment|/* put_des_char: write a char to an encrypted file; return char written */
 end_comment
 
-begin_macro
-name|desputc
-argument_list|(
-argument|c
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|put_des_char
+parameter_list|(
+name|c
+parameter_list|,
+name|fp
+parameter_list|)
 name|int
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -545,7 +505,7 @@ condition|)
 block|{
 name|des_ct
 operator|=
-name|cbcenc
+name|cbc_encode
 argument_list|(
 name|des_buf
 argument_list|,
@@ -581,27 +541,22 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* desflush: flush an encrypted file's output; return status */
+comment|/* flush_des_file: flush an encrypted file's output; return status */
 end_comment
 
-begin_macro
-name|desflush
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|flush_des_file
+parameter_list|(
+name|fp
+parameter_list|)
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -616,7 +571,7 @@ condition|)
 block|{
 name|des_ct
 operator|=
-name|cbcenc
+name|cbc_encode
 argument_list|(
 name|des_buf
 argument_list|,
@@ -636,7 +591,7 @@ name|des_ct
 operator|>=
 literal|0
 operator|&&
-name|cbcenc
+name|cbc_encode
 argument_list|(
 name|des_buf
 argument_list|,
@@ -655,7 +610,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -667,12 +622,10 @@ begin_comment
 comment|/*  * get keyword from tty or stdin  */
 end_comment
 
-begin_macro
-name|getkey
-argument_list|()
-end_macro
-
-begin_block
+begin_function
+name|int
+name|get_keyword
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -699,7 +652,7 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * copy it, nul-padded, into the key area 		 */
-name|cvtkey
+name|expand_des_key
 argument_list|(
 name|BUFFER
 argument_list|(
@@ -716,7 +669,7 @@ argument_list|,
 name|_PASSWORD_LEN
 argument_list|)
 expr_stmt|;
-name|makekey
+name|set_des_key
 argument_list|(
 name|msgbuf
 argument_list|)
@@ -737,15 +690,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|errmsg
-index|[]
-decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * print a warning message and, possibly, terminate  */
@@ -753,7 +698,7 @@ end_comment
 
 begin_function
 name|void
-name|err
+name|des_error
 parameter_list|(
 name|s
 parameter_list|)
@@ -789,36 +734,22 @@ begin_comment
 comment|/*  * map a hex character to an integer  */
 end_comment
 
-begin_macro
-name|tobinhex
-argument_list|(
-argument|c
-argument_list|,
-argument|radix
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|hex_to_binary
+parameter_list|(
+name|c
+parameter_list|,
+name|radix
+parameter_list|)
 name|int
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* char to be converted */
-end_comment
-
-begin_decl_stmt
 name|int
 name|radix
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* base (2 to 16) */
-end_comment
-
-begin_block
 block|{
 switch|switch
 condition|(
@@ -1078,7 +1009,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * convert the key to a bit pattern  */
@@ -1086,7 +1017,7 @@ end_comment
 
 begin_function
 name|void
-name|cvtkey
+name|expand_des_key
 parameter_list|(
 name|obuf
 parameter_list|,
@@ -1179,7 +1110,7 @@ index|[
 name|i
 index|]
 operator|=
-name|tobinhex
+name|hex_to_binary
 argument_list|(
 operator|(
 name|int
@@ -1196,7 +1127,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|des_error
 argument_list|(
 literal|"bad hex digit in key"
 argument_list|)
@@ -1330,7 +1261,7 @@ index|[
 name|i
 index|]
 operator|=
-name|tobinhex
+name|hex_to_binary
 argument_list|(
 operator|(
 name|int
@@ -1347,7 +1278,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|des_error
 argument_list|(
 literal|"bad binary digit in key"
 argument_list|)
@@ -1448,7 +1379,7 @@ end_comment
 
 begin_function
 name|void
-name|makekey
+name|set_des_key
 parameter_list|(
 name|buf
 parameter_list|)
@@ -1592,38 +1523,27 @@ begin_comment
 comment|/*  * This encrypts using the Cipher Block Chaining mode of DES  */
 end_comment
 
-begin_macro
-name|cbcenc
-argument_list|(
-argument|msgbuf
-argument_list|,
-argument|n
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|cbc_encode
+parameter_list|(
+name|msgbuf
+parameter_list|,
+name|n
+parameter_list|,
+name|fp
+parameter_list|)
 name|char
 modifier|*
 name|msgbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|inverse
@@ -1786,44 +1706,30 @@ name|fp
 argument_list|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This decrypts using the Cipher Block Chaining mode of DES  */
 end_comment
 
-begin_macro
-name|cbcdec
-argument_list|(
-argument|msgbuf
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|int
+name|cbc_decode
+parameter_list|(
+name|msgbuf
+parameter_list|,
+name|fp
+parameter_list|)
 name|char
 modifier|*
 name|msgbuf
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* I/O buffer */
-end_comment
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* input file descriptor */
-end_comment
-
-begin_block
 block|{
 name|Desbuf
 name|ibuf
@@ -1967,7 +1873,7 @@ operator|>
 literal|7
 condition|)
 block|{
-name|err
+name|des_error
 argument_list|(
 literal|"decryption failed (block corrupted)"
 argument_list|)
@@ -1998,7 +1904,7 @@ name|n
 operator|>
 literal|0
 condition|)
-name|err
+name|des_error
 argument_list|(
 literal|"decryption failed (incomplete block)"
 argument_list|)
@@ -2010,7 +1916,7 @@ name|n
 operator|<
 literal|0
 condition|)
-name|err
+name|des_error
 argument_list|(
 literal|"cannot read file"
 argument_list|)
@@ -2019,7 +1925,7 @@ return|return
 name|EOF
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
