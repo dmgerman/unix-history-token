@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READ4.c 1.7 %G%"
+literal|"@(#)READ4.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,19 +166,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|curfile
-operator|->
-name|funit
-operator|&=
-operator|~
-name|EOLN
-expr_stmt|;
-name|curfile
-operator|->
-name|funit
-operator||=
-name|SYNC
-expr_stmt|;
 return|return
 name|data
 return|;

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)READE.c 1.5 %G%"
+literal|"@(#)READE.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,19 +133,6 @@ condition|)
 goto|goto
 name|ename
 goto|;
-name|curfile
-operator|->
-name|funit
-operator|&=
-operator|~
-name|EOLN
-expr_stmt|;
-name|curfile
-operator|->
-name|funit
-operator||=
-name|SYNC
-expr_stmt|;
 for|for
 control|(
 name|len

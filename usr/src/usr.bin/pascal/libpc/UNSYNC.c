@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)UNSYNC.c 1.3 %G%"
+literal|"@(#)UNSYNC.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,19 @@ name|fbuf
 argument_list|)
 expr_stmt|;
 block|}
+name|curfile
+operator|->
+name|funit
+operator|&=
+operator|~
+name|EOLN
+expr_stmt|;
+name|curfile
+operator|->
+name|funit
+operator||=
+name|SYNC
+expr_stmt|;
 block|}
 end_block
 
