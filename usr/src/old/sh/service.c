@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)service.c	4.3 %G%"
+literal|"@(#)service.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_decl_stmt
 name|STRING
 name|sysmsg
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|INT
+name|num_sysmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -1245,6 +1251,10 @@ end_expr_stmt
 begin_expr_stmt
 name|FI
 name|IF
+name|sig
+operator|<
+name|num_sysmsg
+name|ANDF
 name|sysmsg
 index|[
 name|sig
