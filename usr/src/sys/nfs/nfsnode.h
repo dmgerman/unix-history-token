@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ modifier|*
 name|n_sillyrename
 decl_stmt|;
 comment|/* Ptr to silly rename struct */
-name|off_t
+name|u_quad_t
 name|n_size
 decl_stmt|;
 comment|/* Current size of file */
