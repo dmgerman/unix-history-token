@@ -13618,6 +13618,12 @@ condition|(
 name|com
 operator|->
 name|tp
+operator|!=
+name|NULL
+operator|&&
+name|com
+operator|->
+name|tp
 operator|->
 name|t_hotchar
 operator|!=
