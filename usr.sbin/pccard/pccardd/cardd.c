@@ -188,6 +188,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|struct
+name|slot
+modifier|*
+name|slots
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *	Dump configuration file data.  */
 end_comment
@@ -418,9 +426,6 @@ name|fd
 decl_stmt|;
 name|struct
 name|slot
-modifier|*
-name|slots
-decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
@@ -664,6 +669,9 @@ case|case
 name|empty
 case|:
 case|case
+name|inactive
+case|:
+case|case
 name|noslot
 case|:
 comment|/* Debounce potentially incorrectly reported removals */
@@ -716,6 +724,19 @@ case|:
 comment|/* ignored */
 break|break;
 block|}
+name|sp
+operator|->
+name|state
+operator|=
+name|state
+operator|.
+name|state
+expr_stmt|;
+name|stat_changed
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
