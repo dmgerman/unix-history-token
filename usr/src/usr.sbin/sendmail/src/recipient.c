@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.21 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1357,6 +1357,8 @@ operator|(
 operator|!
 name|writable
 argument_list|(
+name|buf
+argument_list|,
 operator|&
 name|stb
 argument_list|)
@@ -1476,10 +1478,6 @@ name|int
 name|udbexpand
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|if
 condition|(
 name|udbexpand
@@ -2382,8 +2380,14 @@ begin_function
 name|bool
 name|writable
 parameter_list|(
+name|filename
+parameter_list|,
 name|s
 parameter_list|)
+name|char
+modifier|*
+name|filename
+decl_stmt|;
 specifier|register
 name|struct
 name|stat
@@ -2400,6 +2404,26 @@ decl_stmt|;
 name|int
 name|bits
 decl_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"writable(%s) mode=%o\n"
+argument_list|,
+name|filename
+argument_list|,
+name|s
+operator|->
+name|st_mode
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -2467,6 +2491,32 @@ operator|->
 name|st_gid
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|29
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\teu/gid=%d/%d, st_u/gid=%d/%d\n"
+argument_list|,
+name|euid
+argument_list|,
+name|egid
+argument_list|,
+name|s
+operator|->
+name|st_uid
+argument_list|,
+name|s
+operator|->
+name|st_gid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|euid
