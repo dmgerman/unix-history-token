@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)checknr.c	4.6 (Berkeley) %G%"
+literal|"@(#)checknr.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2947,12 +2947,32 @@ modifier|*
 modifier|*
 name|loc
 decl_stmt|;
+if|if
+condition|(
 name|binsrch
 argument_list|(
 name|mac
 argument_list|)
-expr_stmt|;
+operator|>=
+literal|0
+condition|)
+block|{
 comment|/* it's OK to redefine something */
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"binsrch(%s) -> already in table\n"
+argument_list|,
+name|mac
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
+return|return;
+block|}
 comment|/* binsrch sets slot as a side effect */
 ifdef|#
 directive|ifdef
