@@ -2974,7 +2974,7 @@ name|sprintf
 argument_list|(
 name|dev
 argument_list|,
-literal|"/dev/r%s"
+literal|"/dev/%s"
 argument_list|,
 name|nm
 operator|+
