@@ -17,7 +17,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)cmt.c	4.5	%G%"
+literal|"@(#)cmt.c	4.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1904,6 +1904,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_block
+
+begin_comment
+comment|/* Null routine to satisfy external reference from dodelt() */
+end_comment
+
+begin_macro
+name|escdodelt
+argument_list|()
+end_macro
+
+begin_block
+block|{}
 end_block
 
 end_unit
