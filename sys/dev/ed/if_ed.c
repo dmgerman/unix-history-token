@@ -4,11 +4,11 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 2.5 93/09/30 17:44:14 davidg Exp Locker: davidg $  */
+comment|/*  * $Id: if_ed.c,v 2.8 1993/10/15 10:59:56 davidg Exp davidg $  */
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
+comment|/*  * Modification history  *  * Revision 2.8  1993/10/15  10:59:56  davidg  * increase maximum time to wait for transmit DMA to complete to 120us.  * call ed_reset() if the time limit is reached instead of trying  * to abort the remote DMA.  *  * Revision 2.7  1993/10/15  10:49:10  davidg  * minor change to way the mbuf pointer temp variable is assigned in  * ed_start (slightly improves code readability)  *  * Revision 2.6  93/10/02  01:12:20  davidg  * use ETHER_ADDR_LEN in NE probe rather than '6'.  *   * Revision 2.5  93/09/30  17:44:14  davidg  * patch from vak@zebub.msk.su (Serge V.Vakulenko) to work around  * a hardware bug in cheap WD clone boards where the PROM checksum  * byte is always zero  *   * Revision 2.4  93/09/29  21:24:30  davidg  * Added software NIC reset in NE probe to work around a problem  * with some NE boards where the 8390 doesn't reset properly on  * power-up. Remove initialization of IMR/ISR in the NE probe  * because this is inherent in the reset.  *   * Revision 2.3  93/09/29  15:10:16  davidg  * credit Charles Hannum  *   * Revision 2.2  93/09/29  13:23:25  davidg  * added no multi-buffer override for 3c503  *   * Revision 2.1  93/09/29  12:32:12  davidg  * changed multi-buffer count for 16bit 3c503's from 5 to 2 after  * noticing that the transmitter becomes idle because of so many  * packets to load.  *   * Revision 2.0  93/09/29  00:00:19  davidg  * many changes, rewrites, additions, etc. Now supports the  * NE1000, NE2000, WD8003, WD8013, 3C503, 16bit 3C503, and  * a variety of similar clones. 16bit 3c503 now does multi  * transmit buffers. Nearly every part of the driver has  * changed in some way since rev 1.30.  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   */
 end_comment
 
 begin_include
@@ -3199,7 +3199,7 @@ literal|0
 init|;
 name|n
 operator|<
-literal|6
+name|ETHER_ADDR_LEN
 condition|;
 name|n
 operator|++
@@ -4566,6 +4566,10 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Copy the mbuf chain into the transmit buffer 	 */
+name|m0
+operator|=
+name|m
+expr_stmt|;
 comment|/* txb_new points to next open buffer slot */
 name|buffer
 operator|=
@@ -4649,10 +4653,6 @@ control|(
 name|len
 operator|=
 literal|0
-operator|,
-name|m0
-operator|=
-name|m
 init|;
 name|m
 operator|!=
@@ -4754,8 +4754,6 @@ name|ed_pio_write_mbufs
 argument_list|(
 name|sc
 argument_list|,
-name|m0
-operator|=
 name|m
 argument_list|,
 name|buffer
@@ -7114,9 +7112,9 @@ block|{
 name|int
 name|maxwait
 init|=
-literal|20
+literal|100
 decl_stmt|;
-comment|/* about 25us */
+comment|/* about 120us */
 comment|/* select page 0 registers */
 name|outb
 argument_list|(
@@ -7319,9 +7317,9 @@ decl_stmt|;
 name|int
 name|maxwait
 init|=
-literal|20
+literal|100
 decl_stmt|;
-comment|/* about 25us */
+comment|/* about 120us */
 comment|/* First, count up the total number of bytes to copy */
 for|for
 control|(
@@ -7689,40 +7687,15 @@ operator|.
 name|if_unit
 argument_list|)
 expr_stmt|;
-comment|/* attempt to abort the remote DMA */
-name|outb
+name|ed_reset
 argument_list|(
 name|sc
 operator|->
-name|nic_addr
-operator|+
-name|ED_P0_RBCR0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_RBCR1
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|sc
-operator|->
-name|nic_addr
-operator|+
-name|ED_P0_CR
-argument_list|,
-name|ED_CR_RD2
-operator||
-name|ED_CR_STA
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
