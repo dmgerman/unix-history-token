@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: iptest.c,v 2.1 1999/08/04 17:31:08 darrenr Exp $"
+literal|"@(#)$Id: iptest.c,v 2.1.2.2 1999/11/28 03:43:45 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -428,9 +434,12 @@ index|]
 decl_stmt|,
 name|host
 index|[
-literal|64
+name|MAXHOSTNAMELEN
+operator|+
+literal|1
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|gateway
 init|=
@@ -685,6 +694,18 @@ argument_list|(
 name|host
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|host
+index|[
+sizeof|sizeof
+argument_list|(
+name|host
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|src
 operator|=

@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipmon.c,v 2.3.2.1 1999/08/14 04:46:07 darrenr Exp $"
+literal|"@(#)$Id: ipmon.c,v 2.3.2.3 1999/11/28 04:05:28 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2790,7 +2790,7 @@ argument|; 		} else { 			(void) sprintf(t,
 literal|"%s -> "
 argument|, hostname(res, ip->ip_src)); 			t += strlen(t); 			(void) sprintf(t,
 literal|"%s PR %s len %hu %hu"
-argument|, 				hostname(res, ip->ip_dst), proto, 				hl, ip->ip_len); 		} 	} else if (p == IPPROTO_ICMP) { 		ic = (struct icmp *)((char *)ip + hl); 		(void) sprintf(t,
+argument|, 				hostname(res, ip->ip_dst), proto, 				hl, ip->ip_len); 		} 	} else if ((p == IPPROTO_ICMP)&& !(ip->ip_off& IP_OFFMASK)) { 		ic = (struct icmp *)((char *)ip + hl); 		(void) sprintf(t,
 literal|"%s -> "
 argument|, hostname(res, ip->ip_src)); 		t += strlen(t); 		(void) sprintf(t,
 literal|"%s PR icmp len %hu %hu icmp %d/%d"
@@ -3050,7 +3050,7 @@ argument|, argv[optind], 				STRERROR(errno)); 			exit(-
 literal|1
 argument|); 		} 		setvbuf(log, NULL, _IONBF,
 literal|0
-argument|); 	} else 		log = NULL;  	if (make_daemon&& (log != stdout)) { 		if (fork()>
+argument|); 	} else 		log = NULL;  	if (make_daemon&& ((log != stdout) || (opts& OPT_SYSLOG))) { 		if (fork()>
 literal|0
 argument|) 			exit(
 literal|0

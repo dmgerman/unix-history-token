@@ -333,7 +333,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: natparse.c,v 1.2 1999/08/01 11:17:18 darrenr Exp $"
+literal|"@(#)$Id: natparse.c,v 1.2.2.1 1999/11/20 22:50:30 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3370,20 +3370,41 @@ name|IPN_ANY
 expr_stmt|;
 else|else
 block|{
-name|fprintf
+name|ipn
+operator|.
+name|in_flags
+operator|=
+name|IPN_ANY
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pr
+operator|=
+name|getprotobyname
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: expected protocol - got \"%s\"\n"
-argument_list|,
-name|linenum
-argument_list|,
+name|s
+argument_list|)
+operator|)
+condition|)
+name|ipn
+operator|.
+name|in_p
+operator|=
+name|pr
+operator|->
+name|p_proto
+expr_stmt|;
+else|else
+name|ipn
+operator|.
+name|in_p
+operator|=
+name|atoi
+argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-name|NULL
-return|;
 block|}
 name|proto
 operator|=

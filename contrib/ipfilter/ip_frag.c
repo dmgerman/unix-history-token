@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_frag.c,v 2.4.2.3 1999/09/18 15:03:54 darrenr Exp $"
+literal|"@(#)$Id: ip_frag.c,v 2.4.2.4 1999/11/28 04:52:10 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1541,6 +1541,8 @@ operator|=
 name|ip
 operator|->
 name|ip_off
+operator|&
+name|IP_OFFMASK
 expr_stmt|;
 name|atoff
 operator|=
@@ -1557,11 +1559,7 @@ expr_stmt|;
 comment|/* 			 * If we've follwed the fragments, and this is the 			 * last (in order), shrink expiration time. 			 */
 if|if
 condition|(
-operator|(
 name|off
-operator|&
-name|IP_OFFMASK
-operator|)
 operator|==
 name|f
 operator|->
@@ -1572,7 +1570,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|off
+name|ip
+operator|->
+name|ip_off
 operator|&
 name|IP_MF
 operator|)
