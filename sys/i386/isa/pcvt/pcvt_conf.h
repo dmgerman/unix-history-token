@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1994 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_conf.h, 3.20, Last Edit-Date: [Sun Feb 26 12:48:45 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1994 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_conf.h, 3.20, Last Edit-Date: [Sun Apr  2 18:57:45 1995]  *  */
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/*  *  one of the following options must be set in the kernel config file:  *  *======================================================================*  *			N e t B S D					*  *======================================================================*  *  *	options "PCVT_NETBSD=xxx" enables support for NetBSD  *  *	select:  *		PCVT_NETBSD =   9	for NetBSD 0.9  *		PCVT_NETBSD =  99	for PRE-1.0 NetBSD-current  *		PCVT_NETBSD = 100	for NetBSD 1.0  *		PCVT_NETBSD = 199	for PRE-2.0 NetBSD-current  *  *  *======================================================================*  *			F r e e B S D					*  *======================================================================*  *		  *	options "PCVT_FREEBSD=xxx" enables support for FreeBSD  *  *	select:  *		PCVT_FREEBSD = 102	for 1.0 release (actually 1.0.2)  *		PCVT_FREEBSD = 110	for FreeBSD 1.1-Release  *		PCVT_FREEBSD = 115	for FreeBSD 1.1.5.1-Release  *		PCVT_FREEBSD = 200	for FreeBSD 2.0-Release  *		PCVT_FREEBSD = 210	for FreeBSD 2.1-Release  *  *======================================================================*  *			3 8 6 B S D					*  *======================================================================*  *		  *	options "PCVT_386BSD" enables support for 386BSD + pk 0.2.4  *                            NOTE: the 386BSD pcvt is unsupported and  *                            will be removed in a future release  *  */
+comment|/*  *  one of the following options must be set in the kernel config file:  *  *======================================================================*  *			N e t B S D					*  *======================================================================*  *  *	options "PCVT_NETBSD=xxx" enables support for NetBSD  *  *	select:  *		PCVT_NETBSD =   9	for NetBSD 0.9  *		PCVT_NETBSD =  99	for PRE-1.0 NetBSD-current  *		PCVT_NETBSD = 100	for NetBSD 1.0  *		PCVT_NETBSD = 199	for PRE-2.0 NetBSD-current  *  *  *======================================================================*  *			F r e e B S D					*  *======================================================================*  *		  *	options "PCVT_FREEBSD=xxx" enables support for FreeBSD  *  *	select:  *		PCVT_FREEBSD = 102	for 1.0 release (actually 1.0.2)  *		PCVT_FREEBSD = 110	for FreeBSD 1.1-Release  *		PCVT_FREEBSD = 115	for FreeBSD 1.1.5.1-Release  *		PCVT_FREEBSD = 200	for FreeBSD 2.0-Release  *		PCVT_FREEBSD = 210	for FreeBSD 2.1-Release  *  */
 end_comment
 
 begin_comment
@@ -1123,6 +1123,75 @@ if|#
 directive|if
 operator|!
 name|defined
+name|PCVT_PORTIO_DELAY
+end_if
+
+begin_comment
+comment|/* ---------- DEFAULT: ON ------------- */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCVT_PORTIO_DELAY
+value|1
+end_define
+
+begin_comment
+comment|/* Defining PCVT_PORTIO_DELAY lets pcvt */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|PCVT_PORTIO_DELAY
+operator|!=
+literal|0
+end_elif
+
+begin_comment
+comment|/* use multiple accesses to port 0x84   */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|PCVT_PORTIO_DELAY
+end_undef
+
+begin_comment
+comment|/* to produce a delay of 7 us needed for*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCVT_PORTIO_DELAY
+value|1
+end_define
+
+begin_comment
+comment|/* accessing the keyboard controller,   */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* otherwise the system delay functions */
+end_comment
+
+begin_comment
+comment|/* are used.                            */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
 name|PCVT_PCBURST
 end_if
 
@@ -1578,71 +1647,6 @@ end_comment
 
 begin_comment
 comment|/* different values (:-)		*/
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|PCVT_NEEDPG
-end_if
-
-begin_comment
-comment|/* ---------- DEFAULT: OFF ------------ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCVT_NEEDPG
-value|0
-end_define
-
-begin_comment
-comment|/* pg moved out to cons.c with pk 0.2.2	*/
-end_comment
-
-begin_elif
-elif|#
-directive|elif
-name|PCVT_NEEDPG
-operator|!=
-literal|0
-end_elif
-
-begin_comment
-comment|/* if you run a system with patchkit	*/
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_NEEDPG
-end_undef
-
-begin_comment
-comment|/* 0.2.1 or earlier you must define this*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCVT_NEEDPG
-value|1
-end_define
-
-begin_comment
-comment|/*   OBSOLETE, just for 386BSD 0.1 !!   */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* will be removed in a future release  */
 end_comment
 
 begin_if

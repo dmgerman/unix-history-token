@@ -1,17 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_hdr.h, 3.20, Last Edit-Date: [Wed Mar  8 21:00:00 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Brian Dunford-Shore and Joerg Wunsch.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_hdr.h, 3.20, Last Edit-Date: [Fri Apr  7 10:16:58 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patches from Thomas Gellekum  *	-hm	moving vt_selattr() inline into this file  *	-hm	Michael's keyboard fifo diffs  *	-hm	documenting some #ifdef's ...  *	-hm	Joerg's patches for FreeBSD's ttymalloc  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	moved user configurable items to pcvt_conf.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	patch from Joerg fixing FreeBSD 2.0 support  *	-hm	patch from Onno/John for NetBSD-current  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	added pcstop (patch from Onno)  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from Joerg for FreeBSD pre-2.1  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_hdr.h	VT220 Driver Global Include File  *	------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	integrating patches from Thomas Gellekum  *	-hm	moving vt_selattr() inline into this file  *	-hm	Michael's keyboard fifo diffs  *	-hm	documenting some #ifdef's ...  *	-hm	Joerg's patches for FreeBSD's ttymalloc  *	-jw	introduced kbd_emulate_pc() if scanset> 1  *	-hm	moved user configurable items to pcvt_conf.h  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	patch from Onno& Martin for NetBSD-current (post 1.0)  *	-hm	some adjustments for NetBSD 1.0  *	-hm	patch from Joerg fixing FreeBSD 2.0 support  *	-hm	patch from Onno/John for NetBSD-current  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	added pcstop (patch from Onno)  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from Joerg for FreeBSD pre-2.1  *	-jw	adding more support for FreeBSD pre-2.1  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PCVT_REL
-value|"3.20-b23"
+value|"3.20-b24"
 end_define
 
 begin_comment
@@ -552,6 +552,14 @@ directive|include
 file|<machine/pc/display.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|PCVT_FREEBSD
+operator|>
+literal|200
+end_if
+
 begin_include
 include|#
 directive|include
@@ -564,6 +572,11 @@ directive|include
 file|<machine/md_var.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -574,6 +587,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* PCVT_FREEBSD>= 200 */
+end_comment
 
 begin_include
 include|#
@@ -591,6 +608,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* PCVT_FREEBSD>= 200 */
+end_comment
 
 begin_if
 if|#
@@ -699,35 +720,6 @@ begin_if
 if|#
 directive|if
 name|defined
-name|PCVT_386BSD
-operator|&&
-name|PCVT_386BSD
-operator|!=
-literal|0
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_386BSD
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCVT_386BSD
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
 name|PCVT_FREEBSD
 operator|&&
 name|PCVT_FREEBSD
@@ -793,8 +785,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|PCVT_386BSD
-operator|+
 name|PCVT_FREEBSD
 operator|+
 name|PCVT_NETBSD
@@ -805,49 +795,23 @@ end_if
 begin_error
 error|#
 directive|error
-literal|"pcvt_hdr.h: You MUST define one of PCVT_{386,NET,FREE}BSD \ in the config file"
+literal|"pcvt_hdr.h: You MUST define one of PCVT_{NET,FREE}BSD \ in the config file"
 end_error
 
 begin_elif
 elif|#
 directive|elif
 operator|(
-name|PCVT_386BSD
-operator|&&
-operator|(
-name|PCVT_FREEBSD
-operator|||
-name|PCVT_NETBSD
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
-name|PCVT_NETBSD
-operator|&&
-operator|(
-name|PCVT_FREEBSD
-operator|||
-name|PCVT_386BSD
-operator|)
-operator|)
-operator|||
-expr|\
-operator|(
 name|PCVT_FREEBSD
 operator|&&
-operator|(
-name|PCVT_386BSD
-operator|||
 name|PCVT_NETBSD
-operator|)
 operator|)
 end_elif
 
 begin_error
 error|#
 directive|error
-literal|"pcvt_hdr.h: You should only define *one* of PCVT_{386,NET,FREE}BSD \ in the config file"
+literal|"pcvt_hdr.h: You CAN only define *one* of PCVT_{NET,FREE}BSD \ in the config file"
 end_error
 
 begin_endif
@@ -968,40 +932,6 @@ end_endif
 begin_comment
 comment|/* XSERVER */
 end_comment
-
-begin_comment
-comment|/* #undef PCVT_NEEDPG is mandatory for PCVT_NETBSD and PCVT_FREEBSD */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|PCVT_NETBSD
-operator|||
-name|PCVT_FREEBSD
-operator|)
-operator|&&
-name|PCVT_NEEDPG
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|PCVT_NEEDPG
-end_undef
-
-begin_define
-define|#
-directive|define
-name|PCVT_NEEDPG
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* PCVT_SCREENSAVER is mandatory for PCVT_PRETTYSCRNS */
@@ -7994,58 +7924,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|PCVT_NEEDPG
-end_if
-
-begin_function_decl
-name|int
-name|pg
-parameter_list|(
-name|char
-modifier|*
-name|p
-parameter_list|,
-name|int
-name|q
-parameter_list|,
-name|int
-name|r
-parameter_list|,
-name|int
-name|s
-parameter_list|,
-name|int
-name|t
-parameter_list|,
-name|int
-name|u
-parameter_list|,
-name|int
-name|v
-parameter_list|,
-name|int
-name|w
-parameter_list|,
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|,
-name|int
-name|z
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
 name|roll_up
@@ -9168,6 +9046,108 @@ end_endif
 
 begin_comment
 comment|/* PCVT_INCLUDE_VT_SELATTR */
+end_comment
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	produce 7 us delay accessing the keyboard controller  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_PORTIO_DELAY
+end_if
+
+begin_comment
+comment|/* use multiple dummy accesses to port    */
+end_comment
+
+begin_comment
+comment|/* 0x84 to produce keyboard controller    */
+end_comment
+
+begin_comment
+comment|/* access delays                          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCVT_KBD_DELAY
+parameter_list|()
+define|\
+value|{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); } \ 	{ u_char x = inb(0x84); }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* PCVT_PORTIO_DELAY */
+end_comment
+
+begin_comment
+comment|/* use system supplied delay function for */
+end_comment
+
+begin_comment
+comment|/* producing delays for accesssing the    */
+end_comment
+
+begin_comment
+comment|/* keyboard controller                    */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|PCVT_NETBSD
+operator|>
+literal|9
+end_if
+
+begin_define
+define|#
+directive|define
+name|PCVT_KBD_DELAY
+parameter_list|()
+value|delay(7)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|PCVT_FREEBSD
+operator|||
+operator|(
+name|PCVT_NETBSD
+operator|<=
+literal|9
+operator|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PCVT_KBD_DELAY
+parameter_list|()
+value|DELAY(7)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PCVT_PORTIO_DELAY */
 end_comment
 
 begin_comment

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Joerg Wunsch and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_ext.c, 3.20, Last Edit-Date: [Fri Mar 24 20:58:28 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  *	Hellmuth Michaelis, Joerg Wunsch and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_ext.c, 3.20, Last Edit-Date: [Thu Apr  6 10:07:45 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	applied Onno van der Linden's patch for Cirrus BIOS upgrade  *	-hm	pcvt_x_hook has to care about fkey labels now  *	-hm	changed some bcopyb's to bcopy's  *	-hm	TS_INDEX -> TS_DATA for cirrus (mail from Onno/Charles)  *	-jw	removed kbc_8042(), and replaced by kbd_emulate_pc()  *	-hm	X server patch from John Kohl<jtk@kolvir.blrc.ma.us>  *	-hm	applying Joerg's patch for FreeBSD 2.0  *	-hm	enable 132 col support for Trident TVGA8900CL  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	fastscroll/Crtat bugfix from Lon Willett  *	-hm	bell patch from Thomas Eberhardt for NetBSD  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from John Kohl fixing tsleep bug in usl_vt_ioctl()  *	-hm	bugfix: clear 25th line when switching to a force 24 lines vt  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_ext.c	VT220 Driver Extended Support Routines  *	------------------------------------------------------  *  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	applied Onno van der Linden's patch for Cirrus BIOS upgrade  *	-hm	pcvt_x_hook has to care about fkey labels now  *	-hm	changed some bcopyb's to bcopy's  *	-hm	TS_INDEX -> TS_DATA for cirrus (mail from Onno/Charles)  *	-jw	removed kbc_8042(), and replaced by kbd_emulate_pc()  *	-hm	X server patch from John Kohl<jtk@kolvir.blrc.ma.us>  *	-hm	applying Joerg's patch for FreeBSD 2.0  *	-hm	enable 132 col support for Trident TVGA8900CL  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	fastscroll/Crtat bugfix from Lon Willett  *	-hm	bell patch from Thomas Eberhardt for NetBSD  *	-hm	multiple X server bugfixes from Lon Willett  *	-hm	patch from John Kohl fixing tsleep bug in usl_vt_ioctl()  *	-hm	bugfix: clear 25th line when switching to a force 24 lines vt  *	-jw	add some forward declarations  *	-hm	fixing MDA re-init when leaving X  *	-hm	patch from John Kohl fixing potential divide by 0 problem  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -9703,8 +9703,7 @@ operator|==
 name|MDA_ADAPTOR
 condition|)
 block|{
-comment|/* 			 * Due to the fact that HGC registers are 			 * write-only, the Xserver can only make 			 * guesses about the state the HGC adaptor 			 * has been before turning on X mode. Thus, 			 * the display must be re-enabled now, and 			 * the cursor shape and location restored. 			 */
-comment|/* enable display, text mode */
+comment|/* 		     * Due to the fact that HGC registers are write-only, 		     * the Xserver can only make guesses about the state 		     * the HGC adaptor has been before turning on X mode. 		     * Thus, the display must be re-enabled now, and the 		     * cursor shape and location restored. 		     */
 name|outb
 argument_list|(
 name|GN_DMCNTLM
@@ -9712,7 +9711,105 @@ argument_list|,
 literal|0x28
 argument_list|)
 expr_stmt|;
-comment|/* XXX - something missing here ? Joerg ??? */
+comment|/* enable display, text mode */
+name|outb
+argument_list|(
+name|addr_6845
+argument_list|,
+name|CRTC_CURSORH
+argument_list|)
+expr_stmt|;
+comment|/* select high register */
+name|outb
+argument_list|(
+name|addr_6845
+operator|+
+literal|1
+argument_list|,
+operator|(
+operator|(
+name|vsp
+operator|->
+name|Crtat
+operator|+
+name|vsp
+operator|->
+name|cur_offset
+operator|)
+operator|-
+name|Crtat
+operator|)
+operator|>>
+literal|8
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|addr_6845
+argument_list|,
+name|CRTC_CURSORL
+argument_list|)
+expr_stmt|;
+comment|/* select low register */
+name|outb
+argument_list|(
+name|addr_6845
+operator|+
+literal|1
+argument_list|,
+operator|(
+operator|(
+name|vsp
+operator|->
+name|Crtat
+operator|+
+name|vsp
+operator|->
+name|cur_offset
+operator|)
+operator|-
+name|Crtat
+operator|)
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|addr_6845
+argument_list|,
+name|CRTC_CURSTART
+argument_list|)
+expr_stmt|;
+comment|/* select high register */
+name|outb
+argument_list|(
+name|addr_6845
+operator|+
+literal|1
+argument_list|,
+name|vsp
+operator|->
+name|cursor_start
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|addr_6845
+argument_list|,
+name|CRTC_CUREND
+argument_list|)
+expr_stmt|;
+comment|/* select low register */
+name|outb
+argument_list|(
+name|addr_6845
+operator|+
+literal|1
+argument_list|,
+name|vsp
+operator|->
+name|cursor_end
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* make status display happy */
 name|async_update
@@ -11936,6 +12033,13 @@ decl_stmt|;
 if|#
 directive|if
 name|PCVT_NETBSD
+if|if
+condition|(
+name|pitch
+operator|!=
+literal|0
+condition|)
+block|{
 name|sysbeep
 argument_list|(
 name|PCVT_SYSBEEPF
@@ -11949,6 +12053,7 @@ operator|/
 literal|1000
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* PCVT_NETBSD */

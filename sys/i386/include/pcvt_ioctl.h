@@ -1,22 +1,22 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  * 	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Holger Veit  *	and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)ioctl_pcvt.h, 3.20, Last Edit-Date: [Thu Mar 30 10:38:23 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Holger Veit.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * This code is derived from software contributed to 386BSD by  * Holger Veit.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by  * 	Hellmuth Michaelis, Brian Dunford-Shore, Joerg Wunsch, Holger Veit  *	and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)ioctl_pcvt.h, 3.20, Last Edit-Date: [Fri Apr  7 10:17:13 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	some new PCVT_xxx (and CONF_xxx) values  *	-hm	version definitions moved to begin of file  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	accept KERNEL or _KERNEL  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------  *  *	pcvt_ioctl.h	ioctl's for the VT220 video driver 'pcvt'  *	---------------------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	some new PCVT_xxx (and CONF_xxx) values  *	-hm	version definitions moved to begin of file  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	accept KERNEL or _KERNEL  *	-hm	changed _IOCTL_PCVT_H_ to _MACHINE_PCVT_IOCTL_H_ (bde)  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_IOCTL_PCVT_H_
+name|_MACHINE_PCVT_IOCTL_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_IOCTL_PCVT_H_
+name|_MACHINE_PCVT_IOCTL_H_
 end_define
 
 begin_comment
@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|PCVTIDNAME
-value|"pcvt-b23"
+value|"pcvt-b24"
 end_define
 
 begin_comment
@@ -2249,6 +2249,7 @@ define|#
 directive|define
 name|CONF_386BSD
 value|1
+comment|/* unsupported */
 define|#
 directive|define
 name|CONF_NETBSD
@@ -2347,10 +2348,7 @@ directive|define
 name|CONF_SW0CNOUTP
 value|0x00001000
 comment|/* was FORCE8BIT */
-define|#
-directive|define
-name|CONF_NEEDPG
-value|0x00002000
+comment|/* 0x00002000 was NEEDPG */
 define|#
 directive|define
 name|CONF_SETCOLOR
@@ -2375,7 +2373,11 @@ define|#
 directive|define
 name|CONF_USL_VT_COMPAT
 value|0x00080000
-comment|/* 0x00100000 was FAKE_SYSCONS10 */
+define|#
+directive|define
+name|CONF_PORTIO_DELAY
+value|0x00100000
+comment|/* was FAKE_SYSCONS10 */
 define|#
 directive|define
 name|CONF_INHIBIT_NUMLOCK
@@ -2825,7 +2827,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _IOCTL_PC_H_ */
+comment|/* ! _MACHINE_PCVT_IOCTL_H_ */
 end_comment
 
 end_unit

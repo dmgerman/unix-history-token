@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_sup.c, 3.20, Last Edit-Date: [Sun Feb 19 19:59:38 1995]  *  */
+comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis and Joerg Wunsch.  *  * Copyright (c) 1992, 1993 Brian Dunford-Shore and Scott Turner.  *  * Copyright (C) 1992, 1993 Soeren Schmidt.  *  * All rights reserved.  *  * For the sake of compatibility, portions of this code regarding the  * X server interface are taken from Soeren Schmidt's syscons driver.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis,  *	Brian Dunford-Shore, Joerg Wunsch, Scott Turner and Soeren Schmidt.  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * @(#)pcvt_sup.c, 3.20, Last Edit-Date: [Thu Apr  6 10:49:44 1995]  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	removed paranoid delay()/DELAY() from vga_test()  *	-hm	removing vgapage() protection if PCVT_KBD_FIFO  *	-hm	some new CONF_ - values  *	-hm	Joerg's patches for FreeBSD ttymalloc  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	applying Lon Willet's patches for NetBSD  *	-hm	NetBSD PR #400: patch to short-circuit TIOCSWINSZ  *	-hm	getting PCVT_BURST reported correctly for FreeBSD 2.0  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	moving ega/vga coldinit support code to mda2egaorvga()  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	pcvt_sup.c	VT220 Driver Support Routines  *	---------------------------------------------  *	-hm	------------ Release 3.00 --------------  *	-hm	integrating NetBSD-current patches  *	-hm	removed paranoid delay()/DELAY() from vga_test()  *	-hm	removing vgapage() protection if PCVT_KBD_FIFO  *	-hm	some new CONF_ - values  *	-hm	Joerg's patches for FreeBSD ttymalloc  *	-hm	applying Joerg's patches for FreeBSD 2.0  *	-hm	applying Lon Willet's patches for NetBSD  *	-hm	NetBSD PR #400: patch to short-circuit TIOCSWINSZ  *	-hm	getting PCVT_BURST reported correctly for FreeBSD 2.0  *	-hm	applying patch from Joerg fixing Crtat bug  *	-hm	moving ega/vga coldinit support code to mda2egaorvga()  *	-hm	patch from Thomas Eberhardt fixing force 24 lines fkey update  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -946,21 +946,6 @@ parameter_list|)
 block|{
 if|#
 directive|if
-name|PCVT_386BSD
-name|data
-operator|->
-name|opsys
-operator|=
-name|CONF_386BSD
-expr_stmt|;
-name|data
-operator|->
-name|opsysrel
-operator|=
-name|PCVT_386BSD
-expr_stmt|;
-elif|#
-directive|elif
 name|PCVT_NETBSD
 name|data
 operator|->
@@ -1177,13 +1162,6 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|PCVT_NEEDPG
-operator||
-name|CONF_NEEDPG
-endif|#
-directive|endif
-if|#
-directive|if
 name|PCVT_SETCOLOR
 operator||
 name|CONF_SETCOLOR
@@ -1222,6 +1200,13 @@ directive|if
 name|PCVT_USL_VT_COMPAT
 operator||
 name|CONF_USL_VT_COMPAT
+endif|#
+directive|endif
+if|#
+directive|if
+name|PCVT_PORTIO_DELAY
+operator||
+name|CONF_PORTIO_DELAY
 endif|#
 directive|endif
 if|#
@@ -2594,6 +2579,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|vs
 index|[
 name|screen
@@ -2605,6 +2591,55 @@ name|data
 operator|->
 name|force_24lines
 expr_stmt|;
+if|if
+condition|(
+name|vs
+index|[
+name|screen
+index|]
+operator|.
+name|force24
+condition|)
+block|{
+name|swritefkl
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+literal|"FORCE24 ENABLE *"
+argument_list|,
+operator|&
+name|vs
+index|[
+name|screen
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|swritefkl
+argument_list|(
+literal|2
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+literal|"FORCE24 ENABLE  "
+argument_list|,
+operator|&
+name|vs
+index|[
+name|screen
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|(
