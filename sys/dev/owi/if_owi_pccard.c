@@ -614,7 +614,7 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
-name|PLANEX_2
+name|PLANEX
 argument_list|,
 name|GWNS11H
 argument_list|,
