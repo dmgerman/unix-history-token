@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.27 (Berkeley) %G%"
+literal|"@(#)conf.c	6.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3775,17 +3775,17 @@ name|bool
 name|enoughspace
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|defined
-name|(
+argument_list|(
 name|HASSTATFS
-name|)
-name|||
+argument_list|)
+operator|||
 name|defined
-name|(
+argument_list|(
 name|HASUSTAT
-name|)
+argument_list|)
 if|#
 directive|if
 name|defined
