@@ -2961,6 +2961,28 @@ name|np
 operator|<
 literal|0
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|errno
+operator|==
+name|ENXIO
+condition|)
+block|{
+name|logmsg
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Device not/no longer configured"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 name|logmsg
 argument_list|(
 name|LOG_NOTICE
@@ -2973,6 +2995,7 @@ name|hpcap
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|gotsig_close
