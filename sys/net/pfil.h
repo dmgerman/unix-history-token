@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -50,12 +56,6 @@ end_include
 begin_comment
 comment|/* XXX */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
 
 begin_struct_decl
 struct_decl|struct

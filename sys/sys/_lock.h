@@ -15,12 +15,6 @@ directive|define
 name|_SYS__LOCK_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
 begin_struct
 struct|struct
 name|lock_object

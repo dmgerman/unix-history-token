@@ -464,6 +464,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -471,12 +477,6 @@ begin_include
 include|#
 directive|include
 file|<sys/_mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
 end_include
 
 begin_typedef
