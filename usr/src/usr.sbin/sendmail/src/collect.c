@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	1.4	%G%"
+literal|"@(#)collect.c	1.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,12 @@ name|NULL
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|c
+operator|!=
+name|EOF
+condition|)
 name|ungetc
 argument_list|(
 name|c
