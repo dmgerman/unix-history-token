@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pty.c	5.5 (Berkeley) %G%"
+literal|"@(#)pty.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -294,9 +294,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fchown
+name|chown
 argument_list|(
-name|master
+name|line
 argument_list|,
 name|getuid
 argument_list|()
@@ -307,9 +307,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fchmod
+name|chmod
 argument_list|(
-name|master
+name|line
 argument_list|,
 name|S_IRUSR
 operator||
