@@ -761,8 +761,6 @@ directive|define
 name|DEV_STRATEGY
 parameter_list|(
 name|bp
-parameter_list|,
-name|dummy
 parameter_list|)
 define|\
 value|do {								\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(bp)->b_io.bio_done = bufdonebio;				\ 	(bp)->b_io.bio_caller2 = (bp);					\ 	BIO_STRATEGY(&(bp)->b_io);					\ 	} while (0)

@@ -2009,8 +2009,6 @@ operator|&
 name|rqe
 operator|->
 name|b
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4586,8 +4584,6 @@ operator|&
 name|sbp
 operator|->
 name|b
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|splx

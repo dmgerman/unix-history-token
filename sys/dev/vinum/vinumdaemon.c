@@ -619,8 +619,6 @@ argument_list|(
 name|rq
 operator|->
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* reissue the command */

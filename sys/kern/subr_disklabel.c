@@ -162,8 +162,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -697,8 +695,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|error
@@ -847,8 +843,6 @@ directive|endif
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|error
@@ -915,8 +909,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|error

@@ -2944,8 +2944,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT
@@ -2956,8 +2954,6 @@ else|else
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -3081,8 +3077,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

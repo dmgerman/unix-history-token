@@ -1161,8 +1161,6 @@ expr_stmt|;
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* initiate the transfer */
@@ -3549,8 +3547,6 @@ comment|/*      * This should read:      *      *       vinumstrategy (bp);     
 name|DEV_STRATEGY
 argument_list|(
 name|bp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|error
