@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	3.17 83/12/02"
+literal|"@(#)cmd.c	3.18 83/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -440,6 +440,13 @@ case|case
 literal|'L'
 case|:
 name|c_list
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|c_variable
 argument_list|()
 expr_stmt|;
 break|break;
