@@ -85,6 +85,14 @@ end_endif
 
 begin_decl_stmt
 name|int
+name|datesep
+init|=
+literal|'/'
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|preserve_perms
 init|=
 literal|0
@@ -14476,11 +14484,15 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%04d/%02d/%02d %02d:%02d:%02d"
+literal|"%04d%c%02d%c%02d %02d:%02d:%02d"
 argument_list|,
 name|year
 argument_list|,
+name|datesep
+argument_list|,
 name|mon
+argument_list|,
+name|datesep
 argument_list|,
 name|mday
 argument_list|,

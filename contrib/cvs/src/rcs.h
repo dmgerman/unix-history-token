@@ -1405,6 +1405,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|datesep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|preserve_perms
 decl_stmt|;
 end_decl_stmt

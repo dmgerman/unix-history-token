@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Print Log Information  *   * Prints the RCS "log" (rlog) information for the specified files.  With no  * argument, prints the log information for all the files in the directory  * (recursive by default).  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -7463,11 +7463,15 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%04d/%02d/%02d %02d:%02d:%02d"
+literal|"%04d%c%02d%c%02d %02d:%02d:%02d"
 argument_list|,
 name|year
 argument_list|,
+name|datesep
+argument_list|,
 name|mon
+argument_list|,
+name|datesep
 argument_list|,
 name|mday
 argument_list|,
