@@ -1084,7 +1084,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"proc_dtor: bad thread pointer"
+literal|"proc_fini: bad thread pointer"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1104,7 +1104,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"proc_dtor: bad kg pointer"
+literal|"proc_fini: bad kg pointer"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1124,7 +1124,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"proc_dtor: bad ke pointer"
+literal|"proc_fini: bad ke pointer"
 operator|)
 argument_list|)
 expr_stmt|;
