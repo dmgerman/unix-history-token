@@ -658,6 +658,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|dumpfile
 argument_list|)
 expr_stmt|;
@@ -2297,6 +2299,8 @@ condition|)
 block|{
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|dumpfile
 argument_list|)
 expr_stmt|;
