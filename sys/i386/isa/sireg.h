@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: sireg.h,v 1.1 1995/08/09 13:13:47 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: sireg.h,v 1.2 1995/11/28 02:07:36 peter Exp $  */
 end_comment
 
 begin_comment
@@ -181,8 +181,172 @@ comment|/* Clear host int */
 end_comment
 
 begin_comment
+comment|/* SI old PCI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIPCIBADR
+value|0x10
+end_define
+
+begin_comment
+comment|/* Which BADR to map in RAM */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIPCI_MEMSIZE
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Mapping size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIPCIRESET
+value|0xc0001
+end_define
+
+begin_comment
+comment|/* 0 = Reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIPCIINTCL
+value|0x40001
+end_define
+
+begin_comment
+comment|/* 0 = clear int */
+end_comment
+
+begin_comment
+comment|/* SI Jet PCI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJETSSIDREG
+value|0x2c
+end_define
+
+begin_comment
+comment|/* Is it a SI/XIO or RIO? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJETBADR
+value|0x18
+end_define
+
+begin_comment
+comment|/* Which BADR to map in RAM */
+end_comment
+
+begin_comment
+comment|/* SI Jet PCI& ISA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJETIDBASE
+value|0x7c00
+end_define
+
+begin_comment
+comment|/* ID ROM base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SISPLXID
+value|0x984d
+end_define
+
+begin_comment
+comment|/* Specialix ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIUNIQID
+value|0x7c0e
+end_define
+
+begin_comment
+comment|/*& 0xf0 = 0x20 for Si/XIO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJETRESET
+value|0x7d00
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIJETINTCL
+value|0x7d80
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIJETCONFIG
+value|0x7c00
+end_define
+
+begin_comment
+comment|/* for ISA, top nibble = IRQ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJETBUSEN
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIJETIRQEN
+value|0x4
+end_define
+
+begin_comment
 comment|/*  * MEMSIZE is the total shared mem region  * RAMSIZE is value to use when probing  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SIJET_MEMSIZE
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIJET_RAMSIZE
+value|0x7000
+end_define
 
 begin_define
 define|#
