@@ -81,6 +81,37 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* for struct timeval in net/if.h */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_comment
+comment|/* for struct ifnet in net/if_arp.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -92,6 +123,29 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN_TCP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dlpi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -183,51 +237,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATF_INUSE
+end_ifndef
+
 begin_comment
-comment|/* For BSD 4.4, set arp entry by writing to routing socket */
+comment|/* Not defined on some systems (i.e. Linux) */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-end_if
-
-begin_if
-if|#
-directive|if
-name|BSD
-operator|>=
-literal|199306
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_arp_set
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|in_addr
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|ATF_INUSE
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -360,9 +385,11 @@ name|s
 parameter_list|,
 name|ia
 parameter_list|,
-name|ha
+name|hafamily
 parameter_list|,
-name|len
+name|haddr
+parameter_list|,
+name|halen
 parameter_list|)
 name|int
 name|s
@@ -373,17 +400,92 @@ name|in_addr
 modifier|*
 name|ia
 decl_stmt|;
+comment|/* protocol address */
+name|int
+name|hafamily
+decl_stmt|;
+comment|/* HW address family */
 name|u_char
 modifier|*
-name|ha
+name|haddr
 decl_stmt|;
+comment|/* HW address data */
 name|int
-name|len
+name|halen
 decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
 name|SIOCSARP
+ifdef|#
+directive|ifdef
+name|WIN_TCP
+comment|/* This is an SVR4 with different networking code from 	 * Wollongong WIN-TCP.  Not quite like the Lachman code. 	 * Code from: drew@drewsun.FEITH.COM (Andrew B. Sudell) 	 */
+undef|#
+directive|undef
+name|SIOCSARP
+define|#
+directive|define
+name|SIOCSARP
+value|ARP_ADD
+name|struct
+name|arptab
+name|arpreq
+decl_stmt|;
+comment|/* Arp table entry */
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|arpreq
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|arpreq
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|arpreq
+operator|.
+name|at_flags
+operator|=
+name|ATF_COM
+expr_stmt|;
+comment|/* Set up IP address */
+name|arpreq
+operator|.
+name|at_in
+operator|=
+name|ia
+operator|->
+name|s_addr
+expr_stmt|;
+comment|/* Set up Hardware Address */
+name|bcopy
+argument_list|(
+name|haddr
+argument_list|,
+name|arpreq
+operator|.
+name|at_enaddr
+argument_list|,
+name|halen
+argument_list|)
+expr_stmt|;
+comment|/* Set the Date Link type. */
+comment|/* XXX - Translate (hafamily) to dltype somehow? */
+name|arpreq
+operator|.
+name|at_dltype
+operator|=
+name|DL_ETHER
+expr_stmt|;
+else|#
+directive|else
+comment|/* WIN_TCP */
+comment|/* Good old Berkeley way. */
 name|struct
 name|arpreq
 name|arpreq
@@ -394,19 +496,10 @@ name|sockaddr_in
 modifier|*
 name|si
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SVR4
-name|int
-name|fd
+name|char
+modifier|*
+name|p
 decl_stmt|;
-name|struct
-name|strioctl
-name|iocb
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* SVR4 */
 name|bzero
 argument_list|(
 operator|(
@@ -458,23 +551,55 @@ operator|*
 name|ia
 expr_stmt|;
 comment|/* Set up the hardware address. */
-name|bcopy
-argument_list|(
-name|ha
-argument_list|,
+ifdef|#
+directive|ifdef
+name|__linux__
+comment|/* XXX - Do others need this? -gwr */
+comment|/* 	 * Linux requires the sa_family field set. 	 * longyear@netcom.com (Al Longyear) 	 */
+name|arpreq
+operator|.
+name|arp_ha
+operator|.
+name|sa_family
+operator|=
+name|hafamily
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* linux */
+comment|/* This variable is just to help catch type mismatches. */
+name|p
+operator|=
 name|arpreq
 operator|.
 name|arp_ha
 operator|.
 name|sa_data
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|haddr
 argument_list|,
-name|len
+name|p
+argument_list|,
+name|halen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* WIN_TCP */
 ifdef|#
 directive|ifdef
 name|SVR4
 comment|/* 	 * And now the stuff for System V Rel 4.x which does not 	 * appear to allow SIOCxxx ioctls on a socket descriptor. 	 * Thanks to several people: (all sent the same fix) 	 *   Barney Wolff<barney@databus.com>, 	 *   bear@upsys.se (Bj|rn Sj|holm), 	 *   Michael Kuschke<Michael.Kuschke@Materna.DE>, 	 */
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|struct
+name|strioctl
+name|iocb
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -568,6 +693,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 else|#
 directive|else
 comment|/* SVR4 */
@@ -607,57 +733,49 @@ comment|/* SVR4 */
 else|#
 directive|else
 comment|/* SIOCSARP */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-operator|&&
-operator|(
-name|BSD
-operator|>=
-literal|199306
-operator|)
-name|bsd_arp_set
-argument_list|(
-name|ia
-argument_list|,
-name|ha
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* Not BSD 4.4, and SIOCSARP not defined */
-comment|/* 	 * Oh well, SIOCSARP is not defined.  Just run arp(8). 	 * XXX - Gag! 	 */
+comment|/* 	 * Oh well, SIOCSARP is not defined.  Just run arp(8). 	 * Need to delete partial entry first on some systems. 	 * XXX - Gag! 	 */
+name|int
+name|status
+decl_stmt|;
 name|char
 name|buf
 index|[
 literal|256
 index|]
 decl_stmt|;
-name|int
-name|status
+name|char
+modifier|*
+name|a
 decl_stmt|;
-name|sprintf
-argument_list|(
-name|buf
-argument_list|,
-literal|"arp -s %s %s temp"
-argument_list|,
+specifier|extern
+name|char
+modifier|*
+name|inet_ntoa
+parameter_list|()
+function_decl|;
+name|a
+operator|=
 name|inet_ntoa
 argument_list|(
 operator|*
 name|ia
 argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"arp -d %s; arp -s %s %s temp"
+argument_list|,
+name|a
+argument_list|,
+name|a
 argument_list|,
 name|haddrtoa
 argument_list|(
-name|ha
+name|haddr
 argument_list|,
-name|len
+name|halen
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -695,9 +813,6 @@ name|status
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
-comment|/* ! 4.4 BSD */
 endif|#
 directive|endif
 comment|/* SIOCSARP */

@@ -3,27 +3,6 @@ begin_comment
 comment|/************************************************************************           Copyright 1988, 1991 by Carnegie Mellon University                            All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Carnegie Mellon University not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL CMU BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. ************************************************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: bootpef.c,v 1.1.1.1 1994/09/10 14:44:54 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * bootpef - BOOTP Extension File generator  *	Makes an "Extension File" for each host entry that  *	defines an and Extension File. (See RFC1497, tag 18.)  *  * HISTORY  *	See ./Changes  *  * BUGS  *	See ./ToDo  */
 end_comment
@@ -322,27 +301,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-specifier|static
-name|void
-name|dovend_rfc1048
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|bootp
-operator|*
-operator|,
-expr|struct
-name|host
-operator|*
-operator|,
-name|int32
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1119,10 +1077,6 @@ name|byte
 modifier|*
 name|vp
 decl_stmt|;
-name|char
-modifier|*
-name|tmpstr
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1308,7 +1262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* dovend_rfc1048 */
+comment|/* mktagfile */
 end_comment
 
 begin_comment

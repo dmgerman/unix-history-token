@@ -40,6 +40,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_comment
+comment|/* for struct timeval in net/if.h */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -90,6 +111,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"getether.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|debug
@@ -106,12 +133,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -166,6 +197,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|ea
 argument_list|)
 operator|)

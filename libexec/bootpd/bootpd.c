@@ -3,27 +3,6 @@ begin_comment
 comment|/************************************************************************           Copyright 1988, 1991 by Carnegie Mellon University                            All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Carnegie Mellon University not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL CMU BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. ************************************************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: bootpd.c,v 1.1.1.1 1994/09/10 14:44:54 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * BOOTP (bootstrap protocol) server daemon.  *  * Answers BOOTP request packets from booting client machines.  * See [SRI-NIC]<RFC>RFC951.TXT for a description of the protocol.  * See [SRI-NIC]<RFC>RFC1048.TXT for vendor-information extensions.  * See RFC 1395 for option tags 14-17.  * See accompanying man page -- bootpd.8  *  * HISTORY  *	See ./Changes  *  * BUGS  *	See ./ToDo  */
 end_comment
@@ -71,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/utsname.h>
 end_include
 
 begin_include
@@ -181,28 +166,6 @@ end_include
 begin_comment
 comment|/* for O_RDONLY, etc */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SVR4
-end_ifdef
-
-begin_comment
-comment|/* Using sigset() avoids the need to re-arm each time. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|signal
-value|sigset
-end_define
 
 begin_endif
 endif|#
@@ -695,22 +658,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|hostname
-index|[
-name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* System host name */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|in_addr
 name|my_ip_addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|utsname
+name|my_uname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|hostname
 decl_stmt|;
 end_decl_stmt
 
@@ -821,6 +785,16 @@ decl_stmt|;
 name|int
 name|standalone
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SA_NOCLDSTOP
+comment|/* Have POSIX sigaction(2). */
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+endif|#
+directive|endif
 name|progname
 operator|=
 name|strrchr
@@ -1013,6 +987,36 @@ name|timeout
 operator|=
 operator|&
 name|actualtimeout
+expr_stmt|;
+if|if
+condition|(
+name|uname
+argument_list|(
+operator|&
+name|my_uname
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"bootpd: can't get hostname\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|hostname
+operator|=
+name|my_uname
+operator|.
+name|nodename
 expr_stmt|;
 comment|/* 	 * Read switches. 	 */
 for|for
@@ -1304,19 +1308,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
-argument_list|(
 name|hostname
-argument_list|,
+operator|=
 name|stmp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-operator|-
-literal|1
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1501,46 +1495,6 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* 	 * Get my hostname and IP address. 	 */
-if|if
-condition|(
-name|hostname
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|gethostname
-argument_list|(
-name|hostname
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hostname
-argument_list|)
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bootpd: can't get hostname\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 name|hep
 operator|=
 name|gethostbyname
@@ -1927,6 +1881,96 @@ name|IPPORT_BOOTPC
 expr_stmt|;
 block|}
 comment|/* 	 * Set up signals to read or dump the table. 	 */
+ifdef|#
+directive|ifdef
+name|SA_NOCLDSTOP
+comment|/* Have POSIX sigaction(2). */
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|catcher
+expr_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGHUP
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|report
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sigaction: %s"
+argument_list|,
+name|get_errmsg
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|SIGUSR1
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|report
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sigaction: %s"
+argument_list|,
+name|get_errmsg
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
+comment|/* SA_NOCLDSTOP */
+comment|/* Old-fashioned UNIX signals */
 if|if
 condition|(
 operator|(
@@ -1989,6 +2033,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* SA_NOCLDSTOP */
 comment|/* 	 * Process incoming requests. 	 */
 for|for
 control|(
@@ -1996,11 +2043,24 @@ init|;
 condition|;
 control|)
 block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
 name|readfds
 operator|=
 literal|1
 operator|<<
 name|s
+expr_stmt|;
+if|if
+condition|(
+name|timeout
+condition|)
+name|tv
+operator|=
+operator|*
+name|timeout
 expr_stmt|;
 name|nfound
 operator|=
@@ -2021,7 +2081,14 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+operator|(
 name|timeout
+operator|)
+condition|?
+operator|&
+name|tv
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2202,7 +2269,7 @@ condition|)
 block|{
 name|report
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"received short packet"
 argument_list|)
@@ -2344,11 +2411,19 @@ name|do_dumptab
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SA_NOCLDSTOP
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|SYSV
-comment|/* For older "System V" derivatives with no sigset(). */
-comment|/* XXX - Should just do it the POSIX way (sigaction). */
+argument_list|)
+comment|/* For older "System V" derivatives with no sigaction(). */
 name|signal
 argument_list|(
 name|sig
@@ -2743,12 +2818,10 @@ comment|/* 			 * XXX - Add dynamic IP address assignment? 			 */
 if|if
 condition|(
 name|debug
-operator|>
-literal|1
 condition|)
 name|report
 argument_list|(
-name|LOG_INFO
+name|LOG_NOTICE
 argument_list|,
 literal|"unknown client %s address %s"
 argument_list|,
@@ -2875,8 +2948,6 @@ block|{
 if|if
 condition|(
 name|debug
-operator|>
-literal|1
 condition|)
 block|{
 name|report
@@ -3518,8 +3589,14 @@ argument_list|,
 name|clntpath
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CHECK_FILE_ACCESS
 name|null_file_name
 label|:
+endif|#
+directive|endif
+comment|/* CHECK_FILE_ACCESS */
 comment|/* 	 * Handle vendor options based on magic number. 	 */
 if|if
 condition|(
@@ -3832,6 +3909,8 @@ name|ha
 decl_stmt|;
 name|int
 name|len
+decl_stmt|,
+name|haf
 decl_stmt|;
 comment|/* 	 * XXX - Should honor bp_flags "broadcast" bit here. 	 * Temporary workaround: use the :ra=ADDR: option to 	 * set the reply address to the broadcast address. 	 */
 comment|/* 	 * If the destination address was specified explicitly 	 * (i.e. the broadcast address for HP compatiblity) 	 * then send the response to that address.  Otherwise, 	 * act in accordance with RFC951: 	 *   If the client IP address is specified, use that 	 * else if gateway IP address is specified, use that 	 * else make a temporary arp cache entry for the client's 	 * NEW IP/hardware address and use that. 	 */
@@ -3959,6 +4038,25 @@ name|len
 operator|=
 name|MAXHADDRLEN
 expr_stmt|;
+name|haf
+operator|=
+operator|(
+name|int
+operator|)
+name|bp
+operator|->
+name|bp_htype
+expr_stmt|;
+if|if
+condition|(
+name|haf
+operator|==
+literal|0
+condition|)
+name|haf
+operator|=
+name|HTYPE_ETHERNET
+expr_stmt|;
 if|if
 condition|(
 name|debug
@@ -3990,6 +4088,8 @@ name|s
 argument_list|,
 operator|&
 name|dst
+argument_list|,
+name|haf
 argument_list|,
 name|ha
 argument_list|,
@@ -4678,10 +4778,6 @@ decl_stmt|;
 name|byte
 modifier|*
 name|vp
-decl_stmt|;
-name|char
-modifier|*
-name|tmpstr
 decl_stmt|;
 specifier|static
 name|char

@@ -111,6 +111,8 @@ expr|struct
 name|in_addr
 operator|*
 operator|,
+name|int
+operator|,
 name|u_char
 operator|*
 operator|,

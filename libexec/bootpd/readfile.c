@@ -3,27 +3,6 @@ begin_comment
 comment|/************************************************************************           Copyright 1988, 1991 by Carnegie Mellon University                            All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Carnegie Mellon University not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  CARNEGIE MELLON UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL CMU BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. ************************************************************************/
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: readfile.c,v 1.1.1.1 1994/09/10 14:44:55 csgr Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * bootpd configuration file reading code.  *  * The routines in this file deal with reading, interpreting, and storing  * the information found in the bootpd configuration file (usually  * /etc/bootptab).  */
 end_comment
@@ -2217,9 +2196,12 @@ name|hp
 operator|->
 name|haddr
 argument_list|,
+name|haddrlength
+argument_list|(
 name|hp
 operator|->
 name|htype
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3167,13 +3149,13 @@ value|do \ { \ 	if (optype == OP_BOOLEAN) \ 		return E_SYNTAX_ERROR; \ 	if (hp->
 end_define
 
 begin_comment
-comment|/* Parse an integer value for MEMBER */
+comment|/* Parse an unsigned integer value for MEMBER */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PARSE_INT
+name|PARSE_UINT
 parameter_list|(
 name|MEMBER
 parameter_list|)
@@ -3213,11 +3195,6 @@ decl_stmt|;
 name|byte
 modifier|*
 name|tmphaddr
-decl_stmt|;
-name|struct
-name|shared_string
-modifier|*
-name|ss
 decl_stmt|;
 name|struct
 name|symbolmap
@@ -3348,6 +3325,9 @@ name|current_tagname
 argument_list|,
 literal|"T%d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|value
 argument_list|)
 expr_stmt|;
@@ -4072,6 +4052,10 @@ name|tmpstr
 argument_list|,
 literal|"%d"
 argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
 operator|&
 name|timeoff
 argument_list|)
@@ -4587,7 +4571,7 @@ directive|endif
 case|case
 name|SYM_MSG_SIZE
 case|:
-name|PARSE_INT
+name|PARSE_UINT
 argument_list|(
 name|msg_size
 argument_list|)
@@ -4613,22 +4597,11 @@ break|break;
 case|case
 name|SYM_MIN_WAIT
 case|:
-name|PARSE_INT
+name|PARSE_UINT
 argument_list|(
 name|min_wait
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hp
-operator|->
-name|min_wait
-operator|<
-literal|0
-condition|)
-return|return
-name|E_BAD_VALUE
-return|;
 break|break;
 comment|/* XXX - Add new tags here */
 default|default:
@@ -6519,10 +6492,6 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX - experimental */
 comment|/* Leading alpha char causes IP addr lookup. */
 if|if
 condition|(
@@ -6633,8 +6602,6 @@ return|return
 name|n
 return|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Parse an address in Internet format: 	 *	a.b.c.d 	 *	a.b.c	(with c treated as 16-bits) 	 *	a.b	(with b treated as 24 bits) 	 */
 name|pp
 operator|=
@@ -6972,10 +6939,6 @@ name|p
 operator|=
 name|tmpstr
 expr_stmt|;
-if|#
-directive|if
-literal|1
-comment|/* XXX - experimental */
 comment|/* If it's a valid host name, try to lookup the HW address. */
 if|if
 condition|(
@@ -7014,8 +6977,6 @@ argument_list|)
 expr_stmt|;
 comment|/* OK, assume it must be numeric. */
 block|}
-endif|#
-directive|endif
 name|hap
 operator|=
 name|haddr
@@ -7031,10 +6992,19 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 operator|*
 name|p
 operator|==
 literal|'.'
+operator|)
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|':'
+operator|)
 condition|)
 name|p
 operator|++
