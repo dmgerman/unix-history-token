@@ -21,6 +21,10 @@ directive|endif
 endif|not lint
 end_endif
 
+begin_empty
+empty|#
+end_empty
+
 begin_comment
 comment|/*  input:  records of lines, separated by blank lines     output: key:file1 start/length ... start/length:file2 start/length ... */
 end_comment
@@ -379,7 +383,7 @@ name|sprintf
 argument_list|(
 name|tag_line
 argument_list|,
-literal|" %s %ld %ld\n"
+literal|" %s %d %d\n"
 argument_list|,
 name|filename
 argument_list|,
@@ -500,7 +504,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%ld documents   %ld distinct keys  %ld key occurrences\n"
+literal|"%d documents   %d distinct keys  %d key occurrences\n"
 argument_list|,
 name|records
 argument_list|,
@@ -758,7 +762,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s%s%ld%ld"
+literal|"%s%s%d%d"
 argument_list|,
 name|key
 argument_list|,
@@ -775,7 +779,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"%s :%s %ld/%ld"
+literal|"%s :%s %d/%d"
 argument_list|,
 name|key
 argument_list|,
@@ -813,7 +817,7 @@ name|sscanf
 argument_list|(
 name|line
 argument_list|,
-literal|"%s%s%ld%ld"
+literal|"%s%s%d%d"
 argument_list|,
 name|newkey
 argument_list|,
@@ -856,7 +860,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"\n%s :%s %ld/%ld"
+literal|"\n%s :%s %d/%d"
 argument_list|,
 name|key
 argument_list|,
@@ -895,7 +899,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|":%s %ld/%ld"
+literal|":%s %d/%d"
 argument_list|,
 name|file
 argument_list|,
@@ -910,7 +914,7 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|" %ld/%ld"
+literal|" %d/%d"
 argument_list|,
 name|start
 argument_list|,
