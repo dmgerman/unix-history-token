@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	8.1 (Berkeley) %G%"
+literal|"@(#)printjob.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1803,13 +1803,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|sprintf
 argument_list|(
+operator|&
 name|width
-operator|+
+index|[
 literal|2
+index|]
 argument_list|,
-literal|"0"
+literal|"%d"
+argument_list|,
+name|PW
 argument_list|)
 expr_stmt|;
 name|strcpy
