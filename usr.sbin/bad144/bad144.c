@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bad144.c,v 1.15 1997/12/11 07:27:06 bde Exp $"
+literal|"$Id: bad144.c,v 1.16 1997/12/12 17:58:31 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1639,11 +1639,21 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d: out of range [0,%d) for disk %s\n"
+literal|"%d: out of range [0,%d) for disk %.*s\n"
 argument_list|,
 name|sn
 argument_list|,
 name|bend
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|dp
+operator|->
+name|d_typename
+argument_list|)
 argument_list|,
 name|dp
 operator|->
@@ -3818,7 +3828,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|dp
 operator|->
@@ -3827,9 +3837,30 @@ argument_list|,
 name|fp
 operator|->
 name|f_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dp
+operator|->
+name|d_typename
+argument_list|)
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|strlen
+argument_list|(
+name|fp
+operator|->
+name|f_name
+argument_list|)
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|dp
+operator|->
+name|d_typename
+argument_list|)
 condition|)
 break|break;
 if|if
@@ -3844,7 +3875,17 @@ name|errx
 argument_list|(
 literal|2
 argument_list|,
-literal|"don't know how to format %s disks"
+literal|"don't know how to format %.*s disks"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+name|dp
+operator|->
+name|d_typename
+argument_list|)
 argument_list|,
 name|dp
 operator|->
