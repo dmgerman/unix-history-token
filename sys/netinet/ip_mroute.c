@@ -10656,6 +10656,10 @@ name|x
 operator|!=
 name|NULL
 condition|;
+name|prev
+operator|=
+name|x
+operator|,
 name|x
 operator|=
 name|x
