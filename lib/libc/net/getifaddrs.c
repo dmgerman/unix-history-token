@@ -231,10 +231,44 @@ operator|>=
 literal|199802
 end_if
 
+begin_comment
+comment|/* ifam_data is very specific to recent versions of bsdi */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HAVE_IFAM_DATA
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_IFM_DATA
 end_define
 
 begin_endif
