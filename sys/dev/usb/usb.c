@@ -2879,7 +2879,7 @@ if|if
 condition|(
 name|type
 operator|==
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 condition|)
 block|{
 for|for
@@ -2913,6 +2913,10 @@ condition|(
 name|ueq
 operator|->
 name|ue
+operator|.
+name|u
+operator|.
+name|ue_driver
 operator|.
 name|ue_cookie
 operator|.
@@ -3026,6 +3030,10 @@ name|ueq
 operator|->
 name|ue
 operator|.
+name|u
+operator|.
+name|ue_driver
+operator|.
 name|ue_cookie
 operator|=
 name|dev
@@ -3040,6 +3048,8 @@ operator|&
 name|ueq
 operator|->
 name|ue
+operator|.
+name|u
 operator|.
 name|ue_device
 argument_list|,

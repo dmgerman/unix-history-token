@@ -5516,7 +5516,7 @@ return|;
 block|}
 name|usbd_add_event
 argument_list|(
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 argument_list|,
 name|dev
 argument_list|)
@@ -6302,7 +6302,7 @@ index|]
 operator|&&
 name|i
 operator|<
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 condition|;
 name|i
 operator|++
@@ -6327,7 +6327,7 @@ name|i
 index|]
 argument_list|)
 argument_list|,
-name|MAXDEVNAMELEN
+name|USB_MAX_DEVNAMELEN
 argument_list|)
 expr_stmt|;
 name|di
@@ -6337,7 +6337,7 @@ index|[
 name|i
 index|]
 index|[
-name|MAXDEVNAMELEN
+name|USB_MAX_DEVNAMELEN
 operator|-
 literal|1
 index|]
@@ -6359,7 +6359,7 @@ comment|/*i is set */
 init|;
 name|i
 operator|<
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 condition|;
 name|i
 operator|++

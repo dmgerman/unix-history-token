@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.38 1999/10/20 21:02:39 augustss Exp $	*/
+comment|/*	$NetBSD: usb/usb.h,v 1.60 2001/12/29 15:44:11 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*	$FreeBSD$    */
 end_comment
 
 begin_comment
@@ -213,7 +213,7 @@ value|1000
 end_define
 
 begin_comment
-comment|/*  * The USB records contain some unaligned little-endian word  * components.  The U[SG]ETW macros take care of both the alignment  * and endian problem and should always be used to access 16 bit  * values.  */
+comment|/*  * The USB records contain some unaligned little-endian word  * components.  The U[SG]ETW macros take care of both the alignment  * and endian problem and should always be used to access non-byte  * values.  */
 end_comment
 
 begin_typedef
@@ -232,6 +232,36 @@ literal|2
 index|]
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int8_t
+name|uDWord
+index|[
+literal|4
+index|]
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|USETW2
+parameter_list|(
+name|w
+parameter_list|,
+name|h
+parameter_list|,
+name|l
+parameter_list|)
+value|((w)[0] = (u_int8_t)(l), (w)[1] = (u_int8_t)(h))
+end_define
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
 
 begin_define
 define|#
@@ -258,30 +288,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|USETW2
-parameter_list|(
-name|w
-parameter_list|,
-name|h
-parameter_list|,
-name|l
-parameter_list|)
-value|((w)[0] = (u_int8_t)(l), (w)[1] = (u_int8_t)(h))
-end_define
-
-begin_typedef
-typedef|typedef
-name|u_int8_t
-name|uDWord
-index|[
-literal|4
-index|]
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
 name|UGETDW
 parameter_list|(
 name|w
@@ -301,15 +307,14 @@ parameter_list|)
 value|((w)[0] = (u_int8_t)(v), \ 		     (w)[1] = (u_int8_t)((v)>> 8), \ 		     (w)[2] = (u_int8_t)((v)>> 16), \ 		     (w)[3] = (u_int8_t)((v)>> 24))
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/*   * On little-endian machines that can handle unanliged accesses  * (e.g. i386) these macros can be replaced by the following.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_define
 define|#
@@ -333,10 +338,39 @@ parameter_list|)
 value|(*(u_int16_t *)(w) = (v))
 end_define
 
+begin_define
+define|#
+directive|define
+name|UGETDW
+parameter_list|(
+name|w
+parameter_list|)
+value|(*(u_int32_t *)(w))
+end_define
+
+begin_define
+define|#
+directive|define
+name|USETDW
+parameter_list|(
+name|w
+parameter_list|,
+name|v
+parameter_list|)
+value|(*(u_int32_t *)(w) = (v))
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|UPACKED
+value|__attribute__((__packed__))
+end_define
 
 begin_typedef
 typedef|typedef
@@ -358,6 +392,7 @@ name|uWord
 name|wLength
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_device_request_t
 typedef|;
 end_typedef
@@ -656,6 +691,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|UDESC_DEVICE_QUALIFIER
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_OTHER_SPEED_CONFIGURATION
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_INTERFACE_POWER
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_OTG
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
 name|UDESC_CS_DEVICE
 value|0x21
 end_define
@@ -762,6 +825,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UF_TEST_MODE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_MAX_IPACKET
 value|8
 end_define
@@ -769,6 +839,20 @@ end_define
 begin_comment
 comment|/* maximum size of the initial packet */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_2_MAX_CTRL_PACKET
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_2_MAX_BULK_PACKET
+value|512
+end_define
 
 begin_typedef
 typedef|typedef
@@ -784,6 +868,7 @@ name|uByte
 name|bDescriptorSubtype
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_descriptor_t
 typedef|;
 end_typedef
@@ -801,6 +886,17 @@ decl_stmt|;
 name|uWord
 name|bcdUSB
 decl_stmt|;
+define|#
+directive|define
+name|UD_USB_2_0
+value|0x0200
+define|#
+directive|define
+name|UD_IS_USB2
+parameter_list|(
+name|d
+parameter_list|)
+value|(UGETW((d)->bcdUSB)>= UD_USB_2_0)
 name|uByte
 name|bDeviceClass
 decl_stmt|;
@@ -836,6 +932,7 @@ name|uByte
 name|bNumConfigurations
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_device_descriptor_t
 typedef|;
 end_typedef
@@ -893,6 +990,7 @@ directive|define
 name|UC_POWER_FACTOR
 value|2
 block|}
+name|UPACKED
 name|usb_config_descriptor_t
 typedef|;
 end_typedef
@@ -936,6 +1034,7 @@ name|uByte
 name|iInterface
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_interface_descriptor_t
 typedef|;
 end_typedef
@@ -1055,6 +1154,7 @@ name|uByte
 name|bInterval
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_endpoint_descriptor_t
 typedef|;
 end_typedef
@@ -1083,6 +1183,7 @@ literal|127
 index|]
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_string_descriptor_t
 typedef|;
 end_typedef
@@ -1114,6 +1215,34 @@ define|#
 directive|define
 name|UR_GET_BUS_STATE
 value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|UR_CLEAR_TT_BUFFER
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|UR_RESET_TT
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|UR_GET_TT_STATE
+value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|UR_STOP_TT
+value|0x0b
 end_define
 
 begin_comment
@@ -1218,6 +1347,20 @@ name|UHF_C_PORT_RESET
 value|20
 end_define
 
+begin_define
+define|#
+directive|define
+name|UHF_PORT_TEST
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHF_PORT_INDICATOR
+value|22
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1237,39 +1380,63 @@ decl_stmt|;
 define|#
 directive|define
 name|UHD_PWR
-value|0x03
+value|0x0003
 define|#
 directive|define
 name|UHD_PWR_GANGED
-value|0x00
+value|0x0000
 define|#
 directive|define
 name|UHD_PWR_INDIVIDUAL
-value|0x01
+value|0x0001
 define|#
 directive|define
 name|UHD_PWR_NO_SWITCH
-value|0x02
+value|0x0002
 define|#
 directive|define
 name|UHD_COMPOUND
-value|0x04
+value|0x0004
 define|#
 directive|define
 name|UHD_OC
-value|0x18
+value|0x0018
 define|#
 directive|define
 name|UHD_OC_GLOBAL
-value|0x00
+value|0x0000
 define|#
 directive|define
 name|UHD_OC_INDIVIDUAL
-value|0x08
+value|0x0008
 define|#
 directive|define
 name|UHD_OC_NONE
-value|0x10
+value|0x0010
+define|#
+directive|define
+name|UHD_TT_THINK
+value|0x0060
+define|#
+directive|define
+name|UHD_TT_THINK_8
+value|0x0000
+define|#
+directive|define
+name|UHD_TT_THINK_16
+value|0x0020
+define|#
+directive|define
+name|UHD_TT_THINK_24
+value|0x0040
+define|#
+directive|define
+name|UHD_TT_THINK_32
+value|0x0060
+define|#
+directive|define
+name|UHD_PORT_IND
+value|0x0080
 name|uByte
 name|bPwrOn2PwrGood
 decl_stmt|;
@@ -1298,8 +1465,15 @@ name|i
 parameter_list|)
 define|\
 value|(((desc)->DeviceRemovable[(i)/8]>> ((i) % 8))& 1)
-comment|/* deprecated uByte		PortPowerCtrlMask[]; */
+comment|/* deprecated */
+name|uByte
+name|PortPowerCtrlMask
+index|[
+literal|1
+index|]
+decl_stmt|;
 block|}
+name|UPACKED
 name|usb_hub_descriptor_t
 typedef|;
 end_typedef
@@ -1308,7 +1482,107 @@ begin_define
 define|#
 directive|define
 name|USB_HUB_DESCRIPTOR_SIZE
-value|8
+value|9
+end_define
+
+begin_comment
+comment|/* includes deprecated PortPowerCtrlMask */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uWord
+name|bcdUSB
+decl_stmt|;
+name|uByte
+name|bDeviceClass
+decl_stmt|;
+name|uByte
+name|bDeviceSubClass
+decl_stmt|;
+name|uByte
+name|bDeviceProtocol
+decl_stmt|;
+name|uByte
+name|bMaxPacketSize0
+decl_stmt|;
+name|uByte
+name|bNumConfigurations
+decl_stmt|;
+name|uByte
+name|bReserved
+decl_stmt|;
+block|}
+name|UPACKED
+name|usb_device_qualifier_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|USB_DEVICE_QUALIFIER_SIZE
+value|10
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uByte
+name|bLength
+decl_stmt|;
+name|uByte
+name|bDescriptorType
+decl_stmt|;
+name|uByte
+name|bmAttributes
+decl_stmt|;
+define|#
+directive|define
+name|UOTG_SRP
+value|0x01
+define|#
+directive|define
+name|UOTG_HNP
+value|0x02
+block|}
+name|UPACKED
+name|usb_otg_descriptor_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* OTG feature selectors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UOTG_B_HNP_ENABLE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|UOTG_A_HNP_SUPPORT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|UOTG_A_ALT_HNP_SUPPORT
+value|5
 end_define
 
 begin_typedef
@@ -1333,6 +1607,7 @@ directive|define
 name|UES_HALT
 value|0x0001
 block|}
+name|UPACKED
 name|usb_status_t
 typedef|;
 end_typedef
@@ -1356,6 +1631,7 @@ name|uWord
 name|wHubChange
 decl_stmt|;
 block|}
+name|UPACKED
 name|usb_hub_status_t
 typedef|;
 end_typedef
@@ -1395,6 +1671,18 @@ define|#
 directive|define
 name|UPS_LOW_SPEED
 value|0x0200
+define|#
+directive|define
+name|UPS_HIGH_SPEED
+value|0x0400
+define|#
+directive|define
+name|UPS_PORT_TEST
+value|0x0800
+define|#
+directive|define
+name|UPS_PORT_INDICATOR
+value|0x1000
 name|uWord
 name|wPortChange
 decl_stmt|;
@@ -1419,6 +1707,7 @@ directive|define
 name|UPS_C_PORT_RESET
 value|0x0010
 block|}
+name|UPACKED
 name|usb_port_status_t
 typedef|;
 end_typedef
@@ -1460,6 +1749,27 @@ define|#
 directive|define
 name|UDSUBCLASS_HUB
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPROTO_FSHUB
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPROTO_HSHUBSTT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDPROTO_HSHUBMTT
+value|2
 end_define
 
 begin_define
@@ -1634,6 +1944,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UIPROTO_PRINTER_1284
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|UICLASS_MASS
 value|0x08
 end_define
@@ -1697,14 +2014,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|UIPROTO_MASS_BBB
+name|UIPROTO_MASS_BBB_OLD
 value|2
 end_define
+
+begin_comment
+comment|/* Not in the spec anymore */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|UIPROTO_MASS_BBB_P
+name|UIPROTO_MASS_BBB
 value|80
 end_define
 
@@ -1724,6 +2045,31 @@ define|#
 directive|define
 name|UISUBCLASS_HUB
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_FSHUB
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_HSHUBSTT
+value|0
+end_define
+
+begin_comment
+comment|/* Yes, same as previous */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_HSHUBMTT
+value|1
 end_define
 
 begin_define
@@ -1900,6 +2246,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|UISUBCLASS_IRDA
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|UIPROTO_IRDA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|UICLASS_VENDOR
 value|0xff
 end_define
@@ -1961,6 +2321,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PORT_ROOT_RESET_DELAY
+value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PORT_RESET_SETTLE
 value|10
 end_define
@@ -1994,7 +2365,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_RESUME_TIME
+name|USB_RESUME_DELAY
 value|(20*5)
 end_define
 
@@ -2058,6 +2429,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_PORT_ROOT_RESET_DELAY
+value|250
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_PORT_RESET_RECOVERY
 value|50
 end_define
@@ -2070,7 +2452,7 @@ begin_define
 define|#
 directive|define
 name|USB_PORT_POWERUP_DELAY
-value|200
+value|300
 end_define
 
 begin_comment
@@ -2359,6 +2741,32 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|cookie
+decl_stmt|;
+block|}
+name|usb_event_cookie_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_DEVNAMES
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_DEVNAMELEN
+value|16
+end_define
+
 begin_struct
 struct|struct
 name|usb_device_info
@@ -2366,84 +2774,55 @@ block|{
 name|u_int8_t
 name|bus
 decl_stmt|;
-comment|/* bus number */
 name|u_int8_t
 name|addr
 decl_stmt|;
 comment|/* device address */
-define|#
-directive|define
-name|MAXDEVNAMELEN
-value|10
-comment|/* number of drivers */
-define|#
-directive|define
-name|MAXDEVNAMES
-value|4
-comment|/* attached drivers */
-name|char
-name|devnames
-index|[
-name|MAXDEVNAMES
-index|]
-index|[
-name|MAXDEVNAMELEN
-index|]
+name|usb_event_cookie_t
+name|cookie
 decl_stmt|;
-comment|/* device names */
 name|char
 name|product
 index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
-comment|/* iProduct */
 name|char
 name|vendor
 index|[
 name|USB_MAX_STRING_LEN
 index|]
 decl_stmt|;
-comment|/* iManufacturer */
 name|char
 name|release
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* string of releaseNo*/
 name|u_int16_t
 name|productNo
 decl_stmt|;
-comment|/* idProduct */
 name|u_int16_t
 name|vendorNo
 decl_stmt|;
-comment|/* idVendor */
 name|u_int16_t
 name|releaseNo
 decl_stmt|;
-comment|/* bcdDevice */
 name|u_int8_t
 name|class
 decl_stmt|;
-comment|/* bDeviceClass */
 name|u_int8_t
 name|subclass
 decl_stmt|;
-comment|/* bDeviceSubclass */
 name|u_int8_t
 name|protocol
 decl_stmt|;
-comment|/* bDeviceProtocol */
 name|u_int8_t
 name|config
 decl_stmt|;
-comment|/* config index */
 name|u_int8_t
 name|lowspeed
 decl_stmt|;
-comment|/* lowsped yes/no */
 name|int
 name|power
 decl_stmt|;
@@ -2451,7 +2830,15 @@ comment|/* power consumption in mA, 0 if selfpowered */
 name|int
 name|nports
 decl_stmt|;
-comment|/* 0 if not hub */
+name|char
+name|devnames
+index|[
+name|USB_MAX_DEVNAMES
+index|]
+index|[
+name|USB_MAX_DEVNAMELEN
+index|]
+decl_stmt|;
 name|u_int8_t
 name|ports
 index|[
@@ -2512,18 +2899,6 @@ block|}
 struct|;
 end_struct
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|u_int32_t
-name|cookie
-decl_stmt|;
-block|}
-name|usb_event_cookie_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/* Events that can be read from /dev/usb */
 end_comment
@@ -2537,23 +2912,70 @@ name|ue_type
 decl_stmt|;
 define|#
 directive|define
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 value|1
 define|#
 directive|define
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 value|2
-name|struct
-name|usb_device_info
-name|ue_device
-decl_stmt|;
+define|#
+directive|define
+name|USB_EVENT_DEVICE_ATTACH
+value|3
+define|#
+directive|define
+name|USB_EVENT_DEVICE_DETACH
+value|4
+define|#
+directive|define
+name|USB_EVENT_DRIVER_ATTACH
+value|5
+define|#
+directive|define
+name|USB_EVENT_DRIVER_DETACH
+value|6
+define|#
+directive|define
+name|USB_EVENT_IS_ATTACH
+parameter_list|(
+name|n
+parameter_list|)
+value|((n) == USB_EVENT_CTRLR_ATTACH || (n) == USB_EVENT_DEVICE_ATTACH || (n) == USB_EVENT_DRIVER_ATTACH)
 name|struct
 name|timespec
 name|ue_time
 decl_stmt|;
+union|union
+block|{
+struct|struct
+block|{
+name|int
+name|ue_bus
+decl_stmt|;
+block|}
+name|ue_ctrlr
+struct|;
+name|struct
+name|usb_device_info
+name|ue_device
+decl_stmt|;
+struct|struct
+block|{
 name|usb_event_cookie_t
 name|ue_cookie
 decl_stmt|;
+name|char
+name|ue_devname
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+name|ue_driver
+struct|;
+block|}
+name|u
+union|;
 block|}
 struct|;
 end_struct
@@ -2627,6 +3049,13 @@ define|#
 directive|define
 name|USB_SET_REPORT
 value|_IOW ('U', 24, struct usb_ctl_report)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_GET_REPORT_ID
+value|_IOR ('U', 25, int)
 end_define
 
 begin_comment

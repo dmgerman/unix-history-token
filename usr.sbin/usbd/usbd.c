@@ -293,13 +293,13 @@ index|[]
 init|=
 block|{
 block|{
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 block|,
 literal|"attach"
 block|}
 block|,
 block|{
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 block|,
 literal|"detach"
 block|}
@@ -2590,6 +2590,8 @@ init|=
 operator|&
 name|event
 operator|->
+name|u
+operator|.
 name|ue_device
 decl_stmt|;
 name|printf
@@ -2751,7 +2753,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 condition|;
 name|i
 operator|++
@@ -3165,7 +3167,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAXDEVNAMES
+name|USB_MAX_DEVNAMES
 condition|;
 name|i
 operator|++
@@ -4174,10 +4176,10 @@ name|ue_type
 condition|)
 block|{
 case|case
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 case|:
 case|case
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 case|:
 if|if
 condition|(
@@ -4185,6 +4187,8 @@ name|find_action
 argument_list|(
 operator|&
 name|event
+operator|.
+name|u
 operator|.
 name|ue_device
 argument_list|,
@@ -4277,7 +4281,7 @@ name|event
 operator|.
 name|ue_type
 operator|==
-name|USB_EVENT_ATTACH
+name|USB_EVENT_CTRLR_ATTACH
 operator|&&
 name|action_match
 operator|.
@@ -4300,7 +4304,7 @@ name|event
 operator|.
 name|ue_type
 operator|==
-name|USB_EVENT_DETACH
+name|USB_EVENT_CTRLR_DETACH
 operator|&&
 name|action_match
 operator|.
