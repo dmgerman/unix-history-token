@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.45 (Berkeley) %G%"
+literal|"@(#)main.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,6 +277,11 @@ endif|SMTP
 endif|#
 directive|endif
 endif|DAEMON
+define|#
+directive|define
+name|MAXCONFIGLEVEL
+value|3
+comment|/* highest config version level known */
 expr|main
 operator|(
 name|argc
@@ -2166,6 +2171,26 @@ argument_list|(
 name|ConfFile
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
+if|if
+condition|(
+name|ConfigLevel
+operator|>
+name|MAXCONFIGLEVEL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"Warning: .cf version level (%d) exceeds program functionality (%d)"
+argument_list|,
+name|ConfigLevel
+argument_list|,
+name|MAXCONFIGLEVEL
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_switch
