@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	4.4	81/05/12	*/
+comment|/*	param.c	4.5	81/05/15	*/
 end_comment
 
 begin_include
@@ -189,6 +189,8 @@ name|MAXUSERS
 operator|)
 operator|/
 literal|10
+operator|+
+literal|32
 decl_stmt|;
 end_decl_stmt
 
