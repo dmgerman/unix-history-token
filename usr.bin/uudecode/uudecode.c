@@ -1739,16 +1739,9 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: uudecode [-cips] [file ...]\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: uudecode [-i] -o output_file [file]\n"
+literal|"       uudecode [-i] -o output_file [file]\n"
+literal|"       b64decode [-cips] [file ...]\n"
+literal|"       b64decode [-i] -o output_file [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit

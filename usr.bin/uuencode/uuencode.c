@@ -969,6 +969,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: uuencode [-m] [-o outfile] [infile] remotefile\n"
+literal|"       b64encode [-o outfile] [infile] remotefile\n"
 argument_list|)
 expr_stmt|;
 name|exit
