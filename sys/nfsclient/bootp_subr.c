@@ -2795,9 +2795,9 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking done */
 comment|/* 	 * Create socket and set its recieve timeout. 	 */
 name|error
 operator|=
