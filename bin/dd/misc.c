@@ -68,6 +68,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -355,6 +367,7 @@ name|notused
 parameter_list|)
 name|int
 name|notused
+name|__unused
 decl_stmt|;
 block|{
 name|int
@@ -386,8 +399,10 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-comment|/* XXX exit() shouldn't call exit() from a signal handler. */
-name|exit
+name|summary
+argument_list|()
+expr_stmt|;
+name|_exit
 argument_list|(
 name|sig
 operator|==
