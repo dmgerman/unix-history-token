@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.76 1996/10/01 03:01:06 pst Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7880, aic7870 and aic7850 controllers  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: aic7xxx.c,v 1.77 1996/10/06 16:38:25 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -5950,6 +5950,9 @@ name|u_int8_t
 name|offset
 decl_stmt|;
 name|u_int8_t
+name|saved_offset
+decl_stmt|;
+name|u_int8_t
 name|targ_scratch
 decl_stmt|;
 name|u_int8_t
@@ -5992,7 +5995,7 @@ argument_list|,
 name|MSGIN_EXT_BYTE0
 argument_list|)
 expr_stmt|;
-name|offset
+name|saved_offset
 operator|=
 name|AHC_INB
 argument_list|(
@@ -6031,7 +6034,7 @@ name|offset
 operator|=
 name|MIN
 argument_list|(
-name|offset
+name|saved_offset
 argument_list|,
 name|maxoffset
 argument_list|)
@@ -6086,14 +6089,24 @@ argument_list|,
 name|targ_scratch
 argument_list|)
 expr_stmt|;
-comment|/* See if we initiated Sync Negotiation */
+comment|/* 			 * See if we initiated Sync Negotiation 			 * and didn't have to fall down to async 			 * transfers. 			 */
 if|if
 condition|(
+operator|(
 name|ahc
 operator|->
 name|sdtrpending
 operator|&
 name|targ_mask
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|saved_offset
+operator|==
+name|offset
+operator|)
 condition|)
 block|{
 comment|/* 				 * Don't send an SDTR back to 				 * the target 				 */
@@ -6105,6 +6118,20 @@ name|RETURN_1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|needsdtr
+operator|&=
+operator|~
+name|targ_mask
+expr_stmt|;
+name|ahc
+operator|->
+name|sdtrpending
+operator|&=
+operator|~
+name|targ_mask
 expr_stmt|;
 block|}
 else|else
@@ -6147,8 +6174,19 @@ argument_list|,
 name|SEND_MSG
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 			 * Negate the flags 			 */
+comment|/* 				 * If we aren't starting a re-negotiation 				 * because we had to go async in response 				 * to a "too low" response from the target 				 * clear the needsdtr flag for this target. 				 */
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|sdtrpending
+operator|&
+name|targ_mask
+operator|)
+operator|==
+literal|0
+condition|)
 name|ahc
 operator|->
 name|needsdtr
@@ -6156,13 +6194,14 @@ operator|&=
 operator|~
 name|targ_mask
 expr_stmt|;
+else|else
 name|ahc
 operator|->
 name|sdtrpending
-operator|&=
-operator|~
+operator||=
 name|targ_mask
 expr_stmt|;
+block|}
 break|break;
 block|}
 case|case
