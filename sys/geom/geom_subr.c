@@ -1630,13 +1630,9 @@ name|KASSERT
 argument_list|(
 name|cp
 operator|->
-name|stat
-operator|->
-name|nop
+name|nstart
 operator|==
 name|cp
-operator|->
-name|stat
 operator|->
 name|nend
 argument_list|,
