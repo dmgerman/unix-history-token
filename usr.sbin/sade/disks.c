@@ -1565,13 +1565,6 @@ decl_stmt|;
 name|chunk_e
 name|partitiontype
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|save
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|strcpy
 argument_list|(
 name|tmp
@@ -1661,11 +1654,6 @@ operator|=
 name|subtype
 expr_stmt|;
 block|}
-name|restorescr
-argument_list|(
-name|save
-argument_list|)
-expr_stmt|;
 block|}
 break|break;
 case|case
@@ -2151,9 +2139,6 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|use_helpline
 argument_list|(
 literal|"Press F1 to read more about disk slices."
@@ -2447,8 +2432,6 @@ name|FALSE
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2726,8 +2709,6 @@ expr_stmt|;
 block|}
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -3235,9 +3216,6 @@ name|i
 index|]
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find any free space on this disk!"
@@ -3431,9 +3409,6 @@ name|i
 index|]
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find %d free blocks on this disk!"
@@ -3494,9 +3469,6 @@ name|i
 index|]
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Unable to find any existing FreeBSD partitions on this disk!"
@@ -3507,9 +3479,6 @@ block|}
 block|}
 else|else
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"`%s' is an invalid value for %s - is config file valid?"

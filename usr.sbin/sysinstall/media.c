@@ -510,8 +510,6 @@ name|status
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -532,8 +530,6 @@ name|DITEM_LEAVE_MENU
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -678,8 +674,6 @@ name|status
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -708,8 +702,6 @@ name|DITEM_LEAVE_MENU
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -852,8 +844,6 @@ name|status
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -872,8 +862,6 @@ name|DITEM_LEAVE_MENU
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1018,8 +1006,6 @@ name|status
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -1080,8 +1066,6 @@ name|DITEM_LEAVE_MENU
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -1126,11 +1110,6 @@ name|networkDev
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|what
-init|=
-name|DITEM_RESTORE
-decl_stmt|;
 name|mediaClose
 argument_list|()
 expr_stmt|;
@@ -1171,9 +1150,6 @@ operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1187,8 +1163,6 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 else|else
 name|cp
@@ -1198,10 +1172,6 @@ argument_list|(
 name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
-name|what
-operator|=
-name|DITEM_RESTORE
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1210,8 +1180,6 @@ name|cp
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 elseif|else
 if|if
@@ -1233,9 +1201,6 @@ literal|"ftp://"
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 name|cp
 operator|=
@@ -1279,8 +1244,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 block|}
 block|}
@@ -1310,8 +1273,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 block|}
 name|SAFE_STRCPY
@@ -1331,9 +1292,6 @@ name|cp
 operator|+
 literal|6
 argument_list|)
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1378,8 +1336,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 block|}
 block|}
@@ -1411,8 +1367,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 block|}
 if|if
@@ -1618,8 +1572,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|what
 return|;
 block|}
 block|}
@@ -1709,8 +1661,6 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_LEAVE_MENU
-operator||
-name|what
 return|;
 block|}
 end_function
@@ -1791,9 +1741,6 @@ modifier|*
 name|cp
 decl_stmt|;
 name|mediaClose
-argument_list|()
-expr_stmt|;
-name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|cp
@@ -1926,9 +1873,6 @@ name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|mediaClose
-argument_list|()
-expr_stmt|;
-name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|cp
@@ -3480,8 +3424,6 @@ name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -3538,9 +3480,6 @@ name|char
 modifier|*
 name|pass
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|variable_get_value
@@ -3553,9 +3492,6 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|DialogInputAttrs
 operator||=
 name|DITEM_NO_ECHO
@@ -3590,8 +3526,6 @@ name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function

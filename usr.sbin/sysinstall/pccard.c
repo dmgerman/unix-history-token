@@ -253,6 +253,10 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
 name|pccard_mode
 operator|=
 literal|1
@@ -432,18 +436,23 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|dialog_clear
+name|w
+operator|=
+name|savescr
+argument_list|()
+expr_stmt|;
+name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|msgConfirm
 argument_list|(
-literal|"Now starts initializing PC-card controller and cards.\n"
-literal|"If you've executed this installer from PC-card floppy\n"
+literal|"Now we start initializing PC-card controller and cards.\n"
+literal|"If you've executed this installer from a PC-card floppy\n"
 literal|"drive, this is the last chance to replace it with\n"
 literal|"installation media (PC-card Ethernet, CDROM, etc.).\n"
 literal|"Please insert installation media and press [Enter].\n"
 literal|"If you've not plugged the PC-card installation media\n"
-literal|"yet, please plug it now and press [Enter].\n"
+literal|"in yet, please plug it in now and press [Enter].\n"
 literal|"Otherwise, just press [Enter] to proceed."
 argument_list|)
 expr_stmt|;
@@ -484,6 +493,11 @@ argument_list|,
 name|card_device
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -506,6 +520,11 @@ argument_list|(
 literal|"ioctl %s failed.\n"
 argument_list|,
 name|card_device
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 return|return;
@@ -551,6 +570,11 @@ expr_stmt|;
 name|vsystem
 argument_list|(
 name|pccardd_cmd
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 block|}

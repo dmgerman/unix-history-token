@@ -251,6 +251,13 @@ name|DIST_DES_SKERBEROS
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|DIST_DES_ALL
+value|0x001F
+end_define
+
 begin_comment
 comment|/* Subtypes for SRC distribution */
 end_comment
@@ -368,7 +375,7 @@ begin_define
 define|#
 directive|define
 name|DIST_SRC_ALL
-value|0xFFFF
+value|0x0FFFF
 end_define
 
 begin_comment

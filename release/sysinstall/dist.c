@@ -2169,6 +2169,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2195,6 +2198,8 @@ expr_stmt|;
 return|return
 name|i
 operator||
+name|DITEM_REDRAW
+operator||
 name|DITEM_RESTORE
 return|;
 block|}
@@ -2214,16 +2219,15 @@ name|int
 name|i
 init|=
 name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Do wish to install DES cryptographic software?\n\n"
+literal|"Do you wish to install DES cryptographic software?\n\n"
 literal|"If you choose No, FreeBSD will use an MD5 based password scheme which,\n"
 literal|"while perhaps more secure, is not interoperable with the traditional\n"
 literal|"UNIX DES passwords on other non-FreeBSD systems.\n\n"
@@ -2259,7 +2263,7 @@ expr_stmt|;
 return|return
 name|i
 operator||
-name|DITEM_RESTORE
+name|DITEM_REDRAW
 return|;
 block|}
 end_function
@@ -2274,9 +2278,6 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2306,8 +2307,6 @@ name|DIST_PORTS
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2865,6 +2864,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2910,6 +2912,9 @@ name|i
 init|=
 name|DITEM_SUCCESS
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4507,6 +4512,10 @@ index|[
 literal|512
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+decl_stmt|;
 comment|/* paranoia */
 if|if
 condition|(
@@ -4530,8 +4539,6 @@ name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -4565,6 +4572,11 @@ name|msgNotify
 argument_list|(
 literal|"Attempting to install all selected distributions.."
 argument_list|)
+expr_stmt|;
+name|w
+operator|=
+name|savescr
+argument_list|()
 expr_stmt|;
 comment|/* Try for 3 times around the loop, then give up. */
 while|while
@@ -4666,11 +4678,12 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|status
-operator||=
-name|DITEM_RESTORE
-expr_stmt|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|status
 return|;

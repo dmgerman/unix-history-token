@@ -2489,8 +2489,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function

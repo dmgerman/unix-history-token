@@ -926,9 +926,6 @@ argument_list|(
 literal|"UPGRADE"
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|msgYesNo
@@ -941,8 +938,6 @@ literal|0
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -972,12 +967,7 @@ name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1017,12 +1007,7 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 block|}
 block|}
 comment|/* Still?!  OK!  They must know what they're doing.. */
@@ -1157,8 +1142,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Don't write out MBR info */
@@ -1197,8 +1180,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 name|msgNotify
@@ -1243,8 +1224,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 name|chdir
@@ -1394,8 +1373,6 @@ literal|0
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 name|msgNotify
 argument_list|(
@@ -1481,8 +1458,6 @@ argument_list|()
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -1822,8 +1797,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Don't write out MBR info */
@@ -1862,8 +1835,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -1927,8 +1898,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 name|chdir
@@ -1962,8 +1931,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 name|saved_etc
@@ -1999,8 +1966,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 if|if
@@ -2132,8 +2097,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 return|return

@@ -883,8 +883,6 @@ literal|0
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -1881,6 +1879,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1933,9 +1934,6 @@ condition|)
 return|return
 name|i
 return|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1964,8 +1962,6 @@ expr_stmt|;
 block|}
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2004,12 +2000,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__alpha__
 name|msgConfirm
 argument_list|(
 literal|"In the next menu, you will need to set up a DOS-style (\"fdisk\") partitioning\n"
@@ -2067,9 +2063,6 @@ goto|;
 block|}
 endif|#
 directive|endif
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
@@ -2112,9 +2105,6 @@ condition|)
 return|return
 name|DITEM_FAILURE
 return|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|DITEM_STATUS
@@ -2132,9 +2122,6 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Installation completed with some errors.  You may wish to\n"
@@ -2146,8 +2133,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else
@@ -2193,18 +2178,10 @@ block|{
 name|Device
 modifier|*
 name|tmp
-decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
-name|tmp
-operator|=
+init|=
 name|tcpDeviceSelect
 argument_list|()
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|tmp
@@ -2253,9 +2230,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2274,9 +2248,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2290,9 +2261,6 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2305,9 +2273,6 @@ name|configNFSServer
 argument_list|(
 name|self
 argument_list|)
-expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2326,9 +2291,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2337,14 +2299,6 @@ argument_list|(
 literal|"Would you like to customize your system console settings?"
 argument_list|)
 condition|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -2352,15 +2306,6 @@ name|MenuSyscons
 argument_list|,
 name|FALSE
 argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-block|}
-name|dialog_clear_norefresh
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2370,34 +2315,14 @@ argument_list|(
 literal|"Would you like to set this machine's time zone now?"
 argument_list|)
 condition|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|systemExecute
 argument_list|(
 literal|"tzsetup"
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|__i386__
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2416,9 +2341,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2427,14 +2349,6 @@ argument_list|(
 literal|"Does this system have a mouse attached to it?"
 argument_list|)
 condition|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -2443,12 +2357,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Now would be a good time to checkpoint the configuration data */
 name|configRC_conf
 argument_list|()
@@ -2464,9 +2372,6 @@ literal|"/usr/X11R6"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2484,9 +2389,6 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2498,9 +2400,6 @@ literal|"like to browse the collection now?"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2510,9 +2409,6 @@ name|self
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2532,23 +2428,12 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"Now you must set the system manager's password.\n"
 literal|"This is the password you'll use to log in as \"root\"."
 argument_list|)
 expr_stmt|;
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2566,24 +2451,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* XXX Put whatever other nice configuration questions you'd like to ask the user here XXX */
 comment|/* Give user the option of one last configuration spree */
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|installConfigure
 argument_list|()
 expr_stmt|;
 return|return
 name|DITEM_LEAVE_MENU
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2604,9 +2478,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 name|i
 operator|=
 name|installCommit
@@ -2665,6 +2536,9 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2696,8 +2570,6 @@ name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 if|if
 condition|(
@@ -2707,8 +2579,6 @@ argument_list|()
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 name|str
 operator|=
@@ -2784,8 +2654,6 @@ argument_list|()
 condition|)
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 else|else
 goto|goto
@@ -2795,8 +2663,6 @@ block|}
 else|else
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Now go get it all */
@@ -2831,8 +2697,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|i
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -2846,9 +2710,6 @@ name|void
 parameter_list|)
 block|{
 comment|/* Final menu of last resort */
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2858,14 +2719,6 @@ literal|"Visit the general configuration menu for a chance to set\n"
 literal|"any last options?"
 argument_list|)
 condition|)
-block|{
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|savescr
-argument_list|()
-decl_stmt|;
 name|dmenuOpenSimple
 argument_list|(
 operator|&
@@ -2874,12 +2727,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
-block|}
 name|configRC_conf
 argument_list|()
 expr_stmt|;

@@ -51,8 +51,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -87,8 +85,6 @@ name|DITEM_SUCCESS
 else|:
 name|DITEM_FAILURE
 operator|)
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -160,6 +156,13 @@ modifier|*
 name|tmp
 parameter_list|)
 block|{
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|use_helpfile
 argument_list|(
 name|NULL
@@ -193,10 +196,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -521,13 +527,6 @@ decl_stmt|,
 modifier|*
 name|var
 decl_stmt|;
-name|WINDOW
-modifier|*
-name|w
-init|=
-name|NULL
-decl_stmt|;
-comment|/* Keep lint happy */
 if|if
 condition|(
 operator|!
@@ -557,11 +556,6 @@ return|return
 name|DITEM_FAILURE
 return|;
 block|}
-name|w
-operator|=
-name|savescr
-argument_list|()
-expr_stmt|;
 name|ans
 operator|=
 name|msgGetInput
@@ -576,11 +570,6 @@ operator|->
 name|title
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
 argument_list|)
 expr_stmt|;
 if|if
@@ -1191,6 +1180,13 @@ index|[
 name|FILENAME_MAX
 index|]
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 comment|/* Any helpful hints, put 'em up! */
 name|use_helpline
 argument_list|(
@@ -1211,10 +1207,10 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Pop up that dialog! */
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+comment|/* Pop up that dialog! */
 if|if
 condition|(
 name|menu
@@ -1390,13 +1386,6 @@ operator|->
 name|title
 argument_list|)
 expr_stmt|;
-name|clearok
-argument_list|(
-name|stdscr
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|exited
@@ -1405,6 +1394,11 @@ block|{
 name|exited
 operator|=
 name|FALSE
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 return|return
 name|TRUE
@@ -1415,9 +1409,16 @@ if|if
 condition|(
 name|rval
 condition|)
+block|{
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1427,9 +1428,16 @@ name|type
 operator|&
 name|DMENU_SELECTION_RETURNS
 condition|)
+block|{
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|TRUE
 return|;
+block|}
 block|}
 block|}
 end_function

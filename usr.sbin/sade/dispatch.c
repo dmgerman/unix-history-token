@@ -1485,8 +1485,6 @@ block|{
 name|int
 name|what
 init|=
-name|DITEM_RESTORE
-operator||
 name|DITEM_SUCCESS
 decl_stmt|;
 specifier|extern
@@ -1507,9 +1505,6 @@ modifier|*
 name|list
 decl_stmt|;
 name|mediaClose
-argument_list|()
-expr_stmt|;
-name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 name|cp

@@ -352,8 +352,6 @@ name|FALSE
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -605,10 +603,6 @@ name|menu
 argument_list|)
 expr_stmt|;
 block|}
-name|i
-operator||=
-name|DITEM_RESTORE
-expr_stmt|;
 block|}
 block|}
 if|if
@@ -1716,6 +1710,13 @@ block|,
 literal|"A swap partition."
 block|,     }
 decl_stmt|;
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|DialogX
 operator|=
 literal|7
@@ -1757,6 +1758,11 @@ operator|=
 name|DialogY
 operator|=
 literal|0
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3267,6 +3273,13 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+name|WINDOW
+modifier|*
+name|w
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|label_focus
 operator|=
 literal|0
@@ -3297,6 +3310,11 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"No disks found!"
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|w
 argument_list|)
 expr_stmt|;
 return|return
@@ -5745,10 +5763,13 @@ operator|=
 name|here
 expr_stmt|;
 block|}
+name|restorescr
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -5810,9 +5831,6 @@ operator|!
 name|cp
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"diskLabel:  No disk selected - can't label automatically."
@@ -6253,9 +6271,6 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|msgConfirm
 argument_list|(
 literal|"For slice entry %s, got an invalid detail entry of: %s"

@@ -156,8 +156,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 comment|/* Run browser on the appropriate doc */
@@ -173,14 +171,10 @@ argument_list|)
 condition|)
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 else|else
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 end_function
@@ -381,9 +375,6 @@ argument_list|,
 name|where
 argument_list|)
 expr_stmt|;
-name|dialog_clear
-argument_list|()
-expr_stmt|;
 name|systemExecute
 argument_list|(
 name|tmp
@@ -391,8 +382,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 else|else

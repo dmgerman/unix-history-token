@@ -188,8 +188,6 @@ argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 return|;
 block|}
 block|}
@@ -400,8 +398,6 @@ comment|/* Be initially optimistic */
 name|ret
 operator|=
 name|DITEM_SUCCESS
-operator||
-name|DITEM_RESTORE
 expr_stmt|;
 comment|/* Make a couple of paranoid locations for temp files to live if user specified none */
 if|if
@@ -964,8 +960,6 @@ block|{
 name|ret
 operator|=
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 expr_stmt|;
 if|if
 condition|(
@@ -1040,9 +1034,6 @@ block|}
 block|}
 else|else
 block|{
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|variable_get
@@ -1070,8 +1061,6 @@ expr_stmt|;
 name|ret
 operator|=
 name|DITEM_FAILURE
-operator||
-name|DITEM_RESTORE
 expr_stmt|;
 block|}
 name|signal
