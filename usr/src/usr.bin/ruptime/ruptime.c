@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	5.2 (Berkeley) %G%"
+literal|"@(#)ruptime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -893,9 +893,7 @@ literal|0
 operator|||
 name|time
 operator|>
-literal|3
-operator|*
-literal|30
+literal|365
 operator|*
 literal|24
 operator|*
