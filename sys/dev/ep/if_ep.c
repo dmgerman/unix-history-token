@@ -1926,25 +1926,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|padmap
-index|[]
-init|=
-block|{
-literal|0
-block|,
-literal|3
-block|,
-literal|2
-block|,
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -2063,12 +2044,13 @@ name|m_len
 expr_stmt|;
 name|pad
 operator|=
-name|padmap
-index|[
+operator|(
+literal|4
+operator|-
 name|len
+operator|)
 operator|&
 literal|3
-index|]
 expr_stmt|;
 comment|/*      * The 3c509 automatically pads short packets to minimum ethernet length,      * but we drop packets that are too large. Perhaps we should truncate      * them instead?      */
 if|if
