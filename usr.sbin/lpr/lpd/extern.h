@@ -32,6 +32,17 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* in lpd.c */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|printer
