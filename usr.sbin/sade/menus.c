@@ -1452,7 +1452,7 @@ literal|"Configure system ttys."
 block|,
 name|NULL
 block|,
-name|configTTYs
+name|configEtcTtys
 block|,
 name|NULL
 block|,
@@ -7833,7 +7833,7 @@ literal|"Configure system ttys."
 block|,
 name|NULL
 block|,
-name|configTTYs
+name|configEtcTtys
 block|,
 name|NULL
 block|,

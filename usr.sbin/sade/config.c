@@ -4783,7 +4783,7 @@ end_function
 
 begin_function
 name|int
-name|configTTYs
+name|configEtcTtys
 parameter_list|(
 name|dialogMenuItem
 modifier|*
