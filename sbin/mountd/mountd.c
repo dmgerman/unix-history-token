@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.11.2.3 1997/04/09 20:31:33 guido Exp $"
+literal|"$Id: mountd.c,v 1.11.2.4 1997/04/23 11:04:58 msmith Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4614,13 +4614,9 @@ argument|; 		} 		if (addrp) { 			++addrp; 			if (*addrp == (u_long *)NULL) 				d
 literal|0
 argument|); }
 comment|/*  * Translate a net address.  */
-argument|int get_net(cp, net, maskflg) 	char *cp; 	struct netmsk *net; 	int maskflg; { 	struct netent *np; 	long netaddr; 	struct in_addr inetaddr, inetaddr2; 	char *name;  	if (!maskflg&& (np = getnetbyname(cp))) 		inetaddr = inet_makeaddr(np->n_net,
-literal|0
-argument|); 	else if (isdigit(*cp)) { 		if ((netaddr = inet_network(cp)) == -
+argument|int get_net(cp, net, maskflg) 	char *cp; 	struct netmsk *net; 	int maskflg; { 	struct netent *np; 	long netaddr; 	struct in_addr inetaddr, inetaddr2; 	char *name;  	if (isdigit(*cp)&& ((netaddr = inet_network(cp)) != -
 literal|1
-argument|) 			return (
-literal|1
-argument|); 		inetaddr = inet_makeaddr(netaddr,
+argument|)) { 		inetaddr = inet_makeaddr(netaddr,
 literal|0
 argument|);
 comment|/* 		 * Due to arbritrary subnet masks, you don't know how many 		 * bits to shift the address to make it into a network, 		 * however you do know how to make a network address into 		 * a host with host == 0 and then compare them. 		 * (What a pest) 		 */
@@ -4628,9 +4624,11 @@ argument|if (!maskflg) { 			setnetent(
 literal|0
 argument|); 			while (np = getnetent()) { 				inetaddr2 = inet_makeaddr(np->n_net,
 literal|0
-argument|); 				if (inetaddr2.s_addr == inetaddr.s_addr) 					break; 			} 			endnetent(); 		} 	} else 		return (
+argument|); 				if (inetaddr2.s_addr == inetaddr.s_addr) 					break; 			} 			endnetent(); 		} 	} else if ((np = getnetbyname(cp)) != NULL) { 		inetaddr = inet_makeaddr(np->n_net,
+literal|0
+argument|); 	} else 		return (
 literal|1
-argument|); 	if (maskflg) 		net->nt_mask = inetaddr.s_addr; 	else { 		if (np) 			name = np->n_name; 		else 			name = inet_ntoa(inetaddr); 		net->nt_name = (char *)malloc(strlen(name) +
+argument|);  	if (maskflg) 		net->nt_mask = inetaddr.s_addr; 	else { 		if (np) 			name = np->n_name; 		else 			name = inet_ntoa(inetaddr); 		net->nt_name = (char *)malloc(strlen(name) +
 literal|1
 argument|); 		if (net->nt_name == (char *)NULL) 			out_of_mem(); 		strcpy(net->nt_name, name); 		net->nt_net = inetaddr.s_addr; 	} 	return (
 literal|0
