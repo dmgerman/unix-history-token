@@ -864,7 +864,7 @@ begin_define
 define|#
 directive|define
 name|TKT_ROOT
-value|"/tmp/tkt"
+value|"/tmp/tkt_"
 end_define
 
 begin_comment
