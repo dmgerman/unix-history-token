@@ -3093,6 +3093,8 @@ name|numdevs
 decl_stmt|,
 name|pstate
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* First give child devices a chance to suspend. */
 name|error
 operator|=
@@ -3244,6 +3246,8 @@ decl_stmt|,
 modifier|*
 name|devlist
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/*      * Put all devices in D0 before resuming them.  Call _S0D on each one      * since some systems expect this.      */
 name|device_get_children
 argument_list|(
@@ -3343,6 +3347,8 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
 comment|/* Allow children to shutdown first. */
 name|bus_generic_shutdown
 argument_list|(
@@ -9176,6 +9182,13 @@ argument_list|(
 name|acpi
 argument_list|)
 expr_stmt|;
+comment|/*      * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since non-MPSAFE      * drivers need this.      */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|slp_state
 operator|=
 name|ACPI_SS_NONE
@@ -9508,6 +9521,12 @@ argument_list|,
 name|hz
 operator|*
 name|ACPI_MINIMUM_AWAKETIME
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
