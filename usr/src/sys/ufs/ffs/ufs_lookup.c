@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.22	85/04/19	*/
+comment|/*	ufs_lookup.c	6.23	85/05/22	*/
 end_comment
 
 begin_include
@@ -709,12 +709,19 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|ENOENT
+name|ENAMETOOLONG
 expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+operator|*
+name|cp
+operator|&
+literal|0200
+condition|)
 if|if
 condition|(
 operator|(
@@ -730,13 +737,6 @@ operator||
 literal|0200
 operator|)
 operator|||
-operator|(
-operator|*
-name|cp
-operator|&
-literal|0200
-operator|)
-operator|&&
 name|flag
 operator|!=
 name|DELETE
@@ -746,7 +746,7 @@ name|u
 operator|.
 name|u_error
 operator|=
-name|EPERM
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|bad
@@ -2787,7 +2787,7 @@ goto|goto
 name|bad2
 goto|;
 block|}
-comment|/* 	 * insert name into cache (if we want it, and it isn't "." or "..") 	 * 	 * all other cases where making a cache entry would be wrong 	 * have already departed from the code sequence somewhere above. 	 */
+comment|/* 	 * insert name into cache if appropriate 	 */
 if|if
 condition|(
 name|makeentry
@@ -3015,7 +3015,20 @@ operator|>=
 name|MAXPATHLEN
 operator|-
 literal|1
-operator|||
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENAMETOOLONG
+expr_stmt|;
+goto|goto
+name|bad2
+goto|;
+block|}
+if|if
+condition|(
 operator|++
 name|nlink
 operator|>
