@@ -55,6 +55,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -285,7 +302,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipf.c,v 2.10.2.10 2001/07/18 11:34:19 darrenr Exp $"
+literal|"@(#)$Id: ipf.c,v 2.10.2.13 2002/02/22 15:32:53 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,12 +429,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_INET6
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|use_inet6
@@ -425,11 +436,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -713,9 +719,6 @@ condition|(
 name|c
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USE_INET6
 case|case
 literal|'6'
 case|:
@@ -724,8 +727,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'A'
 case|:

@@ -3,6 +3,23 @@ begin_comment
 comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sgi
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptimers.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -242,7 +259,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_hx.c,v 2.2.2.1 2001/06/26 10:43:18 darrenr Exp $"
+literal|"@(#)$Id: ipft_hx.c,v 2.2.2.5 2002/02/22 15:32:54 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,6 +543,25 @@ name|ip_t
 modifier|*
 name|ip
 decl_stmt|;
+comment|/* 	 * interpret start of line as possibly "[ifname]" or 	 * "[in/out,ifname]". 	 */
+if|if
+condition|(
+name|ifn
+condition|)
+operator|*
+name|ifn
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|dir
+condition|)
+operator|*
+name|dir
+operator|=
+literal|0
+expr_stmt|;
 name|ip
 operator|=
 operator|(
@@ -634,30 +670,11 @@ name|stdout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * interpret start of line as possibly "[ifname]" or 		 * "[in/out,ifname]". 		 */
-if|if
-condition|(
-name|ifn
-condition|)
-operator|*
-name|ifn
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|dir
-condition|)
-operator|*
-name|dir
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
 operator|*
-name|buf
+name|line
 operator|==
 literal|'['
 operator|)
@@ -676,19 +693,25 @@ condition|)
 block|{
 name|t
 operator|=
-name|buf
+name|line
 operator|+
 literal|1
 expr_stmt|;
 if|if
 condition|(
-name|t
-operator|-
 name|s
+operator|-
+name|t
 operator|>
 literal|0
 condition|)
 block|{
+operator|*
+name|s
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -719,7 +742,10 @@ condition|)
 operator|*
 name|ifn
 operator|=
+name|strdup
+argument_list|(
 name|u
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -762,12 +788,6 @@ operator|*
 name|ifn
 operator|=
 name|t
-expr_stmt|;
-operator|*
-name|s
-operator|++
-operator|=
-literal|'\0'
 expr_stmt|;
 block|}
 block|}
