@@ -5437,6 +5437,11 @@ decl_stmt|,
 name|size
 decl_stmt|;
 comment|/* 			 * if this is a system process or if we have already 			 * looked at this process, skip it. 			 */
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -5450,6 +5455,11 @@ name|P_WEXIT
 operator|)
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
@@ -5498,15 +5508,20 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|breakout
 condition|)
 block|{
-name|mtx_unlock_spin
+name|PROC_UNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5556,10 +5571,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-name|mtx_unlock_spin
+name|PROC_UNLOCK
 argument_list|(
-operator|&
-name|sched_lock
+name|p
 argument_list|)
 expr_stmt|;
 name|size
