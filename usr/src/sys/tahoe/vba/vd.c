@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.18	87/04/02	*/
+comment|/*	vd.c	1.19	87/05/07	*/
 end_comment
 
 begin_include
@@ -6857,56 +6857,56 @@ block|,
 block|{
 literal|0
 block|,
-literal|30528
+literal|61056
 block|}
 block|,
 comment|/* a cyl   0 - 52 */
 block|{
-literal|30528
+literal|61056
 block|,
-literal|30528
+literal|61056
 block|}
 block|,
 comment|/* b cyl  53 - 105 */
 block|{
-literal|61056
+literal|122112
 block|,
-literal|345600
+literal|691200
 block|}
 block|,
 comment|/* c cyl 106 - 705 */
 block|{
-literal|118656
+literal|237312
 block|,
-literal|288000
+literal|576000
 block|}
 block|,
 comment|/* d cyl 206 - 705 */
 block|{
-literal|176256
+literal|352512
 block|,
-literal|230400
+literal|460800
 block|}
 block|,
 comment|/* e cyl 306 - 705 */
 block|{
-literal|233856
+literal|467712
 block|,
-literal|172800
+literal|345600
 block|}
 block|,
 comment|/* f cyl 406 - 705 */
 block|{
-literal|291456
+literal|582912
 block|,
-literal|115200
+literal|230400
 block|}
 block|,
 comment|/* g cyl 506 - 705 */
 block|{
-literal|349056
+literal|698112
 block|,
-literal|57600
+literal|115200
 block|}
 comment|/* h cyl 606 - 705 */
 block|}
@@ -6954,14 +6954,14 @@ block|,
 literal|736560
 block|}
 block|,
-comment|/* egl0e cyl 0 - 836 */
+comment|/* egl0e cyl   0 - 836 */
 block|{
 literal|0
 block|,
 literal|740960
 block|}
 block|,
-comment|/* egl0f cyl 0 - 841 */
+comment|/* egl0f cyl   0 - 841 */
 block|{
 literal|118800
 block|,
@@ -6989,56 +6989,56 @@ block|,
 block|{
 literal|0
 block|,
-literal|19200
+literal|38400
 block|}
 block|,
 comment|/* fuj0a cyl   0 - 59 */
 block|{
-literal|19200
+literal|38400
 block|,
-literal|24000
+literal|48000
 block|}
 block|,
 comment|/* fuj0b cyl  60 - 134 */
 block|{
-literal|43200
+literal|86400
 block|,
-literal|218560
+literal|437120
 block|}
 block|,
 comment|/* fuj0c cyl 135 - 817 */
 block|{
-literal|79680
+literal|159360
 block|,
-literal|182080
+literal|364160
 block|}
 block|,
 comment|/* fuj0d cyl 249 - 817 */
 block|{
-literal|116160
+literal|232320
 block|,
-literal|145600
+literal|291200
 block|}
 block|,
 comment|/* fuj0e cyl 363 - 817 */
 block|{
-literal|152640
+literal|305280
 block|,
-literal|109120
+literal|218240
 block|}
 block|,
 comment|/* fuj0f cyl 477 - 817 */
 block|{
-literal|189120
+literal|378240
 block|,
-literal|72640
+literal|145280
 block|}
 block|,
 comment|/* fuj0g cyl 591 - 817 */
 block|{
-literal|225600
+literal|451200
 block|,
-literal|36160
+literal|72320
 block|}
 comment|/* fug0h cyl 705 - 817 */
 block|}
@@ -7121,56 +7121,56 @@ block|,
 block|{
 literal|0
 block|,
-literal|20064
+literal|40128
 block|}
 block|,
 comment|/* a cyl   0-65 */
 block|{
-literal|20064
+literal|40128
 block|,
-literal|13680
+literal|27360
 block|}
 block|,
 comment|/* b cyl  66-110 */
 block|{
-literal|33744
+literal|67488
 block|,
-literal|214928
+literal|429856
 block|}
 block|,
 comment|/* c cyl 111-817 */
 block|{
-literal|69616
+literal|139232
 block|,
-literal|179056
+literal|358112
 block|}
 block|,
 comment|/* d cyl 229 - 817 */
 block|{
-literal|105488
+literal|210976
 block|,
-literal|143184
+literal|286368
 block|}
 block|,
 comment|/* e cyl 347 - 817 */
 block|{
-literal|141360
+literal|282720
 block|,
-literal|107312
+literal|214624
 block|}
 block|,
 comment|/* f cyl 465 - 817 */
 block|{
-literal|177232
+literal|354464
 block|,
-literal|71440
+literal|142880
 block|}
 block|,
 comment|/* g cyl 583 - 817 */
 block|{
-literal|213104
+literal|426208
 block|,
-literal|35568
+literal|71136
 block|}
 comment|/* h cyl 701 - 817 */
 block|}
