@@ -47,6 +47,14 @@ modifier|*
 name|shell
 decl_stmt|;
 comment|/* user's shell */
+name|time_t
+name|mailread
+decl_stmt|;
+comment|/* last time mail was read */
+name|time_t
+name|mailrecv
+decl_stmt|;
+comment|/* last time mail was received */
 name|struct
 name|where
 modifier|*

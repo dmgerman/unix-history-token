@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tony Nardo of the Johns Hopkins University/Applied Physics Lab.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
+begin_comment
+comment|/*  * Luke Mewburn<lm@rmit.edu.au> added the following on 940622:  *    - mail status ("No Mail", "Mail read:...", or "New Mail ...,  *	Unread since ...".)  *    - 4 digit phone extensions (3210 is printed as x3210.)  *    - host/office toggling in short format with -h& -o.  *    - short day names (`Tue' printed instead of `Jun 21' if the  *	login time is< 6 days.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -54,7 +58,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * Finger prints out information about users.  It is not portable since  * certain fields (e.g. the full user name, office, and phone numbers) are  * extracted from the gecos field of the passwd file which other UNIXes  * may not have or may use for other things.  *  * There are currently two output formats; the short format is one line  * per user and displays login name, tty, login time, real name, idle time,  * and office location/phone number.  The long format gives the same  * information (in a more legible format) as well as home directory, shell,  * mail info, and .plan/.project files.  */
+comment|/*  * Finger prints out information about users.  It is not portable since  * certain fields (e.g. the full user name, office, and phone numbers) are  * extracted from the gecos field of the passwd file which other UNIXes  * may not have or may use for other things.  *  * There are currently two output formats; the short format is one line  * per user and displays login name, tty, login time, real name, idle time,  * and either remote host information (default) or office location/phone  * number, depending on if -h or -o is used respectively.  * The long format gives the same information (in a more legible format) as  * well as home directory, shell, mail info, and .plan/.project files.  */
 end_comment
 
 begin_include
@@ -147,6 +151,8 @@ decl_stmt|,
 name|pplan
 decl_stmt|,
 name|sflag
+decl_stmt|,
+name|oflag
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +214,12 @@ block|{
 name|int
 name|ch
 decl_stmt|;
+comment|/* delete this for sun behavior */
+name|oflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* default to old behavior for now */
 while|while
 condition|(
 operator|(
@@ -219,7 +231,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lmps"
+literal|"lmpsho"
 argument_list|)
 operator|)
 operator|!=
@@ -267,6 +279,24 @@ expr_stmt|;
 comment|/* short format */
 break|break;
 case|case
+literal|'h'
+case|:
+name|oflag
+operator|=
+literal|0
+expr_stmt|;
+comment|/* remote host info */
+break|break;
+case|case
+literal|'o'
+case|:
+name|oflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* office info */
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -277,7 +307,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: finger [-lmps] [login ...]\n"
+literal|"usage: finger [-lmpsho] [login ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -123,6 +123,10 @@ specifier|extern
 name|time_t
 name|now
 decl_stmt|;
+specifier|extern
+name|int
+name|oflag
+decl_stmt|;
 specifier|register
 name|PERSON
 modifier|*
@@ -149,17 +153,21 @@ name|data
 decl_stmt|,
 name|key
 decl_stmt|;
-comment|/* 	 * short format -- 	 *	login name 	 *	real name 	 *	terminal name (the XX of ttyXX) 	 *	if terminal writeable (add an '*' to the terminal name 	 *		if not) 	 *	if logged in show idle time and day logged in, else 	 *		show last login date and time.  If> 6 moths, 	 *		show year instead of time. 	 *	office location 	 *	office phone 	 */
+comment|/* 	 * short format -- 	 *	login name 	 *	real name 	 *	terminal name (the XX of ttyXX) 	 *	if terminal writeable (add an '*' to the terminal name 	 *		if not) 	 *	if logged in show idle time and day logged in, else 	 *		show last login date and time. 	 *		If> 6 months, show year instead of time. 	 *	if (-o) 	 *		office location 	 *		office phone 	 *	else 	 *		remote host 	 */
 define|#
 directive|define
 name|MAXREALNAME
+value|20
+define|#
+directive|define
+name|MAXHOSTNAME
 value|20
 operator|(
 name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %-*s %s\n"
+literal|"%-*s %-*s %s  %s\n"
 argument_list|,
 name|UT_NAMESIZE
 argument_list|,
@@ -169,7 +177,13 @@ name|MAXREALNAME
 argument_list|,
 literal|"Name"
 argument_list|,
-literal|"Tty  Idle  Login Time   Office     Office Phone"
+literal|"TTY  Idle  Login Time"
+argument_list|,
+name|oflag
+condition|?
+literal|" Office     Office Phone"
+else|:
+literal|" Where"
 argument_list|)
 expr_stmt|;
 for|for
@@ -433,6 +447,33 @@ operator|->
 name|loginat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|now
+operator|-
+name|w
+operator|->
+name|loginat
+operator|<
+name|SECSPERDAY
+operator|*
+operator|(
+name|DAYSPERWEEK
+operator|-
+literal|1
+operator|)
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%.3s   "
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -488,6 +529,11 @@ name|office
 label|:
 if|if
 condition|(
+name|oflag
+condition|)
+block|{
+if|if
+condition|(
 name|pn
 operator|->
 name|office
@@ -540,6 +586,22 @@ name|pn
 operator|->
 name|officephone
 argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" %.*s"
+argument_list|,
+name|MAXHOSTNAME
+argument_list|,
+name|w
+operator|->
+name|host
 argument_list|)
 expr_stmt|;
 name|putchar
