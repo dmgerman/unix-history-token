@@ -2765,6 +2765,21 @@ literal|"=ftp://ftp7.jp.freebsd.org"
 block|}
 block|,
 block|{
+literal|" IPv6 Ready #3"
+block|,
+literal|"ftp3.ie.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.ie.freebsd.org"
+block|}
+block|,
+block|{
 literal|"Argentina"
 block|,
 literal|"ftp.ar.freebsd.org"
@@ -3487,6 +3502,21 @@ name|NULL
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp2.ie.freebsd.org"
+block|}
+block|,
+block|{
+literal|" Ireland #3"
+block|,
+literal|"ftp3.ie.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.ie.freebsd.org"
 block|}
 block|,
 block|{
