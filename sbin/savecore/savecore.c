@@ -2390,7 +2390,7 @@ name|he
 operator|&=
 name|BLOCKMASK
 expr_stmt|;
-comment|/* 			 * 1) Don't go beyond the end of the buffer. 			 * 2) If the end of the buffer is less than 			 *    BLOCKSIZE bytes away, we're at the end 			 *    of the file, so just grab what's left. 			 */
+comment|/* 			     * 1) Don't go beyond the end of the buffer. 			     * 2) If the end of the buffer is less than 			     *    BLOCKSIZE bytes away, we're at the end 			     *    of the file, so just grab what's left. 			     */
 if|if
 condition|(
 name|hs
@@ -2405,7 +2405,7 @@ name|he
 operator|=
 name|nr
 expr_stmt|;
-comment|/* 			 * At this point, we have a partial ordering: 			 *     nw<= hs<= he<= nr 			 * If hs> nw, buf[nw..hs] contains non-zero data. 			 * If he> hs, buf[hs..he] is all zeroes. 			 */
+comment|/* 			     * At this point, we have a partial ordering: 			     *     nw<= hs<= he<= nr 			     * If hs> nw, buf[nw..hs] contains non-zero data. 			     * If he> hs, buf[hs..he] is all zeroes. 			     */
 if|if
 condition|(
 name|hs
