@@ -266,6 +266,13 @@ directive|include
 file|<sys/md5.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MD5_RESULTLEN
+value|16
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1992,7 +1999,7 @@ block|{
 name|u_char
 name|digest
 index|[
-literal|16
+name|MD5_RESULTLEN
 index|]
 decl_stmt|;
 if|if
@@ -2689,7 +2696,7 @@ decl_stmt|;
 name|u_char
 name|tk
 index|[
-literal|16
+name|MD5_RESULTLEN
 index|]
 decl_stmt|;
 name|u_char
@@ -3062,7 +3069,7 @@ block|{
 name|u_char
 name|digest
 index|[
-literal|16
+name|MD5_RESULTLEN
 index|]
 decl_stmt|;
 name|u_char
