@@ -6532,18 +6532,17 @@ specifier|register
 name|int
 name|prop
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
+operator|!
 name|_SIG_VALID
 argument_list|(
 name|sig
 argument_list|)
-argument_list|,
-operator|(
-literal|"psignal(): invalid signal %d\n"
-operator|,
-name|sig
-operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"psignal(): invalid signal"
 argument_list|)
 expr_stmt|;
 name|PROC_LOCK_ASSERT
