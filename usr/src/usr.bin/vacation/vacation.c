@@ -45,7 +45,7 @@ operator|)
 name|vacation
 operator|.
 name|c
-literal|3.8
+literal|3.9
 operator|%
 name|G
 operator|%
@@ -787,8 +787,6 @@ argument_list|,
 literal|"-f"
 argument_list|,
 name|myname
-argument_list|,
-literal|"-n"
 argument_list|,
 name|user
 argument_list|,
