@@ -1535,6 +1535,26 @@ comment|/* nothing done yet */
 if|if
 condition|(
 operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_concat
+operator|)
+comment|/* only change this for concat and struped */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_striped
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
 operator|(
 name|vps
 operator|&
@@ -1582,7 +1602,7 @@ operator|)
 condition|)
 block|{
 comment|/* and we consider that up */
-comment|/* 	     * Conceptually, an empty plex does not contain valid data, 	     * but normally we'll see this state when we have just 	     * created a plex, and it's either consistent from earlier, 	     * or we don't care about the previous contents (we're going 	     * to create a file system or use it for swap). 	     * 	     * We need to do this in one swell foop: on the next call 	     * we will no longer be just empty. 	     * 	     * This code assumes that all the other plexes are also 	     * capable of coming up (i.e. all the sds are up), but 	     * that's OK: we'll come back to this function for the remaining 	     * plexes in the volume.  	     */
+comment|/* 		 * Conceptually, an empty plex does not contain valid data, 		 * but normally we'll see this state when we have just 		 * created a plex, and it's either consistent from earlier, 		 * or we don't care about the previous contents (we're going 		 * to create a file system or use it for swap). 		 * 		 * We need to do this in one swell foop: on the next call 		 * we will no longer be just empty. 		 * 		 * This code assumes that all the other plexes are also 		 * capable of coming up (i.e. all the sds are up), but 		 * that's OK: we'll come back to this function for the remaining 		 * plexes in the volume.  		 */
 name|struct
 name|volume
 modifier|*
@@ -1711,6 +1731,16 @@ operator|=
 name|plex_faulty
 expr_stmt|;
 comment|/* no, it's down */
+block|}
+else|else
+comment|/* invalid or RAID-5 organization */
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_faulty
+expr_stmt|;
+comment|/* it's down */
 block|}
 elseif|else
 if|if
