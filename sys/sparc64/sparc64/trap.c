@@ -645,8 +645,7 @@ comment|/* fix alignment */
 name|SIGILL
 block|,
 comment|/* integer overflow */
-operator|-
-literal|1
+name|SIGSYS
 block|,
 comment|/* syscall */
 operator|-
