@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.11 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3354,7 +3354,7 @@ end_comment
 
 begin_function
 name|void
-name|start
+name|startcmd
 parameter_list|(
 name|argc
 parameter_list|,
