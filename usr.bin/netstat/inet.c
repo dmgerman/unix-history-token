@@ -2325,6 +2325,13 @@ argument_list|)
 expr_stmt|;
 name|p1a
 argument_list|(
+name|udps_nosum
+argument_list|,
+literal|"\t%lu with no checksum\n"
+argument_list|)
+expr_stmt|;
+name|p1a
+argument_list|(
 name|udps_noport
 argument_list|,
 literal|"\t%lu dropped due to no socket\n"

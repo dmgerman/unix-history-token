@@ -1121,6 +1121,12 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+else|else
+name|udpstat
+operator|.
+name|udps_nosum
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|IN_MULTICAST
