@@ -182,6 +182,9 @@ decl_stmt|;
 name|bus_space_handle_t
 name|ioh
 decl_stmt|;
+name|bus_size_t
+name|sc_size
+decl_stmt|;
 if|#
 directive|if
 name|defined

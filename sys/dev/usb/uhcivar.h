@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.28 2000/04/06 23:44:21 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.29 2000/04/25 09:20:55 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -282,6 +282,9 @@ name|iot
 decl_stmt|;
 name|bus_space_handle_t
 name|ioh
+decl_stmt|;
+name|bus_size_t
+name|sc_size
 decl_stmt|;
 if|#
 directive|if

@@ -1186,6 +1186,46 @@ end_endif
 begin_define
 define|#
 directive|define
+name|OBARR
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_space_barrier((sc)->iot, (sc)->ioh, 0, (sc)->sc_size, \ 			BUS_SPACE_BARRIER_READ|BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OWRITE1
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do { OBARR(sc); bus_space_write_1((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OWRITE2
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|,
+name|x
+parameter_list|)
+define|\
+value|do { OBARR(sc); bus_space_write_2((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|OWRITE4
 parameter_list|(
 name|sc
@@ -1194,19 +1234,20 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|bus_space_write_4((sc)->iot, (sc)->ioh, (r), (x))
+define|\
+value|do { OBARR(sc); bus_space_write_4((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|OREAD4
+name|OREAD1
 parameter_list|(
 name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|bus_space_read_4((sc)->iot, (sc)->ioh, (r))
+value|(OBARR(sc), bus_space_read_1((sc)->iot, (sc)->ioh, (r)))
 end_define
 
 begin_define
@@ -1218,7 +1259,19 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|bus_space_read_2((sc)->iot, (sc)->ioh, (r))
+value|(OBARR(sc), bus_space_read_2((sc)->iot, (sc)->ioh, (r)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OREAD4
+parameter_list|(
+name|sc
+parameter_list|,
+name|r
+parameter_list|)
+value|(OBARR(sc), bus_space_read_4((sc)->iot, (sc)->ioh, (r)))
 end_define
 
 begin_comment

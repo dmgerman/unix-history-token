@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.109 2000/04/06 23:44:20 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.112 2000/04/25 14:28:14 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1488,6 +1488,16 @@ end_endif
 begin_define
 define|#
 directive|define
+name|UBARR
+parameter_list|(
+name|sc
+parameter_list|)
+value|bus_space_barrier((sc)->iot, (sc)->ioh, 0, (sc)->sc_size, \ 			BUS_SPACE_BARRIER_READ|BUS_SPACE_BARRIER_WRITE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|UWRITE1
 parameter_list|(
 name|sc
@@ -1496,7 +1506,8 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|bus_space_write_1((sc)->iot, (sc)->ioh, (r), (x))
+define|\
+value|do { UBARR(sc); bus_space_write_1((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
 end_define
 
 begin_define
@@ -1510,7 +1521,8 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|bus_space_write_2((sc)->iot, (sc)->ioh, (r), (x))
+define|\
+value|do { UBARR(sc); bus_space_write_2((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
 end_define
 
 begin_define
@@ -1524,7 +1536,8 @@ name|r
 parameter_list|,
 name|x
 parameter_list|)
-value|bus_space_write_4((sc)->iot, (sc)->ioh, (r), (x))
+define|\
+value|do { UBARR(sc); bus_space_write_4((sc)->iot, (sc)->ioh, (r), (x)); } while (0)
 end_define
 
 begin_define
@@ -1536,7 +1549,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|bus_space_read_1((sc)->iot, (sc)->ioh, (r))
+value|(UBARR(sc), bus_space_read_1((sc)->iot, (sc)->ioh, (r)))
 end_define
 
 begin_define
@@ -1548,7 +1561,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|bus_space_read_2((sc)->iot, (sc)->ioh, (r))
+value|(UBARR(sc), bus_space_read_2((sc)->iot, (sc)->ioh, (r)))
 end_define
 
 begin_define
@@ -1560,7 +1573,7 @@ name|sc
 parameter_list|,
 name|r
 parameter_list|)
-value|bus_space_read_4((sc)->iot, (sc)->ioh, (r))
+value|(UBARR(sc), bus_space_read_4((sc)->iot, (sc)->ioh, (r)))
 end_define
 
 begin_define
