@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.61 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7535,7 +7535,7 @@ name|l
 operator|=
 name|SYSLOG_BUFSIZE
 operator|-
-literal|40
+literal|80
 expr_stmt|;
 name|p
 operator|=
@@ -7708,15 +7708,15 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-name|syslog
+name|bp
+operator|=
+name|buf
+expr_stmt|;
+name|sprintf
 argument_list|(
-name|LOG_INFO
+name|bp
 argument_list|,
-literal|"%s: delay=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
+literal|"delay=%s"
 argument_list|,
 name|pintvl
 argument_list|(
@@ -7731,27 +7731,39 @@ name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|m
 operator|!=
 name|NULL
 condition|)
-name|syslog
+block|{
+name|sprintf
 argument_list|(
-name|LOG_INFO
+name|bp
 argument_list|,
-literal|"%s: mailer=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
+literal|", mailer=%s"
 argument_list|,
 name|m
 operator|->
 name|m_name
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|strlen
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|mci
@@ -7774,12 +7786,11 @@ name|CurHostAddr
 decl_stmt|;
 endif|#
 directive|endif
-operator|(
-name|void
-operator|)
-name|strcpy
+name|sprintf
 argument_list|(
-name|buf
+name|bp
+argument_list|,
+literal|", relay=%s"
 argument_list|,
 name|mci
 operator|->
@@ -7794,7 +7805,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|" ("
 argument_list|)
@@ -7804,7 +7815,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -7818,26 +7829,13 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|")"
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"%s: relay=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -7865,20 +7863,29 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|syslog
+name|sprintf
 argument_list|(
-name|LOG_INFO
+name|bp
 argument_list|,
-literal|"%s: relay=%s"
-argument_list|,
-name|e
-operator|->
-name|e_id
+literal|", relay=%s"
 argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 name|syslog
 argument_list|(
 name|LOG_INFO
