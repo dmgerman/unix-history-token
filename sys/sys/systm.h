@@ -1292,6 +1292,7 @@ begin_function_decl
 name|void
 name|hexdump
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|ptr

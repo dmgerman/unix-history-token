@@ -4297,6 +4297,7 @@ begin_function
 name|void
 name|hexdump
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|ptr
@@ -4323,6 +4324,7 @@ decl_stmt|;
 name|int
 name|cols
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
