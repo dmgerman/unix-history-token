@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.10 83/05/05"
+literal|"@(#)ruptime.c	4.11 (Berkeley) 83/05/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
 end_include
 
 begin_include

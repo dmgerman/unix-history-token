@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwho.c	4.5 83/05/05"
+literal|"@(#)rwho.c	4.6 83/05/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|<dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
 end_include
 
 begin_include
@@ -92,7 +86,7 @@ name|int
 name|myidle
 decl_stmt|;
 name|struct
-name|utmp
+name|outmp
 name|myutmp
 decl_stmt|;
 block|}
@@ -586,7 +580,7 @@ name|mp
 operator|->
 name|myutmp
 operator|.
-name|ut_line
+name|out_line
 argument_list|)
 decl_stmt|;
 if|if
@@ -641,7 +635,7 @@ name|mp
 operator|->
 name|myutmp
 operator|.
-name|ut_line
+name|out_line
 argument_list|)
 expr_stmt|;
 name|printf
@@ -652,7 +646,7 @@ name|mp
 operator|->
 name|myutmp
 operator|.
-name|ut_name
+name|out_name
 argument_list|,
 name|width
 argument_list|,
@@ -669,7 +663,7 @@ name|mp
 operator|->
 name|myutmp
 operator|.
-name|ut_time
+name|out_time
 argument_list|)
 operator|+
 literal|4
@@ -807,13 +801,13 @@ name|u1
 operator|->
 name|myutmp
 operator|.
-name|ut_name
+name|out_name
 argument_list|,
 name|u2
 operator|->
 name|myutmp
 operator|.
-name|ut_name
+name|out_name
 argument_list|,
 literal|8
 argument_list|)
@@ -859,13 +853,13 @@ name|u1
 operator|->
 name|myutmp
 operator|.
-name|ut_line
+name|out_line
 argument_list|,
 name|u2
 operator|->
 name|myutmp
 operator|.
-name|ut_line
+name|out_line
 argument_list|,
 literal|8
 argument_list|)
