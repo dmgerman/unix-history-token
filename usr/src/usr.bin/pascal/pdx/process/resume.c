@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.7 %G%"
+literal|"@(#)resume.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -84,6 +84,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_function_decl
 name|LOCAL
 name|ADDRESS
@@ -92,8 +98,21 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|LOCAL
+name|ADDRESS
+modifier|*
+name|pcaddr
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * If we hit a breakpoint, px's pc points at a halt instruction,  * this must be avoided when restarting.  */
+comment|/*  * Resume execution, set (get) pcode location counter before (after) resuming.  */
 end_comment
 
 begin_macro
@@ -152,6 +171,46 @@ directive|if
 operator|(
 name|isvaxpx
 operator|)
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+name|pcaddr
+operator|==
+literal|0
+condition|)
+block|{
+name|dread
+argument_list|(
+operator|&
+name|pcaddr
+argument_list|,
+name|PCADDRP
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pcaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|dread
+argument_list|(
+operator|&
+name|pc
+argument_list|,
+name|pcaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|pc
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+else|ifdef vax
 if|if
 condition|(
 name|p
@@ -215,8 +274,11 @@ name|ENDOFF
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 else|#
 directive|else
+comment|/* compiled code */
 name|pc
 operator|=
 name|process
@@ -301,6 +363,10 @@ name|choose
 argument_list|()
 expr_stmt|;
 block|}
+comment|/*      * If px implements a breakpoint by executing a halt instruction      * (which is true on the VAX), the real pc must be incremented to      * skip over it.  On other machines (such as SUNs), px sends itself      * a signal and no incrementing is needed.      */
+ifdef|#
+directive|ifdef
+name|vax
 if|if
 condition|(
 name|isbperr
@@ -315,6 +381,8 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -325,6 +393,12 @@ operator|(
 name|isvaxpx
 operator|)
 end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_comment
 comment|/*  * Find the location in the Pascal object where execution was suspended.  *  * We basically walk back through the frames looking for saved  * register 11's.  Each time we find one, we remember it.  When we reach  * the frame associated with the interpreter procedure, the most recently  * saved register 11 is the one we want.  */
@@ -613,6 +687,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Under the -r option, we offer the opportunity to just get  * the px traceback and not actually enter the debugger.  *  * If the standard input is not a tty but standard error is,  * change standard input to be /dev/tty.  */
