@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -33,6 +33,33 @@ literal|8
 expr_stmt|;
 block|}
 name|cpuany
+struct|;
+struct|struct
+name|cpu8600
+block|{
+name|u_int
+name|cp_sno
+range|:
+literal|12
+decl_stmt|,
+comment|/* serial number */
+name|cp_plant
+range|:
+literal|4
+decl_stmt|,
+comment|/* plant number */
+name|cp_eco
+range|:
+literal|8
+decl_stmt|,
+comment|/* eco level */
+name|cp_type
+range|:
+literal|8
+decl_stmt|;
+comment|/* VAX_8600 */
+block|}
+name|cpu8600
 struct|;
 struct|struct
 name|cpu780
@@ -144,8 +171,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAX_8600
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAX_MAX
-value|3
+value|4
 end_define
 
 begin_ifndef
@@ -167,13 +201,39 @@ name|pc_cputype
 decl_stmt|;
 comment|/* cpu type code */
 name|short
-name|pc_nnexus
+name|pc_nioa
+decl_stmt|;
+comment|/* number of IO adaptors/SBI's */
+name|caddr_t
+modifier|*
+name|pc_ioaaddr
+decl_stmt|;
+comment|/* phys addresses of IO adaptors */
+name|int
+name|pc_ioasize
+decl_stmt|;
+comment|/* size of a IO adaptor */
+name|short
+modifier|*
+name|pc_ioatype
+decl_stmt|;
+comment|/* io adaptor types if no cfg reg */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|persbi
+block|{
+name|short
+name|psb_nnexus
 decl_stmt|;
 comment|/* number of nexus slots */
 name|struct
 name|nexus
 modifier|*
-name|pc_nexbase
+name|psb_nexbase
 decl_stmt|;
 comment|/* base of nexus space */
 comment|/* we should be able to have just one address for the unibus memories */
@@ -181,15 +241,15 @@ comment|/* and calculate successive addresses by adding to the base, but the 750
 comment|/* doesn't obey the sensible rule: uba1 has a lower address than uba0! */
 name|caddr_t
 modifier|*
-name|pc_umaddr
+name|psb_umaddr
 decl_stmt|;
 comment|/* unibus memory addresses */
 name|short
-name|pc_nubabdp
+name|psb_nubabdp
 decl_stmt|;
 comment|/* number of bdp's per uba */
 name|short
-name|pc_haveubasr
+name|psb_haveubasr
 decl_stmt|;
 comment|/* have uba status register */
 comment|/* the 750 has some slots which don't promise to tell you their types */
@@ -197,7 +257,7 @@ comment|/* if this pointer is non-zero, then you get the type from this array */
 comment|/* rather than from the (much more sensible) low byte of the config register */
 name|short
 modifier|*
-name|pc_nextype
+name|psb_nextype
 decl_stmt|;
 comment|/* botch */
 block|}
@@ -223,6 +283,79 @@ name|percpu
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|VAX730
+end_if
+
+begin_decl_stmt
+name|struct
+name|persbi
+name|xxx730
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX750
+end_if
+
+begin_decl_stmt
+name|struct
+name|persbi
+name|cmi750
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_decl_stmt
+name|struct
+name|persbi
+name|sbi780
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
+begin_decl_stmt
+name|struct
+name|persbi
+name|sbi8600
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

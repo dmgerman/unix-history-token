@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mtpr.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -344,6 +344,11 @@ name|defined
 argument_list|(
 name|VAX780
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VAX8600
+argument_list|)
 end_if
 
 begin_define
@@ -356,6 +361,210 @@ end_define
 begin_comment
 comment|/* accelerator control and status */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX8600
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TBCHK
+value|0x3f
+end_define
+
+begin_comment
+comment|/* Translation Buffer Check */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAMACC
+value|0x40
+end_define
+
+begin_comment
+comment|/* PAMM access */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PAMLOC
+value|0x41
+end_define
+
+begin_comment
+comment|/* PAMM location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSWP
+value|0x42
+end_define
+
+begin_comment
+comment|/* Cache sweep */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDECC
+value|0x43
+end_define
+
+begin_comment
+comment|/* MBOX data ecc register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MENA
+value|0x44
+end_define
+
+begin_comment
+comment|/* MBOX error enable register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDCTL
+value|0x45
+end_define
+
+begin_comment
+comment|/* MBOX data control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCCTL
+value|0x46
+end_define
+
+begin_comment
+comment|/* MBOX mcc control register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MERG
+value|0x47
+end_define
+
+begin_comment
+comment|/* MBOX	error generator register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRBT
+value|0x48
+end_define
+
+begin_comment
+comment|/* Console reboot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFI
+value|0x49
+end_define
+
+begin_comment
+comment|/* Diag fault insertion register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EHSR
+value|0x4a
+end_define
+
+begin_comment
+comment|/* Error handling status register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STXCS
+value|0x4c
+end_define
+
+begin_comment
+comment|/* Console block storage C/S */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STXDB
+value|0x4d
+end_define
+
+begin_comment
+comment|/* Console block storage D/B */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESPA
+value|0x4e
+end_define
+
+begin_comment
+comment|/* EBOX scratchpad address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ESPD
+value|0x4f
+end_define
+
+begin_comment
+comment|/* EBOX sratchpad data */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|VAX780
+argument_list|)
+end_if
 
 begin_define
 define|#

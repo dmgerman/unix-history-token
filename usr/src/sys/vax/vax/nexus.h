@@ -1,11 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nexus.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nexus.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Information about nexus's.  *  * Each machine has an address of backplane slots (nexi).  * Each nexus is some type of adapter, whose code is the low  * byte of the first word of the adapter address space.  * At boot time the system looks through the array of available  * slots and finds the interconnects for the machine.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
+begin_define
+define|#
+directive|define
+name|NNEX8600
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXA8600
+value|((struct nexus *)(0x20000000))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEXB8600
+value|((struct nexus *)(0x22000000))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -89,12 +121,35 @@ name|NEXSIZE
 value|0x2000
 end_define
 
+begin_if
+if|#
+directive|if
+name|VAX8600
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAXNNEXUS
+value|32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|MAXNNEXUS
 value|16
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
