@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sbc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/sound/isa/sb.h>
 end_include
 
