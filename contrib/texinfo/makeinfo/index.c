@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.24 2002/01/22 14:28:07 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* index.c -- indexing for Texinfo.    $Id: index.c,v 1.25 2002/03/19 14:43:04 karl Exp $     Copyright (C) 1998, 99, 2002 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -793,30 +793,13 @@ index|]
 operator|=
 name|new
 expr_stmt|;
-comment|/* The index breaks if there are colons in the entry. */
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|new
-operator|->
-name|entry_text
-argument_list|,
-literal|':'
-argument_list|)
-condition|)
-name|warning
-argument_list|(
-name|_
-argument_list|(
-literal|"Info cannot handle `:' in index entry `%s'"
-argument_list|)
-argument_list|,
-name|new
-operator|->
-name|entry_text
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* The index breaks if there are colons in the entry.          -- This is true, but it's too painful to force changing index          entries to use `colon', and too confusing for users.  The real          fix is to change Info support to support arbitrary characters          in node names, and we're not ready to do that.  --karl,          19mar02.  */
+block|if (strchr (new->entry_text, ':'))         warning (_("Info cannot handle `:' in index entry `%s'"),                  new->entry_text);
+endif|#
+directive|endif
 block|}
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* insertion.c -- insertions for Texinfo.    $Id: insertion.c,v 1.39 2002/03/02 15:05:21 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* insertion.c -- insertions for Texinfo.    $Id: insertion.c,v 1.47 2002/04/01 14:01:36 karl Exp $     Copyright (C) 1998, 99, 2000, 01, 02 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -58,6 +58,8 @@ index|[]
 init|=
 block|{
 literal|"cartouche"
+block|,
+literal|"copying"
 block|,
 literal|"defcv"
 block|,
@@ -129,7 +131,11 @@ literal|"ifnothtml"
 block|,
 literal|"ifnotinfo"
 block|,
+literal|"ifnotplaintext"
+block|,
 literal|"ifnottex"
+block|,
+literal|"ifplaintext"
 block|,
 literal|"ifset"
 block|,
@@ -196,14 +202,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Whether to examine menu lines.  */
+comment|/* Set to 1 if we've processed (commentary) text in a @menu that    wasn't part of a menu item.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|in_menu
-init|=
-literal|0
+name|had_menu_commentary
 decl_stmt|;
 end_decl_stmt
 
@@ -220,12 +224,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Set to 1 if we've processed (commentary) text in a @menu that    wasn't part of a menu item.  */
+comment|/* Whether to examine menu lines.  */
 end_comment
 
 begin_decl_stmt
 name|int
-name|had_menu_commentary
+name|in_menu
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +257,14 @@ init|=
 literal|"<dl>\n"
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|void
+name|cm_insert_copying
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_escape
 end_escape
@@ -345,7 +359,13 @@ case|case
 name|ifnotinfo
 case|:
 case|case
+name|ifnotplaintext
+case|:
+case|case
 name|ifnottex
+case|:
+case|case
+name|ifplaintext
 case|:
 case|case
 name|ifset
@@ -1468,6 +1488,10 @@ argument_list|,
 name|START
 argument_list|)
 expr_stmt|;
+name|next_menu_item_number
+operator|=
+literal|1
+expr_stmt|;
 name|in_menu
 operator|++
 expr_stmt|;
@@ -1602,6 +1626,68 @@ comment|/* go back to the @end to match */
 block|}
 break|break;
 case|case
+name|copying
+case|:
+block|{
+comment|/* Save the copying text away for @insertcopying,            typically used on the back of the @titlepage (for TeX) and            the Top node (for info/html).  */
+name|char
+modifier|*
+name|text
+decl_stmt|;
+name|int
+name|start_of_end
+decl_stmt|;
+name|discard_until
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* ignore remainder of @copying line */
+name|start_of_end
+operator|=
+name|get_until
+argument_list|(
+literal|"\n@end copying"
+argument_list|,
+operator|&
+name|text
+argument_list|)
+expr_stmt|;
+comment|/* include all the output-format-specific markup.  */
+name|copying_text
+operator|=
+name|full_expansion
+argument_list|(
+name|text
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|text
+argument_list|)
+expr_stmt|;
+name|input_text_offset
+operator|=
+name|start_of_end
+expr_stmt|;
+comment|/* go back to the @end to match */
+block|}
+comment|/* For info, output the copying text right away, so it will end up          in the header of the Info file, before the first node, and thus          get copied automatically to all the split files.  For xml, also          output it right away since xml output is never split.          For html, we output it specifically in html_output_head.           For plain text, there's no way to hide it, so the author must           use @insertcopying in the desired location.  */
+if|if
+condition|(
+operator|!
+name|html
+operator|&&
+operator|!
+name|no_headers
+condition|)
+name|cm_insert_copying
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
 name|quotation
 case|:
 comment|/* @quotation does filling (@display doesn't).  */
@@ -1616,7 +1702,8 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|close_single_paragraph
+comment|/* with close_single_paragraph, we get no blank line above              within @copying.  */
+name|close_paragraph
 argument_list|()
 expr_stmt|;
 name|last_char_was_newline
@@ -2078,7 +2165,13 @@ case|case
 name|ifnotinfo
 case|:
 case|case
+name|ifnotplaintext
+case|:
+case|case
 name|ifnottex
+case|:
+case|case
+name|ifplaintext
 case|:
 case|case
 name|ifset
@@ -2350,6 +2443,17 @@ name|documentdescription
 case|:
 break|break;
 case|case
+name|copying
+case|:
+name|xml_insert_element
+argument_list|(
+name|COPYING
+argument_list|,
+name|END
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|quotation
 case|:
 name|xml_insert_element
@@ -2506,6 +2610,9 @@ condition|)
 block|{
 comment|/* Insertions which have no effect on paragraph formatting. */
 case|case
+name|copying
+case|:
+case|case
 name|documentdescription
 case|:
 case|case
@@ -2524,7 +2631,13 @@ case|case
 name|ifnotinfo
 case|:
 case|case
+name|ifnotplaintext
+case|:
+case|case
 name|ifnottex
+case|:
+case|case
+name|ifplaintext
 case|:
 case|case
 name|ifset
@@ -2542,19 +2655,6 @@ case|:
 name|escape_html
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-name|direntry
-case|:
-comment|/* Eaten if html. */
-name|insert_string
-argument_list|(
-literal|"END-INFO-DIR-ENTRY\n\n"
-argument_list|)
-expr_stmt|;
-name|close_insertion_paragraph
-argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -2579,6 +2679,19 @@ name|close_insertion_paragraph
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|direntry
+case|:
+comment|/* Eaten if html. */
+name|insert_string
+argument_list|(
+literal|"END-INFO-DIR-ENTRY\n\n"
+argument_list|)
+expr_stmt|;
+name|close_insertion_paragraph
+argument_list|()
+expr_stmt|;
 break|break;
 case|case
 name|menu
@@ -3146,6 +3259,59 @@ end_function
 
 begin_function
 name|void
+name|cm_copying
+parameter_list|()
+block|{
+if|if
+condition|(
+name|xml
+condition|)
+name|xml_insert_element
+argument_list|(
+name|COPYING
+argument_list|,
+name|START
+argument_list|)
+expr_stmt|;
+name|begin_insertion
+argument_list|(
+name|copying
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Not an insertion, despite the name, but it goes with cm_copying.  */
+end_comment
+
+begin_function
+name|void
+name|cm_insert_copying
+parameter_list|()
+block|{
+if|if
+condition|(
+name|copying_text
+condition|)
+block|{
+comment|/* insert_string rather than add_word because we've already done          full expansion on copying_text when we saved it.  */
+name|insert_string
+argument_list|(
+name|copying_text
+argument_list|)
+expr_stmt|;
+name|insert
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
 name|cm_format
 parameter_list|()
 block|{
@@ -3699,49 +3865,6 @@ end_function
 begin_escape
 end_escape
 
-begin_function
-name|void
-name|cm_ifinfo
-parameter_list|()
-block|{
-if|if
-condition|(
-name|process_info
-condition|)
-name|begin_insertion
-argument_list|(
-name|ifinfo
-argument_list|)
-expr_stmt|;
-else|else
-name|command_name_condition
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|cm_ifnotinfo
-parameter_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|process_info
-condition|)
-name|begin_insertion
-argument_list|(
-name|ifnotinfo
-argument_list|)
-expr_stmt|;
-else|else
-name|command_name_condition
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* Insert raw HTML (no escaping of `<' etc.). */
 end_comment
@@ -3801,6 +3924,92 @@ condition|)
 name|begin_insertion
 argument_list|(
 name|ifnothtml
+argument_list|)
+expr_stmt|;
+else|else
+name|command_name_condition
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cm_ifinfo
+parameter_list|()
+block|{
+if|if
+condition|(
+name|process_info
+condition|)
+name|begin_insertion
+argument_list|(
+name|ifinfo
+argument_list|)
+expr_stmt|;
+else|else
+name|command_name_condition
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cm_ifnotinfo
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|process_info
+condition|)
+name|begin_insertion
+argument_list|(
+name|ifnotinfo
+argument_list|)
+expr_stmt|;
+else|else
+name|command_name_condition
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cm_ifplaintext
+parameter_list|()
+block|{
+if|if
+condition|(
+name|process_plaintext
+condition|)
+name|begin_insertion
+argument_list|(
+name|ifplaintext
+argument_list|)
+expr_stmt|;
+else|else
+name|command_name_condition
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cm_ifnotplaintext
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|process_plaintext
+condition|)
+name|begin_insertion
+argument_list|(
+name|ifnotplaintext
 argument_list|)
 expr_stmt|;
 else|else
@@ -4297,7 +4506,13 @@ case|case
 name|ifnotinfo
 case|:
 case|case
+name|ifnotplaintext
+case|:
+case|case
 name|ifnottex
+case|:
+case|case
+name|ifplaintext
 case|:
 case|case
 name|ifset

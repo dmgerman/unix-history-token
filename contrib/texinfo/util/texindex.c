@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Process TeX index dribble output into an actual index.    $Id: texindex.c,v 1.37 2002/01/19 01:12:54 karl Exp $     Copyright (C) 1987, 91, 92, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
+comment|/* Process TeX index dribble output into an actual index.    $Id: texindex.c,v 1.41 2002/03/11 19:55:46 karl Exp $     Copyright (C) 1987, 91, 92, 96, 97, 98, 99, 2000, 01, 02    Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307. */
 end_comment
 
 begin_include
@@ -1329,8 +1329,15 @@ name|fputs
 argument_list|(
 name|_
 argument_list|(
-literal|"\n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org.\n\ "
+literal|"\n\ Email bug reports to bug-texinfo@gnu.org,\n\ general questions and discussion to help-texinfo@gnu.org.\n\ Texinfo home page: http://www.gnu.org/software/texinfo/"
 argument_list|)
+argument_list|,
+name|f
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\n"
 argument_list|,
 name|f
 argument_list|)
