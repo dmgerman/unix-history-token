@@ -549,6 +549,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_STANDBY
+value|0xe2
+end_define
+
+begin_comment
+comment|/* standby command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_SLEEP
 value|0xe6
 end_define

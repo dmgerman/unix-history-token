@@ -350,6 +350,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|ata_suspend
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -379,6 +388,17 @@ literal|"hw.ata.tags"
 argument_list|,
 operator|&
 name|ata_tags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ata.suspend"
+argument_list|,
+operator|&
+name|ata_suspend
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -467,6 +487,27 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"ATA disk tagged queuing support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw_ata
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|suspend
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|ata_suspend
+argument_list|,
+literal|0
+argument_list|,
+literal|"ATA disk suspend timer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1035,6 +1076,41 @@ argument_list|(
 name|atadev
 argument_list|,
 literal|"disabling service interrupt failed\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ata_suspend
+operator|>
+literal|0
+condition|)
+block|{
+comment|/*  	  * Attempt suspend mode. The drive uses increments of ten seconds. 	  * For the parameters, see ata-all.c and 8.42.4 p. 210 of the  	  * ATAPI-5 interface spec at http://www.t13.org. 	  */
+if|if
+condition|(
+name|ata_command
+argument_list|(
+name|atadev
+argument_list|,
+name|ATA_C_STANDBY
+argument_list|,
+literal|0
+argument_list|,
+name|ata_suspend
+operator|/
+literal|10
+argument_list|,
+literal|0
+argument_list|,
+name|ATA_WAIT_INTR
+argument_list|)
+condition|)
+name|ata_prtdev
+argument_list|(
+name|atadev
+argument_list|,
+literal|"suspend mode failed\n"
 argument_list|)
 expr_stmt|;
 block|}
