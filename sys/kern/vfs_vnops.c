@@ -408,7 +408,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Common code for vnode open operations.  * Check permissions, and call the VOP_OPEN or VOP_CREATE routine.  *   * Note that this do NOT free nameidata for the successful case,  * due to the NDINIT being done elsewhere.  */
+comment|/*  * Common code for vnode open operations.  * Check permissions, and call the VOP_OPEN or VOP_CREATE routine.  *   * Note that this does NOT free nameidata for the successful case,  * due to the NDINIT being done elsewhere.  */
 end_comment
 
 begin_function
