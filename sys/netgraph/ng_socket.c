@@ -475,12 +475,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|NETGRAPH_INIT
+name|NETGRAPH_INIT_ORDERED
 argument_list|(
 name|socket
 argument_list|,
 operator|&
 name|typestruct
+argument_list|,
+name|SI_SUB_PROTO_DOMAIN
+argument_list|,
+name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
