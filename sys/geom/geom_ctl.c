@@ -216,6 +216,12 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|sectorsize
+operator|=
+literal|512
+expr_stmt|;
 name|g_error_provider
 argument_list|(
 name|pp
