@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.11	81/04/15	*/
+comment|/*	ts.c	4.12	81/05/03	*/
 end_comment
 
 begin_include
@@ -23,6 +23,12 @@ operator|>
 literal|0
 end_if
 
+begin_if
+if|#
+directive|if
+name|TSDEBUG
+end_if
+
 begin_define
 define|#
 directive|define
@@ -35,6 +41,11 @@ name|int
 name|tsdebug
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * TS11 tape driver  *  * TODO:  *	test driver with more than one controller  *	test reset code  *	test dump code  *	test rewinds without hanging in driver  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
@@ -699,18 +710,28 @@ name|u_error
 operator|=
 name|ENXIO
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"init failed\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"init ok\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|tscommand
 argument_list|(
 name|dev
@@ -720,6 +741,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"sense xs0 %o\n"
@@ -731,6 +755,8 @@ operator|.
 name|s_xs0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1381,6 +1407,9 @@ operator|)
 name|spl0
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"command %o dev %x count %d\n"
@@ -1392,6 +1421,8 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_dev
@@ -1791,11 +1822,16 @@ name|bp
 operator|->
 name|b_repcnt
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"strat: do cmd\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|dobpcmd
 goto|;
@@ -1976,6 +2012,9 @@ name|TS_IE
 operator||
 name|cmd
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"r/w %o size %d\n"
@@ -1989,6 +2028,8 @@ operator|->
 name|c_size
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -2008,6 +2049,9 @@ name|b_active
 operator|=
 name|SSEEK
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"seek blkno %d b_blkno %d\n"
@@ -2019,6 +2063,8 @@ operator|->
 name|b_blkno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|blkno
@@ -2204,6 +2250,9 @@ name|um_ubinfo
 operator|&
 literal|0777777
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"dgo addr %o\n"
@@ -2211,6 +2260,8 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|sc_cmd
@@ -2302,11 +2353,16 @@ decl_stmt|;
 specifier|register
 name|state
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"intr\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -2382,11 +2438,16 @@ condition|)
 return|return;
 block|}
 comment|/* 	 * An operation completed... record status 	 */
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"  ok1\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|=
 operator|&
@@ -2706,7 +2767,7 @@ block|}
 comment|/* 		 * Couldn't recover error 		 */
 name|printf
 argument_list|(
-literal|"ts%d: hard error bn%d xs0=%b\n"
+literal|"ts%d: hard error bn%d xs0=%b"
 argument_list|,
 name|TSUNIT
 argument_list|(
@@ -2726,6 +2787,74 @@ operator|.
 name|s_xs0
 argument_list|,
 name|TSXS0_BITS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs1
+condition|)
+name|printf
+argument_list|(
+literal|" xs1=%b"
+argument_list|,
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs1
+argument_list|,
+name|TSXS1_BITS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs2
+condition|)
+name|printf
+argument_list|(
+literal|" xs2=%b"
+argument_list|,
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs2
+argument_list|,
+name|TSXS2_BITS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs3
+condition|)
+name|printf
+argument_list|(
+literal|" xs3=%b"
+argument_list|,
+name|sc
+operator|->
+name|sc_sts
+operator|.
+name|s_xs3
+argument_list|,
+name|TSXS3_BITS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|bp
@@ -2874,11 +3003,16 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TSDEBUG
 name|printd
 argument_list|(
 literal|"  iodone\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|iodone
 argument_list|(
 name|bp
@@ -3582,6 +3716,17 @@ case|:
 case|case
 name|MTBSF
 case|:
+name|callcount
+operator|=
+name|mtop
+operator|.
+name|mt_count
+expr_stmt|;
+name|fcount
+operator|=
+name|INF
+expr_stmt|;
+break|break;
 case|case
 name|MTFSR
 case|:
