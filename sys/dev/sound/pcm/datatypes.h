@@ -561,6 +561,9 @@ name|void
 modifier|*
 name|devinfo
 decl_stmt|;
+name|snd_dbuf
+name|buffer2nd
+decl_stmt|;
 block|}
 struct|;
 end_struct

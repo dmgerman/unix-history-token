@@ -496,5 +496,27 @@ name|CHN_F_RESET
 value|(CHN_F_BUSY)
 end_define
 
+begin_comment
+comment|/*  * This should be large enough to hold all pcm data between  * tsleeps in chn_{read,write} at the highest sample rate.  * (which is usually 48kHz * 16bit * stereo = 192000 bytes/sec)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHN_2NDBUFBLKSIZE
+value|(12 * 1024)
+end_define
+
+begin_comment
+comment|/* The total number of blocks per secondary buffer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHN_2NDBUFBLKNUM
+value|(3)
+end_define
+
 end_unit
 

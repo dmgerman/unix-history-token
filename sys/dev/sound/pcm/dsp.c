@@ -1776,15 +1776,8 @@ case|:
 operator|*
 name|arg_i
 operator|=
-name|wrch
-condition|?
-name|wrch
-operator|->
-name|blocksize
-else|:
-literal|0
+name|CHN_2NDBUFBLKSIZE
 expr_stmt|;
-comment|/* XXX rdch? */
 break|break ;
 case|case
 name|SNDCTL_DSP_SETBLKSIZE
