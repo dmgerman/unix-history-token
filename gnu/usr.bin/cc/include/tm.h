@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|CPP_PREDEFINES
-value|"-Dunix -Di386 -D__FreeBSD__=2 -D__386BSD__ -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
+value|"-Dunix -Di386 -D__FreeBSD__=2 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
 end_define
 
 begin_if
