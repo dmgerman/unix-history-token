@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.18	(Berkeley) %G%"
+literal|"@(#)cico.c	5.19	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,12 @@ begin_include
 include|#
 directive|include
 file|"uusub.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_if
@@ -1125,7 +1131,7 @@ name|ret
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpdefs.c	5.5 (Berkeley) %G%"
+literal|"@(#)uucpdefs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"uucp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -193,7 +199,7 @@ name|char
 name|NOLOGIN
 index|[]
 init|=
-literal|"/etc/nologin"
+name|_PATH_NOLOGIN
 decl_stmt|;
 end_decl_stmt
 
@@ -206,7 +212,7 @@ name|char
 name|DEVNULL
 index|[]
 init|=
-literal|"/dev/null"
+name|_PATH_DEVNULL
 decl_stmt|;
 end_decl_stmt
 

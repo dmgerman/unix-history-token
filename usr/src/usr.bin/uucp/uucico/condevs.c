@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.20	(Berkeley) %G%"
+literal|"@(#)condevs.c	5.21	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|"condevs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -912,7 +918,9 @@ name|sprintf
 argument_list|(
 name|dcname
 argument_list|,
-literal|"/dev/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|dev
 operator|.
@@ -2709,7 +2717,7 @@ argument_list|)
 expr_stmt|;
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|0
 argument_list|)

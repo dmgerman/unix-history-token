@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.15	(Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.16	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  acucntrl - turn around tty line between dialin and dialout  *   * Usage:	acucntrl {enable,disable} /dev/ttydX  *  * History:  *	First written by Allan Wilkes (fisher!allan)  *  *	Modified June 8,1983 by W.Sebok (astrovax!wls) to poke kernel rather  * 	than use kernel hack to turn on/off modem control, using subroutine  *	stolen from program written by Tsutomu Shimomura  *	{astrovax,escher}!tsutomu  *  *	Worked over many times by W.Sebok (i.e. hacked to death)  *  * Operation:  *   disable (i.e. setup for dialing out)  *	(1) check input arguments  *	(2) look in /etc/utmp to check that the line is not in use by another  *	(3) disable modem control on terminal  *	(4) check for carrier on device  *	(5) change owner of device to real id  *	(6) edit /etc/ttys,  changing the first character of the appropriate  *	    line to 0  *	(7) send a hangup to process 1 to poke init to disable getty  *	(8) post uid name in capitals in /etc/utmp to let world know device has  *	    been grabbed  *	(9) make sure that DTR is on  *  *   enable (i.e.) restore for dialin  *	(1) check input arguments  *	(2) look in /etc/utmp to check that the line is not in use by another  *	(3) make sure modem control on terminal is disabled  *	(4) turn off DTR to make sure line is hung up  *	(5) condition line: clear exclusive use and set hangup on close modes  *	(6) turn on modem control  *	(7) edit /etc/ttys,  changing the first character of the appropriate  *	    line to 1  *	(8) send a hangup to process 1 to poke init to enable getty  *	(9) clear uid name for /etc/utmp  */
+comment|/*  acucntrl - turn around tty line between dialin and dialout  *   * Usage:	acucntrl {enable,disable} /dev/ttydX  *  * History:  *	First written by Allan Wilkes (fisher!allan)  *  *	Modified June 8,1983 by W.Sebok (astrovax!wls) to poke kernel rather  * 	than use kernel hack to turn on/off modem control, using subroutine  *	stolen from program written by Tsutomu Shimomura  *	{astrovax,escher}!tsutomu  *  *	Worked over many times by W.Sebok (i.e. hacked to death)  *  * Operation:  *   disable (i.e. setup for dialing out)  *	(1) check input arguments  *	(2) look in _PATH_UTMP to check that the line is not in use by another  *	(3) disable modem control on terminal  *	(4) check for carrier on device  *	(5) change owner of device to real id  *	(6) edit _PATH_TTYS, changing the first character of the appropriate  *	    line to 0  *	(7) send a hangup to process 1 to poke init to disable getty  *	(8) post uid name in capitals in _PATH_UTMP to let world know device  *	    has been grabbed  *	(9) make sure that DTR is on  *  *   enable (i.e.) restore for dialin  *	(1) check input arguments  *	(2) look in _PATH_UTMP to check that the line is not in use by another  *	(3) make sure modem control on terminal is disabled  *	(4) turn off DTR to make sure line is hung up  *	(5) condition line: clear exclusive use and set hangup on close modes  *	(6) turn on modem control  *	(7) edit _PATH_TTYS, changing the first character of the appropriate  *	    line to 1  *	(8) send a hangup to process 1 to poke init to enable getty  *	(9) clear uid name for _PATH_UTMP  */
 end_comment
 
 begin_comment
@@ -141,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -341,19 +347,10 @@ end_define
 
 begin_decl_stmt
 name|char
-name|Etcutmp
-index|[]
-init|=
-literal|"/etc/utmp"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|Etcttys
 index|[]
 init|=
-literal|"/etc/ttys"
+name|_PATH_TTYS
 decl_stmt|;
 end_decl_stmt
 
@@ -378,7 +375,7 @@ name|char
 name|NEtcttys
 index|[]
 init|=
-literal|"/etc/ttys.new"
+name|_PATH_NEWTTYS
 decl_stmt|;
 end_decl_stmt
 
@@ -401,7 +398,7 @@ name|char
 name|Devhome
 index|[]
 init|=
-literal|"/dev"
+name|_PATH_DEV
 decl_stmt|;
 end_decl_stmt
 
@@ -684,7 +681,7 @@ name|vax
 comment|/* Get nlist info */
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -852,7 +849,7 @@ name|etcutmp
 operator|=
 name|open
 argument_list|(
-name|Etcutmp
+name|_PATH_UTMP
 argument_list|,
 literal|2
 argument_list|)
@@ -867,7 +864,7 @@ name|stderr
 argument_list|,
 literal|"On open %s open: %s\n"
 argument_list|,
-name|Etcutmp
+name|_PATH_UTMP
 argument_list|,
 name|sys_errlist
 index|[
@@ -1767,7 +1764,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"on lseek in /etc/utmp: %s"
+literal|"on lseek in %s: %s"
+argument_list|,
+name|_PATH_UTMP
 argument_list|,
 name|sys_errlist
 index|[
@@ -1800,7 +1799,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"on write in /etc/utmp: %s"
+literal|"on write in %s: %s"
+argument_list|,
+name|_PATH_UTMP
 argument_list|,
 name|sys_errlist
 index|[
@@ -1940,7 +1941,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"On lseek in /etc/utmp: %s"
+literal|"On lseek in %s: %s"
+argument_list|,
+name|_PATH_UTMP
 argument_list|,
 name|sys_errlist
 index|[
@@ -1971,7 +1974,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"On read from /etc/utmp: %s"
+literal|"On read from %s: %s"
+argument_list|,
+name|_PATH_UTMP
 argument_list|,
 name|sys_errlist
 index|[
@@ -2303,7 +2308,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* modify appropriate line in /etc/ttys to turn on/off the device */
+comment|/* modify appropriate line in _PATH_TTYS to turn on/off the device */
 end_comment
 
 begin_macro
@@ -2502,7 +2507,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Badly formatted line in /etc/ttys:\n%s"
+literal|"Badly formatted line in %s:\n%s"
+argument_list|,
+name|_PATH_TTYS
 argument_list|,
 name|lbuf
 argument_list|)
@@ -2564,7 +2571,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Badly formatted line in /etc/ttys:\n%s"
+literal|"Badly formatted line in %s:\n%s"
+argument_list|,
+name|_PATH_TTYS
 argument_list|,
 name|lbuf
 argument_list|)
@@ -3039,7 +3048,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* modify appropriate line in /etc/ttys to turn on/off the device */
+comment|/* modify appropriate line in _PATH_TTYS to turn on/off the device */
 end_comment
 
 begin_macro
@@ -3425,7 +3434,7 @@ name|kmem
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 literal|2
 argument_list|)
@@ -3438,7 +3447,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"/dev/kmem open: %s\n"
+literal|"%s open: %s\n"
+argument_list|,
+name|_PATH_KMEM
 argument_list|,
 name|sys_errlist
 index|[

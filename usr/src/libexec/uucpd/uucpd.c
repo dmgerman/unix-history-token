@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpd.c	5.6 (Berkeley) %G%"
+literal|"@(#)uucpd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,17 +113,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<lastlog.h>
+file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-name|char
-name|lastlog
-index|[]
-init|=
-literal|"/usr/adm/lastlog"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -368,7 +359,7 @@ name|s
 operator|=
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|2
 argument_list|)
@@ -1125,7 +1116,7 @@ name|wtmp
 operator|=
 name|open
 argument_list|(
-literal|"/usr/adm/wtmp"
+name|_PATH_WTMP
 argument_list|,
 name|O_WRONLY
 operator||
@@ -1311,7 +1302,7 @@ name|wtmp
 operator|=
 name|open
 argument_list|(
-literal|"/usr/adm/wtmp"
+name|_PATH_WTMP
 argument_list|,
 name|O_WRONLY
 operator||
@@ -1409,9 +1400,9 @@ name|f
 operator|=
 name|open
 argument_list|(
-name|lastlog
+name|_PATH_LASTLOG
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 operator|)
 operator|>=
