@@ -4743,9 +4743,6 @@ name|csum_flags
 operator||=
 name|CSUM_IP_VALID
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -4791,11 +4788,9 @@ name|m_pkthdr
 operator|.
 name|csum_data
 operator|=
-literal|0
+literal|0xffff
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 name|ifp
