@@ -6619,9 +6619,12 @@ name|eh
 argument_list|,
 name|m
 argument_list|,
+name|ntohs
+argument_list|(
 name|extsts
 operator|&
 name|NGE_RXEXTSTS_VTCI
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -8012,9 +8015,12 @@ operator||=
 operator|(
 name|NGE_TXEXTSTS_VLANPKT
 operator||
+name|htons
+argument_list|(
 name|ifv
 operator|->
 name|ifv_tag
+argument_list|)
 operator|)
 expr_stmt|;
 block|}
