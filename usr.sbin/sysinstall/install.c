@@ -2308,7 +2308,7 @@ literal|"We will now move on to the final configuration questions.\n"
 literal|"For any option you do not wish to configure, simply select\n"
 literal|"No.\n\n"
 literal|"If you wish to re-enter this utility after the system is up, you\n"
-literal|"may do so by typing: /stand/sysinstall."
+literal|"may do so by typing: /usr/sbin/sysinstall."
 argument_list|)
 expr_stmt|;
 block|}
