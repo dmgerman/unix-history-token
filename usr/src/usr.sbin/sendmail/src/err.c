@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.11	%G%"
+literal|"@(#)err.c	3.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -485,15 +485,41 @@ operator|&&
 operator|!
 name|HasXscrpt
 condition|)
+block|{
+specifier|register
+name|char
+name|del
+decl_stmt|;
+if|if
+condition|(
+name|num
+index|[
+literal|3
+index|]
+operator|==
+literal|'-'
+condition|)
+name|del
+operator|=
+literal|'-'
+expr_stmt|;
+else|else
+name|del
+operator|=
+literal|' '
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|OutChannel
 argument_list|,
-literal|"%.3s "
+literal|"%3.3s%c"
 argument_list|,
 name|num
+argument_list|,
+name|del
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|To
