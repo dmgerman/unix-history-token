@@ -69,6 +69,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|sound_os_info
 modifier|*
 name|gus_osp

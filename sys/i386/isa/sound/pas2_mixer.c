@@ -987,6 +987,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pas_mixer_ioctl
 parameter_list|(

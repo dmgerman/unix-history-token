@@ -118,6 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|input_opened
 init|=
@@ -141,6 +142,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 function_decl|(
 modifier|*

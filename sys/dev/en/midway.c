@@ -741,6 +741,7 @@ comment|/* in software service list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|en_dma
 init|=

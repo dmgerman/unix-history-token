@@ -168,6 +168,7 @@ comment|/* PCVT_NETBSD */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|__debug
 init|=
@@ -2894,6 +2895,7 @@ index|[
 name|PCVT_KBD_FIFO_SZ
 index|]
 decl_stmt|;
+specifier|static
 name|int
 name|pcvt_kbd_wptr
 init|=

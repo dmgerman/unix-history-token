@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.49 1997/12/02 21:06:30 phk Exp $  */
+comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.50 1998/01/24 02:54:27 eivind Exp $  */
 end_comment
 
 begin_include
@@ -396,6 +396,7 @@ comment|/*  * Volume size info.  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|volinfo
 block|{
@@ -1112,6 +1113,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|wcd
 modifier|*

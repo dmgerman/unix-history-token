@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnp.c,v 1.3 1997/09/19 15:20:24 jmg Exp $  */
+comment|/*  * Copyright (c) 1996, Sujal M. Patel  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: pnp.c,v 1.4 1997/11/18 11:45:26 bde Exp $  */
 end_comment
 
 begin_include
@@ -68,6 +68,7 @@ file|<i386/isa/pnp.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_pnp_cards
 init|=
@@ -323,6 +324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|pnp_send_Initiation_LFSR
 parameter_list|(
@@ -332,6 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pnp_get_serial
 parameter_list|(
@@ -343,6 +346,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|config_pnp_device
 parameter_list|(
@@ -357,6 +361,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pnp_isolation_protocol
 parameter_list|(
@@ -453,6 +458,7 @@ comment|/*  * Send Initiation LFSR as described in "Plug and Play ISA Specificat
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pnp_send_Initiation_LFSR
 parameter_list|()
@@ -545,6 +551,7 @@ comment|/*  * Get the device's serial number.  Returns 1 if the serial is valid.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pnp_get_serial
 parameter_list|(
@@ -1725,6 +1732,7 @@ comment|/*  * Configure PnP devices. pnp_id is made of:  *	4 bytes: board id (wh
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|config_pnp_device
 parameter_list|(
@@ -2649,6 +2657,7 @@ comment|/*  * Run the isolation protocol. Use pnp_rd_port as the READ_DATA port 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pnp_isolation_protocol
 parameter_list|()

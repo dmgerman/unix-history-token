@@ -73,6 +73,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sbc_irq
 init|=
@@ -102,6 +103,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sb_no_recording
 init|=
@@ -368,6 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|sound_os_info
 modifier|*
 name|sb_osp
@@ -391,6 +394,7 @@ argument_list|)
 end_if
 
 begin_function_decl
+specifier|static
 name|void
 name|dsp_speaker
 parameter_list|(
@@ -743,6 +747,7 @@ name|CONFIG_AUDIO
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|dsp_speaker
 parameter_list|(

@@ -125,6 +125,7 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+specifier|static
 name|IWAVE
 name|iw
 decl_stmt|;
@@ -157,6 +158,7 @@ value|256
 end_define
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|gus_pnp_found
 index|[
@@ -444,6 +446,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|gus_pcm_volume
 init|=
@@ -696,6 +699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|voice_info
 name|voices
@@ -782,6 +786,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|patch_info
 modifier|*
@@ -790,6 +795,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dbg_samplep
 decl_stmt|;
@@ -890,6 +896,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|guswave_start_note2
 parameter_list|(
@@ -923,6 +930,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|compute_and_set_volume
 parameter_list|(
@@ -973,6 +981,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|compute_volume
 parameter_list|(
@@ -1017,6 +1026,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|SEND
 parameter_list|(
@@ -1030,6 +1040,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_serial
 parameter_list|(
@@ -1044,6 +1055,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|send_Initiation_LFSR
 parameter_list|(
@@ -1053,6 +1065,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|isolation_protocol
 parameter_list|(
@@ -1561,6 +1574,7 @@ value|{ outb(iwl_codec_base, reg); val = inb(iwl_codec_data); }
 end_define
 
 begin_function_decl
+specifier|static
 name|u_char
 name|gus_look8
 parameter_list|(
@@ -1571,6 +1585,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gus_write16
 parameter_list|(
@@ -1584,6 +1599,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_short
 name|gus_read16
 parameter_list|(
@@ -1594,6 +1610,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|gus_write_addr
 parameter_list|(
@@ -1610,6 +1627,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveLineLevel
 parameter_list|(
@@ -1623,6 +1641,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveInputSource
 parameter_list|(
@@ -1636,6 +1655,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveDelay
 parameter_list|(
@@ -1646,6 +1666,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveStopDma
 parameter_list|(
@@ -1656,6 +1677,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpGetCfg
 parameter_list|(
@@ -1665,6 +1687,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpDevice
 parameter_list|(
@@ -1675,6 +1698,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpSetCfg
 parameter_list|(
@@ -1684,6 +1708,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpKey
 parameter_list|(
@@ -1693,6 +1718,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BYTE
 name|IwavePnpIsol
 parameter_list|(
@@ -1704,6 +1730,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveCfgIOSpace
 parameter_list|(
@@ -1713,6 +1740,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpSerial
 parameter_list|(
@@ -1734,6 +1762,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpPeek
 parameter_list|(
@@ -1751,6 +1780,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpEeprom
 parameter_list|(
@@ -1761,6 +1791,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpActivate
 parameter_list|(
@@ -1774,6 +1805,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpPower
 parameter_list|(
@@ -1784,6 +1816,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwavePnpWake
 parameter_list|(
@@ -1794,6 +1827,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|PORT
 name|IwavePnpIOcheck
 parameter_list|(
@@ -1807,6 +1841,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BYTE
 name|IwavePnpGetCSN
 parameter_list|(
@@ -1820,6 +1855,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BYTE
 name|IwavePnpPing
 parameter_list|(
@@ -1830,6 +1866,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|WORD
 name|IwaveMemSize
 parameter_list|(
@@ -1839,6 +1876,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|BYTE
 name|IwaveMemPeek
 parameter_list|(
@@ -1849,6 +1887,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveMemPoke
 parameter_list|(
@@ -1862,6 +1901,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveMemCfg
 parameter_list|(
@@ -1873,6 +1913,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveCodecIrq
 parameter_list|(
@@ -1883,6 +1924,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|WORD
 name|IwaveRegPeek
 parameter_list|(
@@ -1893,6 +1935,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveRegPoke
 parameter_list|(
@@ -1906,6 +1949,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveCodecMode
 parameter_list|(
@@ -1916,6 +1960,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|IwaveLineMute
 parameter_list|(
@@ -1929,6 +1974,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|Iwaveinitcodec
 parameter_list|(
@@ -2377,6 +2423,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_char
 name|gus_look8
 parameter_list|(
@@ -2422,6 +2469,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gus_write16
 parameter_list|(
@@ -2489,6 +2537,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_short
 name|gus_read16
 parameter_list|(
@@ -2555,6 +2604,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|gus_write_addr
 parameter_list|(
@@ -5361,6 +5411,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|compute_volume
 parameter_list|(
@@ -5503,6 +5554,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|compute_and_set_volume
 parameter_list|(
@@ -6113,6 +6165,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|guswave_start_note2
 parameter_list|(
@@ -13356,6 +13409,7 @@ comment|/* start of pnp code */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|SEND
 parameter_list|(
@@ -13388,6 +13442,7 @@ comment|/*  * Get the device's serial number.  Returns 1 if the serial is valid.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|get_serial
 parameter_list|(
@@ -13572,6 +13627,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|send_Initiation_LFSR
 parameter_list|()
@@ -13659,6 +13715,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|isolation_protocol
 parameter_list|(
@@ -13858,6 +13915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveDelay
 parameter_list|(
@@ -14021,6 +14079,7 @@ comment|/*  * ##################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwaveStopDma
 parameter_list|(
@@ -14089,6 +14148,7 @@ comment|/*  * ##################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwaveInputSource
 parameter_list|(
@@ -14165,6 +14225,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpGetCfg
 parameter_list|(
@@ -14809,6 +14870,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpSetCfg
 parameter_list|(
@@ -15423,6 +15485,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveCfgIOSpace
 parameter_list|(
@@ -15917,6 +15980,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpKey
 parameter_list|(
@@ -16018,6 +16082,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|BYTE
 name|IwavePnpIsol
 parameter_list|(
@@ -16196,6 +16261,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpSerial
 parameter_list|(
@@ -16534,6 +16600,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpPeek
 parameter_list|(
@@ -16670,6 +16737,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpEeprom
 parameter_list|(
@@ -16749,6 +16817,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpActivate
 parameter_list|(
@@ -16825,6 +16894,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpDevice
 parameter_list|(
@@ -16904,6 +16974,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpPower
 parameter_list|(
@@ -16983,6 +17054,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwavePnpWake
 parameter_list|(
@@ -17074,6 +17146,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|PORT
 name|IwavePnpIOcheck
 parameter_list|(
@@ -17243,6 +17316,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|BYTE
 name|IwavePnpGetCSN
 parameter_list|(
@@ -17436,6 +17510,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|BYTE
 name|IwavePnpPing
 parameter_list|(
@@ -17579,6 +17654,7 @@ comment|/* end of pnp code */
 end_comment
 
 begin_function
+specifier|static
 name|WORD
 name|IwaveMemSize
 parameter_list|(
@@ -17698,6 +17774,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|BYTE
 name|IwaveMemPeek
 parameter_list|(
@@ -17779,6 +17856,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveMemPoke
 parameter_list|(
@@ -17942,6 +18020,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwaveMemCfg
 parameter_list|(
@@ -18847,6 +18926,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwaveCodecIrq
 parameter_list|(
@@ -19037,6 +19117,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|WORD
 name|IwaveRegPeek
 parameter_list|(
@@ -19767,6 +19848,7 @@ comment|/* #####################################################################
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|IwaveRegPoke
 parameter_list|(
@@ -20387,6 +20469,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveLineLevel
 parameter_list|(
@@ -20461,6 +20544,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveCodecMode
 parameter_list|(
@@ -20517,6 +20601,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|IwaveLineMute
 parameter_list|(
@@ -20612,6 +20697,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|Iwaveinitcodec
 parameter_list|()
@@ -22534,6 +22620,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|do_volume_irq
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.148 1998/02/04 22:32:39 eivind Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.149 1998/02/06 12:13:29 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -238,6 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|count_lock_queue
 name|__P
@@ -444,7 +445,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|numdirtybuffers
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|lodirtybuffers
 decl_stmt|,
 name|hidirtybuffers
@@ -9010,6 +9016,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|count_lock_queue
 parameter_list|()
@@ -9064,6 +9071,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vfs_update_interval
 init|=

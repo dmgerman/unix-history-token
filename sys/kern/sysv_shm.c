@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.32 1997/11/06 19:29:25 phk Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.33 1997/12/16 17:40:23 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -381,6 +381,7 @@ comment|/* XXX casting to (sy_call_t *) is bogus, as usual. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|sy_call_t
 modifier|*
 name|shmcalls

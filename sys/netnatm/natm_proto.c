@@ -87,6 +87,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|natmsw
@@ -282,6 +283,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|domain
 name|natmdomain
@@ -339,6 +341,7 @@ comment|/* natm packet input queue */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|natmqmaxlen
 init|=

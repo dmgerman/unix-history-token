@@ -128,6 +128,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|Byte_t
 name|RData
 index|[
@@ -283,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Byte_t
 name|RRegData
 index|[
@@ -411,6 +413,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|CONTROLLER_T
 name|sController
 index|[
@@ -718,6 +721,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|Byte_t
 name|sBitMapClrTbl
 index|[
@@ -745,6 +749,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|Byte_t
 name|sBitMapSetTbl
 index|[
@@ -3694,6 +3699,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|rp_pcidevice

@@ -669,6 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_initDCB
 parameter_list|(
@@ -685,6 +686,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_initSRB
 parameter_list|(
@@ -695,6 +697,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_linkSRB
 parameter_list|(
@@ -705,6 +708,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_initACB
 parameter_list|(
@@ -724,6 +728,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|DC390_initAdapter
 parameter_list|(
@@ -824,6 +829,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_EnDisableCE
 parameter_list|(
@@ -840,6 +846,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_EEpromOutDI
 parameter_list|(
@@ -856,6 +863,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|UCHAR
 name|DC390_EEpromInDO
 parameter_list|(
@@ -866,6 +874,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|USHORT
 name|EEpromGetData1
 parameter_list|(
@@ -876,6 +885,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_Prepare
 parameter_list|(
@@ -892,6 +902,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|DC390_ReadEEprom
 parameter_list|(
@@ -905,6 +916,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|USHORT
 name|DC390_DefaultEEprom
 parameter_list|(
@@ -918,6 +930,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|USHORT
 name|DC390_CheckEEpromCheckSum
 parameter_list|(
@@ -931,6 +944,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|USHORT
 name|DC390_ToMech
 parameter_list|(
@@ -1078,6 +1092,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pci_device
 name|trmamd_device
@@ -1108,6 +1123,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_adapter
 name|trmamd_switch
@@ -1141,6 +1157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scsi_device
 name|trmamd_dev
@@ -1288,6 +1305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UCHAR
 name|eepromBuf
 index|[
@@ -1300,6 +1318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UCHAR
 name|clock_period1
 index|[]
@@ -1325,6 +1344,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|UCHAR
 name|baddevname1
 index|[
@@ -3886,6 +3906,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|DC390_initDCB
 parameter_list|(
@@ -4219,6 +4240,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|DC390_initSRB
 parameter_list|(
@@ -4239,6 +4261,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|DC390_linkSRB
 parameter_list|(
@@ -4340,6 +4363,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|DC390_initACB
 parameter_list|(
@@ -4685,6 +4709,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|DC390_initAdapter
 parameter_list|(
@@ -5513,6 +5538,7 @@ endif|/PCI_COMPAT */
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|DC390_EnDisableCE
 parameter_list|(
@@ -5585,6 +5611,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|DC390_EEpromOutDI
 parameter_list|(
@@ -5677,6 +5704,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|UCHAR
 name|DC390_EEpromInDO
 parameter_list|(
@@ -5763,6 +5791,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|USHORT
 name|EEpromGetData1
 parameter_list|(
@@ -5822,6 +5851,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|DC390_Prepare
 parameter_list|(
@@ -5895,6 +5925,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|DC390_ReadEEprom
 parameter_list|(
@@ -5997,6 +6028,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|USHORT
 name|DC390_DefaultEEprom
 parameter_list|(
@@ -6111,6 +6143,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|USHORT
 name|DC390_CheckEEpromCheckSum
 parameter_list|(
@@ -6208,6 +6241,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|USHORT
 name|DC390_ToMech
 parameter_list|(

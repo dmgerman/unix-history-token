@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.14 1998/02/04 22:33:00 eivind Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.15 1998/02/06 12:13:46 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -96,6 +96,7 @@ comment|/*  * Fat cache stats.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fc_fileextends
 decl_stmt|;
@@ -106,6 +107,7 @@ comment|/* # of file extends			 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fc_lfcempty
 decl_stmt|;
@@ -116,6 +118,7 @@ comment|/* # of time last file cluster cache entry 				 * was empty */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fc_bmapcalls
 decl_stmt|;
@@ -133,6 +136,7 @@ value|20
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fc_lmdistance
 index|[
@@ -146,6 +150,7 @@ comment|/* counters for how far off the last 				 * cluster mapped entry was. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fc_largedistance
 decl_stmt|;

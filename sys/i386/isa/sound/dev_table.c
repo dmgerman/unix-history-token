@@ -51,6 +51,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sndtable_init
 parameter_list|(
@@ -90,6 +91,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sndtable_identify_card
 parameter_list|(
@@ -101,6 +103,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sound_chconf
 parameter_list|(
@@ -444,6 +447,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sndtable_init
 parameter_list|()
@@ -1093,6 +1097,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sndtable_identify_card
 parameter_list|(
@@ -1212,6 +1217,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sound_chconf
 parameter_list|(

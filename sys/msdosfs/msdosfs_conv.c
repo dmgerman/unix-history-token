@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfs_conv.c,v 1.13 1997/02/22 09:40:46 peter Exp $ */
 end_comment
 
 begin_comment
@@ -144,24 +144,28 @@ comment|/*  * Variables used to remember parts of the last time conversion.  May
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|lasttime
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|lastday
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|lastddate
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|lastdtime
 decl_stmt|;
@@ -458,12 +462,14 @@ value|(((8 * 365) + (2 * 366)) * (24 * 60 * 60))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|lastdosdate
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|lastseconds
 decl_stmt|;

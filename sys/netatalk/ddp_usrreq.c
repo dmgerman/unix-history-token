@@ -218,6 +218,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|ddp_sendspace
 init|=
@@ -230,6 +231,7 @@ comment|/* Max ddp size + 1 (ddp_type) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|ddp_recvspace
 init|=

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_media.c,v 1.1 1997/03/17 02:55:15 thorpej Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_media.c,v 1.4 1998/02/04 22:33:03 eivind Exp $ */
+comment|/*	$Id: if_media.c,v 1.5 1998/02/06 12:13:48 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -62,6 +62,7 @@ comment|/*  * Compile-time options:  * IFMEDIA_DEBUG:  *	turn on implementation-
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ifmedia_entry
 modifier|*
@@ -1043,6 +1044,7 @@ comment|/*  * Find media entry matching a given ifm word.  *  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|ifmedia_entry
 modifier|*

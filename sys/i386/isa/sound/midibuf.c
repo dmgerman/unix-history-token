@@ -52,6 +52,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|drain_midi_queue
 parameter_list|(
@@ -272,6 +273,7 @@ value|if (DATA_AVAIL(q)) { \ 	  u_long flags; \ 	  flags = splhigh(); \ 	  data 
 end_define
 
 begin_function
+specifier|static
 name|void
 name|drain_midi_queue
 parameter_list|(

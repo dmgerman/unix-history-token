@@ -152,6 +152,7 @@ value|(AARPTAB_BSIZ * AARPTAB_NB)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|aarptab
 name|aarptab
@@ -162,6 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aarptab_size
 init|=
@@ -240,6 +242,7 @@ endif|__FreeBSD__
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|u_char
 name|atmulticastaddr
 index|[

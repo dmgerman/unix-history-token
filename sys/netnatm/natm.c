@@ -96,6 +96,7 @@ file|<netnatm/natm.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|natm5_sendspace
 init|=
@@ -106,6 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|natm5_recvspace
 init|=
@@ -116,6 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|natm0_sendspace
 init|=
@@ -126,6 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|natm0_recvspace
 init|=

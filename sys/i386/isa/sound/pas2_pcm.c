@@ -182,6 +182,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_speed
 parameter_list|(
@@ -424,6 +425,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_channels
 parameter_list|(
@@ -485,6 +487,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pcm_set_bits
 parameter_list|(

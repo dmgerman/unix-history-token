@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.75 1998/02/06 02:45:54 alex Exp $  */
+comment|/*  * Copyright (c) 1996 Alex Nash  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.c,v 1.76 1998/02/06 12:13:51 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -248,16 +248,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|ip_fw_head
 argument_list|,
 argument|ip_fw_chain
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ip_fw_chain
 expr_stmt|;
 end_expr_stmt

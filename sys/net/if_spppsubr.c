@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.30 1998/01/01 21:27:18 gj Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.31 1998/01/08 23:41:31 eivind Exp $  */
 end_comment
 
 begin_include
@@ -2450,6 +2450,7 @@ comment|/* our control protocol descriptors */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cp
@@ -2494,6 +2495,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cp
@@ -2538,6 +2540,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cp
@@ -2582,6 +2585,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cp
@@ -2626,6 +2630,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cp

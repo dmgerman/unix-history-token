@@ -36,6 +36,7 @@ file|<i386/isa/sound/midi_ctrl.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|seq_drain_midi_queues
 parameter_list|(
@@ -236,6 +237,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|prev_input_time
 init|=
@@ -244,12 +246,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prev_event_time
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|seq_time
 init|=
@@ -5152,6 +5156,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|seq_drain_midi_queues
 parameter_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.21 1998/02/04 22:32:38 eivind Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. John S. Dyson's name may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * DISCLAIMER:  This code isn't warranted to do anything useful.  Anything  * bad that happens because of using this software isn't the responsibility  * of the author.  This software is distributed AS-IS.  *  * $Id: vfs_aio.c,v 1.22 1998/02/06 12:13:29 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -378,6 +378,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|max_aio_procs
 init|=
@@ -386,6 +387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_aio_procs
 init|=
@@ -394,6 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|target_aio_procs
 init|=
@@ -402,6 +405,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|max_queue_count
 init|=
@@ -410,6 +414,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_queue_count
 init|=
@@ -418,6 +423,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_buf_aio
 init|=
@@ -426,6 +432,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|num_aio_resv_start
 init|=
@@ -434,18 +441,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aiod_timeout
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aiod_lifetime
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|max_aio_per_proc
 init|=
@@ -458,6 +468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|max_buf_aio
 init|=
@@ -1054,30 +1065,26 @@ begin_comment
 comment|/* wakeup process when there is a significant 								   event */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|aioproclist
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|aio_freeproc
 operator|,
 name|aio_activeproc
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|aiocblist
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|aio_jobs
 expr_stmt|;
 end_expr_stmt
@@ -1086,15 +1093,13 @@ begin_comment
 comment|/* Async job list */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|aiocblist
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|aio_bufjobs
 expr_stmt|;
 end_expr_stmt
@@ -1103,15 +1108,13 @@ begin_comment
 comment|/* Phys I/O job list */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|aiocblist
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|aio_freejobs
 expr_stmt|;
 end_expr_stmt

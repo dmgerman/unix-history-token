@@ -18737,6 +18737,7 @@ value|6.00
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nabcst
 index|[]
@@ -18858,6 +18859,7 @@ value|6.00
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|irccable
 index|[]
@@ -19019,6 +19021,7 @@ value|6.00
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hrccable
 index|[]
@@ -19173,6 +19176,7 @@ comment|/*  * Western European broadcast channels:  *  * (there are others that 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|weurope
 index|[]
@@ -19415,6 +19419,7 @@ value|45.75
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|jpnbcst
 index|[]
@@ -19549,6 +19554,7 @@ value|45.75
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|jpncable
 index|[]
@@ -19705,6 +19711,7 @@ name|OFFSET
 end_undef
 
 begin_decl_stmt
+specifier|static
 name|int
 modifier|*
 name|freqTable

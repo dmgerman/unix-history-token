@@ -269,19 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|void
-name|sndintr
-name|__P
-argument_list|(
-operator|(
-name|int
-name|unit
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|int
 name|sndprobe
 name|__P
@@ -296,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sndattach
 name|__P
@@ -310,6 +299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sndmmap
 name|__P
@@ -456,6 +446,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|isa_driver
 name|trixdriver
@@ -471,6 +462,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|isa_driver
 name|trixsbdriver
@@ -591,6 +583,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|isa_driver
 name|gusxvidriver
@@ -606,6 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|isa_driver
 name|gusmaxdriver
@@ -651,6 +645,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|isa_driver
 name|cssdriver
@@ -757,6 +752,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sndmmap
 parameter_list|(
@@ -1666,6 +1662,7 @@ comment|/*  * sndprobe is called for each isa_device. From here, a voxware unit 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|sndprobe
 parameter_list|(
@@ -1902,6 +1899,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sndattach
 parameter_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.35 1997/10/26 21:08:39 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.36 1997/11/20 15:48:23 nate Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -3879,6 +3879,7 @@ comment|/* init device */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|aicunload
 parameter_list|(
@@ -4078,6 +4079,7 @@ comment|/*  * aicunload - unload the driver and clear the table.  * XXX TODO:  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|aicunload
 parameter_list|(

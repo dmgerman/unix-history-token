@@ -1489,6 +1489,7 @@ comment|/*  * The next table looks magical, but it certainly is not. Its values 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|fm_volume_table
 index|[

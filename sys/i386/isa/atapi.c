@@ -310,6 +310,7 @@ comment|/* nonstandard - for NEC 260 */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|atapi
 name|atapitab

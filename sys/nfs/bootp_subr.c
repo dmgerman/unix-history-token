@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.7 1998/01/09 03:21:07 eivind Exp $	*/
+comment|/*	$Id: bootp_subr.c,v 1.8 1998/01/18 18:46:20 tegge Exp $	*/
 end_comment
 
 begin_comment
@@ -570,6 +570,7 @@ directive|endif
 end_endif
 
 begin_function_decl
+specifier|static
 name|int
 name|bootpc_call
 parameter_list|(
@@ -592,6 +593,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bootpc_fakeup_interface
 parameter_list|(
@@ -614,6 +616,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|bootpc_adjust_interface
 parameter_list|(
@@ -1272,6 +1275,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|int
 name|bootpc_call
 parameter_list|(
@@ -2033,6 +2037,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bootpc_fakeup_interface
 parameter_list|(
@@ -2544,6 +2549,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bootpc_adjust_interface
 parameter_list|(

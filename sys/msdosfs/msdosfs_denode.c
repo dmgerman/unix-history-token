@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.29 1998/02/04 22:33:00 eivind Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.30 1998/02/06 12:13:46 eivind Exp $ */
 end_comment
 
 begin_comment
@@ -123,6 +123,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|denode
 modifier|*
@@ -132,6 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|dehash
 decl_stmt|;
