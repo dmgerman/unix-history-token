@@ -10,17 +10,27 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/*#include<machine/ioctl_meteor.h>*/
-end_comment
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
 directive|include
-file|"/sys/i386/include/ioctl_meteor.h"
+file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/bktr/ioctl_meteor.h>
 end_include
 
 begin_decl_stmt
