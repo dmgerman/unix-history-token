@@ -4,6 +4,10 @@ comment|/*	$OpenBSD: pf_norm.c,v 1.80.2.1 2004/04/30 21:46:33 brad Exp $ */
 end_comment
 
 begin_comment
+comment|/* add	$OpenBSD: pf_norm.c,v 1.87 2004/05/11 07:34:11 dhartmei Exp $ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright 2001 Niels Provos<provos@citi.umich.edu>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -556,19 +560,6 @@ name|int
 parameter_list|,
 name|int
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|u_int16_t
-name|pf_cksum_fixup
-parameter_list|(
-name|u_int16_t
-parameter_list|,
-name|u_int16_t
-parameter_list|,
-name|u_int16_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5343,6 +5334,14 @@ name|rule_flag
 operator|&
 name|PFRULE_RANDOMID
 condition|)
+block|{
+name|u_int16_t
+name|ip_id
+init|=
+name|h
+operator|->
+name|ip_id
+decl_stmt|;
 name|h
 operator|->
 name|ip_id
@@ -5350,6 +5349,26 @@ operator|=
 name|ip_randomid
 argument_list|()
 expr_stmt|;
+name|h
+operator|->
+name|ip_sum
+operator|=
+name|pf_cksum_fixup
+argument_list|(
+name|h
+operator|->
+name|ip_sum
+argument_list|,
+name|ip_id
+argument_list|,
+name|h
+operator|->
+name|ip_id
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|PF_PASS
@@ -7262,6 +7281,8 @@ argument_list|,
 name|ov
 argument_list|,
 name|nv
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|rewrite
@@ -7297,6 +7318,8 @@ argument_list|,
 name|th
 operator|->
 name|th_urp
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -8619,6 +8642,8 @@ name|r
 operator|->
 name|max_mss
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
