@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.7 1997/08/26 11:23:37 charnier Exp $"
+literal|"$Id: write.c,v 1.8 1997/09/15 00:08:19 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1578,10 +1578,19 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+operator|(
 operator|*
 name|s
-operator|<=
+operator|&
+literal|0x80
+operator|)
+operator|&&
+operator|*
+name|s
+operator|<
 literal|0xA0
+operator|)
 operator|||
 comment|/* disable upper controls */
 operator|(
