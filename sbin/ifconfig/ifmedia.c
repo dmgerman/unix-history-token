@@ -267,12 +267,14 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|media_status
 parameter_list|(
 name|int
 name|s
 parameter_list|,
+specifier|const
 name|struct
 name|rt_addrinfo
 modifier|*
@@ -668,6 +670,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setmedia
 parameter_list|(
@@ -877,6 +880,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setmediaopt
 parameter_list|(
@@ -911,6 +915,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|unsetmediaopt
 parameter_list|(
@@ -1199,6 +1204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setmediamode
 parameter_list|(
@@ -3535,6 +3541,126 @@ end_function
 begin_comment
 comment|/**********************************************************************  * ...until here.  **********************************************************************/
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cmd
+name|media_cmds
+index|[]
+init|=
+block|{
+name|DEF_CMD_ARG
+argument_list|(
+literal|"media"
+argument_list|,
+name|setmedia
+argument_list|)
+block|,
+name|DEF_CMD_ARG
+argument_list|(
+literal|"mode"
+argument_list|,
+name|setmediamode
+argument_list|)
+block|,
+name|DEF_CMD_ARG
+argument_list|(
+literal|"mediaopt"
+argument_list|,
+name|setmediaopt
+argument_list|)
+block|,
+name|DEF_CMD_ARG
+argument_list|(
+literal|"-mediaopt"
+argument_list|,
+name|unsetmediaopt
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|afswtch
+name|af_media
+init|=
+block|{
+operator|.
+name|af_name
+operator|=
+literal|"af_media"
+block|,
+operator|.
+name|af_af
+operator|=
+name|AF_UNSPEC
+block|,
+operator|.
+name|af_status
+operator|=
+name|media_status
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|__constructor
+name|void
+name|ifmedia_ctor
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+define|#
+directive|define
+name|N
+parameter_list|(
+name|a
+parameter_list|)
+value|(sizeof(a) / sizeof(a[0]))
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|N
+argument_list|(
+name|media_cmds
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+name|cmd_register
+argument_list|(
+operator|&
+name|media_cmds
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|af_register
+argument_list|(
+operator|&
+name|af_media
+argument_list|)
+expr_stmt|;
+undef|#
+directive|undef
+name|N
+block|}
+end_function
 
 end_unit
 
