@@ -395,6 +395,10 @@ name|KPML4I
 value|(NPML4EPG-1)
 end_define
 
+begin_comment
+comment|/* Top 512GB for KVM */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -402,12 +406,20 @@ name|DMPML4I
 value|(KPML4I-1)
 end_define
 
+begin_comment
+comment|/* Next 512GB down for direct map */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|KPDPI
 value|(NPDPEPG-1)
 end_define
+
+begin_comment
+comment|/* kernbase at -1GB */
+end_comment
 
 begin_comment
 comment|/*  * XXX doesn't really belong here I guess...  */
