@@ -280,6 +280,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -290,18 +293,11 @@ name|type
 parameter_list|,
 name|int
 name|local
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
-name|Elf_Addr
-name|relocbase
-init|=
-operator|(
-name|Elf_Addr
-operator|)
-name|lf
-operator|->
-name|address
-decl_stmt|;
 name|Elf_Addr
 modifier|*
 name|where
@@ -496,7 +492,7 @@ case|:
 comment|/* S + A - P */
 name|addr
 operator|=
-name|elf_lookup
+name|lookup
 argument_list|(
 name|lf
 argument_list|,
@@ -558,7 +554,7 @@ case|:
 comment|/* S */
 name|addr
 operator|=
-name|elf_lookup
+name|lookup
 argument_list|(
 name|lf
 argument_list|,
@@ -622,6 +618,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -629,6 +628,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 return|return
@@ -637,11 +639,15 @@ name|elf_reloc_internal
 argument_list|(
 name|lf
 argument_list|,
+name|relocbase
+argument_list|,
 name|data
 argument_list|,
 name|type
 argument_list|,
 literal|0
+argument_list|,
+name|lookup
 argument_list|)
 operator|)
 return|;
@@ -655,6 +661,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -662,6 +671,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 return|return
@@ -670,11 +682,15 @@ name|elf_reloc_internal
 argument_list|(
 name|lf
 argument_list|,
+name|relocbase
+argument_list|,
 name|data
 argument_list|,
 name|type
 argument_list|,
 literal|1
+argument_list|,
+name|lookup
 argument_list|)
 operator|)
 return|;

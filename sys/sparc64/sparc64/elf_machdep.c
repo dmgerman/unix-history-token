@@ -1603,6 +1603,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1610,6 +1613,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 specifier|const
@@ -1718,6 +1724,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1725,6 +1734,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 specifier|const
@@ -1769,15 +1781,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|relocbase
-operator|=
-operator|(
-name|Elf_Addr
-operator|)
-name|lf
-operator|->
-name|address
-expr_stmt|;
 name|rela
 operator|=
 operator|(
@@ -1891,7 +1894,7 @@ condition|)
 block|{
 name|addr
 operator|=
-name|elf_lookup
+name|lookup
 argument_list|(
 name|lf
 argument_list|,

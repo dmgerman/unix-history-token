@@ -1010,6 +1010,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|Elf_Addr
+name|elf_lookup_fn
+parameter_list|(
+name|linker_file_t
+parameter_list|,
+name|Elf_Word
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/* Support functions */
 end_comment
@@ -1021,6 +1035,9 @@ parameter_list|(
 name|linker_file_t
 name|_lf
 parameter_list|,
+name|Elf_Addr
+name|base
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1028,6 +1045,9 @@ name|_rel
 parameter_list|,
 name|int
 name|_type
+parameter_list|,
+name|elf_lookup_fn
+name|_lu
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1039,6 +1059,9 @@ parameter_list|(
 name|linker_file_t
 name|_lf
 parameter_list|,
+name|Elf_Addr
+name|base
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1046,19 +1069,9 @@ name|_rel
 parameter_list|,
 name|int
 name|_type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|Elf_Addr
-name|elf_lookup
-parameter_list|(
-name|linker_file_t
 parameter_list|,
-name|Elf_Word
-parameter_list|,
-name|int
+name|elf_lookup_fn
+name|_lu
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -509,6 +509,9 @@ name|lf
 parameter_list|,
 name|Elf_Word
 name|symidx
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 name|linker_file_t
@@ -533,7 +536,7 @@ literal|0
 decl_stmt|;
 name|addr
 operator|=
-name|elf_lookup
+name|lookup
 argument_list|(
 name|lf
 argument_list|,
@@ -737,6 +740,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -747,6 +753,9 @@ name|type
 parameter_list|,
 name|int
 name|local
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 name|Elf_Addr
@@ -961,7 +970,7 @@ case|:
 comment|/* word64 LSB	S + A */
 name|addr
 operator|=
-name|elf_lookup
+name|lookup
 argument_list|(
 name|lf
 argument_list|,
@@ -1016,6 +1025,8 @@ argument_list|(
 name|lf
 argument_list|,
 name|symidx
+argument_list|,
+name|lookup
 argument_list|)
 expr_stmt|;
 if|if
@@ -1051,6 +1062,8 @@ argument_list|(
 name|lf
 argument_list|,
 name|symidx
+argument_list|,
+name|lookup
 argument_list|)
 expr_stmt|;
 if|if
@@ -1131,6 +1144,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1138,6 +1154,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 return|return
@@ -1146,11 +1165,15 @@ name|elf_reloc_internal
 argument_list|(
 name|lf
 argument_list|,
+name|relocbase
+argument_list|,
 name|data
 argument_list|,
 name|type
 argument_list|,
 literal|0
+argument_list|,
+name|lookup
 argument_list|)
 operator|)
 return|;
@@ -1164,6 +1187,9 @@ parameter_list|(
 name|linker_file_t
 name|lf
 parameter_list|,
+name|Elf_Addr
+name|relocbase
+parameter_list|,
 specifier|const
 name|void
 modifier|*
@@ -1171,6 +1197,9 @@ name|data
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|elf_lookup_fn
+name|lookup
 parameter_list|)
 block|{
 return|return
@@ -1179,11 +1208,15 @@ name|elf_reloc_internal
 argument_list|(
 name|lf
 argument_list|,
+name|relocbase
+argument_list|,
 name|data
 argument_list|,
 name|type
 argument_list|,
 literal|1
+argument_list|,
+name|lookup
 argument_list|)
 operator|)
 return|;
