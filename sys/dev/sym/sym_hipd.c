@@ -12034,11 +12034,27 @@ condition|(
 operator|(
 name|SYM_SETUP_SCSI_LED
 operator|||
+operator|(
 name|nvram
 operator|->
 name|type
 operator|==
 name|SYM_SYMBIOS_NVRAM
+operator|||
+operator|(
+name|nvram
+operator|->
+name|type
+operator|==
+name|SYM_TEKRAM_NVRAM
+operator|&&
+name|np
+operator|->
+name|device_id
+operator|==
+name|PCI_ID_SYM53C895
+operator|)
+operator|)
 operator|)
 operator|&&
 operator|!
@@ -41083,7 +41099,7 @@ name|gpcntl
 operator|=
 name|old_gpcntl
 operator|&
-literal|0xfc
+literal|0x1c
 expr_stmt|;
 comment|/* set up GPREG& GPCNTL to set GPIO0 and GPIO1 in to known state */
 name|OUTB
