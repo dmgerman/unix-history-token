@@ -648,8 +648,8 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|callout_handle
-name|rpcclnt_timer_handle
+name|callout
+name|rpcclnt_callout
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,6 +1206,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* !__OpenBSD__ */
+name|callout_init
+argument_list|(
+operator|&
+name|rpcclnt_callout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|rpcclnt_timer
 argument_list|(
 name|NULL
@@ -1235,17 +1243,10 @@ argument_list|(
 literal|"uninit"
 argument_list|)
 expr_stmt|;
-name|untimeout
+name|callout_stop
 argument_list|(
-name|rpcclnt_timer
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|NULL
-argument_list|,
-name|rpcclnt_timer_handle
+operator|&
+name|rpcclnt_callout
 argument_list|)
 expr_stmt|;
 comment|/* XXX delete sysctl variables? */
@@ -6626,15 +6627,16 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|rpcclnt_timer_handle
-operator|=
-name|timeout
+name|callout_reset
 argument_list|(
+operator|&
+name|rpcclnt_callout
+argument_list|,
+name|rpcclnt_ticks
+argument_list|,
 name|rpcclnt_timer
 argument_list|,
 name|NULL
-argument_list|,
-name|rpcclnt_ticks
 argument_list|)
 expr_stmt|;
 endif|#
