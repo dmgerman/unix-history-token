@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.12 (Berkeley) %G%"
+literal|"@(#)main.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -838,23 +838,6 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
-condition|(
-name|status
-operator|.
-name|w_termsig
-condition|)
-name|sumstatus
-operator||=
-literal|8
-expr_stmt|;
-else|else
-name|sumstatus
-operator||=
-name|status
-operator|.
-name|w_retcode
-expr_stmt|;
 for|for
 control|(
 name|dk
@@ -938,6 +921,12 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sumstatus
+operator||=
+name|status
+operator|.
+name|w_retcode
+expr_stmt|;
 operator|*
 name|badnext
 operator|=
