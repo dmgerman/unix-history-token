@@ -967,6 +967,8 @@ name|err
 condition|)
 name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
