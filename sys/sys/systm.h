@@ -2235,61 +2235,31 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|mwakeup
+name|wakeup
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
 name|chan
-operator|,
-expr|struct
-name|mtx
-operator|*
-name|mtx
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|wakeup
-parameter_list|(
-name|chan
-parameter_list|)
-value|mwakeup(chan, NULL)
-end_define
 
 begin_decl_stmt
 name|void
-name|mwakeup_one
+name|wakeup_one
 name|__P
 argument_list|(
 operator|(
 name|void
 operator|*
 name|chan
-operator|,
-expr|struct
-name|mtx
-operator|*
-name|mtx
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|wakeup_one
-parameter_list|(
-name|chan
-parameter_list|)
-value|mwakeup_one(chan, NULL)
-end_define
 
 begin_comment
 comment|/*  * Common `dev_t' stuff are declared here to avoid #include poisoning  */
