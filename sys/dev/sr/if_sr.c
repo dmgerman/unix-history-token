@@ -432,9 +432,7 @@ comment|/* ---netgraph bits --- */
 name|char
 name|nodename
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* store our node name */
