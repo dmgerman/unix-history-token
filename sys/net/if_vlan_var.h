@@ -48,11 +48,18 @@ end_struct
 begin_define
 define|#
 directive|define
+name|EVL_VLID_MASK
+value|0x0FFF
+end_define
+
+begin_define
+define|#
+directive|define
 name|EVL_VLANOFTAG
 parameter_list|(
 name|tag
 parameter_list|)
-value|((tag)& 4095)
+value|((tag)& EVL_VLID_MASK)
 end_define
 
 begin_define

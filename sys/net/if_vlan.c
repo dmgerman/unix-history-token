@@ -1677,6 +1677,8 @@ block|{
 comment|/* 		 * Packet is tagged, m contains a normal 		 * Ethernet frame; the tag is stored out-of-band. 		 */
 name|tag
 operator|=
+name|EVL_VLANOFTAG
+argument_list|(
 operator|*
 operator|(
 name|u_int
@@ -1687,6 +1689,7 @@ name|mtag
 operator|+
 literal|1
 operator|)
+argument_list|)
 expr_stmt|;
 name|m_tag_delete
 argument_list|(
@@ -1783,11 +1786,14 @@ argument_list|)
 expr_stmt|;
 name|tag
 operator|=
+name|EVL_VLANOFTAG
+argument_list|(
 name|ntohs
 argument_list|(
 name|evl
 operator|->
 name|evl_tag
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Restore the original ethertype.  We'll remove 			 * the encapsulation after we've found the vlan 			 * interface corresponding to the tag. 			 */
@@ -3244,6 +3250,23 @@ block|{
 name|error
 operator|=
 name|ENOENT
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * Don't let the caller set up a VLAN tag with 		 * anything except VLID bits. 		 */
+if|if
+condition|(
+name|vlr
+operator|.
+name|vlr_tag
+operator|&
+operator|~
+name|EVL_VLID_MASK
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 break|break;
 block|}
