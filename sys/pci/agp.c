@@ -1798,6 +1798,23 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+operator|)
+operator|==
+literal|0
+condition|)
+name|vm_page_zero_fill
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 name|AGP_DPF
 argument_list|(
 literal|"found page pa=%#x\n"
