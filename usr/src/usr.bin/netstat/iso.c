@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.5 (Berkeley) %G%"
+literal|"@(#)iso.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
 
 begin_include
 include|#
