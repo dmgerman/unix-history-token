@@ -53,7 +53,7 @@ comment|/* RFCOMM protocol number */
 end_comment
 
 begin_comment
-comment|/*  * Bluetooth version of struct sockaddr for raw HCI sockets  *  * XXX: sizeof(hci_node) was NG_NODELEN + 1, but NG_NODESIZ (the equivalent  * of NG_NODELEN + 1) has been bumped to 32. The code currently  * truncates the node name to sizeof(hci_node), although it would be  * possible to correctly handle this by means of the hci_len field.  */
+comment|/*  * Bluetooth version of struct sockaddr for raw HCI sockets  */
 end_comment
 
 begin_struct
@@ -71,10 +71,10 @@ comment|/* address family */
 name|char
 name|hci_node
 index|[
-literal|16
+literal|32
 index|]
 decl_stmt|;
-comment|/* address */
+comment|/* address (size == NG_NODESIZ ) */
 block|}
 struct|;
 end_struct

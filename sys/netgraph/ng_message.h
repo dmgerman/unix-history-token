@@ -159,9 +159,17 @@ name|arglen
 decl_stmt|;
 comment|/* length of data */
 name|u_int32_t
+name|cmd
+decl_stmt|;
+comment|/* command identifier */
+name|u_int32_t
 name|flags
 decl_stmt|;
 comment|/* message status */
+name|u_int32_t
+name|spare2
+decl_stmt|;
+comment|/* pad to 8 bytes */
 name|u_int32_t
 name|token
 decl_stmt|;
@@ -170,10 +178,6 @@ name|u_int32_t
 name|typecookie
 decl_stmt|;
 comment|/* node's type cookie */
-name|u_int32_t
-name|cmd
-decl_stmt|;
-comment|/* command identifier */
 name|u_char
 name|cmdstr
 index|[
@@ -215,7 +219,7 @@ name|NG_GENERIC_NG_MESG_INFO
 parameter_list|(
 name|dtype
 parameter_list|)
-value|{			\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng_parse_uint8_type	},	\ 	  { "arglen",&ng_parse_uint16_type	},	\ 	  { "flags",&ng_parse_hint32_type	},	\ 	  { "token",&ng_parse_uint32_type	},	\ 	  { "typecookie",&ng_parse_uint32_type	},	\ 	  { "cmd",&ng_parse_uint32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL }						\ }
+value|{			\ 	  { "version",&ng_parse_uint8_type	},	\ 	  { "spare",&ng_parse_uint8_type	},	\ 	  { "arglen",&ng_parse_uint16_type	},	\ 	  { "cmd",&ng_parse_uint32_type	},	\ 	  { "flags",&ng_parse_hint32_type	},	\ 	  { "spare2",&ng_parse_uint32_type	},	\ 	  { "token",&ng_parse_uint32_type	},	\ 	  { "typecookie",&ng_parse_uint32_type	},	\ 	  { "cmdstr",&ng_parse_cmdbuf_type	},	\ 	  { "data",		(dtype)			},	\ 	  { NULL }						\ }
 end_define
 
 begin_comment
@@ -226,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|NG_VERSION
-value|6
+value|7
 end_define
 
 begin_comment
