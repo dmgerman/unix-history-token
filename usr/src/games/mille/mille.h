@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)mille.h	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -12,7 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"curses.h"
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
 end_include
 
 begin_comment
@@ -36,39 +48,6 @@ directive|define
 name|CARD
 value|short
 end_define
-
-begin_define
-define|#
-directive|define
-name|ARNOLD
-value|214
-end_define
-
-begin_comment
-comment|/* my uid			*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|GURP
-value|28672
-end_define
-
-begin_comment
-comment|/* bad uid			*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXUSERS
-value|35
-end_define
-
-begin_comment
-comment|/* max # of users for startup	*/
-end_comment
 
 begin_define
 define|#
