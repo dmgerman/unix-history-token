@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: scsiio.h,v 1.8 1997/02/22 09:45:49 peter Exp $  */
+comment|/*  * $Id: scsiio.h,v 1.9 1998/02/01 04:13:13 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -383,7 +383,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|scsi_getdevinfo
+name|scsi_devinfo
 block|{
 name|struct
 name|scsi_addr
@@ -391,6 +391,18 @@ name|addr
 decl_stmt|;
 name|dev_t
 name|dev
+decl_stmt|;
+name|char
+name|devname
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|char
+name|adname
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -400,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|SCIOCGETDEVINFO
-value|_IOWR('Q', 13, struct scsi_getdevinfo)
+value|_IOWR('Q', 13, struct scsi_devinfo)
 end_define
 
 begin_endif
