@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.7 81/10/26 */
+comment|/* tcp.h 1.6 81/10/28 */
 end_comment
 
 begin_comment
@@ -31,7 +31,11 @@ name|u_char
 name|t_pr
 decl_stmt|;
 comment|/* protocol */
-name|u_short
+comment|/* by rights, t_len should be a u_short, but this makes operations */
+comment|/* on it very dangerous as comparisons become unsigned and comparing */
+comment|/* against negative numbers then fails... we don't expect any> 32767 */
+comment|/* byte segments, so pragmatically delcare it to be a short */
+name|short
 name|t_len
 decl_stmt|;
 comment|/* seg length */
