@@ -492,7 +492,7 @@ comment|/* ENE */
 block|{
 name|PCIC_ID_ENE_CB710
 block|,
-literal|"ENE CB720 PCI-CardBus Bridge"
+literal|"ENE CB710 PCI-CardBus Bridge"
 block|,
 name|CB_TI12XX
 block|}
