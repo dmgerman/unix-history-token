@@ -8331,6 +8331,11 @@ name|struct
 name|label
 modifier|*
 name|label
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|)
 block|{
 name|struct

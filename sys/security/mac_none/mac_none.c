@@ -1474,6 +1474,16 @@ name|struct
 name|label
 modifier|*
 name|vnodelabel
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|interpvnodelabel
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|)
 block|{  }
 end_function
@@ -1497,6 +1507,16 @@ name|struct
 name|label
 modifier|*
 name|vnodelabel
+parameter_list|,
+name|struct
+name|label
+modifier|*
+name|interpvnodelabel
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|)
 block|{
 return|return
@@ -2510,6 +2530,11 @@ name|struct
 name|label
 modifier|*
 name|label
+parameter_list|,
+name|struct
+name|image_params
+modifier|*
+name|imgp
 parameter_list|)
 block|{
 return|return
