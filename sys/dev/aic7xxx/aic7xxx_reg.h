@@ -102,7 +102,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ULTRAEN
+name|FAST20
 value|0x20
 end_define
 
