@@ -5092,7 +5092,6 @@ name|privused
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XXX it is authorized, but semantics don't permit it */
 if|if
 condition|(
 name|p1
