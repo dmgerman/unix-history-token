@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	4.6 %G%"
+literal|"@(#)af.c	4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -213,7 +213,7 @@ name|hp
 operator|->
 name|afh_nethash
 operator|=
-name|IN_NETOF
+name|in_netof
 argument_list|(
 name|sin
 operator|->
@@ -281,14 +281,14 @@ begin_block
 block|{
 return|return
 operator|(
-name|IN_NETOF
+name|in_netof
 argument_list|(
 name|sin1
 operator|->
 name|sin_addr
 argument_list|)
 operator|==
-name|IN_NETOF
+name|in_netof
 argument_list|(
 name|sin2
 operator|->
@@ -527,7 +527,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return 1 if the address is for an Internet host,  * otherwise assume it's a network address (broadcast).  */
+comment|/*  * Return 1 if the address is believed  * for an Internet host -- THIS IS A KLUDGE.  */
 end_comment
 
 begin_macro
@@ -547,41 +547,16 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|struct
-name|in_addr
-name|if_makeaddr
-parameter_list|()
-function_decl|;
-name|struct
-name|in_addr
-name|netaddr
-decl_stmt|;
-name|netaddr
-operator|=
-name|if_makeaddr
-argument_list|(
-name|IN_NETOF
-argument_list|(
-name|sin
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|,
-name|INADDR_ANY
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|netaddr
-operator|.
-name|s_addr
-operator|!=
+name|in_lnaof
+argument_list|(
 name|sin
 operator|->
 name|sin_addr
-operator|.
-name|s_addr
+argument_list|)
+operator|!=
+literal|0
 operator|)
 return|;
 block|}
