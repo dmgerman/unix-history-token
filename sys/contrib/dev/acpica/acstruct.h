@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 16 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 17 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -288,10 +288,22 @@ name|UINT16
 name|FieldCount
 decl_stmt|;
 name|UINT16
+name|BufferCount
+decl_stmt|;
+name|UINT16
+name|PackageCount
+decl_stmt|;
+name|UINT16
 name|OpRegionInit
 decl_stmt|;
 name|UINT16
 name|FieldInit
+decl_stmt|;
+name|UINT16
+name|BufferInit
+decl_stmt|;
+name|UINT16
+name|PackageInit
 decl_stmt|;
 name|UINT16
 name|ObjectCount

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -281,8 +281,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_LOGICAL_ADDRESS
+value|(ACPI_STATUS) (0x001B | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001A
+value|0x001B
 end_define
 
 begin_comment
@@ -334,8 +341,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_BAD_HEX_CONSTANT
+value|(ACPI_STATUS) (0x0007 | AE_CODE_PROGRAMMER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_BAD_OCTAL_CONSTANT
+value|(ACPI_STATUS) (0x0008 | AE_CODE_PROGRAMMER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_BAD_DECIMAL_CONSTANT
+value|(ACPI_STATUS) (0x0009 | AE_CODE_PROGRAMMER)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_PGM_MAX
-value|0x0006
+value|0x0009
 end_define
 
 begin_comment
@@ -743,6 +771,8 @@ block|,
 literal|"AE_NO_HARDWARE_RESPONSE"
 block|,
 literal|"AE_NO_GLOBAL_LOCK"
+block|,
+literal|"AE_LOGICAL_ADDRESS"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -766,6 +796,12 @@ block|,
 literal|"AE_BAD_ADDRESS"
 block|,
 literal|"AE_ALIGNMENT"
+block|,
+literal|"AE_BAD_HEX_CONSTANT"
+block|,
+literal|"AE_BAD_OCTAL_CONSTANT"
+block|,
+literal|"AE_BAD_DECIMAL_CONSTANT"
 block|}
 decl_stmt|;
 end_decl_stmt

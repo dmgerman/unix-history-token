@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 87 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 88 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"**** String %p, ptr %p\n"
 operator|,
@@ -161,7 +161,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"**** Buffer %p, ptr %p\n"
 operator|,
@@ -191,7 +191,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|" **** Package of count %X\n"
 operator|,
@@ -220,7 +220,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"***** Mutex %p, Semaphore %p\n"
 operator|,
@@ -255,7 +255,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"***** Event %p, Semaphore %p\n"
 operator|,
@@ -293,7 +293,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"***** Method %p\n"
 operator|,
@@ -336,7 +336,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"***** Region %p\n"
 operator|,
@@ -405,7 +405,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"***** Buffer Field %p\n"
 operator|,
@@ -444,7 +444,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Deleting Object Subptr %p\n"
 operator|,
@@ -462,7 +462,7 @@ comment|/* Now the object can be safely deleted */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Deleting Object %p [%s]\n"
 operator|,
@@ -619,7 +619,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Obj %p Refs=%X, [Incremented]\n"
 operator|,
@@ -643,7 +643,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Obj %p Refs=%X, can't decrement! (Set to 0)\n"
 operator|,
@@ -666,7 +666,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Obj %p Refs=%X, [Decremented]\n"
 operator|,
@@ -691,7 +691,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Method Obj %p Refs=%X, [Decremented]\n"
 operator|,
@@ -730,7 +730,7 @@ case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Obj %p Refs=%X, Force delete! (Set to 0)\n"
 operator|,
@@ -872,7 +872,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Object %p is NS handle\n"
 operator|,
@@ -1415,7 +1415,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Obj %p Refs=%X\n"
 operator|,

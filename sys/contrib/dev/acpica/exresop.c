@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 47 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 48 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -123,7 +123,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ERROR
 operator|,
 literal|"Needed [%s], found [%s] %p\n"
 operator|,
@@ -270,9 +270,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Opcode %X OperandTypes=%X \n"
+literal|"Opcode %X [%s] OperandTypes=%X \n"
 operator|,
 name|Opcode
+operator|,
+name|OpInfo
+operator|->
+name|Name
 operator|,
 name|ArgTypes
 operator|)
@@ -459,7 +463,7 @@ argument_list|(
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_EXEC
 operator|,
 literal|"Reference Opcode: %s\n"
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 125 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 126 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -418,7 +418,7 @@ name|NotifyObj
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|DeviceNode
+name|Node
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -431,6 +431,11 @@ expr_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
+operator|(
+operator|!
+name|Device
+operator|)
+operator|||
 operator|(
 operator|!
 name|Handler
@@ -471,7 +476,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Convert and validate the device handle */
-name|DeviceNode
+name|Node
 operator|=
 name|AcpiNsMapHandleToNode
 argument_list|(
@@ -481,7 +486,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|DeviceNode
+name|Node
 condition|)
 block|{
 name|Status
@@ -547,7 +552,7 @@ name|AcpiGbl_SysNotify
 operator|.
 name|Node
 operator|=
-name|DeviceNode
+name|Node
 expr_stmt|;
 name|AcpiGbl_SysNotify
 operator|.
@@ -569,7 +574,7 @@ name|AcpiGbl_DrvNotify
 operator|.
 name|Node
 operator|=
-name|DeviceNode
+name|Node
 expr_stmt|;
 name|AcpiGbl_DrvNotify
 operator|.
@@ -589,45 +594,19 @@ block|}
 comment|/*      * All Other Objects:      * Caller will only receive notifications specific to the target object.      * Note that only certain object types can receive notifications.      */
 else|else
 block|{
-comment|/*          * These are the ONLY objects that can receive ACPI notifications          */
+comment|/* Notifies allowed on this object? */
 if|if
 condition|(
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_DEVICE
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_PROCESSOR
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_POWER
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_THERMAL
-operator|)
+operator|!
+name|AcpiEvIsNotifyObject
+argument_list|(
+name|Node
+argument_list|)
 condition|)
 block|{
 name|Status
 operator|=
-name|AE_BAD_PARAMETER
+name|AE_TYPE
 expr_stmt|;
 goto|goto
 name|UnlockAndExit
@@ -638,7 +617,7 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|DeviceNode
+name|Node
 argument_list|)
 expr_stmt|;
 if|if
@@ -658,7 +637,7 @@ operator|)
 operator|&&
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|SysHandler
 operator|)
@@ -672,7 +651,7 @@ operator|)
 operator|&&
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|DrvHandler
 operator|)
@@ -694,7 +673,7 @@ name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|DeviceNode
+name|Node
 operator|->
 name|Type
 argument_list|)
@@ -722,7 +701,7 @@ name|Device
 argument_list|,
 name|ObjDesc
 argument_list|,
-name|DeviceNode
+name|Node
 operator|->
 name|Type
 argument_list|)
@@ -768,7 +747,7 @@ name|NotifyHandler
 operator|.
 name|Node
 operator|=
-name|DeviceNode
+name|Node
 expr_stmt|;
 name|NotifyObj
 operator|->
@@ -795,7 +774,7 @@ condition|)
 block|{
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|SysHandler
 operator|=
@@ -807,7 +786,7 @@ comment|/* ACPI_DEVICE_NOTIFY */
 block|{
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|DrvHandler
 operator|=
@@ -861,7 +840,7 @@ name|ObjDesc
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|DeviceNode
+name|Node
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -874,6 +853,11 @@ expr_stmt|;
 comment|/* Parameter validation */
 if|if
 condition|(
+operator|(
+operator|!
+name|Device
+operator|)
+operator|||
 operator|(
 operator|!
 name|Handler
@@ -914,7 +898,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Convert and validate the device handle */
-name|DeviceNode
+name|Node
 operator|=
 name|AcpiNsMapHandleToNode
 argument_list|(
@@ -924,7 +908,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|DeviceNode
+name|Node
 condition|)
 block|{
 name|Status
@@ -1040,45 +1024,19 @@ block|}
 comment|/*      * All Other Objects      */
 else|else
 block|{
-comment|/*          * These are the ONLY objects that can receive ACPI notifications          */
+comment|/* Notifies allowed on this object? */
 if|if
 condition|(
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_DEVICE
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_PROCESSOR
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_POWER
-operator|)
-operator|&&
-operator|(
-name|DeviceNode
-operator|->
-name|Type
-operator|!=
-name|ACPI_TYPE_THERMAL
-operator|)
+operator|!
+name|AcpiEvIsNotifyObject
+argument_list|(
+name|Node
+argument_list|)
 condition|)
 block|{
 name|Status
 operator|=
-name|AE_BAD_PARAMETER
+name|AE_TYPE
 expr_stmt|;
 goto|goto
 name|UnlockAndExit
@@ -1089,7 +1047,7 @@ name|ObjDesc
 operator|=
 name|AcpiNsGetAttachedObject
 argument_list|(
-name|DeviceNode
+name|Node
 argument_list|)
 expr_stmt|;
 if|if
@@ -1118,7 +1076,7 @@ name|NotifyObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|SysHandler
 expr_stmt|;
@@ -1129,7 +1087,7 @@ name|NotifyObj
 operator|=
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|DrvHandler
 expr_stmt|;
@@ -1170,7 +1128,7 @@ condition|)
 block|{
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|SysHandler
 operator|=
@@ -1181,7 +1139,7 @@ else|else
 block|{
 name|ObjDesc
 operator|->
-name|Device
+name|CommonNotify
 operator|.
 name|DrvHandler
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 127 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 129 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_NAME
 argument_list|(
-literal|"AcpiNsPrintPathname"
+literal|"NsPrintPathname"
 argument_list|)
 expr_stmt|;
 if|if
@@ -589,6 +589,8 @@ argument_list|(
 name|ThisNode
 operator|->
 name|Name
+operator|.
+name|Integer
 argument_list|)
 condition|)
 block|{
@@ -773,6 +775,17 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_DATA_VALID
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|" Elements %.2X\n"
@@ -784,10 +797,30 @@ operator|.
 name|Count
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Length not yet evaluated]\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator|&
+name|AOPOBJ_DATA_VALID
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|" Len %.2X"
@@ -861,6 +894,15 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" [Length not yet evaluated]\n"
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_STRING
@@ -889,7 +931,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" = \"%.32s\"..."
+literal|" = \"%.32s\""
 argument_list|,
 name|ObjDesc
 operator|->
@@ -898,6 +940,23 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|>
+literal|32
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"..."
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -967,7 +1026,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|" [Address/Length not evaluated]\n"
+literal|" [Address/Length not yet evaluated]\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 58 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 59 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -122,6 +122,8 @@ name|i
 index|]
 operator|.
 name|Name
+operator|.
+name|Integer
 operator||=
 operator|(
 name|i
@@ -203,6 +205,8 @@ name|i
 index|]
 operator|.
 name|Name
+operator|.
+name|Integer
 operator||=
 operator|(
 name|i

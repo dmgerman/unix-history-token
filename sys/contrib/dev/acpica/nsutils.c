@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 105 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -760,11 +760,7 @@ literal|"returning [%p] (abs) \"\\%s\"\n"
 operator|,
 name|InternalName
 operator|,
-operator|&
 name|InternalName
-index|[
-literal|0
-index|]
 operator|)
 argument_list|)
 expr_stmt|;
@@ -780,11 +776,7 @@ literal|"returning [%p] (rel) \"%s\"\n"
 operator|,
 name|InternalName
 operator|,
-operator|&
 name|InternalName
-index|[
-literal|2
-index|]
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1900,6 +1892,8 @@ condition|(
 name|ParentNode
 operator|->
 name|Name
+operator|.
+name|Integer
 condition|)
 block|{
 name|return_VALUE
@@ -1907,6 +1901,8 @@ argument_list|(
 name|ParentNode
 operator|->
 name|Name
+operator|.
+name|Integer
 argument_list|)
 expr_stmt|;
 block|}
@@ -1984,6 +1980,8 @@ condition|(
 name|Node
 operator|->
 name|Name
+operator|.
+name|Integer
 condition|)
 block|{
 return|return

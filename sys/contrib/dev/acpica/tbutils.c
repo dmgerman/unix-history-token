@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -247,7 +247,7 @@ expr_stmt|;
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Invalid table signature %4.4s found\n"
+literal|"Invalid table signature found: [%4.4s]\n"
 operator|,
 operator|(
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 84 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -382,7 +382,7 @@ name|Address
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"AcpiExAccessRegion"
+literal|"ExAccessRegion"
 argument_list|)
 expr_stmt|;
 comment|/*      * The physical address of this field datum is:      *      * 1) The base of the region, plus      * 2) The base offset of the field, plus      * 3) The current offset into the field      */
@@ -1746,7 +1746,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"Field size %X (bytes) too large for buffer (%X)\n"
 operator|,
@@ -1779,7 +1779,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"ByteLen=%x, DatumLen=%x, ByteGran=%x\n"
 operator|,
@@ -2191,7 +2191,7 @@ block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"Buffer length %X too small for field %X\n"
 operator|,
@@ -2224,7 +2224,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"ByteLen=%x, DatumLen=%x, ByteGran=%x\n"
 operator|,

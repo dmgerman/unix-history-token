@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 32 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -462,7 +462,7 @@ operator|&
 name|ANOBJ_DATA_WIDTH_32
 condition|)
 block|{
-comment|/*              * We are running a method that exists in a 32-bit ACPI table.              * Truncate the value to 32 bits by zeroing out the upper              * 32-bit field              */
+comment|/*              * We are running a method that exists in a 32-bit ACPI table.              * Use only 32 bits of the Integer for conversion.              */
 name|IntegerSize
 operator|=
 sizeof|sizeof
@@ -589,6 +589,18 @@ name|AE_TYPE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Mark buffer initialized */
+operator|(
+operator|*
+name|ResultDesc
+operator|)
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -957,7 +969,7 @@ operator|&
 name|ANOBJ_DATA_WIDTH_32
 condition|)
 block|{
-comment|/*              * We are running a method that exists in a 32-bit ACPI table.              * Truncate the value to 32 bits by zeroing out the upper              * 32-bit field              */
+comment|/*              * We are running a method that exists in a 32-bit ACPI table.              * Use only 32 bits of the Integer              */
 name|IntegerSize
 operator|=
 sizeof|sizeof

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 78 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 80 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -509,7 +509,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"Node %p [%4.4s] Object %p\n"
 operator|,
@@ -657,7 +657,7 @@ parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
-literal|"AcpiNsGetSecondaryObject"
+literal|"NsGetSecondaryObject"
 argument_list|,
 name|ObjDesc
 argument_list|)

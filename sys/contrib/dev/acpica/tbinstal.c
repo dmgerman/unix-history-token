@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * We only "recognize" a limited number of ACPI tables -- namely, the      * ones that are used by the subsystem (DSDT, FADT, etc.)      *      * An AE_NOT_FOUND means that the table was not recognized.      * This can be any one of many valid ACPI tables, it just isn't one of      * the tables that is consumed by the core subsystem      */
+comment|/*      * We only "recognize" a limited number of ACPI tables -- namely, the      * ones that are used by the subsystem (DSDT, FADT, etc.)      *      * An AE_TABLE_NOT_SUPPORTED means that the table was not recognized.      * This can be any one of many valid ACPI tables, it just isn't one of      * the tables that is consumed by the core subsystem      */
 name|Status
 operator|=
 name|AcpiTbMatchSignature
@@ -340,12 +340,39 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_SUCCESS
+name|ACPI_FAILURE
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiTbValidateTableHeader
+argument_list|(
+name|TableHeader
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Return the table type and length via the info struct */
 name|TableInfo
 operator|->
@@ -355,7 +382,7 @@ name|TableHeader
 operator|->
 name|Length
 expr_stmt|;
-comment|/*          * Validate checksum for _most_ tables,          * even the ones whose signature we don't recognize          */
+comment|/*      * Validate checksum for _most_ tables,      * even the ones whose signature we don't recognize      */
 if|if
 condition|(
 name|TableInfo
@@ -390,7 +417,6 @@ name|Status
 operator|=
 name|AE_OK
 expr_stmt|;
-block|}
 block|}
 block|}
 name|return_ACPI_STATUS
@@ -793,16 +819,6 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Free the table */
-name|AcpiTbFreeAcpiTablesOfType
-argument_list|(
-operator|&
-name|AcpiGbl_AcpiTables
-index|[
-name|Type
-index|]
-argument_list|)
-expr_stmt|;
 comment|/* Clear the appropriate "typed" global table pointer */
 switch|switch
 condition|(
@@ -858,6 +874,16 @@ case|:
 default|default:
 break|break;
 block|}
+comment|/* Free the table */
+name|AcpiTbFreeAcpiTablesOfType
+argument_list|(
+operator|&
+name|AcpiGbl_AcpiTables
+index|[
+name|Type
+index|]
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

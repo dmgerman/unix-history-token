@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 66 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1050,6 +1050,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AML_INT_EVAL_SUBTREE_OP
+value|(UINT16) 0x0037
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARG_NONE
 value|0x0
 end_define
@@ -1817,57 +1824,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|AML_TYPE_CONTROL
+name|AML_TYPE_CREATE_OBJECT
 value|0x12
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_NO_OBJ
+name|AML_TYPE_CONTROL
 value|0x13
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_FIELD
+name|AML_TYPE_NAMED_NO_OBJ
 value|0x14
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_SIMPLE
+name|AML_TYPE_NAMED_FIELD
 value|0x15
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_NAMED_COMPLEX
+name|AML_TYPE_NAMED_SIMPLE
 value|0x16
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_RETURN
+name|AML_TYPE_NAMED_COMPLEX
 value|0x17
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_UNDEFINED
+name|AML_TYPE_RETURN
 value|0x18
 end_define
 
 begin_define
 define|#
 directive|define
-name|AML_TYPE_BOGUS
+name|AML_TYPE_UNDEFINED
 value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_TYPE_BOGUS
+value|0x1A
 end_define
 
 begin_comment

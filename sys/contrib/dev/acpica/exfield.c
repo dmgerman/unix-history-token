@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 105 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 108 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,13 +70,17 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReadDataFromField  *  * PARAMETERS:  ObjDesc             - The named field  *              RetBufferDesc       - Where the return data object is stored  *  * RETURN:      Status  *  * DESCRIPTION: Read from a named field.  Returns either an Integer or a  *              Buffer, depending on the size of the field.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExReadDataFromField  *  * PARAMETERS:  WalkState           - Current execution state  *              ObjDesc             - The named field  *              RetBufferDesc       - Where the return data object is stored  *  * RETURN:      Status  *  * DESCRIPTION: Read from a named field.  Returns either an Integer or a  *              Buffer, depending on the size of the field.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExReadDataFromField
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
@@ -96,6 +100,9 @@ name|BufferDesc
 decl_stmt|;
 name|UINT32
 name|Length
+decl_stmt|;
+name|UINT32
+name|IntegerSize
 decl_stmt|;
 name|void
 modifier|*
@@ -185,14 +192,39 @@ operator|.
 name|BitLength
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Length
-operator|>
+comment|/* Handle both ACPI 1.0 and ACPI 2.0 Integer widths */
+name|IntegerSize
+operator|=
 sizeof|sizeof
 argument_list|(
 name|ACPI_INTEGER
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|MethodNode
+operator|->
+name|Flags
+operator|&
+name|ANOBJ_DATA_WIDTH_32
+condition|)
+block|{
+comment|/*          * We are running a method that exists in a 32-bit ACPI table.          * Integer size is 4.          */
+name|IntegerSize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|UINT32
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Length
+operator|>
+name|IntegerSize
 condition|)
 block|{
 comment|/* Field is too large for an Integer, create a Buffer instead */
@@ -250,6 +282,14 @@ expr_stmt|;
 block|}
 name|BufferDesc
 operator|->
+name|Common
+operator|.
+name|Flags
+operator|=
+name|AOPOBJ_DATA_VALID
+expr_stmt|;
+name|BufferDesc
+operator|->
 name|Buffer
 operator|.
 name|Length
@@ -289,14 +329,15 @@ expr_stmt|;
 block|}
 name|Length
 operator|=
-sizeof|sizeof
-argument_list|(
+name|IntegerSize
+expr_stmt|;
 name|BufferDesc
 operator|->
 name|Integer
 operator|.
 name|Value
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|Buffer
 operator|=
@@ -311,7 +352,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
 operator|,
@@ -332,7 +373,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"FieldWrite: BitLen=%X BitOff=%X ByteOff=%X\n"
 operator|,
@@ -682,7 +723,7 @@ block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"Obj=%p Type=%X Buf=%p Len=%X\n"
 operator|,
@@ -703,7 +744,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_BFIELD
 operator|,
 literal|"FieldRead: BitLen=%X BitOff=%X ByteOff=%X\n"
 operator|,

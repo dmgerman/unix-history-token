@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 224 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 227 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -78,6 +78,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|COMPILER_DEPENDENT_INT64
+name|INT64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|COMPILER_DEPENDENT_UINT64
 name|UINT64
 typedef|;
@@ -99,7 +106,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|NATIVE_UINT
+name|UINT64
 name|ACPI_TBLPTR
 typedef|;
 end_typedef
@@ -357,6 +364,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|COMPILER_DEPENDENT_INT64
+name|INT64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|COMPILER_DEPENDENT_UINT64
 name|UINT64
 typedef|;
@@ -378,7 +392,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|NATIVE_UINT
+name|UINT64
 name|ACPI_TBLPTR
 typedef|;
 end_typedef
@@ -546,6 +560,64 @@ end_endif
 begin_comment
 comment|/*! [End] no source code translation !*/
 end_comment
+
+begin_comment
+comment|/*  * Pointer overlays to avoid lots of typecasting for  * code that accepts both physical and logical pointers.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+name|AcpiPointers
+block|{
+name|ACPI_PHYSICAL_ADDRESS
+name|Physical
+decl_stmt|;
+name|void
+modifier|*
+name|Logical
+decl_stmt|;
+name|ACPI_TBLPTR
+name|Value
+decl_stmt|;
+block|}
+name|ACPI_POINTERS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|AcpiPointer
+block|{
+name|UINT32
+name|PointerType
+decl_stmt|;
+name|ACPI_POINTERS
+name|Pointer
+decl_stmt|;
+block|}
+name|ACPI_POINTER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PointerTypes for above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_LOGICAL_POINTER
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PHYSICAL_POINTER
+value|0x02
+end_define
 
 begin_comment
 comment|/*  * Useful defines  */

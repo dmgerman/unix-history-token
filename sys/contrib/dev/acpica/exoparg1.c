@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 134 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 135 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2164,7 +2164,25 @@ block|{
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-comment|/*                      * The target is a buffer, we must create a new object that                      * contains one element of the buffer, the element pointed                      * to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
+comment|/* Ensure that the Buffer arguments are evaluated */
+name|TempDesc
+operator|=
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Reference
+operator|.
+name|Object
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|Status = AcpiDsGetBufferArguments (TempDesc);                     if (ACPI_FAILURE (Status))                     {                         goto Cleanup;                     }
+endif|#
+directive|endif
+comment|/*                      * Create a new object that contains one element of the                       * buffer -- the element pointed to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
 name|ReturnDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -2187,17 +2205,6 @@ name|Cleanup
 goto|;
 block|}
 comment|/*                      * Since we are returning the value of the buffer at the                      * indexed location, we don't need to add an additional                      * reference to the buffer itself.                      */
-name|TempDesc
-operator|=
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|Object
-expr_stmt|;
 name|ReturnDesc
 operator|->
 name|Integer
@@ -2224,7 +2231,14 @@ break|break;
 case|case
 name|ACPI_TYPE_PACKAGE
 case|:
-comment|/*                      * The target is a package, we want to return the referenced                      * element of the package.  We must add another reference to                      * this object, however.                      */
+if|#
+directive|if
+literal|0
+comment|/* Ensure that the Package arguments are evaluated */
+block|Status = AcpiDsGetPackageArguments (Operand[0]->Reference.Object);                     if (ACPI_FAILURE (Status))                     {                         goto Cleanup;                     }
+endif|#
+directive|endif
+comment|/*                      * Return the referenced element of the package.  We must add                       * another reference to the referenced object, however.                      */
 name|ReturnDesc
 operator|=
 operator|*

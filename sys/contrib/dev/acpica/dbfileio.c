@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -786,31 +786,30 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLoadAcpiTable  *  * PARAMETERS:  Filname         - File where table is located  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table from a file  *  ******************************************************************************/
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+end_ifdef
 
 begin_function
 name|ACPI_STATUS
-name|AcpiDbLoadAcpiTable
+name|AcpiDbGetAcpiTable
 parameter_list|(
 name|NATIVE_CHAR
 modifier|*
 name|Filename
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ACPI_APPLICATION
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|UINT32
 name|TableLength
+decl_stmt|;
+name|ACPI_STATUS
+name|Status
 decl_stmt|;
 comment|/* Open the file */
 name|fp
@@ -880,6 +879,59 @@ argument_list|(
 literal|"Couldn't get table from the file\n"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbLoadAcpiTable  *  * PARAMETERS:  Filname         - File where table is located  *  * RETURN:      Status  *  * DESCRIPTION: Load an ACPI table from a file  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiDbLoadAcpiTable
+parameter_list|(
+name|NATIVE_CHAR
+modifier|*
+name|Filename
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|ACPI_APPLICATION
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiDbGetAcpiTable
+argument_list|(
+name|Filename
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
 return|return
 operator|(
 name|Status

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 9 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acefi.h - OS specific defines, etc.  *       $Revision: 10 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -47,6 +47,13 @@ end_include
 begin_comment
 comment|/* _int64 works for both IA32 and IA64 */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|COMPILER_DEPENDENT_INT64
+value|__int64
+end_define
 
 begin_define
 define|#

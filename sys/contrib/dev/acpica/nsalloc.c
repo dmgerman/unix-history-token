@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 70 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -103,6 +103,8 @@ expr_stmt|;
 name|Node
 operator|->
 name|Name
+operator|.
+name|Integer
 operator|=
 name|Name
 expr_stmt|;
@@ -416,7 +418,7 @@ comment|/*          * We don't want to abort here, however!          * We will f
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_NAMES
 operator|,
 literal|"[%4.4s] is a forward reference\n"
 operator|,
@@ -642,7 +644,7 @@ expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
+name|ACPI_DB_ALLOCATIONS
 operator|,
 literal|"Object %p, Remaining %X\n"
 operator|,

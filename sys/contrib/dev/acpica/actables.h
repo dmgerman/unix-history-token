@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actables.h - ACPI table management  *       $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -125,12 +125,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbGetTable
 parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|PhysicalAddress
-parameter_list|,
-name|ACPI_TABLE_HEADER
+name|ACPI_POINTER
 modifier|*
-name|BufferPtr
+name|Address
 parameter_list|,
 name|ACPI_TABLE_DESC
 modifier|*
@@ -143,32 +140,20 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbVerifyRsdp
 parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|RSDP_PhysicalAddress
+name|ACPI_POINTER
+modifier|*
+name|Address
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiTbGetTableFacs
-parameter_list|(
-name|ACPI_TABLE_HEADER
-modifier|*
-name|BufferPtr
-parameter_list|,
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableInfo
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|ACPI_PHYSICAL_ADDRESS
+name|void
 name|AcpiTbGetRsdtAddress
 parameter_list|(
-name|void
+name|ACPI_POINTER
+modifier|*
+name|OutAddress
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -188,8 +173,9 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiTbGetTablePointer
 parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|PhysicalAddress
+name|ACPI_POINTER
+modifier|*
+name|Address
 parameter_list|,
 name|UINT32
 name|Flags

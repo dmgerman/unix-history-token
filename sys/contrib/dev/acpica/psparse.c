@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 119 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 121 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -427,7 +427,7 @@ break|break;
 case|case
 name|AML_CLASS_CREATE
 case|:
-comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replace by a placeholder return op                  */
+comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replaced by a placeholder return op                  */
 name|ReplacementOp
 operator|=
 name|AcpiPsAllocOp
@@ -451,7 +451,7 @@ break|break;
 case|case
 name|AML_CLASS_NAMED_OBJECT
 case|:
-comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replace by a placeholder return op                  */
+comment|/*                  * These opcodes contain TermArg operands.  The current                  * op must be replaced by a placeholder return op                  */
 if|if
 condition|(
 operator|(
@@ -473,6 +473,36 @@ name|Opcode
 operator|==
 name|AML_DATA_REGION_OP
 operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_BUFFER_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_PACKAGE_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_VAR_PACKAGE_OP
+operator|)
 condition|)
 block|{
 name|ReplacementOp
@@ -492,6 +522,117 @@ name|return_VALUE
 argument_list|(
 name|FALSE
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Parent
+operator|->
+name|Opcode
+operator|==
+name|AML_NAME_OP
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|DescendingCallback
+operator|!=
+name|AcpiDsExecBeginOp
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_BUFFER_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_PACKAGE_OP
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Opcode
+operator|==
+name|AML_VAR_PACKAGE_OP
+operator|)
+condition|)
+block|{
+name|ReplacementOp
+operator|=
+name|AcpiPsAllocOp
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ReplacementOp
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|ReplacementOp
+operator|)
+operator|->
+name|Data
+operator|=
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|Op
+operator|)
+operator|->
+name|Data
+expr_stmt|;
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|ReplacementOp
+operator|)
+operator|->
+name|Length
+operator|=
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|Op
+operator|)
+operator|->
+name|Length
 expr_stmt|;
 block|}
 block|}
@@ -556,6 +697,14 @@ operator|.
 name|Arg
 operator|=
 name|NULL
+expr_stmt|;
+name|ReplacementOp
+operator|->
+name|Node
+operator|=
+name|Op
+operator|->
+name|Node
 expr_stmt|;
 name|Op
 operator|->
@@ -634,6 +783,14 @@ name|Arg
 operator|=
 name|NULL
 expr_stmt|;
+name|ReplacementOp
+operator|->
+name|Node
+operator|=
+name|Op
+operator|->
+name|Node
+expr_stmt|;
 name|Prev
 operator|->
 name|Next
@@ -705,7 +862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsNextParseState  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsNextParseState  *  * PARAMETERS:  ParserState         - Current parser state object  *  * RETURN:      Status  *  * DESCRIPTION: Update the parser state based upon the return exception from  *              the parser callback.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -986,6 +1143,8 @@ decl_stmt|;
 name|UINT8
 modifier|*
 name|AmlOpStart
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
@@ -1340,11 +1499,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Found unknown opcode %X at AML offset %X, ignoring\n"
+literal|"Found unknown opcode %X at AML address %p offset %X, ignoring\n"
 operator|,
 name|WalkState
 operator|->
 name|Opcode
+operator|,
+name|ParserState
+operator|->
+name|Aml
 operator|,
 name|WalkState
 operator|->
@@ -1841,7 +2004,7 @@ name|ArgTypes
 condition|)
 comment|/* Are there any arguments that must be processed? */
 block|{
-comment|/* get arguments */
+comment|/* Get arguments */
 switch|switch
 condition|(
 name|Op
@@ -1869,7 +2032,7 @@ case|case
 name|AML_STRING_OP
 case|:
 comment|/* AML_ASCIICHARLIST_ARG */
-comment|/* fill in constant or string argument directly */
+comment|/* Fill in constant or string argument directly */
 name|AcpiPsGetNextSimpleArg
 argument_list|(
 name|ParserState
@@ -1987,16 +2150,17 @@ name|ArgTypes
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* For a method, save the length and address of the body */
-if|if
+switch|switch
 condition|(
 name|Op
 operator|->
 name|Opcode
-operator|==
-name|AML_METHOD_OP
 condition|)
 block|{
+case|case
+name|AML_METHOD_OP
+case|:
+comment|/* For a method, save the length and address of the body */
 comment|/*                      * Skip parsing of control method or opregion body,                      * because we don't have enough info in the first pass                      * to parse them correctly.                      */
 operator|(
 operator|(
@@ -2050,17 +2214,97 @@ name|ArgCount
 operator|=
 literal|0
 expr_stmt|;
-block|}
-elseif|else
+break|break;
+case|case
+name|AML_BUFFER_OP
+case|:
+case|case
+name|AML_PACKAGE_OP
+case|:
+case|case
+name|AML_VAR_PACKAGE_OP
+case|:
 if|if
 condition|(
+operator|(
 name|Op
+operator|->
+name|Parent
+operator|)
+operator|&&
+operator|(
+name|Op
+operator|->
+name|Parent
 operator|->
 name|Opcode
 operator|==
-name|AML_WHILE_OP
+name|AML_NAME_OP
+operator|)
+operator|&&
+operator|(
+name|WalkState
+operator|->
+name|DescendingCallback
+operator|!=
+name|AcpiDsExecBeginOp
+operator|)
 condition|)
 block|{
+comment|/*                          * Skip parsing of                           * because we don't have enough info in the first pass                          * to parse them correctly.                          */
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|Op
+operator|)
+operator|->
+name|Data
+operator|=
+name|AmlOpStart
+expr_stmt|;
+operator|(
+operator|(
+name|ACPI_PARSE2_OBJECT
+operator|*
+operator|)
+name|Op
+operator|)
+operator|->
+name|Length
+operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
+name|ParserState
+operator|->
+name|PkgEnd
+operator|-
+name|AmlOpStart
+argument_list|)
+expr_stmt|;
+comment|/*                          * Skip body                          */
+name|ParserState
+operator|->
+name|Aml
+operator|=
+name|ParserState
+operator|->
+name|PkgEnd
+expr_stmt|;
+name|WalkState
+operator|->
+name|ArgCount
+operator|=
+literal|0
+expr_stmt|;
+block|}
+break|break;
+case|case
+name|AML_WHILE_OP
+case|:
 if|if
 condition|(
 name|WalkState
@@ -2081,6 +2325,7 @@ operator|->
 name|PkgEnd
 expr_stmt|;
 block|}
+break|break;
 block|}
 break|break;
 block|}

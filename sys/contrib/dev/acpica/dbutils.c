@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 51 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 52 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -319,7 +319,13 @@ name|ACPI_TYPE_BUFFER
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"[Buffer] = "
+literal|"[Buffer] Length %.2X = "
+argument_list|,
+name|ObjDesc
+operator|->
+name|Buffer
+operator|.
+name|Length
 argument_list|)
 expr_stmt|;
 name|AcpiUtDumpBuffer

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 153 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utglobal - Global variables for the ACPI subsystem  *              $Revision: 155 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -87,6 +87,11 @@ decl_stmt|;
 name|ACPI_STATUS
 name|SubStatus
 decl_stmt|;
+name|ACPI_FUNCTION_NAME
+argument_list|(
+literal|"FormatException"
+argument_list|)
+expr_stmt|;
 name|SubStatus
 operator|=
 operator|(
@@ -120,8 +125,11 @@ index|[
 name|SubStatus
 index|]
 expr_stmt|;
-block|}
 break|break;
+block|}
+goto|goto
+name|Unknown
+goto|;
 case|case
 name|AE_CODE_PROGRAMMER
 case|:
@@ -141,8 +149,11 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 break|break;
+block|}
+goto|goto
+name|Unknown
+goto|;
 case|case
 name|AE_CODE_ACPI_TABLES
 case|:
@@ -162,8 +173,11 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 break|break;
+block|}
+goto|goto
+name|Unknown
+goto|;
 case|case
 name|AE_CODE_AML
 case|:
@@ -183,8 +197,11 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 break|break;
+block|}
+goto|goto
+name|Unknown
+goto|;
 case|case
 name|AE_CODE_CONTROL
 case|:
@@ -204,11 +221,39 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-block|}
 break|break;
+block|}
+goto|goto
+name|Unknown
+goto|;
 default|default:
-break|break;
+goto|goto
+name|Unknown
+goto|;
 block|}
+return|return
+operator|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|Exception
+operator|)
+return|;
+name|Unknown
+label|:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown exception code: 0x%8.8X\n"
+operator|,
+name|Status
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -487,44 +532,34 @@ comment|/* 02 String           */
 name|ACPI_NS_NORMAL
 block|,
 comment|/* 03 Buffer           */
-name|ACPI_NS_LOCAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 04 Package          */
 name|ACPI_NS_NORMAL
 block|,
 comment|/* 05 FieldUnit        */
 name|ACPI_NS_NEWSCOPE
-operator||
-name|ACPI_NS_LOCAL
 block|,
 comment|/* 06 Device           */
-name|ACPI_NS_LOCAL
+name|ACPI_NS_NORMAL
 block|,
-comment|/* 07 AcpiEvent        */
+comment|/* 07 Event            */
 name|ACPI_NS_NEWSCOPE
-operator||
-name|ACPI_NS_LOCAL
 block|,
 comment|/* 08 Method           */
-name|ACPI_NS_LOCAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 09 Mutex            */
-name|ACPI_NS_LOCAL
+name|ACPI_NS_NORMAL
 block|,
 comment|/* 10 Region           */
 name|ACPI_NS_NEWSCOPE
-operator||
-name|ACPI_NS_LOCAL
 block|,
 comment|/* 11 Power            */
 name|ACPI_NS_NEWSCOPE
-operator||
-name|ACPI_NS_LOCAL
 block|,
 comment|/* 12 Processor        */
 name|ACPI_NS_NEWSCOPE
-operator||
-name|ACPI_NS_LOCAL
 block|,
 comment|/* 13 Thermal          */
 name|ACPI_NS_NORMAL
@@ -2329,6 +2364,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Miscellaneous variables */
+name|AcpiGbl_TableFlags
+operator|=
+name|ACPI_PHYSICAL_POINTER
+expr_stmt|;
 name|AcpiGbl_RsdpOriginalLocation
 operator|=
 literal|0
@@ -2390,6 +2429,8 @@ expr_stmt|;
 name|AcpiGbl_RootNodeStruct
 operator|.
 name|Name
+operator|.
+name|Integer
 operator|=
 name|ACPI_ROOT_NAME
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -221,8 +221,11 @@ modifier|*
 name|TablePointer
 parameter_list|)
 block|{
-name|ACPI_PHYSICAL_ADDRESS
-name|PhysicalAddress
+name|ACPI_POINTER
+name|RsdpAddress
+decl_stmt|;
+name|ACPI_POINTER
+name|Address
 decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
@@ -300,7 +303,7 @@ argument_list|(
 name|Flags
 argument_list|,
 operator|&
-name|PhysicalAddress
+name|RsdpAddress
 argument_list|)
 expr_stmt|;
 if|if
@@ -342,7 +345,11 @@ name|Status
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
-name|PhysicalAddress
+name|RsdpAddress
+operator|.
+name|Pointer
+operator|.
+name|Physical
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -377,10 +384,11 @@ else|else
 block|{
 name|AcpiGbl_RSDP
 operator|=
-name|ACPI_PHYSADDR_TO_PTR
-argument_list|(
-name|PhysicalAddress
-argument_list|)
+name|RsdpAddress
+operator|.
+name|Pointer
+operator|.
+name|Logical
 expr_stmt|;
 block|}
 comment|/*          *  The signature and checksum must both be correct          */
@@ -464,16 +472,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Get the RSDT and validate it */
-name|PhysicalAddress
-operator|=
 name|AcpiTbGetRsdtAddress
-argument_list|()
+argument_list|(
+operator|&
+name|Address
+argument_list|)
 expr_stmt|;
 name|Status
 operator|=
 name|AcpiTbGetTablePointer
 argument_list|(
-name|PhysicalAddress
+operator|&
+name|Address
 argument_list|,
 name|Flags
 argument_list|,
@@ -547,6 +557,12 @@ operator|++
 control|)
 block|{
 comment|/* Get the next table pointer */
+name|Address
+operator|.
+name|PointerType
+operator|=
+name|AcpiGbl_TableFlags
+expr_stmt|;
 if|if
 condition|(
 name|AcpiGbl_RSDP
@@ -556,18 +572,19 @@ operator|<
 literal|2
 condition|)
 block|{
-name|PhysicalAddress
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
 operator|=
-call|(
-name|ACPI_PHYSICAL_ADDRESS
-call|)
-argument_list|(
+operator|(
 operator|(
 name|RSDT_DESCRIPTOR
 operator|*
 operator|)
 name|RsdtPtr
-argument_list|)
+operator|)
 operator|->
 name|TableOffsetEntry
 index|[
@@ -577,11 +594,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PhysicalAddress
+name|Address
+operator|.
+name|Pointer
+operator|.
+name|Value
 operator|=
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|ACPI_GET_ADDRESS
 argument_list|(
 operator|(
@@ -604,7 +622,8 @@ name|Status
 operator|=
 name|AcpiTbGetTablePointer
 argument_list|(
-name|PhysicalAddress
+operator|&
+name|Address
 argument_list|,
 name|Flags
 argument_list|,
@@ -736,7 +755,7 @@ name|_IA16
 end_ifndef
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpPhysicalAddress       - Where to place the RSDP address  *              Flags                       - Logical/Physical addressing  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpAddress           - Where to place the RSDP address  *              Flags                   - Logical/Physical addressing  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -746,9 +765,9 @@ parameter_list|(
 name|UINT32
 name|Flags
 parameter_list|,
-name|ACPI_PHYSICAL_ADDRESS
+name|ACPI_POINTER
 modifier|*
-name|RsdpPhysicalAddress
+name|RsdpAddress
 parameter_list|)
 block|{
 name|ACPI_TABLE_DESC
@@ -796,8 +815,17 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|RsdpPhysicalAddress
+name|RsdpAddress
+operator|->
+name|PointerType
+operator|=
+name|ACPI_PHYSICAL_POINTER
+expr_stmt|;
+name|RsdpAddress
+operator|->
+name|Pointer
+operator|.
+name|Physical
 operator|=
 name|TableInfo
 operator|.

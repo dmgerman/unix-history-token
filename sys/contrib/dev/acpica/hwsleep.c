@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 35 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 37 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -516,6 +516,9 @@ operator|->
 name|AccessBitMask
 expr_stmt|;
 comment|/* Write #2: SLP_TYP + SLP_EN */
+name|ACPI_FLUSH_CPU_CACHE
+argument_list|()
+expr_stmt|;
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK

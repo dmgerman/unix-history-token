@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utdebug - Debug print routines  *              $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -788,6 +788,31 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+operator|(
+name|Count
+operator|<
+literal|4
+operator|)
+operator|||
+operator|(
+name|Count
+operator|&
+literal|0x01
+operator|)
+condition|)
+block|{
+name|Display
+operator|=
+name|DB_BYTE_DISPLAY
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"\nOffset   Value\n"
+argument_list|)
+expr_stmt|;
 comment|/*      * Nasty little dump buffer routine!      */
 while|while
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 41 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -249,6 +249,19 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Copy flags */
+name|TargetDesc
+operator|->
+name|Buffer
+operator|.
+name|Flags
+operator|=
+name|SourceDesc
+operator|->
+name|Buffer
+operator|.
+name|Flags
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK

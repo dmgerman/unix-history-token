@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 104 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg2 - AML execution - opcodes with 2 arguments  *              $Revision: 105 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -144,24 +144,39 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-comment|/* The node must refer to a device or thermal zone or processor */
-switch|switch
+comment|/* Notifies allowed on this object? */
+if|if
 condition|(
+operator|!
+name|AcpiEvIsNotifyObject
+argument_list|(
+name|Node
+argument_list|)
+condition|)
+block|{
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unexpected notify object type [%s]\n"
+operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|Node
 operator|->
 name|Type
-condition|)
-block|{
-case|case
-name|ACPI_TYPE_DEVICE
-case|:
-case|case
-name|ACPI_TYPE_THERMAL
-case|:
-case|case
-name|ACPI_TYPE_PROCESSOR
-case|:
-comment|/*              * Dispatch the notify to the appropriate handler              * NOTE: the request is queued for execution after this method              * completes.  The notify handlers are NOT invoked synchronously              * from this thread -- because handlers may in turn run other              * control methods.              */
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_OPERAND_TYPE
+expr_stmt|;
+break|break;
+block|}
+comment|/*          * Dispatch the notify to the appropriate handler          * NOTE: the request is queued for execution after this method          * completes.  The notify handlers are NOT invoked synchronously          * from this thread -- because handlers may in turn run other          * control methods.          */
 name|Status
 operator|=
 name|AcpiEvQueueNotifyRequest
@@ -181,27 +196,6 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Unexpected notify object type %X\n"
-operator|,
-name|Node
-operator|->
-name|Type
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_AML_OPERAND_TYPE
-expr_stmt|;
-break|break;
-block|}
 break|break;
 default|default:
 name|ACPI_REPORT_ERROR

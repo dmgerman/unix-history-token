@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 106 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -20,11 +20,11 @@ name|_ACOBJECT_H
 end_define
 
 begin_comment
-comment|/*  * The ACPI_OPERAND_OBJECT  is used to pass AML operands from the dispatcher  * to the interpreter, and to keep track of the various handlers such as  * address space handlers and notify handlers.  The object is a constant  * size in order to allow them to be cached and reused.  *  * All variants of the ACPI_OPERAND_OBJECT  are defined with the same  * sequence of field types, with fields that are not used in a particular  * variant being named "Reserved".  This is not strictly necessary, but  * may in some circumstances simplify understanding if these structures  * need to be displayed in a debugger having limited (or no) support for  * union types.  It also simplifies some debug code in DumpTable() which  * dumps multi-level values: fetching Buffer.Pointer suffices to pick up  * the value or next level for any of several types.  */
+comment|/*  * The ACPI_OPERAND_OBJECT  is used to pass AML operands from the dispatcher  * to the interpreter, and to keep track of the various handlers such as  * address space handlers and notify handlers.  The object is a constant  * size in order to allow it to be cached and reused.  */
 end_comment
 
 begin_comment
-comment|/******************************************************************************  *  * Common Descriptors  *  *****************************************************************************/
+comment|/*******************************************************************************  *  * Common Descriptors  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -50,7 +50,7 @@ end_define
 
 begin_comment
 unit|\
-comment|/* Defines for flag byte above */
+comment|/* Values for flag byte above */
 end_comment
 
 begin_define
@@ -145,13 +145,33 @@ value|UINT32                      Length;
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Individual Object Descriptors  *  *****************************************************************************/
+comment|/*  * Common fields for objects that support ASL notifications  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_NOTIFY_INFO
+define|\
+value|union acpi_operand_obj      *SysHandler;
+comment|/* Handler for system notifies */
+value|\     union acpi_operand_obj      *DrvHandler;
+comment|/* Handler for driver notifies */
+value|\     union acpi_operand_obj      *AddrHandler;
+end_define
+
+begin_comment
+comment|/* Handler for Address space */
+end_comment
+
+begin_comment
+comment|/******************************************************************************  *  * Basic data types  *  *****************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* COMMON */
+name|AcpiObjectCommon
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 block|}
@@ -162,24 +182,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* CACHE_LIST */
-block|{
-name|ACPI_OBJECT_COMMON_HEADER
-name|union
-name|acpi_operand_obj
-modifier|*
-name|Next
-decl_stmt|;
-comment|/* Link for object cache and internal lists*/
-block|}
-name|ACPI_OBJECT_CACHE_LIST
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-comment|/* NUMBER - has value */
+name|AcpiObjectInteger
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_INTEGER
@@ -193,7 +196,8 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* STRING - has length and pointer - Null terminated, ASCII characters only */
+name|AcpiObjectString
+comment|/* Null terminated, ASCII characters only */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
@@ -201,7 +205,7 @@ name|NATIVE_CHAR
 modifier|*
 name|Pointer
 decl_stmt|;
-comment|/* String value in AML stream or in allocated space */
+comment|/* String in AML stream or allocated string */
 block|}
 name|ACPI_OBJECT_STRING
 typedef|;
@@ -210,7 +214,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* BUFFER - has length and pointer - not null terminated */
+name|AcpiObjectBuffer
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_BUFFER_INFO
@@ -218,12 +222,19 @@ name|UINT8
 modifier|*
 name|Pointer
 decl_stmt|;
-comment|/* Buffer value in AML stream or in allocated space */
+comment|/* Buffer in AML stream or allocated buffer */
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
 comment|/* Link back to parent node */
+name|UINT8
+modifier|*
+name|AmlStart
+decl_stmt|;
+name|UINT32
+name|AmlLength
+decl_stmt|;
 block|}
 name|ACPI_OBJECT_BUFFER
 typedef|;
@@ -232,13 +243,25 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* PACKAGE - has count, elements, next element */
+name|AcpiObjectPackage
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT32
 name|Count
 decl_stmt|;
 comment|/* # of elements in package */
+name|UINT32
+name|AmlLength
+decl_stmt|;
+name|UINT8
+modifier|*
+name|AmlStart
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+comment|/* Link back to parent node */
 name|union
 name|acpi_operand_obj
 modifier|*
@@ -246,51 +269,19 @@ modifier|*
 name|Elements
 decl_stmt|;
 comment|/* Array of pointers to AcpiObjects */
-name|union
-name|acpi_operand_obj
-modifier|*
-modifier|*
-name|NextElement
-decl_stmt|;
-comment|/* used only while initializing */
 block|}
 name|ACPI_OBJECT_PACKAGE
 typedef|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-struct|struct
-comment|/* DEVICE - has handle and notification handler/context */
-block|{
-name|ACPI_OBJECT_COMMON_HEADER
-name|union
-name|acpi_operand_obj
-modifier|*
-name|SysHandler
-decl_stmt|;
-comment|/* Handler for system notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|DrvHandler
-decl_stmt|;
-comment|/* Handler for driver notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|AddrHandler
-decl_stmt|;
-comment|/* Handler for Address space */
-block|}
-name|ACPI_OBJECT_DEVICE
-typedef|;
-end_typedef
+begin_comment
+comment|/******************************************************************************  *  * Complex data types  *  *****************************************************************************/
+end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* EVENT */
+name|AcpiObjectEvent
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|void
@@ -312,7 +303,7 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* METHOD */
+name|AcpiObjectMethod
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
@@ -349,8 +340,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_obj_mutex
-comment|/* MUTEX */
+name|AcpiObjectMutex
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT16
@@ -388,17 +378,11 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* REGION */
+name|AcpiObjectRegion
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
 name|SpaceId
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
 decl_stmt|;
 name|union
 name|acpi_operand_obj
@@ -416,35 +400,59 @@ name|acpi_operand_obj
 modifier|*
 name|Next
 decl_stmt|;
+name|UINT32
+name|Length
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+decl_stmt|;
 block|}
 name|ACPI_OBJECT_REGION
+typedef|;
+end_typedef
+
+begin_comment
+comment|/******************************************************************************  *  * Objects that can be notified.  All share a common NotifyInfo area.  *  *****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|AcpiObjectNotifyCommon
+comment|/* COMMON NOTIFY for POWER, PROCESSOR, DEVICE, and THERMAL */
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_NOTIFY_INFO
+block|}
+name|ACPI_OBJECT_NOTIFY_COMMON
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* POWER RESOURCE - has Handle and notification handler/context*/
+name|AcpiObjectDevice
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_NOTIFY_INFO
+block|}
+name|ACPI_OBJECT_DEVICE
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|AcpiObjectPowerResource
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_NOTIFY_INFO
 name|UINT32
 name|SystemLevel
 decl_stmt|;
 name|UINT32
 name|ResourceOrder
 decl_stmt|;
-name|union
-name|acpi_operand_obj
-modifier|*
-name|SysHandler
-decl_stmt|;
-comment|/* Handler for system notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|DrvHandler
-decl_stmt|;
-comment|/* Handler for driver notifies */
 block|}
 name|ACPI_OBJECT_POWER_RESOURCE
 typedef|;
@@ -453,9 +461,10 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* PROCESSOR - has Handle and notification handler/context*/
+name|AcpiObjectProcessor
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
+name|ACPI_COMMON_NOTIFY_INFO
 name|UINT32
 name|ProcId
 decl_stmt|;
@@ -465,24 +474,6 @@ decl_stmt|;
 name|ACPI_IO_ADDRESS
 name|Address
 decl_stmt|;
-name|union
-name|acpi_operand_obj
-modifier|*
-name|SysHandler
-decl_stmt|;
-comment|/* Handler for system notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|DrvHandler
-decl_stmt|;
-comment|/* Handler for driver notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|AddrHandler
-decl_stmt|;
-comment|/* Handler for Address space */
 block|}
 name|ACPI_OBJECT_PROCESSOR
 typedef|;
@@ -491,39 +482,23 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* THERMAL ZONE - has Handle and Handler/Context */
+name|AcpiObjectThermalZone
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|union
-name|acpi_operand_obj
-modifier|*
-name|SysHandler
-decl_stmt|;
-comment|/* Handler for system notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|DrvHandler
-decl_stmt|;
-comment|/* Handler for driver notifies */
-name|union
-name|acpi_operand_obj
-modifier|*
-name|AddrHandler
-decl_stmt|;
-comment|/* Handler for Address space */
+name|ACPI_COMMON_NOTIFY_INFO
 block|}
 name|ACPI_OBJECT_THERMAL_ZONE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Fields.  All share a common header/info field.  */
+comment|/******************************************************************************  *  * Fields.  All share a common header/info field.  *  *****************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
+name|AcpiObjectFieldCommon
 comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
@@ -543,7 +518,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* REGION FIELD */
+name|AcpiObjectRegionField
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -561,7 +536,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* BANK FIELD */
+name|AcpiObjectBankField
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -585,7 +560,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* INDEX FIELD */
+name|AcpiObjectIndexField
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -614,7 +589,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* BUFFER FIELD */
+name|AcpiObjectBufferField
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -630,13 +605,13 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Handlers  */
+comment|/******************************************************************************  *  * Objects for handlers  *  *****************************************************************************/
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* NOTIFY HANDLER */
+name|AcpiObjectNotifyHandler
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_NAMESPACE_NODE
@@ -670,7 +645,7 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* ADDRESS HANDLER */
+name|AcpiObjectAddrHandler
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
@@ -711,13 +686,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/******************************************************************************  *  * Special internal objects  *  *****************************************************************************/
+end_comment
+
+begin_comment
 comment|/*  * The Reference object type is used for these opcodes:  * Arg[0-6], Local[0-7], IndexOp, NameOp, ZeroOp, OneOp, OnesOp, DebugOp  */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* Reference - Local object type */
+name|AcpiObjectReference
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
@@ -758,7 +737,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* EXTRA */
+name|AcpiObjectExtra
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|UINT8
@@ -789,10 +768,14 @@ name|ACPI_OBJECT_EXTRA
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Additional data that can be attached to namespace nodes */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
-comment|/* DATA */
+name|AcpiObjectData
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_OBJECT_HANDLER
@@ -808,7 +791,28 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/******************************************************************************  *  * ACPI_OPERAND_OBJECT  Descriptor - a giant union of all of the above  *  *****************************************************************************/
+comment|/* Structure used when objects are cached for reuse */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|AcpiObjectCacheList
+block|{
+name|ACPI_OBJECT_COMMON_HEADER
+name|union
+name|acpi_operand_obj
+modifier|*
+name|Next
+decl_stmt|;
+comment|/* Link for object cache and internal lists*/
+block|}
+name|ACPI_OBJECT_CACHE_LIST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/******************************************************************************  *  * ACPI_OPERAND_OBJECT Descriptor - a giant union of all of the above  *  *****************************************************************************/
 end_comment
 
 begin_typedef
@@ -818,9 +822,6 @@ name|acpi_operand_obj
 block|{
 name|ACPI_OBJECT_COMMON
 name|Common
-decl_stmt|;
-name|ACPI_OBJECT_CACHE_LIST
-name|Cache
 decl_stmt|;
 name|ACPI_OBJECT_INTEGER
 name|Integer
@@ -834,12 +835,6 @@ decl_stmt|;
 name|ACPI_OBJECT_PACKAGE
 name|Package
 decl_stmt|;
-name|ACPI_OBJECT_BUFFER_FIELD
-name|BufferField
-decl_stmt|;
-name|ACPI_OBJECT_DEVICE
-name|Device
-decl_stmt|;
 name|ACPI_OBJECT_EVENT
 name|Event
 decl_stmt|;
@@ -851,6 +846,12 @@ name|Mutex
 decl_stmt|;
 name|ACPI_OBJECT_REGION
 name|Region
+decl_stmt|;
+name|ACPI_OBJECT_NOTIFY_COMMON
+name|CommonNotify
+decl_stmt|;
+name|ACPI_OBJECT_DEVICE
+name|Device
 decl_stmt|;
 name|ACPI_OBJECT_POWER_RESOURCE
 name|PowerResource
@@ -867,14 +868,14 @@ decl_stmt|;
 name|ACPI_OBJECT_REGION_FIELD
 name|Field
 decl_stmt|;
+name|ACPI_OBJECT_BUFFER_FIELD
+name|BufferField
+decl_stmt|;
 name|ACPI_OBJECT_BANK_FIELD
 name|BankField
 decl_stmt|;
 name|ACPI_OBJECT_INDEX_FIELD
 name|IndexField
-decl_stmt|;
-name|ACPI_OBJECT_REFERENCE
-name|Reference
 decl_stmt|;
 name|ACPI_OBJECT_NOTIFY_HANDLER
 name|NotifyHandler
@@ -882,11 +883,17 @@ decl_stmt|;
 name|ACPI_OBJECT_ADDR_HANDLER
 name|AddrHandler
 decl_stmt|;
+name|ACPI_OBJECT_REFERENCE
+name|Reference
+decl_stmt|;
 name|ACPI_OBJECT_EXTRA
 name|Extra
 decl_stmt|;
 name|ACPI_OBJECT_DATA
 name|Data
+decl_stmt|;
+name|ACPI_OBJECT_CACHE_LIST
+name|Cache
 decl_stmt|;
 block|}
 name|ACPI_OPERAND_OBJECT
