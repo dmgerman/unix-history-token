@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1996-1997 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -13,7 +13,12 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_ELF_H_
+value|1
 end_define
+
+begin_comment
+comment|/*  * ELF definitions for the sparc64 architecture.  */
+end_comment
 
 begin_include
 include|#
@@ -21,12 +26,20 @@ directive|include
 file|<sys/elf64.h>
 end_include
 
+begin_comment
+comment|/* Definitions common to all 64 bit architectures. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__ELF_WORD_SIZE
 value|64
 end_define
+
+begin_comment
+comment|/* Used by<sys/elf_generic.h> */
+end_comment
 
 begin_include
 include|#
@@ -44,39 +57,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ELF_TARG_CLASS
-value|ELFCLASS64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELF_TARG_DATA
-value|ELFDATA2MSB
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELF_TARG_MACH
-value|ELF_ARCH
-end_define
-
-begin_define
-define|#
-directive|define
-name|ELF_TARG_VER
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|ELF_MACHINE_OK
 parameter_list|(
-name|m
+name|x
 parameter_list|)
-value|((m) == ELF_ARCH)
+value|((x) == ELF_ARCH)
 end_define
 
 begin_define
@@ -97,18 +82,22 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+comment|/* Auxiliary vector entry on initial stack */
 name|long
 name|a_type
 decl_stmt|;
+comment|/* Entry type. */
 union|union
 block|{
 name|long
 name|a_val
 decl_stmt|;
+comment|/* Integer value. */
 name|void
 modifier|*
 name|a_ptr
 decl_stmt|;
+comment|/* Address. */
 name|void
 function_decl|(
 modifier|*
@@ -118,6 +107,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/* Function pointer (not used). */
 block|}
 name|a_un
 union|;
@@ -154,7 +144,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Values for a_type.  */
+comment|/* Values for a_type. */
 end_comment
 
 begin_define
@@ -293,6 +283,65 @@ begin_comment
 comment|/* Debugging level. */
 end_comment
 
+begin_comment
+comment|/*  * The following non-standard values are used in Linux ELF binaries.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_NOTELF
+value|10
+end_define
+
+begin_comment
+comment|/* Program is not ELF ?? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_UID
+value|11
+end_define
+
+begin_comment
+comment|/* Real uid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EUID
+value|12
+end_define
+
+begin_comment
+comment|/* Effective uid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_GID
+value|13
+end_define
+
+begin_comment
+comment|/* Real gid. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AT_EGID
+value|14
+end_define
+
+begin_comment
+comment|/* Effective gid. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -302,6 +351,72 @@ end_define
 
 begin_comment
 comment|/* Count of defined aux entry types. */
+end_comment
+
+begin_comment
+comment|/*  * Relocation types.  */
+end_comment
+
+begin_comment
+comment|/* Define "machine" characteristics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_DATA
+value|ELFDATA2MSB
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_MACH
+value|ELF_ARCH
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_VER
+value|1
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * On the Sparc64 we load the dynamic linker where a userland call  * to mmap(0, ...) would put it.  The rationale behind this  * calculation is that it leaves room for the heap to grow to  * its maximum allowed size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELF_RTLD_ADDR
+parameter_list|(
+name|vmspace
+parameter_list|)
+define|\
+value|(round_page((vm_offset_t)(vmspace)->vm_daddr + MAXDSIZ))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
