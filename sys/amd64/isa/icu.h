@@ -70,17 +70,6 @@ begin_comment
 comment|/* APIC interrupt mask enable */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|APIC_IMEN_BITS
-value|32
-end_define
-
-begin_comment
-comment|/* number of bits in apic_imen */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -95,17 +84,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* interrupt mask enable */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IMEN_BITS
-value|16
-end_define
-
-begin_comment
-comment|/* number of bits in imen */
 end_comment
 
 begin_endif
@@ -335,7 +313,7 @@ name|APIC_IO
 end_ifdef
 
 begin_comment
-comment|/* 32-47: ISA IRQ0-IRQ15, 48-55: IO APIC IRQ16-IRQ31 */
+comment|/* 32-47: ISA IRQ0-IRQ15, 48-63: IO APIC IRQ16-IRQ31 */
 end_comment
 
 begin_define
@@ -355,6 +333,13 @@ end_define
 begin_comment
 comment|/* bits for h/w interrupts */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NHWI
+value|32
+end_define
 
 begin_else
 else|#
@@ -382,6 +367,13 @@ end_define
 begin_comment
 comment|/* bits for h/w interrupts */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NHWI
+value|16
+end_define
 
 begin_endif
 endif|#
