@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.8 1998/09/15 10:03:42 gibbs Exp $  */
+comment|/*  * Copyright (c) 1997, 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.9 1998/09/29 09:06:00 bde Exp $  */
 end_comment
 
 begin_include
@@ -932,10 +932,16 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 				 * Last reference count, so 				 * release our reference 				 * count on our parent. 				 */
 name|dmat
 operator|=
 name|parent
+expr_stmt|;
+block|}
+else|else
+name|dmat
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 block|}
@@ -1184,8 +1190,7 @@ block|{
 operator|*
 name|mapp
 operator|=
-operator|&
-name|nobounce_dmamap
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -1295,8 +1300,7 @@ comment|/* If we succeed, no mapping/bouncing will be required */
 operator|*
 name|mapp
 operator|=
-operator|&
-name|nobounce_dmamap
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1431,6 +1435,26 @@ argument_list|(
 literal|"bus_dmamem_free: Invalid map freed\n"
 argument_list|)
 expr_stmt|;
+comment|/* XXX There is no "contigfree" and "free" doesn't work */
+if|if
+condition|(
+operator|(
+name|dmat
+operator|->
+name|maxsize
+operator|<=
+name|PAGE_SIZE
+operator|)
+operator|&&
+name|dmat
+operator|->
+name|lowaddr
+operator|>=
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+condition|)
 name|free
 argument_list|(
 name|vaddr
@@ -1518,6 +1542,17 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+name|NULL
+condition|)
+name|map
+operator|=
+operator|&
+name|nobounce_dmamap
+expr_stmt|;
 name|error
 operator|=
 literal|0
