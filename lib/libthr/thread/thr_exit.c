@@ -188,6 +188,11 @@ block|{
 name|pthread_t
 name|pthread
 decl_stmt|;
+name|int
+name|exitNow
+init|=
+literal|0
+decl_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
@@ -297,69 +302,12 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+comment|/* Lock the dead list first to maintain correct lock order */
+name|DEAD_LIST_LOCK
 expr_stmt|;
-comment|/* Add this thread to the list of dead threads. */
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|_dead_list
-argument_list|,
-name|curthread
-argument_list|,
-name|dle
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
-if|if
-condition|(
-name|pthread_cond_signal
-argument_list|(
-operator|&
-name|_gc_cond
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot signal gc cond"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Avoid a race condition where a scheduling signal can occur 	 * causing the garbage collector thread to run.  If this happens, 	 * the current thread can be cleaned out from under us. 	 */
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
-argument_list|)
-expr_stmt|;
-comment|/* Unlock the garbage collector mutex. */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
 argument_list|)
 expr_stmt|;
 comment|/* Check if there is a thread joining this one: */
@@ -377,6 +325,14 @@ operator|=
 name|curthread
 operator|->
 name|joiner
+expr_stmt|;
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 name|curthread
 operator|->
@@ -419,6 +375,14 @@ name|thread
 operator|=
 name|NULL
 expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Make this thread collectable by the garbage collector. */
 name|PTHREAD_ASSERT
 argument_list|(
@@ -448,7 +412,19 @@ operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
 block|}
-comment|/* Remove this thread from the thread list: */
+comment|/* 	 * Add this thread to the list of dead threads, and 	 * also remove it from the active threads list. 	 */
+name|THREAD_LIST_LOCK
+expr_stmt|;
+name|TAILQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|,
+name|curthread
+argument_list|,
+name|dle
+argument_list|)
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -466,9 +442,25 @@ argument_list|,
 name|PS_DEAD
 argument_list|)
 expr_stmt|;
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
 name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
+if|if
+condition|(
+name|pthread_cond_signal
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot signal gc cond"
 argument_list|)
 expr_stmt|;
 comment|/* If we're the last thread, call it quits */
@@ -479,6 +471,18 @@ argument_list|(
 operator|&
 name|_thread_list
 argument_list|)
+condition|)
+name|exitNow
+operator|=
+literal|1
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
+expr_stmt|;
+if|if
+condition|(
+name|exitNow
 condition|)
 name|exit
 argument_list|(

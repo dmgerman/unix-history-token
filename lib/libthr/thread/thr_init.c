@@ -1158,7 +1158,7 @@ condition|(
 name|_pthread_mutex_init
 argument_list|(
 operator|&
-name|_gc_mutex
+name|dead_list_lock
 argument_list|,
 name|NULL
 argument_list|)

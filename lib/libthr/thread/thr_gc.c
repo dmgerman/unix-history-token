@@ -146,21 +146,8 @@ comment|/* Dump thread info to file. */
 name|_thread_dump_info
 argument_list|()
 expr_stmt|;
-comment|/* 		 * Lock the garbage collector mutex which ensures that 		 * this thread sees another thread exit: 		 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+comment|/* 		 * Lock the list of dead threads which ensures that 		 * this thread sees another thread exit: 		 */
+name|DEAD_LIST_LOCK
 expr_stmt|;
 comment|/* No stack or thread structure to free yet. */
 name|p_stack
@@ -171,12 +158,9 @@ name|pthread_cln
 operator|=
 name|NULL
 expr_stmt|;
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* Check if this is the last running thread. */
+name|THREAD_LIST_LOCK
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -200,6 +184,8 @@ comment|/* 			 * This is the last thread, so it can exit 			 * now. 			 */
 name|f_done
 operator|=
 literal|1
+expr_stmt|;
+name|THREAD_LIST_UNLOCK
 expr_stmt|;
 comment|/* 		 * Enter a loop to search for the first dead thread that 		 * has memory to free. 		 */
 for|for
@@ -242,7 +228,59 @@ operator|==
 name|_thread_initial
 condition|)
 continue|continue;
-comment|/* 			 * Check if this thread has detached: 			 */
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Check if the stack was not specified by 			 * the caller to pthread_create() and has not 			 * been destroyed yet:  			 */
+if|if
+condition|(
+name|pthread
+operator|->
+name|attr
+operator|.
+name|stackaddr_attr
+operator|==
+name|NULL
+operator|&&
+name|pthread
+operator|->
+name|stack
+operator|!=
+name|NULL
+condition|)
+block|{
+name|_thread_stack_free
+argument_list|(
+name|pthread
+operator|->
+name|stack
+argument_list|,
+name|pthread
+operator|->
+name|attr
+operator|.
+name|stacksize_attr
+argument_list|,
+name|pthread
+operator|->
+name|attr
+operator|.
+name|guardsize_attr
+argument_list|)
+expr_stmt|;
+name|pthread
+operator|->
+name|stack
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* 			 * If the thread has not been detached, leave 			 * it on the dead thread list. 			 */
 if|if
 condition|(
 operator|(
@@ -254,10 +292,20 @@ name|flags
 operator|&
 name|PTHREAD_DETACHED
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Remove this thread from the dead list: */
 name|TAILQ_REMOVE
 argument_list|(
@@ -269,104 +317,20 @@ argument_list|,
 name|dle
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stackaddr_attr
-operator|==
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|stack
-operator|!=
-name|NULL
-condition|)
-block|{
-name|_thread_stack_free
-argument_list|(
-name|pthread
-operator|->
-name|stack
-argument_list|,
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stacksize_attr
-argument_list|,
-name|pthread
-operator|->
-name|attr
-operator|.
-name|guardsize_attr
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 				 * Point to the thread structure that must 				 * be freed outside the locks: 				 */
+comment|/* 			 * Point to the thread structure that must 			 * be freed outside the locks: 			 */
 name|pthread_cln
 operator|=
 name|pthread
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create() and has not 				 * been destroyed yet:  				 */
-if|if
-condition|(
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stackaddr_attr
-operator|==
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|stack
-operator|!=
-name|NULL
-condition|)
-block|{
-name|_thread_stack_free
+name|_SPINUNLOCK
 argument_list|(
+operator|&
 name|pthread
 operator|->
-name|stack
-argument_list|,
-name|pthread
-operator|->
-name|attr
-operator|.
-name|stacksize_attr
-argument_list|,
-name|pthread
-operator|->
-name|attr
-operator|.
-name|guardsize_attr
+name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 					 * NULL the stack pointer now that the 					 * memory has been freed: 					 */
-name|pthread
-operator|->
-name|stack
-operator|=
-name|NULL
-expr_stmt|;
 block|}
-block|}
-block|}
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Check if this is not the last thread and there is no 		 * memory to free this time around. 		 */
 if|if
 condition|(
@@ -419,7 +383,7 @@ operator|&
 name|_gc_cond
 argument_list|,
 operator|&
-name|_gc_mutex
+name|dead_list_lock
 argument_list|,
 operator|&
 name|abstime
@@ -450,20 +414,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Unlock the garbage collector mutex: */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 comment|/* 		 * If there is memory to free, do it now. The call to 		 * free() might block, so this must be done outside the 		 * locks. 		 */
 if|if

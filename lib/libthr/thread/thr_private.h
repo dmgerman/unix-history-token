@@ -1350,6 +1350,66 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * These two locks protect the global active threads list and  * the global dead threads list, respectively. Combining these  * into one lock for both lists doesn't seem wise, since it  * would likely increase contention during busy thread creation  * and destruction for very little savings in space.  *  * The lock for the "dead threads list" must be a pthread mutex  * because it is used with condition variables to synchronize  * the gc thread with active threads in the process of exiting or  * dead threads who have just been joined.  */
+end_comment
+
+begin_decl_stmt
+name|SCLASS
+name|spinlock_t
+name|thread_list_lock
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|_SPINLOCK_INITIALIZER
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|SCLASS
+name|pthread_mutex_t
+name|dead_list_lock
+ifdef|#
+directive|ifdef
+name|GLOBAL_PTHREAD_PRIVATE
+init|=
+name|NULL
+endif|#
+directive|endif
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LIST_LOCK
+value|_SPINLOCK(&thread_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_LIST_UNLOCK
+value|_SPINUNLOCK(&thread_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEAD_LIST_LOCK
+value|_pthread_mutex_lock(&dead_list_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEAD_LIST_UNLOCK
+value|_pthread_mutex_unlock(&dead_list_lock)
+end_define
+
+begin_comment
 comment|/* Initial thread: */
 end_comment
 
@@ -1563,22 +1623,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Garbage collector mutex and condition variable. */
+comment|/* Garbage collector condition variable. */
 end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|pthread_mutex_t
-name|_gc_mutex
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|NULL
-endif|#
-directive|endif
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|SCLASS

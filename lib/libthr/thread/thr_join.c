@@ -97,28 +97,11 @@ name|EDEADLK
 operator|)
 return|;
 block|}
-comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
-expr_stmt|;
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Search for the specified thread in the list of active threads.  This 	 * is done manually here rather than calling _find_thread() because 	 * the searches in _thread_list and _dead_list (as well as setting up 	 * join/detach state) have to be done atomically. 	 */
+name|DEAD_LIST_LOCK
+expr_stmt|;
+name|THREAD_LIST_LOCK
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|thread
@@ -133,7 +116,17 @@ name|thread
 operator|==
 name|pthread
 condition|)
+block|{
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|thread
@@ -155,7 +148,19 @@ name|thread
 operator|==
 name|pthread
 condition|)
+block|{
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
 comment|/* Check if the thread was not found or has been detached: */
 if|if
 condition|(
@@ -180,18 +185,19 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_mutex_unlock
+name|thread
+operator|!=
+name|NULL
+condition|)
+name|_SPINUNLOCK
 argument_list|(
 operator|&
-name|_gc_mutex
+name|pthread
+operator|->
+name|lock
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -212,20 +218,15 @@ condition|)
 block|{
 comment|/* Multiple joiners are not supported. */
 comment|/* XXXTHR - support multiple joiners. */
-if|if
-condition|(
-name|pthread_mutex_unlock
+name|_SPINUNLOCK
 argument_list|(
 operator|&
-name|_gc_mutex
+name|pthread
+operator|->
+name|lock
 argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 name|ret
 operator|=
@@ -235,22 +236,6 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Unlock the garbage collector mutex, now that the garbage collector 	 * can't be run: 	 */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
-expr_stmt|;
 comment|/* Check if the thread is not dead: */
 if|if
 condition|(
@@ -261,6 +246,11 @@ operator|!=
 name|PS_DEAD
 condition|)
 block|{
+name|_thread_critical_enter
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
 comment|/* Set the running thread to be the joiner: */
 name|pthread
 operator|->
@@ -276,6 +266,14 @@ operator|.
 name|thread
 operator|=
 name|pthread
+expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -296,10 +294,12 @@ name|PS_JOIN
 argument_list|)
 expr_stmt|;
 comment|/* Wait for our signal to wake up. */
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 name|_thread_suspend
 argument_list|(
@@ -308,7 +308,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|GIANT_LOCK
+comment|/* XXX - For correctness reasons. */
+name|DEAD_LIST_LOCK
+expr_stmt|;
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -346,6 +349,14 @@ name|join_status
 operator|.
 name|ret
 expr_stmt|;
+name|_thread_critical_exit
+argument_list|(
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* 		 * XXX - Must unlock here, instead of doing it earlier, 		 *	 because it could lead to a deadlock. If the thread 		 *	 we are joining is waiting on this lock we would 		 *	 deadlock if we released this lock before unlocking the 		 *	 joined thread. 		 */
+name|DEAD_LIST_UNLOCK
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -376,14 +387,34 @@ name|flags
 operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pthread_cond_signal
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|PANIC
+argument_list|(
+literal|"Cannot signal gc cond"
+argument_list|)
+expr_stmt|;
+name|DEAD_LIST_UNLOCK
+expr_stmt|;
 block|}
 name|out
 label|:
-name|GIANT_UNLOCK
-argument_list|(
-name|curthread
-argument_list|)
-expr_stmt|;
 name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;

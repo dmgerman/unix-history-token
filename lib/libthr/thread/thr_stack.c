@@ -202,20 +202,7 @@ name|_pthread_guard_default
 condition|)
 block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+name|DEAD_LIST_LOCK
 expr_stmt|;
 if|if
 condition|(
@@ -248,40 +235,14 @@ name|stackaddr
 expr_stmt|;
 block|}
 comment|/* Unlock the garbage collector mutex. */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 block|}
 comment|/* 	 * The user specified a non-default stack and/or guard size, so try to 	 * allocate a stack from the non-default size stack cache, using the 	 * rounded up stack size (stack_size) in the search: 	 */
 else|else
 block|{
 comment|/* 		 * Use the garbage collector mutex for synchronization of the 		 * spare stack list. 		 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
+name|DEAD_LIST_LOCK
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -324,20 +285,7 @@ break|break;
 block|}
 block|}
 comment|/* Unlock the garbage collector mutex. */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
+name|DEAD_LIST_UNLOCK
 expr_stmt|;
 block|}
 comment|/* Check if a stack was not allocated from a stack cache: */
@@ -415,7 +363,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function must be called with _gc_mutex held. */
+comment|/* This function must be called with the 'dead thread list' lock held. */
 end_comment
 
 begin_function

@@ -337,6 +337,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Check if there are no dead threads: */
+name|DEAD_LIST_LOCK
+expr_stmt|;
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -413,6 +415,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|DEAD_LIST_UNLOCK
+expr_stmt|;
 comment|/* Close the dump file: */
 name|__sys_close
 argument_list|(
