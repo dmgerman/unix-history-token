@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.16	%G%	*/
+comment|/*	tm.c	4.17	%G%	*/
 end_comment
 
 begin_include
@@ -16,6 +16,16 @@ name|NTM
 operator|>
 literal|0
 end_if
+
+begin_decl_stmt
+name|int
+name|tmgapsdcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* DEBUG */
+end_comment
 
 begin_comment
 comment|/*  * TM11/TE10 tape driver  *  * THIS DRIVER HAS NOT BEEN TESTED WITH MORE THAN ONE TRANSPORT.  */
@@ -330,6 +340,10 @@ name|short
 name|sc_resid
 decl_stmt|;
 comment|/* copy of last bc */
+name|short
+name|sc_lastcmd
+decl_stmt|;
+comment|/* last command to handle direction changes */
 block|}
 name|tm_softc
 index|[
@@ -1616,12 +1630,6 @@ condition|)
 goto|goto
 name|next
 goto|;
-name|cmd
-operator||=
-name|bp
-operator|->
-name|b_command
-expr_stmt|;
 name|um
 operator|->
 name|um_tab
@@ -1660,13 +1668,9 @@ name|bp
 operator|->
 name|b_repcnt
 expr_stmt|;
-name|addr
-operator|->
-name|tmcs
-operator|=
-name|cmd
-expr_stmt|;
-return|return;
+goto|goto
+name|dobpcmd
+goto|;
 block|}
 comment|/* 	 * If the data transfer command is in the correct place, 	 * set up all the registers except the csr, and give 	 * control over to the UNIBUS adapter routines, to 	 * wait for resources to start the i/o. 	 */
 if|if
@@ -1746,6 +1750,14 @@ name|um_cmd
 operator|=
 name|cmd
 expr_stmt|;
+comment|/* 		if (tmreverseop(sc->sc_lastcmd)) 			while (addr->tmer& TM_SDWN) 				tmgapsdcnt++; */
+name|sc
+operator|->
+name|sc_lastcmd
+operator|=
+name|TM_RCOM
+expr_stmt|;
+comment|/* will serve */
 name|ubago
 argument_list|(
 name|ui
@@ -1774,8 +1786,10 @@ name|b_blkno
 argument_list|)
 condition|)
 block|{
-name|cmd
-operator||=
+name|bp
+operator|->
+name|b_command
+operator|=
 name|TM_SFORW
 expr_stmt|;
 name|addr
@@ -1794,8 +1808,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cmd
-operator||=
+name|bp
+operator|->
+name|b_command
+operator|=
 name|TM_SREV
 expr_stmt|;
 name|addr
@@ -1812,11 +1828,28 @@ operator|-
 name|blkno
 expr_stmt|;
 block|}
+name|dobpcmd
+label|:
+comment|/* 	if (tmreverseop(sc->sc_lastcmd) != tmreverseop(bp->b_command)) 		while (addr->tmer& TM_SDWN) 			tmgapsdcnt++; */
+name|sc
+operator|->
+name|sc_lastcmd
+operator|=
+name|bp
+operator|->
+name|b_command
+expr_stmt|;
 name|addr
 operator|->
 name|tmcs
 operator|=
+operator|(
 name|cmd
+operator||
+name|bp
+operator|->
+name|b_command
+operator|)
 expr_stmt|;
 return|return;
 name|next
