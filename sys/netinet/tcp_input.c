@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.68 1998/01/21 02:05:59 fenner Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.69 1998/01/27 09:15:08 davidg Exp $  */
 end_comment
 
 begin_include
@@ -278,6 +278,35 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
+name|int
+name|tcp_delack_enabled
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_inet_tcp
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|delack_enabled
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|tcp_delack_enabled
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
 name|u_long
 name|tcp_now
 decl_stmt|;
@@ -416,7 +445,7 @@ name|so
 parameter_list|,
 name|flags
 parameter_list|)
-value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		tp->t_flags |= TF_DELACK; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
+value|{ \ 	if ((ti)->ti_seq == (tp)->rcv_nxt&& \ 	    (tp)->seg_next == (struct tcpiphdr *)(tp)&& \ 	    (tp)->t_state == TCPS_ESTABLISHED) { \ 		if (tcp_delack_enabled) \ 			tp->t_flags |= TF_DELACK; \ 		else \ 			tp->t_flags |= TF_ACKNOW; \ 		(tp)->rcv_nxt += (ti)->ti_len; \ 		flags = (ti)->ti_flags& TH_FIN; \ 		tcpstat.tcps_rcvpack++;\ 		tcpstat.tcps_rcvbyte += (ti)->ti_len;\ 		sbappend(&(so)->so_rcv, (m)); \ 		sorwakeup(so); \ 	} else { \ 		(flags) = tcp_reass((tp), (ti), (m)); \ 		tp->t_flags |= TF_ACKNOW; \ 	} \ }
 end_define
 
 begin_ifndef
@@ -2436,16 +2465,19 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_ACK_HACK
-comment|/* 			 * If this is a short packet, then ACK now - with Nagel 			 *	congestion avoidance sender won't send more until 			 *	he gets an ACK. 			 */
 if|if
 condition|(
-name|tiflags
-operator|&
-name|TH_PUSH
+name|tcp_delack_enabled
 condition|)
+block|{
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_DELACK
+expr_stmt|;
+block|}
+else|else
 block|{
 name|tp
 operator|->
@@ -2459,25 +2491,6 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_DELACK
-expr_stmt|;
-block|}
-else|#
-directive|else
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_DELACK
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 block|}
@@ -2974,6 +2987,9 @@ expr_stmt|;
 comment|/* 			 * If there is a FIN, or if there is data and the 			 * connection is local, then delay SYN,ACK(SYN) in 			 * the hope of piggy-backing it on a response 			 * segment.  Otherwise must send ACK now in case 			 * the other side is slow starting. 			 */
 if|if
 condition|(
+name|tcp_delack_enabled
+operator|&&
+operator|(
 operator|(
 name|tiflags
 operator|&
@@ -2993,6 +3009,7 @@ name|inp
 operator|->
 name|inp_faddr
 argument_list|)
+operator|)
 operator|)
 condition|)
 name|tp
@@ -3456,6 +3473,8 @@ comment|/* SYN is acked */
 comment|/* 			 * If there's data, delay ACK; if there's also a FIN 			 * ACKNOW will be turned on later. 			 */
 if|if
 condition|(
+name|tcp_delack_enabled
+operator|&&
 name|ti
 operator|->
 name|ti_len
@@ -5973,11 +5992,15 @@ expr_stmt|;
 comment|/* 			 *  If connection is half-synchronized 			 *  (ie NEEDSYN flag on) then delay ACK, 			 *  so it may be piggybacked when SYN is sent. 			 *  Otherwise, since we received a FIN then no 			 *  more input can be expected, send ACK now. 			 */
 if|if
 condition|(
+name|tcp_delack_enabled
+operator|&&
+operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
 name|TF_NEEDSYN
+operator|)
 condition|)
 name|tp
 operator|->
