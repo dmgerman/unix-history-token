@@ -3476,6 +3476,36 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* Detect the Realtek 8139B. For some reason, this chip is very 	 * unstable when left to autoselect the media 	 * The best workaround is to set the device to the required 	 * media type or to set it to the 10 Meg speed. 	 */
+if|if
+condition|(
+operator|(
+name|rman_get_end
+argument_list|(
+name|sc
+operator|->
+name|rl_res
+argument_list|)
+operator|-
+name|rman_get_start
+argument_list|(
+name|sc
+operator|->
+name|rl_res
+argument_list|)
+operator|)
+operator|==
+literal|0xff
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"rl%d: Realtek 8139B detected. Warning, this may be unstable in autoselect mode\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
 name|sc
 operator|->
 name|rl_btag
