@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n1.c	4.10 %G%"
+literal|"@(#)n1.c	4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2020,7 +2020,7 @@ name|char
 operator|*
 name|acct_file
 operator|=
-literal|"/usr/adm/tracct"
+name|_PATH_TRACCT
 block|;
 name|acctf
 operator|=
