@@ -609,14 +609,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if we have anything open.  If so, return 0 (not inactive),  * otherwise 1 (inactive)   */
+comment|/*  * Check if we have anything open.  If confopen is != 0,  * that goes for the super device as well, otherwise  * only for volumes.  *  * Return 0 if not inactive, 1 if inactive.  */
 end_comment
 
 begin_function
 name|int
 name|vinum_inactive
 parameter_list|(
-name|void
+name|int
+name|confopen
 parameter_list|)
 block|{
 name|int
@@ -630,11 +631,15 @@ decl_stmt|;
 comment|/* assume we can do it */
 if|if
 condition|(
+name|confopen
+operator|&&
+operator|(
 name|vinum_conf
 operator|.
 name|flags
 operator|&
 name|VF_OPEN
+operator|)
 condition|)
 comment|/* open by vinum(8)? */
 return|return
@@ -970,7 +975,9 @@ if|if
 condition|(
 operator|!
 name|vinum_inactive
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 condition|)
 comment|/* is anything open? */
 return|return
