@@ -1407,15 +1407,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"altflags= %x, optarg = %s\n"
-argument_list|,
-name|altflags
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Handle altflags which don't map directly to 			 * mount flags. 			 */
 if|if
 condition|(
