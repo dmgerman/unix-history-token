@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<struct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -4906,9 +4912,8 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|offsetof
+name|fldoff
 argument_list|(
-expr|struct
 name|aac_common
 argument_list|,
 name|ac_fibs
@@ -4958,9 +4963,8 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|offsetof
+name|fldoff
 argument_list|(
-expr|struct
 name|aac_common
 argument_list|,
 name|ac_printf
@@ -5454,9 +5458,8 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|offsetof
+name|fldoff
 argument_list|(
-expr|struct
 name|aac_common
 argument_list|,
 name|ac_init
@@ -5800,9 +5803,8 @@ name|sc
 operator|->
 name|aac_common_busaddr
 operator|+
-name|offsetof
+name|fldoff
 argument_list|(
-expr|struct
 name|aac_common
 argument_list|,
 name|ac_sync_fib
