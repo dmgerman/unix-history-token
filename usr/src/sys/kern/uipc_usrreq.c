@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.20 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -425,7 +425,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-name|unp_usrclosed
+name|unp_shutdown
 argument_list|(
 name|unp
 argument_list|)
@@ -756,9 +756,8 @@ condition|(
 name|control
 condition|)
 block|{
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|sbappendcontrol
 argument_list|(
 name|rcv
@@ -767,7 +766,7 @@ name|m
 argument_list|,
 name|control
 argument_list|)
-expr_stmt|;
+condition|)
 name|control
 operator|=
 literal|0
@@ -2487,12 +2486,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*ARGSUSED*/
-end_comment
-
 begin_macro
-name|unp_usrclosed
+name|unp_shutdown
 argument_list|(
 argument|unp
 argument_list|)
@@ -2507,7 +2502,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_block
-block|{  }
+block|{
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+if|if
+condition|(
+name|unp
+operator|->
+name|unp_socket
+operator|->
+name|so_type
+operator|==
+name|SOCK_STREAM
+operator|&&
+name|unp
+operator|->
+name|unp_conn
+operator|&&
+operator|(
+name|so
+operator|=
+name|unp
+operator|->
+name|unp_conn
+operator|->
+name|unp_socket
+operator|)
+condition|)
+name|socantrcvmore
+argument_list|(
+name|so
+argument_list|)
+expr_stmt|;
+block|}
 end_block
 
 begin_macro
@@ -3252,6 +3282,9 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|so
@@ -3263,6 +3296,10 @@ operator|&
 name|SB_LOCK
 condition|)
 block|{
+comment|/* 				 * This is problematical; it's not clear 				 * we need to wait for the sockbuf to be 				 * unlocked (on a uniprocessor, at least), 				 * and it's also not clear what to do 				 * if sbwait returns an error due to receipt 				 * of a signal.  If sbwait does return 				 * an error, we'll go into an infinite 				 * loop.  Delete all of this for now. 				 */
+operator|(
+name|void
+operator|)
 name|sbwait
 argument_list|(
 operator|&
@@ -3275,6 +3312,8 @@ goto|goto
 name|restart
 goto|;
 block|}
+endif|#
+directive|endif
 name|unp_scan
 argument_list|(
 name|so
