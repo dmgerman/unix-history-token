@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kdb_command.c	7.1	86/11/20	*/
+comment|/*	kdb_command.c	7.2	86/11/20	*/
 end_comment
 
 begin_include
@@ -182,7 +182,7 @@ name|EOR
 condition|)
 return|return
 operator|(
-name|FALSE
+literal|0
 operator|)
 return|;
 name|lp
@@ -215,8 +215,9 @@ name|adrval
 operator|=
 name|dot
 expr_stmt|;
-if|if
-condition|(
+name|cntflg
+operator|=
+operator|(
 name|rdc
 argument_list|()
 operator|==
@@ -226,20 +227,17 @@ name|expr
 argument_list|(
 literal|0
 argument_list|)
-condition|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
 name|cntflg
-operator|=
-name|TRUE
-operator|,
+condition|)
 name|cntval
 operator|=
 name|expv
 expr_stmt|;
 else|else
-name|cntflg
-operator|=
-name|FALSE
-operator|,
 name|cntval
 operator|=
 literal|1
@@ -373,7 +371,7 @@ name|trypr
 label|:
 name|longpr
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|eqcom
 operator|=
@@ -392,7 +390,7 @@ literal|'L'
 case|:
 name|longpr
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 case|case
 literal|'l'
@@ -529,7 +527,7 @@ literal|'W'
 case|:
 name|longpr
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 case|case
 literal|'w'
@@ -797,13 +795,12 @@ literal|':'
 case|:
 if|if
 condition|(
-operator|!
 name|executing
 condition|)
-block|{
+break|break;
 name|executing
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 name|subpcs
 argument_list|(
@@ -813,22 +810,16 @@ argument_list|)
 expr_stmt|;
 name|executing
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|lastcom
 operator|=
 literal|0
 expr_stmt|;
-block|}
 break|break;
 case|case
-literal|0
+literal|'\0'
 case|:
-name|printf
-argument_list|(
-name|DBNAME
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|error
