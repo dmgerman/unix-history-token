@@ -6,16 +6,17 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"ypset.c,v 1.3 1993/06/12 00:02:37 deraadt Exp"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +24,40 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
 
 begin_include
 include|#
@@ -40,18 +75,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -99,25 +122,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\typset [-h host ] [-d domain] server\n"
+literal|"usage: ypset [-h host] [-d domain] server\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -126,36 +141,31 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|bind_tohost
-argument_list|(
-argument|sin
-argument_list|,
-argument|dom
-argument_list|,
-argument|server
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sin
+parameter_list|,
+name|dom
+parameter_list|,
+name|server
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|dom
 decl_stmt|,
-modifier|*
+decl|*
 name|server
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -210,22 +220,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s not running ypserv.\n"
+literal|"%s not running ypserv"
 argument_list|,
 name|server
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|&
@@ -297,18 +300,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"can't find address for %s\n"
-argument_list|,
-name|server
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"can't find address for %s"
+argument_list|,
+name|server
 argument_list|)
 expr_stmt|;
 block|}
@@ -402,11 +400,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"can't yp_bind: Reason: %s\n"
+literal|"can't yp_bind, reason: %s"
 argument_list|,
 name|yperr_string
 argument_list|(
@@ -450,11 +446,9 @@ condition|(
 name|r
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Sorry, cannot ypset for domain %s on host.\n"
+literal|"sorry, cannot ypset for domain %s on host"
 argument_list|,
 name|dom
 argument_list|)
@@ -616,22 +610,15 @@ name|hent
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"ypset: host %s unknown\n"
+literal|"host %s unknown"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bcopy
 argument_list|(
 operator|&
