@@ -1166,6 +1166,17 @@ begin_comment
 comment|/* CAPABILITY: monitor mode */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_C_RCVMGT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* CAPABILITY: rcv mgt frames */
+end_comment
+
 begin_comment
 comment|/* flags for ieee80211_fix_rate() */
 end_comment

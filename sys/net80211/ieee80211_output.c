@@ -629,7 +629,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 			 * When not in station mode the 			 * destination address should always be 			 * in the node table unless this is a 			 * multicast/broadcast frame. 			 */
+comment|/* 			 * When not in station mode the destination 			 * address should always be in the node table 			 * if the device sends management frames to us; 			 * unless this is a multicast/broadcast frame. 			 * For devices that don't send management frames 			 * to the host we have to cheat; use the bss 			 * node instead; the card will/should clobber 			 * the bssid address as necessary. 			 * 			 * XXX this handles AHDEMO because all devices 			 *     that support it don't send mgmt frames; 			 *     but it might be better to test explicitly 			 */
 if|if
 condition|(
 operator|!
@@ -639,9 +639,33 @@ name|eh
 operator|.
 name|ether_dhost
 argument_list|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_caps
+operator|&
+name|IEEE80211_C_RCVMGT
+operator|)
 condition|)
 block|{
-comment|/* ic->ic_stats.st_tx_nonode++; XXX statistic */
+name|IEEE80211_DPRINTF
+argument_list|(
+operator|(
+literal|"%s: no node for dst %s, "
+literal|"discard frame\n"
+operator|,
+name|__func__
+operator|,
+name|ether_sprintf
+argument_list|(
+name|eh
+operator|.
+name|ether_dhost
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
