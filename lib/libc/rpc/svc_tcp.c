@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_tcp.c,v 1.6 1996/06/10 20:13:09 jraynard Exp $"
+literal|"$Id: svc_tcp.c,v 1.7 1996/08/12 14:00:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,7 +1221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * reads data from the tcp conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  */
+comment|/*  * reads data from the tcp conection.  * any error is fatal and the connection is closed.  * (And a read of zero bytes is a half closed stream => error.)  *  * Note: we have to be careful here not to allow ourselves to become  * blocked too long in this routine. While we're waiting for data from one  * client, another client may be trying to connect. To avoid this situation,  * some code from svc_run() is transplanted here: the select() loop checks  * all RPC descriptors including the one we want and calls svc_getreqset2()  * to handle new requests if any are detected.  */
 end_comment
 
 begin_function
@@ -1260,25 +1260,8 @@ ifdef|#
 directive|ifdef
 name|FD_SETSIZE
 name|fd_set
-name|mask
-decl_stmt|;
-name|fd_set
 name|readfds
 decl_stmt|;
-name|FD_ZERO
-argument_list|(
-operator|&
-name|mask
-argument_list|)
-expr_stmt|;
-name|FD_SET
-argument_list|(
-name|sock
-argument_list|,
-operator|&
-name|mask
-argument_list|)
-expr_stmt|;
 else|#
 directive|else
 specifier|register
@@ -1297,10 +1280,38 @@ directive|endif
 comment|/* def FD_SETSIZE */
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|FD_SETSIZE
 name|readfds
 operator|=
-name|mask
+name|svc_fdset
 expr_stmt|;
+name|FD_SET
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|readfds
+operator|=
+name|svc_fds
+expr_stmt|;
+name|readfds
+operator||=
+operator|(
+literal|1
+operator|<<
+name|sock
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* def FD_SETSIZE */
 if|if
 condition|(
 name|select
@@ -1342,6 +1353,39 @@ block|}
 goto|goto
 name|fatal_err
 goto|;
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|FD_SETSIZE
+if|if
+condition|(
+operator|!
+name|FD_ISSET
+argument_list|(
+name|sock
+argument_list|,
+operator|&
+name|readfds
+argument_list|)
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|readfds
+operator|!=
+name|mask
+condition|)
+endif|#
+directive|endif
+name|svc_getreqset
+argument_list|(
+operator|&
+name|readfds
+argument_list|)
+expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1706,6 +1750,13 @@ name|TRUE
 operator|)
 return|;
 block|}
+name|cd
+operator|->
+name|strm_stat
+operator|=
+name|XPRT_DIED
+expr_stmt|;
+comment|/* XXXX */
 return|return
 operator|(
 name|FALSE

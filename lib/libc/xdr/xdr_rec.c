@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: xdr_rec.c,v 1.3 1995/05/30 05:42:09 rgrimes Exp $"
+literal|"$Id: xdr_rec.c,v 1.4 1995/10/22 14:53:56 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2594,6 +2594,27 @@ name|FALSE
 else|:
 name|TRUE
 expr_stmt|;
+comment|/* 	 * Sanity check. Try not to accept wildly incorrect 	 * record sizes. 	 */
+if|if
+condition|(
+operator|(
+name|header
+operator|&
+operator|(
+operator|~
+name|LAST_FRAG
+operator|)
+operator|)
+operator|>
+name|rstrm
+operator|->
+name|recvsize
+condition|)
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 name|rstrm
 operator|->
 name|fbtbc
