@@ -630,21 +630,15 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"(default: 0x%x "
+literal|"(default: 0x%jx "
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|val
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" / %u)>>"
+literal|" / %ju)>>"
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|val
 argument_list|)
 expr_stmt|;
