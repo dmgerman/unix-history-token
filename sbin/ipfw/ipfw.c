@@ -11818,11 +11818,6 @@ name|p
 init|=
 name|limit_masks
 decl_stmt|;
-name|int
-name|found
-init|=
-literal|0
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -11869,35 +11864,17 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-name|found
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|found
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|rule
-operator|.
-name|limit_mask
-operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"missing limit mask"
-argument_list|)
-expr_stmt|;
 break|break ;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|s
+operator|==
+name|NULL
+condition|)
+break|break ;
 block|}
 if|if
 condition|(
@@ -11935,6 +11912,21 @@ argument_list|(
 name|EX_USAGE
 argument_list|,
 literal|"limit: limit must be>0"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rule
+operator|.
+name|limit_mask
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"missing limit mask"
 argument_list|)
 expr_stmt|;
 name|av
