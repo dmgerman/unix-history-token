@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.5 1993/09/18 03:39:48 jkh Exp $"
+literal|"$Id: file.c,v 1.6 1994/12/06 00:51:48 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,80 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|move_file
+parameter_list|(
+name|char
+modifier|*
+name|dir
+parameter_list|,
+name|char
+modifier|*
+name|fname
+parameter_list|,
+name|char
+modifier|*
+name|to
+parameter_list|)
+block|{
+name|char
+name|cmd
+index|[
+name|FILENAME_MAX
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|fname
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"mv %s %s"
+argument_list|,
+name|fname
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+else|else
+name|sprintf
+argument_list|(
+name|cmd
+argument_list|,
+literal|"mv %s/%s %s"
+argument_list|,
+name|dir
+argument_list|,
+name|fname
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+name|cmd
+argument_list|)
+condition|)
+name|barf
+argument_list|(
+literal|"Couldn't perform '%s'"
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Copy a hierarchy (possibly from dir) to the current directory, or  * if "to" is TRUE, from the current directory to a location someplace  * else.  *  * Though slower, using tar to copy preserves symlinks and everything  * without me having to write some big hairy routine to do it.  */
 end_comment
@@ -748,7 +822,7 @@ name|strcpy
 argument_list|(
 name|args
 argument_list|,
-literal|"z"
+literal|"-z"
 argument_list|)
 expr_stmt|;
 block|}

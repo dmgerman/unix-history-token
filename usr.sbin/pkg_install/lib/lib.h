@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.13 1995/04/19 14:02:01 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.14 1995/04/22 07:41:01 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -466,6 +466,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|long
+name|min_free
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* String */
 end_comment
@@ -598,6 +608,22 @@ end_function_decl
 begin_function_decl
 name|void
 name|copy_file
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|move_file
 parameter_list|(
 name|char
 modifier|*

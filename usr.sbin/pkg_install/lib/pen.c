@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.10 1995/04/18 13:04:34 jkh Exp $"
+literal|"$Id: pen.c,v 1.11 1995/04/21 06:30:41 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,17 +66,6 @@ name|FILENAME_MAX
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|long
-name|min_free
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Make a temporary directory to play in and chdir() to it, returning  * pathname of previous working directory.  */
@@ -372,7 +361,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|long
 name|min_free
 parameter_list|(
@@ -385,6 +373,15 @@ name|struct
 name|statfs
 name|buf
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|tmpdir
+condition|)
+name|tmpdir
+operator|=
+name|Pen
+expr_stmt|;
 if|if
 condition|(
 name|statfs
