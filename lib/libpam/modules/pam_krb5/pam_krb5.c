@@ -1484,6 +1484,21 @@ operator|(
 name|PAM_SERVICE_ERR
 operator|)
 return|;
+comment|/* If a persistent cache isn't desired, stop now. */
+if|if
+condition|(
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_OPT_NO_CCACHE
+argument_list|)
+condition|)
+return|return
+operator|(
+name|PAM_SUCCESS
+operator|)
+return|;
 name|PAM_LOG
 argument_list|(
 literal|"Establishing credentials"
