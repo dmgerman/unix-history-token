@@ -63,6 +63,23 @@ directive|include
 file|<dev/vx/if_vxreg.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPAT_OLDPCI
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"The vx driver requires the old pci compatability shims."
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
