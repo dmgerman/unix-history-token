@@ -657,7 +657,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|getuid
+name|geteuid
 argument_list|()
 operator|!=
 literal|0
