@@ -2351,11 +2351,11 @@ expr_stmt|;
 if|if
 condition|(
 name|padLen
-operator|>
-literal|0
-operator|&&
-name|padLen
 operator|<=
+literal|0
+operator|||
+name|padLen
+operator|>
 literal|16
 condition|)
 return|return
