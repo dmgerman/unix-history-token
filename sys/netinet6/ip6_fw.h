@@ -129,7 +129,7 @@ comment|/* TCP flags set/unset */
 define|#
 directive|define
 name|IPV6_FW_ICMPTYPES_DIM
-value|(32 / (sizeof(unsigned) * 8))
+value|(256 / (sizeof(unsigned) * 8))
 name|unsigned
 name|fw_icmp6types
 index|[
