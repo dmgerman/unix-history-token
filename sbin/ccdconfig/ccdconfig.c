@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: ccdconfig.c,v 1.3 1995/12/28 00:22:16 asami Exp $ */
 end_comment
 
 begin_comment
@@ -213,6 +213,18 @@ block|{
 literal|"CCDF_UNIFORM"
 block|,
 name|CCDF_UNIFORM
+block|}
+block|,
+block|{
+literal|"CCDF_MIRROR"
+block|,
+name|CCDF_MIRROR
+block|}
+block|,
+block|{
+literal|"CCDF_PARITY"
+block|,
+name|CCDF_PARITY
 block|}
 block|,
 block|{
