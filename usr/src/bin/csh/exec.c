@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c	4.10 (Berkeley) %G%"
+literal|"@(#)exec.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,17 @@ literal|"shell"
 argument_list|)
 else|:
 name|SHELLPATH
+expr_stmt|;
+name|vp
+index|[
+literal|1
+index|]
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
