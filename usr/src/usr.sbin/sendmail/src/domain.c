@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.33 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.34 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.33 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.34 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,6 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_typedef
@@ -1201,7 +1195,7 @@ operator|(
 operator|!
 name|TryNullMXList
 operator|||
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|host
 argument_list|)
@@ -3559,7 +3553,7 @@ name|p
 decl_stmt|;
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|host
 argument_list|)

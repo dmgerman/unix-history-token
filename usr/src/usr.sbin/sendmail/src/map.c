@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.50 (Berkeley) %G%"
+literal|"@(#)map.c	8.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8966,12 +8966,6 @@ begin_comment
 comment|/* **  USER_MAP_LOOKUP -- look up a user in the passwd file. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
 begin_function
 name|char
 modifier|*
@@ -9030,7 +9024,7 @@ argument_list|)
 expr_stmt|;
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|key
 argument_list|)

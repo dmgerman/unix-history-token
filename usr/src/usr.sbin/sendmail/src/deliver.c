@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.139 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.140 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include

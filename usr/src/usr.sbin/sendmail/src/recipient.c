@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.75 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.76 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_comment
@@ -2517,20 +2511,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwent
-parameter_list|()
-function_decl|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -2621,7 +2601,7 @@ condition|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|name
 argument_list|)
@@ -3886,7 +3866,7 @@ name|pw
 decl_stmt|;
 name|pw
 operator|=
-name|getpwuid
+name|sm_getpwuid
 argument_list|(
 name|st
 operator|.

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.58 (Berkeley) %G%"
+literal|"@(#)util.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5377,12 +5377,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arpa/inet.h>
 end_include
 
@@ -5684,7 +5678,7 @@ else|else
 block|{
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 operator|(
 name|char
@@ -5787,7 +5781,7 @@ else|else
 block|{
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 operator|(
 name|char

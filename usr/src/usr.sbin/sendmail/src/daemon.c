@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.5 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.76 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48.1.5 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.76 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,12 +77,6 @@ ifdef|#
 directive|ifdef
 name|DAEMON
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
 
 begin_include
 include|#
@@ -696,7 +690,7 @@ block|{
 comment|/* try it as a host name (avoid MX lookup) */
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 operator|&
 name|host
@@ -753,7 +747,7 @@ literal|'\0'
 expr_stmt|;
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 operator|&
 name|host
@@ -862,7 +856,7 @@ index|]
 decl_stmt|;
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|host
 argument_list|)
@@ -909,7 +903,7 @@ literal|'\0'
 expr_stmt|;
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|host
 argument_list|)
@@ -1740,13 +1734,6 @@ modifier|*
 name|hp
 decl_stmt|;
 specifier|extern
-name|struct
-name|hostent
-modifier|*
-name|gethostbyname
-parameter_list|()
-function_decl|;
-specifier|extern
 name|bool
 name|getcanonname
 parameter_list|()
@@ -1780,7 +1767,7 @@ expr_stmt|;
 block|}
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|hostbuf
 argument_list|)
@@ -2944,13 +2931,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|extern
-name|struct
-name|hostent
-modifier|*
-name|gethostbyaddr
-parameter_list|()
-function_decl|;
 if|#
 directive|if
 name|NAMED_BIND
@@ -3411,7 +3391,7 @@ return|;
 comment|/* 			**  Try to look it up in /etc/hosts 			*/
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|name
 argument_list|)
@@ -3527,7 +3507,7 @@ expr_stmt|;
 comment|/* nope -- ask the name server */
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 operator|(
 name|char
@@ -3940,7 +3920,7 @@ name|AF_INET
 case|:
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 operator|(
 name|char
@@ -3969,7 +3949,7 @@ name|AF_ISO
 case|:
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 operator|(
 name|char
@@ -4006,7 +3986,7 @@ break|break;
 default|default:
 name|hp
 operator|=
-name|gethostbyaddr
+name|sm_gethostbyaddr
 argument_list|(
 name|sap
 operator|->
@@ -4258,7 +4238,7 @@ name|hp
 decl_stmt|;
 name|hp
 operator|=
-name|gethostbyname
+name|sm_gethostbyname
 argument_list|(
 name|name
 argument_list|)

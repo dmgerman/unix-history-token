@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.76 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.77 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -3621,7 +3615,7 @@ literal|'\0'
 expr_stmt|;
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|q
 argument_list|)
@@ -7238,7 +7232,7 @@ literal|1
 expr_stmt|;
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|val
 argument_list|)

@@ -9,12 +9,6 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -27,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.40 (Berkeley) %G%"
+literal|"@(#)alias.c	8.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

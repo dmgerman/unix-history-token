@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.61 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.62 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_comment
@@ -213,13 +207,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
 specifier|extern
 name|char
 modifier|*
@@ -972,7 +959,7 @@ condition|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|e
 operator|->

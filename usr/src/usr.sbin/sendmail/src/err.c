@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.31 (Berkeley) %G%"
+literal|"@(#)err.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,18 +38,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_comment
@@ -323,7 +311,7 @@ directive|ifdef
 name|LOG
 name|pw
 operator|=
-name|getpwuid
+name|sm_getpwuid
 argument_list|(
 name|getuid
 argument_list|()

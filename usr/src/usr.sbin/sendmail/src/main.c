@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.93 (Berkeley) %G%"
+literal|"@(#)main.c	8.94 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,6 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netdb.h>
-end_include
-
 begin_if
 if|#
 directive|if
@@ -87,12 +81,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -1000,7 +988,7 @@ end_expr_stmt
 begin_expr_stmt
 name|pw
 operator|=
-name|getpwuid
+name|sm_getpwuid
 argument_list|(
 name|RealUid
 argument_list|)

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.74 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.75 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.74 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.75 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,12 +64,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -2239,7 +2233,7 @@ operator|||
 operator|(
 name|pw
 operator|=
-name|getpwuid
+name|sm_getpwuid
 argument_list|(
 name|uid
 argument_list|)
@@ -7467,7 +7461,7 @@ operator|&&
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|user
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.56 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.57 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,12 +32,6 @@ begin_include
 include|#
 directive|include
 file|"sendmail.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_comment
@@ -2550,13 +2544,6 @@ name|PSBUFSIZE
 index|]
 decl_stmt|;
 specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwnam
-parameter_list|()
-function_decl|;
-specifier|extern
 name|char
 modifier|*
 name|FullName
@@ -3124,7 +3111,7 @@ condition|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 name|e
 operator|->
