@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexdh.c,v 1.17 2002/02/28 15:46:33 markus Exp $"
+literal|"$OpenBSD: kexdh.c,v 1.18 2002/03/18 17:50:31 provos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"ssh2.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"monitor_wrap.h"
 end_include
 
 begin_function
@@ -1321,6 +1327,8 @@ expr_stmt|;
 block|}
 comment|/* sign H */
 comment|/* XXX hashlen depends on KEX */
+name|PRIVSEP
+argument_list|(
 name|key_sign
 argument_list|(
 name|server_host_key
@@ -1334,6 +1342,7 @@ argument_list|,
 name|hash
 argument_list|,
 literal|20
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* destroy_sensitive_data(); */

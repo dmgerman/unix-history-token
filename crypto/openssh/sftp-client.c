@@ -28,7 +28,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-client.c,v 1.24 2002/02/24 16:57:19 markus Exp $"
+literal|"$OpenBSD: sftp-client.c,v 1.32 2002/06/09 13:32:01 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1250,7 +1250,7 @@ name|ret
 operator|->
 name|transfer_buflen
 operator|=
-name|MAX
+name|MIN
 argument_list|(
 name|ret
 operator|->
@@ -2496,14 +2496,21 @@ literal|"Server version does not support lstat operation"
 argument_list|)
 expr_stmt|;
 else|else
-name|error
+name|log
 argument_list|(
 literal|"Server version does not support lstat operation"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|do_stat
+argument_list|(
+name|conn
+argument_list|,
+name|path
+argument_list|,
+name|quiet
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4076,8 +4083,18 @@ name|debug3
 argument_list|(
 literal|"Request range %llu -> %llu (%d/%d)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|offset
 operator|+
 name|buflen
@@ -4316,10 +4333,20 @@ name|debug3
 argument_list|(
 literal|"Received data %llu -> %llu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|req
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|req
 operator|->
 name|offset
@@ -4438,12 +4465,22 @@ argument_list|(
 literal|"Short data block, re-requesting "
 literal|"%llu -> %llu (%2d)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|req
 operator|->
 name|offset
 operator|+
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|req
 operator|->
 name|offset
@@ -4542,6 +4579,11 @@ name|debug3
 argument_list|(
 literal|"Finish at %llu (%2d)"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|offset
 argument_list|,
 name|num_req
@@ -5345,7 +5387,9 @@ argument_list|,
 name|id
 argument_list|,
 operator|(
-name|u_int64_t
+name|unsigned
+name|long
+name|long
 operator|)
 name|offset
 argument_list|,
@@ -5397,6 +5441,9 @@ operator|->
 name|num_requests
 condition|)
 block|{
+name|u_int
+name|r_id
+decl_stmt|;
 name|buffer_clear
 argument_list|(
 operator|&
@@ -5421,7 +5468,7 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|id
+name|r_id
 operator|=
 name|buffer_get_int
 argument_list|(
@@ -5479,7 +5526,7 @@ name|ack
 operator|->
 name|id
 operator|!=
-name|id
+name|r_id
 condition|;
 name|ack
 operator|=
@@ -5501,7 +5548,7 @@ name|fatal
 argument_list|(
 literal|"Can't find request for ID %d"
 argument_list|,
-name|id
+name|r_id
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -5563,6 +5610,11 @@ name|ack
 operator|->
 name|len
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ack
 operator|->
 name|offset

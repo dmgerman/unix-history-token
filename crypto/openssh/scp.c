@@ -20,7 +20,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: scp.c,v 1.86 2001/12/05 03:56:39 itojun Exp $"
+literal|"$OpenBSD: scp.c,v 1.91 2002/06/19 00:27:55 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -823,14 +823,6 @@ argument_list|(
 operator|&
 name|args
 argument_list|,
-literal|"-oFallBackToRsh no"
-argument_list|)
-expr_stmt|;
-name|addargs
-argument_list|(
-operator|&
-name|args
-argument_list|,
 literal|"-oClearAllForwardings yes"
 argument_list|)
 expr_stmt|;
@@ -1446,8 +1438,7 @@ name|char
 modifier|*
 name|ssh_options
 init|=
-literal|"-x -o'FallBackToRsh no' "
-literal|"-o'ClearAllForwardings yes'"
+literal|"-x -o'ClearAllForwardings yes'"
 decl_stmt|;
 operator|*
 name|src
@@ -4031,8 +4022,12 @@ literal|"%s%s%s"
 argument_list|,
 name|targ
 argument_list|,
-operator|*
+name|strcmp
+argument_list|(
 name|targ
+argument_list|,
+literal|"/"
+argument_list|)
 condition|?
 literal|"/"
 else|:
@@ -5019,9 +5014,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: scp [-pqrvBC46] [-F config] [-S ssh] [-P port] [-c cipher] [-i identity]\n"
-literal|"           [-o option] f1 f2\n"
-literal|"   or: scp [options] f1 ... fn directory\n"
+literal|"usage: scp [-pqrvBC46] [-F config] [-S program] [-P port]\n"
+literal|"           [-c cipher] [-i identity] [-o option]\n"
+literal|"           [[user@]host1:]file1 [...] [[user@]host2:]file2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -5691,7 +5686,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-literal|256
+literal|512
 index|]
 decl_stmt|;
 if|if
@@ -5855,10 +5850,13 @@ literal|"|%.*s%*s|"
 argument_list|,
 name|i
 argument_list|,
-literal|"***************************************"
-literal|"***************************************"
-literal|"***************************************"
-literal|"***************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
+literal|"*******************************************************"
 argument_list|,
 name|barlength
 operator|-

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: kex.h,v 1.29 2002/02/14 23:41:01 markus Exp $	*/
+comment|/*	$OpenBSD: kex.h,v 1.31 2002/05/16 22:02:50 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -201,6 +201,7 @@ decl_stmt|;
 name|int
 name|enabled
 decl_stmt|;
+specifier|const
 name|EVP_MD
 modifier|*
 name|md
@@ -326,6 +327,16 @@ name|load_host_key
 function_decl|)
 parameter_list|(
 name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|host_key_index
+function_decl|)
+parameter_list|(
+name|Key
+modifier|*
 parameter_list|)
 function_decl|;
 block|}

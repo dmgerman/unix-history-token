@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bufaux.h,v 1.16 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: bufaux.h,v 1.18 2002/04/20 09:14:58 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -79,6 +79,28 @@ modifier|*
 parameter_list|,
 name|BIGNUM
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|u_short
+name|buffer_get_short
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|buffer_put_short
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+name|u_short
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,6 +214,17 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|buffer_skip_string
+parameter_list|(
+name|b
+parameter_list|)
+define|\
+value|do { u_int l = buffer_get_int(b); buffer_consume(b, l); } while(0)
+end_define
 
 begin_endif
 endif|#

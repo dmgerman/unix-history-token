@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-options.c,v 1.21 2002/01/29 14:32:03 markus Exp $"
+literal|"$OpenBSD: auth-options.c,v 1.24 2002/05/13 20:44:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -68,7 +68,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"bufaux.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"misc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"monitor_wrap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth.h"
 end_include
 
 begin_comment
@@ -213,6 +231,9 @@ block|}
 name|channel_clear_permitted_opens
 argument_list|()
 expr_stmt|;
+name|auth_debug_reset
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -298,7 +319,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Port forwarding disabled."
 argument_list|)
@@ -339,7 +360,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Agent forwarding disabled."
 argument_list|)
@@ -380,7 +401,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"X11 forwarding disabled."
 argument_list|)
@@ -421,7 +442,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Pty allocation disabled."
 argument_list|)
@@ -555,7 +576,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: missing end quote"
 argument_list|,
@@ -584,7 +605,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Forced command: %.900s"
 argument_list|,
@@ -721,7 +742,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: missing end quote"
 argument_list|,
@@ -746,7 +767,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Adding to environment: %.900s"
 argument_list|,
@@ -930,7 +951,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: missing end quote"
 argument_list|,
@@ -992,7 +1013,7 @@ argument_list|,
 name|remote_ip
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Your host '%.200s' is not "
 literal|"permitted to use this key for login."
@@ -1145,7 +1166,7 @@ argument_list|,
 name|linenum
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: missing end quote"
 argument_list|,
@@ -1214,7 +1235,7 @@ argument_list|,
 name|patterns
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: "
 literal|"Bad permitopen specification"
@@ -1258,7 +1279,7 @@ argument_list|,
 name|sport
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"%.100s, line %lu: "
 literal|"Bad permitopen port"
@@ -1342,6 +1363,14 @@ operator|++
 expr_stmt|;
 comment|/* Process the next option. */
 block|}
+if|if
+condition|(
+operator|!
+name|use_privsep
+condition|)
+name|auth_debug_send
+argument_list|()
+expr_stmt|;
 comment|/* grant access */
 return|return
 literal|1
@@ -1359,7 +1388,7 @@ argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
-name|packet_send_debug
+name|auth_debug_add
 argument_list|(
 literal|"Bad options in %.100s file, line %lu: %.50s"
 argument_list|,
@@ -1369,6 +1398,14 @@ name|linenum
 argument_list|,
 name|opts
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|use_privsep
+condition|)
+name|auth_debug_send
+argument_list|()
 expr_stmt|;
 comment|/* deny access */
 return|return

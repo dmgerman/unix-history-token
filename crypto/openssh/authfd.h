@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: authfd.h,v 1.23 2002/03/04 17:27:39 stevesk Exp $	*/
+comment|/*	$OpenBSD: authfd.h,v 1.30 2002/06/19 00:27:55 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -164,6 +164,49 @@ value|21
 end_define
 
 begin_comment
+comment|/* lock/unlock the agent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENTC_LOCK
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENTC_UNLOCK
+value|23
+end_define
+
+begin_comment
+comment|/* add key with constraints */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENTC_ADD_RSA_ID_CONSTRAINED
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_AGENTC_ADD_ID_CONSTRAINED
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH_AGENT_CONSTRAIN_LIFETIME
+value|1
+end_define
+
+begin_comment
 comment|/* extended failure messages */
 end_comment
 
@@ -313,6 +356,25 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ssh_add_identity_constrained
+parameter_list|(
+name|AuthenticationConnection
+modifier|*
+parameter_list|,
+name|Key
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ssh_remove_identity
 parameter_list|(
 name|AuthenticationConnection
@@ -338,12 +400,32 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ssh_lock_agent
+parameter_list|(
+name|AuthenticationConnection
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ssh_update_card
 parameter_list|(
 name|AuthenticationConnection
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 specifier|const
 name|char

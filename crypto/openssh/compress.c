@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: compress.c,v 1.17 2001/12/29 21:56:01 stevesk Exp $"
+literal|"$OpenBSD: compress.c,v 1.19 2002/03/18 17:31:54 provos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,14 +42,12 @@ file|"compress.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 name|z_stream
 name|incoming_stream
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|z_stream
 name|outgoing_stream
 decl_stmt|;
@@ -68,6 +66,24 @@ begin_decl_stmt
 specifier|static
 name|int
 name|compress_init_recv_called
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|inflate_failed
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|deflate_failed
 init|=
 literal|0
 decl_stmt|;
@@ -248,6 +264,10 @@ condition|(
 name|compress_init_recv_called
 operator|==
 literal|1
+operator|&&
+name|inflate_failed
+operator|==
+literal|0
 condition|)
 name|inflateEnd
 argument_list|(
@@ -260,6 +280,10 @@ condition|(
 name|compress_init_send_called
 operator|==
 literal|1
+operator|&&
+name|deflate_failed
+operator|==
+literal|0
 condition|)
 name|deflateEnd
 argument_list|(
@@ -383,6 +407,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|deflate_failed
+operator|=
+literal|1
+expr_stmt|;
 name|fatal
 argument_list|(
 literal|"buffer_compress: deflate returned %d"
@@ -512,6 +540,10 @@ case|:
 comment|/* 			 * Comments in zlib.h say that we should keep calling 			 * inflate() until we get an error.  This appears to 			 * be the error that we get. 			 */
 return|return;
 default|default:
+name|inflate_failed
+operator|=
+literal|1
+expr_stmt|;
 name|fatal
 argument_list|(
 literal|"buffer_uncompress: inflate returned %d"

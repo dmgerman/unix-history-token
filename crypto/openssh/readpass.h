@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: readpass.h,v 1.6 2001/06/26 17:27:24 markus Exp $	*/
+comment|/*	$OpenBSD: readpass.h,v 1.7 2002/03/26 15:58:46 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -19,6 +19,13 @@ define|#
 directive|define
 name|RP_ALLOW_STDIN
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RP_ALLOW_EOF
+value|0x0004
 end_define
 
 begin_function_decl
