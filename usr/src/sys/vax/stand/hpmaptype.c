@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hpmaptype.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -358,6 +358,33 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|short
+name|fj2361a_off
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|12
+block|,
+literal|0
+block|,
+literal|277
+block|,
+literal|289
+block|,
+literal|515
+block|,
+literal|277
+block|,
+literal|62
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * hptypes is used to translate Massbus drive type and other information  * into an index in hpst.  The indices of hptypes and hpst must therefore agree.  */
 end_comment
@@ -415,6 +442,10 @@ operator|-
 literal|1
 block|,
 comment|/* 2361 */
+operator|-
+literal|1
+block|,
+comment|/* 2361A */
 literal|0
 block|}
 decl_stmt|;
@@ -695,6 +726,22 @@ block|,
 name|fj2361_off
 block|,
 comment|/* Fuji 2361 */
+define|#
+directive|define
+name|HPDT_2361A
+literal|68
+block|,
+literal|20
+block|,
+literal|68
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|fj2361a_off
+block|,
+comment|/* Fuji 2361a */
 block|}
 decl_stmt|;
 end_decl_stmt

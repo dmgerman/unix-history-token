@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -316,6 +316,13 @@ define|#
 directive|define
 name|HPDT_2361
 value|15
+operator|-
+literal|1
+block|,
+define|#
+directive|define
+name|HPDT_2361A
+value|16
 operator|-
 literal|1
 block|,
@@ -7258,6 +7265,54 @@ literal|66
 block|,
 comment|/* H=cyl 66 thru 293 */
 block|}
+struct|,
+name|fj2361a_sizes
+index|[
+literal|8
+index|]
+init|=
+block|{
+literal|15884
+block|,
+literal|0
+block|,
+comment|/* A=cyl 0 thru 11 */
+literal|66880
+block|,
+literal|12
+block|,
+comment|/* B=cyl 12 thru 61 */
+literal|1145120
+block|,
+literal|0
+block|,
+comment|/* C=cyl 0 thru 841 */
+literal|15884
+block|,
+literal|277
+block|,
+comment|/* D=cyl 277 thru 288 */
+literal|307200
+block|,
+literal|289
+block|,
+comment|/* E=cyl 289 thru 514 */
+literal|444516
+block|,
+literal|515
+block|,
+comment|/* F=cyl 515 thru 841 */
+literal|768196
+block|,
+literal|277
+block|,
+comment|/* G=cyl 277 thru 841 */
+literal|291346
+block|,
+literal|62
+block|,
+comment|/* H=cyl 62 thru 276 */
+block|}
 struct|;
 end_struct
 
@@ -7637,6 +7692,28 @@ block|,
 literal|3
 block|,
 literal|"2361"
+block|}
+block|,
+block|{
+literal|68
+block|,
+literal|20
+block|,
+literal|68
+operator|*
+literal|20
+block|,
+literal|842
+block|,
+name|fj2361a_sizes
+block|,
+literal|15
+block|,
+literal|8
+block|,
+literal|3
+block|,
+literal|"2361a"
 block|}
 block|, }
 struct|;
