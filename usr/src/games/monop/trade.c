@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trade.c	5.3 (Berkeley) %G%"
+literal|"@(#)trade.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,6 @@ file|"monop.ext"
 end_include
 
 begin_struct
-specifier|static
 struct|struct
 name|trd_st
 block|{
