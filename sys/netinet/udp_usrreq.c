@@ -1577,9 +1577,11 @@ name|bad
 goto|;
 if|if
 condition|(
-operator|!
 name|blackhole
 condition|)
+goto|goto
+name|bad
+goto|;
 name|icmp_error
 argument_list|(
 name|m
@@ -1593,10 +1595,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-else|else
-goto|goto
-name|bad
-goto|;
 return|return;
 block|}
 ifdef|#
