@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.23 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,13 +256,6 @@ name|time
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|FILENAME_MAX
-value|MAXPATHLEN
-end_define
 
 begin_define
 define|#
