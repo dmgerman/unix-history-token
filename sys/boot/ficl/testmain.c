@@ -851,7 +851,7 @@ operator|->
 name|pStack
 argument_list|,
 operator|(
-name|UNS32
+name|FICL_UNS
 operator|)
 name|now
 argument_list|)

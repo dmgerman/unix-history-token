@@ -521,7 +521,7 @@ decl_stmt|;
 name|STRINGINFO
 name|si
 decl_stmt|;
-name|UNS32
+name|FICL_UNS
 name|count
 init|=
 literal|0
@@ -2056,7 +2056,7 @@ argument_list|(
 name|ud
 argument_list|,
 operator|(
-name|UNS32
+name|FICL_UNS
 operator|)
 name|radix
 argument_list|)

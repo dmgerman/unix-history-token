@@ -767,7 +767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************                         d i c t A p p e n d U N S 3 2 ** Append the specified UNS32 to the dictionary **************************************************************************/
+comment|/**************************************************************************                         d i c t A p p e n d U N S ** Append the specified FICL_UNS to the dictionary **************************************************************************/
 end_comment
 
 begin_function
@@ -778,7 +778,7 @@ name|FICL_DICT
 modifier|*
 name|pDict
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|u
 parameter_list|)
 block|{

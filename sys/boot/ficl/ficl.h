@@ -162,7 +162,7 @@ typedef|;
 typedef|typedef
 struct|struct
 block|{
-name|UNS32
+name|FICL_UNS
 name|count
 decl_stmt|;
 name|char
@@ -194,7 +194,7 @@ name|si
 parameter_list|,
 name|len
 parameter_list|)
-value|(si.count = (UNS32)(len))
+value|(si.count = (FICL_UNS)(len))
 define|#
 directive|define
 name|SI_SETPTR
@@ -583,11 +583,11 @@ modifier|*
 name|runningWord
 decl_stmt|;
 comment|/* address of currently running word (often just *(ip-1) ) */
-name|UNS32
+name|FICL_UNS
 name|state
 decl_stmt|;
 comment|/* compiling or interpreting        */
-name|UNS32
+name|FICL_UNS
 name|base
 decl_stmt|;
 comment|/* number conversion base           */
@@ -1092,7 +1092,7 @@ name|char
 modifier|*
 name|text
 parameter_list|,
-name|INT32
+name|FICL_INT
 name|nChars
 parameter_list|,
 name|TIB
@@ -1730,7 +1730,7 @@ name|char
 modifier|*
 name|pText
 parameter_list|,
-name|INT32
+name|FICL_INT
 name|nChars
 parameter_list|)
 function_decl|;
@@ -1815,7 +1815,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|value
 parameter_list|)
 function_decl|;
@@ -1826,10 +1826,10 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|hi
 parameter_list|,
-name|UNS32
+name|FICL_UNS
 name|lo
 parameter_list|)
 function_decl|;

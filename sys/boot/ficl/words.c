@@ -4339,6 +4339,7 @@ name|pw
 operator|=
 operator|(
 name|UNS32
+operator|*
 operator|)
 name|stackPopPtr
 argument_list|(
