@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -172,6 +172,50 @@ end_define
 
 begin_comment
 comment|/* namei path name buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_GPROF
+value|13
+end_define
+
+begin_comment
+comment|/* kernel profiling buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_IOCTLOPS
+value|14
+end_define
+
+begin_comment
+comment|/* ioctl data buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_SUPERBLK
+value|15
+end_define
+
+begin_comment
+comment|/* super block data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_TEMP
+value|16
+end_define
+
+begin_comment
+comment|/* misc temporary data buffers */
 end_comment
 
 begin_define
