@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.64 1996/09/22 00:48:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: disks.c,v 1.65 1996/10/01 04:56:31 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -69,6 +69,8 @@ name|struct
 name|chunk
 modifier|*
 name|c1
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|i
@@ -95,10 +97,6 @@ name|d
 operator|->
 name|name
 argument_list|)
-expr_stmt|;
-name|current_chunk
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -774,6 +772,8 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
+name|rv
+decl_stmt|,
 name|key
 init|=
 literal|0
@@ -794,6 +794,9 @@ decl_stmt|;
 name|WINDOW
 modifier|*
 name|w
+init|=
+name|savescr
+argument_list|()
 decl_stmt|;
 name|chunking
 operator|=
@@ -806,24 +809,25 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|w
-operator|=
-name|savescr
+comment|/* Flush both the dialog and curses library views of the screen        since we don't always know who called us */
+name|dialog_clear_norefresh
 argument_list|()
-expr_stmt|;
+operator|,
 name|clear
 argument_list|()
-expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
 expr_stmt|;
 while|while
 condition|(
 name|chunking
 condition|)
 block|{
+comment|/* Set up the chunk array */
+name|record_chunks
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+comment|/* Now print our overall state */
 name|print_chunks
 argument_list|(
 name|d
@@ -864,6 +868,20 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+else|else
+block|{
+name|move
+argument_list|(
+literal|23
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+block|}
+comment|/* Get command character */
 name|key
 operator|=
 name|getch
@@ -877,6 +895,7 @@ name|key
 argument_list|)
 condition|)
 block|{
+comment|/* redraw */
 case|case
 literal|'\014'
 case|:
@@ -884,10 +903,11 @@ comment|/* ^L */
 name|clear
 argument_list|()
 expr_stmt|;
-name|print_command_summary
-argument_list|()
+name|msg
+operator|=
+name|NULL
 expr_stmt|;
-continue|continue;
+break|break;
 case|case
 name|KEY_UP
 case|:
@@ -974,10 +994,6 @@ break|break;
 case|case
 literal|'A'
 case|:
-block|{
-name|int
-name|rv
-decl_stmt|;
 name|rv
 operator|=
 name|msgYesNo
@@ -1044,12 +1060,6 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-block|}
 name|clear
 argument_list|()
 expr_stmt|;
@@ -1339,16 +1349,11 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
+block|}
+block|}
 name|clear
 argument_list|()
 expr_stmt|;
-block|}
-block|}
 block|}
 break|break;
 case|case
@@ -1389,11 +1394,6 @@ argument_list|(
 name|DISK_PARTITIONED
 argument_list|,
 literal|"yes"
-argument_list|)
-expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
 argument_list|)
 expr_stmt|;
 block|}
@@ -1581,11 +1581,6 @@ argument_list|(
 name|DISK_LABELLED
 argument_list|)
 expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
 name|clear
 argument_list|()
 expr_stmt|;
@@ -1691,24 +1686,11 @@ literal|"No seat belts whatsoever are provided!"
 argument_list|)
 condition|)
 block|{
-name|WINDOW
-modifier|*
-name|w
-decl_stmt|;
-name|w
-operator|=
-name|savescr
+name|clear
 argument_list|()
 expr_stmt|;
-name|dialog_clear
+name|refresh
 argument_list|()
-expr_stmt|;
-name|end_dialog
-argument_list|()
-expr_stmt|;
-name|DialogActive
-operator|=
-name|FALSE
 expr_stmt|;
 name|slice_wizard
 argument_list|(
@@ -1722,28 +1704,14 @@ argument_list|,
 literal|"yes"
 argument_list|)
 expr_stmt|;
-name|dialog_clear_norefresh
-argument_list|()
-expr_stmt|;
-name|DialogActive
-operator|=
-name|TRUE
-expr_stmt|;
-name|record_chunks
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-name|restorescr
-argument_list|(
-name|w
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 name|msg
 operator|=
 literal|"Wise choice!"
+expr_stmt|;
+name|clear
+argument_list|()
 expr_stmt|;
 break|break;
 case|case
@@ -1752,9 +1720,6 @@ case|:
 name|chunking
 operator|=
 name|FALSE
-expr_stmt|;
-name|clear
-argument_list|()
 expr_stmt|;
 comment|/* Don't trash the MBR if the first (and therefore only) chunk is marked for a truly dedicated 	     * disk (i.e., the disklabel starts at sector 0), even in cases where the user has requested 	     * booteasy or a "standard" MBR -- both would be fatal in this case. 	     */
 if|if
