@@ -13330,6 +13330,13 @@ block|}
 block|,
 comment|/* SNY9002, Vaio */
 block|{
+literal|0x0390d94d
+block|,
+literal|"SONY VAIO PS/2 mouse port"
+block|}
+block|,
+comment|/* SNY9003, Vaio */
+block|{
 literal|0x0490d94d
 block|,
 literal|"SONY VAIO PS/2 mouse port"
