@@ -731,15 +731,15 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
-comment|/* 		 * Jungsoft NEXDISK USB flash key 		 * PR: kern/54737 		 */
+comment|/* 		 * Power Quotient Int. (PQI) USB flash key 		 * PR: kern/53067 		 */
 block|{
 name|T_DIRECT
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
-literal|"JUNGSOFT"
+literal|"Generic*"
 block|,
-literal|"NEXDISK*"
+literal|"USB Flash Disk*"
 block|,
 literal|"*"
 block|}
@@ -758,6 +758,62 @@ block|,
 literal|"CREATIVE"
 block|,
 literal|"NOMAD_MUVO"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_PREVENT
+block|}
+block|,
+block|{
+comment|/* 		 * Jungsoft NEXDISK USB flash key 		 * PR: kern/54737 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"JUNGSOFT"
+block|,
+literal|"NEXDISK*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * FreeDik USB Mini Data Drive 		 * PR: kern/54786 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"FreeDik*"
+block|,
+literal|"Mini Data Drive"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+block|}
+block|,
+block|{
+comment|/* 		 * Sigmatel USB Flash MP3 Player 		 * PR: kern/57046 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SigmaTel"
+block|,
+literal|"MSCN"
 block|,
 literal|"*"
 block|}
