@@ -160,12 +160,15 @@ name|struct
 name|ngm_connect
 name|ngc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|path
 init|=
 name|NULL
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|hook
 init|=
