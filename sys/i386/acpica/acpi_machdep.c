@@ -1426,7 +1426,7 @@ argument_list|,
 literal|16
 argument_list|)
 expr_stmt|;
-comment|/*       * Date must be>= 1/1/1999 or we don't trust ACPI.  Note that this      * check must be changed by my 114th birthday.      */
+comment|/*  	 * Date must be>= 1/1/1999 or we don't trust ACPI.  Note that this 	 * check must be changed by my 114th birthday. 	 */
 if|if
 condition|(
 name|year
