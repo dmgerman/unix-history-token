@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1983, 1987, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  *  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.18 1997/06/01 20:34:32 vixie Exp  *	$Id: resolv.h,v 1.13 1997/06/27 08:32:38 peter Exp $  */
+comment|/*-  * Copyright (c) 1983, 1987, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Portions Copyright (c) 1996 by Internet Software Consortium.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE  * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	From Id: resolv.h,v 8.12 1998/04/28 19:36:46 halley Exp $  *	$Id: resolv.h,v 1.14 1997/09/01 01:19:10 brian Exp $  */
 end_comment
 
 begin_ifndef
@@ -49,6 +57,17 @@ directive|define
 name|__RES
 value|19960801
 end_define
+
+begin_comment
+comment|/*  * This used to be defined in res_query.c, now it's in herror.c.  It was  * never extern'd by any *.h file before it was placed here.  herror.c is  * part of libresolv.a even though it might make more sense in libnetdb.a  * or even libnet.a.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
@@ -442,9 +461,12 @@ name|RES_PRF_STATS
 value|0x00000001
 end_define
 
-begin_comment
-comment|/*			0x00000002	*/
-end_comment
+begin_define
+define|#
+directive|define
+name|RES_PRF_UPDATE
+value|0x00000002
+end_define
 
 begin_define
 define|#
@@ -539,10 +561,6 @@ end_define
 
 begin_comment
 comment|/*			0x00008000	*/
-end_comment
-
-begin_comment
-comment|/* hooks are still experimental as of 4.9.2 */
 end_comment
 
 begin_typedef
@@ -776,6 +794,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|fp_resstat
+value|__fp_resstat
+end_define
+
+begin_comment
+comment|/* XXX new divert */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|p_query
+value|__p_query
+end_define
+
+begin_comment
+comment|/* XXX new divert */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|dn_skipname
 value|__dn_skipname
 end_define
@@ -860,6 +900,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|p_section
+value|__p_section
+end_define
+
+begin_comment
+comment|/* XXX new func in 8.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|p_cdname
 value|__p_cdname
 end_define
@@ -878,12 +929,9 @@ name|p_fqname
 value|__p_fqname
 end_define
 
-begin_define
-define|#
-directive|define
-name|p_rr
-value|__p_rr
-end_define
+begin_comment
+comment|/* XXX p_rr gone */
+end_comment
 
 begin_define
 define|#
@@ -916,9 +964,86 @@ end_define
 begin_define
 define|#
 directive|define
+name|dn_expand
+value|__dn_expand
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|res_init
+value|__res_init
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|res_randomid
 value|__res_randomid
 end_define
+
+begin_define
+define|#
+directive|define
+name|res_query
+value|__res_query
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|res_search
+value|__res_search
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|res_querydomain
+value|__res_querydomain
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|res_mkquery
+value|__res_mkquery
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|res_send
+value|__res_send
+end_define
+
+begin_comment
+comment|/* XXX unmasked */
+end_comment
 
 begin_define
 define|#
@@ -948,65 +1073,38 @@ name|res_close
 value|__res_close
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIND_RES_POSIX3
-end_ifdef
+begin_define
+define|#
+directive|define
+name|res_mkupdate
+value|__res_mkupdate
+end_define
+
+begin_comment
+comment|/* XXX new func in 8.1 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|dn_expand
-value|__dn_expand
+name|res_mkupdrec
+value|__res_mkupdrec
 end_define
+
+begin_comment
+comment|/* XXX new func in 8.1 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|res_init
-value|__res_init
+name|res_freeupdrec
+value|__res_freeupdrec
 end_define
 
-begin_define
-define|#
-directive|define
-name|res_query
-value|__res_query
-end_define
-
-begin_define
-define|#
-directive|define
-name|res_search
-value|__res_search
-end_define
-
-begin_define
-define|#
-directive|define
-name|res_querydomain
-value|__res_querydomain
-end_define
-
-begin_define
-define|#
-directive|define
-name|res_mkquery
-value|__res_mkquery
-end_define
-
-begin_define
-define|#
-directive|define
-name|res_send
-value|__res_send
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* XXX new func in 8.1 */
+end_comment
 
 begin_decl_stmt
 name|__BEGIN_DECLS
@@ -1076,6 +1174,7 @@ expr|struct
 name|res_sym
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|,
@@ -1479,29 +1578,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
-name|u_char
-modifier|*
-name|p_rr
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|,
-specifier|const
-name|u_char
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|p_option
@@ -1533,6 +1609,7 @@ name|dn_count_labels
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1821,6 +1898,89 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|p_section
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_update
+name|__P
+argument_list|(
+operator|(
+name|ns_updrec
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|res_mkupdate
+name|__P
+argument_list|(
+operator|(
+name|ns_updrec
+operator|*
+operator|,
+name|u_char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ns_updrec
+modifier|*
+name|res_mkupdrec
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|u_int
+operator|,
+name|u_int
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|res_freeupdrec
+name|__P
+argument_list|(
+operator|(
+name|ns_updrec
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
