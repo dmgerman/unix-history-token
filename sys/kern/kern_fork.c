@@ -2264,30 +2264,7 @@ argument_list|(
 name|p2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If p_limit is still copy-on-write, bump refcnt, 	 * otherwise get a copy that won't be modified. 	 * (If PL_SHAREMOD is clear, the structure is shared 	 * copy-on-write.) 	 */
-if|if
-condition|(
-name|p1
-operator|->
-name|p_limit
-operator|->
-name|p_lflags
-operator|&
-name|PL_SHAREMOD
-condition|)
-name|p2
-operator|->
-name|p_limit
-operator|=
-name|limcopy
-argument_list|(
-name|p1
-operator|->
-name|p_limit
-argument_list|)
-expr_stmt|;
-else|else
-block|{
+comment|/* 	 * p_limit is copy-on-write, bump refcnt, 	 */
 name|p2
 operator|->
 name|p_limit
@@ -2303,7 +2280,6 @@ operator|->
 name|p_refcnt
 operator|++
 expr_stmt|;
-block|}
 comment|/* 	 * Setup linkage for kernel based threading 	 */
 if|if
 condition|(

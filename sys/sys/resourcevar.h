@@ -133,7 +133,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Kernel shareable process resource limits.  Because this structure  * is moderately large but changes infrequently, it is normally  * shared copy-on-write after forks.  If a group of processes  * ("threads") share modifications, the PL_SHAREMOD flag is set,  * and a copy must be made for the child of a new fork that isn't  * sharing modifications to the limits.  */
+comment|/*  * Kernel shareable process resource limits.  Because this structure  * is moderately large but changes infrequently, it is normally  * shared copy-on-write after forks.  */
 end_comment
 
 begin_struct
@@ -146,14 +146,6 @@ name|pl_rlimit
 index|[
 name|RLIM_NLIMITS
 index|]
-decl_stmt|;
-define|#
-directive|define
-name|PL_SHAREMOD
-value|0x01
-comment|/* modifications are shared */
-name|int
-name|p_lflags
 decl_stmt|;
 name|int
 name|p_refcnt
