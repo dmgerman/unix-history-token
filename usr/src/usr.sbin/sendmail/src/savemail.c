@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.74 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4897,11 +4897,7 @@ literal|'~'
 operator|||
 name|c
 operator|==
-literal|'\\'
-operator|||
-name|c
-operator|==
-literal|'('
+literal|'='
 condition|)
 return|return
 name|FALSE
