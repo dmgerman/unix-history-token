@@ -25,18 +25,12 @@ directive|include
 file|<bootstrap.h>
 end_include
 
-begin_macro
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|pnpinfo
-argument_list|)
-end_macro
-
-begin_expr_stmt
+begin_decl_stmt
+name|struct
+name|pnpinfo_stql
 name|pnp_devices
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static

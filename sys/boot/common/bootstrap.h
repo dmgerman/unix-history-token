@@ -599,6 +599,24 @@ block|}
 struct|;
 end_struct
 
+begin_expr_stmt
+name|STAILQ_HEAD
+argument_list|(
+name|pnpinfo_stql
+argument_list|,
+name|pnpinfo
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pnpinfo_stql
+name|pnp_devices
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
