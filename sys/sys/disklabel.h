@@ -286,46 +286,13 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* type name, e.g. "eagle" */
-comment|/*  	 * d_packname contains the pack identifier and is returned when 	 * the disklabel is read off the disk or in-core copy. 	 * d_boot0 and d_boot1 are the (optional) names of the 	 * primary (block 0) and secondary (block 1-15) bootstraps 	 * as found in /boot.  These are returned when using 	 * getdiskbyname(3) to retrieve the values from /etc/disktab. 	 */
-union|union
-block|{
 name|char
-name|un_d_packname
+name|d_packname
 index|[
 literal|16
 index|]
 decl_stmt|;
 comment|/* pack identifier */
-struct|struct
-block|{
-name|char
-modifier|*
-name|un_d_boot0
-decl_stmt|;
-comment|/* primary bootstrap name */
-name|char
-modifier|*
-name|un_d_boot1
-decl_stmt|;
-comment|/* secondary bootstrap name */
-block|}
-name|un_b
-struct|;
-block|}
-name|d_un
-union|;
-define|#
-directive|define
-name|d_packname
-value|d_un.un_d_packname
-define|#
-directive|define
-name|d_boot0
-value|d_un.un_b.un_d_boot0
-define|#
-directive|define
-name|d_boot1
-value|d_un.un_b.un_d_boot1
 comment|/* disk geometry: */
 name|u_int32_t
 name|d_secsize
@@ -476,6 +443,31 @@ comment|/* actually may be more */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|disklabel
+argument_list|)
+operator|==
+literal|276
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -1549,6 +1541,104 @@ end_define
 begin_comment
 comment|/* Set/Clear kernel dumps */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__alpha__
+end_ifdef
+
+begin_struct
+struct|struct
+name|disklabel_alphahack
+block|{
+name|struct
+name|disklabel
+name|dl
+decl_stmt|;
+name|char
+name|pad
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DIOCGDINFO_ALPHAHACK
+value|_IOR('d', 101, struct disklabel_alphahack)
+end_define
+
+begin_comment
+comment|/* get */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCSDINFO_ALPHAHACK
+value|_IOW('d', 102, struct disklabel_alphahack)
+end_define
+
+begin_comment
+comment|/* set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCWDINFO_ALPHAHACK
+value|_IOW('d', 103, struct disklabel_alphahack)
+end_define
+
+begin_comment
+comment|/* set, update disk */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DIOCGDVIRGIN_ALPHAHACK
+value|_IOR('d', 105, struct disklabel_alphahack)
+end_define
+
+begin_comment
+comment|/* get virgin label */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CTASSERT
+end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|disklabel_alphahack
+argument_list|)
+operator|==
+literal|280
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
