@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.3 83/01/15"
+literal|"@(#)kgmon.c	4.4 83/01/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,7 +33,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/pte.h>
+file|<machine/pte.h>
 end_include
 
 begin_include
@@ -401,7 +401,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|2
 argument_list|)
 expr_stmt|;
 block|}
@@ -467,7 +467,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|3
 argument_list|)
 expr_stmt|;
 block|}
@@ -606,7 +606,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|4
 argument_list|)
 expr_stmt|;
 block|}
@@ -1300,7 +1300,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|7
 argument_list|)
 expr_stmt|;
 block|}
@@ -1374,7 +1374,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -1451,7 +1451,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|9
 argument_list|)
 expr_stmt|;
 block|}
@@ -1499,7 +1499,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -1583,7 +1583,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+literal|11
 argument_list|)
 expr_stmt|;
 block|}
@@ -1609,7 +1609,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|2
+literal|12
 argument_list|)
 expr_stmt|;
 block|}
@@ -1645,7 +1645,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|3
+literal|13
 argument_list|)
 expr_stmt|;
 block|}
