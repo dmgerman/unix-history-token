@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	6.1	83/07/31	*/
+comment|/*	uba.c	4.62	83/08/21	*/
 end_comment
 
 begin_include
@@ -2106,7 +2106,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This routine is called by a driver for a device with on-board Unibus  * memory.  It removes the memory block from the Unibus resource map  * and clears the map registers for the block.  *  * Arguments are the Unibus number, the Unibus address of the memory  * block, its size in blocks of 512 bytes, and a flag indicating whether  * to allocate the unibus space form the resource map or whether it already  * has been.  *  * Returns> 0 if successful, 0 if not.  */
+comment|/*  * Allocate UNIBUS memory.  Allocates and initializes  * sufficient mapping registers for access.  On a 780,  * the configuration register is setup to disable UBA  * response on DMA transfers to addresses controlled  * by the disabled mapping registers.  */
 end_comment
 
 begin_macro
@@ -2116,7 +2116,7 @@ argument|uban
 argument_list|,
 argument|addr
 argument_list|,
-argument|size
+argument|npg
 argument_list|,
 argument|doalloc
 argument_list|)
@@ -2128,7 +2128,7 @@ name|uban
 decl_stmt|,
 name|addr
 decl_stmt|,
-name|size
+name|npg
 decl_stmt|,
 name|doalloc
 decl_stmt|;
@@ -2150,27 +2150,19 @@ index|]
 decl_stmt|;
 specifier|register
 name|int
-modifier|*
-name|m
-decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|,
 name|a
-decl_stmt|,
-name|s
 decl_stmt|;
 if|if
 condition|(
 name|doalloc
 condition|)
 block|{
+name|int
 name|s
-operator|=
+init|=
 name|spl6
 argument_list|()
-expr_stmt|;
+decl_stmt|;
 name|a
 operator|=
 name|rmget
@@ -2179,7 +2171,7 @@ name|uh
 operator|->
 name|uh_map
 argument_list|,
-name|size
+name|npg
 argument_list|,
 operator|(
 name|addr
@@ -2190,7 +2182,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* starts at ONE! */
 name|splx
 argument_list|(
 name|s
@@ -2213,6 +2204,13 @@ condition|(
 name|a
 condition|)
 block|{
+specifier|register
+name|int
+name|i
+decl_stmt|,
+modifier|*
+name|m
+decl_stmt|;
 name|m
 operator|=
 operator|(
@@ -2239,7 +2237,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|size
+name|npg
 condition|;
 name|i
 operator|++
@@ -2254,6 +2252,7 @@ comment|/* All off, especially 'valid' */
 if|#
 directive|if
 name|VAX780
+comment|/* 		 * On a 780, set up the map register disable 		 * field in the configuration register.  Beware 		 * of callers that request memory ``out of order''. 		 */
 if|if
 condition|(
 name|cpu
@@ -2261,13 +2260,21 @@ operator|==
 name|VAX_780
 condition|)
 block|{
-comment|/* map disable */
+name|int
+name|cr
+init|=
+name|uh
+operator|->
+name|uh_uba
+operator|->
+name|uba_cr
+decl_stmt|;
 name|i
 operator|=
 operator|(
 name|addr
 operator|+
-name|size
+name|npg
 operator|*
 literal|512
 operator|+
@@ -2276,6 +2283,16 @@ operator|)
 operator|/
 literal|8192
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+operator|(
+name|cr
+operator|>>
+literal|26
+operator|)
+condition|)
 name|uh
 operator|->
 name|uh_uba
