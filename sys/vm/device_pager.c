@@ -278,6 +278,8 @@ literal|0
 block|,
 name|dev_pager_putpage
 block|,
+literal|0
+block|,
 name|dev_pager_haspage
 block|}
 decl_stmt|;

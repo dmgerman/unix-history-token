@@ -75,6 +75,12 @@ directive|include
 file|"machine/stdarg.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"machine/vmparam.h"
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -596,7 +602,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Allocate a wired-down (for now) pcb and kernel stack for the process 	 */
-comment|/* addr = UPT_MIN_ADDRESS - UPAGES*NBPG; */
 name|addr
 operator|=
 operator|(
@@ -1748,15 +1753,7 @@ block|{
 case|case
 name|SRUN
 case|:
-if|if
-condition|(
-name|p
-operator|->
-name|p_pri
-operator|<
-name|PUSER
-condition|)
-continue|continue;
+comment|/* 			if (p->p_pri< PUSER) 				continue; */
 if|if
 condition|(
 operator|(
@@ -1792,15 +1789,7 @@ case|:
 case|case
 name|SSTOP
 case|:
-if|if
-condition|(
-name|p
-operator|->
-name|p_pri
-operator|<=
-name|PRIBIO
-condition|)
-continue|continue;
+comment|/* 			if (p->p_pri<= PRIBIO) 				continue; */
 if|if
 condition|(
 name|p
@@ -1851,7 +1840,7 @@ block|}
 continue|continue;
 block|}
 block|}
-comment|/* 	 * If we didn't get rid of any real duds, toss out the next most 	 * likely sleeping/stopped or running candidate.  We only do this 	 * if we are real low on memory since we don't gain much by doing 	 * it (UPAGES pages). 	 */
+comment|/* 	 * If we didn't get rid of any real duds, toss out the next most 	 * likely sleeping/stopped or running candidate.  We only do this 	 * if we are real low on memory since we don't gain much by doing 	 * it (UPAGES+1 pages). 	 */
 if|if
 condition|(
 name|didswap
@@ -1861,9 +1850,17 @@ operator|&&
 operator|(
 name|swapinreq
 operator|&&
+operator|(
 name|vm_page_free_count
+operator|+
+name|vm_page_inactive_count
+operator|)
 operator|<=
-name|vm_pageout_free_min
+operator|(
+name|vm_page_free_min
+operator|+
+name|vm_page_inactive_target
+operator|)
 operator|)
 condition|)
 block|{
