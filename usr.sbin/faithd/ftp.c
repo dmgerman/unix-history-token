@@ -1016,10 +1016,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|port6
-operator|==
-operator|-
-literal|1
+name|error
+operator|<
+literal|0
 condition|)
 block|{
 name|close
@@ -1271,10 +1270,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|port4
-operator|==
-operator|-
-literal|1
+name|error
+operator|<
+literal|0
 condition|)
 block|{
 name|close
