@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/timerreg.h>
 end_include
 

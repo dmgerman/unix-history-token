@@ -611,12 +611,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_long
-name|atdevbase
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cold
 init|=
@@ -4680,12 +4674,6 @@ name|PAGE_SIZE
 operator|)
 operator|-
 literal|1
-expr_stmt|;
-name|atdevbase
-operator|=
-name|ISA_HOLE_START
-operator|+
-name|KERNBASE
 expr_stmt|;
 comment|/*  	 * This may be done better later if it gets more high level  	 * components in it. If so just link td->td_proc here. 	 */
 name|proc_linkup

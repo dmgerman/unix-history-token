@@ -156,37 +156,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|BIOS_PADDRTOVADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) - ISA_HOLE_START) + atdevbase)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BIOS_VADDRTOPADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x) - atdevbase) + ISA_HOLE_START)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -206,11 +175,6 @@ name|x
 parameter_list|)
 value|(x)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * System Management BIOS / Desktop Management Interface tables  */

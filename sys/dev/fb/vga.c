@@ -206,7 +206,7 @@ name|BIOS_PADDRTOVADDR
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) - ISA_HOLE_START) + atdevbase)
+value|((x) + KERNBASE)
 end_define
 
 begin_endif

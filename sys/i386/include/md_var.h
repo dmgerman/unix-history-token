@@ -116,17 +116,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|atdevbase
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* offset in virtual memory of ISA io mem */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
 name|basemem
 decl_stmt|;
 end_decl_stmt
