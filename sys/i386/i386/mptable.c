@@ -1152,39 +1152,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|invltlb_ok
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* throttle smp_invltlb() till safe */
-end_comment
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_machdep
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|invltlb_ok
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|invltlb_ok
-argument_list|,
-literal|0
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Local data and functions.  */
 end_comment
@@ -9396,8 +9363,6 @@ argument_list|)
 if|if
 condition|(
 name|smp_started
-operator|&&
-name|invltlb_ok
 condition|)
 name|ipi_all_but_self
 argument_list|(
@@ -9462,30 +9427,9 @@ name|aps_ready
 condition|)
 comment|/* spin */
 empty_stmt|;
-comment|/* 	 * Set curproc to our per-cpu idleproc so that mutexes have 	 * something unique to lock with. 	 */
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|idlethread
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* lock against other AP's that are waking up */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|ap_boot_mtx
-argument_list|)
-expr_stmt|;
-comment|/* BSP may have changed PTD while we're waiting for the lock */
+comment|/* BSP may have changed PTD while we were waiting */
 name|cpu_invltlb
 argument_list|()
-expr_stmt|;
-name|smp_cpus
-operator|++
 expr_stmt|;
 if|#
 directive|if
@@ -9507,34 +9451,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Build our map of 'other' CPUs. */
-name|PCPU_SET
-argument_list|(
-name|other_cpus
-argument_list|,
-name|all_cpus
-operator|&
-operator|~
-operator|(
-literal|1
-operator|<<
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-operator|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SMP: AP CPU #%d Launched!\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
@@ -9622,7 +9538,55 @@ comment|/* Set memory range attributes for this CPU to match the BSP */
 name|mem_range_AP_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Activate smp_invltlb, although strictly speaking, this isn't 	 * quite correct yet.  We should have a bitfield for cpus willing 	 * to accept TLB flush IPI's or something and sync them. 	 */
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|ap_boot_mtx
+argument_list|)
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_SMP
+argument_list|,
+literal|"SMP: AP CPU #%d Launched"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|smp_cpus
+operator|++
+expr_stmt|;
+comment|/* Build our map of 'other' CPUs. */
+name|PCPU_SET
+argument_list|(
+name|other_cpus
+argument_list|,
+name|all_cpus
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SMP: AP CPU #%d Launched!\n"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|smp_cpus
@@ -9630,10 +9594,6 @@ operator|==
 name|mp_ncpus
 condition|)
 block|{
-name|invltlb_ok
-operator|=
-literal|1
-expr_stmt|;
 name|smp_started
 operator|=
 literal|1
@@ -9645,7 +9605,6 @@ literal|1
 expr_stmt|;
 comment|/* historic */
 block|}
-comment|/* let other AP's wake up now */
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -9677,9 +9636,6 @@ name|ticks
 argument_list|)
 expr_stmt|;
 comment|/* ok, now grab sched_lock and enter the scheduler */
-name|enable_intr
-argument_list|()
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -9692,7 +9648,9 @@ expr_stmt|;
 comment|/* doesn't return */
 name|panic
 argument_list|(
-literal|"scheduler returned us to ap_init"
+literal|"scheduler returned us to %s"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -9757,9 +9715,6 @@ if|if
 condition|(
 operator|!
 name|smp_started
-operator|||
-operator|!
-name|invltlb_ok
 operator|||
 name|cold
 operator|||
@@ -9843,9 +9798,6 @@ if|if
 condition|(
 operator|!
 name|smp_started
-operator|||
-operator|!
-name|invltlb_ok
 operator|||
 name|cold
 operator|||

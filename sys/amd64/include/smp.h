@@ -1033,25 +1033,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* global data in init_smp.c */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|invltlb_ok
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|int
-name|smp_idle_loops
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif

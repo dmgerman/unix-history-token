@@ -514,17 +514,6 @@ name|mc_expected
 operator|=
 literal|0
 expr_stmt|;
-comment|/*          * Set curproc to our per-cpu idleproc so that mutexes have          * something unique to lock with. 	 * 	 * XXX: shouldn't this already be set for us?          */
-name|PCPU_SET
-argument_list|(
-name|curthread
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|idlethread
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set flags in our per-CPU slot in the HWRPB. 	 */
 name|cpu
 operator|=
@@ -597,13 +586,19 @@ expr_stmt|;
 name|smp_cpus
 operator|++
 expr_stmt|;
-name|CTR0
+name|CTR1
 argument_list|(
 name|KTR_SMP
 argument_list|,
-literal|"smp_init_secondary"
+literal|"SMP: AP CPU #%d Launched"
+argument_list|,
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Build our map of 'other' CPUs. */
 name|PCPU_SET
 argument_list|(
 name|other_cpus
@@ -659,9 +654,7 @@ name|smp_started
 operator|==
 literal|0
 condition|)
-name|alpha_mb
-argument_list|()
-expr_stmt|;
+empty_stmt|;
 comment|/* nothing */
 name|microuptime
 argument_list|(
@@ -679,14 +672,6 @@ name|ticks
 argument_list|)
 expr_stmt|;
 comment|/* ok, now grab sched_lock and enter the scheduler */
-operator|(
-name|void
-operator|)
-name|alpha_pal_swpipl
-argument_list|(
-name|ALPHA_PSL_IPL_0
-argument_list|)
-expr_stmt|;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -699,7 +684,8 @@ expr_stmt|;
 comment|/* doesn't return */
 name|panic
 argument_list|(
-literal|"scheduler returned us to "
+literal|"scheduler returned us to %s"
+argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
