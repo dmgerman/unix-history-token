@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -113,23 +113,16 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CQUERYM
+name|STATUS
 value|0x2
 end_define
 
 begin_comment
-comment|/* completion query (multiple) */
+comment|/* nameserver status query */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CQUERYU
-value|0x3
-end_define
-
 begin_comment
-comment|/* completion query (unique) */
+comment|/*#define xxx		0x3		/* 0x3 reserved */
 end_comment
 
 begin_comment
