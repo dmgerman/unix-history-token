@@ -817,16 +817,6 @@ decl_stmt|,
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
 decl_stmt|;
 name|cs_writereg
 argument_list|(
@@ -867,13 +857,16 @@ operator|>
 literal|40000
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d: full/half duplex "
-literal|"auto negotiation timeout\n"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
-name|unit
+literal|"full/half duplex auto negotiation timeout\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -910,17 +903,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-decl_stmt|;
 name|cs_writereg
 argument_list|(
 name|sc
@@ -963,12 +945,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d: failed to enable TP\n"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
-name|unit
+literal|"failed to enable TP\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1320,17 +1306,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-decl_stmt|;
 name|control_dc_dc
 argument_list|(
 name|sc
@@ -1365,12 +1340,16 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d failed to enable AUI\n"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
-name|unit
+literal|"failed to enable AUI\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1398,17 +1377,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
-name|unit
-init|=
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
-decl_stmt|;
 name|control_dc_dc
 argument_list|(
 name|sc
@@ -1443,12 +1411,16 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d failed to enable BNC\n"
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
-name|unit
+literal|"failed to enable BNC\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2194,7 +2166,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*          * Temporary disabled          *         if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		printf( CS_NAME"%1d: incorrect drq\n", unit ); 		return 0; 	}         */
+comment|/*          * Temporary disabled          *         if (drq>0) 		cs_writereg(sc, pp_isadma, drq); 	else { 		device_printf(dev, "incorrect drq\n",); 		return 0; 	}         */
 if|if
 condition|(
 name|bootverbose
@@ -2836,12 +2808,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%d: Couldn't allocate memory for NIC\n"
+name|ifp
 argument_list|,
-name|unit
+literal|"Couldn't allocate memory for NIC\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3060,12 +3031,11 @@ name|IFM_10_5
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%d: adapter has no media\n"
+name|ifp
 argument_list|,
-name|unit
+literal|"adapter has no media\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3098,14 +3068,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%d: ethernet address %6D\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"ethernet address %6D\n"
 argument_list|,
 name|sc
 operator|->
@@ -3479,14 +3446,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d: rcvd: stat %x, len %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"rcvd: stat %x, len %d\n"
 argument_list|,
 name|status
 argument_list|,
@@ -3508,14 +3472,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d: bad pkt stat %x\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"bad pkt stat %x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -3832,19 +3793,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|int
-name|unit
-init|=
-name|ifp
-operator|->
-name|if_unit
-decl_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d: Interrupt.\n"
+name|ifp
 argument_list|,
-name|unit
+literal|"Interrupt.\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3866,12 +3819,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%1d:from ISQ: %04x\n"
+name|ifp
 argument_list|,
-name|unit
+literal|"from ISQ: %04x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -4738,18 +4690,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%d: ioctl(%lx)\n"
+name|ifp
 argument_list|,
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-operator|.
-name|if_unit
+literal|"ioctl(%lx)\n"
 argument_list|,
 name|command
 argument_list|)
@@ -5269,18 +5214,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CS_DEBUG
-name|printf
+name|if_printf
 argument_list|(
-name|CS_NAME
-literal|"%d: cs_setmedia(%x)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|arpcom
 operator|.
 name|ac_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"cs_setmedia(%x)\n"
 argument_list|,
 name|media
 argument_list|)
