@@ -2819,7 +2819,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"IdlePTD at phsyical address 0x%08lx\n"
+literal|"IdlePTD at physical address 0x%08lx\n"
 argument_list|,
 operator|(
 name|unsigned
