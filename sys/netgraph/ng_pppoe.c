@@ -4428,11 +4428,7 @@ name|node
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|send_sessionid
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
+comment|/* send_sessionid(sp); */
 name|neg
 operator|->
 name|timeout
@@ -4718,11 +4714,7 @@ operator|.
 name|sid
 argument_list|)
 expr_stmt|;
-name|send_sessionid
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
+comment|/* send_sessionid(sp); */
 name|neg
 operator|->
 name|timeout
