@@ -481,7 +481,7 @@ begin_define
 define|#
 directive|define
 name|OPIE_LOCK_DIR
-value|"/etc/opielocks"
+value|"/var/spool/opielocks"
 end_define
 
 begin_comment
