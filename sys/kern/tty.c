@@ -12146,6 +12146,16 @@ condition|?
 literal|"running"
 else|:
 comment|/* XXXKSE */
+name|pick
+operator|->
+name|p_stat
+operator|==
+name|SMTX
+condition|?
+name|td
+operator|->
+name|td_mtxname
+else|:
 name|td
 operator|->
 name|td_wmesg
@@ -12211,7 +12221,7 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|" cmd: %s %d [%s] "
+literal|" cmd: %s %d [%s%s] "
 argument_list|,
 name|pick
 operator|->
@@ -12220,6 +12230,16 @@ argument_list|,
 name|pick
 operator|->
 name|p_pid
+argument_list|,
+name|pick
+operator|->
+name|p_stat
+operator|==
+name|SMTX
+condition|?
+literal|"*"
+else|:
+literal|""
 argument_list|,
 name|stmp
 argument_list|)
