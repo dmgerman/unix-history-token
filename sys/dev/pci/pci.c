@@ -6938,7 +6938,7 @@ argument_list|,
 name|buflen
 argument_list|,
 literal|"vendor=0x%04x device=0x%04x subvendor=0x%04x "
-literal|"subdevice=0x%04x"
+literal|"subdevice=0x%04x class=0x%02x%02x%02x"
 argument_list|,
 name|cfg
 operator|->
@@ -6955,6 +6955,18 @@ argument_list|,
 name|cfg
 operator|->
 name|subdevice
+argument_list|,
+name|cfg
+operator|->
+name|baseclass
+argument_list|,
+name|cfg
+operator|->
+name|subclass
+argument_list|,
+name|cfg
+operator|->
+name|progif
 argument_list|)
 expr_stmt|;
 return|return
