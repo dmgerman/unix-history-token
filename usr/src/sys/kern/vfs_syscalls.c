@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.67 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.68 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -80,7 +80,7 @@ comment|/*  * Virtual File System System Calls  */
 end_comment
 
 begin_comment
-comment|/*  * mount system call  */
+comment|/*  * Mount system call.  */
 end_comment
 
 begin_comment
@@ -1349,7 +1349,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * operate on filesystem quotas  */
+comment|/*  * Operate on filesystem quotas.  */
 end_comment
 
 begin_comment
@@ -1511,7 +1511,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * get filesystem statistics  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_comment
@@ -1712,7 +1712,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * get filesystem statistics  */
+comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_comment
@@ -1886,7 +1886,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * get statistics on all filesystems  */
+comment|/*  * Get statistics on all filesystems.  */
 end_comment
 
 begin_macro
@@ -3199,7 +3199,7 @@ comment|/* COMPAT_43 */
 end_comment
 
 begin_comment
-comment|/*  * Mknod system call  */
+comment|/*  * Mknod system call.  */
 end_comment
 
 begin_comment
@@ -3519,7 +3519,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Mkfifo system call  */
+comment|/*  * Mkfifo system call.  */
 end_comment
 
 begin_comment
@@ -3749,7 +3749,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * link system call  */
+comment|/*  * Link system call.  */
 end_comment
 
 begin_comment
@@ -4057,7 +4057,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * symlink -- make a symbolic link  */
+comment|/*  * Make a symbolic link.  */
 end_comment
 
 begin_comment
@@ -4314,7 +4314,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Unlink system call.  * Hard to avoid races here, especially  * in unlinking directories.  */
+comment|/*  * Delete a name from the filesystem.  */
 end_comment
 
 begin_comment
@@ -4460,7 +4460,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Don't unlink a mounted file. 	 */
+comment|/* 	 * The root of a mounted filesystem cannot be deleted. 	 */
 if|if
 condition|(
 name|vp
@@ -4570,7 +4570,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Seek system call  */
+comment|/*  * Seek system call.  */
 end_comment
 
 begin_macro
@@ -4797,7 +4797,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Access system call  */
+comment|/*  * Check access permissions.  */
 end_comment
 
 begin_comment
@@ -5086,7 +5086,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Stat system call.  This version follows links.  */
+comment|/*  * Stat system call.  * This version follows links.  */
 end_comment
 
 begin_comment
@@ -5265,7 +5265,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Lstat system call.  This version does not follow links.  */
+comment|/*  * Lstat system call.  * This version does not follow links.  */
 end_comment
 
 begin_comment
@@ -5444,7 +5444,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Return target name of a symbolic link  */
+comment|/*  * Return target name of a symbolic link.  */
 end_comment
 
 begin_comment
@@ -8039,7 +8039,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Mkdir system call  */
+comment|/*  * Mkdir system call.  */
 end_comment
 
 begin_comment
@@ -8428,7 +8428,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 	 * Don't unlink a mounted file. 	 */
+comment|/* 	 * The root of a mounted filesystem cannot be deleted. 	 */
 if|if
 condition|(
 name|vp
@@ -8504,7 +8504,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read a block of directory entries in a file system independent format  */
+comment|/*  * Read a block of directory entries in a file system independent format.  */
 end_comment
 
 begin_macro
@@ -8803,7 +8803,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * mode mask for creation of files  */
+comment|/*  * Set the mode mask for creation of filesystem nodes.  */
 end_comment
 
 begin_decl_stmt
@@ -9113,6 +9113,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Convert a user file descriptor to a kernel file entry.  */
+end_comment
 
 begin_macro
 name|getvnode
