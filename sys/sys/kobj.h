@@ -355,39 +355,6 @@ name|kobj_lookup_misses
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|KOBJOPHIT
-value|do { kobj_lookup_hits++; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KOBJOPMISS
-value|do { kobj_lookup_misses++; } while (0)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KOBJOPHIT
-value|do { } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KOBJOPMISS
-value|do { } while (0)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -395,6 +362,33 @@ end_endif
 
 begin_comment
 comment|/*  * Lookup the method in the cache and if it isn't there look it up the  * slow way.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KOBJ_STATS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KOBJOPLOOKUP
+parameter_list|(
+name|OPS
+parameter_list|,
+name|OP
+parameter_list|)
+value|do {					\ 	kobjop_desc_t _desc =&OP##_##desc;				\ 	kobj_method_t *_ce =						\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];		\ 	if (_ce->desc != _desc) {					\ 		kobj_lookup_misses++;					\ 		kobj_lookup_method(OPS->cls->methods, _ce, _desc);	\ 	} else {							\ 		kobj_lookup_hits++;					\ 	}								\ 	_m = _ce->func;							\ } while(0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !KOBJ_STATS */
 end_comment
 
 begin_define
@@ -406,8 +400,17 @@ name|OPS
 parameter_list|,
 name|OP
 parameter_list|)
-value|do {					\ 	kobjop_desc_t _desc =&OP##_##desc;				\ 	kobj_method_t *_ce =						\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];		\ 	if (_ce->desc != _desc) {					\ 		KOBJOPMISS;						\ 		kobj_lookup_method(OPS->cls->methods, _ce, _desc);	\ 	} else {							\ 		KOBJOPHIT;						\ 	}								\ 	_m = _ce->func;							\ } while(0)
+value|do {					\ 	kobjop_desc_t _desc =&OP##_##desc;				\ 	kobj_method_t *_ce =						\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];		\ 	if (_ce->desc != _desc)						\ 		kobj_lookup_method(OPS->cls->methods, _ce, _desc);	\ 	_m = _ce->func;							\ } while(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !KOBJ_STATS */
+end_comment
 
 begin_function_decl
 name|void
