@@ -816,7 +816,7 @@ name|print_button
 argument_list|(
 name|dialog
 argument_list|,
-literal|" CONTINUE "
+literal|" OK "
 argument_list|,
 name|height
 operator|-
@@ -826,7 +826,7 @@ name|width
 operator|/
 literal|2
 operator|-
-literal|8
+literal|2
 argument_list|,
 name|TRUE
 argument_list|)
