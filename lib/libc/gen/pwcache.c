@@ -110,6 +110,7 @@ comment|/* bits to store with */
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|user_from_uid
@@ -310,6 +311,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|group_from_gid
