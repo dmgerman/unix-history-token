@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	4.3 %G%"
+literal|"@(#)newfs.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,21 +667,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-s sectors/track\n"
+literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-b block-size\n"
+literal|"\t-b block size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-f frag-size\n"
+literal|"\t-f frag size\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -702,7 +702,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-S sector-size\n"
+literal|"\t-S sector size\n"
 argument_list|)
 expr_stmt|;
 name|exit
