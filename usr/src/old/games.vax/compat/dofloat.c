@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	dofloat.c	4.2	84/05/05	"
+literal|"	dofloat.c	4.3	88/04/24	"
 decl_stmt|;
 end_decl_stmt
 
@@ -254,8 +254,6 @@ literal|1
 decl_stmt|;
 block|}
 name|fps
-init|=
-name|FALSE
 struct|;
 end_struct
 
@@ -343,6 +341,10 @@ modifier|*
 name|resolve
 argument_list|()
 decl_stmt|;
+name|long
+name|fliplong
+parameter_list|()
+function_decl|;
 define|#
 directive|define
 name|DOUBLE
