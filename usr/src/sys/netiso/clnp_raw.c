@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_raw.c	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)clnp_raw.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -341,11 +341,13 @@ if|if
 condition|(
 literal|0
 operator|==
+operator|(
 name|m0
 operator|->
 name|m_flags
 operator|&
 name|M_PKTHDR
+operator|)
 condition|)
 return|return
 operator|(
