@@ -2817,7 +2817,7 @@ name|out
 goto|;
 name|no_fault_in
 label|:
-comment|/* 		 * Additionally check the privilege level. We don't want to 		 * panic when we're in the gateway page, running at user 		 * level. This happens for the signal trampolines. 		 */
+comment|/* 		 * Additionally check the privilege level. We don't want to 		 * panic when we're in the gateway page, running at user 		 * level. This happens for the signal trampolines. Note that 		 * when that happens, user is defined as 0 above. We need to 		 * set user to 1 to force calling userret() and do_ast(). 		 */
 if|if
 condition|(
 operator|!
@@ -2880,6 +2880,11 @@ goto|goto
 name|dopanic
 goto|;
 block|}
+else|else
+name|user
+operator|=
+literal|1
+expr_stmt|;
 name|ucode
 operator|=
 name|va
