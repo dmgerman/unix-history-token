@@ -351,5 +351,29 @@ return|;
 block|}
 end_function
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_thread_init
+end_pragma
+
+begin_function
+name|void
+name|_rtld_thread_init
+parameter_list|(
+name|void
+modifier|*
+name|li
+parameter_list|)
+block|{
+name|_rtld_error
+argument_list|(
+name|sorry
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 
