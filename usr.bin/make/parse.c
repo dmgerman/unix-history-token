@@ -2253,6 +2253,10 @@ return|return;
 block|}
 else|else
 block|{
+name|cp
+operator|=
+name|line
+expr_stmt|;
 continue|continue;
 block|}
 block|}
