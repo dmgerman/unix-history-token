@@ -11,8 +11,8 @@ end_ifndef
 
 begin_decl_stmt
 name|char
+modifier|*
 name|copyright
-index|[]
 init|=
 literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
@@ -33,10 +33,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

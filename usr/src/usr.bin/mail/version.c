@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)version.c	5.1 (Berkeley) %G%"
+literal|"@(#)version.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ name|char
 modifier|*
 name|SccsID
 init|=
-literal|"@(#)UCB Mail Version 5.1 (%G%)"
+literal|"@(#)UCB Mail Version 5.2 (%G%)"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,7 +44,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"5.1 %G%"
+literal|"5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 

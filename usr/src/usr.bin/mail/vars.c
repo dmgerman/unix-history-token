@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)vars.c	5.1 (Berkeley) %G%"
+literal|"@(#)vars.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
