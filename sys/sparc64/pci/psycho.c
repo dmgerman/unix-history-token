@@ -2481,21 +2481,6 @@ name|psycho_set_intr
 argument_list|(
 name|sc
 argument_list|,
-literal|3
-argument_list|,
-name|dev
-argument_list|,
-name|PSR_PCIBERR_INT_MAP
-argument_list|,
-name|INTR_FAST
-argument_list|,
-name|psycho_bus_b
-argument_list|)
-expr_stmt|;
-name|psycho_set_intr
-argument_list|(
-name|sc
-argument_list|,
 literal|4
 argument_list|,
 name|dev
@@ -2507,10 +2492,36 @@ argument_list|,
 name|psycho_powerfail
 argument_list|)
 expr_stmt|;
+comment|/* Psycho-specific initialization. */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mode
+operator|==
+name|PSYCHO_MODE_PSYCHO
+condition|)
+block|{
+comment|/* 			 * Sabres do not have the following two interrupts. 			 */
+name|psycho_set_intr
+argument_list|(
+name|sc
+argument_list|,
+literal|3
+argument_list|,
+name|dev
+argument_list|,
+name|PSR_PCIBERR_INT_MAP
+argument_list|,
+name|INTR_FAST
+argument_list|,
+name|psycho_bus_b
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PSYCHO_MAP_WAKEUP
-comment|/* 		 * On some models, this is mapped to the same interrupt as 		 * pciberr by default, so leave it alone for now since 		 * psycho_wakeup() doesn't do anything useful anyway. 		 */
+comment|/* 			 * psycho_wakeup() doesn't do anything useful right 			 * now. 			 */
 name|psycho_set_intr
 argument_list|(
 name|sc
@@ -2529,16 +2540,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* PSYCHO_MAP_WAKEUP */
-comment|/* Initialize the counter-timer if we handle a psycho. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_mode
-operator|==
-name|PSYCHO_MODE_PSYCHO
-condition|)
-block|{
+comment|/* Initialize the counter-timer. */
 name|sparc64_counter_init
 argument_list|(
 name|sc
