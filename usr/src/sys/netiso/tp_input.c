@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.4 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.5 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -1191,6 +1191,8 @@ argument_list|,
 name|cons_channel
 argument_list|,
 name|dgout_routine
+argument_list|,
+name|ce_bit
 argument_list|)
 decl|register	struct
 name|mbuf
@@ -1229,6 +1231,12 @@ function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|ce_bit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3190,6 +3198,60 @@ expr_stmt|;
 end_expr_stmt
 
 begin_if
+if|if
+condition|(
+operator|!
+name|tpcb
+operator|->
+name|tp_cebit_off
+condition|)
+block|{
+name|tpcb
+operator|->
+name|tp_win_recv
+operator|=
+name|tp_start_win
+operator|<<
+literal|8
+expr_stmt|;
+name|tpcb
+operator|->
+name|tp_cong_sample
+operator|.
+name|cs_size
+operator|=
+literal|0
+expr_stmt|;
+name|LOCAL_CREDIT
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
+name|CONG_INIT_SAMPLE
+argument_list|(
+name|tpcb
+argument_list|)
+expr_stmt|;
+name|CONG_UPDATE_SAMPLE
+argument_list|(
+name|tpcb
+argument_list|,
+name|ce_bit
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_expr_stmt
+name|tpcb
+operator|->
+name|tp_ackrcvd
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 unit|} else
 if|if
 condition|(
@@ -3418,12 +3480,26 @@ argument_list|)
 decl_stmt|;
 name|ENDDEBUG
 comment|/*  		 * At this point the state of the dref could be 		 * FROZEN: tpr_pcb == NULL,  has ( reference only) timers 		 *		   for example, DC may arrive after the close() has detached 		 *         the tpcb (e.g., if user turned off SO_LISTEN option) 		 * OPENING : a tpcb exists but no timers yet 		 * OPEN  : tpcb exists& timers are outstanding 		 */
+if|if
+condition|(
+operator|!
+name|tpcb
+operator|->
+name|tp_cebit_off
+condition|)
+name|CONG_UPDATE_SAMPLE
+argument_list|(
+name|tpcb
+argument_list|,
+name|ce_bit
+argument_list|)
+expr_stmt|;
 name|dusize
-init|=
+operator|=
 name|tpcb
 operator|->
 name|tp_tpdusize
-decl_stmt|;
+expr_stmt|;
 name|dutype
 operator|=
 name|hdr
@@ -5784,30 +5860,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
+begin_decl_stmt
 name|ENDDEBUG
-end_macro
-
-begin_if
-if|if
-condition|(
-name|tpcb
-operator|->
-name|tp_decbit
-operator|!=
-literal|0
-condition|)
-comment|/* unsigned 4 bits */
-name|tpcb
-operator|->
-name|tp_decbit
-operator|--
-expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|error
-operator|=
+init|=
 name|tp_driver
 argument_list|(
 name|tpcb
@@ -5815,8 +5871,8 @@ argument_list|,
 operator|&
 name|e
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|ASSERT
