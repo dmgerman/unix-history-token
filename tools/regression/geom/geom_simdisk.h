@@ -38,6 +38,9 @@ decl_stmt|;
 name|off_t
 name|mediasize
 decl_stmt|;
+name|off_t
+name|lastsector
+decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,

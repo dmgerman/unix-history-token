@@ -63,6 +63,13 @@ directive|include
 file|<geom/geom.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|g_orphan_t
+name|g_dev_orphan
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|struct
@@ -153,6 +160,12 @@ name|pp
 operator|->
 name|name
 argument_list|)
+expr_stmt|;
+name|gp
+operator|->
+name|orphan
+operator|=
+name|g_dev_orphan
 expr_stmt|;
 name|cp
 operator|=
@@ -294,10 +307,6 @@ block|{
 literal|"DEV-class"
 block|,
 name|dev_taste
-block|,
-name|NULL
-block|,
-name|g_dev_orphan
 block|,
 name|NULL
 block|,
