@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* mbuf.h 4.11 82/01/24 */
+comment|/*	mbuf.h	4.12	82/05/18	*/
 end_comment
 
 begin_comment
@@ -64,6 +64,17 @@ directive|define
 name|NMBCLUSTERS
 value|256
 end_define
+
+begin_define
+define|#
+directive|define
+name|NMBPCL
+value|(CLBYTES/MSIZE)
+end_define
+
+begin_comment
+comment|/* # mbufs per cluster */
+end_comment
 
 begin_comment
 comment|/*  * Macros for type conversion  */
@@ -238,7 +249,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_bufs--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_free == 0) panic("mget"); (m)->m_free = 0; \ 		  mbstat.m_mbfree--; mfree = (m)->m_next; (m)->m_next = 0; } \ 	  else \ 		(m) = m_more(i); \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -251,7 +262,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mclfree) \ 	      { ++mclrefcnt[mtocl(m)]; nmclfree--; mclfree = (m)->m_next; } \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mclfree) \ 	     {++mclrefcnt[mtocl(m)];mbstat.m_clfree--;mclfree = (m)->m_next;} \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -264,29 +275,48 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_free) panic("mfree"); (m)->m_free = 1; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree; mclfree = (n); nmclfree++; } \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_bufs++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_free) panic("mfree"); (m)->m_free = 1; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~0x3ff); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
 end_define
+
+begin_comment
+comment|/*  * Mbuf statistics.  Clients can committ hunks of space until we are  * overcommitted by the fraction represented by MBUFOVERALLOCFRAG.  * We keep track of the amount of space committed, the number  * of mbufs and clusters allocated from the free memory pool, and  * the number of mbufs and clusters on our free lists.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBUFOVERALLOCFRACTION
+value|3 / 2
+end_define
+
+begin_comment
+comment|/* don't parenthesize ! */
+end_comment
 
 begin_struct
 struct|struct
 name|mbstat
 block|{
 name|short
-name|m_bufs
+name|m_mbcommitted
 decl_stmt|;
-comment|/* # free msg buffers */
+comment|/* most we'll allow pool size to get */
 name|short
-name|m_hiwat
+name|m_mbufs
 decl_stmt|;
-comment|/* # free mbufs allocated */
+comment|/* mbufs obtained from page pool */
 name|short
-name|m_lowat
+name|m_mbfree
 decl_stmt|;
-comment|/* min. # free mbufs */
+comment|/* mbufs on our free list */
 name|short
 name|m_clusters
 decl_stmt|;
-comment|/* # pages owned by network */
+comment|/* clusters obtained from page pool */
+name|short
+name|m_clfree
+decl_stmt|;
+comment|/* free clusters */
 name|short
 name|m_drops
 decl_stmt|;
@@ -335,6 +365,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nmbclusters
 decl_stmt|;
@@ -348,12 +379,6 @@ name|mfree
 decl_stmt|,
 modifier|*
 name|mclfree
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|nmclfree
 decl_stmt|;
 end_decl_stmt
 
