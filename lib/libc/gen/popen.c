@@ -369,6 +369,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|twoway
+condition|)
 operator|(
 name|void
 operator|)
