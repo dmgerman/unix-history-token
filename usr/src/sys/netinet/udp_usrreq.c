@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.17	81/12/12	*/
+comment|/*	udp_usrreq.c	4.18	81/12/23	*/
 end_comment
 
 begin_include
@@ -186,6 +186,13 @@ name|m0
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|m
+operator|->
+name|m_off
+operator|>
+name|MMAXOFF
+operator|||
 name|m
 operator|->
 name|m_len
@@ -195,7 +202,11 @@ argument_list|(
 expr|struct
 name|udpiphdr
 argument_list|)
+operator|)
 operator|&&
+operator|(
+name|m
+operator|=
 name|m_pullup
 argument_list|(
 name|m
@@ -206,6 +217,7 @@ expr|struct
 name|udpiphdr
 argument_list|)
 argument_list|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -215,9 +227,7 @@ operator|.
 name|udps_hdrops
 operator|++
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
+return|return;
 block|}
 name|ui
 operator|=
