@@ -3388,7 +3388,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+name|TC_DEVICEID_TORNADO_10_100BT_920B
 value|0x9201
 end_define
 

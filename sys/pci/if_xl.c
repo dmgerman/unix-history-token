@@ -337,9 +337,9 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
-name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+name|TC_DEVICEID_TORNADO_10_100BT_920B
 block|,
-literal|"3Com 3c905C-TX on nVidia nForce2 chipset"
+literal|"3Com 3c920B-EMB Integrated Fast Etherlink XL"
 block|}
 block|,
 block|{
@@ -4975,9 +4975,9 @@ name|TC_DEVICEID_TORNADO_656C
 case|:
 comment|/* 3c656C */
 case|case
-name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+name|TC_DEVICEID_TORNADO_10_100BT_920B
 case|:
-comment|/* nVidia nForce2 */
+comment|/* 3c920B-EMB */
 name|sc
 operator|->
 name|xl_media
@@ -5478,7 +5478,7 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|TC_DEVICEID_TORNADO_10_100BT_NVIDIA
+name|TC_DEVICEID_TORNADO_10_100BT_920B
 condition|)
 name|sc
 operator|->
