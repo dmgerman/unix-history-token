@@ -450,7 +450,8 @@ name|rs
 decl_stmt|;
 name|int
 name|len
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size
 decl_stmt|;
 name|char
@@ -626,10 +627,7 @@ operator|)
 operator|&
 name|ss
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ss
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -844,7 +842,7 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
-name|int
+name|socklen_t
 name|size
 decl_stmt|;
 name|clock
@@ -951,10 +949,7 @@ operator|)
 operator|&
 name|ss
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ss
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -1206,7 +1201,8 @@ index|]
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|socklen_t
 name|size
 decl_stmt|;
 name|struct
@@ -1291,10 +1287,7 @@ operator|)
 operator|&
 name|ss
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ss
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -3013,7 +3006,7 @@ name|struct
 name|sockaddr_storage
 name|ss
 decl_stmt|;
-name|int
+name|socklen_t
 name|size
 decl_stmt|;
 name|size
@@ -3108,10 +3101,7 @@ operator|)
 operator|&
 name|ss
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ss
-argument_list|)
+name|size
 argument_list|)
 expr_stmt|;
 block|}
