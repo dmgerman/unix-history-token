@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implogd.c	4.4 (Berkeley) %G%"
+literal|"@(#)implogd.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -47,7 +47,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netimp/if_imp.h>
 end_include
 
 begin_define
@@ -55,13 +67,6 @@ define|#
 directive|define
 name|LOGFILE
 value|"/usr/adm/implog"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMPMTU
-value|((8159 / 8)& ~01)
 end_define
 
 begin_decl_stmt
@@ -283,7 +288,13 @@ name|open
 argument_list|(
 name|LOGFILE
 argument_list|,
-literal|1
+name|FCREATE
+operator||
+name|FWRONLY
+operator||
+name|FAPPEND
+argument_list|,
+literal|0644
 argument_list|)
 expr_stmt|;
 if|if
@@ -292,20 +303,18 @@ name|log
 operator|<
 literal|0
 condition|)
+block|{
+name|perror
+argument_list|(
+literal|"implogd: open"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|lseek
-argument_list|(
-name|log
-argument_list|,
-literal|0L
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
+block|}
 name|from
 operator|.
 name|sin_time
@@ -341,8 +350,9 @@ name|from
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|again
-label|:
+while|while
+condition|(
+operator|(
 name|s
 operator|=
 name|socket
@@ -355,17 +365,14 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
+operator|)
 operator|<
 literal|0
 condition|)
 block|{
 name|perror
 argument_list|(
-literal|"socket"
+literal|"implogd: socket"
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -373,9 +380,6 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
 for|for
 control|(
@@ -402,6 +406,8 @@ argument_list|,
 operator|&
 name|len
 argument_list|,
+literal|0
+argument_list|,
 operator|&
 name|from
 argument_list|,
@@ -409,13 +415,18 @@ sizeof|sizeof
 argument_list|(
 name|from
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|perror
+argument_list|(
+literal|"implogd: recvfrom"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|len
