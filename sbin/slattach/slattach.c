@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.8 1993/09/10 17:56:41 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/slattach/slattach.c,v 1.9 1993/09/14 12:10:48 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -444,9 +444,7 @@ name|char
 name|usage_str
 index|[]
 init|=
-literal|"\ usage: %s [-achlnz] [-e command] [-r command] [-s speed] [-u command] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in "
-name|foreground
-literal|" (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n"
+literal|"\ usage: %s [-achlnz] [-e command] [-r command] [-s speed] [-u command] device\n\   -a      -- autoenable VJ compression\n\   -c      -- enable VJ compression\n\   -e ECMD -- run ECMD before exiting\n\   -f      -- run in foreground (don't detach from controlling tty)\n\   -h      -- turn on cts/rts style flow control\n\   -l      -- disable modem control (CLOCAL) and ignore carrier detect\n\   -n      -- throw out ICMP packets\n\   -r RCMD -- run RCMD upon loss of carrier\n\   -s #    -- set baud rate (default 9600)\n\   -u UCMD -- run 'UCMD<old sl#><new sl#>' before switch to slip discipline\n\   -z      -- run RCMD upon startup irrespective of carrier\n"
 decl_stmt|;
 end_decl_stmt
 
