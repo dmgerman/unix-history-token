@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)htable.c	4.4 (Berkeley) %G%"
+literal|"@(#)htable.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,18 +51,18 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"htable.h"
 end_include
 
 begin_comment
 comment|/* includes<sys/types.h> */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
 
 begin_include
 include|#
