@@ -303,7 +303,7 @@ name|u_long
 name|_f_flags
 decl_stmt|;
 name|u_long
-name|_f_mask
+name|_f_notflags
 decl_stmt|;
 block|}
 name|fl
@@ -410,8 +410,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|fl_mask
-value|p_un.fl._f_mask
+name|fl_notflags
+value|p_un.fl._f_notflags
 end_define
 
 begin_define
