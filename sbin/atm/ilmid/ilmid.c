@@ -82,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/hea/eni_stats.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/hfa/fore_aali.h>
 end_include
 
