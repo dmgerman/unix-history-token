@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.43 1998/12/04 06:49:20 jkh Exp $"
+literal|"$Id: syslogd.c,v 1.44 1998/12/28 00:39:14 cwt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6806,9 +6806,18 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|!
 operator|*
 name|p
+operator|)
+operator|||
+operator|(
+operator|*
+name|p
+operator|==
+literal|'*'
+operator|)
 condition|)
 block|{
 name|strcpy
