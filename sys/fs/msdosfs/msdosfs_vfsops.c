@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.35 1998/05/06 05:29:38 msmith Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.36 1998/09/07 13:17:02 bde Exp $ */
 end_comment
 
 begin_comment
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/conf.h>
 end_include
 
 begin_include
@@ -1595,6 +1601,18 @@ name|v_rdev
 argument_list|)
 operator|>=
 name|nblkdev
+operator|||
+name|bdevsw
+index|[
+name|major
+argument_list|(
+name|devvp
+operator|->
+name|v_rdev
+argument_list|)
+index|]
+operator|==
+name|NULL
 condition|)
 block|{
 name|vrele
