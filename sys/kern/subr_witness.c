@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -819,22 +825,22 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 end_ifdef
 
 begin_comment
-comment|/*  * When DDB is enabled and witness_ddb is set to 1, it will cause the system to  * drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
+comment|/*  * When KDB is enabled and witness_kdb is set to 1, it will cause the system  * to drop into kdebug() when:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|WITNESS_DDB
+name|WITNESS_KDB
 end_ifdef
 
 begin_decl_stmt
 name|int
-name|witness_ddb
+name|witness_kdb
 init|=
 literal|1
 decl_stmt|;
@@ -847,7 +853,7 @@ end_else
 
 begin_decl_stmt
 name|int
-name|witness_ddb
+name|witness_kdb
 init|=
 literal|0
 decl_stmt|;
@@ -861,10 +867,10 @@ end_endif
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
-literal|"debug.witness_ddb"
+literal|"debug.witness_kdb"
 argument_list|,
 operator|&
-name|witness_ddb
+name|witness_kdb
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -876,12 +882,12 @@ name|_debug
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|witness_ddb
+name|witness_kdb
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|witness_ddb
+name|witness_kdb
 argument_list|,
 literal|0
 argument_list|,
@@ -891,7 +897,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * When DDB is enabled and witness_trace is set to 1, it will cause the system  * to print a stack trace:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
+comment|/*  * When KDB is enabled and witness_trace is set to 1, it will cause the system  * to print a stack trace:  *	- a lock heirarchy violation occurs  *	- locks are held when going to sleep.  */
 end_comment
 
 begin_decl_stmt
@@ -940,7 +946,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DDB */
+comment|/* KDB */
 end_comment
 
 begin_ifdef
@@ -3509,7 +3515,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 goto|goto
 name|debugger
 goto|;
@@ -4056,7 +4062,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 goto|goto
 name|debugger
 goto|;
@@ -4162,21 +4168,21 @@ expr_stmt|;
 return|return;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 name|debugger
 label|:
 if|if
 condition|(
 name|witness_trace
 condition|)
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|witness_ddb
+name|witness_kdb
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 name|__func__
 argument_list|)
@@ -5820,15 +5826,15 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 elseif|else
 if|if
 condition|(
-name|witness_ddb
+name|witness_kdb
 operator|&&
 name|n
 condition|)
-name|Debugger
+name|kdb_enter
 argument_list|(
 name|__func__
 argument_list|)
@@ -5840,7 +5846,7 @@ name|witness_trace
 operator|&&
 name|n
 condition|)
-name|backtrace
+name|kdb_backtrace
 argument_list|()
 expr_stmt|;
 endif|#
@@ -9223,7 +9229,7 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|db_active
+name|kdb_active
 argument_list|,
 operator|(
 literal|"%s: not in the debugger"
