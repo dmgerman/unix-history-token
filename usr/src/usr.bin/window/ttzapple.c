@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttzapple.c	3.3 (Berkeley) %G%"
+literal|"@(#)ttzapple.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1265,15 +1265,14 @@ expr_stmt|;
 block|}
 name|pc
 argument_list|(
-name|ctrl
-argument_list|(
-literal|'^'
-argument_list|)
+literal|0x80
 argument_list|)
 expr_stmt|;
 name|pc
 argument_list|(
 name|t
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|s
@@ -1414,8 +1413,8 @@ block|}
 name|pc
 argument_list|(
 name|t
-operator||
-literal|0x80
+operator|+
+literal|0x81
 argument_list|)
 expr_stmt|;
 name|tt
@@ -1589,7 +1588,7 @@ name|tt
 operator|.
 name|tt_ntoken
 operator|=
-literal|128
+literal|127
 expr_stmt|;
 name|tt
 operator|.
