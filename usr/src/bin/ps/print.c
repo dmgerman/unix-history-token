@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.5 (Berkeley) %G%"
+literal|"@(#)print.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -756,6 +756,9 @@ operator|++
 operator|=
 literal|'N'
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NEWVM
 if|if
 condition|(
 name|flag
@@ -781,6 +784,8 @@ operator|++
 operator|=
 literal|'S'
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|flag
@@ -836,6 +841,25 @@ operator|++
 operator|=
 literal|'V'
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NEWVM
+if|if
+condition|(
+name|flag
+operator|&
+operator|(
+name|SSYS
+operator||
+name|SLOCK
+operator||
+name|SKEEP
+operator||
+name|SPHYSIO
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|flag
@@ -852,6 +876,8 @@ operator||
 name|SPHYSIO
 operator|)
 condition|)
+endif|#
+directive|endif
 operator|*
 name|cp
 operator|++
@@ -1874,7 +1900,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%*x"
+literal|"%-*x"
 argument_list|,
 name|v
 operator|->
