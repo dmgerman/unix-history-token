@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rmpproto.c,v 1.7 1996/02/01 21:27:46 mycroft Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)rmpproto.c	8.1 (Berkeley) 6/4/93  *  * From: Utah Hdr: rmpproto.c 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)rmpproto.c	8.1 (Berkeley) 6/4/93  *  * Utah $Hdr: rmpproto.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -13,17 +9,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "@(#)rmpproto.c	8.1 (Berkeley) 6/4/93";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$NetBSD: rmpproto.c,v 1.7 1996/02/01 21:27:46 mycroft Exp $"
+literal|"@(#)rmpproto.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,14 +149,11 @@ return|return;
 comment|/* 			 *  If the Session ID is 0xffff, this is a "probe" 			 *  packet and we do not want to add the connection 			 *  to the linked list of active connections.  There 			 *  are two types of probe packets, if the Sequence 			 *  Number is 0 they want to know our host name, o/w 			 *  they want the name of the file associated with 			 *  the number spec'd by the Sequence Number. 			 * 			 *  If this is an actual boot request, open the file 			 *  and send a reply.  If SendBootRepl() does not 			 *  return 0, add the connection to the linked list 			 *  of active connections, otherwise delete it since 			 *  an error was encountered. 			 */
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|rmp
 operator|->
 name|r_brq
 operator|.
 name|rmp_session
-argument_list|)
 operator|==
 name|RMP_PROBESID
 condition|)
@@ -359,7 +348,7 @@ modifier|*
 name|dst
 decl_stmt|;
 specifier|register
-name|u_int8_t
+name|u_char
 modifier|*
 name|size
 decl_stmt|;
@@ -411,10 +400,7 @@ name|r_brpl
 operator|.
 name|rmp_version
 operator|=
-name|htons
-argument_list|(
 name|RMP_VERSION
-argument_list|)
 expr_stmt|;
 name|size
 operator|=
@@ -552,12 +538,10 @@ modifier|*
 name|dst
 decl_stmt|;
 specifier|register
-name|u_int8_t
+name|u_char
 modifier|*
 name|size
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
 name|GETWORD
@@ -617,10 +601,7 @@ name|r_brpl
 operator|.
 name|rmp_version
 operator|=
-name|htons
-argument_list|(
 name|RMP_VERSION
-argument_list|)
 expr_stmt|;
 name|size
 operator|=
@@ -814,7 +795,7 @@ modifier|*
 name|dst2
 decl_stmt|;
 specifier|register
-name|u_int8_t
+name|u_char
 name|i
 decl_stmt|;
 comment|/* 	 *  If another connection already exists, delete it since we 	 *  are obviously starting again. 	 */
@@ -888,11 +869,8 @@ name|r_brpl
 operator|.
 name|rmp_session
 operator|=
-name|htons
-argument_list|(
 name|GenSessID
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|rpl
 operator|->
@@ -900,10 +878,7 @@ name|r_brpl
 operator|.
 name|rmp_version
 operator|=
-name|htons
-argument_list|(
 name|RMP_VERSION
-argument_list|)
 expr_stmt|;
 name|rpl
 operator|->
@@ -1181,8 +1156,6 @@ decl_stmt|;
 block|{
 name|int
 name|retval
-init|=
-literal|0
 decl_stmt|;
 name|RMPCONN
 modifier|*
@@ -1298,14 +1271,11 @@ block|}
 comment|/* 	 *  Make sure Session ID's match. 	 */
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|req
 operator|->
 name|r_rrq
 operator|.
 name|rmp_session
-argument_list|)
 operator|!=
 operator|(
 operator|(
@@ -1316,23 +1286,17 @@ operator|==
 name|RMP_BOOT_REPL
 operator|)
 condition|?
-name|ntohs
-argument_list|(
 name|rpl
 operator|->
 name|r_brpl
 operator|.
 name|rmp_session
-argument_list|)
 else|:
-name|ntohs
-argument_list|(
 name|rpl
 operator|->
 name|r_rrpl
 operator|.
 name|rmp_session
-argument_list|)
 operator|)
 condition|)
 block|{
@@ -1367,14 +1331,11 @@ block|}
 comment|/* 	 *  If the requester asks for more data than we can fit, 	 *  silently clamp the request size down to RMPREADDATA. 	 * 	 *  N.B. I do not know if this is "legal", however it seems 	 *  to work.  This is necessary for bpfwrite() on machines 	 *  with MCLBYTES less than 1514. 	 */
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|req
 operator|->
 name|r_rrq
 operator|.
 name|rmp_size
-argument_list|)
 operator|>
 name|RMPREADDATA
 condition|)
@@ -1384,10 +1345,7 @@ name|r_rrq
 operator|.
 name|rmp_size
 operator|=
-name|htons
-argument_list|(
 name|RMPREADDATA
-argument_list|)
 expr_stmt|;
 comment|/* 	 *  Position read head on file according to info in request packet. 	 */
 name|GETWORD
@@ -1470,14 +1428,11 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|ntohs
-argument_list|(
 name|req
 operator|->
 name|r_rrq
 operator|.
 name|rmp_size
-argument_list|)
 argument_list|)
 operator|)
 operator|<=
@@ -1682,8 +1637,6 @@ comment|/* cache ptr to RMP packet */
 comment|/* 	 *  Make sure Session ID's match. 	 */
 if|if
 condition|(
-name|ntohs
-argument_list|(
 name|rconn
 operator|->
 name|rmp
@@ -1691,7 +1644,6 @@ operator|.
 name|r_rrq
 operator|.
 name|rmp_session
-argument_list|)
 operator|!=
 operator|(
 operator|(
@@ -1702,23 +1654,17 @@ operator|==
 name|RMP_BOOT_REPL
 operator|)
 condition|?
-name|ntohs
-argument_list|(
 name|rpl
 operator|->
 name|r_brpl
 operator|.
 name|rmp_session
-argument_list|)
 else|:
-name|ntohs
-argument_list|(
 name|rpl
 operator|->
 name|r_rrpl
 operator|.
 name|rmp_session
-argument_list|)
 operator|)
 condition|)
 block|{
@@ -1820,10 +1766,6 @@ argument_list|,
 name|RMP_ADDRLEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* BPF (incorrectly) wants this in host order. */
 name|rconn
 operator|->
 name|rmp
@@ -1842,31 +1784,6 @@ expr|struct
 name|hp_hdr
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|rconn
-operator|->
-name|rmp
-operator|.
-name|hp_hdr
-operator|.
-name|len
-operator|=
-name|htons
-argument_list|(
-name|rconn
-operator|->
-name|rmplen
-operator|-
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|hp_hdr
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 *  Reverse 802.2/HP Extended Source& Destination Access Pts. 	 */
 name|rconn
 operator|->
@@ -1876,10 +1793,7 @@ name|hp_llc
 operator|.
 name|dxsap
 operator|=
-name|htons
-argument_list|(
 name|HPEXT_SXSAP
-argument_list|)
 expr_stmt|;
 name|rconn
 operator|->
@@ -1889,10 +1803,7 @@ name|hp_llc
 operator|.
 name|sxsap
 operator|=
-name|htons
-argument_list|(
 name|HPEXT_DXSAP
-argument_list|)
 expr_stmt|;
 comment|/* 	 *  Last time this connection was active. 	 */
 operator|(

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rmp_var.h,v 1.8 1995/11/14 08:41:44 thorpej Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)rmp_var.h	8.1 (Berkeley) 6/4/93  *  * from: Utah Hdr: rmp_var.h 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)rmp_var.h	8.1 (Berkeley) 6/4/93  *  * Utah $Hdr: rmp_var.h 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_comment
@@ -278,7 +274,7 @@ name|RMPREADSIZE
 parameter_list|(
 name|s
 parameter_list|)
-value|(sizeof(struct hp_hdr) + sizeof(struct hp_llc) + \ 			 sizeof(struct rmp_read_repl) + s - sizeof(restofpkt) \ 			 - sizeof(u_int8_t))
+value|(sizeof(struct hp_hdr) + sizeof(struct hp_llc) + \ 			 sizeof(struct rmp_read_repl) + s - sizeof(restofpkt) \ 			 - sizeof(u_char))
 end_define
 
 begin_define
@@ -299,7 +295,7 @@ begin_define
 define|#
 directive|define
 name|RMPREADDATA
-value|(RMPDATALEN - \ 			 (2*sizeof(u_int8_t)+sizeof(u_int16_t)+sizeof(u_word)))
+value|(RMPDATALEN - \ 			 (2*sizeof(u_char)+sizeof(u_short)+sizeof(u_word)))
 end_define
 
 begin_comment
@@ -314,7 +310,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Due to the RMP packet layout, we'll run into alignment problems  * on machines that can't access (or don't, by default, align) words  * on half-word boundaries.  If you know that your machine does not suffer  * from this problem, add it to the vax/tahoe/m68k #define below.  *  * The following macros are used to deal with this problem:  *	WORDZE(w)	Return True if u_word `w' is zero, False otherwise.  *	ZEROWORD(w)	Set u_word `w' to zero.  *	COPYWORD(w1,w2)	Copy u_word `w1' to `w2'.  *	GETWORD(w,i)	Copy u_word `w' into int `i'.  *	PUTWORD(i,w)	Copy int `i' into u_word `w'.  *   * N.B. Endianness is handled by use of ntohl/htonl  */
+comment|/*  * Due to the RMP packet layout, we'll run into alignment problems  * on machines that cant access words on half-word boundaries.  If  * you know that your machine does not suffer from this problem,  * add it to the hp300 #define below.  *  * The following macros are used to deal with this problem:  *	WORDZE(w)	Return True if u_word `w' is zero, False otherwise.  *	ZEROWORD(w)	Set u_word `w' to zero.  *	COPYWORD(w1,w2)	Copy u_word `w1' to `w2'.  *	GETWORD(w,i)	Copy u_word `w' into int `i'.  *	PUTWORD(i,w)	Copy int `i' into u_word `w'.  *  * N.B. We do not support little endian alignment-challenged machines.  */
 end_comment
 
 begin_if
@@ -322,23 +318,23 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__vax__
+name|vax
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__tahoe__
+name|tahoe
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__m68k__
+name|hp300
 argument_list|)
 end_if
 
 begin_typedef
 typedef|typedef
-name|u_int32_t
+name|u_int
 name|u_word
 typedef|;
 end_typedef
@@ -384,7 +380,7 @@ name|w
 parameter_list|,
 name|i
 parameter_list|)
-value|(i) = ntohl(w)
+value|(i) = (w)
 end_define
 
 begin_define
@@ -396,7 +392,7 @@ name|i
 parameter_list|,
 name|w
 parameter_list|)
-value|(w) = htonl(i)
+value|(w) = (i)
 end_define
 
 begin_else
@@ -411,6 +407,10 @@ name|_WORD_HIGHPART
 value|0
 end_define
 
+begin_comment
+comment|/* XXX: assume Big Endian for now */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -423,7 +423,7 @@ typedef|typedef
 struct|struct
 name|_uword
 block|{
-name|u_int16_t
+name|u_short
 name|val
 index|[
 literal|2
@@ -479,7 +479,7 @@ parameter_list|,
 name|i
 parameter_list|)
 define|\
-value|(i) = (((u_int32_t)ntohs((w).val[_WORD_HIGHPART]))<< 16) | ntohs((w).val[_WORD_LOWPART])
+value|(i) = (((u_int)(w).val[_WORD_HIGHPART])<< 16) | (w).val[_WORD_LOWPART]
 end_define
 
 begin_define
@@ -492,7 +492,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|{ (w).val[_WORD_HIGHPART] = htons((u_int16_t) ((i>> 16)& 0xffff)); \ 	  (w).val[_WORD_LOWPART] = htons((u_int16_t) (i& 0xffff)); \ 	}
+value|{ (w).val[_WORD_HIGHPART] = (u_short) (((i)>> 16)& 0xffff); \ 	  (w).val[_WORD_LOWPART] = (u_short) (i& 0xffff); \ 	}
 end_define
 
 begin_endif
@@ -509,11 +509,11 @@ struct|struct
 name|rmp_raw
 block|{
 comment|/* generic RMP packet */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type */
-name|u_int8_t
+name|u_char
 name|rmp_rawdata
 index|[
 name|RMPDATALEN
@@ -530,11 +530,11 @@ struct|struct
 name|rmp_boot_req
 block|{
 comment|/* boot request */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type (RMP_BOOT_REQ) */
-name|u_int8_t
+name|u_char
 name|rmp_retcode
 decl_stmt|;
 comment|/* return code (0) */
@@ -542,11 +542,11 @@ name|u_word
 name|rmp_seqno
 decl_stmt|;
 comment|/* sequence number (real time clock) */
-name|u_int16_t
+name|u_short
 name|rmp_session
 decl_stmt|;
 comment|/* session id (normally 0) */
-name|u_int16_t
+name|u_short
 name|rmp_version
 decl_stmt|;
 comment|/* protocol version (RMP_VERSION) */
@@ -557,7 +557,7 @@ name|RMP_MACHLEN
 index|]
 decl_stmt|;
 comment|/* machine type */
-name|u_int8_t
+name|u_char
 name|rmp_flnmsize
 decl_stmt|;
 comment|/* length of rmp_flnm */
@@ -574,11 +574,11 @@ struct|struct
 name|rmp_boot_repl
 block|{
 comment|/* boot reply */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type (RMP_BOOT_REPL) */
-name|u_int8_t
+name|u_char
 name|rmp_retcode
 decl_stmt|;
 comment|/* return code (normally 0) */
@@ -586,15 +586,15 @@ name|u_word
 name|rmp_seqno
 decl_stmt|;
 comment|/* sequence number (from boot req) */
-name|u_int16_t
+name|u_short
 name|rmp_session
 decl_stmt|;
 comment|/* session id (generated) */
-name|u_int16_t
+name|u_short
 name|rmp_version
 decl_stmt|;
 comment|/* protocol version (RMP_VERSION) */
-name|u_int8_t
+name|u_char
 name|rmp_flnmsize
 decl_stmt|;
 comment|/* length of rmp_flnm */
@@ -611,11 +611,11 @@ struct|struct
 name|rmp_read_req
 block|{
 comment|/* read request */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type (RMP_READ_REQ) */
-name|u_int8_t
+name|u_char
 name|rmp_retcode
 decl_stmt|;
 comment|/* return code (0) */
@@ -623,11 +623,11 @@ name|u_word
 name|rmp_offset
 decl_stmt|;
 comment|/* file relative byte offset */
-name|u_int16_t
+name|u_short
 name|rmp_session
 decl_stmt|;
 comment|/* session id (from boot repl) */
-name|u_int16_t
+name|u_short
 name|rmp_size
 decl_stmt|;
 comment|/* max no of bytes to send */
@@ -640,11 +640,11 @@ struct|struct
 name|rmp_read_repl
 block|{
 comment|/* read reply */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type (RMP_READ_REPL) */
-name|u_int8_t
+name|u_char
 name|rmp_retcode
 decl_stmt|;
 comment|/* return code (normally 0) */
@@ -652,7 +652,7 @@ name|u_word
 name|rmp_offset
 decl_stmt|;
 comment|/* byte offset (from read req) */
-name|u_int16_t
+name|u_short
 name|rmp_session
 decl_stmt|;
 comment|/* session id (from read req) */
@@ -660,7 +660,7 @@ name|restofpkt
 name|rmp_data
 decl_stmt|;
 comment|/* data (max size from read req) */
-name|u_int8_t
+name|u_char
 name|rmp_unused
 decl_stmt|;
 comment|/* padding to 16-bit boundary */
@@ -673,11 +673,11 @@ struct|struct
 name|rmp_boot_done
 block|{
 comment|/* boot complete */
-name|u_int8_t
+name|u_char
 name|rmp_type
 decl_stmt|;
 comment|/* packet type (RMP_BOOT_DONE) */
-name|u_int8_t
+name|u_char
 name|rmp_retcode
 decl_stmt|;
 comment|/* return code (0) */
@@ -685,7 +685,7 @@ name|u_word
 name|rmp_unused
 decl_stmt|;
 comment|/* not used (0) */
-name|u_int16_t
+name|u_short
 name|rmp_session
 decl_stmt|;
 comment|/* session id (from read repl) */
@@ -759,7 +759,7 @@ begin_define
 define|#
 directive|define
 name|r_data
-value|rmp_proto.rmp_raw.rmp_rawdata
+value|rmp_proto.rmp_raw.rmp_data
 end_define
 
 begin_define

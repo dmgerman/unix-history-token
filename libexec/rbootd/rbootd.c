@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rbootd.c,v 1.5 1995/10/06 05:12:17 thorpej Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)rbootd.c	8.1 (Berkeley) 6/4/93  *  * From: Utah Hdr: rbootd.c 3.1 92/07/06  * Author: Jeff Forys, University of Utah CSS  */
+comment|/*  * Copyright (c) 1988, 1992 The University of Utah and the Center  *	for Software Science (CSS).  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Center for Software Science of the University of Utah Computer  * Science Department.  CSS requests users of this software to return  * to css-dist@cs.utah.edu any improvements that they make and grant  * CSS redistribution rights.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)rbootd.c	8.2 (Berkeley) 2/22/94  *  * Utah $Hdr: rbootd.c 3.1 92/07/06$  * Author: Jeff Forys, University of Utah CSS  */
 end_comment
 
 begin_ifndef
@@ -38,17 +34,13 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/*static char sccsid[] = "@(#)rbootd.c	8.1 (Berkeley) 6/4/93";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$NetBSD: rbootd.c,v 1.5 1995/10/06 05:12:17 thorpej Exp $"
+literal|"@(#)rbootd.c	8.2 (Berkeley) 2/22/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -77,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -139,17 +131,94 @@ directive|include
 file|"defs.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* from crt0.o */
+comment|/* fd mask macros (backward compatibility with 4.2BSD) */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SET
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|fd_set
+block|{
+comment|/* this should already be in 4.2 */
+name|int
+name|fds_bits
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|fd_set
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|FD_ZERO
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->fds_bits[0] = 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_SET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0] |= (1<< (n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_CLR
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0]&= ~(1<< (n)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|FD_ISSET
+parameter_list|(
+name|n
+parameter_list|,
+name|p
+parameter_list|)
+value|((p)->fds_bits[0]& (1<< (n)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
@@ -180,6 +249,29 @@ decl_stmt|;
 name|fd_set
 name|rset
 decl_stmt|;
+comment|/* 	 *  Find what name we are running under. 	 */
+name|ProgName
+operator|=
+operator|(
+name|ProgName
+operator|=
+name|rindex
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+condition|?
+operator|++
+name|ProgName
+else|:
+operator|*
+name|argv
+expr_stmt|;
 comment|/* 	 *  Close any open file descriptors. 	 *  Temporarily leave stdin& stdout open for `-d', 	 *  and stderr open for any pre-syslog error messages. 	 */
 block|{
 name|int
@@ -307,9 +399,13 @@ index|]
 expr_stmt|;
 else|else
 block|{
-name|warnx
+name|fprintf
 argument_list|(
-literal|"too many config files (`%s' ignored)\n"
+name|stderr
+argument_list|,
+literal|"%s: too many config files (`%s' ignored)\n"
+argument_list|,
+name|ProgName
 argument_list|,
 name|argv
 index|[
@@ -361,34 +457,174 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
 name|fclose
 argument_list|(
-name|stderr
+name|stdin
 argument_list|)
 expr_stmt|;
-comment|/* finished with it */
+comment|/* dont need these */
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
+comment|/* 		 *  Fork off a child to do the work& exit. 		 */
+switch|switch
+condition|(
+name|fork
+argument_list|()
+condition|)
+block|{
+case|case
+operator|-
+literal|1
+case|:
+comment|/* fork failed */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|ProgName
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"fork"
+argument_list|)
+expr_stmt|;
+name|Exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+case|case
+literal|0
+case|:
+comment|/* this is the CHILD */
+break|break;
+default|default:
+comment|/* this is the PARENT */
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 *  Try to disassociate from the current tty. 		 */
+block|{
+name|char
+modifier|*
+name|devtty
+init|=
+literal|"/dev/tty"
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|open
+argument_list|(
+name|devtty
+argument_list|,
+name|O_RDWR
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* probably already disassociated */
+if|if
+condition|(
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|ProgName
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"setpgrp"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
 if|if
 condition|(
-name|daemon
+name|ioctl
 argument_list|(
-literal|0
+name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
+name|TIOCNOTTY
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
+operator|<
+literal|0
 condition|)
-name|err
+block|{
+name|fprintf
 argument_list|(
-literal|1
+name|stderr
 argument_list|,
-literal|"can't detach from terminal"
+literal|"%s: "
+argument_list|,
+name|ProgName
 argument_list|)
 expr_stmt|;
+name|perror
+argument_list|(
+literal|"ioctl"
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 operator|(
 name|void
 operator|)
@@ -410,15 +646,38 @@ name|DebugOff
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|stderr
+argument_list|)
+expr_stmt|;
+comment|/* finished with it */
+ifdef|#
+directive|ifdef
+name|SYSLOG4_2
 name|openlog
 argument_list|(
-name|__progname
+name|ProgName
+argument_list|,
+name|LOG_PID
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|openlog
+argument_list|(
+name|ProgName
 argument_list|,
 name|LOG_PID
 argument_list|,
 name|LOG_DAEMON
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 *  If no interface was specified, get one now. 	 * 	 *  This is convoluted because we want to get the default interface 	 *  name for the syslog("restarted") message.  If BpfGetIntfName() 	 *  runs into an error, it will return a syslog-able error message 	 *  (in `errmsg') which will be displayed here. 	 */
 if|if
 condition|(
@@ -575,9 +834,6 @@ name|fp
 argument_list|,
 literal|"%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|MyPid
 argument_list|)
 expr_stmt|;
@@ -740,11 +996,24 @@ argument_list|,
 operator|&
 name|r
 argument_list|,
-name|NULL
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
 argument_list|,
-name|NULL
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
 argument_list|,
-name|NULL
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -771,9 +1040,17 @@ argument_list|,
 operator|&
 name|r
 argument_list|,
-name|NULL
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
 argument_list|,
-name|NULL
+operator|(
+name|fd_set
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|&
 name|timeout
