@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.1 (Berkeley) %G%"
+literal|"@(#)main.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -569,7 +569,7 @@ specifier|static
 name|char
 name|string_ident
 index|[
-literal|20
+literal|60
 index|]
 decl_stmt|;
 name|char
@@ -660,39 +660,31 @@ goto|;
 case|case
 name|CU_STRING
 case|:
-comment|/* Have better handling here */
 operator|(
 name|void
 operator|)
-name|strncpy
+name|sprintf
 argument_list|(
 name|string_ident
+argument_list|,
+literal|"\"%.50s%s\""
 argument_list|,
 name|script
 operator|->
 name|s
 argument_list|,
-sizeof|sizeof
+name|strlen
 argument_list|(
-name|string_ident
+name|script
+operator|->
+name|s
 argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|string_ident
-operator|+
-sizeof|sizeof
-argument_list|(
-name|string_ident
-argument_list|)
-operator|-
-literal|5
-argument_list|,
+operator|>
+literal|50
+condition|?
 literal|"..."
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|fname
