@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/namei.h>
 end_include
 
@@ -100,12 +112,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/msdosfs/bpb.h>
 end_include
 
@@ -138,13 +144,6 @@ include|#
 directive|include
 file|<fs/msdosfs/fat.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|MSDOSFS_DFLTBSIZE
-value|4096
-end_define
 
 begin_if
 if|#
@@ -195,6 +194,14 @@ literal|"MSDOSFS file allocation table"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+name|int
+name|bdemsd
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -569,6 +576,28 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|int msdosfs_mountroot() { 	register struct mount *mp; 	struct thread *td = curthread;
+comment|/* XXX */
+end_comment
+
+begin_comment
+unit|size_t size; 	int error; 	struct msdosfs_args args;  	if (root_device->dv_class != DV_DISK) 		return (ENODEV);
+comment|/* 	 * Get vnodes for swapdev and rootdev. 	 */
+end_comment
+
+begin_endif
+unit|if (bdevvp(rootdev,&rootvp)) 		panic("msdosfs_mountroot: can't setup rootvp");  	mp = malloc((u_long)sizeof(struct mount), M_MOUNT, M_WAITOK | M_ZERO); 	mp->mnt_op =&msdosfs_vfsops; 	mp->mnt_flag = 0; 	TAILQ_INIT(&mp->mnt_nvnodelist); 	TAILQ_INIT(&mp->mnt_reservedvnlist);  	args.flags = 0; 	args.uid = 0; 	args.gid = 0; 	args.mask = 0777;  	if ((error = mountmsdosfs(rootvp, mp, p,&args)) != 0) { 		free(mp, M_MOUNT); 		return (error); 	}  	if ((error = update_mp(mp,&args)) != 0) { 		(void)msdosfs_unmount(mp, 0, td); 		free(mp, M_MOUNT); 		return (error); 	}  	if ((error = vfs_lock(mp)) != 0) { 		(void)msdosfs_unmount(mp, 0, td); 		free(mp, M_MOUNT); 		return (error); 	}  	TAILQ_INSERT_TAIL(&mountlist, mp, mnt_list); 	mp->mnt_vnodecovered = NULLVP; 	(void) copystr("/", mp->mnt_stat.f_mntonname, MNAMELEN - 1,&size); 	bzero(mp->mnt_stat.f_mntonname + size, MNAMELEN - size); 	(void) copystr(ROOTNAME, mp->mnt_stat.f_mntfromname, MNAMELEN - 1,&size); 	bzero(mp->mnt_stat.f_mntfromname + size, MNAMELEN - size); 	(void)msdosfs_statfs(mp,&mp->mnt_stat, td); 	vfs_unlock(mp); 	return (0); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * mp - path - addr in user space of mount point (ie /usr or whatever)  * data - addr in user space of mount params including the name of the block  * special file to treat as a filesystem.  */
@@ -1523,7 +1552,7 @@ name|pmp
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 2048 is a maximum sector size in current... 	 */
+comment|/* 	 * Read the boot sector of the filesystem, and then check the 	 * boot signature.  If not a dos boot sector then error out. 	 * 	 * NOTE: 8192 is a magic size that works for ffs. 	 */
 name|error
 operator|=
 name|bread
@@ -1532,7 +1561,7 @@ name|devvp
 argument_list|,
 literal|0
 argument_list|,
-literal|2048
+literal|8192
 argument_list|,
 name|NOCRED
 argument_list|,
@@ -2421,8 +2450,9 @@ name|pmp
 operator|->
 name|pm_fatblocksize
 operator|=
-name|MSDOSFS_DFLTBSIZE
+name|PAGE_SIZE
 expr_stmt|;
+comment|/* XXX */
 name|pmp
 operator|->
 name|pm_fatblocksec
@@ -2660,7 +2690,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Next free cluster in FSInfo (%u) exceeds maxcluster (%u)\n"
+literal|"Next free cluster in FSInfo (%lu) exceeds maxcluster (%lu)\n"
 argument_list|,
 name|pmp
 operator|->
@@ -3674,7 +3704,6 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
 name|TAILQ_EMPTY
 argument_list|(
 operator|&
@@ -3682,11 +3711,6 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 argument_list|)
-operator|||
-name|waitfor
-operator|==
-name|MNT_LAZY
-operator|)
 operator|)
 condition|)
 block|{
@@ -3812,6 +3836,36 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|pmp
+operator|->
+name|pm_devvp
+operator|->
+name|v_dirtyblkhd
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|bdemsd
+condition|)
+name|Debugger
+argument_list|(
+literal|"msdosfs: flush fs control info"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"msdosfs: flush fs control info\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|VOP_FSYNC
