@@ -451,7 +451,7 @@ name|d
 operator|->
 name|bios_hd
 operator|>
-literal|16
+literal|256
 operator|||
 name|d
 operator|->
