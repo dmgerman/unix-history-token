@@ -50,6 +50,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|AGP_MODE_GET_ARQSZ
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x0000e000U)>> 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_GET_CAL
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x00001c00U)>> 10)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AGP_MODE_GET_SBA
 parameter_list|(
 name|x
@@ -70,7 +90,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|AGP_MODE_GET_4G
+name|AGP_MODE_GET_GART_64
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x00000080U)>> 7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_GET_OVER_4G
 parameter_list|(
 name|x
 parameter_list|)
@@ -85,6 +115,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x00000010U)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_GET_MODE_3
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& 0x00000008U)>> 3)
 end_define
 
 begin_define
@@ -107,6 +147,30 @@ parameter_list|,
 name|v
 parameter_list|)
 value|(((x)& ~0xff000000U) | ((v)<< 24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_SET_ARQSZ
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|(((x)& ~0x0000e000U) | ((v)<< 13))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_SET_CAL
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|(((x)& ~0x00001c00U) | ((v)<< 10))
 end_define
 
 begin_define
@@ -136,7 +200,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|AGP_MODE_SET_4G
+name|AGP_MODE_SET_GART_64
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|(((x)& ~0x00000080U) | ((v)<< 7))
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_SET_OVER_4G
 parameter_list|(
 name|x
 parameter_list|,
@@ -160,6 +236,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|AGP_MODE_SET_MODE_3
+parameter_list|(
+name|x
+parameter_list|,
+name|v
+parameter_list|)
+value|(((x)& ~0x00000008U) | ((v)<< 3))
+end_define
+
+begin_define
+define|#
+directive|define
 name|AGP_MODE_SET_RATE
 parameter_list|(
 name|x
@@ -172,22 +260,88 @@ end_define
 begin_define
 define|#
 directive|define
-name|AGP_MODE_RATE_1x
+name|AGP_MODE_V2_RATE_1x
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|AGP_MODE_RATE_2x
+name|AGP_MODE_V2_RATE_2x
 value|0x00000002
 end_define
 
 begin_define
 define|#
 directive|define
-name|AGP_MODE_RATE_4x
+name|AGP_MODE_V2_RATE_4x
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_V3_RATE_4x
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_V3_RATE_8x
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_V3_RATE_RSVD
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* XXX: Compat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_GET_4G
+parameter_list|(
+name|x
+parameter_list|)
+value|AGP_MODE_GET_OVER_4G(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_SET_4G
+parameter_list|(
+name|x
+parameter_list|)
+value|AGP_MODE_SET_OVER_4G(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_RATE_1x
+value|AGP_MODE_V2_RATE_1x
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_RATE_2x
+value|AGP_MODE_V2_RATE_2x
+end_define
+
+begin_define
+define|#
+directive|define
+name|AGP_MODE_RATE_4x
+value|AGP_MODE_V2_RATE_4x
 end_define
 
 begin_define
