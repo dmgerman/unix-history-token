@@ -2778,13 +2778,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|panic
-argument_list|(
-literal|"bad ivar read request (%d)"
-argument_list|,
-name|index
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ENOENT
