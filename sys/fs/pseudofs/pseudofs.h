@@ -124,6 +124,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|PFS_PROCDEP
+value|0x0010
+end_define
+
+begin_comment
+comment|/* process-dependent */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PFS_DISABLED
 value|0x8000
 end_define
@@ -153,6 +164,42 @@ struct_decl|struct
 name|pfs_bitmap
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/*  * Init / uninit callback  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PFS_INIT_ARGS
+define|\
+value|struct pfs_info *pi, struct vfsconf *vfc
+end_define
+
+begin_define
+define|#
+directive|define
+name|PFS_INIT_PROTO
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|int name(PFS_INIT_ARGS);
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|pfs_init_t
+function_decl|)
+parameter_list|(
+name|PFS_INIT_ARGS
+parameter_list|)
+function_decl|;
+end_typedef
 
 begin_comment
 comment|/*  * Filler callback  */
@@ -292,12 +339,18 @@ index|[
 name|MFSNAMELEN
 index|]
 decl_stmt|;
+name|pfs_init_t
+name|pi_init
+decl_stmt|;
+name|pfs_init_t
+name|pi_uninit
+decl_stmt|;
+comment|/* members below this line aren't initialized */
 name|struct
 name|pfs_node
 modifier|*
 name|pi_root
 decl_stmt|;
-comment|/* members below this line aren't initialized */
 comment|/* currently, the mutex is only used to protect the bitmap */
 name|struct
 name|mtx
@@ -354,6 +407,7 @@ define|#
 directive|define
 name|pn_nodes
 value|u1._pn_nodes
+comment|/*pfs_ioctl_t		 pn_ioctl;*/
 name|pfs_attr_t
 name|pn_attr
 decl_stmt|;
@@ -367,11 +421,20 @@ decl_stmt|;
 name|int
 name|pn_flags
 decl_stmt|;
-comment|/* members below this line aren't initialized */
+name|struct
+name|pfs_info
+modifier|*
+name|pn_info
+decl_stmt|;
 name|struct
 name|pfs_node
 modifier|*
 name|pn_parent
+decl_stmt|;
+name|struct
+name|pfs_node
+modifier|*
+name|pn_next
 decl_stmt|;
 name|u_int32_t
 name|pn_fileno
@@ -379,146 +442,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|PFS_NODE
-parameter_list|(
-name|name
-parameter_list|,
-name|type
-parameter_list|,
-name|fill
-parameter_list|,
-name|attr
-parameter_list|,
-name|vis
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|{ (name), (type), { (fill) }, (attr), (vis), (data), (flags) }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_DIR
-parameter_list|(
-name|name
-parameter_list|,
-name|nodes
-parameter_list|,
-name|attr
-parameter_list|,
-name|vis
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|PFS_NODE(name, pfstype_dir, nodes, attr, vis, data, flags)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_ROOT
-parameter_list|(
-name|nodes
-parameter_list|)
-define|\
-value|PFS_NODE("/", pfstype_root, nodes, NULL, NULL, NULL, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_THIS
-define|\
-value|PFS_NODE(".", pfstype_this, NULL, NULL, NULL, NULL, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_PARENT
-define|\
-value|PFS_NODE("..", pfstype_parent, NULL, NULL, NULL, NULL, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_FILE
-parameter_list|(
-name|name
-parameter_list|,
-name|func
-parameter_list|,
-name|attr
-parameter_list|,
-name|vis
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|PFS_NODE(name, pfstype_file, func, attr, vis, data, flags)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_SYMLINK
-parameter_list|(
-name|name
-parameter_list|,
-name|func
-parameter_list|,
-name|attr
-parameter_list|,
-name|vis
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|PFS_NODE(name, pfstype_symlink, func, attr, vis, data, flags)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_PROCDIR
-parameter_list|(
-name|nodes
-parameter_list|,
-name|attr
-parameter_list|,
-name|vis
-parameter_list|,
-name|data
-parameter_list|,
-name|flags
-parameter_list|)
-define|\
-value|PFS_NODE("", pfstype_procdir, nodes, attr, vis, data, flags)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PFS_LASTNODE
-define|\
-value|PFS_NODE("", pfstype_none, NULL, NULL, NULL, NULL, 0)
-end_define
 
 begin_comment
 comment|/*  * VFS interface  */
@@ -653,8 +576,95 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Other utility functions  */
+comment|/*  * Directory structure construction and manipulation  */
 end_comment
+
+begin_function_decl
+name|struct
+name|pfs_node
+modifier|*
+name|pfs_create_dir
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|parent
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|pfs_attr_t
+name|attr
+parameter_list|,
+name|pfs_vis_t
+name|vis
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pfs_node
+modifier|*
+name|pfs_create_file
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|parent
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|pfs_fill_t
+name|fill
+parameter_list|,
+name|pfs_attr_t
+name|attr
+parameter_list|,
+name|pfs_vis_t
+name|vis
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pfs_node
+modifier|*
+name|pfs_create_link
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|parent
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|pfs_fill_t
+name|fill
+parameter_list|,
+name|pfs_attr_t
+name|attr
+parameter_list|,
+name|pfs_vis_t
+name|vis
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -680,6 +690,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pfs_destroy
+parameter_list|(
+name|struct
+name|pfs_node
+modifier|*
+name|pn
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Now for some initialization magic...  */
 end_comment
@@ -691,12 +713,10 @@ name|PSEUDOFS
 parameter_list|(
 name|name
 parameter_list|,
-name|root
-parameter_list|,
 name|version
 parameter_list|)
 define|\ 									\
-value|static struct pfs_info name##_info = {					\ 	#name,								\&(root)								\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct thread *td) {		\         return pfs_mount(&name##_info, mp, path, data, ndp, td);	\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 2, 2, 2);
+value|static struct pfs_info name##_info = {					\ 	#name,								\&name##_init,							\&name##_uninit,							\ };									\ 									\ static int								\ _##name##_mount(struct mount *mp, char *path, caddr_t data,		\ 	     struct nameidata *ndp, struct thread *td) {		\         return pfs_mount(&name##_info, mp, path, data, ndp, td);	\ }									\ 									\ static int								\ _##name##_init(struct vfsconf *vfc) {					\         return pfs_init(&name##_info, vfc);				\ }									\ 									\ static int								\ _##name##_uninit(struct vfsconf *vfc) {					\         return pfs_uninit(&name##_info, vfc);				\ }									\ 									\ static struct vfsops name##_vfsops = {					\ 	_##name##_mount,						\ 	vfs_stdstart,							\ 	pfs_unmount,							\ 	pfs_root,							\ 	vfs_stdquotactl,						\ 	pfs_statfs,							\ 	vfs_stdsync,							\ 	vfs_stdvget,							\ 	vfs_stdfhtovp,							\ 	vfs_stdcheckexp,						\ 	vfs_stdvptofh,							\ 	_##name##_init,							\ 	_##name##_uninit,						\ 	vfs_stdextattrctl,						\ };									\ VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);				\ MODULE_VERSION(name, version);						\ MODULE_DEPEND(name, pseudofs, 3, 3, 3);
 end_define
 
 begin_endif
