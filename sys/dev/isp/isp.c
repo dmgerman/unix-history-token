@@ -10638,7 +10638,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 operator|(
 literal|"%s: Command Mbox 0x%x\n"
@@ -10669,7 +10669,7 @@ argument_list|)
 decl_stmt|;
 name|IDPRINTF
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 operator|(
 literal|"%s: Async Mbox 0x%x\n"
@@ -10932,7 +10932,7 @@ condition|)
 block|{
 name|IDPRINTF
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 operator|(
 literal|"%s: continuation segment\n"
@@ -12382,7 +12382,7 @@ argument_list|)
 expr_stmt|;
 name|IDPRINTF
 argument_list|(
-literal|3
+literal|4
 argument_list|,
 operator|(
 literal|"%s: fast post completion of %u\n"
