@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.h	4.11	82/03/15	*/
+comment|/*	tty.h	4.12	82/12/05	*/
 end_comment
 
 begin_ifdef
@@ -12,7 +12,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/ioctl.h"
+file|"../h/ttychars.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ttydev.h"
 end_include
 
 begin_else
@@ -23,7 +29,13 @@ end_else
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/ttychars.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ttydev.h>
 end_include
 
 begin_endif
@@ -31,14 +43,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<sgtty.h>
-end_include
-
 begin_comment
-comment|/*  * A clist structure is the head of a linked list queue of characters.  * The characters are stored in blocks containing a link and CBSIZE (param.h)  * characters.  The routines in prim.c manipulate these structures.  */
+comment|/*  * A clist structure is the head of a linked list queue  * of characters.  The characters are stored in blocks  * containing a link and CBSIZE (param.h) characters.   * The routines in tty_subr.c manipulate these structures.  */
 end_comment
 
 begin_struct
@@ -64,7 +70,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Per-tty structre.  *  * Should be split in two, into device and tty drivers.  * Glue could be masks of what to echo and circular buffer  * (low, high, timeout).  */
+comment|/*  * Per-tty structure.  *  * Should be split in two, into device and tty drivers.  * Glue could be masks of what to echo and circular buffer  * (low, high, timeout).  */
 end_comment
 
 begin_struct
@@ -175,11 +181,11 @@ name|dev_t
 name|t_dev
 decl_stmt|;
 comment|/* device */
-name|short
+name|int
 name|t_flags
 decl_stmt|;
 comment|/* some of both */
-name|short
+name|int
 name|t_state
 decl_stmt|;
 comment|/* some of both */
@@ -192,6 +198,10 @@ name|t_delct
 decl_stmt|;
 comment|/* tty */
 name|char
+name|t_char
+decl_stmt|;
+comment|/* tty */
+name|char
 name|t_line
 decl_stmt|;
 comment|/* glue */
@@ -200,22 +210,11 @@ name|t_col
 decl_stmt|;
 comment|/* tty */
 name|char
-name|t_erase
-decl_stmt|,
-name|t_kill
-decl_stmt|;
-comment|/* tty */
-name|char
-name|t_char
-decl_stmt|;
-comment|/* tty */
-name|char
 name|t_ispeed
 decl_stmt|,
 name|t_ospeed
 decl_stmt|;
 comment|/* device */
-comment|/* begin local */
 name|char
 name|t_rocount
 decl_stmt|,
@@ -223,50 +222,70 @@ name|t_rocol
 decl_stmt|;
 comment|/* tty */
 name|struct
-name|ltchars
-name|t_lchr
+name|ttychars
+name|t_chars
 decl_stmt|;
 comment|/* tty */
-name|short
-name|t_local
-decl_stmt|;
-comment|/* tty */
-name|short
-name|t_lstate
-decl_stmt|;
-comment|/* tty */
-comment|/* end local */
-union|union
-block|{
-name|struct
-name|tchars
-name|t_chr
-decl_stmt|;
-comment|/* tty */
-name|struct
-name|clist
-name|T_CTLQ
-decl_stmt|;
-block|}
-name|t_un
-union|;
+comment|/* be careful of tchars& co. */
+define|#
+directive|define
+name|t_erase
+value|t_chars.tc_erase
+define|#
+directive|define
+name|t_kill
+value|t_chars.tc_kill
+define|#
+directive|define
+name|t_intrc
+value|t_chars.tc_intrc
+define|#
+directive|define
+name|t_quitc
+value|t_chars.tc_quitc
+define|#
+directive|define
+name|t_startc
+value|t_chars.tc_startc
+define|#
+directive|define
+name|t_stopc
+value|t_chars.tc_stopc
+define|#
+directive|define
+name|t_eofc
+value|t_chars.tc_eofc
+define|#
+directive|define
+name|t_brkc
+value|t_chars.tc_brkc
+define|#
+directive|define
+name|t_suspc
+value|t_chars.tc_suspc
+define|#
+directive|define
+name|t_dsuspc
+value|t_chars.tc_dsuspc
+define|#
+directive|define
+name|t_rprntc
+value|t_chars.tc_rprntc
+define|#
+directive|define
+name|t_flushc
+value|t_chars.tc_flushc
+define|#
+directive|define
+name|t_werasc
+value|t_chars.tc_werasc
+define|#
+directive|define
+name|t_lnextc
+value|t_chars.tc_lnextc
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|tun
-value|tp->t_un.t_chr
-end_define
-
-begin_define
-define|#
-directive|define
-name|tlun
-value|tp->t_lchr
-end_define
 
 begin_define
 define|#
@@ -280,84 +299,6 @@ define|#
 directive|define
 name|TTOPRI
 value|29
-end_define
-
-begin_define
-define|#
-directive|define
-name|CTRL
-parameter_list|(
-name|c
-parameter_list|)
-value|('c'&037)
-end_define
-
-begin_comment
-comment|/* default special characters */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CERASE
-value|'#'
-end_define
-
-begin_define
-define|#
-directive|define
-name|CEOT
-value|CTRL(d)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CKILL
-value|'@'
-end_define
-
-begin_define
-define|#
-directive|define
-name|CQUIT
-value|034
-end_define
-
-begin_comment
-comment|/* FS, cntl shift L */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CINTR
-value|0177
-end_define
-
-begin_comment
-comment|/* DEL */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CSTOP
-value|CTRL(s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CSTART
-value|CTRL(q)
-end_define
-
-begin_define
-define|#
-directive|define
-name|CBRK
-value|0377
 end_define
 
 begin_comment
@@ -376,6 +317,20 @@ define|#
 directive|define
 name|TTMASK
 value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|OBUFSIZ
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|TTYHOG
+value|255
 end_define
 
 begin_ifdef
@@ -418,35 +373,18 @@ parameter_list|)
 value|ttlowat[(tp)->t_ospeed&TTMASK]
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ttychars
+name|ttydefaults
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|TTYHOG
-value|255
-end_define
-
-begin_comment
-comment|/* hardware bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DONE
-value|0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|IENABLE
-value|0100
-end_define
 
 begin_comment
 comment|/* internal state bits */
@@ -456,7 +394,7 @@ begin_define
 define|#
 directive|define
 name|TS_TIMEOUT
-value|000001
+value|0x000001
 end_define
 
 begin_comment
@@ -467,7 +405,7 @@ begin_define
 define|#
 directive|define
 name|TS_WOPEN
-value|000002
+value|0x000002
 end_define
 
 begin_comment
@@ -478,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|TS_ISOPEN
-value|000004
+value|0x000004
 end_define
 
 begin_comment
@@ -489,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|TS_FLUSH
-value|000010
+value|0x000008
 end_define
 
 begin_comment
@@ -500,7 +438,7 @@ begin_define
 define|#
 directive|define
 name|TS_CARR_ON
-value|000020
+value|0x000010
 end_define
 
 begin_comment
@@ -511,7 +449,7 @@ begin_define
 define|#
 directive|define
 name|TS_BUSY
-value|000040
+value|0x000020
 end_define
 
 begin_comment
@@ -522,7 +460,7 @@ begin_define
 define|#
 directive|define
 name|TS_ASLEEP
-value|000100
+value|0x000040
 end_define
 
 begin_comment
@@ -533,7 +471,7 @@ begin_define
 define|#
 directive|define
 name|TS_XCLUDE
-value|000200
+value|0x000080
 end_define
 
 begin_comment
@@ -544,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|TS_TTSTOP
-value|000400
+value|0x000100
 end_define
 
 begin_comment
@@ -555,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|TS_HUPCLS
-value|001000
+value|0x000200
 end_define
 
 begin_comment
@@ -566,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|TS_TBLOCK
-value|002000
+value|0x000400
 end_define
 
 begin_comment
@@ -577,7 +515,7 @@ begin_define
 define|#
 directive|define
 name|TS_RCOLL
-value|004000
+value|0x000800
 end_define
 
 begin_comment
@@ -588,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|TS_WCOLL
-value|010000
+value|0x001000
 end_define
 
 begin_comment
@@ -599,7 +537,7 @@ begin_define
 define|#
 directive|define
 name|TS_NBIO
-value|020000
+value|0x002000
 end_define
 
 begin_comment
@@ -610,12 +548,89 @@ begin_define
 define|#
 directive|define
 name|TS_ASYNC
-value|040000
+value|0x004000
 end_define
 
 begin_comment
 comment|/* tty in async i/o mode */
 end_comment
+
+begin_comment
+comment|/* state for intra-line fancy editing work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_BKSL
+value|0x010000
+end_define
+
+begin_comment
+comment|/* state for lowercase \ work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_QUOT
+value|0x020000
+end_define
+
+begin_comment
+comment|/* last character input was \ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_ERASE
+value|0x040000
+end_define
+
+begin_comment
+comment|/* within a \.../ for PRTRUB */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_LNCH
+value|0x080000
+end_define
+
+begin_comment
+comment|/* next character is literal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_TYPEN
+value|0x100000
+end_define
+
+begin_comment
+comment|/* retyping suspended input (PENDIN) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_CNTTB
+value|0x200000
+end_define
+
+begin_comment
+comment|/* counting tab width; leave FLUSHO alone */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_LOCAL
+value|(TS_BKSL|TS_QUOT|TS_ERASE|TS_LNCH|TS_TYPEN|TS_CNTTB)
+end_define
 
 begin_comment
 comment|/* define partab character types */
@@ -668,38 +683,6 @@ define|#
 directive|define
 name|RETURN
 value|6
-end_define
-
-begin_comment
-comment|/* define dmctl actions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMSET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMBIS
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMBIC
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DMGET
-value|3
 end_define
 
 end_unit
