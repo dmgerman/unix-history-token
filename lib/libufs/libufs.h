@@ -38,12 +38,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DEBUG
+name|ERROR
 parameter_list|(
+name|uufsd
+parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {								\ 	fprintf(stderr, "libufs in %s", __func__);		\ 	if (str != NULL)					\ 		fprintf(stderr, ": %s", str);			\ 	if (errno)						\ 		fprintf(stderr, ": %s", strerror(errno));	\ 	fprintf(stderr, "\n");					\ } while (0)
+value|do {								\ 	fprintf(stderr, "libufs in %s", __func__);		\ 	if (str != NULL)					\ 		fprintf(stderr, ": %s", str);			\ 	if (errno)						\ 		fprintf(stderr, ": %s", strerror(errno));	\ 	fprintf(stderr, "\n");					\ 	if ((uufsd) != NULL)					\ 		(uufsd)->d_error = str;				\ } while (0)
 end_define
 
 begin_else
@@ -60,13 +62,13 @@ define|#
 directive|define
 name|DEBUG
 parameter_list|(
+name|uufsd
+parameter_list|,
 name|str
 parameter_list|)
+define|\
+value|do {								\ 	if ((uufsd) != NULL)					\ 		(uufsd)->d_error = str;				\ } while (0)
 end_define
-
-begin_comment
-comment|/* nil */
-end_comment
 
 begin_endif
 endif|#
@@ -203,21 +205,6 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*  * error.c  */
-end_comment
-
-begin_function_decl
-name|void
-name|libufs_printerror
-parameter_list|(
-name|struct
-name|uufsd
-modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

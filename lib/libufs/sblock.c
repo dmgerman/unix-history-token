@@ -125,8 +125,10 @@ name|sb
 decl_stmt|,
 name|superblock
 decl_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
+name|disk
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -185,15 +187,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|disk
-operator|->
-name|d_error
-operator|=
-literal|"non-existent or truncated superblock"
-expr_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
-name|NULL
+name|disk
+argument_list|,
+literal|"non-existent or truncated superblock"
 argument_list|)
 expr_stmt|;
 return|return
@@ -292,16 +290,12 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Other error cases will result in errno being set, here we 		 * must set it to indicate no superblock could be found with 		 * which to associate this disk/filesystem. 		 */
-name|DEBUG
+name|ERROR
 argument_list|(
-literal|"no superblock found"
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
-literal|"no superblock found"
+argument_list|,
+literal|"no usable known superblock found"
+argument_list|)
 expr_stmt|;
 name|errno
 operator|=
@@ -366,8 +360,10 @@ name|i
 decl_stmt|,
 name|rofd
 decl_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
+name|disk
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -406,16 +402,12 @@ operator|<
 literal|0
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-literal|"open"
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
+argument_list|,
 literal|"failed to open disk"
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -441,16 +433,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
+argument_list|,
 literal|"failed to write superblock"
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -504,16 +492,12 @@ operator|-
 literal|1
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
+argument_list|,
 literal|"failed to update a superblock"
+argument_list|)
 expr_stmt|;
 return|return
 operator|-

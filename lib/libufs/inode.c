@@ -146,8 +146,10 @@ name|fs
 modifier|*
 name|fs
 decl_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
+name|disk
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -199,9 +201,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-name|NULL
+name|disk
+argument_list|,
+literal|"unable to allocate inode block"
 argument_list|)
 expr_stmt|;
 return|return
@@ -368,9 +372,11 @@ return|;
 default|default:
 break|break;
 block|}
-name|DEBUG
+name|ERROR
 argument_list|(
-literal|"unknown UFS filesystem"
+name|disk
+argument_list|,
+literal|"unknown UFS filesystem type"
 argument_list|)
 expr_stmt|;
 return|return

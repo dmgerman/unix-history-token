@@ -116,8 +116,10 @@ decl_stmt|;
 name|ssize_t
 name|cnt
 decl_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
+name|disk
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -158,16 +160,12 @@ operator|!=
 name|size
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-literal|"short read"
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
+argument_list|,
 literal|"short read from block device"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -228,8 +226,10 @@ block|{
 name|ssize_t
 name|cnt
 decl_stmt|;
-name|DEBUG
+name|ERROR
 argument_list|(
+name|disk
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -264,16 +264,12 @@ operator|!=
 name|size
 condition|)
 block|{
-name|DEBUG
+name|ERROR
 argument_list|(
-literal|"short write"
-argument_list|)
-expr_stmt|;
 name|disk
-operator|->
-name|d_error
-operator|=
+argument_list|,
 literal|"short write to block device"
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
