@@ -3138,7 +3138,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is for xe driver. But not better. 		 * In PC Card Standard, 		 * Manufacturer ID: 2byte. 		 * Product ID: 2byte usually, but no limited. 		 */
+comment|/* 		 * This is for xe driver. But not limited to that driver. 		 * In PC Card Standard, 		 * Manufacturer ID: 2byte. 		 * Product ID: typically 2bytes, but there's no limit on its 		 * size.  prodext is a two byte field, so maybe we should 		 * also handle the '6' case.  So far no cards have surfaced 		 * with a length of '6'. 		 */
 if|if
 condition|(
 name|tuple
