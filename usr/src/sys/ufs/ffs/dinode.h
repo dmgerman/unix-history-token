@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -101,10 +101,10 @@ name|NIADDR
 index|]
 decl_stmt|;
 comment|/*  88: indirect blocks */
-name|long
+name|u_long
 name|di_flags
 decl_stmt|;
-comment|/* 100: status, currently unused */
+comment|/* 100: status flags */
 name|long
 name|di_blocks
 decl_stmt|;
