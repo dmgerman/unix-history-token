@@ -2377,7 +2377,7 @@ name|swap_idle_threshold1
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Guaranteed swapped in time for a process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2411,7 +2411,7 @@ name|swap_idle_threshold2
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Time before a process will be swapped out"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
