@@ -855,6 +855,14 @@ operator|->
 name|pru_attach
 operator|==
 name|NULL
+operator|||
+name|prp
+operator|->
+name|pr_usrreqs
+operator|->
+name|pru_attach
+operator|==
+name|pru_attach_notsupp
 condition|)
 return|return
 operator|(
