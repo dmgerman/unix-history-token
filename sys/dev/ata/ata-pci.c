@@ -932,7 +932,15 @@ name|dev
 argument_list|,
 literal|"ata"
 argument_list|,
+name|devclass_find_free_unit
+argument_list|(
+name|devclass_find
+argument_list|(
+literal|"ata"
+argument_list|)
+argument_list|,
 literal|2
+argument_list|)
 argument_list|)
 operator|)
 condition|)
