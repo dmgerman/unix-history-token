@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: map.c,v 8.645.2.1 2002/06/21 20:25:23 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.645.2.3 2002/08/09 22:23:13 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -16611,6 +16611,19 @@ name|vp_tmp
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|>=
+name|vp_tmp
+operator|+
+name|vsize
+condition|)
+name|syserr
+argument_list|(
+literal|"ldapmap_lookup: Internal error: buffer too small for LDAP values"
+argument_list|)
+expr_stmt|;
 operator|*
 name|p
 operator|++
@@ -30404,6 +30417,21 @@ operator|*
 operator|)
 name|xalloc
 argument_list|(
+sizeof|sizeof
+expr|*
+name|ns_map
+operator|->
+name|map
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|ns_map
+operator|->
+name|map
+argument_list|,
+literal|'\0'
+argument_list|,
 sizeof|sizeof
 expr|*
 name|ns_map

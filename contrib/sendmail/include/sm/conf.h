@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.2 2002/06/21 22:31:35 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.4 2002/08/26 22:58:37 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -4711,6 +4711,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAS_IN_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|SM_CONF_GETOPT
 value|0
 end_define
@@ -4820,6 +4827,22 @@ directive|define
 name|sleep
 value|sleepX
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|int
+name|sleepX
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|int
+name|seconds
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

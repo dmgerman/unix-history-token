@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940 2002/06/06 00:03:16 gshapiro Exp $"
+literal|"@(#)$Id: deliver.c,v 8.940.2.3 2002/08/16 14:56:01 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4178,6 +4178,46 @@ sizeof|sizeof
 name|f2buf
 argument_list|)
 expr_stmt|;
+comment|/* Force the df to disk if it's not there yet */
+if|if
+condition|(
+name|type
+operator|==
+name|DATAFL_LETTER
+operator|&&
+name|e
+operator|->
+name|e_dfp
+operator|!=
+name|NULL
+operator|&&
+name|sm_io_setinfo
+argument_list|(
+name|e
+operator|->
+name|e_dfp
+argument_list|,
+name|SM_BF_COMMIT
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|EINVAL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"!dup_queue_file: can't commit %s"
+argument_list|,
+name|f1buf
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 if|if
 condition|(
 name|link
@@ -5876,9 +5916,9 @@ name|q_paddr
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,
@@ -9314,10 +9354,7 @@ condition|(
 name|pwd
 operator|!=
 name|NULL
-condition|)
-operator|(
-name|void
-operator|)
+operator|&&
 name|setusercontext
 argument_list|(
 name|NULL
@@ -9332,7 +9369,24 @@ name|LOGIN_SETRESOURCES
 operator||
 name|LOGIN_SETPRIORITY
 argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|suidwarn
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"openmailer: setusercontext() failed"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+name|EX_TEMPFAIL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -11639,9 +11693,7 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|false
+name|RSF_RMCOMM
 argument_list|,
 literal|7
 argument_list|,
@@ -11832,9 +11884,9 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|5
 argument_list|,
@@ -12994,9 +13046,9 @@ name|NULL
 argument_list|,
 name|e
 argument_list|,
-name|true
-argument_list|,
-name|true
+name|RSF_RMCOMM
+operator||
+name|RSF_COUNT
 argument_list|,
 literal|3
 argument_list|,

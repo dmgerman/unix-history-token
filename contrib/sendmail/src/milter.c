@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197 2002/06/12 22:33:48 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.2 2002/08/06 22:58:38 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -207,6 +207,32 @@ comment|/* Abort the filters to let them know we are done with msg */
 value|\ 		milter_abort(e); \ 	}
 end_define
 
+begin_if
+if|#
+directive|if
+name|_FFR_QUARANTINE
+end_if
+
+begin_define
+define|#
+directive|define
+name|MILTER_CHECK_ERROR
+parameter_list|(
+name|action
+parameter_list|)
+define|\
+value|if (tTd(71, 101)) \ 	{ \ 		if (e->e_quarmsg == NULL) \ 		{ \ 			e->e_quarmsg = sm_rpool_strdup_x(e->e_rpool, \ 							 "filter failure"); \ 			macdefine(&e->e_macro, A_PERM, macid("{quarantine}"), \ 				  e->e_quarmsg); \ 		} \ 	} \ 	else if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -217,6 +243,15 @@ parameter_list|)
 define|\
 value|if (bitnset(SMF_TEMPFAIL, m->mf_flags)) \ 		*state = SMFIR_TEMPFAIL; \ 	else if (bitnset(SMF_REJECT, m->mf_flags)) \ 		*state = SMFIR_REJECT; \ 	else \ 		action;
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_QUARANTINE */
+end_comment
 
 begin_define
 define|#

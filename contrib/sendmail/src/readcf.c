@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: readcf.c,v 8.607 2002/06/14 16:57:32 ca Exp $"
+literal|"@(#)$Id: readcf.c,v 8.607.2.2 2002/08/19 21:50:49 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -8467,7 +8467,7 @@ directive|define
 name|O_SRVKEYFILE
 value|0xb5
 block|{
-literal|"Serverkeyfile"
+literal|"ServerKeyFile"
 block|,
 name|O_SRVKEYFILE
 block|,
@@ -8491,7 +8491,7 @@ directive|define
 name|O_CLTKEYFILE
 value|0xb7
 block|{
-literal|"Clientkeyfile"
+literal|"ClientKeyFile"
 block|,
 name|O_CLTKEYFILE
 block|,

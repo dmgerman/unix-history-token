@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.2 2002/06/25 21:34:31 gshapiro Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.6 2002/08/16 16:27:37 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -6055,7 +6055,16 @@ operator|>
 name|MaxQueueChildren
 condition|)
 break|break;
-comment|/* 		**  Pick up where we left off (curnum), in case we 		**  used up all the children last time without finishing. 		**  This give a round-robin fairness to queue runs. 		*/
+comment|/* 		**  Pick up where we left off (curnum), in case we 		**  used up all the children last time without finishing. 		**  This give a round-robin fairness to queue runs. 		** 		**  Increment CurRunners before calling run_work_group() 		**  to avoid a "race condition" with proc_list_drop() which 		**  decrements CurRunners if the queue runners terminate. 		**  This actually doesn't cause any harm, but CurRunners 		**  might become negative which is at least confusing. 		** 		**  Notice: CurRunners is an upper limit, in some cases 		**  (too few jobs in the queue) this value is larger than 		**  the actual number of queue runners. The discrepancy can 		**  increase if some queue runners "hang" for a long time. 		*/
+name|CurRunners
+operator|+=
+name|WorkGrp
+index|[
+name|curnum
+index|]
+operator|.
+name|wg_maxact
+expr_stmt|;
 name|ret
 operator|=
 name|run_work_group
@@ -6071,16 +6080,15 @@ argument_list|,
 name|runall
 argument_list|)
 expr_stmt|;
-comment|/* 		**  Failure means a message was printed for ETRN 		**  and subsequent queues are likely to fail as well. 		*/
+comment|/* 		**  Failure means a message was printed for ETRN 		**  and subsequent queues are likely to fail as well. 		**  Decrement CurRunners in that case because 		**  none have been started. 		*/
 if|if
 condition|(
 operator|!
 name|ret
 condition|)
-break|break;
-comment|/* Success means the runner count needs to be updated. */
+block|{
 name|CurRunners
-operator|+=
+operator|-=
 name|WorkGrp
 index|[
 name|curnum
@@ -6088,6 +6096,8 @@ index|]
 operator|.
 name|wg_maxact
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -7890,6 +7900,55 @@ name|loop
 operator|++
 control|)
 block|{
+if|#
+directive|if
+name|_FFR_NONSTOP_PERSISTENCE
+comment|/* 			**  Require a free "slot" before processing 			**  this queue runner. 			*/
+while|while
+condition|(
+name|MaxQueueChildren
+operator|>
+literal|0
+operator|&&
+name|CurChildren
+operator|>
+name|MaxQueueChildren
+condition|)
+block|{
+name|int
+name|status
+decl_stmt|;
+name|pid_t
+name|ret
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|ret
+operator|=
+name|sm_wait
+argument_list|(
+operator|&
+name|status
+argument_list|)
+operator|)
+operator|<=
+literal|0
+condition|)
+continue|continue;
+name|proc_list_drop
+argument_list|(
+name|ret
+argument_list|,
+name|status
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_NONSTOP_PERSISTENCE */
 comment|/* 			**  Since the delivery may happen in a child and the 			**  parent does not wait, the parent may close the 			**  maps thereby removing any shared memory used by 			**  the map.  Therefore, close the maps now so the 			**  child will dynamically open them if necessary. 			*/
 name|closemaps
 argument_list|(
@@ -8069,6 +8128,10 @@ argument_list|(
 name|SIGCHLD
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|_FFR_NONSTOP_PERSISTENCE
 comment|/* 		**  Wait until all of the runners have completed before 		**  seeing if there is another queue group in the 		**  work group to process. 		**  XXX Future enhancement: don't wait() for all children 		**  here, just go ahead and make sure that overall the number 		**  of children is not exceeded. 		*/
 while|while
 condition|(
@@ -8108,6 +8171,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !_FFR_NONSTOP_PERSISTENCE */
 block|}
 else|else
 block|{
@@ -21225,12 +21291,50 @@ operator|==
 name|NOQGRP
 condition|)
 block|{
-comment|/* 		**  Use the queue group of the first recipient, as set by 		**  the "queuegroup" rule set.  If that is not defined, then 		**  use the queue group of the mailer of the first recipient. 		**  If that is not defined either, then use the default 		**  queue group. 		*/
-if|if
-condition|(
+name|ADDRESS
+modifier|*
+name|q
+decl_stmt|;
+comment|/* 		**  Use the queue group of the "first" recipient, as set by 		**  the "queuegroup" rule set.  If that is not defined, then 		**  use the queue group of the mailer of the first recipient. 		**  If that is not defined either, then use the default 		**  queue group. 		**  Notice: "first" depends on the sorting of sendqueue 		**  in recipient(). 		**  To avoid problems with "bad" recipients look 		**  for a valid address first. 		*/
+name|q
+operator|=
 name|e
 operator|->
 name|e_sendqueue
+expr_stmt|;
+while|while
+condition|(
+name|q
+operator|!=
+name|NULL
+operator|&&
+operator|(
+name|QS_IS_BADADDR
+argument_list|(
+name|q
+operator|->
+name|q_state
+argument_list|)
+operator|||
+name|QS_IS_DEAD
+argument_list|(
+name|q
+operator|->
+name|q_state
+argument_list|)
+operator|)
+condition|)
+block|{
+name|q
+operator|=
+name|q
+operator|->
+name|q_next
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|q
 operator|==
 name|NULL
 condition|)
@@ -21243,9 +21347,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|e
-operator|->
-name|e_sendqueue
+name|q
 operator|->
 name|q_qgrp
 operator|>=
@@ -21255,18 +21357,14 @@ name|e
 operator|->
 name|e_qgrp
 operator|=
-name|e
-operator|->
-name|e_sendqueue
+name|q
 operator|->
 name|q_qgrp
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|e
-operator|->
-name|e_sendqueue
+name|q
 operator|->
 name|q_mailer
 operator|!=
@@ -21274,9 +21372,7 @@ name|NULL
 operator|&&
 name|ISVALIDQGRP
 argument_list|(
-name|e
-operator|->
-name|e_sendqueue
+name|q
 operator|->
 name|q_mailer
 operator|->
@@ -21287,9 +21383,7 @@ name|e
 operator|->
 name|e_qgrp
 operator|=
-name|e
-operator|->
-name|e_sendqueue
+name|q
 operator|->
 name|q_mailer
 operator|->
@@ -28788,6 +28882,9 @@ name|nsplits
 decl_stmt|,
 name|i
 decl_stmt|;
+name|bool
+name|changed
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -28835,6 +28932,10 @@ comment|/* Count addresses and assign queue groups. */
 name|naddrs
 operator|=
 literal|0
+expr_stmt|;
+name|changed
+operator|=
+name|false
 expr_stmt|;
 for|for
 control|(
@@ -29004,6 +29105,10 @@ name|q_qgrp
 operator|=
 name|i
 expr_stmt|;
+name|changed
+operator|=
+name|true
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -29070,6 +29175,11 @@ operator|->
 name|m_qgrp
 argument_list|)
 condition|)
+block|{
+name|changed
+operator|=
+name|true
+expr_stmt|;
 name|q
 operator|->
 name|q_qgrp
@@ -29080,6 +29190,7 @@ name|q_mailer
 operator|->
 name|m_qgrp
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -29113,6 +29224,9 @@ condition|(
 name|naddrs
 operator|<=
 literal|1
+operator|&&
+operator|!
+name|changed
 condition|)
 return|return
 name|SM_SPLIT_NONE

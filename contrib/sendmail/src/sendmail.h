@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.1 2002/06/21 20:25:22 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.4 2002/08/16 14:56:01 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -1652,6 +1652,17 @@ end_define
 
 begin_comment
 comment|/* :include: delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QS_FATALERR
+value|15
+end_define
+
+begin_comment
+comment|/* fatal error, don't deliver */
 end_comment
 
 begin_comment
@@ -5689,7 +5700,7 @@ begin_define
 define|#
 directive|define
 name|EF_OLDSTYLE
-value|0x0000001L
+value|0x00000001L
 end_define
 
 begin_comment
@@ -5700,7 +5711,7 @@ begin_define
 define|#
 directive|define
 name|EF_INQUEUE
-value|0x0000002L
+value|0x00000002L
 end_define
 
 begin_comment
@@ -5711,7 +5722,7 @@ begin_define
 define|#
 directive|define
 name|EF_NO_BODY_RETN
-value|0x0000004L
+value|0x00000004L
 end_define
 
 begin_comment
@@ -5722,7 +5733,7 @@ begin_define
 define|#
 directive|define
 name|EF_CLRQUEUE
-value|0x0000008L
+value|0x00000008L
 end_define
 
 begin_comment
@@ -5733,7 +5744,7 @@ begin_define
 define|#
 directive|define
 name|EF_SENDRECEIPT
-value|0x0000010L
+value|0x00000010L
 end_define
 
 begin_comment
@@ -5744,7 +5755,7 @@ begin_define
 define|#
 directive|define
 name|EF_FATALERRS
-value|0x0000020L
+value|0x00000020L
 end_define
 
 begin_comment
@@ -5755,7 +5766,7 @@ begin_define
 define|#
 directive|define
 name|EF_DELETE_BCC
-value|0x0000040L
+value|0x00000040L
 end_define
 
 begin_comment
@@ -5766,7 +5777,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESPONSE
-value|0x0000080L
+value|0x00000080L
 end_define
 
 begin_comment
@@ -5777,7 +5788,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESENT
-value|0x0000100L
+value|0x00000100L
 end_define
 
 begin_comment
@@ -5788,7 +5799,7 @@ begin_define
 define|#
 directive|define
 name|EF_VRFYONLY
-value|0x0000200L
+value|0x00000200L
 end_define
 
 begin_comment
@@ -5799,7 +5810,7 @@ begin_define
 define|#
 directive|define
 name|EF_WARNING
-value|0x0000400L
+value|0x00000400L
 end_define
 
 begin_comment
@@ -5810,7 +5821,7 @@ begin_define
 define|#
 directive|define
 name|EF_QUEUERUN
-value|0x0000800L
+value|0x00000800L
 end_define
 
 begin_comment
@@ -5821,7 +5832,7 @@ begin_define
 define|#
 directive|define
 name|EF_GLOBALERRS
-value|0x0001000L
+value|0x00001000L
 end_define
 
 begin_comment
@@ -5832,7 +5843,7 @@ begin_define
 define|#
 directive|define
 name|EF_PM_NOTIFY
-value|0x0002000L
+value|0x00002000L
 end_define
 
 begin_comment
@@ -5843,7 +5854,7 @@ begin_define
 define|#
 directive|define
 name|EF_METOO
-value|0x0004000L
+value|0x00004000L
 end_define
 
 begin_comment
@@ -5854,7 +5865,7 @@ begin_define
 define|#
 directive|define
 name|EF_LOGSENDER
-value|0x0008000L
+value|0x00008000L
 end_define
 
 begin_comment
@@ -5865,7 +5876,7 @@ begin_define
 define|#
 directive|define
 name|EF_NORECEIPT
-value|0x0010000L
+value|0x00010000L
 end_define
 
 begin_comment
@@ -5876,7 +5887,7 @@ begin_define
 define|#
 directive|define
 name|EF_HAS8BIT
-value|0x0020000L
+value|0x00020000L
 end_define
 
 begin_comment
@@ -5887,7 +5898,7 @@ begin_define
 define|#
 directive|define
 name|EF_NL_NOT_EOL
-value|0x0040000L
+value|0x00040000L
 end_define
 
 begin_comment
@@ -5898,7 +5909,7 @@ begin_define
 define|#
 directive|define
 name|EF_CRLF_NOT_EOL
-value|0x0080000L
+value|0x00080000L
 end_define
 
 begin_comment
@@ -5909,7 +5920,7 @@ begin_define
 define|#
 directive|define
 name|EF_RET_PARAM
-value|0x0100000L
+value|0x00100000L
 end_define
 
 begin_comment
@@ -5920,7 +5931,7 @@ begin_define
 define|#
 directive|define
 name|EF_HAS_DF
-value|0x0200000L
+value|0x00200000L
 end_define
 
 begin_comment
@@ -5931,7 +5942,7 @@ begin_define
 define|#
 directive|define
 name|EF_IS_MIME
-value|0x0400000L
+value|0x00400000L
 end_define
 
 begin_comment
@@ -5942,7 +5953,7 @@ begin_define
 define|#
 directive|define
 name|EF_DONT_MIME
-value|0x0800000L
+value|0x00800000L
 end_define
 
 begin_comment
@@ -5953,7 +5964,7 @@ begin_define
 define|#
 directive|define
 name|EF_DISCARD
-value|0x1000000L
+value|0x01000000L
 end_define
 
 begin_comment
@@ -5964,7 +5975,7 @@ begin_define
 define|#
 directive|define
 name|EF_TOOBIG
-value|0x2000000L
+value|0x02000000L
 end_define
 
 begin_comment
@@ -5975,7 +5986,7 @@ begin_define
 define|#
 directive|define
 name|EF_SPLIT
-value|0x4000000L
+value|0x04000000L
 end_define
 
 begin_comment
@@ -5986,7 +5997,7 @@ begin_define
 define|#
 directive|define
 name|EF_UNSAFE
-value|0x8000000L
+value|0x08000000L
 end_define
 
 begin_comment
@@ -6847,9 +6858,7 @@ operator|,
 name|ENVELOPE
 operator|*
 operator|,
-name|bool
-operator|,
-name|bool
+name|int
 operator|,
 name|int
 operator|,
@@ -9816,6 +9825,43 @@ directive|define
 name|RF_COPYNONE
 value|0
 end_define
+
+begin_comment
+comment|/* **  Flags passed to rscheck */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSF_RMCOMM
+value|0x0001
+end_define
+
+begin_comment
+comment|/* strip comments */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSF_UNSTRUCTURED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* unstructured, ignore syntax errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RSF_COUNT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* count rejections (statistics)? */
+end_comment
 
 begin_comment
 comment|/* **  Flags passed to mime8to7 and putheader. */

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: ldap.c,v 1.44 2002/02/22 21:54:02 gshapiro Exp $"
+literal|"@(#)$Id: ldap.c,v 1.44.2.2 2002/08/09 22:23:12 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -3214,6 +3214,10 @@ operator|*
 name|resultln
 operator|>
 literal|0
+operator|&&
+name|p
+operator|<
+name|pe
 condition|)
 operator|*
 name|p
@@ -4052,6 +4056,21 @@ operator|->
 name|ldap_timelimit
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LDAP_OPT_RESTART
+name|ldap_set_option
+argument_list|(
+name|ld
+argument_list|,
+name|LDAP_OPT_RESTART
+argument_list|,
+name|LDAP_OPT_ON
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LDAP_OPT_RESTART */
 else|#
 directive|else
 comment|/* USE_LDAP_SET_OPTION */
