@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.57 2000/06/01 14:29:03 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.58 2000/06/24 04:12:53 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -936,11 +936,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_comment
+comment|/*  * XXX This check is extremely bogus. Bad Bad Bad.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DIAGNOSTIC
-end_ifdef
+argument_list|)
+operator|&&
+literal|0
+end_if
 
 begin_define
 define|#
