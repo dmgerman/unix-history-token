@@ -27,6 +27,12 @@ directive|include
 file|"uwx_trace.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UWX_TRACE_ENABLE
+end_ifdef
+
 begin_function
 name|void
 name|uwx_trace_init
@@ -699,6 +705,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* UWX_TRACE_ENABLE */
+end_comment
 
 end_unit
 
