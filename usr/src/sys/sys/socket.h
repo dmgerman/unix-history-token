@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1118,7 +1118,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* given pointer to struct adatahdr, return pointer to data */
+comment|/* given pointer to struct cmsghdr, return pointer to data */
 end_comment
 
 begin_define
@@ -1132,7 +1132,7 @@ value|((u_char *)((cmsg) + 1))
 end_define
 
 begin_comment
-comment|/* given pointer to struct adatahdr, return pointer to next adatahdr */
+comment|/* given pointer to struct cmsghdr, return pointer to next cmsghdr */
 end_comment
 
 begin_define
