@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eval.c,v 1.5.6.2 1997/07/24 06:53:36 charnier Exp $"
+literal|"$Id: eval.c,v 1.5.6.3 1997/08/21 02:49:49 jlemon Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1124,6 +1124,15 @@ name|argv
 index|[
 name|n
 index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MACRTYPE
+case|:
+name|pbstr
+argument_list|(
+literal|""
 argument_list|)
 expr_stmt|;
 break|break;
