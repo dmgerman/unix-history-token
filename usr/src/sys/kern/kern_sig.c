@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -4154,7 +4154,7 @@ name|nd
 argument_list|,
 name|p
 argument_list|,
-name|FCREAT
+name|O_CREAT
 operator||
 name|FWRITE
 argument_list|,
@@ -4171,11 +4171,6 @@ operator|=
 name|nd
 operator|.
 name|ni_vp
-expr_stmt|;
-name|VOP_LOCK
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
