@@ -25858,9 +25858,9 @@ argument_list|)
 argument_list|,
 name|SCB_LIST_NULL
 argument_list|,
-name|CAM_REQUEUE_REQ
-argument_list|,
 name|ROLE_INITIATOR
+argument_list|,
+name|CAM_REQUEUE_REQ
 argument_list|,
 name|SEARCH_COMPLETE
 argument_list|)
@@ -26688,9 +26688,9 @@ name|lun
 argument_list|,
 name|tag
 argument_list|,
-name|CAM_REQUEUE_REQ
-argument_list|,
 name|role
+argument_list|,
+name|CAM_REQUEUE_REQ
 argument_list|,
 name|SEARCH_COMPLETE
 argument_list|)
