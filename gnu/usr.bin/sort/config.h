@@ -3740,7 +3740,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"GNU coreutils 5.2.1"
+value|"GNU coreutils 5.3.0-20040812-FreeBSD"
 end_define
 
 begin_comment
@@ -3762,7 +3762,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.2.1"
+value|"5.3.0-20040812-FreeBSD"
 end_define
 
 begin_comment
@@ -4010,7 +4010,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.2.1"
+value|"5.3.0-20040812-FreeBSD"
 end_define
 
 begin_comment
