@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)scan.c	2.5 (Berkeley) %G%"
+literal|"@(#)scan.c	2.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3184,7 +3184,9 @@ argument|){ 			if( c != EOF ) ungetc(c,stdin);
 ifndef|#
 directive|ifndef
 name|LINT
-argument|if ( lastloc != PROG) return; 			cp = ftitle; 			cq = ititle; 			while ( *cp ) if (*cp++ != *cq++) return; 			if ( *cq ) return; 			psline();
+argument|if ( lastloc != PROG) return; 			cp = ftitle; 			cq = ititle; 			while ( *cp ) if (*cp++ != *cq++) return; 			if ( *cq ) return; 			if( nerrors ==
+literal|0
+argument|) psline();
 endif|#
 directive|endif
 argument|return; 			}  		lxget(
