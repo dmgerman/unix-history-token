@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log10.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)log10.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,62 @@ begin_comment
 comment|/* VAX D format (56 bits) */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|A
+comment|/**/
+value|B
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* VAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|B
+comment|/**/
+value|A
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VAX */
+end_comment
+
 begin_comment
 comment|/* static double */
 end_comment
@@ -64,9 +120,19 @@ name|ln10hix
 index|[]
 init|=
 block|{
-literal|0x5d8d4113
+name|_0x
+argument_list|(
+literal|5d8d
+argument_list|,
+literal|4113
+argument_list|)
 block|,
-literal|0xa8acddaa
+name|_0x
+argument_list|(
+argument|a8ac
+argument_list|,
+argument|ddaa
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt

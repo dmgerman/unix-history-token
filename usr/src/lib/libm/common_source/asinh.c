@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asinh.c	1.2 (Berkeley) 8/21/85; 1.2 (ucb.elefunt) %G%"
+literal|"@(#)asinh.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,14 +29,80 @@ begin_comment
 comment|/* ASINH(X)  * RETURN THE INVERSE HYPERBOLIC SINE OF X  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 2/16/85;  * REVISED BY K.C. NG on 3/7/85, 3/24/85, 4/16/85.  *  * Required system supported functions :  *	copysign(x,y)  *	sqrt(x)  *  * Required kernel function:  *	log1p(x) 		...return log(1+x)  *  * Method :  *	Based on   *		asinh(x) = sign(x) * log [ |x| + sqrt(x*x+1) ]  *	we have  *	asinh(x) := x  if  1+x*x=1,  *		 := sign(x)*(log1p(x)+ln2))	 if sqrt(1+x*x)=x, else  *		 := sign(x)*log1p(|x| + |x|/(1/|x| + sqrt(1+(1/|x|)^2)) )    *  * Accuracy:  *	asinh(x) returns the exact inverse hyperbolic sine of x nearly rounded.  *	In a test run with 52,000 random arguments on a VAX, the maximum   *	observed error was 1.58 ulps (units in the last place).  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
+end_if
+
+begin_comment
+comment|/* VAX D format */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|VAX
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|A
+comment|/**/
+value|B
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* VAX D format */
+comment|/* VAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|B
+comment|/**/
+value|A
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VAX */
 end_comment
 
 begin_comment
@@ -58,9 +124,19 @@ name|ln2hix
 index|[]
 init|=
 block|{
-literal|0x72174031
+name|_0x
+argument_list|(
+literal|7217
+argument_list|,
+literal|4031
+argument_list|)
 block|,
-literal|0x0000f7d0
+name|_0x
+argument_list|(
+literal|0000
+argument_list|,
+argument|f7d0
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -72,9 +148,19 @@ name|ln2lox
 index|[]
 init|=
 block|{
-literal|0xbcd52ce7
+name|_0x
+argument_list|(
+name|bcd5
+argument_list|,
+literal|2ce7
+argument_list|)
 block|,
-literal|0xd9cce4f1
+name|_0x
+argument_list|(
+argument|d9cc
+argument_list|,
+argument|e4f1
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -171,9 +257,21 @@ name|one
 init|=
 literal|1.0
 decl_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+operator|)
 if|if
 condition|(
 name|x

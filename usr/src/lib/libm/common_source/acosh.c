@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acosh.c	1.2 (Berkeley) 8/21/85; 1.3 (ucb.elefunt) %G%"
+literal|"@(#)acosh.c	1.2 (Berkeley) 8/21/85; 1.4 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,62 @@ begin_comment
 comment|/* VAX D format */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|A
+comment|/**/
+value|B
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* VAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|B
+comment|/**/
+value|A
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VAX */
+end_comment
+
 begin_comment
 comment|/* static double */
 end_comment
@@ -68,9 +124,19 @@ name|ln2hix
 index|[]
 init|=
 block|{
-literal|0x72174031
+name|_0x
+argument_list|(
+literal|7217
+argument_list|,
+literal|4031
+argument_list|)
 block|,
-literal|0x0000f7d0
+name|_0x
+argument_list|(
+literal|0000
+argument_list|,
+argument|f7d0
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -82,9 +148,19 @@ name|ln2lox
 index|[]
 init|=
 block|{
-literal|0xbcd52ce7
+name|_0x
+argument_list|(
+name|bcd5
+argument_list|,
+literal|2ce7
+argument_list|)
 block|,
-literal|0xd9cce4f1
+name|_0x
+argument_list|(
+argument|d9cc
+argument_list|,
+argument|e4f1
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)floor.c	4.2	9/11/85; 1.3 (ucb.elefunt) %G% */
+comment|/*	@(#)floor.c	4.2	9/11/85; 1.4 (ucb.elefunt) %G% */
 end_comment
 
 begin_comment
@@ -125,6 +125,62 @@ argument_list|)
 operator|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VAX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|A
+comment|/**/
+value|B
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* VAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_0x
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|)
+value|0x
+comment|/**/
+value|B
+comment|/**/
+value|A
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VAX */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -132,9 +188,19 @@ name|Lx
 index|[]
 init|=
 block|{
-literal|0x5c00
+name|_0x
+argument_list|(
+literal|0000
+argument_list|,
+literal|5c00
+argument_list|)
 block|,
-literal|0x0
+name|_0x
+argument_list|(
+literal|0000
+argument_list|,
+literal|0000
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
