@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_7.c	5.2 (Berkeley) %G%"
+literal|"@(#)pl_7.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1173,7 +1173,7 @@ name|putchar
 argument_list|(
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|)
 expr_stmt|;

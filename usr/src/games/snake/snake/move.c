@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.2 (Berkeley) %G%"
+literal|"@(#)move.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1969,14 +1969,14 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 case|:
 name|outch
 argument_list|(
 name|CTRL
 argument_list|(
-name|g
+literal|'g'
 argument_list|)
 argument_list|)
 expr_stmt|;
