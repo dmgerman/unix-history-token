@@ -97,10 +97,12 @@ define|#
 directive|define
 name|PRVERBOSE
 parameter_list|(
+name|fmt
+parameter_list|,
 name|arg
 modifier|...
 parameter_list|)
-value|if (bootverbose) printf(##arg);
+value|if (bootverbose) printf(fmt, ##arg);
 end_define
 
 begin_struct
