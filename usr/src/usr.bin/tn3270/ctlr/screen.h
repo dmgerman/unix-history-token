@@ -206,26 +206,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FieldInc
-parameter_list|(
-name|p
-parameter_list|)
-value|FieldFind(FieldForward, p, LowestScreen())
-end_define
-
-begin_define
-define|#
-directive|define
-name|FieldDec
-parameter_list|(
-name|p
-parameter_list|)
-value|(HighestScreen() - \ 				FieldFind(FieldReverse, \ 					HighestScreen()-(p), HighestScreen()))
-end_define
-
-begin_define
-define|#
-directive|define
 name|WhereAttrByte
 parameter_list|(
 name|p
@@ -353,7 +333,7 @@ name|p
 parameter_list|,
 name|a
 parameter_list|)
-value|(Host[p].data = (a)|ATTR_MASK, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 1)
+value|(Host[p].data = (a)|ATTR_MASK)
 end_define
 
 begin_define
@@ -363,7 +343,7 @@ name|DeleteField
 parameter_list|(
 name|p
 parameter_list|)
-value|(Host[p].data = 0, \ 			    FieldForward[p] = FieldReverse[ScreenSize-p-1] = 0)
+value|(Host[p].data = 0)
 end_define
 
 begin_define
@@ -371,7 +351,6 @@ define|#
 directive|define
 name|DeleteAllFields
 parameter_list|()
-value|(bzero(FieldForward, sizeof FieldForward), \ 				    bzero(FieldReverse, sizeof FieldReverse))
 end_define
 
 begin_escape
