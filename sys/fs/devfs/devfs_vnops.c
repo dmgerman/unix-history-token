@@ -6564,7 +6564,7 @@ name|f_vnode
 expr_stmt|;
 name|ioflag
 operator|=
-name|IO_UNIT
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -6572,7 +6572,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNONBLOCK
+name|O_NONBLOCK
 condition|)
 name|ioflag
 operator||=
