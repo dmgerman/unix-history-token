@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)exec.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -50,6 +50,32 @@ name|PS_STRINGS
 define|\
 value|((struct ps_strings *)(USRSTACK - sizeof(struct ps_strings)))
 end_define
+
+begin_comment
+comment|/*  * Arguments to the exec system call.  */
+end_comment
+
+begin_struct
+struct|struct
+name|execve_args
+block|{
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argp
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|envp
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 end_unit
 
