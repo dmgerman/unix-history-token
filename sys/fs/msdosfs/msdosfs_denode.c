@@ -424,7 +424,7 @@ name|nvp
 argument_list|,
 name|hash
 argument_list|,
-literal|0
+name|LK_EXCLUSIVE
 argument_list|,
 name|curthread
 argument_list|,
