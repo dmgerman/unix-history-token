@@ -787,6 +787,7 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+else|else
 name|cp
 operator|->
 name|spoiled
