@@ -222,9 +222,6 @@ name|struct
 name|FTW
 name|ftw_st
 decl_stmt|;
-name|int
-name|skip_entry
-decl_stmt|;
 name|__ftw_func_t
 name|ftw_func
 decl_stmt|;
@@ -380,10 +377,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|skip_entry
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|entry
@@ -413,13 +406,6 @@ block|{
 name|ftw_flag
 operator|=
 name|FTW_D
-expr_stmt|;
-block|}
-else|else
-block|{
-name|skip_entry
-operator|=
-literal|1
 expr_stmt|;
 block|}
 break|break;
@@ -502,20 +488,10 @@ operator|=
 name|FTW_D
 expr_stmt|;
 block|}
-else|else
-block|{
-name|skip_entry
-operator|=
-literal|1
-expr_stmt|;
-block|}
 break|break;
 default|default:
 comment|/* I'm not sure this is right, but we don't have a valid FTW                  * type to call with, so cowardice seems the better part of                  * guessing.                  */
-name|skip_entry
-operator|=
-literal|1
-expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
