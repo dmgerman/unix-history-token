@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)iostat.c	4.18 (Berkeley) 91/01/14"
+literal|"@(#)iostat.c	4.19 (Berkeley) 91/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1918,13 +1918,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vaxuba/ubavar.h>
+file|<vax/uba/ubavar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vaxmba/mbavar.h>
+file|<vax/mba/mbavar.h>
 end_include
 
 begin_macro
