@@ -219,6 +219,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|slice_type_name
+parameter_list|(
+name|int
+name|type
+parameter_list|,
+name|int
+name|subtype
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* "chunk_n" for subtypes too  */
+end_comment
+
+begin_function_decl
 name|struct
 name|disk
 modifier|*
