@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.20 (Berkeley) %G%"
+literal|"@(#)main.c	8.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4741,13 +4741,25 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n====finis: stat %d e_flags %o\n"
+literal|"\n====finis: stat %d e_flags %o, e_id=%s\n"
 argument_list|,
 name|ExitStat
 argument_list|,
 name|CurEnv
 operator|->
 name|e_flags
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+operator|==
+name|NULL
+operator|?
+literal|"NOQUEUE"
+operator|:
+name|CurEnv
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 comment|/* clean up temp files */
