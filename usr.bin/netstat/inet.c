@@ -316,6 +316,8 @@ name|struct
 name|tcpcb
 modifier|*
 name|tp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|inpcb

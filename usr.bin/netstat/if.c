@@ -587,6 +587,8 @@ name|struct
 name|sockaddr
 modifier|*
 name|sa
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|name

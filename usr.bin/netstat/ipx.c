@@ -1529,6 +1529,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPXERRORMSGS
+end_ifdef
+
 begin_struct
 specifier|static
 struct|struct
@@ -1624,12 +1630,6 @@ block|}
 block|, }
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPXERRORMSGS
-end_ifdef
 
 begin_comment
 comment|/*  * Dump IPX Error statistics structure.  */
