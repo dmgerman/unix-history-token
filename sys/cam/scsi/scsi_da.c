@@ -822,6 +822,24 @@ name|DA_Q_NO_SYNC_CACHE
 block|}
 block|,
 block|{
+comment|/* 		 * Olympus digital cameras (D-370) 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"OLYMPUS"
+block|,
+literal|"D-*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_6_BYTE
+block|}
+block|,
+block|{
 comment|/* 		 * Olympus E-100RS digital camera. 		 * Reported by:	Bernd Walter<ticso@cicely8.cicely.de> 		 * XXX See above; its likely all Olympus digital cameras 		 *     have the same quirk, but I cannot confirm. - kbyanc 		 */
 block|{
 name|T_DIRECT
