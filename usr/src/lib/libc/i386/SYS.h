@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,9 +24,9 @@ name|x
 parameter_list|)
 value|.globl _
 comment|/**/
-value|x; \ 			.data; 1:; .long 0; .text; _
+value|x; \ 			.data; 1:; .long 0; .text; .align 2; _
 comment|/**/
-value|x:	.align 4; \ 			movl $1b,%eax; call mcount
+value|x: \ 			movl $1b,%eax; call mcount
 end_define
 
 begin_else
@@ -43,7 +43,7 @@ name|x
 parameter_list|)
 value|.globl _
 comment|/**/
-value|x; .text; .align 4; _
+value|x; .text; .align 2; _
 comment|/**/
 value|x:
 end_define
