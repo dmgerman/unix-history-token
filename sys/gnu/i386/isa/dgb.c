@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *  dgb.c $Id: dgb.c,v 1.42 1999/01/30 12:17:32 phk Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
+comment|/*-  *  dgb.c $Id: dgb.c,v 1.43 1999/03/13 13:20:54 joerg Exp $  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
 end_comment
 
 begin_include
@@ -2621,10 +2621,12 @@ decl_stmt|,
 name|t
 decl_stmt|;
 name|u_char
+specifier|volatile
 modifier|*
 name|mem
 decl_stmt|;
 name|u_char
+specifier|volatile
 modifier|*
 name|ptr
 decl_stmt|;
@@ -3034,6 +3036,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3049,6 +3052,7 @@ condition|(
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3096,6 +3100,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3111,6 +3116,7 @@ condition|(
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3170,6 +3176,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3185,6 +3192,7 @@ condition|(
 operator|*
 operator|(
 name|u_long
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3491,6 +3499,7 @@ operator|*
 operator|(
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3541,6 +3550,7 @@ operator|*
 operator|(
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3827,6 +3837,7 @@ condition|(
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3873,6 +3884,7 @@ argument_list|,
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3884,6 +3896,7 @@ argument_list|,
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3895,6 +3908,7 @@ argument_list|,
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3981,6 +3995,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -3996,6 +4011,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4015,6 +4031,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4030,6 +4047,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4045,6 +4063,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4060,6 +4079,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4102,6 +4122,7 @@ init|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4141,6 +4162,7 @@ argument_list|,
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4178,6 +4200,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4205,6 +4228,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4220,6 +4244,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4235,6 +4260,7 @@ expr_stmt|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4284,6 +4310,7 @@ init|;
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4353,6 +4380,7 @@ operator|=
 operator|*
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
@@ -4479,6 +4507,7 @@ name|pstat
 operator|=
 operator|(
 name|ushort
+specifier|volatile
 operator|*
 operator|)
 operator|(
