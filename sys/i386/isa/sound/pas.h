@@ -1027,6 +1027,13 @@ name|PAS_16
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAS_16D
+value|4
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1034,6 +1041,7 @@ name|DEFINE_TRANSLATIONS
 end_ifdef
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|I_C_2_PCM_DMA_translate
 index|[]
@@ -1060,6 +1068,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|I_C_3_PCM_IRQ_translate
 index|[]
@@ -1084,7 +1093,7 @@ literal|6
 block|,
 literal|0
 block|,
-literal|0
+literal|1
 block|,
 literal|7
 block|,
@@ -1102,6 +1111,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_MPU401_IRQ_translate
 index|[]
@@ -1126,7 +1136,7 @@ literal|0x04
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x01
 block|,
 literal|0x05
 block|,
@@ -1138,6 +1148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_SB_IRQ_translate
 index|[]
@@ -1162,18 +1173,23 @@ literal|0x20
 block|,
 literal|0x00
 block|,
-literal|0x00
+literal|0x08
 block|,
 literal|0x28
 block|,
 literal|0x30
 block|,
 literal|0x38
+block|,
+literal|0
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|E_C_SB_DMA_translate
 index|[]
@@ -1187,11 +1203,20 @@ block|,
 literal|0x80
 block|,
 literal|0xC0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|O_M_1_to_card
 index|[]
@@ -1222,7 +1247,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|3
+literal|4
 block|,
 literal|0
 block|,
@@ -1240,6 +1265,7 @@ end_else
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|I_C_2_PCM_DMA_translate
 index|[]
@@ -1252,6 +1278,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|I_C_3_PCM_IRQ_translate
 index|[]
@@ -1264,6 +1291,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_MPU401_IRQ_translate
 index|[]
@@ -1276,6 +1304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_SB_IRQ_translate
 index|[]
@@ -1288,6 +1317,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|E_C_SB_DMA_translate
 index|[]
@@ -1300,6 +1330,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|unsigned
 name|char
 name|O_M_1_to_card
 index|[]
