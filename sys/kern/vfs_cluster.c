@@ -1819,6 +1819,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If the buffer is already fully valid or locked 			 * (which could also mean that a background write is 			 * in progress), or the buffer is not backed by VMIO, 			 * stop. 			 */
 if|if
 condition|(
 operator|(
@@ -1826,7 +1827,11 @@ name|tbp
 operator|->
 name|b_flags
 operator|&
+operator|(
 name|B_CACHE
+operator||
+name|B_LOCKED
+operator|)
 operator|)
 operator|||
 operator|(
@@ -1862,6 +1867,7 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|tbp
@@ -1874,6 +1880,7 @@ operator|->
 name|valid
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|j
@@ -3172,6 +3179,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* 		 * If the buffer is not delayed-write (i.e. dirty), or it  		 * is delayed-write but either locked or inval, it cannot  		 * partake in the clustered write. 		 */
 if|if
 condition|(
 operator|(
@@ -3196,6 +3204,8 @@ operator|->
 name|b_flags
 operator|&
 operator|(
+name|B_LOCKED
+operator||
 name|B_INVAL
 operator||
 name|B_DELWRI
@@ -3516,7 +3526,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 				 * If it IS in core, but has different 				 * characteristics, don't cluster with it. 				 */
+comment|/* 				 * If it IS in core, but has different 				 * characteristics, or is locked (which 				 * means it could be undergoing a background 				 * I/O or be in a weird state), then don't 				 * cluster with it. 				 */
 if|if
 condition|(
 operator|(
@@ -3553,6 +3563,14 @@ operator||
 name|B_NEEDCOMMIT
 operator|)
 operator|)
+operator|)
+operator|||
+operator|(
+name|tbp
+operator|->
+name|b_flags
+operator|&
+name|B_LOCKED
 operator|)
 operator|||
 name|tbp
