@@ -489,6 +489,13 @@ operator|||
 operator|!
 operator|*
 name|env
+operator|||
+name|strchr
+argument_list|(
+name|env
+argument_list|,
+literal|'/'
+argument_list|)
 condition|)
 name|env
 operator|=
