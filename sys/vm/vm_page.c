@@ -1119,6 +1119,9 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+name|vm_object_t
+name|object
+decl_stmt|;
 name|int
 name|is_object_locked
 decl_stmt|;
@@ -1158,14 +1161,18 @@ operator||
 name|PG_REFERENCED
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Remove mtx_owned() after vm_object locking is finished. 		 */
+comment|/* 		 * It's possible that while we sleep, the page will get 		 * unbusied and freed.  If we are holding the object 		 * lock, we will assume we hold a reference to the object 		 * such that even if m->object changes, we can re-lock 		 * it. 		 * 		 * Remove mtx_owned() after vm_object locking is finished. 		 */
+name|object
+operator|=
+name|m
+operator|->
+name|object
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|is_object_locked
 operator|=
-name|m
-operator|->
 name|object
 operator|!=
 name|NULL
@@ -1173,8 +1180,6 @@ operator|&&
 name|mtx_owned
 argument_list|(
 operator|&
-name|m
-operator|->
 name|object
 operator|->
 name|mtx
@@ -1184,8 +1189,6 @@ condition|)
 name|mtx_unlock
 argument_list|(
 operator|&
-name|m
-operator|->
 name|object
 operator|->
 name|mtx
@@ -1214,8 +1217,6 @@ condition|)
 name|mtx_lock
 argument_list|(
 operator|&
-name|m
-operator|->
 name|object
 operator|->
 name|mtx
