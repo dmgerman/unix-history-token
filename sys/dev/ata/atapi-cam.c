@@ -1207,6 +1207,12 @@ literal|0
 expr_stmt|;
 name|cpi
 operator|->
+name|target_sprt
+operator|=
+literal|0
+expr_stmt|;
+name|cpi
+operator|->
 name|hba_misc
 operator|=
 literal|0
