@@ -1097,11 +1097,11 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-block|}
 name|tab
 operator|=
 literal|"\t"
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * XXX 	 * since chflags(2) will reset file times, the utimes() above 	 * may have been useless!  oh well, we'd rather have correct 	 * flags, rather than times? 	 */
@@ -1563,11 +1563,11 @@ literal|"%slink_ref expected %s found %s\n"
 argument_list|,
 name|tab
 argument_list|,
-name|cp
-argument_list|,
 name|s
 operator|->
 name|slink
+argument_list|,
+name|cp
 argument_list|)
 expr_stmt|;
 block|}

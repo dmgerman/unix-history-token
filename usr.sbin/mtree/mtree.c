@@ -483,6 +483,7 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|'U'
 case|:
