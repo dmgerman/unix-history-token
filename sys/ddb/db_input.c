@@ -689,6 +689,30 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
+literal|'u'
+argument_list|)
+case|:
+comment|/* kill entire line: */
+comment|/* at first, delete to beginning of line */
+if|if
+condition|(
+name|db_lc
+operator|>
+name|db_lbuf_start
+condition|)
+name|db_delete
+argument_list|(
+name|db_lc
+operator|-
+name|db_lbuf_start
+argument_list|,
+name|DEL_BWD
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|CTRL
+argument_list|(
 literal|'k'
 argument_list|)
 case|:
