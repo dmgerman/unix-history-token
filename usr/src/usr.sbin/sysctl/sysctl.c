@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	5.2 (Berkeley) %G%"
+literal|"@(#)sysctl.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1568,13 +1568,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s\n\t%s\n\t%s\n"
+literal|"usage:\t%s\n\t%s\n\t%s\n\t%s\n"
 argument_list|,
-literal|"sysctl [-w] variable ..."
+literal|"sysctl [-n] variable ..."
 argument_list|,
-literal|"sysctl -a"
+literal|"sysctl [-n] -w variable=value ..."
 argument_list|,
-literal|"sysctl -A"
+literal|"sysctl [-n] -a"
+argument_list|,
+literal|"sysctl [-n] -A"
 argument_list|)
 expr_stmt|;
 name|exit
