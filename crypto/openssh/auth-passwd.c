@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -40,6 +48,16 @@ include|#
 directive|include
 file|"auth.h"
 end_include
+
+begin_comment
+comment|/*  * Do not try to use PAM for password authentication, as it is  * already (and far better) supported by the challenge/response  * authentication mechanism.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|USE_PAM
+end_undef
 
 begin_if
 if|#
