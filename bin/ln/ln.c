@@ -127,6 +127,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|hflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Check new name for symlink first. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
@@ -201,6 +211,22 @@ name|char
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -339,7 +365,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fisv"
+literal|"fhinsv"
 argument_list|)
 operator|)
 operator|!=
@@ -361,6 +387,17 @@ expr_stmt|;
 name|iflag
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+case|case
+literal|'n'
+case|:
+name|hflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -434,6 +471,7 @@ case|:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|1
 case|:
@@ -486,6 +524,43 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|hflag
+operator|&&
+name|lstat
+argument_list|(
+name|sourcedir
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * We were asked not to follow symlinks, but found one at 		 * the target--simulate "not a directory" error 		 */
+name|errno
+operator|=
+name|ENOTDIR
+expr_stmt|;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|sourcedir
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|stat
@@ -659,16 +734,34 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* If the source is a directory, append the target's name. */
+comment|/* 	 * If the source is a directory (and not a symlink if hflag), 	 * append the target's name. 	 */
 if|if
 condition|(
 name|isdir
 operator|||
 operator|(
+name|lstat
+argument_list|(
+name|source
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|)
+operator|||
 operator|(
-name|exists
-operator|=
 operator|!
+name|hflag
+operator|&&
 name|stat
 argument_list|(
 name|source
@@ -676,7 +769,8 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|)
+operator|==
+literal|0
 operator|&&
 name|S_ISDIR
 argument_list|(
@@ -733,19 +827,7 @@ name|source
 operator|=
 name|path
 expr_stmt|;
-name|exists
-operator|=
-operator|!
-name|lstat
-argument_list|(
-name|source
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-expr_stmt|;
 block|}
-else|else
 name|exists
 operator|=
 operator|!
@@ -944,9 +1026,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ln [-fisv] file1 file2"
+literal|"usage: ln [-fhinsv] file1 file2"
 argument_list|,
-literal|"       ln [-fisv] file ... directory"
+literal|"       ln [-fhinsv] file ... directory"
 argument_list|,
 literal|"       link file1 file2"
 argument_list|)
