@@ -344,7 +344,7 @@ name|PCMCIA_CARD
 argument_list|(
 name|RATOC
 argument_list|,
-name|REX_R280
+name|REX9530
 argument_list|,
 literal|0
 argument_list|)
