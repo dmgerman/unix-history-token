@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.33 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.34 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.33 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.34 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,7 +306,11 @@ name|DaemonSocket
 operator|=
 name|socket
 argument_list|(
-name|AF_INET
+name|DaemonAddr
+operator|.
+name|sa
+operator|.
+name|sa_family
 argument_list|,
 name|SOCK_STREAM
 argument_list|,
@@ -420,6 +424,55 @@ sizeof|sizeof
 name|on
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|DaemonAddr
+operator|.
+name|sa
+operator|.
+name|sa_family
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|NETINET
+case|case
+name|AF_INET
+case|:
+name|t
+operator|=
+sizeof|sizeof
+name|DaemonAddr
+operator|.
+name|sin
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NETISO
+case|case
+name|AF_ISO
+case|:
+name|t
+operator|=
+sizeof|sizeof
+name|DaemonAddr
+operator|.
+name|siso
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+default|default:
+name|t
+operator|=
+sizeof|sizeof
+name|DaemonAddr
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|bind
@@ -431,8 +484,7 @@ name|DaemonAddr
 operator|.
 name|sa
 argument_list|,
-sizeof|sizeof
-name|DaemonAddr
+name|t
 argument_list|)
 operator|<
 literal|0
