@@ -655,9 +655,9 @@ name|isdepth
 decl_stmt|,
 name|isoutput
 decl_stmt|,
-name|isxargs
-decl_stmt|,
 name|issort
+decl_stmt|,
+name|isxargs
 decl_stmt|;
 end_decl_stmt
 
