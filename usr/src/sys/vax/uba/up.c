@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.38	81/04/18	*/
+comment|/*	up.c	4.39	81/05/11	*/
 end_comment
 
 begin_include
@@ -193,16 +193,31 @@ block|,
 literal|589
 block|,
 comment|/* E=cyl 589 thru 680 */
-literal|81472
+ifndef|#
+directive|ifndef
+name|NOBADSECT
+literal|81376
 block|,
 literal|681
 block|,
 comment|/* F=cyl 681 thru 814 */
-literal|153824
+literal|153728
 block|,
 literal|562
 block|,
 comment|/* G=cyl 562 thru 814 */
+else|#
+directive|else
+literal|81472
+block|,
+literal|681
+block|,
+literal|153824
+block|,
+literal|562
+block|,
+endif|#
+directive|endif
 literal|291346
 block|,
 literal|82
@@ -247,11 +262,22 @@ literal|0
 block|,
 literal|0
 block|,
-literal|213760
+ifndef|#
+directive|ifndef
+name|NOBADSECT
+literal|213664
 block|,
 literal|155
 block|,
 comment|/* H=cyl 155 thru 822 */
+else|#
+directive|else
+literal|213760
+block|,
+literal|155
+block|,
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
