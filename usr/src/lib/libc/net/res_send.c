@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	6.7 (Berkeley) %G%"
+literal|"@(#)res_send.c	6.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1206,6 +1206,11 @@ name|close
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
