@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -69,6 +69,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_blkatoff_args
+comment|/* { 		struct vnode *a_vp; 		off_t a_offset; 		char **a_res; 		struct buf **a_bpp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -437,8 +438,6 @@ modifier|*
 name|ip
 decl_stmt|;
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 specifier|register
 name|struct
 name|buf
