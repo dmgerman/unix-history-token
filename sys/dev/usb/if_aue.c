@@ -282,6 +282,12 @@ name|USB_PRODUCT_KINGSTON_KNU101TX
 block|, }
 block|,
 block|{
+name|USB_VENDOR_ABOCOM
+block|,
+name|USB_PRODUCT_DLINK_DSB650TX_PNA
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
