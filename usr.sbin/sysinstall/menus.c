@@ -10168,7 +10168,21 @@ literal|"scrnmap=iso-8859-7_to_cp437"
 block|}
 block|,
 block|{
-literal|"4 KOI8-R to IBM866"
+literal|"4 US-ASCII to IBM437"
+block|,
+literal|"US-ASCII to IBM 437 screenmap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+literal|"scrnmap=us-ascii_to_cp437"
+block|}
+block|,
+block|{
+literal|"5 KOI8-R to IBM866"
 block|,
 literal|"Russian KOI8-R to IBM 866 screenmap"
 block|,
@@ -10182,7 +10196,7 @@ literal|"scrnmap=koi8-r2cp866"
 block|}
 block|,
 block|{
-literal|"5 KOI8-U to IBM866u"
+literal|"6 KOI8-U to IBM866u"
 block|,
 literal|"Ukrainian KOI8-U to IBM 866u screenmap"
 block|,
