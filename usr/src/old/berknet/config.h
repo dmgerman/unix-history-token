@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)config.h	4.3	(Berkeley)	%G%	*/
+comment|/*	@(#)config.h	4.4	(Berkeley)	%G%	*/
 end_comment
 
 begin_comment
@@ -2089,7 +2089,7 @@ block|,
 comment|/* k,l,m,n,o */
 literal|'p'
 block|,
-literal|000
+literal|'g'
 block|,
 literal|'r'
 block|,
