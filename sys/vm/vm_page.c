@@ -3436,6 +3436,15 @@ block|{
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+condition|)
+return|return;
 comment|/* 	 * Only bump the wire statistics if the page is not already wired, 	 * and only unqueue the page if it is on some queue (if it is unmanaged 	 * it is already off the queues). 	 */
 name|s
 operator|=
@@ -3527,6 +3536,15 @@ block|{
 name|int
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_FICTITIOUS
+condition|)
+return|return;
 name|s
 operator|=
 name|splvm
