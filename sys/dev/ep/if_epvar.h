@@ -59,10 +59,10 @@ modifier|*
 name|irq
 decl_stmt|;
 name|bus_space_handle_t
-name|bst
+name|bsh
 decl_stmt|;
 name|bus_space_tag_t
-name|bsh
+name|bst
 decl_stmt|;
 name|void
 modifier|*
