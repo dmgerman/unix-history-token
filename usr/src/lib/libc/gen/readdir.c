@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c	8.2 (Berkeley) %G%"
+literal|"@(#)readdir.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +240,23 @@ operator|->
 name|d_ino
 operator|==
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|dp
+operator|->
+name|d_type
+operator|==
+name|DT_WHT
+operator|&&
+operator|(
+name|dirp
+operator|->
+name|dd_flags
+operator|&
+name|DTF_HIDEW
+operator|)
 condition|)
 continue|continue;
 return|return
