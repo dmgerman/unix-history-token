@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucp.c	5.5 (Berkeley) %G%"
+literal|"@(#)uucp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,8 +592,8 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|guinfo
 argument_list|(
 name|Uid
@@ -602,20 +602,36 @@ name|User
 argument_list|,
 name|Path
 argument_list|)
-expr_stmt|;
-name|ASSERT
+operator|!=
+name|SUCCESS
+condition|)
+block|{
+name|assert
 argument_list|(
-name|ret
-operator|==
-literal|0
+literal|"Can't find username for "
 argument_list|,
-literal|"CAN NOT FIND UID"
-argument_list|,
-name|CNULL
+literal|"uid"
 argument_list|,
 name|Uid
 argument_list|)
 expr_stmt|;
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Using username"
+argument_list|,
+literal|"uucp"
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|User
+argument_list|,
+literal|"uucp"
+argument_list|)
+expr_stmt|;
+block|}
 name|DEBUG
 argument_list|(
 literal|4
@@ -1512,6 +1528,17 @@ argument_list|(
 name|file1
 argument_list|,
 name|file2
+argument_list|)
+expr_stmt|;
+comment|/* With odd umask() might not be able to read it himself */
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|file2
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 name|logent
