@@ -317,6 +317,17 @@ block|}
 block|,
 comment|/* Mylex v3 software interface */
 block|{
+literal|0x1069
+block|,
+literal|0x0010
+block|,
+name|MLX_IFTYPE_4
+block|,
+literal|"Mylex version 4 RAID interface"
+block|}
+block|,
+comment|/* Mylex v4 software interface */
+block|{
 literal|0
 block|,
 literal|0
