@@ -772,6 +772,34 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|pageout_lock_miss
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|pageout_lock_miss
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|pageout_lock_miss
+argument_list|,
+literal|0
+argument_list|,
+literal|"vget() lock misses during pageout"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -3141,7 +3169,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * The object is already known NOT to be dead.   It 			 * is possible for the vget() to block the whole 			 * pageout daemon, but the new low-memory handling 			 * code should prevent it. 			 * 			 * The previous code skipped locked vnodes and, worse, 			 * reordered pages in the queue.  This results in 			 * completely non-deterministic operation because, 			 * quite often, a vm_fault has initiated an I/O and 			 * is holding a locked vnode at just the point where 			 * the pageout daemon is woken up. 			 * 			 * XXX we need to be able to apply a timeout to the 			 * vget() lock attempt. 			 */
+comment|/* 			 * The object is already known NOT to be dead.   It 			 * is possible for the vget() to block the whole 			 * pageout daemon, but the new low-memory handling 			 * code should prevent it. 			 * 			 * The previous code skipped locked vnodes and, worse, 			 * reordered pages in the queue.  This results in 			 * completely non-deterministic operation because, 			 * quite often, a vm_fault has initiated an I/O and 			 * is holding a locked vnode at just the point where 			 * the pageout daemon is woken up. 			 * 			 * We can't wait forever for the vnode lock, we might 			 * deadlock due to a vn_read() getting stuck in 			 * vm_wait while holding this vnode.  We skip the  			 * vnode if we can't get it in a reasonable amount 			 * of time. 			 */
 if|if
 condition|(
 name|object
@@ -3166,11 +3194,16 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOOBJ
+operator||
+name|LK_TIMELOCK
 argument_list|,
 name|curproc
 argument_list|)
 condition|)
 block|{
+operator|++
+name|pageout_lock_miss
+expr_stmt|;
 if|if
 condition|(
 name|object

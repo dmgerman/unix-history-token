@@ -4760,6 +4760,12 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 			 * We must reference the vp to prevent it from 			 * getting ripped out from under UFS_UPDATE, since 			 * we are not holding a vnode lock.  XXX why aren't 			 * we holding a vnode lock? 			 */
+name|VREF
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|simple_unlock
 argument_list|(
 operator|&
@@ -4772,6 +4778,11 @@ argument_list|(
 name|vp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|vrele
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|simple_lock
@@ -5163,7 +5174,7 @@ name|PINOD
 argument_list|,
 literal|"inode"
 argument_list|,
-literal|0
+name|VLKTIMEOUT
 argument_list|,
 name|LK_CANRECURSE
 argument_list|)

@@ -1183,7 +1183,7 @@ name|PINOD
 argument_list|,
 literal|"smbnode"
 argument_list|,
-literal|0
+name|VLKTIMEOUT
 argument_list|,
 name|LK_CANRECURSE
 argument_list|)

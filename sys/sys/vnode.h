@@ -962,6 +962,17 @@ name|VNOVAL
 value|(-1)
 end_define
 
+begin_comment
+comment|/*  * LK_TIMELOCK timeout for vnode locks (used mainly by the pageout daemon)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VLKTIMEOUT
+value|(hz / 20 + 1)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1354,7 +1365,7 @@ parameter_list|(
 name|vp
 parameter_list|)
 define|\
-value|(!((vp)->v_flag& (VFREE|VDOOMED))&& \ 	 !(vp)->v_holdcnt&& !(vp)->v_usecount)
+value|(!((vp)->v_flag& (VFREE|VDOOMED|VXLOCK))&&   \ 	 LIST_EMPTY(&(vp)->v_cache_src)&& !(vp)->v_usecount)
 end_define
 
 begin_define

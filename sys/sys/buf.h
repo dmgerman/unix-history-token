@@ -1064,14 +1064,7 @@ name|PRIBIO
 operator|+
 literal|4
 expr_stmt|;
-name|bp
-operator|->
-name|b_lock
-operator|.
-name|lk_timo
-operator|=
-literal|0
-expr_stmt|;
+comment|/* bp->b_lock.lk_timo = 0;   not necessary */
 name|ret
 operator|=
 name|lockmgr
@@ -1175,6 +1168,8 @@ expr_stmt|;
 name|locktype
 operator||=
 name|LK_INTERLOCK
+operator||
+name|LK_TIMELOCK
 expr_stmt|;
 name|bp
 operator|->
