@@ -1984,6 +1984,7 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
 name|curthread
 operator|->
 name|td_kse
@@ -1992,6 +1993,7 @@ name|ke_flags
 operator||=
 name|KEF_NEEDRESCHED
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
