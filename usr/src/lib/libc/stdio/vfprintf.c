@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.20 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1108,7 +1108,7 @@ name|size
 condition|)
 name|PUTC
 argument_list|(
-name|padc
+literal|' '
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1332,19 +1332,16 @@ operator|*
 name|t
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|width
+operator|--
 operator|>
 name|size
-condition|;
-operator|--
-name|width
-control|)
+condition|)
 name|PUTC
 argument_list|(
-name|padc
+literal|' '
 argument_list|)
 expr_stmt|;
 break|break;
