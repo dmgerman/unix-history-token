@@ -300,10 +300,10 @@ modifier|*
 name|writeit
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -340,10 +340,10 @@ modifier|*
 name|readit
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -498,7 +498,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|void
 modifier|*
 name|tcp_handle
 decl_stmt|;
@@ -515,10 +515,10 @@ modifier|*
 name|readit
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -537,10 +537,10 @@ modifier|*
 name|writeit
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int

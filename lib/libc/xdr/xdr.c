@@ -200,7 +200,7 @@ parameter_list|)
 name|xdrproc_t
 name|proc
 decl_stmt|;
-name|char
+name|void
 modifier|*
 name|objp
 decl_stmt|;
@@ -236,10 +236,8 @@ begin_function
 name|bool_t
 name|xdr_void
 parameter_list|(
-comment|/* xdrs, addr */
+name|void
 parameter_list|)
-comment|/* XDR *xdrs; */
-comment|/* caddr_t addr; */
 block|{
 return|return
 operator|(

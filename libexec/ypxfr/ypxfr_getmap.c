@@ -259,11 +259,17 @@ name|clnt
 argument_list|,
 name|YPPROC_ALL
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_ypreq_nokey
 argument_list|,
 operator|&
 name|req
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_ypresp_all_seq
 argument_list|,
 operator|&

@@ -177,11 +177,13 @@ name|rpcproc_t
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|struct
 name|timeval
@@ -228,7 +230,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* destroy this structure */
@@ -256,7 +259,7 @@ modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -368,7 +371,7 @@ comment|/*  * client side rpc interface ops  *  * Parameter types are:  *  */
 end_comment
 
 begin_comment
-comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	caddr_t argsp;  *	xdrproc_t xres;  *	caddr_t resp;  *	struct timeval timeout;  */
+comment|/*  * enum clnt_stat  * CLNT_CALL(rh, proc, xargs, argsp, xres, resp, timeout)  * 	CLIENT *rh;  *	rpcproc_t proc;  *	xdrproc_t xargs;  *	void *argsp;  *	xdrproc_t xres;  *	void *resp;  *	struct timeval timeout;  */
 end_comment
 
 begin_define
@@ -391,7 +394,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		(caddr_t)(void *)argsp,	xres, (caddr_t)(void *)resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
 end_define
 
 begin_define
@@ -414,7 +417,7 @@ parameter_list|,
 name|secs
 parameter_list|)
 define|\
-value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		(caddr_t)(void *)argsp, xres, (caddr_t)(void *)resp, secs))
+value|((*(rh)->cl_ops->cl_call)(rh, proc, xargs, \ 		argsp, xres, resp, secs))
 end_define
 
 begin_comment
@@ -470,7 +473,7 @@ value|((*(rh)->cl_ops->cl_geterr)(rh, errp))
 end_define
 
 begin_comment
-comment|/*  * bool_t  * CLNT_FREERES(rh, xres, resp);  * 	CLIENT *rh;  *	xdrproc_t xres;  *	caddr_t resp;  */
+comment|/*  * bool_t  * CLNT_FREERES(rh, xres, resp);  * 	CLIENT *rh;  *	xdrproc_t xres;  *	void *resp;  */
 end_comment
 
 begin_define

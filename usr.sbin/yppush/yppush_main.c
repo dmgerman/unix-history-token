@@ -1888,7 +1888,6 @@ if|if
 condition|(
 name|yp_push
 argument_list|(
-operator|&
 name|server
 argument_list|,
 name|yppush_mapname

@@ -424,11 +424,17 @@ name|client
 argument_list|,
 name|YPBINDPROC_SETDOM
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_ypbind_setdom
 argument_list|,
 operator|&
 name|ypsd
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 name|NULL

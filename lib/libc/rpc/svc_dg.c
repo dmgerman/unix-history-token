@@ -246,7 +246,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -261,7 +262,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -652,13 +654,6 @@ name|xprt
 operator|->
 name|xp_p2
 operator|=
-operator|(
-name|caddr_t
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
 name|su
 expr_stmt|;
 name|xprt
@@ -1392,7 +1387,8 @@ decl_stmt|;
 name|xdrproc_t
 name|xdr_args
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|args_ptr
 decl_stmt|;
 block|{
@@ -1436,7 +1432,8 @@ decl_stmt|;
 name|xdrproc_t
 name|xdr_args
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|args_ptr
 decl_stmt|;
 block|{

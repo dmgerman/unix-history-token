@@ -1606,7 +1606,8 @@ decl_stmt|;
 name|xdrproc_t
 name|xdr_results
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|xdr_location
 decl_stmt|;
 block|{
@@ -1905,7 +1906,7 @@ comment|/*  * Tell RPC package to not complain about version errors to the clien
 end_comment
 
 begin_endif
-unit|void __svc_versquiet_on(xprt) 	SVCXPRT *xprt; { 	u_long	tmp;  	tmp = ((u_long) xprt->xp_p3) | SVC_VERSQUIET; 	xprt->xp_p3 = (caddr_t) tmp; }  void __svc_versquiet_off(xprt) 	SVCXPRT *xprt; { 	u_long	tmp;  	tmp = ((u_long) xprt->xp_p3)& ~SVC_VERSQUIET; 	xprt->xp_p3 = (caddr_t) tmp; }  void svc_versquiet(xprt) 	SVCXPRT *xprt; { 	__svc_versquiet_on(xprt); }  int __svc_versquiet_get(xprt) 	SVCXPRT *xprt; { 	return ((int) xprt->xp_p3)& SVC_VERSQUIET; }
+unit|void __svc_versquiet_on(xprt) 	SVCXPRT *xprt; { 	u_long	tmp;  	tmp = ((u_long) xprt->xp_p3) | SVC_VERSQUIET; 	xprt->xp_p3 = tmp; }  void __svc_versquiet_off(xprt) 	SVCXPRT *xprt; { 	u_long	tmp;  	tmp = ((u_long) xprt->xp_p3)& ~SVC_VERSQUIET; 	xprt->xp_p3 = tmp; }  void svc_versquiet(xprt) 	SVCXPRT *xprt; { 	__svc_versquiet_on(xprt); }  int __svc_versquiet_get(xprt) 	SVCXPRT *xprt; { 	return ((int) xprt->xp_p3)& SVC_VERSQUIET; }
 endif|#
 directive|endif
 end_endif

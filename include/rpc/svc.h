@@ -126,7 +126,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* send reply */
@@ -158,7 +159,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/* destroy this struct */
@@ -330,7 +332,7 @@ value|((struct cmsgcred *)(x)->xp_p2)
 end_define
 
 begin_comment
-comment|/*  * Operations defined on an SVCXPRT handle  *  * SVCXPRT		*xprt;  * struct rpc_msg	*msg;  * xdrproc_t		 xargs;  * caddr_t		 argsp;  */
+comment|/*  * Operations defined on an SVCXPRT handle  *  * SVCXPRT		*xprt;  * struct rpc_msg	*msg;  * xdrproc_t		 xargs;  * void *		 argsp;  */
 end_comment
 
 begin_define
@@ -602,7 +604,7 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

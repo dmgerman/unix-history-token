@@ -304,7 +304,10 @@ modifier|*
 name|xdrproc_t
 function_decl|)
 parameter_list|(
-comment|/* XDR *, void *, u_int */
+name|XDR
+modifier|*
+parameter_list|,
+modifier|...
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1401,7 +1404,7 @@ name|xdr_free
 parameter_list|(
 name|xdrproc_t
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1589,7 +1592,7 @@ name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -1597,10 +1600,10 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int
@@ -1611,10 +1614,10 @@ function_decl|(
 modifier|*
 function_decl|)
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|int

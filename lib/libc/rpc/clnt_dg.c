@@ -213,11 +213,13 @@ name|rpcproc_t
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|,
 name|struct
 name|timeval
@@ -250,7 +252,8 @@ modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1373,7 +1376,8 @@ name|xdrproc_t
 name|xargs
 decl_stmt|;
 comment|/* xdr routine for args */
-name|caddr_t
+name|void
+modifier|*
 name|argsp
 decl_stmt|;
 comment|/* pointer to args */
@@ -1381,7 +1385,8 @@ name|xdrproc_t
 name|xresults
 decl_stmt|;
 comment|/* xdr routine for results */
-name|caddr_t
+name|void
+modifier|*
 name|resultsp
 decl_stmt|;
 comment|/* pointer to results */
@@ -2938,7 +2943,8 @@ decl_stmt|;
 name|xdrproc_t
 name|xdr_res
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|res_ptr
 decl_stmt|;
 block|{

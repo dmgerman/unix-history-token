@@ -352,12 +352,11 @@ name|clnt_freeres
 argument_list|(
 name|clnt
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_desresp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|result_1
 argument_list|)
 expr_stmt|;

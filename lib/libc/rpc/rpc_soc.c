@@ -749,14 +749,6 @@ name|cl
 argument_list|,
 name|CLSET_RETRY_TIMEOUT
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
 operator|&
 name|wait
 argument_list|)
@@ -1713,7 +1705,8 @@ name|xdrproc_t
 name|xargs
 decl_stmt|;
 comment|/* xdr routine for args */
-name|caddr_t
+name|void
+modifier|*
 name|argsp
 decl_stmt|;
 comment|/* pointer to args */
@@ -1721,7 +1714,8 @@ name|xdrproc_t
 name|xresults
 decl_stmt|;
 comment|/* xdr routine for results */
-name|caddr_t
+name|void
+modifier|*
 name|resultsp
 decl_stmt|;
 comment|/* pointer to results */

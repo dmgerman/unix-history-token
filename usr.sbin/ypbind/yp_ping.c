@@ -377,11 +377,17 @@ name|client
 argument_list|,
 name|PMAPPROC_GETPORT
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_pmap
 argument_list|,
 operator|&
 name|parms
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_u_short
 argument_list|,
 operator|&

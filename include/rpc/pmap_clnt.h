@@ -123,12 +123,12 @@ name|u_long
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|xdrproc_t
 parameter_list|,
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|resultproc_t

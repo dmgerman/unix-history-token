@@ -589,6 +589,9 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -689,11 +692,11 @@ name|svc_getargs
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_getquota_args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|getq_args
 argument_list|)
@@ -900,12 +903,11 @@ name|svc_sendreply
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_getquota_rslt
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|getq_rslt
 argument_list|)
@@ -924,11 +926,11 @@ name|svc_freeargs
 argument_list|(
 name|transp
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_getquota_args
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|getq_args
 argument_list|)
@@ -1437,9 +1439,6 @@ case|:
 comment|/*                          * Convert implicit 0 quota (EOF)                          * into an explicit one (zero'ed dqblk)                          */
 name|bzero
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|dqblk
 argument_list|,
 sizeof|sizeof
