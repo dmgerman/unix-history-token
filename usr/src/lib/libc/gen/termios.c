@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	5.11 (Berkeley) %G%"
+literal|"@(#)termios.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,14 +700,6 @@ name|TIOCDRAIN
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 block|}
@@ -789,14 +781,6 @@ argument_list|,
 operator|&
 name|com
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 block|}
@@ -846,14 +830,6 @@ name|TIOCSTOP
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 case|case
@@ -869,14 +845,6 @@ name|TIOCSTART
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
 operator|)
 return|;
 case|case
