@@ -3444,6 +3444,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kmem_alloc.h>
 end_include
 
@@ -4681,6 +4687,12 @@ name|d
 parameter_list|)
 value|ipfuiomove(a,b,c,d)
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
