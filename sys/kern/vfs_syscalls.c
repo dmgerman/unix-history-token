@@ -11902,14 +11902,14 @@ operator|.
 name|va_mtime
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
 operator|==
 literal|0
 condition|)
-endif|#
-directive|endif
 name|error
 operator|=
 name|VOP_SETATTR
