@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_pcb.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"socketvar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
 end_include
 
 begin_include
@@ -1588,11 +1594,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * After a routing change, flush old routing  * and allocate a (hopefully) better one.  */
+comment|/*  * Check for alternatives when higher level complains  * about service problems.  For now, invalidate cached  * routing information.  If the route was created dynamically  * (by a redirect), time to try a default gateway again.  */
 end_comment
 
 begin_macro
-name|in_rtchange
+name|in_losing
 argument_list|(
 argument|inp
 argument_list|)
@@ -1605,6 +1611,77 @@ modifier|*
 name|inp
 decl_stmt|;
 end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|rtentry
+modifier|*
+name|rt
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|rt
+operator|=
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_DYNAMIC
+condition|)
+name|rtrequest
+argument_list|(
+name|SIOCDELRT
+argument_list|,
+name|rt
+argument_list|)
+expr_stmt|;
+name|rtfree
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+name|inp
+operator|->
+name|inp_route
+operator|.
+name|ro_rt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * A new route can be allocated 		 * the next time output is attempted. 		 */
+block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * After a routing change, flush old routing  * and allocate a (hopefully) better one.  */
+end_comment
+
+begin_expr_stmt
+name|in_rtchange
+argument_list|(
+name|inp
+argument_list|)
+specifier|register
+expr|struct
+name|inpcb
+operator|*
+name|inp
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
