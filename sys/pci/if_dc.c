@@ -357,6 +357,22 @@ literal|"ADMtek AN985 10/100BaseTX"
 block|}
 block|,
 block|{
+name|DC_VENDORID_ADMTEK
+block|,
+name|DC_DEVICEID_ADM9511
+block|,
+literal|"ADMtek ADM9511 10/100BaseTX"
+block|}
+block|,
+block|{
+name|DC_VENDORID_ADMTEK
+block|,
+name|DC_DEVICEID_ADM9513
+block|,
+literal|"ADMtek ADM9513 10/100BaseTX"
+block|}
+block|,
+block|{
 name|DC_VENDORID_ASIX
 block|,
 name|DC_DEVICEID_AX88140A
@@ -9157,6 +9173,12 @@ expr_stmt|;
 break|break;
 case|case
 name|DC_DEVICEID_AN985
+case|:
+case|case
+name|DC_DEVICEID_ADM9511
+case|:
+case|case
+name|DC_DEVICEID_ADM9513
 case|:
 case|case
 name|DC_DEVICEID_FE2500

@@ -4308,6 +4308,20 @@ name|DC_DEVICEID_AN985
 value|0x0985
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_ADM9511
+value|0x9511
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_ADM9513
+value|0x9513
+end_define
+
 begin_comment
 comment|/*  * 3COM PCI vendor ID  */
 end_comment
