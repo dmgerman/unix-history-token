@@ -1156,13 +1156,13 @@ block|{
 name|char
 name|line
 index|[
-literal|2048
+literal|10240
 index|]
 decl_stmt|;
 name|char
 name|junk
 index|[
-literal|511
+literal|2048
 index|]
 decl_stmt|;
 name|char
@@ -1370,7 +1370,7 @@ index|]
 decl_stmt|,
 name|deps
 index|[
-literal|1024
+literal|2048
 index|]
 decl_stmt|;
 name|PkgNodePtr
