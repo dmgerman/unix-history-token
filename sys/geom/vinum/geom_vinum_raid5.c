@@ -1338,16 +1338,8 @@ literal|"gv_build_raid5_request: stripestart< 0"
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|stripeoff
-operator|>=
-name|p
-operator|->
-name|stripesize
-condition|)
-name|stripeoff
-operator|-=
+operator|%=
 name|p
 operator|->
 name|stripesize
