@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1981 Regents of the University of California */
-end_comment
-
-begin_comment
-comment|/* "@(#)dumprestore.h 2.4 %G%" */
+comment|/*	dumprestore.h	2.5	83/08/11	*/
 end_comment
 
 begin_comment

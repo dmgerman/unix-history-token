@@ -500,7 +500,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)unctime.c	1.4 (Berkeley) 83/07/03"
+literal|"@(#)unctime.c	1.5 (Berkeley) 83/08/11"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)indent_globs.h	4.1	(Berkeley)	%G%	*/
+comment|/*	indent_globs.h	4.2	83/08/11	*/
 end_comment
 
 begin_comment

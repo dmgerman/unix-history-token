@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* sccsid:  @(#)gprof.h	1.18 (Berkeley) %G% */
+comment|/*	gprof.h	1.19	83/08/11	*/
 end_comment
 
 begin_include
