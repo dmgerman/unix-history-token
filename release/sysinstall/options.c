@@ -79,9 +79,6 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-name|clear
-argument_list|()
-expr_stmt|;
 return|return
 literal|"[RESET!]"
 return|;
