@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.27	82/01/24	*/
+comment|/*	uipc_mbuf.c	1.28	82/01/25	*/
 end_comment
 
 begin_include
@@ -1236,6 +1236,12 @@ name|n
 condition|)
 if|if
 condition|(
+name|m
+operator|->
+name|m_off
+operator|<
+name|MMAXOFF
+operator|&&
 name|m
 operator|->
 name|m_off

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.19	82/01/19	*/
+comment|/*	vfs_vnops.c	4.20	82/01/25	*/
 end_comment
 
 begin_include
@@ -238,6 +238,13 @@ operator|&
 name|FSOCKET
 condition|)
 block|{
+name|u
+operator|.
+name|u_error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
 name|soclose
 argument_list|(
 name|fp
@@ -249,6 +256,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|nouser
+operator|==
+literal|0
+operator|&&
 name|u
 operator|.
 name|u_error
