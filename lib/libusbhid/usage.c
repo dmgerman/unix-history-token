@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"libusb.h"
+file|"libusbhid.h"
 end_include
 
 begin_define
