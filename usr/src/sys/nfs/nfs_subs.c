@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_subs.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4559,17 +4559,24 @@ label|:
 end_label
 
 begin_comment
-comment|/* 	 * Check for read-only file systems and executing texts 	 */
+comment|/* 	 * Check for read-only file systems. 	 */
 end_comment
 
 begin_if
 if|if
 condition|(
 name|flag
-operator|!=
-name|LOOKUP
-operator|&&
-operator|(
+operator|==
+name|DELETE
+operator|||
+name|flag
+operator|==
+name|RENAME
+condition|)
+block|{
+comment|/* 		 * Disallow directory write attempts on read-only 		 * file systems. 		 */
+if|if
+condition|(
 operator|(
 name|dp
 operator|->
@@ -4585,24 +4592,31 @@ operator|)
 operator|)
 operator|||
 operator|(
-name|error
-operator|=
-name|vn_access
-argument_list|(
-name|dp
-argument_list|,
-name|VWRITE
-argument_list|,
+name|wantparent
+operator|&&
+operator|(
 name|ndp
 operator|->
-name|ni_cred
-argument_list|)
+name|ni_dvp
+operator|->
+name|v_mount
+operator|->
+name|m_flag
+operator|&
+name|M_RDONLY
 operator|)
 operator|)
 condition|)
+block|{
+name|error
+operator|=
+name|EROFS
+expr_stmt|;
 goto|goto
 name|bad2
 goto|;
+block|}
+block|}
 end_if
 
 begin_comment
