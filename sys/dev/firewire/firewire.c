@@ -9643,7 +9643,7 @@ name|device_get_children
 argument_list|(
 name|fc
 operator|->
-name|dev
+name|bdev
 argument_list|,
 operator|&
 name|devlistp
