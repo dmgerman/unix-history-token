@@ -23313,7 +23313,7 @@ operator|==
 name|reg
 condition|)
 block|{
-comment|/* Can replace with any giv that was reduced and 	     that has (MULT_VAL != 0) and (ADD_VAL == 0). 	     Require a constant for MULT_VAL, so we know it's nonzero.  */
+comment|/* Can replace with any giv that was reduced and 	     that has (MULT_VAL != 0) and (ADD_VAL == 0). 	     Require a constant for MULT_VAL, so we know it's nonzero. 	     ??? We disable this optimization to avoid potential 	     overflows.  */
 for|for
 control|(
 name|v
@@ -23370,6 +23370,8 @@ operator|->
 name|mode
 operator|==
 name|mode
+operator|&&
+literal|0
 condition|)
 block|{
 if|if
@@ -23441,7 +23443,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Look for a giv with (MULT_VAL != 0) and (ADD_VAL != 0); 	     replace test insn with a compare insn (cmp REDUCED_GIV ADD_VAL). 	     Require a constant for MULT_VAL, so we know it's nonzero.  */
+comment|/* Look for a giv with (MULT_VAL != 0) and (ADD_VAL != 0); 	     replace test insn with a compare insn (cmp REDUCED_GIV ADD_VAL). 	     Require a constant for MULT_VAL, so we know it's nonzero. 	     ??? Do this only if ADD_VAL is a pointer to avoid a potential 	     overflow problem.  */
 for|for
 control|(
 name|v
@@ -23492,6 +23494,56 @@ operator|->
 name|mode
 operator|==
 name|mode
+operator|&&
+operator|(
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|SYMBOL_REF
+operator|||
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|LABEL_REF
+operator|||
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|CONST
+operator|||
+operator|(
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|REG
+operator|&&
+name|REGNO_POINTER_FLAG
+argument_list|(
+name|REGNO
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+argument_list|)
+operator|)
+operator|)
 condition|)
 block|{
 if|if
@@ -23785,12 +23837,55 @@ argument_list|)
 operator|>
 literal|0
 operator|&&
-name|CONSTANT_P
+operator|(
+name|GET_CODE
 argument_list|(
 name|v
 operator|->
 name|add_val
 argument_list|)
+operator|==
+name|SYMBOL_REF
+operator|||
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|LABEL_REF
+operator|||
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|CONST
+operator|||
+operator|(
+name|GET_CODE
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+operator|==
+name|REG
+operator|&&
+name|REGNO_POINTER_FLAG
+argument_list|(
+name|REGNO
+argument_list|(
+name|v
+operator|->
+name|add_val
+argument_list|)
+argument_list|)
+operator|)
+operator|)
 operator|&&
 operator|!
 name|v
@@ -23963,7 +24058,7 @@ operator|=
 name|reg
 expr_stmt|;
 block|}
-comment|/* Look for giv with positive constant mult_val and nonconst add_val. 	     Insert insns to calculate new compare value.  */
+comment|/* Look for giv with positive constant mult_val and nonconst add_val. 	     Insert insns to calculate new compare value.   	     ??? Turn this off due to possible overflow.  */
 for|for
 control|(
 name|v
@@ -24017,6 +24112,8 @@ operator|->
 name|mode
 operator|==
 name|mode
+operator|&&
+literal|0
 condition|)
 block|{
 name|rtx
@@ -24133,7 +24230,7 @@ operator|==
 literal|1
 condition|)
 block|{
-comment|/* Look for giv with constant positive mult_val and nonconst 		 add_val. Insert insns to compute new compare value.  */
+comment|/* Look for giv with constant positive mult_val and nonconst 		 add_val. Insert insns to compute new compare value.  		 ??? Turn this off due to possible overflow.  */
 for|for
 control|(
 name|v
@@ -24187,6 +24284,8 @@ operator|->
 name|mode
 operator|==
 name|mode
+operator|&&
+literal|0
 condition|)
 block|{
 name|rtx

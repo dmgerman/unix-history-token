@@ -20354,7 +20354,7 @@ name|TREE_READONLY
 argument_list|(
 name|exp
 argument_list|)
-operator||
+operator|&
 name|TREE_STATIC
 argument_list|(
 name|exp

@@ -1544,7 +1544,11 @@ operator|!=
 operator|(
 name|const_size
 operator|+
+operator|(
 name|field_size
+operator|%
+name|type_align
+operator|)
 operator|-
 literal|1
 operator|)

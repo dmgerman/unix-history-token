@@ -23462,6 +23462,21 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|!
+name|constructor_unfilled_index
+condition|)
+name|error_init
+argument_list|(
+literal|"array index in non-array initializer%s"
+argument_list|,
+literal|" for `%s'"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|tree_int_cst_lt
 argument_list|(
 name|first
