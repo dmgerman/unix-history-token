@@ -5465,6 +5465,11 @@ operator|->
 name|sk_phytype
 argument_list|)
 expr_stmt|;
+name|SK_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENODEV
