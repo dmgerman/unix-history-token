@@ -152,7 +152,7 @@ name|char
 modifier|*
 name|map
 decl_stmt|;
-name|u_long
+name|u_int
 name|ordernum
 decl_stmt|;
 name|char
@@ -206,13 +206,13 @@ name|struct
 name|ypmap_parms
 name|map_parms
 decl_stmt|;
-name|u_long
+name|u_int
 name|transid
 decl_stmt|;
-name|u_long
+name|u_int
 name|proto
 decl_stmt|;
-name|u_short
+name|u_int
 name|port
 decl_stmt|;
 block|}
@@ -251,7 +251,7 @@ begin_struct
 struct|struct
 name|ypresp_val
 block|{
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
 name|datum
@@ -265,7 +265,7 @@ begin_struct
 struct|struct
 name|ypresp_key_val
 block|{
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
 name|datum
@@ -282,7 +282,7 @@ begin_struct
 struct|struct
 name|ypresp_master
 block|{
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
 name|char
@@ -297,10 +297,10 @@ begin_struct
 struct|struct
 name|ypresp_order
 block|{
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
-name|u_long
+name|u_int
 name|ordernum
 decl_stmt|;
 block|}
@@ -332,7 +332,7 @@ begin_struct
 struct|struct
 name|ypresp_maplist
 block|{
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
 name|struct
@@ -700,7 +700,7 @@ name|ypbind_status
 decl_stmt|;
 union|union
 block|{
-name|u_long
+name|u_int
 name|ypbind_error
 decl_stmt|;
 name|struct
@@ -771,7 +771,7 @@ name|struct
 name|ypbind_binding
 name|ypsetdom_binding
 decl_stmt|;
-name|u_short
+name|u_int
 name|ypsetdom_vers
 decl_stmt|;
 block|}
@@ -832,10 +832,10 @@ begin_struct
 struct|struct
 name|yppushresp_xfr
 block|{
-name|u_long
+name|u_int
 name|transid
 decl_stmt|;
-name|u_long
+name|u_int
 name|status
 decl_stmt|;
 block|}
