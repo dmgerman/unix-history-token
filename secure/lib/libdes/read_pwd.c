@@ -379,6 +379,12 @@ name|defined
 argument_list|(
 name|MSDOS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
 end_if
 
 begin_include
