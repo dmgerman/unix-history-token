@@ -1045,15 +1045,17 @@ name|bi
 operator|.
 name|bi_basemem
 operator|=
-name|getbasemem
-argument_list|()
+name|bios_basemem
+operator|/
+literal|1024
 expr_stmt|;
 name|bi
 operator|.
 name|bi_extmem
 operator|=
-name|getextmem
-argument_list|()
+name|bios_extmem
+operator|/
+literal|1024
 expr_stmt|;
 comment|/* find the last module in the chain */
 name|addr

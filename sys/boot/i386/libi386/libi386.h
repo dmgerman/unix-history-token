@@ -263,23 +263,35 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|getbasemem
+name|void
+name|bios_getmem
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
-name|int
-name|getextmem
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+name|u_int32_t
+name|bios_basemem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* base memory in bytes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|bios_extmem
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* extended memory in bytes */
+end_comment
 
 begin_decl_stmt
 specifier|extern
