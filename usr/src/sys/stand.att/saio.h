@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	4.7	%G%	*/
+comment|/*	saio.h	4.8	%G%	*/
 end_comment
 
 begin_comment
@@ -51,6 +51,9 @@ name|int
 name|i_errcnt
 decl_stmt|;
 name|int
+name|i_errblk
+decl_stmt|;
+name|int
 name|i_active
 decl_stmt|;
 name|char
@@ -83,6 +86,13 @@ define|#
 directive|define
 name|i_fs
 value|i_un.ui_fs
+end_define
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|0
 end_define
 
 begin_define
@@ -127,6 +137,28 @@ end_define
 
 begin_comment
 comment|/* file instead of device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_NBSF
+value|0x10
+end_define
+
+begin_comment
+comment|/* no bad sector forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_ECCLM
+value|0x20
+end_define
+
+begin_comment
+comment|/* limit the number of bad bits accepted in ecc's */
 end_comment
 
 begin_comment
@@ -246,6 +278,34 @@ name|devsw
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*   * device data structure,  * used by the ioctl-command SAIODEVDATA ( for disks only)  */
+end_comment
+
+begin_struct
+struct|struct
+name|devdata
+block|{
+name|int
+name|nsect
+decl_stmt|;
+comment|/* number of sectors per track */
+name|int
+name|ntrak
+decl_stmt|;
+comment|/* number of tracks/surfaces/heads... */
+name|int
+name|nspc
+decl_stmt|;
+comment|/* number of sectors per cylinder */
+name|int
+name|ncyl
+decl_stmt|;
+comment|/* number of cylinders */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * request codes. Must be the same a F_XXX above  */
@@ -520,6 +580,87 @@ end_define
 
 begin_comment
 comment|/* next i/o checks header& data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIONOBAD
+value|(('d'<<8)|4)
+end_define
+
+begin_comment
+comment|/* inhibit bad sector forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIODOBAD
+value|(('d'<<8)|5)
+end_define
+
+begin_comment
+comment|/* do bad sector forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOECCLIM
+value|(('d'<<8)|6)
+end_define
+
+begin_comment
+comment|/* report sectors as bad if more than 					 * 5 bits are bad in ecc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIOECCUNL
+value|(('d'<<8)|7)
+end_define
+
+begin_comment
+comment|/* use standard ecc procedures */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAIODEVDATA
+value|(('d'<<8)|8)
+end_define
+
+begin_comment
+comment|/* get device data */
+end_comment
+
+begin_comment
+comment|/* codes for sector header word 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_FMT22
+value|0x1000
+end_define
+
+begin_comment
+comment|/* standard 16 bit format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDR1_OKSCT
+value|0xc000
+end_define
+
+begin_comment
+comment|/* sector ok */
 end_comment
 
 end_unit
