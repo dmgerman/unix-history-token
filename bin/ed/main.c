@@ -58,7 +58,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.10 1997/03/28 15:24:19 imp Exp $"
+literal|"$Id: main.c,v 1.11 1997/08/07 21:33:43 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6886,6 +6886,11 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
 name|struct
 name|winsize
 name|ws
@@ -6956,6 +6961,10 @@ operator|-
 literal|8
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
 end_function
 
