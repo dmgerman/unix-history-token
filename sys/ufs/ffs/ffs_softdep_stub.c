@@ -740,6 +740,26 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|softdep_slowdown
+parameter_list|(
+name|vp
+parameter_list|)
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+block|{
+name|panic
+argument_list|(
+literal|"softdep_slowdown called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
