@@ -452,6 +452,12 @@ directive|ifdef
 name|MAP_LOCK_DIAGNOSTIC
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -493,7 +499,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: 0x%x\n", map); \ 		KASSERT(lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) == 0, \ 			("vm_map_lock: failed to get lock")); \ 		(map)->timestamp++; \ 	} while(0)
+value|do { \ 		vm_map_printf("locking map LK_EXCLUSIVE: %p\n", map); \ 		KASSERT(lockmgr(&(map)->lock, LK_EXCLUSIVE, (void *)0, curproc) == 0, \ 			("vm_map_lock: failed to get lock")); \ 		(map)->timestamp++; \ 	} while(0)
 end_define
 
 begin_define
@@ -504,7 +510,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -515,7 +521,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_SHARED: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_SHARED: %p\n", map); \ 		lockmgr(&(map)->lock, LK_SHARED, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_define
@@ -526,7 +532,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_RELEASE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_RELEASE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_RELEASE, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_function
@@ -549,7 +555,7 @@ name|error
 decl_stmt|;
 name|vm_map_printf
 argument_list|(
-literal|"locking map LK_EXCLUPGRADE: 0x%x\n"
+literal|"locking map LK_EXCLUPGRADE: %p\n"
 argument_list|,
 name|map
 argument_list|)
@@ -609,7 +615,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		vm_map_printf("locking map LK_DOWNGRADE: 0x%x\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc); \ 	} while (0)
+value|do { \ 		vm_map_printf("locking map LK_DOWNGRADE: %p\n", map); \ 		lockmgr(&(map)->lock, LK_DOWNGRADE, (void *)0, curproc); \ 	} while (0)
 end_define
 
 begin_define
