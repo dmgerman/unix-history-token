@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: strptime.c,v 1.4 1998/09/12 21:13:29 dt Exp $"
+literal|"$Id: strptime.c,v 1.5 1999/04/25 01:42:18 wes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1480,7 +1480,7 @@ literal|'y'
 operator|&&
 name|i
 operator|<
-literal|70
+literal|69
 condition|)
 name|i
 operator|+=
