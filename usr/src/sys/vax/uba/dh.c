@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	3.14	%G%	*/
+comment|/*	dh.c	3.15	%G%	*/
 end_comment
 
 begin_comment
@@ -1250,7 +1250,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|ttioccomm
+name|ttioctl
 argument_list|(
 name|cmd
 argument_list|,
@@ -1259,6 +1259,8 @@ argument_list|,
 name|addr
 argument_list|,
 name|dev
+argument_list|,
+name|flag
 argument_list|)
 condition|)
 block|{
