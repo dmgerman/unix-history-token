@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)C.c	8.1 (Berkeley) %G%"
+literal|"@(#)C.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,14 @@ begin_function_decl
 specifier|static
 name|void
 name|hash_entry
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|skip_string
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -223,7 +231,7 @@ operator|=
 name|NO
 expr_stmt|;
 continue|continue;
-comment|/* we ignore quoted strings and comments in their entirety */
+comment|/* 		 * We ignore quoted strings and character constants 		 * completely. 		 */
 case|case
 literal|'"'
 case|:
@@ -233,7 +241,7 @@ case|:
 operator|(
 name|void
 operator|)
-name|skip_key
+name|skip_string
 argument_list|(
 name|c
 argument_list|)
@@ -559,28 +567,110 @@ begin_comment
 comment|/*  * func_entry --  *	handle a function reference  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|func_entry
-argument_list|()
+parameter_list|()
 block|{
 specifier|register
 name|int
 name|c
-block|;
+decl_stmt|;
 comment|/* current character */
-comment|/* 	 * we assume that the character after a function's right paren 	 * is a token character if it's a function and a non-token 	 * character if it's a declaration.  Comments don't count... 	 */
-operator|(
-name|void
-operator|)
-name|skip_key
-argument_list|(
-operator|(
 name|int
-operator|)
-literal|')'
+name|level
+init|=
+literal|0
+decl_stmt|;
+comment|/* for matching '()' */
+comment|/* 	 * Find the end of the assumed function declaration. 	 * Note that ANSI C functions can have type definitions so keep 	 * track of the parentheses nesting level. 	 */
+while|while
+condition|(
+name|GETC
+argument_list|(
+operator|!=
+argument_list|,
+name|EOF
 argument_list|)
-block|;
+condition|)
+block|{
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|c
+condition|)
+block|{
+case|case
+literal|'\''
+case|:
+case|case
+literal|'"'
+case|:
+comment|/* skip strings and character constants */
+name|skip_string
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'/'
+case|:
+comment|/* skip comments */
+if|if
+condition|(
+name|GETC
+argument_list|(
+operator|==
+argument_list|,
+literal|'*'
+argument_list|)
+condition|)
+name|skip_comment
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'('
+case|:
+name|level
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|')'
+case|:
+if|if
+condition|(
+name|level
+operator|==
+literal|0
+condition|)
+goto|goto
+name|fnd
+goto|;
+name|level
+operator|--
+expr_stmt|;
+break|break;
+case|case
+literal|'\n'
+case|:
+name|SETLINE
+expr_stmt|;
+block|}
+block|}
+return|return
+operator|(
+name|NO
+operator|)
+return|;
+name|fnd
+label|:
+comment|/* 	 * we assume that the character after a function's right paren 	 * is a token character if it's a function and a non-token 	 * character if it's a declaration.  Comments don't count... 	 */
 for|for
 control|(
 init|;
@@ -665,18 +755,16 @@ name|NO
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|} 	if
-operator|(
+block|}
+if|if
+condition|(
 name|c
 operator|!=
 operator|(
 name|int
 operator|)
 literal|'{'
-operator|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -688,23 +776,20 @@ operator|)
 literal|'{'
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|YES
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * hash_entry --  *	handle a line starting with a '#'  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|void
 name|hash_entry
 parameter_list|()
@@ -1212,21 +1297,98 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * skip_key --  *	skip to next char "key"  */
+comment|/*  * skip_string --  *	skip to the end of a string or character constant.  */
 end_comment
 
-begin_expr_stmt
-name|skip_key
-argument_list|(
+begin_function
+name|void
+name|skip_string
+parameter_list|(
 name|key
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|key
+decl_stmt|;
+block|{
+specifier|register
+name|int
+name|c
+decl_stmt|,
+name|skip
+decl_stmt|;
+for|for
+control|(
+name|skip
+operator|=
+name|NO
+init|;
+name|GETC
+argument_list|(
+operator|!=
+argument_list|,
+name|EOF
+argument_list|)
+condition|;
+control|)
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|c
+condition|)
+block|{
+case|case
+literal|'\\'
+case|:
+comment|/* a backslash escapes anything */
+name|skip
+operator|=
+operator|!
+name|skip
 expr_stmt|;
-end_expr_stmt
+comment|/* we toggle in case it's "\\" */
+break|break;
+case|case
+literal|'\n'
+case|:
+name|SETLINE
+expr_stmt|;
+comment|/*FALLTHROUGH*/
+default|default:
+if|if
+condition|(
+name|c
+operator|==
+name|key
+operator|&&
+operator|!
+name|skip
+condition|)
+return|return;
+name|skip
+operator|=
+name|NO
+expr_stmt|;
+block|}
+block|}
+end_function
 
-begin_block
+begin_comment
+comment|/*  * skip_key --  *	skip to next char "key"  */
+end_comment
+
+begin_function
+name|int
+name|skip_key
+parameter_list|(
+name|key
+parameter_list|)
+specifier|register
+name|int
+name|key
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1287,12 +1449,63 @@ comment|/* have moved out of the rule */
 break|break;
 comment|/* not used by C */
 case|case
+literal|'\''
+case|:
+case|case
+literal|'"'
+case|:
+comment|/* skip strings and character constants */
+name|skip_string
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'/'
+case|:
+comment|/* skip comments */
+if|if
+condition|(
+name|GETC
+argument_list|(
+operator|==
+argument_list|,
+literal|'*'
+argument_list|)
+condition|)
+block|{
+name|skip_comment
+argument_list|()
+expr_stmt|;
+break|break;
+block|}
+operator|(
+name|void
+operator|)
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|inf
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+literal|'/'
+expr_stmt|;
+goto|goto
+name|norm
+goto|;
+case|case
 literal|'\n'
 case|:
 name|SETLINE
 expr_stmt|;
 comment|/*FALLTHROUGH*/
 default|default:
+name|norm
+label|:
 if|if
 condition|(
 name|c
@@ -1318,7 +1531,7 @@ name|retval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
