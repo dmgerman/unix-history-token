@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.6 (Berkeley) %G%"
+literal|"@(#)function.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2445,6 +2445,10 @@ name|PLAN
 modifier|*
 name|new
 decl_stmt|;
+name|mode_t
+modifier|*
+name|set
+decl_stmt|;
 name|ftsoptions
 operator|&=
 operator|~
@@ -2477,10 +2481,16 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|set
+operator|=
 name|setmode
 argument_list|(
 name|perm
 argument_list|)
+operator|)
+operator|==
+name|NULL
 condition|)
 name|bad_arg
 argument_list|(
@@ -2495,6 +2505,8 @@ name|m_data
 operator|=
 name|getmode
 argument_list|(
+name|set
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2876,12 +2888,16 @@ begin_block
 block|{
 return|return
 operator|(
+operator|(
 name|entry
 operator|->
 name|fts_statb
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|plan
 operator|->
 name|m_data
