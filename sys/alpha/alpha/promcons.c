@@ -1145,13 +1145,13 @@ argument_list|,
 literal|"promcons"
 argument_list|)
 expr_stmt|;
+block|}
 name|cnadd
 argument_list|(
 operator|&
 name|prom_consdev
 argument_list|)
 expr_stmt|;
-block|}
 name|promcn_attached
 operator|=
 literal|1
@@ -1185,12 +1185,6 @@ argument_list|,
 literal|0600
 argument_list|,
 literal|"promcons"
-argument_list|)
-expr_stmt|;
-name|cnadd
-argument_list|(
-operator|&
-name|prom_consdev
 argument_list|)
 expr_stmt|;
 block|}
