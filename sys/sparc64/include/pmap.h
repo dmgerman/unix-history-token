@@ -24,50 +24,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/tte.h>
+file|<machine/cache.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DCACHE_COLOR_BITS
-value|(1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCACHE_COLORS
-value|(1<< DCACHE_COLOR_BITS)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCACHE_COLOR_MASK
-value|(DCACHE_COLORS - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCACHE_COLOR
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)>> PAGE_SHIFT)& DCACHE_COLOR_MASK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DCACHE_OTHER_COLOR
-parameter_list|(
-name|color
-parameter_list|)
-define|\
-value|((color) ^ DCACHE_COLOR_BITS)
-end_define
+begin_include
+include|#
+directive|include
+file|<machine/tte.h>
+end_include
 
 begin_define
 define|#

@@ -352,7 +352,7 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl_ipi_dcache_page_inval
+name|tl_ipi_cheetah_dcache_page_inval
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -360,7 +360,15 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|tl_ipi_icache_page_inval
+name|tl_ipi_spitfire_dcache_page_inval
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|tl_ipi_spitfire_icache_page_inval
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -424,6 +432,10 @@ name|void
 modifier|*
 name|ipi_dcache_page_inval
 parameter_list|(
+name|void
+modifier|*
+name|func
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|)
@@ -479,7 +491,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|tl_ipi_dcache_page_inval
+name|func
 argument_list|,
 operator|(
 name|u_long
@@ -505,6 +517,10 @@ name|void
 modifier|*
 name|ipi_icache_page_inval
 parameter_list|(
+name|void
+modifier|*
+name|func
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|)
@@ -560,7 +576,7 @@ argument_list|,
 operator|(
 name|u_long
 operator|)
-name|tl_ipi_icache_page_inval
+name|func
 argument_list|,
 operator|(
 name|u_long
@@ -1018,6 +1034,10 @@ name|void
 modifier|*
 name|ipi_dcache_page_inval
 parameter_list|(
+name|void
+modifier|*
+name|func
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|)
@@ -1037,6 +1057,10 @@ name|void
 modifier|*
 name|ipi_icache_page_inval
 parameter_list|(
+name|void
+modifier|*
+name|func
+parameter_list|,
 name|vm_offset_t
 name|pa
 parameter_list|)
