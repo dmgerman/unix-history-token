@@ -175,32 +175,6 @@ define|\
 value|(((sp)->n_type& N_EXT)&& ((sp)->n_type& N_TYPE) != N_UNDF)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|arch_sparc
-end_ifdef
-
-begin_comment
-comment|/* is the relocation entry dependent on a symbol? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IS_SYMBOL_RELOC
-parameter_list|(
-name|rp
-parameter_list|)
-define|\
-value|((rp)->r_extern || \ 	((rp)->r_type>= RELOC_BASE10&& (rp)->r_type<= RELOC_BASE22) || \ 	(rp)->r_type == RELOC_JMP_TBL)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* is the relocation entry dependent on a symbol? */
 end_comment
@@ -215,11 +189,6 @@ parameter_list|)
 define|\
 value|((rp)->r_extern||(rp)->r_baserel||(rp)->r_jmptable)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
