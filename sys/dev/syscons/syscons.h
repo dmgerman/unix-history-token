@@ -1793,7 +1793,7 @@ parameter_list|,
 name|set
 parameter_list|)
 define|\
-value|static struct sc_renderer scrndr_##name##_##mode## = {	\ 		#name, mode,&sw				\ 	};							\ 	DATA_SET(scrndr_set, scrndr_##name##_##mode##);		\ 	DATA_SET(set, scrndr_##name##_##mode##)
+value|static struct sc_renderer scrndr_##name##_##mode = {	\ 		#name, mode,&sw				\ 	};							\ 	DATA_SET(scrndr_set, scrndr_##name##_##mode);		\ 	DATA_SET(set, scrndr_##name##_##mode)
 end_define
 
 begin_define
@@ -1806,7 +1806,7 @@ parameter_list|,
 name|set
 parameter_list|)
 define|\
-value|SET_DECLARE(set, sc_renderer_t);			\ 	static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_add(*list);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_remove(*list);\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name##, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|SET_DECLARE(set, sc_renderer_t);			\ 	static int						\ 	scrndr_##name##_event(module_t mod, int type, void *data) \ 	{							\ 		sc_renderer_t **list;				\ 		int error = 0;					\ 		switch (type) {					\ 		case MOD_LOAD:					\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_add(*list);	\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		case MOD_UNLOAD:				\ 			SET_FOREACH(list, set) {		\ 				error = sc_render_remove(*list);\ 				if (error)			\ 					break;			\ 			}					\ 			break;					\ 		default:					\ 			break;					\ 		}						\ 		return error;					\ 	}							\ 	static moduledata_t scrndr_##name##_mod = {		\ 		"scrndr-" #name,				\ 		scrndr_##name##_event,				\ 		NULL,						\ 	};							\ 	DECLARE_MODULE(scrndr_##name, scrndr_##name##_mod, 	\ 		       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_typedef
