@@ -206,6 +206,16 @@ directive|define
 name|ACPI_USE_NATIVE_DIVIDE
 end_define
 
+begin_function_decl
+name|void
+name|acpi_SetDefaultIntrModel
+parameter_list|(
+name|int
+name|model
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
