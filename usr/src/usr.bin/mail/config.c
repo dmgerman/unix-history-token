@@ -10,7 +10,7 @@ modifier|*
 name|SccsID
 index|[]
 init|=
-literal|"@(#)config.c	1.3 %G%"
+literal|"@(#)config.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,14 @@ block|,
 literal|'o'
 block|,
 name|SN
+block|,
+literal|"ucbcad"
+block|,
+literal|'p'
+block|,
+name|SN
+operator||
+name|BN
 block|,
 literal|"q"
 block|,
