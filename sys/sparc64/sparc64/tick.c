@@ -110,6 +110,12 @@ directive|include
 file|<machine/tick.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/ver.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -440,11 +446,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|wrpr
+if|if
+condition|(
+name|cpu_impl
+operator|>=
+name|CPU_IMPL_ULTRASPARCIII
+condition|)
+name|wr
 argument_list|(
-name|tick
+name|asr24
 argument_list|,
-literal|0
+literal|1L
+operator|<<
+literal|63
 argument_list|,
 literal|0
 argument_list|)

@@ -908,6 +908,17 @@ name|kmdp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * Find out what kind of cpu we have first, for anything that changes 	 * behaviour. 	 */
+name|cpu_impl
+operator|=
+name|VER_IMPL
+argument_list|(
+name|rdpr
+argument_list|(
+name|ver
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize openfirmware (needed for console). 	 */
 name|OF_init
 argument_list|(
