@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mystring.c	5.1 (Berkeley) %G%"
+literal|"@(#)mystring.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	scopyn(from, to, n)	Like scopy, but checks for overflow.  *	strchr(s, c)		Find first occurance of c in s.  *	bcopy(from, to, n)	Copy a block of memory.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
+comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	scopyn(from, to, n)	Like scopy, but checks for overflow.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
 end_comment
 
 begin_include
@@ -67,6 +67,14 @@ end_decl_stmt
 
 begin_comment
 comment|/* zero length string */
+end_comment
+
+begin_comment
+comment|/*  * equal - #defined in mystring.h  */
+end_comment
+
+begin_comment
+comment|/*  * scopy - #defined in mystring.h  */
 end_comment
 
 begin_comment
@@ -127,139 +135,6 @@ operator|*
 name|to
 operator|=
 literal|'\0'
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * strchr - find first occurrence of a character in a string.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYS5
-end_ifndef
-
-begin_function
-name|char
-modifier|*
-name|mystrchr
-parameter_list|(
-name|s
-parameter_list|,
-name|charwanted
-parameter_list|)
-name|char
-specifier|const
-modifier|*
-name|s
-decl_stmt|;
-specifier|register
-name|char
-name|charwanted
-decl_stmt|;
-block|{
-specifier|register
-name|char
-specifier|const
-modifier|*
-name|scan
-decl_stmt|;
-comment|/* 	 * The odd placement of the two tests is so NUL is findable. 	 */
-for|for
-control|(
-name|scan
-operator|=
-name|s
-init|;
-operator|*
-name|scan
-operator|!=
-name|charwanted
-condition|;
-control|)
-comment|/* ++ moved down for opt. */
-if|if
-condition|(
-operator|*
-name|scan
-operator|++
-operator|==
-literal|'\0'
-condition|)
-return|return
-name|NULL
-return|;
-return|return
-operator|(
-name|char
-operator|*
-operator|)
-name|scan
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * bcopy - copy bytes  *  * This routine was derived from code by Henry Spencer.  */
-end_comment
-
-begin_function
-name|void
-name|mybcopy
-parameter_list|(
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|length
-parameter_list|)
-name|pointer
-name|dst
-decl_stmt|;
-specifier|const
-name|pointer
-name|src
-decl_stmt|;
-specifier|register
-name|int
-name|length
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|d
-init|=
-name|dst
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|s
-init|=
-name|src
-decl_stmt|;
-while|while
-condition|(
-operator|--
-name|length
-operator|>=
-literal|0
-condition|)
-operator|*
-name|d
-operator|++
-operator|=
-operator|*
-name|s
-operator|++
 expr_stmt|;
 block|}
 end_function
