@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ftp_var.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ftp_var.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -313,7 +313,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file transfer type */
+comment|/* requested file transfer type */
+end_comment
+
+begin_decl_stmt
+name|int
+name|curtype
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* current file transfer type */
 end_comment
 
 begin_decl_stmt
@@ -417,6 +427,26 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of host connected to */
+end_comment
+
+begin_decl_stmt
+name|int
+name|unix_server
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* server is unix, can use binary for ascii */
+end_comment
+
+begin_decl_stmt
+name|int
+name|unix_proxy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* proxy is unix, can use binary for ascii */
 end_comment
 
 begin_decl_stmt
