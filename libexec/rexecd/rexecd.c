@@ -539,7 +539,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|namep
 decl_stmt|;
