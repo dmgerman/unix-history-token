@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	8.1 (Berkeley) %G%"
+literal|"@(#)utils.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -422,6 +422,34 @@ argument_list|,
 name|to
 operator|.
 name|p_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* Some systems don't unmap on close(2). */
+if|if
+condition|(
+name|munmap
+argument_list|(
+name|p
+argument_list|,
+name|fs
+operator|->
+name|st_size
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|entp
+operator|->
+name|fts_path
 argument_list|,
 name|strerror
 argument_list|(
