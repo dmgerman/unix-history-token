@@ -1230,7 +1230,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"bad block size %d\n"
+literal|"bad block size %ld\n"
 argument_list|,
 name|fssize
 argument_list|)
@@ -1278,7 +1278,7 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"header read failed at %d blocks\n"
+literal|"header read failed at %ld blocks\n"
 argument_list|,
 name|blksread
 argument_list|)
@@ -1688,7 +1688,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s%d"
+literal|"%s%ld"
 argument_list|,
 name|buf
 argument_list|,
@@ -1814,7 +1814,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mount tape volume %d\n"
+literal|"Mount tape volume %ld\n"
 argument_list|,
 name|newvol
 argument_list|)
@@ -1999,7 +1999,7 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"header read failed at %d blocks\n"
+literal|"header read failed at %ld blocks\n"
 argument_list|,
 name|blksread
 argument_list|)
@@ -2032,7 +2032,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong volume (%d)\n"
+literal|"Wrong volume (%ld)\n"
 argument_list|,
 name|tmpbuf
 operator|.
@@ -2205,7 +2205,7 @@ name|dprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Skipping %d duplicate record%s.\n"
+literal|"Skipping %ld duplicate record%s.\n"
 argument_list|,
 name|i
 argument_list|,
@@ -2576,7 +2576,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Level %d dump of %s on %s:%s\n"
+literal|"Level %ld dump of %s on %s:%s\n"
 argument_list|,
 name|spcl
 operator|.
@@ -3737,7 +3737,7 @@ name|dprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Missing address (header) block for %s at %d blocks\n"
+literal|"Missing address (header) block for %s at %ld blocks\n"
 argument_list|,
 name|curfile
 operator|.
@@ -4403,7 +4403,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"partial block read: %d should be %d\n"
+literal|"partial block read: %ld should be %ld\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4829,7 +4829,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Tape block size (%d) %s (%d)\n"
+literal|"Tape block size (%ld) %s (%d)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -4858,7 +4858,7 @@ name|vprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Tape block size is %d\n"
+literal|"Tape block size is %ld\n"
 argument_list|,
 name|ntrec
 argument_list|)
@@ -5818,7 +5818,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"begins with record %d"
+literal|"begins with record %ld"
 argument_list|,
 name|header
 operator|->
@@ -5924,7 +5924,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"; predicted %d blocks, got %d blocks"
+literal|"; predicted %ld blocks, got %ld blocks"
 argument_list|,
 name|predict
 argument_list|,
@@ -6246,7 +6246,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"resync restore, skipped %d blocks\n"
+literal|"resync restore, skipped %ld blocks\n"
 argument_list|,
 name|skipcnt
 argument_list|)

@@ -403,12 +403,15 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s%d%d"
+literal|"%s%ld%lu"
 argument_list|,
 name|TMPHDR
 argument_list|,
 name|i
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ep
 operator|->
 name|e_ino
@@ -1462,8 +1465,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"inode number: %ld\n"
+literal|"inode number: %lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ep
 operator|->
 name|e_ino
