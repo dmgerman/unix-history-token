@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty.c	5.13 (Berkeley) %G%"
+literal|"@(#)tty.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,51 @@ name|int
 name|useraw
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OXTABS
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XTABS
+end_ifdef
+
+begin_comment
+comment|/* SMI uses XTABS. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OXTABS
+value|XTABS
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|OXTABS
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * gettmode --  *	Do terminal type initialization.  */
