@@ -80,13 +80,6 @@ name|_PATH_VOID
 block|,
 name|_PATH_SCORE
 block|,
-ifdef|#
-directive|ifdef
-name|ENEMY
-name|_PATH_ENEMY
-block|,
-endif|#
-directive|endif
 operator|(
 name|char
 operator|*
@@ -116,72 +109,6 @@ literal|0117
 argument_list|)
 expr_stmt|;
 comment|/* only owner can read/write created files */
-if|if
-condition|(
-name|getuid
-argument_list|()
-operator|!=
-name|UID
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Warning: UID (%d) is not equal to current uid.\n"
-argument_list|,
-name|UID
-argument_list|)
-expr_stmt|;
-comment|/* check Phantasia destination directory */
-if|if
-condition|(
-name|stat
-argument_list|(
-name|_PATH_PHANTDIR
-argument_list|,
-operator|&
-name|fbuf
-argument_list|)
-operator|<
-literal|0
-condition|)
-comment|/* not found */
-block|{
-name|Error
-argument_list|(
-literal|"Cannot stat %s.\n"
-argument_list|,
-name|_PATH_PHANTDIR
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-if|if
-condition|(
-operator|(
-name|fbuf
-operator|.
-name|st_mode
-operator|&
-name|S_IFDIR
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* not a directory */
-name|Error
-argument_list|(
-literal|"%s is not a directory.\n"
-argument_list|,
-name|_PATH_PHANTDIR
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
 comment|/* try to create data files */
 name|filename
 operator|=
@@ -646,49 +573,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Wizard:  %s   UID:  %d\n"
-argument_list|,
-name|WIZARD
-argument_list|,
-name|UID
+literal|"Wizard: root UID: 0\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|ENEMY
-name|printf
-argument_list|(
-literal|"Enemy list enabled.\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"Enemy list disabled.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SHELL
-name|printf
-argument_list|(
-literal|"Shell escapes enabled.  Default shell:  %s\n"
-argument_list|,
-name|SHELL
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"Shell escapes disabled.\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|BSD41
