@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.100 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.101 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -581,8 +581,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_ISLOCKED
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -1069,10 +1067,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
 specifier|register
 name|struct
 name|vattr
@@ -2721,10 +2715,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|USES_VOP_ABORTOP
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -2999,12 +2989,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_LOOKUP
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -3605,18 +3589,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
-name|USES_VOP_ACCESS
-expr_stmt|;
-name|USES_VOP_LOCK
-expr_stmt|;
-name|USES_VOP_TRUNCATE
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
-name|USES_VOP_UPDATE
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -5233,12 +5205,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|USES_VOP_VALLOC
-expr_stmt|;
-name|USES_VOP_VFREE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -5844,13 +5810,11 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_rmdir_args
-comment|/* { 		struct vnodeop_desc *a_desc; 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
+comment|/* { 		struct vnode *a_dvp; 		struct vnode *a_vp; 		struct componentname *a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_TRUNCATE
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
@@ -6272,8 +6236,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_READ
-expr_stmt|;
 specifier|register
 name|struct
 name|uio
@@ -6684,8 +6646,6 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-name|USES_VOP_READ
-expr_stmt|;
 if|if
 condition|(
 name|ip
@@ -6968,8 +6928,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 specifier|register
 name|struct
 name|buf
@@ -8366,12 +8324,6 @@ modifier|*
 name|cnp
 decl_stmt|;
 block|{
-name|USES_VOP_UPDATE
-expr_stmt|;
-name|USES_VOP_VALLOC
-expr_stmt|;
-name|USES_VOP_VFREE
-expr_stmt|;
 specifier|register
 name|struct
 name|inode
