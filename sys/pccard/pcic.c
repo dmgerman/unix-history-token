@@ -361,6 +361,12 @@ block|}
 block|,
 comment|/* PNP0E03 */
 block|{
+literal|0x1802a904
+block|,
+name|NULL
+block|}
+block|,
+block|{
 literal|0
 block|}
 block|}
