@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.21 (Berkeley) %G%"
+literal|"@(#)tape.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ directive|include
 file|<ufs/inode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -102,19 +108,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dinode.h>
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<ufs/fs.h>
-end_include
 
 begin_include
 include|#

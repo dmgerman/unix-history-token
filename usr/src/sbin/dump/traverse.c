@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.14 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +82,12 @@ directive|include
 file|<ufs/inode.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -96,25 +102,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/dir.h>
+file|<ufs/ufs/dir.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/dinode.h>
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<ufs/fs.h>
-end_include
 
 begin_include
 include|#
