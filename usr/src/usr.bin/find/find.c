@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.25 (Berkeley) %G%"
+literal|"@(#)find.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|deprecated
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* old or new syntax */
+end_comment
+
+begin_decl_stmt
+name|int
 name|depth
 decl_stmt|;
 end_decl_stmt
@@ -194,12 +204,11 @@ decl_stmt|;
 name|char
 modifier|*
 modifier|*
-name|paths
+name|p
 decl_stmt|,
 modifier|*
 modifier|*
-name|find_getpaths
-argument_list|()
+name|paths
 decl_stmt|;
 name|PLAN
 modifier|*
@@ -229,6 +238,10 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|paths
+operator|=
+name|argv
+expr_stmt|;
 name|ftsoptions
 operator|=
 name|FTS_MULTIPLE
@@ -237,15 +250,67 @@ name|FTS_NOSTAT
 operator||
 name|FTS_PHYSICAL
 expr_stmt|;
-name|paths
+comment|/* 	 * if arguments start with an option, it's new syntax; otherwise, 	 * if has a "-option" anywhere it must be old syntax. 	 */
+if|if
+condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|0
+index|]
+operator|!=
+literal|'-'
+condition|)
+for|for
+control|(
+name|p
 operator|=
-name|find_getpaths
+name|argv
+operator|+
+literal|1
+init|;
+operator|*
+name|p
+condition|;
+operator|++
+name|p
+control|)
+if|if
+condition|(
+operator|*
+operator|*
+name|p
+operator|==
+literal|'-'
+condition|)
+block|{
+name|deprecated
+operator|=
+literal|1
+expr_stmt|;
+name|oldsyntax
 argument_list|(
 operator|&
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/* places to start search */
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|deprecated
+condition|)
+name|newsyntax
+argument_list|(
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
 name|plan
 operator|=
 name|find_formplan
@@ -290,9 +355,6 @@ name|tail
 decl_stmt|,
 modifier|*
 name|new
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|PLAN
 modifier|*
@@ -673,6 +735,11 @@ operator|->
 name|statb
 operator|.
 name|st_dev
+operator|&&
+name|curdev
+operator|!=
+operator|-
+literal|1
 operator|&&
 name|ftsset
 argument_list|(

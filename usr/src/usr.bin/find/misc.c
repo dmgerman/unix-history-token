@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.1 (Berkeley) %G%"
+literal|"@(#)misc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,130 +53,7 @@ file|"find.h"
 end_include
 
 begin_comment
-comment|/*  * find_getpaths --  *	remove the path strings from the command line and returns them in  *	another array.  The find syntax assumes all command arguments up  *	to the first one beginning with a '-', '(' or '!' are pathnames.  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-modifier|*
-name|find_getpaths
-parameter_list|(
-name|argvp
-parameter_list|)
-name|char
-modifier|*
-modifier|*
-modifier|*
-name|argvp
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|argv
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|start
-decl_stmt|;
-comment|/* 	 * find first '-', '(' or '!' to delimit paths; if no paths, it's 	 * an error.  Shift the array back one at the same time, creating 	 * a separate array of pathnames. 	 */
-for|for
-control|(
-name|argv
-operator|=
-operator|*
-name|argvp
-operator|+
-literal|1
-init|;
-condition|;
-operator|++
-name|argv
-control|)
-block|{
-name|argv
-index|[
-operator|-
-literal|1
-index|]
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|argv
-operator|||
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'-'
-operator|||
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'!'
-operator|||
-operator|*
-operator|*
-name|argv
-operator|==
-literal|'('
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|argv
-operator|==
-operator|*
-name|argvp
-operator|+
-literal|1
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|argv
-index|[
-operator|-
-literal|1
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|start
-operator|=
-operator|*
-name|argvp
-expr_stmt|;
-comment|/* save beginning of path array */
-operator|*
-name|argvp
-operator|=
-name|argv
-expr_stmt|;
-comment|/* move argv value */
-return|return
-operator|(
-name|start
-operator|)
-return|;
-comment|/* return path array */
-block|}
-end_function
-
-begin_comment
-comment|/*  * find_subst --  *	Replace occurrences of {} in s1 with s2 and return the result string.  *	Find_subst always returns a newly allocated string which should be  *	freed by the caller.  */
+comment|/*  * find_subst --  *	Replace occurrences of {} in s1 with s2 and return the result string.  */
 end_comment
 
 begin_macro
@@ -228,8 +105,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|realloc
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
+argument_list|()
+decl_stmt|;
 name|plen
 operator|=
 name|strlen
@@ -523,6 +404,10 @@ decl_stmt|,
 modifier|*
 name|malloc
 argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -573,6 +458,14 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|deprecated
+decl_stmt|;
+if|if
+condition|(
+name|deprecated
+condition|)
 operator|(
 name|void
 operator|)
@@ -581,6 +474,17 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: find path-list expression\n"
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: find [-dsx] -f path ... expression\n"
 argument_list|)
 expr_stmt|;
 name|exit
