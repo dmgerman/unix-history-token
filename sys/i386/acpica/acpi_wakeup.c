@@ -1016,6 +1016,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|wakeaddr
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1077,13 +1081,8 @@ name|bus_dmamem_alloc
 argument_list|(
 name|acpi_waketag
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
-name|acpi_wakeaddr
+name|wakeaddr
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|,
@@ -1099,6 +1098,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|acpi_wakeaddr
+operator|=
+operator|(
+name|vm_offset_t
+operator|)
+name|wakeaddr
+expr_stmt|;
 block|}
 end_function
 
