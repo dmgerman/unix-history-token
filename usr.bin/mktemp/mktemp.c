@@ -105,7 +105,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|tmpdir
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|prefix
 decl_stmt|;

@@ -81,7 +81,9 @@ begin_function
 specifier|static
 name|void
 name|login_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -103,7 +105,9 @@ begin_function
 specifier|static
 name|void
 name|logout_usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
