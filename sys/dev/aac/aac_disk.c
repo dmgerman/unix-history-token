@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/aac/aac_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/aac/aacvar.h>
 end_include
 
@@ -653,7 +659,7 @@ end_comment
 
 begin_function
 name|void
-name|aac_complete_bio
+name|aac_biodone
 parameter_list|(
 name|struct
 name|bio
@@ -690,6 +696,34 @@ operator|->
 name|ad_stats
 argument_list|,
 name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|bio_flags
+operator|&
+name|BIO_ERROR
+condition|)
+name|diskerr
+argument_list|(
+name|bp
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|bp
+operator|->
+name|bio_driver1
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|ad_label
 argument_list|)
 expr_stmt|;
 name|biodone
@@ -798,7 +832,7 @@ name|ad_dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/* require that extended translation be enabled  XXX document! */
+comment|/* require that extended translation be enabled - other drivers read the disk! */
 name|sc
 operator|->
 name|ad_size

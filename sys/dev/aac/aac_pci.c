@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/aac/aac_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/aac/aacvar.h>
 end_include
 
@@ -1005,7 +1011,7 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|AAC_CLUSTER_COUNT
+name|AAC_FIB_COUNT
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1043,6 +1049,12 @@ name|out
 goto|;
 block|}
 comment|/*       * Detect the hardware interface version, set up the bus interface indirection.      */
+name|sc
+operator|->
+name|aac_hwif
+operator|=
+name|AAC_HWIF_UNKNOWN
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1148,6 +1160,32 @@ break|break;
 block|}
 break|break;
 block|}
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|aac_hwif
+operator|==
+name|AAC_HWIF_UNKNOWN
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|,
+literal|"unknown hardware type\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/*      * Do bus-independent initialisation.      */
 name|error

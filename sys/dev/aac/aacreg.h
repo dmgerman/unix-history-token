@@ -1590,7 +1590,7 @@ name|struct
 name|FsaRevision
 name|HardwareRevision
 decl_stmt|;
-comment|/* TDB */
+comment|/* TBD */
 name|struct
 name|FsaRevision
 name|BIOSRevision
