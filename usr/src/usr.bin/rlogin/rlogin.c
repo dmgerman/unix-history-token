@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	5.26 (Berkeley) %G%"
+literal|"@(#)rlogin.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2735,7 +2735,7 @@ name|mark
 decl_stmt|;
 name|out
 operator|=
-name|FWRITE
+name|O_RDWR
 expr_stmt|;
 name|rcvd
 operator|=
