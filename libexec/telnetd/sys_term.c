@@ -60,6 +60,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|altlogin
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -7907,9 +7915,21 @@ directive|endif
 name|closelog
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|altlogin
+operator|==
+name|NULL
+condition|)
+block|{
+name|altlogin
+operator|=
+name|_PATH_LOGIN
+expr_stmt|;
+block|}
 name|execv
 argument_list|(
-name|_PATH_LOGIN
+name|altlogin
 argument_list|,
 name|argv
 argument_list|)
@@ -7920,14 +7940,14 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m\n"
 argument_list|,
-name|_PATH_LOGIN
+name|altlogin
 argument_list|)
 expr_stmt|;
 name|fatalperror
 argument_list|(
 name|net
 argument_list|,
-name|_PATH_LOGIN
+name|altlogin
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
