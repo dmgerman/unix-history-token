@@ -37,14 +37,10 @@ name|lock
 block|{
 name|struct
 name|mtx
+modifier|*
 name|lk_interlock
 decl_stmt|;
 comment|/* lock on remaining fields */
-name|struct
-name|mtxf
-name|lk_pad
-decl_stmt|;
-comment|/* padding to keep sizeof constant */
 name|u_int
 name|lk_flags
 decl_stmt|;
@@ -330,17 +326,6 @@ end_define
 
 begin_comment
 comment|/* lock is being drained */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LK_VALID
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* 					 * Lock is initialized.  This is a 					 * temporary hack to support vfs 					 * layering. 					 */
 end_comment
 
 begin_comment

@@ -275,6 +275,11 @@ init|=
 literal|0x1A00000
 block|,
 comment|/* kvm operational limits*/
+name|SI_SUB_LOCK
+init|=
+literal|0x1B00000
+block|,
+comment|/* lockmgr locks */
 name|SI_SUB_CPU
 init|=
 literal|0x2000000
