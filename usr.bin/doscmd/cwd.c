@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI cwd.c,v 2.2 1996/04/08 19:32:25 bostic Exp  *  * $Id: cwd.c,v 1.6 1996/09/23 09:59:23 miff Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI cwd.c,v 2.2 1996/04/08 19:32:25 bostic Exp  *  * $Id: cwd.c,v 1.1 1997/08/09 01:42:38 dyson Exp $  */
 end_comment
 
 begin_include
@@ -270,9 +270,10 @@ name|fatal
 argument_list|(
 literal|"strdup in init_path for %c:%s: %s"
 argument_list|,
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 argument_list|,
 name|base
 argument_list|,
@@ -322,9 +323,10 @@ name|fatal
 argument_list|(
 literal|"malloc in init_path for %c:%s: %s"
 argument_list|,
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 argument_list|,
 name|base
 argument_list|,
@@ -463,9 +465,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 expr_stmt|;
 name|dosname
 index|[
@@ -775,10 +778,11 @@ condition|)
 block|{
 name|drive
 operator|=
+name|drlton
+argument_list|(
 operator|*
 name|where
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
 operator|*
 name|newpath
@@ -807,9 +811,10 @@ operator|*
 name|newpath
 operator|++
 operator|=
+name|drntol
+argument_list|(
 name|diskdrive
-operator|+
-literal|'A'
+argument_list|)
 expr_stmt|;
 operator|*
 name|newpath
@@ -818,6 +823,13 @@ operator|=
 literal|':'
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"dos_makepath: Drive = %d\n"
+argument_list|,
+name|drive
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|drive
@@ -835,9 +847,10 @@ name|D_REDIR
 argument_list|,
 literal|"drive %c invalid\n"
 argument_list|,
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -869,9 +882,10 @@ name|D_REDIR
 argument_list|,
 literal|"no cwd for drive %c\n"
 argument_list|,
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1347,9 +1361,10 @@ name|fatal
 argument_list|(
 literal|"malloc in dos_setcwd for %c:%s: %s"
 argument_list|,
+name|drntol
+argument_list|(
 name|drive
-operator|+
-literal|'A'
+argument_list|)
 argument_list|,
 name|newpath
 argument_list|,
@@ -1457,10 +1472,11 @@ condition|)
 block|{
 name|drive
 operator|=
+name|drlton
+argument_list|(
 operator|*
 name|dospath
-operator|-
-literal|'A'
+argument_list|)
 expr_stmt|;
 name|dospath
 operator|++

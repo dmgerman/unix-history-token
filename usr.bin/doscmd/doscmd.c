@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI doscmd.c,v 2.3 1996/04/08 19:32:30 bostic Exp  *  * $Id: doscmd.c,v 1.3 1997/09/30 22:03:40 jlemon Exp $  */
+comment|/*  * Copyright (c) 1992, 1993, 1996  *	Berkeley Software Design, Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Berkeley Software  *	Design, Inc.  *  * THIS SOFTWARE IS PROVIDED BY Berkeley Software Design, Inc. ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Berkeley Software Design, Inc. BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	BSDI doscmd.c,v 2.3 1996/04/08 19:32:30 bostic Exp  *  * $Id: doscmd.c,v 1.4 1998/02/28 16:02:23 jraynard Exp $  */
 end_comment
 
 begin_include
@@ -1323,20 +1323,16 @@ literal|0
 condition|)
 block|{
 comment|/* can we boot it? */
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Cannot boot from %c: (can't open)\n"
-argument_list|,
-name|booting
-operator|+
-literal|'A'
-argument_list|)
-expr_stmt|;
-name|quit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Cannot boot from %c"
+argument_list|,
+name|drntol
+argument_list|(
+name|booting
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1359,20 +1355,16 @@ operator|!=
 literal|512
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Short read on boot block from %c:\n"
-argument_list|,
-name|booting
-operator|+
-literal|'A'
-argument_list|)
-expr_stmt|;
-name|quit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"Short read on boot block from %c:"
+argument_list|,
+name|drntol
+argument_list|(
+name|booting
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1556,9 +1548,10 @@ if|if
 condition|(
 name|dos_getcwd
 argument_list|(
+name|drlton
+argument_list|(
 literal|'C'
-operator|-
-literal|'A'
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
@@ -1608,9 +1601,10 @@ literal|"/"
 expr_stmt|;
 name|init_path
 argument_list|(
+name|drlton
+argument_list|(
 literal|'C'
-operator|-
-literal|'A'
+argument_list|)
 argument_list|,
 operator|(
 name|u_char
@@ -1691,9 +1685,10 @@ literal|"PATH=C:%s"
 argument_list|,
 name|dos_getcwd
 argument_list|(
+name|drlton
+argument_list|(
 literal|'C'
-operator|-
-literal|'A'
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1882,18 +1877,20 @@ if|if
 condition|(
 name|dos_getcwd
 argument_list|(
+name|drlton
+argument_list|(
 literal|'R'
-operator|-
-literal|'A'
+argument_list|)
 argument_list|)
 operator|==
 name|NULL
 condition|)
 name|init_path
 argument_list|(
+name|drlton
+argument_list|(
 literal|'R'
-operator|-
-literal|'A'
+argument_list|)
 argument_list|,
 operator|(
 name|u_char
