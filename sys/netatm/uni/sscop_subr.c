@@ -379,7 +379,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Put element (sequence number) into host order 	 */
-name|NTOHL
+operator|*
+name|pelem
+operator|=
+name|ntohl
 argument_list|(
 operator|*
 name|pelem

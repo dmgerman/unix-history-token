@@ -3831,7 +3831,11 @@ decl_stmt|;
 name|sscop_seq
 name|nps
 decl_stmt|;
-name|NTOHL
+name|pp
+operator|->
+name|poll_ns
+operator|=
+name|ntohl
 argument_list|(
 name|pp
 operator|->
