@@ -710,7 +710,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|access,		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr)
+value|struct sysctl_oid_list sysctl_##parent##_##name##_children;	    \ 	SYSCTL_OID(parent, nbr, name, CTLTYPE_NODE|(access),		    \ 		   (void*)&sysctl_##parent##_##name##_children, 0, handler, \ 		   "N", descr)
 end_define
 
 begin_define
@@ -733,7 +733,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|access,	    \ 	0, 0, handler, "N", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_NODE|(access),	    \ 	0, 0, handler, "N", descr)
 end_define
 
 begin_comment
@@ -760,7 +760,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|access, \ 		arg, len, sysctl_handle_string, "A", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_STRING|(access), \ 		arg, len, sysctl_handle_string, "A", descr)
 end_define
 
 begin_define
@@ -785,7 +785,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|access,	    \ 	arg, len, sysctl_handle_string, "A", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|(access),	    \ 	arg, len, sysctl_handle_string, "A", descr)
 end_define
 
 begin_comment
@@ -812,7 +812,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|access, \ 		ptr, val, sysctl_handle_int, "I", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_INT|(access), \ 		ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_define
@@ -837,7 +837,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|access,	    \ 	ptr, val, sysctl_handle_int, "I", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_INT|(access),	    \ 	ptr, val, sysctl_handle_int, "I", descr)
 end_define
 
 begin_comment
@@ -864,7 +864,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|access, \ 		ptr, val, sysctl_handle_int, "IU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_UINT|(access), \ 		ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_define
@@ -889,7 +889,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|access,	    \ 	ptr, val, sysctl_handle_int, "IU", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_UINT|(access),	    \ 	ptr, val, sysctl_handle_int, "IU", descr)
 end_define
 
 begin_comment
@@ -916,7 +916,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|access, \ 		ptr, val, sysctl_handle_long, "L", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_LONG|(access), \ 		ptr, val, sysctl_handle_long, "L", descr)
 end_define
 
 begin_define
@@ -939,7 +939,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|access,	    \ 	ptr, 0, sysctl_handle_long, "L", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_LONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "L", descr)
 end_define
 
 begin_comment
@@ -966,7 +966,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|access, \ 		ptr, val, sysctl_handle_long, "LU", descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_ULONG|(access), \ 		ptr, val, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_define
@@ -989,7 +989,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|access,	    \ 	ptr, 0, sysctl_handle_long, "LU", descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_ULONG|(access),	    \ 	ptr, 0, sysctl_handle_long, "LU", descr)
 end_define
 
 begin_comment
@@ -1018,7 +1018,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, len, sysctl_handle_opaque, fmt, descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \ 		ptr, len, sysctl_handle_opaque, fmt, descr)
 end_define
 
 begin_define
@@ -1045,7 +1045,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, len, sysctl_handle_opaque, fmt, descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	    \ 	ptr, len, sysctl_handle_opaque, fmt, descr)
 end_define
 
 begin_comment
@@ -1072,7 +1072,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|access, \ 		ptr, sizeof(struct type), sysctl_handle_opaque, \ 		"S," #type, descr)
+value|SYSCTL_OID(parent, nbr, name, CTLTYPE_OPAQUE|(access), \ 		ptr, sizeof(struct type), sysctl_handle_opaque, \ 		"S," #type, descr)
 end_define
 
 begin_define
@@ -1097,7 +1097,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|access,	    \ 	ptr, sizeof(struct type), sysctl_handle_opaque, "S," #type, descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_OPAQUE|(access),	    \ 	ptr, sizeof(struct type), sysctl_handle_opaque, "S," #type, descr)
 end_define
 
 begin_comment
@@ -1128,7 +1128,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|SYSCTL_OID(parent, nbr, name, access, \ 		ptr, arg, handler, fmt, descr)
+value|SYSCTL_OID(parent, nbr, name, (access), \ 		ptr, arg, handler, fmt, descr)
 end_define
 
 begin_define
@@ -1157,7 +1157,7 @@ parameter_list|,
 name|descr
 parameter_list|)
 define|\
-value|sysctl_add_oid(ctx, parent, nbr, name, access,			    \ 	ptr, arg, handler, fmt, descr)
+value|sysctl_add_oid(ctx, parent, nbr, name, (access),			    \ 	ptr, arg, handler, fmt, descr)
 end_define
 
 begin_endif
