@@ -402,61 +402,6 @@ begin_comment
 comment|/* POST_ADDR */
 end_comment
 
-begin_comment
-comment|/*  * These are all temps for debugging...  * #define GUARD_INTS  */
-end_comment
-
-begin_comment
-comment|/*  * This macro traps unexpected INTs to a specific CPU, eg. GUARD_CPU.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GUARD_INTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|GUARD_CPU
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAYBE_PANIC
-parameter_list|(
-name|irq_num
-parameter_list|)
-define|\
-value|cmpl	$GUARD_CPU, _cpuid ;	\ 	jne	9f ;			\ 	cmpl	$1, _ok_test1 ;		\ 	jne	9f ;			\ 	pushl	lapic_isr3 ;		\ 	pushl	lapic_isr2 ;		\ 	pushl	lapic_isr1 ;		\ 	pushl	lapic_isr0 ;		\ 	pushl	lapic_irr3 ;		\ 	pushl	lapic_irr2 ;		\ 	pushl	lapic_irr1 ;		\ 	pushl	lapic_irr0 ;		\ 	pushl	$irq_num ;		\ 	pushl	_cpuid ;		\ 	pushl	$panic_msg ;		\ 	call	_printf ;		\ 	addl	$44, %esp ;		\ 9:
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MAYBE_PANIC
-parameter_list|(
-name|irq_num
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GUARD_INTS */
-end_comment
-
 begin_endif
 endif|#
 directive|endif
