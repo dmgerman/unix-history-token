@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.5 (Berkeley) %G%  *  * from: $Header: device.h,v 1.7 92/11/17 01:55:17 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)device.h	7.6 (Berkeley) %G%  *  * from: $Header: device.h,v 1.9 93/02/01 19:34:50 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -70,23 +70,41 @@ modifier|*
 name|dv_parent
 decl_stmt|;
 comment|/* pointer to parent device */
-name|int
-name|dv_evcnt
-index|[
-literal|2
-index|]
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* `event' counters (use zero or more per device instance, as needed) */
+end_comment
+
+begin_struct
+struct|struct
+name|evcnt
+block|{
+name|struct
+name|evcnt
+modifier|*
+name|ev_next
 decl_stmt|;
-comment|/* event counters */
+comment|/* linked list */
+name|struct
+name|device
+modifier|*
+name|ev_dev
+decl_stmt|;
+comment|/* associated device */
+name|int
+name|ev_count
+decl_stmt|;
+comment|/* how many have occurred */
 name|char
-name|dv_evnam
-index|[
-literal|2
-index|]
+name|ev_name
 index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* and their names */
+comment|/* what to call them (systat display) */
 block|}
 struct|;
 end_struct
@@ -254,16 +272,6 @@ modifier|*
 name|cd_aux
 decl_stmt|;
 comment|/* additional driver, if any */
-name|char
-name|cd_evnam
-index|[
-literal|2
-index|]
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* names for dv_evnam */
 name|int
 name|cd_ndevs
 decl_stmt|;
@@ -328,6 +336,32 @@ begin_comment
 comment|/* print " not supported\n" */
 end_comment
 
+begin_comment
+comment|/*  * Pseudo-device attach information (function + number of pseudo-devs).  */
+end_comment
+
+begin_struct
+struct|struct
+name|pdevinit
+block|{
+name|void
+argument_list|(
+argument|*pdev_attach
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+name|pdev_count
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 name|struct
 name|device
@@ -338,6 +372,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* head of list of all devices */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|evcnt
+modifier|*
+name|allevents
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head of list of all events */
 end_comment
 
 begin_decl_stmt
@@ -434,6 +480,28 @@ name|void
 operator|*
 operator|,
 name|cfprint_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|evcnt_attach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|device
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+expr|struct
+name|evcnt
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
