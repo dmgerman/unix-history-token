@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.61 1999/07/06 19:23:13 des Exp $ */
+comment|/* $Id: if_ppp.c,v 1.62 1999/08/06 13:53:02 brian Exp $ */
 end_comment
 
 begin_comment
@@ -2842,26 +2842,6 @@ name|EINVAL
 expr_stmt|;
 else|else
 block|{
-if|if
-condition|(
-name|ifr
-operator|->
-name|ifr_mtu
-operator|<
-name|IF_MINMTU
-operator|||
-name|ifr
-operator|->
-name|ifr_mtu
-operator|>
-name|IF_MAXMTU
-condition|)
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-block|{
 name|sc
 operator|->
 name|sc_if
@@ -2888,7 +2868,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 break|break;
 case|case
