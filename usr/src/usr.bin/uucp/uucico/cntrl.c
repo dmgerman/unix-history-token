@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.8 (Berkeley) %G%"
+literal|"@(#)cntrl.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1310,6 +1310,13 @@ condition|(
 name|narg
 operator|<
 literal|5
+operator|||
+name|W_TYPE
+index|[
+literal|1
+index|]
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|char
@@ -1349,11 +1356,13 @@ argument_list|,
 name|rqstr
 argument_list|)
 expr_stmt|;
-name|logent
+name|assert
 argument_list|(
+literal|"CMD FILE CORRUPTED"
+argument_list|,
 name|Wfile
 argument_list|,
-literal|"CMD FILE CORRUPTED"
+name|narg
 argument_list|)
 expr_stmt|;
 name|Wfile
@@ -1965,7 +1974,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE1
+name|W_FILE2
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -2445,7 +2454,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE1
+name|W_FILE2
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -2469,15 +2478,6 @@ argument_list|,
 name|role
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|msg
-index|[
-literal|1
-index|]
-operator|!=
-literal|'4'
-condition|)
 name|unlinkdf
 argument_list|(
 name|W_DFILE
@@ -2706,11 +2706,13 @@ argument_list|,
 name|rqstr
 argument_list|)
 expr_stmt|;
-name|logent
+name|assert
 argument_list|(
+literal|"CMD FILE CORRUPTED"
+argument_list|,
 name|Wfile
 argument_list|,
-literal|"CMD FILE CORRUPTED"
+name|i
 argument_list|)
 expr_stmt|;
 name|Wfile
@@ -3346,7 +3348,7 @@ name|mailopt
 argument_list|,
 name|W_USER
 argument_list|,
-name|W_FILE1
+name|W_FILE2
 argument_list|,
 name|Rmtname
 argument_list|,
@@ -3760,11 +3762,13 @@ argument_list|,
 name|rqstr
 argument_list|)
 expr_stmt|;
-name|logent
+name|assert
 argument_list|(
+literal|"CMD FILE CORRUPTED"
+argument_list|,
 name|Wfile
 argument_list|,
-literal|"CMD FILE CORRUPTED"
+name|i
 argument_list|)
 expr_stmt|;
 name|Wfile
