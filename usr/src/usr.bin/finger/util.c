@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.16 (Berkeley) %G%"
+literal|"@(#)util.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -794,13 +794,15 @@ operator|&&
 operator|(
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|NULL
 argument_list|,
 name|O_RDWR
 argument_list|,
 literal|0
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -948,7 +950,7 @@ argument_list|,
 operator|&
 name|data
 argument_list|,
-name|R_PUT
+literal|0
 argument_list|)
 condition|)
 name|err
