@@ -85,7 +85,7 @@ name|i
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Testprogram for stand-alone hp or up driver\n"
+literal|"Testprogram for stand-alone hp or up driver\n\n"
 argument_list|)
 expr_stmt|;
 name|askunit
@@ -194,6 +194,23 @@ name|SAIODEVDATA
 argument_list|,
 operator|&
 name|st
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Device data: #cylinders=%d, #tracks=%d, #sectors=%d\n"
+argument_list|,
+name|st
+operator|->
+name|ncyl
+argument_list|,
+name|st
+operator|->
+name|ntrak
+argument_list|,
+name|st
+operator|->
+name|nsect
 argument_list|)
 expr_stmt|;
 name|chunk
