@@ -1969,7 +1969,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"interface %s does not exist.."
+literal|"interface %s does not exist"
 argument_list|,
 name|name
 argument_list|)
