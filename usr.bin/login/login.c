@@ -3514,12 +3514,31 @@ name|pw_shell
 operator|==
 literal|'\0'
 condition|)
+block|{
 name|pwd
 operator|->
 name|pw_shell
 operator|=
 name|_PATH_BSHELL
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|shell
+operator|==
+literal|'\0'
+condition|)
+comment|/* Not overridden */
+name|strcpy
+argument_list|(
+name|shell
+argument_list|,
+name|pwd
+operator|->
+name|pw_shell
+argument_list|)
+expr_stmt|;
+block|}
 end_if
 
 begin_expr_stmt
