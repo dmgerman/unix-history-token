@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.78 1996/12/18 01:37:22 se Exp $  **/
+comment|/**  ** Copyright (c) 1995  **      Michael Smith, msmith@atrad.adelaide.edu.au.  All rights reserved.  **  ** This code contains a module marked :   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.   ** As such, it contains code subject to the above copyrights.  ** The module and its copyright can be found below.  **   ** Redistribution and use in source and binary forms, with or without  ** modification, are permitted provided that the following conditions  ** are met:  ** 1. Redistributions of source code must retain the above copyright  **    notice, this list of conditions and the following disclaimer as  **    the first lines of this file unmodified.  ** 2. Redistributions in binary form must reproduce the above copyright  **    notice, this list of conditions and the following disclaimer in the  **    documentation and/or other materials provided with the distribution.  ** 3. All advertising materials mentioning features or use of this software  **    must display the following acknowledgment:  **      This product includes software developed by Michael Smith.  ** 4. The name of the author may not be used to endorse or promote products  **    derived from this software without specific prior written permission.  **  ** THIS SOFTWARE IS PROVIDED BY MICHAEL SMITH ``AS IS'' AND ANY EXPRESS OR  ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  ** IN NO EVENT SHALL MICHAEL SMITH BE LIABLE FOR ANY DIRECT, INDIRECT,  ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  **  **      $Id: userconfig.c,v 1.79 1996/12/23 12:33:08 joerg Exp $  **/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/**  ** USERCONFIG  **  ** Kernel boot-time configuration manipulation t
 end_comment
 
 begin_comment
-comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@atrad.adelaide.edu.au  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That the only tunable parameter for PCI devices are their flags.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  PCI devices are   ** listed under a seperate heading for informational purposes only.  ** To date, there is no means for changing the behaviour of PCI drivers  ** from UserConfig.  **  ** Note that some EISA devices probably fall into this category as well,  ** and in fact the actual bus supported by some drivers is less than clear.  ** A longer-term goal might be to list drivers by instance rather than  ** per bus-presence.  **   ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel.  **  ** XXX - TODO:  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  **  ** - Only display headings with devices under them. (difficult)  **/
+comment|/**  ** USERCONFIG, visual mode.  **  **   msmith@atrad.adelaide.edu.au  **  ** Look for "EDIT THIS LIST" to add to the list of known devices  **   **  ** There are a number of assumptions made in this code.  **   ** - That the console supports a minimal set of ANSI escape sequences  **   (See the screen manipulation section for a summary)  **   and has at least 24 rows.  ** - That values less than or equal to zero for any of the device  **   parameters indicate that the driver does not use the parameter.  ** - That the only tunable parameter for PCI devices are their flags.  ** - That flags are _always_ editable.  **  ** Devices marked as disabled are imported as such.  PCI devices are   ** listed under a seperate heading for informational purposes only.  ** To date, there is no means for changing the behaviour of PCI drivers  ** from UserConfig.  **  ** Note that some EISA devices probably fall into this category as well,  ** and in fact the actual bus supported by some drivers is less than clear.  ** A longer-term goal might be to list drivers by instance rather than  ** per bus-presence.  **   ** For this tool to be useful, the list of devices below _MUST_ be updated   ** when a new driver is brought into the kernel.  It is not possible to   ** extract this information from the drivers in the kernel.  **  ** XXX - TODO:  **   ** - Display _what_ a device conflicts with.  ** - Implement page up/down (as what?)  ** - Wizard mode (no restrictions)  ** - Find out how to put syscons back into low-intensity mode so that the  **   !b escape is useful on the console.  (It seems to be that it actually  **   gets low/high intensity backwards. That looks OK.)  **  ** - Only display headings with devices under them. (difficult)  **/
 end_comment
 
 begin_include
@@ -1509,6 +1509,17 @@ directive|define
 name|KEY_UNZOOM
 value|11
 end_define
+
+begin_define
+define|#
+directive|define
+name|KEY_HELP
+value|12
+end_define
+
+begin_comment
+comment|/* duh? */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -3925,7 +3936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  ** Screen-manipulation stuff  **  ** This is the basic screen layout :  **  **     0    5   10   15   20   25   30   35   40   45   50   55   60   67   70   75  **     |....|....|....|....|....|....|....|....|....|....|....|....|....|....|....|....  **    +--------------------------------------------------------------------------------+  ** 0 -|---Active Drivers----------------------------xx Conflicts------Dev---IRQ--Port--|  ** 1 -| ........................                                    .......  ..  0x....|  ** 2 -| ........................                                    .......  ..  0x....|  ** 3 -| ........................                                    .......  ..  0x....|  ** 4 -| ........................                                    .......  ..  0x....|  ** 5 -| ........................                                    .......  ..  0x....|  ** 6 -| ........................                                    .......  ..  0x....|  ** 7 -| ........................                                    .......  ..  0x....|  ** 8 -| ........................                                    .......  ..  0x....|  ** 9 -|---Inactive Drivers--------------------------------------------Dev--------------|  ** 10-| ........................                                    .......            |  ** 11-| ........................                                    .......            |  ** 12-| ........................                                    .......            |  ** 13-| ........................                                    .......            |  ** 14-| ........................                                    .......            |  ** 15-| ........................                                    .......            |  ** 16-| ........................                                    .......            |  ** 17-|------------------------------------------------------UP-DOWN-------------------|  ** 18-| Relevant parameters for the current device                                     |  ** 19-|                                                                                |  ** 20-|                                                                                |  ** 21-|--------------------------------------------------------------------------------|  ** 22-| Help texts go here                                                             |  ** 23-|                                                                                |  **    +--------------------------------------------------------------------------------+  **  ** Help texts  **  ** On a collapsed comment :  **  ** [Enter] Expand device list      [z]   Expand all lists  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On an expanded comment :  **   ** [Enter] Collapse device list    [Z]   Collapse all lists  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On a comment with no followers  **  **   ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On a device in the active list  **  ** [Enter] Edit device parameters  [DEL] Disable device  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On a device in the inactive list  **  ** [Enter] Enable device  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** While editing parameters  **  **<parameter-specific help here>  ** [TAB]   Change fields           [Q]   Save device parameters  **/
+comment|/**  ** Screen-manipulation stuff  **  ** This is the basic screen layout :  **  **     0    5   10   15   20   25   30   35   40   45   50   55   60   67   70   75  **     |....|....|....|....|....|....|....|....|....|....|....|....|....|....|....|....  **    +--------------------------------------------------------------------------------+  ** 0 -|---Active Drivers----------------------------xx Conflicts------Dev---IRQ--Port--|  ** 1 -| ........................                                    .......  ..  0x....|  ** 2 -| ........................                                    .......  ..  0x....|  ** 3 -| ........................                                    .......  ..  0x....|  ** 4 -| ........................                                    .......  ..  0x....|  ** 5 -| ........................                                    .......  ..  0x....|  ** 6 -| ........................                                    .......  ..  0x....|  ** 7 -| ........................                                    .......  ..  0x....|  ** 8 -| ........................                                    .......  ..  0x....|  ** 9 -|---Inactive Drivers--------------------------------------------Dev--------------|  ** 10-| ........................                                    .......            |  ** 11-| ........................                                    .......            |  ** 12-| ........................                                    .......            |  ** 13-| ........................                                    .......            |  ** 14-| ........................                                    .......            |  ** 15-| ........................                                    .......            |  ** 16-| ........................                                    .......            |  ** 17-|------------------------------------------------------UP-DOWN-------------------|  ** 18-| Relevant parameters for the current device                                     |  ** 19-|                                                                                |  ** 20-|                                                                                |  ** 21-|--------------------------------------------------------------------------------|  ** 22-| Help texts go here                                                             |  ** 23-|                                                                                |  **    +--------------------------------------------------------------------------------+  **  ** Help texts  **  ** On a collapsed comment :  **  ** [Enter] Expand device list      [z]   Expand all lists  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On an expanded comment :  **   ** [Enter] Collapse device list    [Z]   Collapse all lists  ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On a comment with no followers  **  **   ** [TAB]   Change fields           [Q]   Save and Exit  **  ** On a device in the active list  **  ** [Enter] Edit device parameters  [DEL] Disable device  ** [TAB]   Change fields           [Q]   Save and Exit             [?] Help  **  ** On a device in the inactive list  **  ** [Enter] Enable device  ** [TAB]   Change fields           [Q]   Save and Exit             [?] Help  **  ** While editing parameters  **  **<parameter-specific help here>  ** [TAB]   Change fields           [Q]   Save device parameters  **/
 end_comment
 
 begin_comment
@@ -5067,9 +5078,10 @@ name|list
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* NULL -> don't draw empty help string */
 name|list
 operator|=
 name|nextent
@@ -5296,7 +5308,7 @@ argument_list|)
 expr_stmt|;
 name|masterhelp
 argument_list|(
-literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save and Exit"
+literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save and Exit             [!b?!n] Help"
 argument_list|)
 expr_stmt|;
 name|redrawactive
@@ -7033,6 +7045,336 @@ comment|/* mark as changed */
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|helptext
+index|[]
+init|=
+block|{
+literal|"                Using the UserConfig kernel settings editor"
+block|,
+literal|"                -------------------------------------------"
+block|,
+literal|""
+block|,
+literal|"VISUAL MODE:"
+block|,
+literal|""
+block|,
+literal|"- - Layout -"
+block|,
+literal|""
+block|,
+literal|"The screen displays a list of available drivers, divided into two"
+block|,
+literal|"scrolling lists: Active Drivers, and Inactive Drivers.  Each list is"
+block|,
+literal|"by default collapsed and can be expanded to show all the drivers"
+block|,
+literal|"available in each category.  The parameters for the currently selected"
+block|,
+literal|"driver are shown at the bottom of the screen."
+block|,
+literal|""
+block|,
+literal|"- - Moving around -"
+block|,
+literal|""
+block|,
+literal|"To move in the current list, use the UP and DOWN cursor keys to select"
+block|,
+literal|"an item (the selected item will be highlighted).  If the item is a"
+block|,
+literal|"category name, you may alternatively expand or collapse the list of"
+block|,
+literal|"drivers for that category by pressing [!bRETURN!n].  Once the category is"
+block|,
+literal|"expanded, you can select each driver in the same manner and either:"
+block|,
+literal|""
+block|,
+literal|"  - change its parameters using [!bRETURN!n]"
+block|,
+literal|"  - move it to the Inactive list using [!bDEL!n]"
+block|,
+literal|""
+block|,
+literal|"Use the [!bTAB!n] key to toggle between the Active and Inactive list; if"
+block|,
+literal|"you need to move a driver from the Inactive list back to the Active"
+block|,
+literal|"one, select it in the Inactive list, using [!bTAB!n] to change lists if"
+block|,
+literal|"necessary, and press [!bRETURN!n] -- the device will me moved to its"
+block|,
+literal|"category in the Active list."
+block|,
+literal|""
+block|,
+literal|"- - Altering the list/parameters -"
+block|,
+literal|""
+block|,
+literal|"Any drivers for devices not installed in your system should be moved"
+block|,
+literal|"to the Inactive list, until there are no remaining parameter conflicts"
+block|,
+literal|"between the drivers, as indicated at the top."
+block|,
+literal|""
+block|,
+literal|"Once the list of Active drivers only contains entries for the devices"
+block|,
+literal|"present in your system, you can set their parameters (Interrupt, DMA"
+block|,
+literal|"channel, I/O addresses).  To do this, select the driver and press"
+block|,
+literal|"[!bRETURN!n]: it is now possible to edit the settings the settings at the"
+block|,
+literal|"bottom of the screen.  Use [!bTAB!n] to change fields, and when you are"
+block|,
+literal|"finished, use [!bQ!n] to return to the list."
+block|,
+literal|""
+block|,
+literal|"- - Saving changes -"
+block|,
+literal|""
+block|,
+literal|"When all settings seem correct, and you wish to proceed with the"
+block|,
+literal|"kernel device probing and boot, press [!bQ!n] -- you will be asked to"
+block|,
+literal|"confirm your choice."
+block|,
+literal|""
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/**  ** helpscreen  **  ** Displays help text onscreen for people that are confused, using a simple  ** pager.  **/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|helpscreen
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|topline
+init|=
+literal|0
+decl_stmt|;
+comment|/* where we are in the text */
+name|int
+name|line
+decl_stmt|,
+name|c
+decl_stmt|,
+name|delta
+init|=
+literal|1
+decl_stmt|;
+name|char
+name|prompt
+index|[
+literal|80
+index|]
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+comment|/* loop until user quits */
+block|{
+comment|/* display help text */
+if|if
+condition|(
+name|delta
+condition|)
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+comment|/* remove everything else */
+for|for
+control|(
+name|line
+operator|=
+name|topline
+init|;
+operator|(
+name|line
+operator|<
+operator|(
+name|topline
+operator|+
+literal|24
+operator|)
+operator|)
+operator|&&
+operator|(
+name|helptext
+index|[
+name|line
+index|]
+operator|)
+condition|;
+name|line
+operator|++
+control|)
+name|putxy
+argument_list|(
+literal|0
+argument_list|,
+name|line
+operator|-
+name|topline
+argument_list|,
+name|helptext
+index|[
+name|line
+index|]
+argument_list|)
+expr_stmt|;
+name|delta
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* prompt */
+name|sprintf
+argument_list|(
+name|prompt
+argument_list|,
+literal|"!i --%s-- [U]p [D]own [Q]uit !n"
+argument_list|,
+name|helptext
+index|[
+name|line
+index|]
+condition|?
+literal|"MORE"
+else|:
+literal|"END"
+argument_list|)
+expr_stmt|;
+name|putxy
+argument_list|(
+literal|0
+argument_list|,
+literal|24
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|getchar
+argument_list|()
+expr_stmt|;
+comment|/* so what do they say? */
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'u'
+case|:
+case|case
+literal|'U'
+case|:
+case|case
+literal|'b'
+case|:
+case|case
+literal|'B'
+case|:
+comment|/* wired into 'more' users' fingers */
+if|if
+condition|(
+name|topline
+operator|>
+literal|0
+condition|)
+comment|/* room to go up? */
+block|{
+name|topline
+operator|-=
+literal|24
+expr_stmt|;
+if|if
+condition|(
+name|topline
+operator|<
+literal|0
+condition|)
+comment|/* don't go too far */
+name|topline
+operator|=
+literal|0
+expr_stmt|;
+name|delta
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'d'
+case|:
+case|case
+literal|'D'
+case|:
+case|case
+literal|' '
+case|:
+comment|/* expected by most people */
+if|if
+condition|(
+name|helptext
+index|[
+name|line
+index|]
+condition|)
+comment|/* maybe more below? */
+block|{
+name|topline
+operator|+=
+literal|24
+expr_stmt|;
+name|delta
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break;
+case|case
+literal|'q'
+case|:
+case|case
+literal|'Q'
+case|:
+name|redraw
+argument_list|()
+expr_stmt|;
+comment|/* restore the screen */
+return|return;
+block|}
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/**   ** High-level control functions  **/
 end_comment
@@ -7516,6 +7858,15 @@ operator|(
 name|KEY_REDRAW
 operator|)
 return|;
+case|case
+literal|'?'
+case|:
+comment|/* helptext */
+return|return
+operator|(
+name|KEY_HELP
+operator|)
+return|;
 block|}
 block|}
 block|}
@@ -7855,7 +8206,7 @@ argument_list|)
 expr_stmt|;
 name|masterhelp
 argument_list|(
-literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save and Exit"
+literal|"  [!bTAB!n]   Change fields           [!bQ!n]   Save and Exit             [!b?!n] Help"
 argument_list|)
 expr_stmt|;
 name|putxy
@@ -8192,18 +8543,27 @@ literal|0
 expr_stmt|;
 comment|/* shouldn't happen... */
 block|}
-if|if
+comment|/* handle returns that are the same for both modes */
+switch|switch
 condition|(
 name|ret
-operator|==
-name|KEY_EXIT
 condition|)
 block|{
+case|case
+name|KEY_HELP
+case|:
+name|helpscreen
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|KEY_EXIT
+case|:
 name|i
 operator|=
 name|yesnocancel
 argument_list|(
-literal|" Save these parameters before exiting? (Yes/No/Cancel) "
+literal|" Save these parameters before exiting? ([!bY!n]es/[!bN!n]o/[!bC!n]ancel) "
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -8264,6 +8624,7 @@ literal|1
 operator|)
 return|;
 block|}
+break|break;
 block|}
 block|}
 block|}
@@ -8279,7 +8640,7 @@ comment|/* VISUAL_USERCONFIG */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.78 1996/12/18 01:37:22 se Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * Many additional changes by Bruce Evans  *  * This code is derived from software contributed by the  * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Bruce Evans.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.79 1996/12/23 12:33:08 joerg Exp $  */
 end_comment
 
 begin_include
@@ -10413,6 +10774,10 @@ name|int
 name|curr_item
 decl_stmt|,
 name|first_time
+decl_stmt|,
+name|extended
+init|=
+literal|0
 decl_stmt|;
 specifier|static
 name|char
@@ -10461,11 +10826,13 @@ name|int
 name|c
 decl_stmt|,
 name|i
-decl_stmt|,
-name|extended
-init|=
-literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|extended
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -10634,6 +11001,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* move the cursor out of the way */
+block|}
 name|c
 operator|=
 name|getchar
