@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ray.c,v 1.25 2000/05/07 15:00:06 dmlb Exp $  *  */
+comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_rayvar.h,v 1.1 2000/05/07 15:12:18 dmlb Exp $  *  */
 end_comment
 
 begin_comment
-comment|/*  * Network parameters, used twice in sotfc to store what we want and what  * we have.  *  * XXX promisc in here too?  * XXX sc_station_addr in here too (for changing mac address)  */
+comment|/*  * Network parameters, used twice in sotfc to store what we want and what  * we have.  */
 end_comment
 
 begin_struct
@@ -140,10 +140,6 @@ name|int
 name|unit
 decl_stmt|;
 comment|/* Unit number			*/
-name|u_char
-name|gone
-decl_stmt|;
-comment|/* 1 = Card bailed out		*/
 name|caddr_t
 name|maddr
 decl_stmt|;
@@ -152,10 +148,6 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Start up flags		*/
-name|int
-name|translation
-decl_stmt|;
-comment|/* Packet translation types	*/
 if|#
 directive|if
 operator|(
@@ -175,6 +167,14 @@ comment|/* Map info for common memory	*/
 endif|#
 directive|endif
 comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
+name|u_char
+name|gone
+decl_stmt|;
+comment|/* 1 = Card bailed out		*/
+name|int
+name|translation
+decl_stmt|;
+comment|/* Packet translation types	*/
 name|struct
 name|ray_ecf_startup_v5
 name|sc_ecf_startup
@@ -424,8 +424,7 @@ name|RAY_COM_NEEDS_TIMO
 parameter_list|(
 name|cmd
 parameter_list|)
-define|\
-value|(cmd == RAY_CMD_DOWNLOAD_PARAMS) ||	\ 	(cmd == RAY_CMD_UPDATE_PARAMS) ||	\ 	(cmd == RAY_CMD_UPDATE_MCAST)
+value|(		\ 	 (cmd == RAY_CMD_DOWNLOAD_PARAMS) ||	\ 	 (cmd == RAY_CMD_UPDATE_PARAMS) ||	\ 	 (cmd == RAY_CMD_UPDATE_MCAST)		\ 	)
 end_define
 
 begin_comment
@@ -465,7 +464,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Indirections for reading/writing shared memory - from NetBSD/if_ray.c */
+comment|/* Indirections for reading/writing memory - from NetBSD/if_ray.c */
 end_comment
 
 begin_ifndef
@@ -496,6 +495,82 @@ begin_comment
 comment|/* offsetof */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|RAY_NEED_CM_REMAPPING
+end_if
+
+begin_define
+define|#
+directive|define
+name|ATTR_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|ray_attr_read_1((sc), (off))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|ray_attr_write_1((sc), (off), (val))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ATTR_READ_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|((u_int8_t)bus_space_read_1((sc)->am_bst, (sc)->am_bsh, (off)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATTR_WRITE_1
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_1((sc)->am_bst, (sc)->am_bsh, (off), (val))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RAY_NEED_CM_REMAPPING */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -509,9 +584,22 @@ define|\
 value|(u_int8_t)*((sc)->maddr + (off))
 end_define
 
-begin_comment
-comment|/* ((u_int8_t)bus_space_read_1((sc)->sc_memt, (sc)->sc_memh, (off))) */
-end_comment
+begin_define
+define|#
+directive|define
+name|SRAM_READ_REGION
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|bcopy((sc)->maddr + (off), (p), (n))
+end_define
 
 begin_define
 define|#
@@ -527,7 +615,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|SRAM_READ_1(sc, (off) + offsetof(struct s, f))
+value|SRAM_READ_1((sc), (off) + offsetof(struct s, f))
 end_define
 
 begin_define
@@ -544,7 +632,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|((((u_int16_t)SRAM_READ_1(sc, (off) + offsetof(struct s, f))<< 8) \     |(SRAM_READ_1(sc, (off) + 1 + offsetof(struct s, f)))))
+value|((((u_int16_t)SRAM_READ_1((sc), (off) + offsetof(struct s, f))<< 8) \     |(SRAM_READ_1((sc), (off) + 1 + offsetof(struct s, f)))))
 end_define
 
 begin_define
@@ -565,24 +653,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|ray_read_region(sc, (off) + offsetof(struct s, f), (p), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ray_read_region
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|vp
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|bcopy((sc)->maddr + (off), (vp), (n))
+value|SRAM_READ_REGION((sc), (off) + offsetof(struct s, f), (p), (n))
 end_define
 
 begin_define
@@ -600,9 +671,22 @@ define|\
 value|*((sc)->maddr + (off)) = (val)
 end_define
 
-begin_comment
-comment|/* bus_space_write_1((sc)->sc_memt, (sc)->sc_memh, (off), (val)) */
-end_comment
+begin_define
+define|#
+directive|define
+name|SRAM_WRITE_REGION
+parameter_list|(
+name|sc
+parameter_list|,
+name|off
+parameter_list|,
+name|p
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|bcopy((p), (sc)->maddr + (off), (n))
+end_define
 
 begin_define
 define|#
@@ -620,7 +704,7 @@ parameter_list|,
 name|v
 parameter_list|)
 define|\
-value|SRAM_WRITE_1(sc, (off) + offsetof(struct s, f), (v))
+value|SRAM_WRITE_1((sc), (off) + offsetof(struct s, f), (v))
 end_define
 
 begin_define
@@ -638,7 +722,7 @@ name|f
 parameter_list|,
 name|v
 parameter_list|)
-value|do {	\     SRAM_WRITE_1(sc, (off) + offsetof(struct s, f), (((v)>> 8 )& 0xff)); \     SRAM_WRITE_1(sc, (off) + 1 + offsetof(struct s, f), ((v)& 0xff)); \ } while (0)
+value|do {	\     SRAM_WRITE_1((sc), (off) + offsetof(struct s, f), (((v)>> 8 )& 0xff)); \     SRAM_WRITE_1((sc), (off) + 1 + offsetof(struct s, f), ((v)& 0xff)); \ } while (0)
 end_define
 
 begin_define
@@ -659,24 +743,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|ray_write_region(sc, (off) + offsetof(struct s, f), (p), (n))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ray_write_region
-parameter_list|(
-name|sc
-parameter_list|,
-name|off
-parameter_list|,
-name|vp
-parameter_list|,
-name|n
-parameter_list|)
-define|\
-value|bcopy((vp), (sc)->maddr + (off), (n))
+value|SRAM_WRITE_REGION((sc), (off) + offsetof(struct s, f), (p), (n))
 end_define
 
 begin_ifndef
@@ -753,7 +820,8 @@ name|RAY_ECF_READY
 parameter_list|(
 name|sc
 parameter_list|)
-value|(!(ray_read_reg(sc, RAY_ECFIR)& RAY_ECFIR_IRQ))
+define|\
+value|(!(ATTR_READ_1((sc), RAY_ECFIR)& RAY_ECFIR_IRQ))
 end_define
 
 begin_define
@@ -763,7 +831,7 @@ name|RAY_ECF_START_CMD
 parameter_list|(
 name|sc
 parameter_list|)
-value|ray_attr_write((sc), RAY_ECFIR, RAY_ECFIR_IRQ)
+value|ATTR_WRITE_1((sc), RAY_ECFIR, RAY_ECFIR_IRQ)
 end_define
 
 begin_define
@@ -773,7 +841,7 @@ name|RAY_HCS_CLEAR_INTR
 parameter_list|(
 name|sc
 parameter_list|)
-value|ray_attr_write((sc), RAY_HCSIR, 0)
+value|ATTR_WRITE_1((sc), RAY_HCSIR, 0)
 end_define
 
 begin_define
@@ -783,7 +851,7 @@ name|RAY_HCS_INTR
 parameter_list|(
 name|sc
 parameter_list|)
-value|(ray_read_reg(sc, RAY_HCSIR)& RAY_HCSIR_IRQ)
+value|(ATTR_READ_1((sc), RAY_HCSIR)& RAY_HCSIR_IRQ)
 end_define
 
 begin_define
@@ -798,7 +866,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\     panic("ray%d: %s(%d) " fmt "\n",				\     	sc->unit, __FUNCTION__ , __LINE__ , ##args);		\ } while (0)
+value|do {			\     panic("ray%d: %s(%d) " fmt "\n", sc->unit,			\     	__FUNCTION__ , __LINE__ , ##args);			\ } while (0)
 end_define
 
 begin_define
@@ -813,7 +881,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {			\     printf("ray%d: %s(%d) " fmt "\n",				\     	(sc)->unit, __FUNCTION__ , __LINE__ , ##args);		\ } while (0)
+value|do {			\     printf("ray%d: %s(%d) " fmt "\n", (sc)->unit,		\     	__FUNCTION__ , __LINE__ , ##args);			\ } while (0)
 end_define
 
 begin_ifndef
@@ -926,7 +994,7 @@ comment|/* RAY_MBUF_DUMP */
 end_comment
 
 begin_comment
-comment|/*  * As described in if_xe.c...  *  * Horrid stuff for accessing CIS tuples and remapping common memory...  */
+comment|/*  * The driver assumes that the common memory is always mapped in,  * for the moment we ensure this with the following macro at the  * head of each function and by using functions to access attribute  * memory. Hysterical raisins led to the non-"reflexive" approach.  * Roll on NEWCARD and it can all die...  */
 end_comment
 
 begin_define
@@ -939,11 +1007,7 @@ end_define
 begin_if
 if|#
 directive|if
-operator|(
 name|RAY_NEED_CM_REMAPPING
-operator||
-name|RAY_NEED_CM_FIXUP
-operator|)
 end_if
 
 begin_define
@@ -976,7 +1040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (RAY_NEED_CM_REMAPPING | RAY_NEED_CM_FIXUP) */
+comment|/* RAY_NEED_CM_REMAPPING */
 end_comment
 
 end_unit
