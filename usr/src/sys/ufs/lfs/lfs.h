@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -115,7 +115,7 @@ comment|/* number of live bytes */
 name|u_long
 name|su_lastmod
 decl_stmt|;
-comment|/* last modified timestamp */
+comment|/* SEGUSE last modified timestamp */
 define|#
 directive|define
 name|SEGUSE_DIRTY
@@ -216,13 +216,13 @@ name|segsum
 decl_stmt|;
 comment|/* segment Summary info */
 name|u_long
-name|sum_bytes_left
-decl_stmt|;
-comment|/* bytes left in summary */
-name|u_long
 name|seg_bytes_left
 decl_stmt|;
 comment|/* bytes left in segment */
+name|u_long
+name|sum_bytes_left
+decl_stmt|;
+comment|/* bytes left in summary block */
 name|daddr_t
 name|saddr
 decl_stmt|;
@@ -236,9 +236,9 @@ name|ninodes
 decl_stmt|;
 comment|/* number of inodes in this segment */
 name|u_long
-name|sum_num
+name|nsums
 decl_stmt|;
-comment|/* number of current summary block */
+comment|/* number of SEGSUMs in this segment */
 name|u_long
 name|seg_number
 decl_stmt|;
@@ -549,7 +549,7 @@ value|di_spare[0]
 end_define
 
 begin_comment
-comment|/*  * Logical block numbers of indirect blocks.  */
+comment|/* Logical block numbers of indirect blocks. */
 end_comment
 
 begin_define
@@ -571,6 +571,17 @@ define|#
 directive|define
 name|T_INDIR
 value|-3
+end_define
+
+begin_comment
+comment|/* Unassigned disk address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UNASSIGNED
+value|-1
 end_define
 
 begin_typedef
@@ -826,27 +837,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|satosn
+name|datosn
 parameter_list|(
 name|fs
 parameter_list|,
-name|saddr
+name|daddr
 parameter_list|)
+comment|/* disk address to segment number */
 define|\
-value|((int)((saddr - fs->lfs_sboffs[0]) / fsbtodb(fs, fs->lfs_ssize)))
+value|(((daddr) - (fs)->lfs_sboffs[0]) / fsbtodb((fs), (fs)->lfs_ssize))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sntosa
+name|sntoda
 parameter_list|(
 name|fs
 parameter_list|,
 name|sn
 parameter_list|)
+comment|/* segment number to disk address */
 define|\
-value|((daddr_t)(sn * (fs->lfs_ssize<< fs->lfs_fsbtodb) + fs->lfs_sboffs[0]))
+value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
 end_define
 
 end_unit
