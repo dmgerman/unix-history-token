@@ -2589,7 +2589,9 @@ argument_list|,
 name|__func__
 literal|": pid %d recursed on %s r=%d"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -3349,7 +3351,9 @@ argument_list|,
 name|__func__
 literal|": pid %d added lle %p"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -3423,7 +3427,9 @@ argument_list|,
 name|__func__
 literal|": pid %d added %s as lle[%d]"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -4228,7 +4234,9 @@ argument_list|,
 name|__func__
 literal|": pid %d unrecursed on %s r=%d"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -4264,7 +4272,9 @@ argument_list|,
 name|__func__
 literal|": pid %d removed %s from lle[%d]"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -4368,7 +4378,9 @@ argument_list|,
 name|__func__
 literal|": pid %d removed lle %p"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -4644,7 +4656,9 @@ name|KTR_WITNESS
 argument_list|,
 literal|"pid %d: sleeping with lock (%s) %s held"
 argument_list|,
-name|curproc
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
