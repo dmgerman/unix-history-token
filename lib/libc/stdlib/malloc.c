@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.12 1996/09/17 19:50:23 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.13 1996/09/23 19:26:39 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -142,25 +142,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<memory.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -313,11 +307,19 @@ begin_comment
 comment|/*  * The i386 architecture has some very convenient instructions.  * We might as well use them.  There are C-language backups, but  * they are considerably slower.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -328,7 +330,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|int
 name|_ffs
 parameter_list|(
@@ -339,7 +341,7 @@ block|{
 name|int
 name|result
 decl_stmt|;
-asm|asm("bsfl %1, %0" : "=r" (result) : "r" (input));
+asm|__asm__("bsfl %1, %0" : "=r" (result) : "r" (input));
 return|return
 name|result
 operator|+
@@ -357,7 +359,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|int
 name|_fls
 parameter_list|(
@@ -368,7 +370,7 @@ block|{
 name|int
 name|result
 decl_stmt|;
-asm|asm("bsrl %1, %0" : "=r" (result) : "r" (input));
+asm|__asm__("bsrl %1, %0" : "=r" (result) : "r" (input));
 return|return
 name|result
 operator|+
@@ -386,7 +388,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|_set_bit
 parameter_list|(
@@ -399,7 +401,7 @@ name|int
 name|bit
 parameter_list|)
 block|{
-asm|asm("btsl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
+asm|__asm__("btsl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
 block|}
 end_function
 
@@ -412,7 +414,7 @@ end_define
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|_clr_bit
 parameter_list|(
@@ -425,7 +427,7 @@ name|int
 name|bit
 parameter_list|)
 block|{
-asm|asm("btcl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
+asm|__asm__("btcl %0, (%1)" : 	: "r" (bit& (MALLOC_BITS-1)), "r" (pi->bits+(bit/MALLOC_BITS)));
 block|}
 end_function
 
@@ -435,7 +437,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __i386__ */
+comment|/* __i386__&& __GNUC__ */
 end_comment
 
 begin_comment
@@ -585,7 +587,7 @@ comment|/* malloc_maxsize */
 end_comment
 
 begin_comment
-comment|/* The minimum size (in bytes) of the free page cache.  */
+comment|/* The minimum size (in pages) of the free page cache.  */
 end_comment
 
 begin_decl_stmt
@@ -594,8 +596,6 @@ name|unsigned
 name|malloc_cache
 init|=
 literal|16
-operator|<<
-name|malloc_pageshift
 decl_stmt|;
 end_decl_stmt
 
@@ -750,6 +750,12 @@ name|malloc_junk
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_comment
 comment|/* utrace ?  */
 end_comment
@@ -794,6 +800,33 @@ parameter_list|)
 define|\
 value|if (malloc_utrace) \ 		{struct ut u; u.p=a; u.s = b; u.r=c; utrace(&u, sizeof u);}
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__FreeBSD__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UTRACE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* my last break. */
@@ -1653,7 +1686,7 @@ end_ifndef
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|set_bit
 parameter_list|(
@@ -1707,7 +1740,7 @@ end_ifndef
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|clr_bit
 parameter_list|(
@@ -1764,7 +1797,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|int
 name|tst_bit
 parameter_list|(
@@ -1821,7 +1854,7 @@ end_ifndef
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|int
 name|fls
 parameter_list|(
@@ -2034,10 +2067,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|;
-name|struct
-name|ut
-name|u
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2252,6 +2281,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 case|case
 literal|'u'
 case|:
@@ -2268,6 +2300,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* !__FreeBSD__ */
 case|case
 literal|'z'
 case|:
@@ -2570,6 +2605,18 @@ expr|*
 name|px
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|malloc_cache
+condition|)
+name|malloc_cache
+operator|++
+expr_stmt|;
+name|malloc_cache
+operator|<<=
+name|malloc_pageshift
+expr_stmt|;
 block|}
 end_function
 
@@ -2825,7 +2872,15 @@ expr_stmt|;
 name|pf
 operator|->
 name|page
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|pg
+operator|->
+name|page
+operator|+
 name|size
 expr_stmt|;
 name|pf
@@ -2968,7 +3023,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|int
 name|malloc_make_chunks
 parameter_list|(
@@ -3902,7 +3957,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|free_pages
 parameter_list|(
@@ -4040,6 +4095,10 @@ argument_list|)
 expr_stmt|;
 name|tail
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ptr
 operator|+
 name|l
@@ -4122,6 +4181,10 @@ block|{
 comment|/* Find the right spot, leave pf pointing to the modified entry. */
 name|tail
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|ptr
 operator|+
 name|l
@@ -4213,7 +4276,15 @@ comment|/* Append to the previous entry */
 name|pf
 operator|->
 name|end
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|pf
+operator|->
+name|end
+operator|+
 name|l
 expr_stmt|;
 name|pf
@@ -4393,6 +4464,10 @@ name|pf
 operator|->
 name|end
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|pf
 operator|->
 name|page
@@ -4472,7 +4547,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+name|__inline__
 name|void
 name|free_bytes
 parameter_list|(
