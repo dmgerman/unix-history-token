@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Smith of The State University of New York at Buffalo.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mv.c,v 1.8 1996/03/01 06:14:13 wosch Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ken Smith of The State University of New York at Buffalo.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mv.c,v 1.8.2.1 1997/08/25 08:33:11 jkh Exp $  */
 end_comment
 
 begin_ifndef
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -563,6 +569,8 @@ name|int
 name|ask
 decl_stmt|,
 name|ch
+decl_stmt|,
+name|first
 decl_stmt|;
 name|char
 name|modep
@@ -613,6 +621,10 @@ literal|1
 operator|)
 return|;
 block|}
+define|#
+directive|define
+name|YESNO
+value|"(y/n [n]) "
 name|ask
 operator|=
 literal|0
@@ -629,9 +641,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"overwrite %s? "
+literal|"overwrite %s? %s"
 argument_list|,
 name|to
+argument_list|,
+name|YESNO
 argument_list|)
 expr_stmt|;
 name|ask
@@ -675,7 +689,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"override %s%s%s/%s for %s? "
+literal|"override %s%s%s/%s for %s? %s"
 argument_list|,
 name|modep
 operator|+
@@ -711,6 +725,8 @@ literal|0
 argument_list|)
 argument_list|,
 name|to
+argument_list|,
+name|YESNO
 argument_list|)
 expr_stmt|;
 name|ask
@@ -723,44 +739,55 @@ condition|(
 name|ask
 condition|)
 block|{
-if|if
-condition|(
-operator|(
+name|first
+operator|=
 name|ch
 operator|=
 name|getchar
 argument_list|()
-operator|)
+expr_stmt|;
+while|while
+condition|(
+name|ch
 operator|!=
-name|EOF
+literal|'\n'
 operator|&&
 name|ch
 operator|!=
-literal|'\n'
+name|EOF
 condition|)
-while|while
-condition|(
+name|ch
+operator|=
 name|getchar
 argument_list|()
-operator|!=
-literal|'\n'
-condition|)
-empty_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|ch
+name|first
 operator|!=
 literal|'y'
 operator|&&
-name|ch
+name|first
 operator|!=
 literal|'Y'
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"not overwritten\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 block|}
 if|if
@@ -781,9 +808,83 @@ return|;
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EXDEV
 condition|)
+block|{
+name|struct
+name|statfs
+name|sfs
+decl_stmt|;
+name|char
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+comment|/* Can't mv(1) a mount point. */
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|from
+argument_list|,
+name|path
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"cannot resolve %s: %s"
+argument_list|,
+name|from
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|statfs
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sfs
+argument_list|)
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+name|path
+argument_list|,
+name|sfs
+operator|.
+name|f_mntonname
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"cannot rename a mount point"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+else|else
 block|{
 name|warn
 argument_list|(
@@ -1634,9 +1735,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mv [-f | -i] src target"
+literal|"usage: mv [-f | -i] source target"
 argument_list|,
-literal|"       mv [-f | -i] src1 ... srcN directory"
+literal|"       mv [-f | -i] source ... directory"
 argument_list|)
 expr_stmt|;
 name|exit
