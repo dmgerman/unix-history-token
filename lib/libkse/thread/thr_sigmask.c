@@ -126,7 +126,7 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-comment|/* Get a copy for thread dump */
+comment|/* Get a fresh copy */
 name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
