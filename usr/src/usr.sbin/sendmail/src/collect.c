@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.13 (Berkeley) %G%"
+literal|"@(#)collect.c	8.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,6 +176,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 name|FileMode
 argument_list|)

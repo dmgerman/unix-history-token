@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.40 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.41 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.40 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.41 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -627,6 +627,8 @@ argument_list|,
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_TRUNC
 argument_list|,
 name|FileMode
 argument_list|)
