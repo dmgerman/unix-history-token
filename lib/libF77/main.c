@@ -50,11 +50,35 @@ directive|ifndef
 name|KR_headers
 end_ifndef
 
+begin_undef
+undef|#
+directive|undef
+name|VOID
+end_undef
+
 begin_include
 include|#
 directive|include
 file|"stdlib.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VOID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|VOID
+value|void
+end_define
 
 begin_endif
 endif|#
@@ -81,7 +105,7 @@ directive|define
 name|ONEXIT
 value|onexit
 specifier|extern
-name|void
+name|VOID
 name|f_exit
 parameter_list|()
 function_decl|;
@@ -129,7 +153,7 @@ directive|define
 name|ONEXIT
 value|onexit
 specifier|extern
-name|void
+name|VOID
 name|f_exit
 parameter_list|()
 function_decl|;
@@ -143,7 +167,7 @@ ifdef|#
 directive|ifdef
 name|KR_headers
 specifier|extern
-name|void
+name|VOID
 name|f_init
 argument_list|()
 decl_stmt|,
@@ -190,7 +214,7 @@ value|int
 endif|#
 directive|endif
 specifier|static
-name|void
+name|VOID
 name|sigfdie
 parameter_list|(
 name|Int
@@ -206,7 +230,7 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
-name|void
+name|VOID
 name|sigidie
 parameter_list|(
 name|Int
@@ -225,7 +249,7 @@ ifdef|#
 directive|ifdef
 name|SIGQUIT
 specifier|static
-name|void
+name|VOID
 name|sigqdie
 parameter_list|(
 name|Int
@@ -243,7 +267,7 @@ block|}
 endif|#
 directive|endif
 specifier|static
-name|void
+name|VOID
 name|sigindie
 parameter_list|(
 name|Int
@@ -259,7 +283,7 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
-name|void
+name|VOID
 name|sigtdie
 parameter_list|(
 name|Int
@@ -278,7 +302,7 @@ ifdef|#
 directive|ifdef
 name|SIGTRAP
 specifier|static
-name|void
+name|VOID
 name|sigtrdie
 parameter_list|(
 name|Int

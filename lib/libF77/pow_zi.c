@@ -83,6 +83,10 @@ block|{
 name|integer
 name|n
 decl_stmt|;
+name|unsigned
+name|long
+name|u
+decl_stmt|;
 name|double
 name|t
 decl_stmt|;
@@ -168,13 +172,16 @@ expr_stmt|;
 block|}
 for|for
 control|(
+name|u
+operator|=
+name|n
 init|;
 condition|;
 control|)
 block|{
 if|if
 condition|(
-name|n
+name|u
 operator|&
 literal|01
 condition|)
@@ -226,7 +233,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|n
+name|u
 operator|>>=
 literal|1
 condition|)
