@@ -3500,6 +3500,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|makelabel
+argument_list|(
+literal|"auto"
+argument_list|,
+name|lp
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
