@@ -1470,47 +1470,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* This is type of the function DEVFS uses to hook into the kernel with */
-end_comment
-
-begin_typedef
-typedef|typedef
+begin_function_decl
 name|void
-name|devfs_create_t
+name|devfs_create
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
-end_typedef
+end_function_decl
 
-begin_typedef
-typedef|typedef
+begin_function_decl
 name|void
-name|devfs_destroy_t
+name|devfs_destroy
 parameter_list|(
 name|dev_t
 name|dev
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|devfs_create_t
-modifier|*
-name|devfs_create_hook
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|devfs_destroy_t
-modifier|*
-name|devfs_destroy_hook
-decl_stmt|;
-end_decl_stmt
+end_function_decl
 
 begin_define
 define|#

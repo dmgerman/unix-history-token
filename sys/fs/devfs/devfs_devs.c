@@ -2002,7 +2002,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|devfs_create
 parameter_list|(
@@ -2217,7 +2216,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|devfs_destroy
 parameter_list|(
@@ -2315,14 +2313,6 @@ modifier|*
 name|junk
 parameter_list|)
 block|{
-name|devfs_create_hook
-operator|=
-name|devfs_create
-expr_stmt|;
-name|devfs_destroy_hook
-operator|=
-name|devfs_destroy
-expr_stmt|;
 name|devfs_rules_init
 argument_list|()
 expr_stmt|;
