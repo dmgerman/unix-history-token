@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.11 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.12	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -798,6 +798,7 @@ expr_stmt|;
 name|Uname
 index|[
 name|i
+operator|++
 index|]
 operator|=
 operator|(
@@ -826,17 +827,12 @@ else|:
 operator|*
 name|p
 expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-name|p
-operator|++
-expr_stmt|;
 block|}
 do|while
 condition|(
 operator|*
 name|p
+operator|++
 operator|&&
 name|i
 operator|<
