@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.6	%G%"
+literal|"@(#)ex_subr.c	7.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3616,6 +3616,10 @@ decl_stmt|;
 name|int
 name|omask
 decl_stmt|;
+name|struct
+name|winsize
+name|win
+decl_stmt|;
 name|f
 operator|=
 name|setty
@@ -3686,6 +3690,41 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|TIOCGWINSZ
+argument_list|,
+operator|&
+name|win
+argument_list|)
+operator|>=
+literal|0
+condition|)
+if|if
+condition|(
+name|win
+operator|.
+name|ws_row
+operator|!=
+name|winsz
+operator|.
+name|ws_row
+operator|||
+name|win
+operator|.
+name|ws_col
+operator|!=
+name|winsz
+operator|.
+name|ws_col
+condition|)
+name|winch
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vcnt
