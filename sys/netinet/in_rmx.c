@@ -269,12 +269,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -285,27 +279,6 @@ end_define
 begin_comment
 comment|/* four hours is ``really old'' */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|RTQ_REALLYOLD
-value|120
-end_define
-
-begin_comment
-comment|/* for testing, make these fire faster */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -642,17 +615,10 @@ name|struct
 name|rtqk_arg
 name|arg
 decl_stmt|;
-specifier|static
-name|int
-name|level
-decl_stmt|;
 name|struct
 name|timeval
 name|atv
 decl_stmt|;
-name|level
-operator|++
-expr_stmt|;
 name|arg
 operator|.
 name|found
@@ -693,21 +659,6 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"in_rtqtimo: found %d, killed %d, level %d\n"
-argument_list|,
-name|arg
-operator|.
-name|found
-argument_list|,
-name|arg
-operator|.
-name|killed
-argument_list|,
-name|level
-argument_list|)
-expr_stmt|;
 name|atv
 operator|.
 name|tv_usec
@@ -722,19 +673,6 @@ name|arg
 operator|.
 name|nextstop
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"next timeout in %d seconds\n"
-argument_list|,
-name|arg
-operator|.
-name|nextstop
-operator|-
-name|time
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
 name|timeout
 argument_list|(
 name|in_rtqtimo
@@ -747,9 +685,6 @@ operator|&
 name|atv
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|level
-operator|--
 expr_stmt|;
 block|}
 end_function
@@ -800,6 +735,26 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|head
+operator|!=
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|rt_tables
+index|[
+name|AF_INET
+index|]
+condition|)
+comment|/* BOGUS! */
+return|return
+literal|1
+return|;
+comment|/* only do this for the real routing table */
 name|rnh
 operator|=
 operator|*
