@@ -1357,6 +1357,17 @@ literal|3
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|ttname
+argument_list|,
+literal|"cua"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
 condition|)
 name|ttname
 operator|+=
