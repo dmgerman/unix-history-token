@@ -1347,8 +1347,7 @@ parameter_list|,
 name|long
 name|type
 parameter_list|,
-name|unsigned
-name|long
+name|void
 modifier|*
 name|arg
 parameter_list|)
@@ -2735,8 +2734,7 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-name|unsigned
-name|long
+name|int
 name|l
 decl_stmt|;
 name|l

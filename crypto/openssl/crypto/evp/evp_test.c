@@ -31,10 +31,27 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/err.h>
 end_include
 
 begin_include
@@ -1447,16 +1464,24 @@ expr_stmt|;
 name|OpenSSL_add_all_digests
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Load all compiled-in ENGINEs */
 name|ENGINE_load_builtin_engines
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
 block|OPENSSL_config();
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Register all available ENGINE implementations of ciphers and digests.      * This could perhaps be changed to "ENGINE_register_all_complete()"? */
 name|ENGINE_register_all_ciphers
 argument_list|()
@@ -1466,6 +1491,8 @@ argument_list|()
 expr_stmt|;
 comment|/* If we add command-line options, this statement should be switchable.      * It'll prevent ENGINEs being ENGINE_init()ialised for cipher/digest use if      * they weren't already initialised. */
 comment|/* ENGINE_set_cipher_flags(ENGINE_CIPHER_FLAG_NOINIT); */
+endif|#
+directive|endif
 for|for
 control|(
 init|;
@@ -1727,9 +1754,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE_cleanup
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|EVP_cleanup
 argument_list|()
 expr_stmt|;

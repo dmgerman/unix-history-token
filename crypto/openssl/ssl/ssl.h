@@ -1202,6 +1202,11 @@ define|#
 directive|define
 name|SSL_MODE_AUTO_RETRY
 value|0x00000004L
+comment|/* Don't attempt to automatically build certificate chain */
+define|#
+directive|define
+name|SSL_MODE_NO_AUTO_CHAIN
+value|0x00000008L
 comment|/* Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value,  * they cannot be used to clear bits. */
 define|#
 directive|define
@@ -4060,9 +4065,6 @@ argument_list|)
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|OPENSSL_SYS_WIN32
-ifndef|#
-directive|ifndef
 name|OPENSSL_SYS_VMS
 ifndef|#
 directive|ifndef
@@ -4084,8 +4086,6 @@ operator|*
 name|dir
 argument_list|)
 decl_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 endif|#

@@ -3958,6 +3958,10 @@ name|ASN1_F_ASN1_TEMPLATE_NEW
 value|133
 define|#
 directive|define
+name|ASN1_F_ASN1_TIME_SET
+value|175
+define|#
+directive|define
 name|ASN1_F_ASN1_TYPE_GET_INT_OCTETSTRING
 value|134
 define|#
@@ -4177,6 +4181,10 @@ define|#
 directive|define
 name|ASN1_R_ENCODE_ERROR
 value|112
+define|#
+directive|define
+name|ASN1_R_ERROR_GETTING_TIME
+value|173
 define|#
 directive|define
 name|ASN1_R_ERROR_LOADING_SECTION

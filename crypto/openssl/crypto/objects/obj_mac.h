@@ -8198,7 +8198,7 @@ begin_define
 define|#
 directive|define
 name|LN_surname
-value|"surName"
+value|"surname"
 end_define
 
 begin_define

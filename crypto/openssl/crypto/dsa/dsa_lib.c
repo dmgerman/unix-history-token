@@ -41,11 +41,22 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|const
@@ -167,6 +178,9 @@ argument_list|(
 name|dsa
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|dsa
@@ -188,6 +202,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|dsa
 operator|->
 name|meth
@@ -268,6 +284,9 @@ operator|=
 name|DSA_get_default_method
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|engine
@@ -363,6 +382,8 @@ name|NULL
 return|;
 block|}
 block|}
+endif|#
+directive|endif
 name|ret
 operator|->
 name|pad
@@ -480,6 +501,9 @@ name|ret
 argument_list|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|ret
@@ -493,6 +517,8 @@ operator|->
 name|engine
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CRYPTO_free_ex_data
 argument_list|(
 name|CRYPTO_EX_INDEX_DSA
@@ -616,6 +642,9 @@ argument_list|(
 name|r
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|r
@@ -629,6 +658,8 @@ operator|->
 name|engine
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|CRYPTO_free_ex_data
 argument_list|(
 name|CRYPTO_EX_INDEX_DSA

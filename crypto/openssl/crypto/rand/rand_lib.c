@@ -31,11 +31,28 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
 
 begin_comment
 comment|/* non-NULL if default_RAND_meth is ENGINE-provided */
@@ -50,6 +67,11 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -72,6 +94,9 @@ modifier|*
 name|meth
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|funct_ref
@@ -87,6 +112,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|default_RAND_meth
 operator|=
 name|meth
@@ -112,6 +139,9 @@ operator|!
 name|default_RAND_meth
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE
 modifier|*
 name|e
@@ -157,6 +187,8 @@ operator|=
 name|e
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|default_RAND_meth
 operator|=
 name|RAND_SSLeay
@@ -168,6 +200,12 @@ name|default_RAND_meth
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
 
 begin_function
 name|int
@@ -239,6 +277,11 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void

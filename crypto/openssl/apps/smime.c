@@ -369,12 +369,17 @@ name|keyform
 init|=
 name|FORMAT_PEM
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|args
 operator|=
 name|argv
@@ -913,6 +918,9 @@ name|need_rand
 operator|=
 literal|1
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 block|}
 elseif|else
 if|if
@@ -949,6 +957,8 @@ name|badarg
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -1936,6 +1946,9 @@ argument_list|,
 literal|"-crl_check_all check revocation status of signer's certificate chain using CRLs\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1943,6 +1956,8 @@ argument_list|,
 literal|"-engine e      use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -1986,6 +2001,9 @@ goto|goto
 name|end
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -1997,6 +2015,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

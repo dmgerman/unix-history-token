@@ -53,11 +53,22 @@ directive|include
 file|<openssl/asn1.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Load all OpenSSL builtin modules */
@@ -74,9 +85,14 @@ comment|/* Add builtin modules here */
 name|ASN1_add_oid_module
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|ENGINE_add_conf_module
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

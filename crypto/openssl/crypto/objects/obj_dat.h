@@ -11446,7 +11446,7 @@ block|,
 block|{
 literal|"SN"
 block|,
-literal|"surName"
+literal|"surname"
 block|,
 name|NID_surname
 block|,
@@ -33797,7 +33797,7 @@ literal|100
 index|]
 operator|)
 block|,
-comment|/* "surName" */
+comment|/* "surname" */
 operator|&
 operator|(
 name|nid_objs

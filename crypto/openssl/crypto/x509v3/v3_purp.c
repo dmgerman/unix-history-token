@@ -1864,6 +1864,16 @@ operator||=
 name|XKU_TIMESTAMP
 expr_stmt|;
 break|break;
+case|case
+name|NID_dvcs
+case|:
+name|x
+operator|->
+name|ex_xkusage
+operator||=
+name|XKU_DVCS
+expr_stmt|;
+break|break;
 block|}
 block|}
 name|sk_ASN1_OBJECT_pop_free

@@ -664,6 +664,9 @@ argument_list|,
 literal|"                 only \"smtp\" is supported.\n"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -671,6 +674,8 @@ argument_list|,
 literal|" -engine id    - Initialise and use the specified engine\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|BIO_printf
 argument_list|(
 name|bio_err
@@ -904,6 +909,9 @@ name|inrand
 init|=
 name|NULL
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|char
 modifier|*
 name|engine_id
@@ -916,6 +924,8 @@ name|e
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_WINDOWS
@@ -1903,6 +1913,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 elseif|else
 if|if
 condition|(
@@ -1936,6 +1949,8 @@ name|argv
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 elseif|else
 if|if
 condition|(
@@ -2014,6 +2029,9 @@ expr_stmt|;
 name|SSL_load_error_strings
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|e
 operator|=
 name|setup_engine
@@ -2025,6 +2043,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

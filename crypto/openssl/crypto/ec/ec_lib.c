@@ -1047,13 +1047,13 @@ name|extra_data_clear_free_func
 operator|)
 condition|)
 block|{
-name|ECerr
-argument_list|(
-name|EC_F_EC_GROUP_GET_EXTRA_DATA
-argument_list|,
-name|EC_R_NO_SUCH_EXTRA_DATA
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* this was an error in 0.9.7, but that does not make a lot of sense */
+block|ECerr(..._F_EC_GROUP_GET_EXTRA_DATA, ..._R_NO_SUCH_EXTRA_DATA);
+endif|#
+directive|endif
 return|return
 name|NULL
 return|;

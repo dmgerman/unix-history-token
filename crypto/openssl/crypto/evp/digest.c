@@ -35,11 +35,22 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<openssl/engine.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -151,6 +162,9 @@ argument_list|,
 name|EVP_MD_CTX_FLAG_CLEANED
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Whether it's nice or not, "Inits" can be used on "Final"'d contexts 	 * so this context may already have an ENGINE! Try to avoid releasing 	 * the previous handle, re-querying for an ENGINE, and having a 	 * reinitialisation, when it may all be unecessary. */
 if|if
 condition|(
@@ -302,6 +316,8 @@ name|NULL
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -373,8 +389,13 @@ name|ctx_size
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 name|skip_to_init
 label|:
+endif|#
+directive|endif
 return|return
 name|ctx
 operator|->
@@ -659,6 +680,9 @@ return|return
 literal|0
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 comment|/* Make sure it's safe to copy a digest context using an ENGINE */
 if|if
 condition|(
@@ -686,6 +710,8 @@ return|return
 literal|0
 return|;
 block|}
+endif|#
+directive|endif
 name|EVP_MD_CTX_cleanup
 argument_list|(
 name|out
@@ -967,6 +993,9 @@ name|md_data
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|OPENSSL_NO_ENGINE
 if|if
 condition|(
 name|ctx
@@ -981,6 +1010,8 @@ operator|->
 name|engine
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|ctx

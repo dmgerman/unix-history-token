@@ -819,10 +819,6 @@ name|EC_F_EC_GROUP_GET_CURVE_GFP
 value|130
 define|#
 directive|define
-name|EC_F_EC_GROUP_GET_EXTRA_DATA
-value|107
-define|#
-directive|define
 name|EC_F_EC_GROUP_GET_ORDER
 value|141
 define|#
@@ -958,10 +954,6 @@ define|#
 directive|define
 name|EC_R_NOT_INITIALIZED
 value|111
-define|#
-directive|define
-name|EC_R_NO_SUCH_EXTRA_DATA
-value|105
 define|#
 directive|define
 name|EC_R_POINT_AT_INFINITY

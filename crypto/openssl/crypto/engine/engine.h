@@ -26,6 +26,29 @@ end_define
 begin_include
 include|#
 directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL_NO_ENGINE
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|ENGINE is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|<openssl/ossl_typ.h>
 end_include
 

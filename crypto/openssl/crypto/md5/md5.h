@@ -65,7 +65,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|OENSSL_SYS_CRAY
+name|OPENSSL_SYS_CRAY
 argument_list|)
 operator|||
 name|defined
