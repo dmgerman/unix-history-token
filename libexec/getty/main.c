@@ -1121,7 +1121,6 @@ name|argc
 operator|>
 literal|1
 condition|)
-block|{
 name|tname
 operator|=
 name|argv
@@ -1129,12 +1128,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|dogettytab
-argument_list|(
-name|tname
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * The following is a work around for vhangup interactions 	 * which cause great problems getting window systems started. 	 * If the tty line is "-", we do the old style getty presuming 	 * that the file descriptors are already set up for us. 	 * J. Gettys - MIT Project Athena. 	 */
 if|if
 condition|(
@@ -1154,6 +1147,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|strcpy
 argument_list|(
 name|ttyn
@@ -1164,6 +1158,12 @@ name|STDIN_FILENO
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|dogettytab
+argument_list|(
+name|tname
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|strcpy
@@ -1252,6 +1252,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|dogettytab
+argument_list|(
+name|tname
+argument_list|)
+expr_stmt|;
 name|setdefttymode
 argument_list|()
 expr_stmt|;
@@ -1327,6 +1332,11 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|dogettytab
+argument_list|(
+name|tname
 argument_list|)
 expr_stmt|;
 name|setdefttymode
@@ -1509,6 +1519,11 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|dogettytab
+argument_list|(
+name|tname
 argument_list|)
 expr_stmt|;
 block|}
@@ -4012,6 +4027,10 @@ modifier|*
 name|tname
 parameter_list|)
 block|{
+name|struct
+name|termios
+name|backupmode
+decl_stmt|;
 comment|/* Read the database entry */
 name|gettable
 argument_list|(
@@ -4041,9 +4060,45 @@ name|NPset
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Fill in default values for unset capabilities */
+comment|/* 	 * Fill in default values for unset capabilities.  Since the 	 * defaults are derived from the actual tty mode, save any 	 * changes to the tmode and fetch it temporarily for 	 * setdefaults() to use. 	 */
+name|backupmode
+operator|=
+name|tmode
+expr_stmt|;
+if|if
+condition|(
+name|tcgetattr
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+operator|&
+name|tmode
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"tcgetattr %s: %m"
+argument_list|,
+name|ttyn
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|setdefaults
 argument_list|()
+expr_stmt|;
+name|tmode
+operator|=
+name|backupmode
 expr_stmt|;
 block|}
 end_function
