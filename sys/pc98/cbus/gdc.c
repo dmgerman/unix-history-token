@@ -364,7 +364,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|gdc_probe
+name|gdcprobe
 parameter_list|(
 name|device_t
 name|dev
@@ -1045,7 +1045,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|gdc_probe
+name|gdcprobe
 argument_list|)
 block|,
 name|DEVMETHOD
