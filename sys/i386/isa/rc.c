@@ -1114,6 +1114,10 @@ name|printf
 argument_list|(
 literal|"rc%d: illegal base address %x\n"
 argument_list|,
+name|dvp
+operator|->
+name|id_unit
+argument_list|,
 name|nec
 argument_list|)
 expr_stmt|;
@@ -1133,6 +1137,10 @@ block|{
 name|printf
 argument_list|(
 literal|"rc%d: illegal IRQ value %d\n"
+argument_list|,
+name|dvp
+operator|->
+name|id_unit
 argument_list|,
 name|irq
 argument_list|)
@@ -1552,7 +1560,7 @@ argument_list|)
 expr_stmt|;
 name|rc_wakeup_started
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 return|return
