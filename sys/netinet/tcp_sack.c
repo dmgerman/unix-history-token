@@ -434,6 +434,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.inet.tcp.sack.enable"
+argument_list|,
+operator|&
+name|tcp_do_sack
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This function is called upon receipt of new valid data (while not in header  * prediction mode), and it updates the ordered list of sacks.  */
 end_comment
