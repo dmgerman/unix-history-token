@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.5	84/07/31	*/
+comment|/*	udp_usrreq.c	6.6	84/08/21	*/
 end_comment
 
 begin_include
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"../h/errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/stat.h"
 end_include
 
 begin_include
@@ -1623,6 +1629,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PRU_SENSE
+case|:
+comment|/* 		 * stat: don't bother with a blocksize. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+case|case
 name|PRU_SENDOOB
 case|:
 case|case
@@ -1644,9 +1659,6 @@ expr_stmt|;
 break|break;
 case|case
 name|PRU_CONTROL
-case|:
-case|case
-name|PRU_SENSE
 case|:
 case|case
 name|PRU_RCVD

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	6.1	83/07/29	*/
+comment|/*	tcp_usrreq.c	6.2	84/08/21	*/
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"../h/errno.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/stat.h"
 end_include
 
 begin_include
@@ -804,15 +810,32 @@ operator|=
 name|EOPNOTSUPP
 expr_stmt|;
 break|break;
+comment|/* END UNIMPLEMENTED HOOKS */
 case|case
 name|PRU_SENSE
 case|:
-name|error
+operator|(
+operator|(
+expr|struct
+name|stat
+operator|*
+operator|)
+name|m
+operator|)
+operator|->
+name|st_blksize
 operator|=
-name|EOPNOTSUPP
+name|so
+operator|->
+name|so_snd
+operator|.
+name|sb_hiwat
 expr_stmt|;
-break|break;
-comment|/* END UNIMPLEMENTED HOOKS */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|PRU_RCVOOB
 case|:
