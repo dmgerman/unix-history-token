@@ -111,7 +111,7 @@ name|int32_t
 name|c_volume
 decl_stmt|;
 comment|/* dump volume number */
-name|daddr_t
+name|int32_t
 name|c_tapea
 decl_stmt|;
 comment|/* logical block of this record */
