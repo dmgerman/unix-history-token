@@ -2266,6 +2266,8 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
