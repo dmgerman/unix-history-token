@@ -1208,8 +1208,6 @@ name|vm_object_t
 name|object
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|object
@@ -1217,6 +1215,12 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -1266,6 +1270,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1406,7 +1416,11 @@ block|{
 name|vm_object_t
 name|temp
 decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1427,6 +1441,12 @@ block|{
 name|vm_object_vndeallocate
 argument_list|(
 name|object
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1463,6 +1483,12 @@ operator|>
 literal|1
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 elseif|else
@@ -1648,6 +1674,12 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|doterm
@@ -1735,6 +1767,12 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

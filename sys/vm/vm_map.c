@@ -3322,8 +3322,6 @@ name|prevsize
 decl_stmt|,
 name|esize
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 if|if
 condition|(
 name|entry
@@ -4277,8 +4275,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|entry
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_lock
 argument_list|(
 name|map
@@ -4479,6 +4475,12 @@ operator|!=
 name|old_prot
 condition|)
 block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|MASK
@@ -4513,6 +4515,12 @@ expr_stmt|;
 undef|#
 directive|undef
 name|MASK
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 name|vm_map_simplify_entry
 argument_list|(
