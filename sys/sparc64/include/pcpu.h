@@ -24,6 +24,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<machine/asmacros.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/frame.h>
 end_include
 
@@ -50,13 +56,17 @@ directive|define
 name|PCPU_MD_FIELDS
 define|\
 value|struct	intr_queue pc_iq;
-comment|/* interrupt queuq */
-value|\ 	u_long	pc_alt_stack[ALT_STACK_SIZE];
-comment|/* alt global stack */
-value|\ 	u_int	pc_wp_insn;
+comment|/* interrupt queue */
+value|\ 	u_int 	pc_mid;							\ 	u_int	pc_wp_insn;
 comment|/* watch point support */
 value|\ 	u_long	pc_wp_pstate;						\ 	u_long	pc_wp_va;						\ 	int	pc_wp_mask
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|pcb
+struct_decl|;
+end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
@@ -67,12 +77,31 @@ end_struct_decl
 begin_decl_stmt
 specifier|register
 name|struct
+name|pcb
+modifier|*
+name|curpcb
+name|__asm__
+argument_list|(
+name|__XSTRING
+argument_list|(
+name|PCB_REG
+argument_list|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|register
+name|struct
 name|pcpu
 modifier|*
 name|pcpup
 name|__asm__
 argument_list|(
-literal|"%g7"
+name|__XSTRING
+argument_list|(
+name|PCPU_REG
+argument_list|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
