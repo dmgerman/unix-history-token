@@ -89,9 +89,6 @@ directive|include
 file|<machine/psl.h>
 include|#
 directive|include
-file|<i386/isa/isa.h>
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 specifier|static
 expr|struct

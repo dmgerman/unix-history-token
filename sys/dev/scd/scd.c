@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.20 1996/05/03 16:49:03 phk Exp $ */
+comment|/* $Id: scd.c,v 1.21 1996/06/08 09:18:23 bde Exp $ */
 end_comment
 
 begin_comment
@@ -159,12 +159,6 @@ begin_include
 include|#
 directive|include
 file|<machine/stdarg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
 end_include
 
 begin_include

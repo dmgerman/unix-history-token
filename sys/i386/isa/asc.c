@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.18 1996/04/08 19:40:54 smpatel Exp $  */
+comment|/*  * $Id: asc.c,v 1.19 1996/04/13 12:18:43 bde Exp $  */
 end_comment
 
 begin_include
@@ -67,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"ioctl.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/isa.h"
 end_include
 
 begin_include
