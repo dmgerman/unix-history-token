@@ -3148,11 +3148,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Force single-user for a while. 	 */
-name|boothowto
-operator||=
-name|RB_SINGLE
-expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
 directive|ifdef
