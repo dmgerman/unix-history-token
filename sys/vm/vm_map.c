@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.157 1999/03/15 06:24:52 alc Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.158 1999/03/21 23:37:00 alc Exp $  */
 end_comment
 
 begin_comment
@@ -146,7 +146,7 @@ file|<vm/vm_zone.h>
 end_include
 
 begin_comment
-comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a single hint is used to speed up lookups.  *  *	In order to properly represent the sharing of virtual  *	memory regions among maps, the map structure is bi-level.  *	Top-level ("address") maps refer to regions of sharable  *	virtual memory.  These regions are implemented as  *	("sharing") maps, which then refer to the actual virtual  *	memory objects.  When two address maps "share" memory,  *	their top-level maps both have references to the same  *	sharing map.  When memory is virtual-copied from one  *	address map to another, the references in the sharing  *	maps are actually copied -- no copying occurs at the  *	virtual memory object level.  *  *	Since portions of maps are specified by start/end addreses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *	No attempt is currently made to "glue back together" two  *	abutting entries.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one sharing map to  *	another, and then marking both regions as copy-on-write.  *	It is important to note that only one writeable reference  *	to a VM object region exists in any map -- this means that  *	shadow object creation can be delayed until a write operation  *	occurs.  */
+comment|/*  *	Virtual memory maps provide for the mapping, protection,  *	and sharing of virtual memory objects.  In addition,  *	this module provides for an efficient virtual copy of  *	memory from one map to another.  *  *	Synchronization is required prior to most operations.  *  *	Maps consist of an ordered doubly-linked list of simple  *	entries; a single hint is used to speed up lookups.  *  *	Since portions of maps are specified by start/end addreses,  *	which may not align with existing map entries, all  *	routines merely "clip" entries to these start/end values.  *	[That is, an entry is split into two, bordering at a  *	start or end value.]  Note that these clippings may not  *	always be necessary (as the two resulting entries are then  *	not changed); however, the clipping is done for convenience.  *  *	As mentioned above, virtual copy operations are performed  *	by copying VM object references from one map to  *	another, and then marking both regions as copy-on-write.  */
 end_comment
 
 begin_comment
@@ -5724,7 +5724,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Perform actions of vm_map_lookup that need 				 * the write lock on the map: create a shadow 				 * object for a copy-on-write region, or an 				 * object for a zero-fill region. 				 * 				 * We don't have to do this for entries that 				 * point to sharing maps, because we won't 				 * hold the lock on the sharing map. 				 */
+comment|/* 				 * Perform actions of vm_map_lookup that need 				 * the write lock on the map: create a shadow 				 * object for a copy-on-write region, or an 				 * object for a zero-fill region. 				 * 				 * We don't have to do this for entries that 				 * point to sub maps, because we won't 				 * hold the lock on the sub map. 				 */
 if|if
 condition|(
 operator|(
@@ -6796,7 +6796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_delete:	[ internal use only ]  *  *	Deallocates the given address range from the target  *	map.  *  *	When called with a sharing map, removes pages from  *	that region from all physical maps.  */
+comment|/*  *	vm_map_delete:	[ internal use only ]  *  *	Deallocates the given address range from the target  *	map.  */
 end_comment
 
 begin_function
@@ -7066,7 +7066,6 @@ name|offidxstart
 operator|+
 name|count
 expr_stmt|;
-comment|/* 		 * If this is a sharing map, we must remove *all* references 		 * to this data, since we can't find all of the physical maps 		 * which are sharing it. 		 */
 if|if
 condition|(
 operator|(
@@ -8380,7 +8379,7 @@ argument_list|,
 name|OBJ_ONEMAPPING
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Clone the entry, referencing the sharing map. 			 */
+comment|/* 			 * Clone the entry, referencing the shared object. 			 */
 name|new_entry
 operator|=
 name|vm_map_entry_create
@@ -9014,7 +9013,7 @@ operator|&
 name|MAP_ENTRY_NEEDS_COPY
 condition|)
 block|{
-comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the sharing map locked. 		 * 		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
+comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the map locked. 		 * 		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
 if|if
 condition|(
 name|fault_type
@@ -9022,7 +9021,7 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 block|{
-comment|/* 			 * Make a new object, and place it in the object 			 * chain.  Note that no new references have appeared 			 * -- one just moved from the share map to the new 			 * object. 			 */
+comment|/* 			 * Make a new object, and place it in the object 			 * chain.  Note that no new references have appeared 			 * -- one just moved from the map to the new 			 * object. 			 */
 if|if
 condition|(
 name|vm_map_lock_upgrade
