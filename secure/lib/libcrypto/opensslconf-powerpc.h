@@ -939,5 +939,15 @@ begin_comment
 comment|/* HEADER_DES_LOCL_H */
 end_comment
 
+begin_comment
+comment|/* The Kerberos 5 support is MIT-specific. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OPENSSL_NO_KRB5
+end_define
+
 end_unit
 
