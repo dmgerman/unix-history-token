@@ -1165,6 +1165,42 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"#define\tSC_PS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|sigcontext
+argument_list|,
+name|sc_ps
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSC_FS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|sigcontext
+argument_list|,
+name|sc_fs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tSC_GS %#x\n"
+argument_list|,
+name|OS
+argument_list|(
+name|sigcontext
+argument_list|,
+name|sc_gs
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"#define\tB_READ %#x\n"
 argument_list|,
 name|B_READ
