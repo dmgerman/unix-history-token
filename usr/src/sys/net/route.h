@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)route.h	8.3.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -677,6 +677,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RTM_ADDPKT
+value|0xf
+end_define
+
+begin_comment
+comment|/* Add Route based on entire packet hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTM_DELPKT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Delete Route base on entire packet hdr */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RTV_MTU
 value|0x1
 end_define
@@ -971,6 +993,24 @@ name|rti_info
 index|[
 name|RTAX_MAX
 index|]
+decl_stmt|;
+name|int
+name|rti_flags
+decl_stmt|;
+name|struct
+name|ifaddr
+modifier|*
+name|rti_ifa
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|rti_ifp
+decl_stmt|;
+name|struct
+name|rt_msghdr
+modifier|*
+name|rti_rtm
 decl_stmt|;
 block|}
 struct|;
