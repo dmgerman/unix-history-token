@@ -876,6 +876,15 @@ block|,
 name|MOUSE_MODEL_INTELLI
 block|}
 block|,
+comment|/* Mitsumi Wireless Scroll Mouse */
+block|{
+literal|"MTM6401"
+block|,
+name|MOUSE_PROTO_INTELLI
+block|,
+name|MOUSE_MODEL_INTELLI
+block|}
+block|,
 comment|/* MS bus */
 block|{
 literal|"PNP0F00"
