@@ -861,8 +861,6 @@ name|nLINEBUF
 index|]
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|nLine
 init|=
 literal|0

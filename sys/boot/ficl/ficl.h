@@ -230,7 +230,7 @@ comment|/* ** Ficl uses a this little structure to hold the address of  ** the b
 typedef|typedef
 struct|struct
 block|{
-name|INT32
+name|FICL_INT
 name|index
 decl_stmt|;
 name|char
