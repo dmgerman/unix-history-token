@@ -3016,6 +3016,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+break|break;
 block|}
 if|if
 condition|(
