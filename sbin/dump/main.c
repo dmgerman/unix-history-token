@@ -1486,7 +1486,9 @@ argument_list|,
 sizeof|sizeof
 name|snapcmd
 argument_list|,
-literal|"mksnap_ffs %s %s"
+literal|"%s %s %s"
+argument_list|,
+name|_PATH_MKSNAP_FFS
 argument_list|,
 name|mntpt
 argument_list|,

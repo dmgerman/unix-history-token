@@ -220,6 +220,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_MKSNAP_FFS
+value|"/sbin/mksnap_ffs"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_MOUNT
 value|"/sbin/mount"
 end_define
