@@ -2717,7 +2717,7 @@ comment|/* TRUE if the variable is local and we're 				 * expanding it in a non-
 name|int
 name|vlen
 decl_stmt|;
-comment|/* length of variable name, after embedded variable 				 * expansion */
+comment|/* length of variable name, after embedded 				 * variable expansion */
 operator|*
 name|freePtr
 operator|=
