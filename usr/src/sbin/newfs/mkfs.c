@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.21 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3599,6 +3599,10 @@ operator|.
 name|fs_nsect
 argument_list|)
 expr_stmt|;
+define|#
+directive|define
+name|B2MBFACTOR
+value|(1 / (1024.0 * 1024.0))
 name|printf
 argument_list|(
 literal|"\t%.1fMB in %d cyl groups (%d c/g, %.2fMB/g, %d i/g)\n"
@@ -3614,7 +3618,7 @@ name|sblock
 operator|.
 name|fs_fsize
 operator|*
-literal|1e-6
+name|B2MBFACTOR
 argument_list|,
 name|sblock
 operator|.
@@ -3635,13 +3639,16 @@ name|sblock
 operator|.
 name|fs_fsize
 operator|*
-literal|1e-6
+name|B2MBFACTOR
 argument_list|,
 name|sblock
 operator|.
 name|fs_ipg
 argument_list|)
 expr_stmt|;
+undef|#
+directive|undef
+name|B2MBFACTOR
 block|}
 comment|/* 	 * Now build the cylinders group blocks and 	 * then print out indices of cylinder groups. 	 */
 if|if
