@@ -507,7 +507,10 @@ operator|!=
 name|fs
 operator|->
 name|fs_passno
-operator|||
+condition|)
+continue|continue;
+if|if
+condition|(
 call|(
 modifier|*
 name|docheck
