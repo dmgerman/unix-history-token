@@ -692,6 +692,15 @@ name|fvp
 decl_stmt|;
 if|if
 condition|(
+operator|(
+name|cnp
+operator|->
+name|cn_flags
+operator|&
+name|ISLASTCN
+operator|)
+operator|&&
+operator|(
 name|cnp
 operator|->
 name|cn_nameiop
@@ -703,6 +712,7 @@ operator|->
 name|cn_nameiop
 operator|==
 name|RENAME
+operator|)
 condition|)
 block|{
 name|error
