@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.172 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1995 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.173 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -262,21 +262,32 @@ begin_comment
 comment|/* max MIME multipart nesting */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|QUEUESEGSIZE
+value|1000
+end_define
+
+begin_comment
+comment|/* increment for queue size */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|QUEUESIZE
+name|MAXQUEUESIZE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|QUEUESIZE
-value|3000
+name|MAXQUEUESIZE
+value|40000
 end_define
 
 begin_comment
-comment|/* max # of jobs per queue run */
+comment|/* max # of jobs we will run at once */
 end_comment
 
 begin_endif
