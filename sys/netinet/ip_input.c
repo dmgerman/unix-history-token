@@ -507,7 +507,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model, so  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use  * ipnat to translate the destination address to another to another  * local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
+comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model,  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use ipnat  * to translate the destination address to another local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
 
 begin_decl_stmt
@@ -2353,7 +2353,7 @@ name|ip_fw_fwd_addr
 operator|->
 name|sin_addr
 expr_stmt|;
-comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 *          * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible will break IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
+comment|/* 	 * Enable a consistency check between the destination address 	 * and the arrival interface for a unicast packet (the RFC 1122 	 * strong ES model) if IP forwarding is disabled and the packet 	 * is not locally generated and the packet is not subject to 	 * 'ipfw fwd'. 	 *          * XXX - Checking also should be disabled if the destination 	 * address is ipnat'ed to a different interface. 	 * 	 * XXX - Checking is incompatible with IP aliases added 	 * to the loopback interface instead of the interface where 	 * the packets are received. 	 */
 name|checkif
 operator|=
 name|ip_checkinterface
