@@ -132,18 +132,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/resource.h>
 end_include
 

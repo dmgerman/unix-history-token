@@ -85,19 +85,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<dev/ata/ata-all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ata/ata-disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ata/ata-all.h>
 end_include
 
 begin_if

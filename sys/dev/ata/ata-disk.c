@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -97,18 +91,6 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_page.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
 end_include
 
 begin_include
