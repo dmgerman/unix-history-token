@@ -1203,10 +1203,6 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|bootverbose
-init|=
-literal|0
-decl_stmt|,
 name|Maxmem
 init|=
 literal|0
@@ -1362,21 +1358,11 @@ decl_stmt|;
 name|int
 name|physmem_est
 decl_stmt|;
-if|if
-condition|(
-name|boothowto
-operator|&
-name|RB_VERBOSE
-condition|)
-name|bootverbose
-operator|++
-expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
-name|printf
+name|mtx_lock
 argument_list|(
-literal|"%s"
-argument_list|,
-name|version
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|earlysetcpuclass
@@ -1951,7 +1937,13 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere.  	 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
+comment|/* 	 * XXX: Mbuf system machine-specific initializations should 	 *      go here, if anywhere. 	 */
 comment|/* 	 * Initialize callouts 	 */
 name|SLIST_INIT
 argument_list|(
@@ -5277,7 +5269,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*        * XXX - Linux emulator        * Make sure sure edx is 0x0 on entry. Linux binaries depend        * on it.        */
+comment|/* 	 * XXX - Linux emulator 	 * Make sure sure edx is 0x0 on entry. Linux binaries depend 	 * on it. 	 */
 name|p
 operator|->
 name|p_retval
@@ -10690,6 +10682,12 @@ name|idt
 operator|=
 name|new_idt
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vm_map_protect
@@ -10712,6 +10710,12 @@ condition|)
 name|panic
 argument_list|(
 literal|"vm_map_protect failed"
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 return|return;
