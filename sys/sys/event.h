@@ -233,6 +233,21 @@ comment|/* error, data contains errno */
 end_comment
 
 begin_comment
+comment|/*  * data/hint flags for EVFILT_{READ|WRITE}, shared with userspace  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOTE_LOWAT
+value|0x0001
+end_define
+
+begin_comment
+comment|/* low water mark */
+end_comment
+
+begin_comment
 comment|/*  * data/hint flags for EVFILT_VNODE, shared with userspace  */
 end_comment
 
