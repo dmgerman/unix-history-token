@@ -1766,6 +1766,10 @@ decl_stmt|;
 name|vm_zone_t
 name|z
 decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1835,7 +1839,7 @@ argument_list|(
 name|tmpbuf
 argument_list|)
 argument_list|,
-literal|"%-14.14s %6.6u, %8.8u, %6.6u, %6.6u, %8.8u\n"
+literal|"%-12.12s  %6.6u, %8.8u, %6.6u, %6.6u, %8.8u\n"
 argument_list|,
 name|z
 operator|->
@@ -1868,6 +1872,35 @@ operator|->
 name|znalloc
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|tmpbuf
+operator|+
+literal|12
+init|;
+name|p
+operator|>
+name|tmpbuf
+operator|&&
+operator|*
+name|p
+operator|==
+literal|' '
+condition|;
+operator|--
+name|p
+control|)
+comment|/* nothing */
+empty_stmt|;
+name|p
+index|[
+literal|1
+index|]
+operator|=
+literal|':'
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -1896,6 +1929,9 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|SYSCTL_OUT
@@ -1906,7 +1942,11 @@ name|tmpbuf
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
 name|mtx_unlock
 argument_list|(
