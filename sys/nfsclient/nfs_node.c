@@ -825,6 +825,7 @@ argument_list|(
 name|np
 argument_list|)
 expr_stmt|;
+comment|/* 		 * np or vp may become invalid if vget() blocks, so loop  		 */
 if|if
 condition|(
 name|vget
@@ -832,6 +833,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|LK_EXCLUSIVE
+operator||
+name|LK_SLEEPFAIL
 argument_list|,
 name|td
 argument_list|)
