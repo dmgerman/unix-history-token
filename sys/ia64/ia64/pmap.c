@@ -2101,11 +2101,17 @@ operator|(
 name|void
 operator|*
 operator|)
+name|IA64_PHYS_TO_RR7
+argument_list|(
+name|ia64_tpa
+argument_list|(
 name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
 name|bytes
+argument_list|)
+argument_list|)
 argument_list|)
 return|;
 block|}
