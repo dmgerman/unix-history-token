@@ -1227,9 +1227,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|cpu_idle
-parameter_list|()
+name|cpu_idle_default
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|ia64_pal_result
@@ -1250,6 +1253,38 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_function
+name|void
+name|cpu_idle
+parameter_list|()
+block|{
+call|(
+modifier|*
+name|cpu_idle_hook
+call|)
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Other subsystems (e.g., ACPI) can hook this later. */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|cpu_idle_hook
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+init|=
+name|cpu_idle_default
+function_decl|;
+end_function_decl
 
 begin_function
 name|void

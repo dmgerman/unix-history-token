@@ -4018,6 +4018,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|cpu_idle_hook
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Hook to machdep CPU idler. */
+end_comment
+
+begin_function_decl
 name|void
 name|cpu_switch
 parameter_list|(
