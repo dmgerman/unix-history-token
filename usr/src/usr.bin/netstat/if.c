@@ -250,7 +250,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %-5.5s %-10.10s  %-12.12s %-7.7s %-5.5s %-7.7s %-5.5s"
+literal|"%-5.5s %-5.5s %-11.11s %-15.15s %8.8s %5.5s %8.8s %5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -271,9 +271,9 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %-6.6s"
+literal|" %5s"
 argument_list|,
-literal|"Collis"
+literal|"Coll"
 argument_list|)
 expr_stmt|;
 if|if
@@ -282,9 +282,9 @@ name|tflag
 condition|)
 name|printf
 argument_list|(
-literal|" %-6.6s"
+literal|" %s"
 argument_list|,
-literal|"Timer"
+literal|"Time"
 argument_list|)
 expr_stmt|;
 name|putchar
@@ -492,14 +492,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-10.10s  "
+literal|"%-11.11s "
 argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-12.12s "
+literal|"%-15.15s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -558,14 +558,14 @@ name|AF_UNSPEC
 case|:
 name|printf
 argument_list|(
-literal|"%-10.10s  "
+literal|"%-11.11s "
 argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-12.12s "
+literal|"%-15.15s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -607,7 +607,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-10.10s  "
+literal|"%-11.11s "
 argument_list|,
 name|netname
 argument_list|(
@@ -619,7 +619,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"%-10.10s  "
+literal|"%-11.11s "
 argument_list|,
 name|netname
 argument_list|(
@@ -644,7 +644,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%-12.12s "
+literal|"%-15.15s "
 argument_list|,
 name|routename
 argument_list|(
@@ -680,7 +680,7 @@ name|u_long
 name|net
 decl_stmt|;
 name|char
-name|host
+name|netnum
 index|[
 literal|8
 index|]
@@ -707,7 +707,7 @@ name|x_net
 expr_stmt|;
 name|sprintf
 argument_list|(
-name|host
+name|netnum
 argument_list|,
 literal|"%lxH"
 argument_list|,
@@ -719,19 +719,19 @@ argument_list|)
 expr_stmt|;
 name|upHex
 argument_list|(
-name|host
+name|netnum
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"ns:%-8s "
 argument_list|,
-name|host
+name|netnum
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-12s "
+literal|"%-15s "
 argument_list|,
 name|ns_phost
 argument_list|(
@@ -835,7 +835,7 @@ if|if
 condition|(
 name|n
 operator|<=
-literal|6
+literal|7
 condition|)
 while|while
 condition|(
@@ -885,7 +885,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"%-7d %-5d %-7d %-5d %-6d"
+literal|"%8d %5d %8d %5d %5d"
 argument_list|,
 name|ifnet
 operator|.
@@ -914,7 +914,7 @@ name|tflag
 condition|)
 name|printf
 argument_list|(
-literal|" %-6d"
+literal|" %3d"
 argument_list|,
 name|ifnet
 operator|.
@@ -1306,7 +1306,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"   input  (Total)    output       "
+literal|"     input  (Total)    output"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1363,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-7.7s %-5.5s %-7.7s %-5.5s %-5.5s "
+literal|"%8.8s %5.5s %8.8s %5.5s %5.5s "
 argument_list|,
 literal|"packets"
 argument_list|,
@@ -1386,7 +1386,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%-7.7s %-5.5s %-7.7s %-5.5s %-5.5s "
+literal|"%8.8s %5.5s %8.8s %5.5s %5.5s "
 argument_list|,
 literal|"packets"
 argument_list|,
@@ -1497,7 +1497,7 @@ name|interesting
 condition|)
 name|printf
 argument_list|(
-literal|"%-7d %-5d %-7d %-5d %-5d "
+literal|"%8d %5d %8d %5d %5d "
 argument_list|,
 name|ifnet
 operator|.
@@ -1640,7 +1640,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%-7d %-5d %-7d %-5d %-5d\n"
+literal|"%8d %5d %8d %5d %5d "
 argument_list|,
 name|sum
 operator|->
@@ -1688,6 +1688,11 @@ name|total
 operator|=
 operator|*
 name|sum
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
 expr_stmt|;
 name|fflush
 argument_list|(
