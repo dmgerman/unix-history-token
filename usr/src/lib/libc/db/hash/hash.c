@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.33 (Berkeley) %G%"
+literal|"@(#)hash.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -314,6 +314,8 @@ operator|(
 specifier|const
 name|DB
 operator|*
+operator|,
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2127,17 +2129,39 @@ name|int
 name|hash_sync
 parameter_list|(
 name|dbp
+parameter_list|,
+name|flags
 parameter_list|)
 specifier|const
 name|DB
 modifier|*
 name|dbp
 decl_stmt|;
+name|u_int
+name|flags
+decl_stmt|;
 block|{
 name|HTAB
 modifier|*
 name|hashp
 decl_stmt|;
+if|if
+condition|(
+name|flags
+operator|!=
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
