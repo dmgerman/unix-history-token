@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_lfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)mount_lfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -293,7 +293,9 @@ comment|/* the mount point */
 comment|/* copied from mount's UFS code */
 name|args
 operator|.
-name|exroot
+name|export
+operator|.
+name|ex_root
 operator|=
 name|DEFAULT_ROOTUID
 expr_stmt|;
@@ -305,14 +307,18 @@ name|MNT_RDONLY
 condition|)
 name|args
 operator|.
-name|exflags
+name|export
+operator|.
+name|ex_flags
 operator|=
 name|MNT_EXRDONLY
 expr_stmt|;
 else|else
 name|args
 operator|.
-name|exflags
+name|export
+operator|.
+name|ex_flags
 operator|=
 literal|0
 expr_stmt|;
