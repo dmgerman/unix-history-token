@@ -2316,11 +2316,15 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* KTRACE */
+end_comment
+
+begin_comment
 comment|/* Interface and common routines */
 end_comment
 
 begin_comment
-comment|/*  * ktrace system call  */
+comment|/*  * ktrace system call  *  * MPSAFE  */
 end_comment
 
 begin_ifndef
@@ -2451,6 +2455,22 @@ name|ucred
 modifier|*
 name|cred
 decl_stmt|;
+comment|/* 	 * Need something to (un)trace. 	 */
+if|if
+condition|(
+name|ops
+operator|!=
+name|KTROP_CLEARFILE
+operator|&&
+name|facs
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|td
 operator|->
 name|td_inktrace
@@ -2491,6 +2511,12 @@ name|FWRITE
 operator||
 name|O_NOFOLLOW
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|vn_open
@@ -2509,6 +2535,12 @@ condition|(
 name|error
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_inktrace
@@ -2571,6 +2603,12 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|td
 operator|->
 name|td_inktrace
@@ -2583,6 +2621,12 @@ name|EACCES
 operator|)
 return|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Clear all uses of the tracefile. 	 */
 if|if
@@ -2672,6 +2716,12 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2686,6 +2736,12 @@ argument_list|,
 name|cred
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|crfree
@@ -2724,22 +2780,13 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* 	 * need something to (un)trace (XXX - why is this here?) 	 */
-if|if
-condition|(
-operator|!
-name|facs
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 comment|/* 	 * do it 	 */
+name|sx_slock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -2750,12 +2797,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * by process group 		 */
-name|sx_slock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
 name|pg
 operator|=
 name|pgfind
@@ -2836,12 +2877,6 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-name|sx_sunlock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -2862,6 +2897,12 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ESRCH
@@ -2870,12 +2911,12 @@ goto|goto
 name|done
 goto|;
 block|}
+comment|/* 		 * The slock of the proctree lock will keep this process 		 * from going away, so unlocking the proc here is ok. 		 */
 name|PROC_UNLOCK
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* XXX: UNLOCK above has a race */
 if|if
 condition|(
 name|descend
@@ -2912,6 +2953,12 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+name|sx_sunlock
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2929,6 +2976,13 @@ name|vp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2945,6 +2999,13 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 name|td
 operator|->
 name|td_inktrace
@@ -2958,16 +3019,20 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* !KTRACE */
 return|return
+operator|(
 name|ENOSYS
+operator|)
 return|;
 endif|#
 directive|endif
+comment|/* KTRACE */
 block|}
 end_function
 
 begin_comment
-comment|/*  * utrace system call  */
+comment|/*  * utrace system call  *  * MPSAFE  */
 end_comment
 
 begin_comment
@@ -3140,6 +3205,7 @@ operator|)
 return|;
 else|#
 directive|else
+comment|/* !KTRACE */
 return|return
 operator|(
 name|ENOSYS
@@ -3147,6 +3213,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* KTRACE */
 block|}
 end_function
 
@@ -3397,11 +3464,25 @@ name|tracevp
 operator|!=
 name|NULL
 condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vrele
 argument_list|(
 name|tracevp
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|tracecred
@@ -3473,10 +3554,12 @@ name|p
 operator|=
 name|top
 expr_stmt|;
-name|sx_slock
+name|sx_assert
 argument_list|(
 operator|&
 name|proctree_lock
+argument_list|,
+name|SX_LOCKED
 argument_list|)
 expr_stmt|;
 for|for
@@ -3535,19 +3618,11 @@ name|p
 operator|==
 name|top
 condition|)
-block|{
-name|sx_sunlock
-argument_list|(
-operator|&
-name|proctree_lock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
 operator|)
 return|;
-block|}
 if|if
 condition|(
 name|LIST_NEXT
