@@ -709,17 +709,6 @@ begin_comment
 comment|/* default file mask: S_IWGRP|S_IWOTH */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NODEV
-value|(dev_t)(-1)
-end_define
-
-begin_comment
-comment|/* non-existent device */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -742,6 +731,33 @@ define|#
 directive|define
 name|NOMAJ
 value|256
+end_define
+
+begin_comment
+comment|/* non-existent device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NODEV
+value|NULL
+end_define
+
+begin_comment
+comment|/* non-existent device */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NODEV
+value|(dev_t)(-1)
 end_define
 
 begin_comment
