@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.3	82/02/01	*/
+comment|/*	raw_ip.c	4.4	82/02/02	*/
 end_comment
 
 begin_include
@@ -186,10 +186,13 @@ name|raw_input
 argument_list|(
 name|m
 argument_list|,
+operator|&
 name|ripproto
 argument_list|,
+operator|&
 name|ripdst
 argument_list|,
+operator|&
 name|ripsrc
 argument_list|)
 expr_stmt|;
@@ -325,9 +328,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m
@@ -535,6 +535,7 @@ condition|(
 name|req
 condition|)
 block|{
+comment|/* 	 * SHOULD HAVE CONTROL TO SET PROTOCOL NUMBER (e.g. GGP) 	 */
 case|case
 name|PRU_CONTROL
 case|:
