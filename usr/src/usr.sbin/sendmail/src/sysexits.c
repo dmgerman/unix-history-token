@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sysexits.c	5.1 (Berkeley) %G%"
+literal|"@(#)sysexits.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,24 +36,6 @@ include|#
 directive|include
 file|"useful.h"
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|sysexits
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  SYSEXITS.C -- error messages corresponding to sysexits.h */
