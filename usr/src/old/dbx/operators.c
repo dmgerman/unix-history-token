@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c 1.4 %G%"
+literal|"@(#)operators.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -185,6 +185,9 @@ comment|/* print symbol information */
 name|O_RUN
 block|,
 comment|/* start up program */
+name|O_SEARCH
+block|,
+comment|/* regular expression search of source file */
 name|O_SKIP
 block|,
 comment|/* skip the current line */
@@ -877,6 +880,13 @@ block|,
 name|null
 block|,
 literal|"run"
+block|,
+comment|/* O_SEARCH */
+literal|2
+block|,
+name|null
+block|,
+literal|"search"
 block|,
 comment|/* O_SKIP */
 literal|0
