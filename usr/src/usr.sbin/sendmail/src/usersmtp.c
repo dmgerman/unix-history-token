@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.12 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.13 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.12 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.13 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,6 +355,25 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|pvp
+index|[
+literal|1
+index|]
+argument_list|,
+name|SmtpPhase
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SmtpPid
 operator|=
 name|openmailer
@@ -476,6 +495,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|r
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|CurEnv
@@ -498,6 +521,10 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|r
 expr_stmt|;
 block|}
 block|}
@@ -560,6 +587,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -616,6 +659,22 @@ begin_expr_stmt
 name|SmtpPhase
 operator|=
 literal|"HELO wait"
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -831,6 +890,22 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -1037,6 +1112,19 @@ name|SmtpPhase
 operator|=
 literal|"RCPT wait"
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|reply
@@ -1172,6 +1260,19 @@ name|SmtpPhase
 operator|=
 literal|"DATA wait"
 expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
+expr_stmt|;
 name|r
 operator|=
 name|reply
@@ -1289,6 +1390,19 @@ comment|/* check for the results of the transaction */
 name|SmtpPhase
 operator|=
 literal|"result wait"
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s %s: %s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
+argument_list|,
+name|CurHostName
+argument_list|,
+name|SmtpPhase
+argument_list|)
 expr_stmt|;
 name|r
 operator|=
