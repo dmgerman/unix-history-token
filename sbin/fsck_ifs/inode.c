@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.4 (Berkeley) 4/18/94"
+literal|"@(#)inode.c	8.5 (Berkeley) 2/8/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1700,6 +1700,19 @@ name|inpp
 operator|=
 name|inp
 expr_stmt|;
+if|if
+condition|(
+name|inumber
+operator|==
+name|ROOTINO
+condition|)
+name|inp
+operator|->
+name|i_parent
+operator|=
+name|ROOTINO
+expr_stmt|;
+else|else
 name|inp
 operator|->
 name|i_parent
