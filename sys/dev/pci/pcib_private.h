@@ -30,6 +30,14 @@ block|{
 name|device_t
 name|dev
 decl_stmt|;
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* flags */
+define|#
+directive|define
+name|PCIB_SUBTRACTIVE
+value|0x1
 name|uint16_t
 name|command
 decl_stmt|;
