@@ -5097,7 +5097,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -5121,7 +5121,7 @@ else|:
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
