@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.81 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.82 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2332,15 +2332,6 @@ operator|=
 name|to
 operator|->
 name|q_paddr
-expr_stmt|;
-name|define
-argument_list|(
-literal|'h'
-argument_list|,
-name|NULL
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
@@ -7287,7 +7278,18 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|stat
+argument_list|,
+literal|"queued"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
 name|char
 modifier|*
@@ -7880,7 +7882,18 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|stat
+argument_list|,
+literal|"queued"
+argument_list|)
+operator|!=
+literal|0
+condition|)
 block|{
 name|char
 modifier|*
