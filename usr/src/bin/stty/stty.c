@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	8.1 (Berkeley) %G%"
+literal|"@(#)stty.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,7 +653,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: stty: [-a|-e|-g] [-f file] [options]"
+literal|"usage: stty: [-a|-e|-g] [-f file] [options]\n"
 argument_list|)
 expr_stmt|;
 name|exit
