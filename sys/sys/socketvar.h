@@ -1134,6 +1134,7 @@ name|sockbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|struct
 name|sockaddr
 modifier|*

@@ -226,6 +226,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|sockaddr
 name|sun_noname
@@ -617,6 +618,7 @@ operator|=
 name|sodupsockaddr
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
@@ -1082,6 +1084,7 @@ operator|=
 name|sodupsockaddr
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*
@@ -1402,6 +1405,7 @@ case|case
 name|SOCK_DGRAM
 case|:
 block|{
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
@@ -2098,6 +2102,7 @@ operator|=
 name|sodupsockaddr
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sockaddr
 operator|*

@@ -2917,6 +2917,7 @@ name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
+specifier|const
 name|struct
 name|sockaddr
 modifier|*
