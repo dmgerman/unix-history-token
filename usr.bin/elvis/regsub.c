@@ -53,6 +53,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|char
+modifier|*
+name|last_repl
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a copy of the text from the previous subst */
+end_comment
+
 begin_comment
 comment|/* perform substitutions after a regexp match */
 end_comment
@@ -64,7 +75,7 @@ name|REGEX
 end_ifdef
 
 begin_function
-name|void
+name|int
 name|regsub
 parameter_list|(
 name|rm
@@ -121,7 +132,7 @@ directive|else
 end_else
 
 begin_function
-name|void
+name|int
 name|regsub
 parameter_list|(
 name|re
@@ -183,12 +194,6 @@ name|int
 name|len
 decl_stmt|;
 comment|/* used to calculate length of subst string */
-specifier|static
-name|char
-modifier|*
-name|prev
-decl_stmt|;
-comment|/* a copy of the text from the previous subst */
 comment|/* replace \~ (or maybe ~) by previous substitution text */
 comment|/* step 1: calculate the length of the new substitution text */
 for|for
@@ -255,7 +260,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|prev
+name|last_repl
 condition|)
 block|{
 name|regerr
@@ -263,13 +268,16 @@ argument_list|(
 literal|"No prev text to substitute for ~"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|len
 operator|+=
 name|strlen
 argument_list|(
-name|prev
+name|last_repl
 argument_list|)
 operator|-
 literal|1
@@ -348,7 +356,10 @@ argument_list|(
 literal|"Not enough memory for ~ expansion"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|-
+literal|1
+return|;
 block|}
 comment|/* copy src into start, replacing the ~s by the previous text */
 while|while
@@ -375,14 +386,14 @@ name|strcpy
 argument_list|(
 name|cpy
 argument_list|,
-name|prev
+name|last_repl
 argument_list|)
 expr_stmt|;
 name|cpy
 operator|+=
 name|strlen
 argument_list|(
-name|prev
+name|last_repl
 argument_list|)
 expr_stmt|;
 name|src
@@ -437,19 +448,57 @@ name|strcpy
 argument_list|(
 name|cpy
 argument_list|,
-name|prev
+name|last_repl
 argument_list|)
 expr_stmt|;
 name|cpy
 operator|+=
 name|strlen
 argument_list|(
-name|prev
+name|last_repl
 argument_list|)
 expr_stmt|;
 name|src
 operator|+=
 literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|o_magic
+operator|&&
+operator|*
+name|src
+operator|==
+literal|'\\'
+operator|&&
+operator|*
+operator|(
+name|src
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'~'
+condition|)
+block|{
+operator|*
+name|cpy
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
+expr_stmt|;
+operator|*
+name|cpy
+operator|++
+operator|=
+operator|*
+name|src
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -511,14 +560,14 @@ expr_stmt|;
 comment|/* remember this as the "previous" for next time */
 if|if
 condition|(
-name|prev
+name|last_repl
 condition|)
 name|_free_
 argument_list|(
-name|prev
+name|last_repl
 argument_list|)
 expr_stmt|;
-name|prev
+name|last_repl
 operator|=
 name|src
 operator|=
@@ -1041,6 +1090,9 @@ name|dst
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

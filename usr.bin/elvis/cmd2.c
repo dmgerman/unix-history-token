@@ -987,6 +987,8 @@ comment|/* substitute for the matched part */
 ifdef|#
 directive|ifdef
 name|REGEX
+if|if
+condition|(
 name|regsub
 argument_list|(
 name|rm
@@ -999,9 +1001,14 @@ name|subst
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return;
 else|#
 directive|else
+if|if
+condition|(
 name|regsub
 argument_list|(
 name|re
@@ -1010,7 +1017,10 @@ name|subst
 argument_list|,
 name|d
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return;
 endif|#
 directive|endif
 ifdef|#
