@@ -945,9 +945,6 @@ name|printf
 argument_list|(
 literal|"%x"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|tcp_pcbs
 index|[
 name|i
