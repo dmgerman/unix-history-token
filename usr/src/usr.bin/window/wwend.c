@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwend.c	3.9 (Berkeley) %G%"
+literal|"@(#)wwend.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,41 @@ if|if
 condition|(
 name|tt
 operator|.
+name|tt_scroll_top
+operator|!=
+literal|0
+operator|||
+name|tt
+operator|.
+name|tt_scroll_bot
+operator|!=
+name|tt
+operator|.
+name|tt_nrow
+operator|-
+literal|1
+condition|)
+comment|/* tt.tt_setscroll is known to be defined */
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_setscroll
+call|)
+argument_list|(
+literal|0
+argument_list|,
+name|tt
+operator|.
+name|tt_nrow
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
 name|tt_insert
 condition|)
 call|(
@@ -81,6 +116,20 @@ call|)
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_scroll_down
+condition|)
+call|(
+modifier|*
+name|tt
+operator|.
+name|tt_scroll_down
+call|)
+argument_list|()
 expr_stmt|;
 call|(
 modifier|*

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwscroll.c	3.18 (Berkeley) %G%"
+literal|"@(#)wwscroll.c	3.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -329,10 +329,17 @@ name|int
 name|nvismax
 decl_stmt|;
 name|int
-name|deleted
+name|scrolled
 init|=
 literal|0
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|scroll_func
+function_decl|)
+parameter_list|()
+function_decl|;
 comment|/* 	 * See how many lines on the screen are affected. 	 * And calculate row1x, row2x, and left at the same time. 	 */
 for|for
 control|(
@@ -449,7 +456,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 	 * If it's a good idea to scroll and the terminal can, then do it. 	 */
+comment|/* 	 * If it's a good idea to scroll and the terminal can, then do it. 	 * We handle retain (da and db) by putting the burden on scrolling up, 	 * which is the less common operation.  It must ensure that 	 * text is not pushed below the screen, so scrolling down doesn't 	 * have to worry about it. 	 */
 if|if
 condition|(
 name|nvis
@@ -458,77 +465,105 @@ name|nvismax
 operator|/
 literal|2
 condition|)
-block|{
+goto|goto
+name|no_scroll
+goto|;
 comment|/* not worth it */
-block|}
-elseif|else
+comment|/* 	 * Try scrolling region (or scrolling the whole screen) first. 	 * Can we assume "sr" doesn't push text below the screen 	 * so we don't have to worry about retain below? 	 * What about scrolling down with a newline?  It probably does 	 * push text above (with da).  Scrolling up would then have 	 * to take care of that. 	 * It's easy to be fool proof, but that slows things down. 	 * The current solution is to disallow tt_scroll_up if da or db is true 	 * but cs (scrolling region) is not.  Again, we sacrifice scrolling 	 * up in favor of scrolling down.  The idea is having scrolling regions 	 * probably means we can scroll (even the whole screen) with impunity. 	 * This lets us work efficiently on simple terminals (use newline 	 * on the bottom to scroll), on any terminal without retain, and 	 * on vt100 style scrolling regions (I think). 	 */
 if|if
 condition|(
-operator|!
-name|tt
-operator|.
-name|tt_noscroll
-operator|&&
-name|row1x
-operator|==
-literal|0
-operator|&&
-name|row2x
-operator|==
-name|wwnrow
-operator|&&
+name|scroll_func
+operator|=
 name|dir
 operator|>
 literal|0
+condition|?
+name|tt
+operator|.
+name|tt_scroll_down
+else|:
+name|tt
+operator|.
+name|tt_scroll_up
 condition|)
 block|{
-comment|/* 		 * We're going to assume that a line feed at the 		 * bottom of the screen will cause a scroll, unless 		 * "ns" is set.  This should work at least 99% 		 * of the time.  At any rate, vi seems to do it. 		 */
 if|if
 condition|(
 name|tt
 operator|.
-name|tt_row
+name|tt_scroll_top
 operator|!=
-name|wwnrow
+name|row1x
+operator|||
+name|tt
+operator|.
+name|tt_scroll_bot
+operator|!=
+name|row2x
 operator|-
 literal|1
 condition|)
+if|if
+condition|(
+name|tt
+operator|.
+name|tt_setscroll
+operator|==
+literal|0
+condition|)
+name|scroll_func
+operator|=
+literal|0
+expr_stmt|;
+else|else
 call|(
 modifier|*
 name|tt
 operator|.
-name|tt_move
+name|tt_setscroll
 call|)
 argument_list|(
-name|wwnrow
+name|row1x
+argument_list|,
+name|row2x
 operator|-
 literal|1
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
-name|ttputc
-argument_list|(
-literal|'\n'
-argument_list|)
+if|if
+condition|(
+name|scroll_func
+condition|)
+block|{
+call|(
+modifier|*
+name|scroll_func
+call|)
+argument_list|()
 expr_stmt|;
-name|deleted
-operator|++
-expr_stmt|;
+goto|goto
+name|did_scroll
+goto|;
 block|}
-elseif|else
+block|}
+comment|/* 	 * Try insert/delete line. 	 * Don't worry about retain when scrolling down, 	 * but do worry when scrolling up, for hp2621. 	 */
 if|if
 condition|(
 name|tt
 operator|.
 name|tt_delline
-operator|&&
+operator|==
+literal|0
+operator|||
 name|tt
 operator|.
 name|tt_insline
+operator|==
+literal|0
 condition|)
-block|{
-comment|/* 		 * Don't worry about retain when scrolling down, 		 * but do worry when scrolling up, for hp2621. 		 */
+goto|goto
+name|no_scroll
+goto|;
 if|if
 condition|(
 name|dir
@@ -644,15 +679,13 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-name|deleted
-operator|++
+name|did_scroll
+label|:
+name|scrolled
+operator|=
+literal|1
 expr_stmt|;
-block|}
 comment|/* 	 * Fix up the old screen. 	 */
-if|if
-condition|(
-name|deleted
-condition|)
 block|{
 specifier|register
 name|union
@@ -794,6 +827,8 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+name|no_scroll
+label|:
 comment|/* 	 * Fix the new screen. 	 */
 if|if
 condition|(
@@ -877,7 +912,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|deleted
+name|scrolled
 condition|)
 block|{
 specifier|register
@@ -1064,7 +1099,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|deleted
+name|scrolled
 condition|)
 block|{
 specifier|register
@@ -1187,7 +1222,7 @@ else|else
 block|{
 if|if
 condition|(
-name|deleted
+name|scrolled
 condition|)
 block|{
 specifier|register
@@ -1263,7 +1298,7 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
-name|deleted
+name|scrolled
 return|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tt.h	3.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)tt.h	3.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -95,6 +95,28 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
+name|tt_scroll_down
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tt_scroll_up
+function_decl|)
+parameter_list|()
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|tt_setscroll
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* set scrolling region */
+name|int
+function_decl|(
+modifier|*
 name|tt_setinsert
 function_decl|)
 parameter_list|()
@@ -133,6 +155,14 @@ name|int
 name|tt_col
 decl_stmt|;
 comment|/* cursor column */
+name|int
+name|tt_scroll_top
+decl_stmt|;
+comment|/* top of scrolling region */
+name|int
+name|tt_scroll_bot
+decl_stmt|;
+comment|/* bottom of scrolling region */
 comment|/* terminal info */
 name|int
 name|tt_nrow
@@ -158,10 +188,6 @@ name|char
 name|tt_retain
 decl_stmt|;
 comment|/* can retain below (db flag) */
-name|char
-name|tt_noscroll
-decl_stmt|;
-comment|/* terminal doesn't scroll (ns flag) */
 comment|/* the frame characters */
 name|short
 modifier|*

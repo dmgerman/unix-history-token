@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.18 (Berkeley) %G%"
+literal|"@(#)ttinit.c	3.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -414,6 +414,22 @@ operator|-
 literal|1
 return|;
 block|}
+name|tt
+operator|.
+name|tt_scroll_top
+operator|=
+literal|0
+expr_stmt|;
+name|tt
+operator|.
+name|tt_scroll_bot
+operator|=
+name|tt
+operator|.
+name|tt_nrow
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
