@@ -373,6 +373,9 @@ name|int
 modifier|*
 name|ntmp
 decl_stmt|;
+name|int
+name|sverrno
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -1310,6 +1313,10 @@ name|EINVAL
 expr_stmt|;
 name|end_error
 label|:
+name|sverrno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|asciivalue
@@ -1331,6 +1338,10 @@ name|free
 argument_list|(
 name|currency_symbol
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|sverrno
 expr_stmt|;
 name|va_end
 argument_list|(
