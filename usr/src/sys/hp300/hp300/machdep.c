@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machdep.c 1.51 89/11/28$  *  *	@(#)machdep.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
+file|"syscontext.h"
 end_include
 
 begin_include
@@ -180,16 +180,6 @@ include|#
 directive|include
 file|"../net/netisr.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|RETURN
-parameter_list|(
-name|value
-parameter_list|)
-value|{ u.u_error = (value); return (u.u_error); }
-end_define
 
 begin_comment
 comment|/*  * Declare these as initialized data so we can patch them.  */
@@ -2503,7 +2493,7 @@ name|sigpid
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, sig %d ssp %x usp %x scp %x ft %d\n"
+literal|"sendsig(%d): sig %d ssp %x usp %x scp %x ft %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2562,7 +2552,7 @@ name|sigpid
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, useracc failed on sig %d\n"
+literal|"sendsig(%d): useracc failed on sig %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2825,7 +2815,7 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, copy out %d of frame %d\n"
+literal|"sendsig(%d): copy out %d of frame %d\n"
 argument_list|,
 name|p
 operator|->
@@ -2901,7 +2891,7 @@ name|ss_fpstate
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, copy out FP state (%x) to %x\n"
+literal|"sendsig(%d): copy out FP state (%x) to %x\n"
 argument_list|,
 name|p
 operator|->
@@ -3288,17 +3278,25 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, scp %x, fp %x, sc_ap %x\n"
+literal|"sendsig(%d): sig %d scp %x fp %x sc_sp %x sc_ap %x\n"
 argument_list|,
 name|p
 operator|->
 name|p_pid
+argument_list|,
+name|sig
 argument_list|,
 name|kfp
 operator|->
 name|sf_scp
 argument_list|,
 name|fp
+argument_list|,
+name|kfp
+operator|->
+name|sf_sc
+operator|.
+name|sc_sp
 argument_list|,
 name|kfp
 operator|->
@@ -3349,7 +3347,7 @@ name|sigpid
 condition|)
 name|printf
 argument_list|(
-literal|"sendsig: pid %d, sig %d, returns\n"
+literal|"sendsig(%d): sig %d returns\n"
 argument_list|,
 name|p
 operator|->
@@ -3919,7 +3917,7 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sigreturn: pid %d, sc_ap %x, flags %x\n"
+literal|"sigreturn(%d): sc_ap %x flags %x\n"
 argument_list|,
 name|p
 operator|->
@@ -3979,7 +3977,7 @@ name|sigpid
 condition|)
 name|printf
 argument_list|(
-literal|"sigreturn: pid %d, ssp %x usp %x scp %x ft %d\n"
+literal|"sigreturn(%d): ssp %x usp %x scp %x ft %d\n"
 argument_list|,
 name|p
 operator|->
@@ -4173,7 +4171,11 @@ name|SDB_FOLLOW
 condition|)
 name|printf
 argument_list|(
-literal|"sigreturn: copy in %d of frame type %d\n"
+literal|"sigreturn(%d): copy in %d of frame type %d\n"
+argument_list|,
+name|p
+operator|->
+name|p_pid
 argument_list|,
 name|sz
 argument_list|,
@@ -4228,7 +4230,7 @@ name|ss_fpstate
 condition|)
 name|printf
 argument_list|(
-literal|"sigreturn: pid %d, copied in FP state (%x) at %x\n"
+literal|"sigreturn(%d): copied in FP state (%x) at %x\n"
 argument_list|,
 name|p
 operator|->
@@ -4281,11 +4283,9 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"sigreturn: pid %d, returns\n"
+literal|"sigreturn(%d): returns\n"
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|p
 operator|->
 name|p_pid
 argument_list|)
