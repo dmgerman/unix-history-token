@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbyht.c,v 1.11 1999/06/07 16:30:27 dt Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.29 1997/04/10 20:26:04 wpaul Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

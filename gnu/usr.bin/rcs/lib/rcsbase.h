@@ -7,7 +7,7 @@ begin_define
 define|#
 directive|define
 name|RCSBASE
-value|"$Id: rcsbase.h,v 1.8 1997/02/22 15:47:33 peter Exp $"
+value|"$FreeBSD$"
 end_define
 
 begin_comment

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fgetpos.c,v 1.7 1999/02/08 21:32:38 dt Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

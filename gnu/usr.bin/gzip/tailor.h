@@ -8,7 +8,7 @@ comment|/* The target dependent definitions should be defined here only.  * The 
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_if

@@ -34,7 +34,7 @@ name|libId
 argument_list|(
 argument|lexId
 argument_list|,
-literal|"$Id$"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

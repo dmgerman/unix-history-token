@@ -4,7 +4,7 @@ comment|/*  * This file is te-generic.h and is intended to be a template for  * 
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_define

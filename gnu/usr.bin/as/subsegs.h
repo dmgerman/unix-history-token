@@ -4,7 +4,7 @@ comment|/* subsegs.h -> subsegs.c     Copyright (C) 1987, 1992 Free Software Fou
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

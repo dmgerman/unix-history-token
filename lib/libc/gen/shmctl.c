@@ -20,7 +20,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

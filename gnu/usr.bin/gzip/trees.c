@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: trees.c,v 1.7 1997/08/29 16:14:19 sos Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

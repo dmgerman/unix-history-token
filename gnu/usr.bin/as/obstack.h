@@ -4,7 +4,7 @@ comment|/* obstack.h - object stack macros    Copyright (C) 1988 Free Software F
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_comment

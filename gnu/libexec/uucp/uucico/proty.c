@@ -21,7 +21,7 @@ name|char
 name|proty_id
 index|[]
 init|=
-literal|"$Id$"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

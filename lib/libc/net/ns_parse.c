@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_parse.c,v 8.8 1998/02/17 17:20:33 vixie Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

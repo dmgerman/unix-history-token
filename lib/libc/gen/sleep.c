@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sleep.c,v 1.23 1998/09/05 08:01:26 jb Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

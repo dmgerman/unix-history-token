@@ -4,7 +4,7 @@ comment|/* RCS compile-time configuration */
 end_comment
 
 begin_comment
-comment|/* $Id$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	From: Id: nameser_compat.h,v 8.9 1998/03/20 23:25:10 halley Exp  *	$Id$  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	From: Id: nameser_compat.h,v 8.9 1998/03/20 23:25:10 halley Exp  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

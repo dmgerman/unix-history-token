@@ -30,7 +30,7 @@ name|libId
 argument_list|(
 argument|rcstimeId
 argument_list|,
-literal|"$Id$"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 

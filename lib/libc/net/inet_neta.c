@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_neta.c,v 1.4 1998/02/20 08:13:51 jb Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

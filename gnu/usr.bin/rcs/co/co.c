@@ -266,7 +266,7 @@ argument|coId
 argument_list|,
 literal|"co"
 argument_list|,
-literal|"$Id: co.c,v 1.8 1997/02/22 15:47:21 peter Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 end_macro
 
