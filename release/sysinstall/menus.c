@@ -1155,13 +1155,13 @@ name|docBrowser
 block|}
 block|,
 block|{
-literal|" Install, Novice"
+literal|" Install, Standard"
 block|,
-literal|"A novice system installation."
+literal|"A standard system installation."
 block|,
 name|NULL
 block|,
-name|installNovice
+name|installStandard
 block|}
 block|,
 block|{
@@ -1701,13 +1701,13 @@ literal|"usage"
 block|}
 block|,
 block|{
-literal|"Novice"
+literal|"Standard"
 block|,
-literal|"Begin a novice installation (for beginners)"
+literal|"Begin a standard installation (recommended)"
 block|,
 name|NULL
 block|,
-name|installNovice
+name|installStandard
 block|}
 block|,
 block|{

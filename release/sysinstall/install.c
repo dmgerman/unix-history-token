@@ -1970,12 +1970,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* Novice mode installation */
+comment|/* Standard mode installation */
 end_comment
 
 begin_function
 name|int
-name|installNovice
+name|installStandard
 parameter_list|(
 name|dialogMenuItem
 modifier|*
@@ -1998,7 +1998,7 @@ name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
 argument_list|,
-literal|"novice"
+literal|"standard"
 argument_list|,
 literal|0
 argument_list|)
@@ -2421,7 +2421,7 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"The FreeBSD package collection is a collection of hundreds of ready-to-run\n"
+literal|"The FreeBSD package collection is a collection of thousands of ready-to-run\n"
 literal|"applications, from text editors to games to WEB servers and more.  Would you\n"
 literal|"like to browse the collection now?"
 argument_list|)
@@ -4641,6 +4641,15 @@ argument_list|(
 name|VAR_NEWFS_ARGS
 argument_list|,
 literal|"-b 8192 -f 1024"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_MOUSED_PORT
+argument_list|,
+literal|"/dev/psm0"
 argument_list|,
 literal|0
 argument_list|)
