@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	6.4	84/11/01	*/
+comment|/*	tcp_timer.c	6.5	84/11/14	*/
 end_comment
 
 begin_include
@@ -575,7 +575,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit all 	 * unacknowledged messages in the window. 	 */
+comment|/* 	 * Retransmission timer went off.  Message has not 	 * been acked within retransmit interval.  Back off 	 * to a longer retransmit interval and retransmit one segment. 	 */
 case|case
 name|TCPT_REXMT
 case|:
@@ -604,6 +604,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * If losing, let the lower level know 		 * and try for a better route. 		 */
+if|if
+condition|(
+name|tp
+operator|->
+name|t_rxtshift
+operator|>
+name|TCP_MAXRXTSHIFT
+operator|/
+literal|2
+condition|)
+name|in_rtchange
+argument_list|(
+name|tp
+operator|->
+name|t_inpcb
+argument_list|)
+expr_stmt|;
 name|TCPT_RANGESET
 argument_list|(
 name|tp
