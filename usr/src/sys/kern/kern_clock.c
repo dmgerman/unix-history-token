@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.49	82/12/30	*/
+comment|/*	kern_clock.c	4.50	83/01/15	*/
 end_comment
 
 begin_include
@@ -108,6 +108,23 @@ begin_include
 include|#
 directive|include
 file|"../vax/mtpr.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GPROF
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../h/gprof.h"
 end_include
 
 begin_endif
@@ -596,11 +613,15 @@ name|kcount
 index|[
 name|k
 operator|/
+operator|(
+name|HISTFRACTION
+operator|*
 sizeof|sizeof
 argument_list|(
 operator|*
 name|kcount
 argument_list|)
+operator|)
 index|]
 operator|++
 expr_stmt|;
