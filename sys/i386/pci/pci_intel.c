@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci_intel.c,v 1.1 1994/09/06 22:39:11 se Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- ** **  $Log: pci_intel.c,v $  * Revision 1.1  1994/09/06  22:39:11  se  * Initial revision  *  * Revision 1.1  94/09/05  22:38:38  wolf  * Initial revision  *   * Revision 1.1  94/09/04  16:05:20  wolf  * Initial revision  *  *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci_intel.c,v 1.2 94/09/15 21:01:52 wolf Exp $ ** **  Device driver for INTEL PCI chipsets. ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** **  Written for 386bsd and FreeBSD by **	wolf@dentaro.gun.de	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_escape
@@ -63,9 +63,6 @@ name|intel_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -77,9 +74,6 @@ name|intel_82424zx_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -91,9 +85,6 @@ name|intel_82434lx_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -192,8 +183,6 @@ name|intel_attach
 block|,
 literal|0x04848086
 block|,
-literal|0
-block|,
 literal|"intel 82378IB pci-isa bridge"
 block|,
 name|return0
@@ -212,8 +201,6 @@ block|,
 name|intel_82424zx_attach
 block|,
 literal|0x04838086
-block|,
-literal|0
 block|,
 literal|"intel 82424ZX cache dram controller"
 block|,
@@ -234,8 +221,6 @@ name|intel_attach
 block|,
 literal|0x04828086
 block|,
-literal|0
-block|,
 literal|"intel 82375EB pci-eisa bridge"
 block|,
 name|return0
@@ -254,8 +239,6 @@ block|,
 name|intel_82434lx_attach
 block|,
 literal|0x04a38086
-block|,
-literal|0
 block|,
 literal|"intel 82434LX pci cache memory controller"
 block|,
@@ -412,7 +395,7 @@ literal|0x00
 block|,
 name|M_NE
 block|,
-literal|"\t\nWarning:"
+literal|"\n\tWarning:"
 block|}
 block|,
 block|{
@@ -448,7 +431,7 @@ literal|0x04
 block|,
 name|M_EQ
 block|,
-literal|"\nWarning: refresh OFF! "
+literal|"\n\tWarning: refresh OFF! "
 block|}
 block|,
 block|{
@@ -460,7 +443,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nCache: "
+literal|"\n\tCache: "
 block|}
 block|,
 block|{
@@ -592,7 +575,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nDRAM:"
+literal|"\n\tDRAM:"
 block|}
 block|,
 block|{
@@ -748,7 +731,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nPCI: CPU->PCI posting "
+literal|"\n\tPCI: CPU->PCI posting "
 block|}
 block|,
 block|{
@@ -820,7 +803,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|", PCI->Mem. posting "
+literal|", PCI->Memory posting "
 block|}
 block|,
 block|{
@@ -1015,7 +998,7 @@ literal|0x00
 block|,
 name|M_NE
 block|,
-literal|"\t\nWarning: NO cache parity!"
+literal|"\n\tWarning: NO cache parity!"
 block|}
 block|,
 block|{
@@ -1027,7 +1010,7 @@ literal|0x00
 block|,
 name|M_NE
 block|,
-literal|"\t\nWarning: NO DRAM parity!"
+literal|"\n\tWarning: NO DRAM parity!"
 block|}
 block|,
 block|{
@@ -1039,7 +1022,7 @@ literal|0x01
 block|,
 name|M_EQ
 block|,
-literal|"\t\nWarning: refresh OFF! "
+literal|"\n\tWarning: refresh OFF! "
 block|}
 block|,
 block|{
@@ -1051,7 +1034,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nCache: "
+literal|"\n\tCache: "
 block|}
 block|,
 block|{
@@ -1171,7 +1154,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nDRAM:"
+literal|"\n\tDRAM:"
 block|}
 block|,
 block|{
@@ -1255,7 +1238,7 @@ literal|0x00
 block|,
 name|TRUE
 block|,
-literal|"\t\nPCI: CPU->PCI posting "
+literal|"\n\tPCI: CPU->PCI posting "
 block|}
 block|,
 block|{
@@ -1606,7 +1589,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-default|default:
 block|}
 block|}
 if|if
@@ -1635,14 +1617,11 @@ name|intel_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"        [40] %lx [50] %lx [54] %lx\n"
+literal|"\t[40] %lx [50] %lx [54] %lx\n"
 argument_list|,
 name|pci_conf_read
 argument_list|(
@@ -1680,9 +1659,6 @@ name|intel_82424zx_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 block|{
 name|writeconfig
@@ -1706,16 +1682,13 @@ name|intel_82434lx_attach
 parameter_list|(
 name|pcici_t
 name|config_id
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 block|{
 name|writeconfig
 argument_list|(
 name|config_id
 argument_list|,
-name|conf82424zx
+name|conf82434lx
 argument_list|)
 expr_stmt|;
 return|return

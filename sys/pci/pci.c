@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pci.c,v 1.2 1994/09/01 02:01:34 se Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- ** **  $Log: pci.c,v $  * Revision 1.2  1994/09/01  02:01:34  se  * Submitted by:	Wolfgang Stanglmeier<wolf@dentaro.GUN.de>  * Merged in changes required for NetBSD support (by mycroft@gnu.ai.mit.edu)  * and support for multiple NCR chips.  * **  Revision 2.0.0.8  94/08/21  19:57:39  wolf **  Unneeded declarations removed (FreeBSD2.0) **   **  Revision 2.0.0.7  94/08/21  19:25:54  wolf **  pci_intr simplified. **  new not_supported() function. **  Vendor and device ids moved into tables. **   **  Revision 2.0.0.6  94/08/18  22:58:23  wolf **  Symbolic names for pci configuration space registers. **  last_device: from configuration mode **  last_bus: from pcibios. **  PCI_MAX_DPI: changed to 4 (settable by config) **  interrupt configuration by line or pin **   **  Revision 2.0.0.5  94/08/11  19:04:10  wolf **  display of interrupt line configuration register. **   **  Revision 2.0.0.4  94/08/01  20:36:28  wolf **  Tiny clean up. **   **  Revision 2.0.0.3  94/08/01  18:52:33  wolf **  New vendor entry:  S3. **  Scan pci busses #0..#255 as default. **  Number of scanned busses and devices settable as option. **  Show these numbers before starting the scan. **   **  Revision 2.0.0.2  94/07/27  09:27:19  wolf **  New option PCI_QUIET: suppress log messages. **   **  Revision 2.0.0.1  94/07/19  19:06:44  wolf **  New vendor entry:  MATROX **   **  Revision 2.0  94/07/10  15:53:29  wolf **  FreeBSD release. **   **  Revision 1.0  94/06/07  20:02:19  wolf **  Beta release. **   *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pci.c,v 2.0.0.12 94/09/15 20:49:23 wolf Exp $ ** **  General subroutines for the PCI bus on 80*86 systems. **  pci_configure () ** **  386bsd / FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** **------------------------------------------------------------------------- */
 end_comment
 
 begin_include
@@ -125,8 +125,7 @@ name|char
 name|ident_pci_c
 index|[]
 init|=
-literal|"\n$Id: pci.c,v 1.2 1994/09/01 02:01:34 se Exp $\n"
-literal|"Copyright (c) 1994, Wolfgang Stanglmeier\n"
+literal|"\n$Id: pci.c,v 2.0.0.12 94/09/15 20:49:23 wolf Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,6 +154,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|vm_offset_t
+name|pmap_mapdev
+parameter_list|(
+name|vm_offset_t
+name|paddr
+parameter_list|,
+name|vm_size_t
+name|vsize
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -168,7 +181,7 @@ comment|/*======================================================== ** **	Autocon
 end_comment
 
 begin_comment
-comment|/* **      per device (interrupt) data structure. */
+comment|/* **      per slot data structure for passing interupts.. */
 end_comment
 
 begin_struct
@@ -544,19 +557,13 @@ directive|ifndef
 name|PCI_QUIET
 name|printf
 argument_list|(
-literal|"PCI configuration mode %d.\n"
+literal|"pci*: mode=%d, scanning bus 0..%d, device 0..%d.\n"
 argument_list|,
 name|pci_mode
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Scanning device 0..%d on pci bus 0..%d "
-literal|"($Revision: 1.2 $)\n"
-argument_list|,
-name|last_device
 argument_list|,
 name|last_bus
+argument_list|,
+name|last_device
 argument_list|)
 expr_stmt|;
 endif|#
@@ -662,6 +669,7 @@ operator|->
 name|pd_device_id
 condition|)
 block|{
+comment|/* 			**	not found 			**	try to dig out some information. 			** 			**	By Garrett Wollman 			**<wollman@halloran-eldar.lcs.mit.edu> 			*/
 name|int
 name|data
 init|=
@@ -669,16 +677,7 @@ name|pci_conf_read
 argument_list|(
 name|tag
 argument_list|,
-name|PCI_CLASS_REV_REG
-argument_list|)
-decl_stmt|;
-name|enum
-name|pci_majclass
-name|class
-init|=
-name|PCI_MAJCLASS_OF
-argument_list|(
-name|data
+name|PCI_CLASS_REG
 argument_list|)
 decl_stmt|;
 name|vm_offset_t
@@ -692,24 +691,27 @@ name|reg
 decl_stmt|;
 switch|switch
 condition|(
-name|class
+name|data
+operator|&
+name|PCI_CLASS_MASK
 condition|)
 block|{
 case|case
-name|PCI_MJC_OLD
+name|PCI_CLASS_PREHISTORIC
 case|:
 if|if
 condition|(
-name|PCI_MINCLASS_OF
-argument_list|(
+operator|(
 name|data
-argument_list|)
+operator|&
+name|PCI_SUBCLASS_MASK
+operator|)
 operator|!=
-name|PCI_MIN_OVGA
+name|PCI_SUBCLASS_PREHISTORIC_VGA
 condition|)
 break|break;
 case|case
-name|PCI_MJC_DISPLAY
+name|PCI_CLASS_DISPLAY
 case|:
 for|for
 control|(
@@ -749,7 +751,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"pci%d:%d: mapped VGA-like device at physaddr %lx\n"
+literal|"pci%d:%d: mapped VGA-like device at physaddr 0x%lx\n"
 argument_list|,
 name|bus
 argument_list|,
@@ -763,7 +765,8 @@ argument_list|)
 expr_stmt|;
 block|}
 continue|continue;
-default|default:
+block|}
+empty_stmt|;
 ifndef|#
 directive|ifndef
 name|PCI_QUIET
@@ -786,7 +789,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-block|}
+empty_stmt|;
 if|if
 condition|(
 operator|!
@@ -842,13 +845,13 @@ name|printf
 argument_list|(
 literal|"%s<%s>: probe failed on pci%d:%d\n"
 argument_list|,
-name|drp
+name|dvp
 operator|->
-name|name
+name|pd_name
 argument_list|,
 name|drp
 operator|->
-name|vendor
+name|name
 argument_list|,
 name|bus
 argument_list|,
@@ -858,43 +861,21 @@ expr_stmt|;
 continue|continue;
 block|}
 empty_stmt|;
-if|if
-condition|(
-name|drp
-operator|->
-name|name
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%s%d<%s>"
 argument_list|,
-name|drp
+name|dvp
 operator|->
-name|name
+name|pd_name
 argument_list|,
 name|unit
 argument_list|,
 name|drp
 operator|->
-name|vendor
+name|name
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"pci%d:<%s>"
-argument_list|,
-name|bus
-argument_list|,
-name|drp
-operator|->
-name|vendor
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		**	install interrupts 		*/
 name|data
 operator|=
@@ -935,9 +916,10 @@ condition|(
 name|isanum
 condition|)
 block|{
+comment|/* 				**	@INT@	FIXME!!! 				** 				**	Should try to use "register_interupt" 				**	at this point. 				*/
 name|printf
 argument_list|(
-literal|" il=%d"
+literal|" line=%d"
 argument_list|,
 name|isanum
 argument_list|)
@@ -969,8 +951,10 @@ name|isanum
 condition|)
 break|break;
 block|}
+empty_stmt|;
 block|}
-comment|/* 			**	Or believe to the interrupt pin register. 			*/
+empty_stmt|;
+comment|/* 			**	Or take the device number as index ... 			*/
 if|if
 condition|(
 name|idx
@@ -979,9 +963,7 @@ name|NPCI
 condition|)
 name|idx
 operator|=
-name|intpin
-operator|-
-literal|1
+name|device
 expr_stmt|;
 comment|/* 			**	And install the interrupt. 			*/
 if|if
@@ -1080,11 +1062,13 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|" not installed"
+literal|" no int"
 argument_list|)
 expr_stmt|;
 block|}
+empty_stmt|;
 block|}
+empty_stmt|;
 comment|/* 		**	enable memory access 		*/
 name|data
 operator|=
@@ -1111,6 +1095,7 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
+comment|/* 		**	attach device 		**	may produce additional log messages, 		**	i.e. when installing subdevices. 		*/
 name|printf
 argument_list|(
 literal|" on pci%d:%d\n"
@@ -1120,7 +1105,6 @@ argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-comment|/* 		**	attach device 		**	may produce additional log messages, 		**	i.e. when installing subdevices. 		*/
 call|(
 name|void
 call|)
@@ -1140,7 +1124,7 @@ directive|ifndef
 name|PCI_QUIET
 name|printf
 argument_list|(
-literal|"pci uses physical addresses from %lx to %lx\n"
+literal|"pci uses physical addresses from 0x%lx to 0x%lx\n"
 argument_list|,
 operator|(
 name|u_long
@@ -1164,13 +1148,6 @@ end_escape
 begin_comment
 comment|/*----------------------------------------------------------------------- ** **	Map device into port space. ** **	PCI-Specification:  6.2.5.1: address maps ** **----------------------------------------------------------------------- */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|vm_map_t
-name|kernel_map
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -1224,8 +1201,6 @@ parameter_list|)
 block|{
 name|u_long
 name|data
-decl_stmt|,
-name|result
 decl_stmt|;
 name|vm_size_t
 name|vsize
@@ -1342,11 +1317,37 @@ argument_list|,
 name|vsize
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
+if|if
+condition|(
+operator|!
+name|vaddr
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+ifndef|#
+directive|ifndef
+name|PCI_QUIET
 comment|/* 	**	display values. 	*/
-block|printf (" virtual=0x%lx physical=0x%lx\n", (u_long)vaddr,  		(u_long)pci_paddr);
+name|printf
+argument_list|(
+literal|"\treg%d: virtual=0x%lx physical=0x%lx\n"
+argument_list|,
+name|reg
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|vaddr
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|pci_paddr
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	**	return them to the driver 	*/
@@ -1370,6 +1371,11 @@ argument_list|,
 name|pci_paddr
 argument_list|)
 expr_stmt|;
+comment|/* 	**	and don't forget to increment pci_paddr 	*/
+name|pci_paddr
+operator|+=
+name|vsize
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1381,26 +1387,168 @@ end_function
 begin_escape
 end_escape
 
+begin_comment
+comment|/*----------------------------------------------------------- ** **	Mapping of physical to virtual memory ** **----------------------------------------------------------- */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|__FreeBSD__
+operator|>=
+literal|2
+operator|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|vm_map_t
+name|kernel_map
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|vm_offset_t
+name|pmap_mapdev
+parameter_list|(
+name|vm_offset_t
+name|paddr
+parameter_list|,
+name|vm_size_t
+name|vsize
+parameter_list|)
+block|{
+name|vm_offset_t
+name|vaddr
+decl_stmt|,
+name|value
+decl_stmt|;
+name|u_long
+name|result
+decl_stmt|;
+name|vaddr
+operator|=
+name|vm_map_min
+argument_list|(
+name|kernel_map
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|vm_map_find
+argument_list|(
+name|kernel_map
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+literal|0
+argument_list|,
+operator|&
+name|vaddr
+argument_list|,
+name|vsize
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|KERN_SUCCESS
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" vm_map_find failed(%d)\n"
+argument_list|,
+name|result
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+empty_stmt|;
+comment|/* 	**	map physical 	*/
+name|value
+operator|=
+name|vaddr
+expr_stmt|;
+while|while
+condition|(
+name|vsize
+operator|>=
+name|NBPG
+condition|)
+block|{
+name|pmap_enter
+argument_list|(
+name|pmap_kernel
+argument_list|()
+argument_list|,
+name|vaddr
+argument_list|,
+name|paddr
+argument_list|,
+name|VM_PROT_READ
+operator||
+name|VM_PROT_WRITE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|vaddr
+operator|+=
+name|NBPG
+expr_stmt|;
+name|paddr
+operator|+=
+name|NBPG
+expr_stmt|;
+name|vsize
+operator|-=
+name|NBPG
+expr_stmt|;
+block|}
+empty_stmt|;
+return|return
+operator|(
+name|value
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*----------------------------------------------------------- ** **	Display of unknown devices. ** **----------------------------------------------------------- */
+end_comment
+
 begin_struct
 struct|struct
 name|vt
 block|{
 name|u_short
-name|ident
-decl_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|dt
-block|{
-name|u_long
 name|ident
 decl_stmt|;
 name|char
@@ -1472,47 +1620,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|dt
-name|DeviceTable
-index|[]
-init|=
-block|{
-block|{
-literal|0x04848086
-block|,
-literal|" 82378IB pci-isa bridge"
-block|}
-block|,
-block|{
-literal|0x04838086
-block|,
-literal|" 82424ZX cache dram controller"
-block|}
-block|,
-block|{
-literal|0x04828086
-block|,
-literal|" 82375EB pci-eisa bridge"
-block|}
-block|,
-block|{
-literal|0x04A38086
-block|,
-literal|" 82434LX pci cache memory controller"
-block|}
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1563,11 +1670,6 @@ name|vt
 modifier|*
 name|vp
 decl_stmt|;
-name|struct
-name|dt
-modifier|*
-name|dp
-decl_stmt|;
 comment|/* 	**	lookup the names. 	*/
 for|for
 control|(
@@ -1595,28 +1697,6 @@ literal|0xffff
 operator|)
 condition|)
 break|break;
-for|for
-control|(
-name|dp
-operator|=
-name|DeviceTable
-init|;
-name|dp
-operator|->
-name|ident
-condition|;
-name|dp
-operator|++
-control|)
-if|if
-condition|(
-name|dp
-operator|->
-name|ident
-operator|==
-name|type
-condition|)
-break|break;
 comment|/* 	**	and display them. 	*/
 if|if
 condition|(
@@ -1634,30 +1714,16 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"vendor=%lx"
+literal|"vendor=0x%lx"
 argument_list|,
 name|type
 operator|&
 literal|0xffff
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|ident
-condition|)
 name|printf
 argument_list|(
-name|dp
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|", device=%lx"
+literal|", device=0x%lx"
 argument_list|,
 name|type
 operator|>>
@@ -1666,19 +1732,22 @@ argument_list|)
 expr_stmt|;
 name|data
 operator|=
+operator|(
 name|pci_conf_read
 argument_list|(
 name|tag
 argument_list|,
-name|PCI_CLASS_REV_REG
+name|PCI_CLASS_REG
 argument_list|)
+operator|>>
+literal|24
+operator|)
+operator|&
+literal|0xff
 expr_stmt|;
 if|if
 condition|(
-name|PCI_MAJCLASS_OF
-argument_list|(
 name|data
-argument_list|)
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -1699,10 +1768,7 @@ literal|", class=%s"
 argument_list|,
 name|majclasses
 index|[
-name|PCI_MAJCLASS_OF
-argument_list|(
 name|data
-argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
