@@ -855,6 +855,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ncp_conn_invalidate
+parameter_list|(
+name|struct
+name|ncp_conn
+modifier|*
+name|ncp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ncp_conn_invalid
+parameter_list|(
+name|struct
+name|ncp_conn
+modifier|*
+name|ncp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*int  ncp_conn_ref(struct ncp_conn *conn, pid_t pid); int  ncp_conn_rm_ref(struct ncp_conn *conn, pid_t pid, int force); void ncp_conn_list_rm_ref(pid_t pid);*/
 end_comment
