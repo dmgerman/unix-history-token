@@ -1631,11 +1631,6 @@ modifier|*
 name|kg
 decl_stmt|;
 name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|struct
 name|proc
 modifier|*
 name|outp
