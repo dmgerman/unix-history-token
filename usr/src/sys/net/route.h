@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)route.h	6.4 (Berkeley) 6/8/85  */
 end_comment
 
 begin_comment
@@ -77,6 +77,40 @@ modifier|*
 name|rt_ifp
 decl_stmt|;
 comment|/* the answer: interface to use */
+union|union
+block|{
+comment|/* domain specific info */
+ifdef|#
+directive|ifdef
+name|INET
+struct|struct
+block|{
+name|int
+name|in_rt_pc
+decl_stmt|;
+comment|/* count of pings not answered */
+block|}
+name|rt_in_data
+struct|;
+define|#
+directive|define
+name|irt_pings
+value|rt_data.rt_in_data.in_rt_pc
+define|#
+directive|define
+name|irt_gdown
+value|rt_data.rt_in_data.in_rt_pc
+endif|#
+directive|endif
+name|char
+name|rt_dummy
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+name|rt_data
+union|;
 block|}
 struct|;
 end_struct
@@ -112,6 +146,17 @@ end_define
 
 begin_comment
 comment|/* host entry (net otherwise) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTF_REINSTATE
+value|0x8
+end_define
+
+begin_comment
+comment|/* re-instate route after timeout */
 end_comment
 
 begin_comment
