@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)query.c	4.3 %G%"
+literal|"@(#)query.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -549,6 +549,8 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 expr_stmt|;
 name|name
@@ -645,6 +647,8 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 expr_stmt|;
 name|name
@@ -674,6 +678,8 @@ argument_list|(
 expr|struct
 name|in_addr
 argument_list|)
+argument_list|,
+name|AF_INET
 argument_list|)
 expr_stmt|;
 name|name
