@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,18 +39,17 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hostname.c	5.1 (Berkeley) %G%"
+literal|"@(#)hostname.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
 
 begin_comment
-comment|/*  * hostname -- get (or set hostname)  */
+comment|/* not lint */
 end_comment
 
 begin_include
@@ -56,21 +58,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-name|char
-name|hostname
-index|[
-literal|32
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_function
 name|main
@@ -79,24 +71,99 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
 decl_stmt|;
 block|{
+specifier|extern
 name|int
-name|myerrno
+name|optind
 decl_stmt|;
-name|argc
-operator|--
+name|int
+name|ch
+decl_stmt|,
+name|sflag
+decl_stmt|;
+name|char
+name|hostname
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
+decl_stmt|;
+name|sflag
+operator|=
+literal|0
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
 name|argv
-operator|++
+argument_list|,
+literal|"s"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+operator|(
+name|char
+operator|)
+name|ch
+condition|)
+block|{
+case|case
+literal|'s'
+case|:
+name|sflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'?'
+case|:
+default|default:
+name|fputs
+argument_list|(
+literal|"hostname [-s] [hostname]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|argv
+operator|+=
+name|optind
 expr_stmt|;
 if|if
 condition|(
-name|argc
+operator|*
+name|argv
 condition|)
 block|{
 if|if
@@ -113,18 +180,23 @@ name|argv
 argument_list|)
 argument_list|)
 condition|)
+block|{
 name|perror
 argument_list|(
 literal|"sethostname"
 argument_list|)
 expr_stmt|;
-name|myerrno
-operator|=
-name|errno
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|gethostname
 argument_list|(
 name|hostname
@@ -134,22 +206,48 @@ argument_list|(
 name|hostname
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|myerrno
-operator|=
-name|errno
-expr_stmt|;
-name|printf
+condition|)
+block|{
+name|perror
 argument_list|(
-literal|"%s\n"
+literal|"gethostname"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sflag
+operator|&&
+operator|(
+name|p
+operator|=
+name|index
+argument_list|(
+name|hostname
 argument_list|,
+literal|'.'
+argument_list|)
+operator|)
+condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+name|puts
+argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|myerrno
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
