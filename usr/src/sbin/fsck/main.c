@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.9 (Berkeley) %G%"
+literal|"@(#)main.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5296,8 +5296,8 @@ operator|>
 name|imax
 operator|||
 name|inum
-operator|<
-name|ROOTINO
+operator|<=
+literal|0
 condition|)
 name|n
 operator|=
@@ -6143,6 +6143,12 @@ operator|=
 operator|*
 operator|--
 name|p2
+expr_stmt|;
+name|dirty
+argument_list|(
+operator|&
+name|fileblk
+argument_list|)
 expr_stmt|;
 name|sbdirty
 argument_list|()
