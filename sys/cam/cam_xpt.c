@@ -22652,7 +22652,7 @@ name|inq_buf
 operator|->
 name|additional_length
 operator|+
-literal|4
+literal|5
 expr_stmt|;
 name|scsi_inquiry
 argument_list|(
@@ -23275,7 +23275,7 @@ operator|>
 operator|(
 name|SHORT_INQUIRY_LENGTH
 operator|-
-literal|4
+literal|5
 operator|)
 condition|)
 block|{
@@ -24732,7 +24732,10 @@ name|CAM_DEV_INQUIRY_DATA_VALID
 operator|)
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|inq_data
 operator|->
@@ -24750,13 +24753,41 @@ operator|<=
 literal|0x9
 condition|)
 block|{
-comment|/* 			 * Don't allow DT transmission rates if the 			 * device does not support it. 			 */
+comment|/* 				 * Don't allow DT transmission rates if the 				 * device does not support it. 				 */
 name|cts
 operator|->
 name|sync_period
 operator|=
 literal|0xa
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|inq_data
+operator|->
+name|spi3data
+operator|&
+name|SID_SPI_IUS
+operator|)
+operator|==
+literal|0
+operator|&&
+name|cts
+operator|->
+name|sync_period
+operator|<=
+literal|0x8
+condition|)
+block|{
+comment|/* 				 * Don't allow PACE transmission rates 				 * if the device does support packetized 				 * transfers. 				 */
+name|cts
+operator|->
+name|sync_period
+operator|=
+literal|0x9
+expr_stmt|;
+block|}
 block|}
 switch|switch
 condition|(
