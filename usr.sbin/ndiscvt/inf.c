@@ -844,7 +844,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"\t\\\n\t\"%s\""
+literal|"\t\\\n\t\"%s\" },"
 argument_list|,
 name|dev
 operator|->
@@ -861,7 +861,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|" },\n\n"
+literal|"\n\n"
 argument_list|)
 expr_stmt|;
 block|}
