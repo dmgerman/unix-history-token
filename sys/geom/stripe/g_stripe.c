@@ -2123,6 +2123,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|bp
+operator|->
+name|bio_children
+operator|--
+expr_stmt|;
 name|g_destroy_bio
 argument_list|(
 name|cbp
@@ -2515,6 +2520,11 @@ name|cbp
 argument_list|,
 name|bio_queue
 argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|bio_children
+operator|--
 expr_stmt|;
 name|g_destroy_bio
 argument_list|(
