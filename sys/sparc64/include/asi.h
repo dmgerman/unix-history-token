@@ -173,6 +173,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASI_UPA_CONFIG_REG
+value|0x4a
+end_define
+
+begin_define
+define|#
+directive|define
 name|ASI_IMMU_TAG_TARGET_REG
 value|0x50
 end_define
@@ -476,6 +483,13 @@ define|#
 directive|define
 name|AA_SDB_INTR_D2
 value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|AA_INTR_SEND
+value|0x70
 end_define
 
 begin_define
