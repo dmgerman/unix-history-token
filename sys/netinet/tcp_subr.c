@@ -747,17 +747,6 @@ block|{
 name|int
 name|hashsize
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|TCP_COMPAT_42
-name|tcp_iss
-operator|=
-literal|1
-expr_stmt|;
-comment|/* wrong */
-endif|#
-directive|endif
-comment|/* TCP_COMPAT_42 */
 name|tcp_ccgen
 operator|=
 literal|1
@@ -1615,21 +1604,10 @@ operator|==
 name|NULL
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|TCP_COMPAT_42
-name|tlen
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
 name|tlen
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_data
