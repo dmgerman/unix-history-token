@@ -54,6 +54,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_comment
+comment|/* for struct label */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/param.h>
 end_include
 
@@ -380,6 +390,12 @@ name|int
 name|pipe_busy
 decl_stmt|;
 comment|/* busy flag, mostly to handle rundown sanely */
+name|struct
+name|label
+modifier|*
+name|pipe_label
+decl_stmt|;
+comment|/* pipe MAC label - shared */
 name|struct
 name|mtx
 modifier|*
