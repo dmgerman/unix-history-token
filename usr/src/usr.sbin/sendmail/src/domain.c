@@ -3,6 +3,12 @@ begin_comment
 comment|/* **  Sendmail **  Copyright (c) 1986  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1986 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"sendmail.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -21,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.3 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.4 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.3 (Berkeley) %G%"
+literal|"@(#)domain.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,12 +69,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sendmail.h"
 end_include
 
 begin_include
