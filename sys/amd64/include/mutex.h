@@ -238,7 +238,7 @@ value|\ 	  "gi" (type),
 comment|/* 4 */
 value|\ 	  "g" (mtxp)
 comment|/* 5 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -280,7 +280,7 @@ value|\ 	  "gi" (type),
 comment|/* 4 */
 value|\ 	  "g" (mtxp)
 comment|/* 5 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -318,7 +318,7 @@ value|\ 	  "gi" (type),
 comment|/* 3 */
 value|\ 	  "g" (mtxp)
 comment|/* 4 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -352,7 +352,7 @@ value|\ 	  "g" (mtxp),
 comment|/* 3 */
 value|\ 	  "r" (MTX_UNOWNED)
 comment|/* 4 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -404,7 +404,7 @@ value|\ 	  "g" (mtxp),
 comment|/* 4 */
 value|\ 	  "r" (MTX_UNOWNED)
 comment|/* 5 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx", "edx"
 comment|/* used */
 value|);		\ })
 end_define
@@ -420,17 +420,15 @@ name|_exitlock_spin
 parameter_list|(
 name|mtxp
 parameter_list|)
-value|({						\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	%1,%2;"							\ "	decl	%2;"							\ "	js	1f;"							\ "	movl	%2,%1;"							\ "	jmp	2f;"							\ "1:	movl	%0,%2;"							\ "	pushl	%3;"							\ "	" MPLOCKED ""							\ "	cmpxchgl %4,%0;"				  		\ "	popfl;"								\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
+value|({						\ 	int	_res;							\ 									\ 	__asm __volatile (						\ "	movl	%1,%2;"							\ "	decl	%2;"							\ "	js	1f;"							\ "	movl	%2,%1;"							\ "	jmp	2f;"							\ "1:	movl	%0,%2;"							\ "	movl	$ " _V(MTX_UNOWNED) ",%%ecx;"				\ "	pushl	%3;"							\ "	" MPLOCKED ""							\ "	cmpxchgl %%ecx,%0;"				  		\ "	popfl;"								\ "2:"									\ "# exitlock_spin"							\ 	: "+m" (mtxp->mtx_lock),
 comment|/* 0 */
 value|\ 	  "+m" (mtxp->mtx_recurse),
 comment|/* 1 */
 value|\ 	  "=&a" (_res)
 comment|/* 2 */
-value|\ 	: "g"  (mtxp->mtx_saveintr),
+value|\ 	: "g"  (mtxp->mtx_saveintr)
 comment|/* 3 */
-value|\ 	  "r" (MTX_UNOWNED)
-comment|/* 4 */
-value|\ 	: "memory"
+value|\ 	: "memory", "ecx"
 comment|/* used */
 value|);			\ })
 end_define
