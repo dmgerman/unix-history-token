@@ -167,15 +167,15 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-8] [-E] [-K] [-L] [-S tos] [-X atype] [-a] [-c] [-d] [-e char]"
+literal|"[-8] [-E] [-K] [-L] [-N] [-S tos] [-X atype] [-a] [-c] [-d]"
 argument_list|,
-literal|"\n\t[-k realm] [-l user] [-f/-F] [-n tracefile] "
+literal|"\n\t[-e char] [-k realm] [-l user] [-f/-F] [-n tracefile] "
 argument_list|,
 else|#
 directive|else
-literal|"[-8] [-E] [-L] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
+literal|"[-8] [-E] [-L] [-N] [-S tos] [-a] [-c] [-d] [-e char] [-l user]"
 argument_list|,
-literal|"\n\t[-n tracefile]"
+literal|"\n\t[-n tracefile] "
 argument_list|,
 endif|#
 directive|endif
@@ -193,17 +193,19 @@ argument_list|)
 ifdef|#
 directive|ifdef
 name|AUTHENTICATION
-literal|"[-noasynch] [-noasynctty]\n\t[-noasyncnet] [-r] [-t transcom] "
+literal|"[-noasynch] [-noasynctty]\n\t"
+literal|"[-noasyncnet] [-r] [-s src_addr] [-t transcom] "
 argument_list|,
 else|#
 directive|else
-literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t[-t transcom]"
+literal|"[-noasynch] [-noasynctty] [-noasyncnet] [-r]\n\t"
+literal|"[-s src_addr] [-t transcom]"
 argument_list|,
 endif|#
 directive|endif
 else|#
 directive|else
-literal|"[-r] "
+literal|"[-r] [-s src_addr] "
 argument_list|,
 endif|#
 directive|endif
@@ -257,6 +259,12 @@ decl_stmt|,
 modifier|*
 name|strrchr
 argument_list|()
+decl_stmt|;
+name|char
+modifier|*
+name|src_addr
+init|=
+name|NULL
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -357,7 +365,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"8EKLNS:X:acde:fFk:l:n:rt:x"
+literal|"8EKLNS:X:acde:fFk:l:n:rs:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -832,6 +840,14 @@ literal|'~'
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|src_addr
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 if|#
@@ -932,7 +948,7 @@ name|char
 modifier|*
 name|args
 index|[
-literal|7
+literal|9
 index|]
 decl_stmt|,
 modifier|*
@@ -972,6 +988,24 @@ name|argp
 operator|++
 operator|=
 name|user
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|src_addr
+condition|)
+block|{
+operator|*
+name|argp
+operator|++
+operator|=
+literal|"-s"
+expr_stmt|;
+operator|*
+name|argp
+operator|++
+operator|=
+name|src_addr
 expr_stmt|;
 block|}
 operator|*
