@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk0.c	5.8 (Berkeley) %G%"
+literal|"@(#)pk0.c	5.9	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1398,15 +1398,13 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|pkmove
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
 name|ibuf
 argument_list|,
 name|cc
-argument_list|,
-name|B_READ
 argument_list|)
 expr_stmt|;
 name|ibuf
@@ -1797,15 +1795,13 @@ name|pk
 operator|->
 name|p_xsize
 expr_stmt|;
-name|pkmove
+name|bcopy
 argument_list|(
-name|cp
-argument_list|,
 name|ibuf
 argument_list|,
-name|cc
+name|cp
 argument_list|,
-name|B_WRITE
+name|cc
 argument_list|)
 expr_stmt|;
 name|ibuf
@@ -2623,32 +2619,19 @@ operator|->
 name|p_rwindow
 condition|)
 block|{
-name|char
-name|buf
-index|[
-literal|256
-index|]
-decl_stmt|;
-name|sprintf
+name|syslog
 argument_list|(
-name|buf
+name|LOG_WARNING
 argument_list|,
-literal|"PK0: rc %d rw %d"
+literal|"%s: pk0: rc %d rw %d"
+argument_list|,
+name|Rmtname
 argument_list|,
 name|rcheck
 argument_list|,
 name|pk
 operator|->
 name|p_rwindow
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|buf
-argument_list|,
-name|Rmtname
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
