@@ -1758,6 +1758,15 @@ operator|=
 literal|"I/O block allocation failed"
 expr_stmt|;
 break|break;
+case|case
+operator|-
+literal|4
+case|:
+name|reason
+operator|=
+literal|"requires more than one memory window"
+expr_stmt|;
+break|break;
 default|default:
 name|reason
 operator|=
@@ -3064,9 +3073,9 @@ operator|=
 name|cisconf
 expr_stmt|;
 comment|/* 	 * Found a matching configuration. Now look at the I/O, memory and IRQ 	 * to create the desired parameters. Look at memory first. 	 */
+comment|/* Skip ed cards in PIO mode */
 if|if
 condition|(
-operator|!
 operator|(
 name|strncmp
 argument_list|(
@@ -3084,6 +3093,7 @@ literal|2
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|&&
 operator|(
 name|sp
@@ -3094,9 +3104,12 @@ name|flags
 operator|&
 literal|0x10
 operator|)
-operator|)
-operator|&&
-operator|(
+condition|)
+goto|goto
+name|memskip
+goto|;
+if|if
+condition|(
 name|cisconf
 operator|->
 name|memspace
@@ -3107,7 +3120,6 @@ operator|&&
 name|defconf
 operator|->
 name|memspace
-operator|)
 operator|)
 condition|)
 block|{
@@ -3122,6 +3134,32 @@ name|cisconf
 operator|->
 name|mem
 expr_stmt|;
+comment|/*  		 * Currently we do not handle the presence of multiple windows. 		 * Then again neither does the interface to the kernel! 		 * See setup_slot() and readcis.c:cis_conf() 		 */
+if|if
+condition|(
+name|cisconf
+operator|->
+name|memwins
+operator|>
+literal|1
+condition|)
+block|{
+name|logmsg
+argument_list|(
+literal|"Card requires %d memory windows."
+argument_list|,
+name|cisconf
+operator|->
+name|memwins
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|4
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3232,6 +3270,27 @@ operator|.
 name|addr
 expr_stmt|;
 block|}
+comment|/* Driver specific set up */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|sp
+operator|->
+name|config
+operator|->
+name|driver
+operator|->
+name|name
+argument_list|,
+literal|"ed"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|sp
 operator|->
 name|mem
@@ -3240,6 +3299,38 @@ name|cardaddr
 operator|=
 literal|0x4000
 expr_stmt|;
+name|sp
+operator|->
+name|mem
+operator|.
+name|flags
+operator|=
+name|MDF_ACTIVE
+operator||
+name|MDF_16BITS
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sp
+operator|->
+name|mem
+operator|.
+name|flags
+operator|=
+name|MDF_ACTIVE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|mem
+operator|.
+name|flags
+operator|&
+name|MDF_ACTIVE
+condition|)
 name|sp
 operator|->
 name|flags
@@ -3255,7 +3346,7 @@ condition|)
 block|{
 name|logmsg
 argument_list|(
-literal|"Using mem addr 0x%x, size %d, card addr 0x%x\n"
+literal|"Using mem addr 0x%x, size %d, card addr 0x%x, flags 0x%x\n"
 argument_list|,
 name|sp
 operator|->
@@ -3274,10 +3365,18 @@ operator|->
 name|mem
 operator|.
 name|cardaddr
+argument_list|,
+name|sp
+operator|->
+name|mem
+operator|.
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|memskip
+label|:
 comment|/* Now look at I/O. */
 name|bzero
 argument_list|(
@@ -4220,10 +4319,6 @@ operator|->
 name|mem
 operator|.
 name|flags
-operator||
-name|MDF_ACTIVE
-operator||
-name|MDF_16BITS
 expr_stmt|;
 name|mem
 operator|.
