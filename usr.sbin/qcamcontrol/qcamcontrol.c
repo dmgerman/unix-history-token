@@ -3,6 +3,38 @@ begin_comment
 comment|/*  * QuickCam(TM) driver control program.  * Copyright (c) 1996, Paul Traina.  *  * QuickCam(TM) is a registered trademark of Connectix Inc.  * Use this driver at your own risk, it is not warranted by  * Connectix or the authors.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id: qcamcontrol.c,v 1.6 1997/10/10 06:28:59 charnier Exp $"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -115,14 +147,13 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -140,9 +171,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -269,22 +301,15 @@ name|x_size
 operator|>
 name|QC_MAX_XSIZE
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"x size too large (max %d)\n"
+literal|"x size too large (max %d)"
 argument_list|,
 name|QC_MAX_XSIZE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'y'
@@ -302,22 +327,15 @@ name|y_size
 operator|>
 name|QC_MAX_YSIZE
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"x size too large (max %d)\n"
+literal|"x size too large (max %d)"
 argument_list|,
 name|QC_MAX_YSIZE
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'z'
@@ -335,22 +353,15 @@ name|zoom
 operator|>
 name|QC_ZOOM_200
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|2
 argument_list|,
-literal|"zoom too large (max %d)\n"
+literal|"zoom too large (max %d)"
 argument_list|,
 name|QC_ZOOM_200
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'d'
@@ -372,20 +383,13 @@ name|depth
 operator|!=
 literal|6
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"invalid depth (4 or 6)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"invalid depth (4 or 6)"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'b'
@@ -403,20 +407,13 @@ name|brightness
 operator|>
 literal|255
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad brightness (max 255)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bad brightness (max 255)"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'w'
@@ -434,20 +431,13 @@ name|whitebalance
 operator|>
 literal|255
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad white balance (max 255)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bad white balance (max 255)"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'c'
@@ -465,20 +455,13 @@ name|contrast
 operator|>
 literal|255
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad contrast (max 255)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bad contrast (max 255)"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'e'
@@ -496,20 +479,13 @@ name|exposure
 operator|<
 literal|100
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bad exposure (min 100)\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|2
+argument_list|,
+literal|"bad exposure (min 100)"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 default|default:
 name|usage
@@ -541,18 +517,13 @@ operator|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"open"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ioctl
@@ -567,19 +538,14 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 comment|/* read in default info */
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl(QC_GET)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|x_size
@@ -705,18 +671,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl(QC_SET)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Tell us what the kernel thinks we're asking for 	 */
 if|if
 condition|(
@@ -732,18 +693,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"ioctl(QC_SET)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|print_data
 argument_list|(
 operator|&
@@ -783,18 +739,13 @@ name|bytes
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"read"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|len
 operator|-=
 name|bytes
@@ -861,18 +812,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"write"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
