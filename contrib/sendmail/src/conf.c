@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)conf.c	8.452 (Berkeley) 1/26/1999"
+literal|"@(#)$Id: conf.c,v 8.646.2.2.2.23 2000/07/15 17:35:18 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,19 +25,23 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"sendmail.h"
+file|<sendmail.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<sendmail/pathnames.h>
 end_include
 
 begin_include
@@ -58,6 +62,94 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETINET6
+end_if
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NETINET || NETINET6 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HASULIMIT
+operator|&&
+name|defined
+argument_list|(
+name|HPUX11
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<ulimit.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HASULIMIT&& defined(HPUX11) */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setupmaps
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setupmailers
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|get_num_procs_online
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* **  CONF.C -- Sendmail Configuration Tables. ** **	Defines the configuration of this installation. ** **	Configuration Variables: **		HdrInfo -- a table describing well-known header fields. **			Each entry has the field name and some flags, **			which are described in sendmail.h. ** **	Notes: **		I have tried to put almost all the reasonable **		configuration information into the configuration **		file read at runtime.  My intent is that anything **		here is a function of the version of UNIX you **		are running, or is really static -- for example **		the headers are a superset of widely used **		protocols.  If you find yourself playing with **		this file too much, you may be making a mistake! */
 end_comment
@@ -73,13 +165,15 @@ name|HdrInfo
 index|[]
 init|=
 block|{
-comment|/* originator fields, most to least significant  */
+comment|/* originator fields, most to least significant */
 block|{
 literal|"resent-sender"
 block|,
 name|H_FROM
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -88,6 +182,8 @@ block|,
 name|H_FROM
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -96,24 +192,32 @@ block|,
 name|H_FROM
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"sender"
 block|,
 name|H_FROM
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"from"
 block|,
 name|H_FROM
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"reply-to"
 block|,
 name|H_FROM
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -122,18 +226,24 @@ block|,
 name|H_FROM
 operator||
 name|H_ERRORSTO
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"full-name"
 block|,
 name|H_ACHECK
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"return-receipt-to"
 block|,
 name|H_RECEIPTTO
+block|,
+name|NULL
 block|}
 block|,
 comment|/* destination fields */
@@ -141,6 +251,8 @@ block|{
 literal|"to"
 block|,
 name|H_RCPT
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -149,12 +261,16 @@ block|,
 name|H_RCPT
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"cc"
 block|,
 name|H_RCPT
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -163,6 +279,8 @@ block|,
 name|H_RCPT
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -171,6 +289,8 @@ block|,
 name|H_RCPT
 operator||
 name|H_BCC
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -181,12 +301,16 @@ operator||
 name|H_BCC
 operator||
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"apparently-to"
 block|,
 name|H_RCPT
+block|,
+name|NULL
 block|}
 block|,
 comment|/* message identification and control */
@@ -194,24 +318,32 @@ block|{
 literal|"message-id"
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"resent-message-id"
 block|,
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"message"
 block|,
 name|H_EOH
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"text"
 block|,
 name|H_EOH
+block|,
+name|NULL
 block|}
 block|,
 comment|/* date fields */
@@ -219,12 +351,16 @@ block|{
 literal|"date"
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"resent-date"
 block|,
 name|H_RESENT
+block|,
+name|NULL
 block|}
 block|,
 comment|/* trace fields */
@@ -234,6 +370,8 @@ block|,
 name|H_TRACE
 operator||
 name|H_FORCE
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -242,6 +380,8 @@ block|,
 name|H_TRACE
 operator||
 name|H_FORCE
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -250,6 +390,8 @@ block|,
 name|H_TRACE
 operator||
 name|H_FORCE
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -258,6 +400,8 @@ block|,
 name|H_TRACE
 operator||
 name|H_FORCE
+block|,
+name|NULL
 block|}
 block|,
 comment|/* miscellaneous fields */
@@ -267,6 +411,8 @@ block|,
 name|H_FORCE
 operator||
 name|H_ENCODABLE
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -275,36 +421,58 @@ block|,
 name|H_FORCE
 operator||
 name|H_ACHECK
+operator||
+name|H_BINDLATE
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"content-transfer-encoding"
 block|,
 name|H_CTE
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"content-type"
 block|,
 name|H_CTYPE
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"content-length"
 block|,
 name|H_ACHECK
+block|,
+name|NULL
 block|}
 block|,
 block|{
 literal|"subject"
 block|,
 name|H_ENCODABLE
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"x-authentication-warning"
+block|,
+name|H_FORCE
+block|,
+name|NULL
 block|}
 block|,
 block|{
 name|NULL
 block|,
 literal|0
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -391,6 +559,12 @@ block|{
 literal|"noreceipts"
 block|,
 name|PRIV_NORECEIPTS
+block|}
+block|,
+block|{
+literal|"nobodyreturn"
+block|,
+name|PRIV_NOBODYRETN
 block|}
 block|,
 block|{
@@ -606,6 +780,42 @@ name|DBS_RUNWRITABLEPROGRAM
 block|}
 block|,
 block|{
+literal|"nonrootsafeaddr"
+block|,
+name|DBS_NONROOTSAFEADDR
+block|}
+block|,
+block|{
+literal|"truststickybit"
+block|,
+name|DBS_TRUSTSTICKYBIT
+block|}
+block|,
+block|{
+literal|"dontwarnforwardfileinunsafedirpath"
+block|,
+name|DBS_DONTWARNFORWARDFILEINUNSAFEDIRPATH
+block|}
+block|,
+block|{
+literal|"insufficiententropy"
+block|,
+name|DBS_INSUFFICIENTENTROPY
+block|}
+block|,
+if|#
+directive|if
+name|_FFR_UNSAFE_SASL
+block|{
+literal|"groupreadablesaslfile"
+block|,
+name|DBS_GROUPREADABLESASLFILE
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_UNSAFE_SASL */
+block|{
 name|NULL
 block|,
 literal|0
@@ -661,24 +871,6 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PATH_VARTMP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_VARTMP
-value|"/usr/tmp/"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|MAXRULERECURSION
 end_ifndef
 
@@ -698,6 +890,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! MAXRULERECURSION */
+end_comment
+
 begin_function
 name|void
 name|setdefaults
@@ -713,57 +909,19 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|numprocs
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
-specifier|extern
-name|void
-name|setdefuser
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|setupmaps
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|setupmailers
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-specifier|extern
-name|void
-name|setupheaders
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
+name|numprocs
+operator|=
+name|get_num_procs_online
+argument_list|()
+expr_stmt|;
 name|SpaceSub
 operator|=
 literal|' '
@@ -772,11 +930,15 @@ comment|/* option B */
 name|QueueLA
 operator|=
 literal|8
+operator|*
+name|numprocs
 expr_stmt|;
 comment|/* option x */
 name|RefuseLA
 operator|=
 literal|12
+operator|*
+name|numprocs
 expr_stmt|;
 comment|/* option X */
 name|WkRecipFact
@@ -815,13 +977,33 @@ else|:
 literal|0600
 expr_stmt|;
 comment|/* option F */
+if|#
+directive|if
+name|_FFR_QUEUE_FILE_MODE
+name|QueueFileMode
+operator|=
+operator|(
+name|RealUid
+operator|!=
+name|geteuid
+argument_list|()
+operator|)
+condition|?
+literal|0644
+else|:
+literal|0600
+expr_stmt|;
+comment|/* option QueueFileMode */
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_FILE_MODE */
 if|if
 condition|(
 operator|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 literal|"mailnull"
 argument_list|)
@@ -840,7 +1022,7 @@ operator|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 literal|"sendmail"
 argument_list|)
@@ -859,7 +1041,7 @@ operator|(
 operator|(
 name|pw
 operator|=
-name|getpwnam
+name|sm_getpwnam
 argument_list|(
 literal|"daemon"
 argument_list|)
@@ -928,7 +1110,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"setdefaults: DefUser=%s, DefUid=%d, DefGid=%d\n"
 argument_list|,
@@ -961,11 +1143,12 @@ operator|=
 literal|25
 expr_stmt|;
 comment|/* option h */
-name|e
-operator|->
-name|e_sendmode
-operator|=
+name|set_delivery_mode
+argument_list|(
 name|SM_FORK
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 comment|/* option d */
 name|e
@@ -975,6 +1158,19 @@ operator|=
 name|EM_PRINT
 expr_stmt|;
 comment|/* option e */
+name|e
+operator|->
+name|e_queuedir
+operator|=
+name|NOQDIR
+expr_stmt|;
+name|e
+operator|->
+name|e_ctime
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 name|SevenBitInput
 operator|=
 name|FALSE
@@ -999,6 +1195,8 @@ comment|/* option L */
 name|inittimeouts
 argument_list|(
 name|NULL
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* option r */
@@ -1007,9 +1205,25 @@ operator|=
 name|PRIV_PUBLIC
 expr_stmt|;
 comment|/* option p */
-name|DontBlameSendmail
+name|MeToo
 operator|=
-name|DBS_SAFE
+name|TRUE
+expr_stmt|;
+comment|/* option m */
+name|SendMIMEErrors
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* option f */
+name|SuperSafe
+operator|=
+name|TRUE
+expr_stmt|;
+comment|/* option s */
+name|clrbitmap
+argument_list|(
+name|DontBlameSendmail
+argument_list|)
 expr_stmt|;
 comment|/* DontBlameSendmail option */
 if|#
@@ -1024,12 +1238,14 @@ expr_stmt|;
 comment|/* option 8 */
 else|#
 directive|else
+comment|/* MIME8TO7 */
 name|MimeMode
 operator|=
 name|MM_PASS8BIT
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* MIME8TO7 */
 for|for
 control|(
 name|i
@@ -1068,7 +1284,7 @@ comment|/* option T */
 block|}
 name|ServiceSwitchFile
 operator|=
-literal|"/etc/service.switch"
+literal|"/etc/mail/service.switch"
 expr_stmt|;
 name|ServiceCacheMaxAge
 operator|=
@@ -1125,39 +1341,23 @@ name|MaxHeadersLength
 operator|=
 name|MAXHDRSLEN
 expr_stmt|;
-name|snprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-name|buf
-argument_list|,
-literal|"%s%sdead.letter"
-argument_list|,
-name|_PATH_VARTMP
-argument_list|,
-name|_PATH_VARTMP
-index|[
-sizeof|sizeof
-name|_PATH_VARTMP
-operator|-
-literal|2
-index|]
-operator|==
-literal|'/'
-condition|?
-literal|""
-else|:
-literal|"/"
-argument_list|)
+name|MaxForwardEntries
+operator|=
+literal|0
 expr_stmt|;
-name|DeadLetterDrop
+if|#
+directive|if
+name|SASL
+name|AuthMechanisms
 operator|=
 name|newstr
 argument_list|(
-name|buf
+name|AUTH_MECHANISMS
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* SASL */
 ifdef|#
 directive|ifdef
 name|HESIOD_INIT
@@ -1167,10 +1367,113 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HESIOD_INIT */
+if|#
+directive|if
+name|NETINET6
+comment|/* Detect if IPv6 is available at run time */
+name|i
+operator|=
+name|socket
+argument_list|(
+name|AF_INET6
+argument_list|,
+name|SOCK_STREAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>=
+literal|0
+condition|)
+block|{
+name|InetMode
+operator|=
+name|AF_INET6
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|InetMode
+operator|=
+name|AF_INET
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
+name|InetMode
+operator|=
+name|AF_INET
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 name|ControlSocketName
 operator|=
 name|NULL
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|ConnectOnlyTo
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|ConnectOnlyTo
+argument_list|)
+expr_stmt|;
+name|DataFileBufferSize
+operator|=
+literal|4096
+expr_stmt|;
+name|XscriptFileBufferSize
+operator|=
+literal|4096
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|MAXRWSETS
+condition|;
+name|i
+operator|++
+control|)
+name|RuleSetNames
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_MILTER
+name|InputFilters
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER */
 name|setupmaps
 argument_list|()
 expr_stmt|;
@@ -1244,7 +1547,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"setdefuser: DefUid=%d, DefUser=%s\n"
 argument_list|,
@@ -1267,6 +1570,7 @@ comment|/* **  SETUPMAILERS -- initialize default mailers */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|setupmailers
 parameter_list|()
@@ -1277,11 +1581,17 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"prog, P=/bin/sh, F=lsoDq9, T=DNS/RFC822/X-Unix, A=sh -c \201u"
+literal|"prog, P=/bin/sh, F=lsoDq9, T=X-Unix/X-Unix/X-Unix, A=sh -c \201u"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -1289,11 +1599,17 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"*file*, P=[FILE], F=lsDFMPEouq9, T=DNS/RFC822/X-Unix, A=FILE \201u"
+literal|"*file*, P=[FILE], F=lsDFMPEouq9, T=X-Unix/X-Unix/X-Unix, A=FILE \201u"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 name|makemailer
@@ -1301,17 +1617,26 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"*include*, P=/dev/null, F=su, A=INCLUDE \201u"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 name|makemailer
 argument_list|(
 name|buf
 argument_list|)
+expr_stmt|;
+name|initerrmailers
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1349,6 +1674,7 @@ value|{ \ 		extern bool parse __P((MAP *, char *)); \ 		extern bool open __P((MA
 end_define
 
 begin_function
+specifier|static
 name|void
 name|setupmaps
 parameter_list|()
@@ -1405,6 +1731,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NEWDB */
 ifdef|#
 directive|ifdef
 name|NDBM
@@ -1431,6 +1758,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NDBM */
 ifdef|#
 directive|ifdef
 name|NIS
@@ -1455,6 +1783,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NIS */
 ifdef|#
 directive|ifdef
 name|NISPLUS
@@ -1479,30 +1808,103 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NISPLUS */
 ifdef|#
 directive|ifdef
 name|LDAPMAP
+name|MAPDEF
+argument_list|(
+literal|"ldap"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|ldapmap_parseargs
+argument_list|,
+name|ldapmap_open
+argument_list|,
+name|ldapmap_close
+argument_list|,
+name|ldapmap_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+comment|/* Deprecated */
 name|MAPDEF
 argument_list|(
 literal|"ldapx"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MCF_ALIASOK
 argument_list|,
-name|ldap_map_parseargs
+name|ldapx_map_parseargs
 argument_list|,
-name|ldap_map_open
+name|ldapmap_open
 argument_list|,
-name|ldap_map_close
+name|ldapmap_close
 argument_list|,
-name|ldap_map_lookup
+name|ldapmap_lookup
 argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* LDAPMAP */
+ifdef|#
+directive|ifdef
+name|PH_MAP
+name|MAPDEF
+argument_list|(
+literal|"ph"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|ph_map_parseargs
+argument_list|,
+name|ph_map_open
+argument_list|,
+name|ph_map_close
+argument_list|,
+name|ph_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PH_MAP */
+if|#
+directive|if
+name|MAP_NSD
+comment|/* IRIX 6.5 nsd support */
+name|MAPDEF
+argument_list|(
+literal|"nsd"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|nsd_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MAP_NSD */
 ifdef|#
 directive|ifdef
 name|HESIOD
@@ -1529,6 +1931,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HESIOD */
 if|#
 directive|if
 name|NETINFO
@@ -1553,12 +1956,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NETINFO */
 if|#
 directive|if
 literal|0
 block|MAPDEF("dns", NULL, 0, 		dns_map_init, null_map_open, null_map_close, 		dns_map_lookup, null_map_store);
 endif|#
 directive|endif
+comment|/* 0 */
 if|#
 directive|if
 name|NAMED_BIND
@@ -1584,6 +1989,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
 name|MAPDEF
 argument_list|(
 literal|"host"
@@ -1730,6 +2136,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* MAP_REGEX */
 if|#
 directive|if
 name|USERDB
@@ -1755,6 +2162,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USERDB */
 comment|/* arbitrary programs */
 name|MAPDEF
 argument_list|(
@@ -1837,9 +2245,6 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|_FFR_MAP_SYSLOG
 comment|/* syslog map -- logs information to syslog */
 name|MAPDEF
 argument_list|(
@@ -1860,8 +2265,79 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* macro storage map -- rulesets can set macros */
+name|MAPDEF
+argument_list|(
+literal|"macro"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dequote_init
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|macro_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+comment|/* arithmetic map -- add/subtract/compare */
+name|MAPDEF
+argument_list|(
+literal|"arith"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dequote_init
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|arith_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+block|{
+comment|/* bogus map -- always return tempfail */
+name|MAPDEF
+argument_list|(
+literal|"bogus"
+argument_list|,
+name|NULL
+argument_list|,
+name|MCF_ALIASOK
+operator||
+name|MCF_OPTFILE
+argument_list|,
+name|map_parseargs
+argument_list|,
+name|null_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|bogus_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1913,34 +2389,39 @@ comment|/* 	**  Set up default hosts maps. 	*/
 if|#
 directive|if
 literal|0
-block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts"); 			(void) makemapentry(buf); 		}
+block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts", 				sizeof buf); 			(void) makemapentry(buf); 		}
 if|#
 directive|if
 name|NAMED_BIND
-block|else if (strcmp(maptype[i], "dns") == 0&& 		    stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.dns dns A"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "dns") == 0&& 		    stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.dns dns A", sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
 ifdef|#
 directive|ifdef
 name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.nisplus nisplus -k name -v address -d hosts.org_dir"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.nisplus nisplus -k name -v address hosts.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NISPLUS */
 ifdef|#
 directive|ifdef
 name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.nis nis -d -k 0 -v 1 hosts.byname"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.nis nis -k 0 -v 1 hosts.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NIS */
 if|#
 directive|if
 name|NETINFO
-block|else if (strcmp(maptype[i], "netinfo") == 0)&& 		    stab("hosts.netinfo", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "hosts.netinfo netinfo -v name /machines"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "netinfo") == 0)&& 		    stab("hosts.netinfo", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.netinfo netinfo -v name /machines", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NETINFO */
 block|}
 endif|#
 directive|endif
+comment|/* 0 */
 comment|/* 	**  Make sure we have a host map. 	*/
 if|if
 condition|(
@@ -1957,11 +2438,17 @@ name|NULL
 condition|)
 block|{
 comment|/* user didn't initialize: set up host map */
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"host host"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 if|#
@@ -1973,15 +2460,22 @@ name|ConfigLevel
 operator|>=
 literal|2
 condition|)
-name|strcat
+operator|(
+name|void
+operator|)
+name|strlcat
 argument_list|(
 name|buf
 argument_list|,
-literal|" -a."
+literal|" -a. -D"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
 operator|(
 name|void
 operator|)
@@ -2043,11 +2537,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"aliases.files null"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2089,11 +2589,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"aliases.nisplus nisplus -kalias -vexpansion -d mail_aliases.org_dir"
+literal|"aliases.nisplus nisplus -kalias -vexpansion mail_aliases.org_dir"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2107,6 +2613,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* NISPLUS */
 ifdef|#
 directive|ifdef
 name|NIS
@@ -2137,11 +2644,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
-literal|"aliases.nis nis -d mail.aliases"
+literal|"aliases.nis nis mail.aliases"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2155,8 +2668,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+comment|/* NIS */
+if|#
+directive|if
 name|NETINFO
 elseif|else
 if|if
@@ -2185,11 +2699,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"aliases.netinfo netinfo -z, /aliases"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2203,6 +2723,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* NETINFO */
 ifdef|#
 directive|ifdef
 name|HESIOD
@@ -2233,11 +2754,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"aliases.hesiod hesiod aliases"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2251,6 +2778,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* HESIOD */
 block|}
 if|if
 condition|(
@@ -2266,11 +2794,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|buf
 argument_list|,
 literal|"aliases switch aliases"
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2287,28 +2821,32 @@ directive|if
 literal|0
 comment|/* "user" map class is a better choice */
 comment|/* 	**  Set up default users maps. 	*/
-block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd"); 			(void) makemapentry(buf); 		}
+block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd", 				sizeof buf); 			(void) makemapentry(buf); 		}
 ifdef|#
 directive|ifdef
 name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.nisplus nisplus -m -kname -vhome -d passwd.org_dir"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.nisplus nisplus -m -kname -vhome passwd.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NISPLUS */
 ifdef|#
 directive|ifdef
 name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.nis nis -m -d passwd.byname"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.nis nis -m passwd.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
+comment|/* NIS */
 ifdef|#
 directive|ifdef
 name|HESIOD
-block|else if (strcmp(maptype[i], "hesiod") == 0)&& 		    stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			strcpy(buf, "users.hesiod hesiod"); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "hesiod") == 0)&& 		    stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.hesiod hesiod", sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
-block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		strcpy(buf, "users switch -m passwd"); 		(void) makemapentry(buf); 	}
+comment|/* HESIOD */
+block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		(void) strlcpy(buf, "users switch -m passwd", sizeof buf); 		(void) makemapentry(buf); 	}
 endif|#
 directive|endif
+comment|/* 0 */
 block|}
 end_function
 
@@ -2316,7 +2854,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SWITCH_MAP_FIND -- find the list of types associated with a map ** **	This is the system-dependent interface to the service switch. ** **	Parameters: **		service -- the name of the service of interest. **		maptype -- an out-array of strings containing the types **			of access to use for this service.  There can **			be at most MAXMAPSTACK types for a single service. **		mapreturn -- an out-array of return information bitmaps **			for the map. ** **	Returns: **		The number of map types filled in, or -1 for failure. */
+comment|/* **  SWITCH_MAP_FIND -- find the list of types associated with a map ** **	This is the system-dependent interface to the service switch. ** **	Parameters: **		service -- the name of the service of interest. **		maptype -- an out-array of strings containing the types **			of access to use for this service.  There can **			be at most MAXMAPSTACK types for a single service. **		mapreturn -- an out-array of return information bitmaps **			for the map. ** **	Returns: **		The number of map types filled in, or -1 for failure. ** **	Side effects: **		Preserves errno so nothing in the routine clobbers it. */
 end_comment
 
 begin_if
@@ -2351,6 +2889,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(SOLARIS) || (defined(sony_news)&& defined(__svr4)) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2367,6 +2909,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _USE_SUN_NSSWITCH_ */
+end_comment
 
 begin_if
 if|#
@@ -2400,6 +2946,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(ultrix) || (defined(__osf__)&& defined(__alpha)) */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2416,6 +2966,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _USE_DEC_SVC_CONF_ */
+end_comment
 
 begin_function
 name|int
@@ -2447,6 +3001,11 @@ decl_stmt|;
 block|{
 name|int
 name|svcno
+decl_stmt|;
+name|int
+name|save_errno
+init|=
+name|errno
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2643,11 +3202,16 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|svcno
 return|;
 endif|#
 directive|endif
+comment|/* _USE_SUN_NSSWITCH_ */
 ifdef|#
 directive|ifdef
 name|_USE_DEC_SVC_CONF_
@@ -2741,10 +3305,16 @@ operator|=
 name|SVC_PASSWD
 expr_stmt|;
 else|else
+block|{
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 for|for
 control|(
 name|svcno
@@ -2821,19 +3391,29 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+comment|/* SVC_HESIOD */
 case|case
 name|SVC_LAST
 case|:
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|svcno
 return|;
 block|}
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|svcno
 return|;
 endif|#
 directive|endif
+comment|/* _USE_DEC_SVC_CONF_ */
 if|#
 directive|if
 operator|!
@@ -2898,7 +3478,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-name|int
+name|long
 name|sff
 init|=
 name|SFF_REGONLY
@@ -2910,7 +3490,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_LINKEDSERVICESWITCHFILEINWRITABLEDIR
 argument_list|,
@@ -3191,6 +3771,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -3262,6 +3845,10 @@ name|NULL
 condition|)
 break|break;
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 operator|--
 name|svcno
@@ -3269,6 +3856,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* !defined(_USE_SUN_NSSWITCH_)&& !defined(_USE_DEC_SVC_CONF_) */
 if|#
 directive|if
 operator|!
@@ -3284,6 +3872,7 @@ name|punt
 label|:
 endif|#
 directive|endif
+comment|/* _USE_DEC_SVC_CONF_ */
 for|for
 control|(
 name|svcno
@@ -3328,6 +3917,28 @@ index|]
 operator|=
 literal|"files"
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTO_NETINFO_ALIASES
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NETINFO
+argument_list|)
+name|maptype
+index|[
+name|svcno
+operator|++
+index|]
+operator|=
+literal|"netinfo"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(AUTO_NETINFO_ALIASES)&& defined (NETINFO) */
 ifdef|#
 directive|ifdef
 name|AUTO_NIS_ALIASES
@@ -3344,6 +3955,7 @@ literal|"nisplus"
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NISPLUS */
 ifdef|#
 directive|ifdef
 name|NIS
@@ -3357,8 +3969,14 @@ literal|"nis"
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NIS */
 endif|#
 directive|endif
+comment|/* AUTO_NIS_ALIASES */
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|svcno
 return|;
@@ -3388,6 +4006,7 @@ literal|"dns"
 expr_stmt|;
 else|#
 directive|else
+comment|/* NAMED_BIND */
 if|#
 directive|if
 name|defined
@@ -3411,8 +4030,32 @@ literal|"nis"
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(sun)&& !defined(BSD) */
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|AUTO_NETINFO_HOSTS
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|NETINFO
+argument_list|)
+name|maptype
+index|[
+name|svcno
+operator|++
+index|]
+operator|=
+literal|"netinfo"
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(AUTO_NETINFO_HOSTS)&& defined (NETINFO) */
 name|maptype
 index|[
 name|svcno
@@ -3421,16 +4064,25 @@ index|]
 operator|=
 literal|"files"
 expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|svcno
 return|;
 block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
 endif|#
 directive|endif
+comment|/* !defined(_USE_SUN_NSSWITCH_) */
 block|}
 end_function
 
@@ -3596,7 +4248,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"554 Who are you?"
+literal|"554 5.3.0 Who are you?"
 argument_list|)
 expr_stmt|;
 name|myname
@@ -3606,9 +4258,7 @@ expr_stmt|;
 block|}
 block|}
 return|return
-operator|(
 name|myname
-operator|)
 return|;
 block|}
 end_function
@@ -3689,9 +4339,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 comment|/* see if we have write permission */
@@ -3723,9 +4371,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 comment|/* see if the user is logged in */
@@ -3737,15 +4383,11 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 comment|/* looks good */
 return|return
-operator|(
 name|pathn
-operator|)
 return|;
 block|}
 end_function
@@ -3776,21 +4418,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-if|if
-condition|(
-name|to
-operator|==
-name|NULL
-condition|)
-name|to
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* lint */
 if|if
 condition|(
 name|tTd
@@ -3800,7 +4427,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"checkcompat(to=%s, from=%s)\n"
 argument_list|,
@@ -3870,7 +4497,7 @@ argument_list|(
 literal|"553 No ARPA mail through this machine: see your system administration"
 argument_list|)
 expr_stmt|;
-comment|/* e->e_flags |= EF_NO_BODY_RETN; to supress body on return */
+comment|/* e->e_flags |= EF_NO_BODY_RETN; to suppress body on return */
 name|to
 operator|->
 name|q_status
@@ -3878,18 +4505,14 @@ operator|=
 literal|"5.7.1"
 expr_stmt|;
 return|return
-operator|(
 name|EX_UNAVAILABLE
-operator|)
 return|;
 block|}
 endif|#
 directive|endif
 comment|/* EXAMPLE_CODE */
 return|return
-operator|(
 name|EX_OK
-operator|)
 return|;
 block|}
 end_function
@@ -3916,52 +4539,22 @@ name|sigfunc_t
 name|handler
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYS5SIGNALS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BSD4_3
-argument_list|)
+comment|/* 	**  First, try for modern signal calls 	**  and restartable syscalls 	*/
 ifdef|#
 directive|ifdef
-name|BSD4_3
-return|return
-name|signal
-argument_list|(
-name|sig
-argument_list|,
-name|handler
-argument_list|)
-return|;
-else|#
-directive|else
-return|return
-name|sigset
-argument_list|(
-name|sig
-argument_list|,
-name|handler
-argument_list|)
-return|;
-endif|#
-directive|endif
-else|#
-directive|else
+name|SA_RESTART
 name|struct
 name|sigaction
 name|n
 decl_stmt|,
 name|o
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|n
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|n
@@ -4001,15 +4594,13 @@ name|SA_SIGINFO
 expr_stmt|;
 else|#
 directive|else
+comment|/* USE_SA_SIGACTION */
 name|n
 operator|.
 name|sa_handler
 operator|=
 name|handler
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SA_RESTART
 name|n
 operator|.
 name|sa_flags
@@ -4018,8 +4609,97 @@ name|SA_RESTART
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* USE_SA_SIGACTION */
+if|if
+condition|(
+name|sigaction
+argument_list|(
+name|sig
+argument_list|,
+operator|&
+name|n
+argument_list|,
+operator|&
+name|o
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+name|SIG_ERR
+return|;
+return|return
+name|o
+operator|.
+name|sa_handler
+return|;
+else|#
+directive|else
+comment|/* SA_RESTART */
+comment|/* 	**  Else check for SYS5SIGNALS or 	**  BSD4_3 signals 	*/
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SYS5SIGNALS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|BSD4_3
+argument_list|)
+ifdef|#
+directive|ifdef
+name|BSD4_3
+return|return
+name|signal
+argument_list|(
+name|sig
+argument_list|,
+name|handler
+argument_list|)
+return|;
+else|#
+directive|else
+comment|/* BSD4_3 */
+return|return
+name|sigset
+argument_list|(
+name|sig
+argument_list|,
+name|handler
+argument_list|)
+return|;
 endif|#
 directive|endif
+comment|/* BSD4_3 */
+else|#
+directive|else
+comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
+comment|/* 	**  Finally, if nothing else is available, 	**  go for a default 	*/
+name|struct
+name|sigaction
+name|n
+decl_stmt|,
+name|o
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|n
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+name|n
+argument_list|)
+expr_stmt|;
+name|n
+operator|.
+name|sa_handler
+operator|=
+name|handler
+expr_stmt|;
 if|if
 condition|(
 name|sigaction
@@ -4045,6 +4725,10 @@ name|sa_handler
 return|;
 endif|#
 directive|endif
+comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
+endif|#
+directive|endif
+comment|/* SA_RESTART */
 block|}
 end_function
 
@@ -4080,6 +4764,7 @@ parameter_list|)
 value|(1<< ((s) - 1))
 endif|#
 directive|endif
+comment|/* ! sigmask */
 return|return
 operator|(
 name|sigblock
@@ -4100,6 +4785,7 @@ literal|0
 return|;
 else|#
 directive|else
+comment|/* BSD4_3 */
 ifdef|#
 directive|ifdef
 name|ALTOS_SYSTEM_V
@@ -4133,17 +4819,24 @@ name|SIG_HOLD
 return|;
 else|#
 directive|else
+comment|/* ALTOS_SYSTEM_V */
 name|sigset_t
 name|sset
 decl_stmt|,
 name|oset
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sigemptyset
 argument_list|(
 operator|&
 name|sset
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -4183,8 +4876,10 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* ALTOS_SYSTEM_V */
 endif|#
 directive|endif
+comment|/* BSD4_3 */
 block|}
 end_function
 
@@ -4234,6 +4929,7 @@ literal|0
 return|;
 else|#
 directive|else
+comment|/* BSD4_3 */
 ifdef|#
 directive|ifdef
 name|ALTOS_SYSTEM_V
@@ -4270,17 +4966,24 @@ name|SIG_HOLD
 return|;
 else|#
 directive|else
+comment|/* ALTOS_SYSTEM_V */
 name|sigset_t
 name|sset
 decl_stmt|,
 name|oset
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sigemptyset
 argument_list|(
 operator|&
 name|sset
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sigaddset
 argument_list|(
 operator|&
@@ -4320,8 +5023,10 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* ALTOS_SYSTEM_V */
 endif|#
 directive|endif
+comment|/* BSD4_3 */
 block|}
 end_function
 
@@ -4377,6 +5082,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _AUX_SOURCE */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -4393,6 +5102,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SHARE_V1 */
+end_comment
 
 begin_function
 name|void
@@ -4424,6 +5137,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* _AUX_SOURCE */
 ifdef|#
 directive|ifdef
 name|SUN_EXTENSIONS
@@ -4432,6 +5146,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SUN_EXTENSIONS */
 if|#
 directive|if
 name|_CONVEX_SOURCE
@@ -4441,6 +5156,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* _CONVEX_SOURCE */
 ifdef|#
 directive|ifdef
 name|__QNX__
@@ -4450,6 +5166,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __QNX__ */
 if|#
 directive|if
 name|SECUREWARE
@@ -4484,8 +5201,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* _SCO_unix_ */
 endif|#
 directive|endif
+comment|/* SECUREWARE || defined(_SCO_unix_) */
 ifdef|#
 directive|ifdef
 name|VENDOR_DEFAULT
@@ -4495,12 +5214,14 @@ name|VENDOR_DEFAULT
 expr_stmt|;
 else|#
 directive|else
+comment|/* VENDOR_DEFAULT */
 name|VendorCode
 operator|=
 name|VENDOR_BERKELEY
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* VENDOR_DEFAULT */
 block|}
 end_function
 
@@ -4712,6 +5433,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! LA_TYPE */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4739,6 +5464,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(unixpc) */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -4765,10 +5494,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(__alpha) || defined(IRIX) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! FSHIFT */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -4788,6 +5525,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! FSHIFT */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4805,6 +5546,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! FSCALE */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -4830,6 +5575,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* SYSTEM5 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4842,10 +5591,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* SYSTEM5 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! LA_AVENRUN */
+end_comment
 
 begin_comment
 comment|/* _PATH_KMEM should be defined in<paths.h> */
@@ -4868,6 +5625,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! _PATH_KMEM */
+end_comment
 
 begin_if
 if|#
@@ -4928,6 +5689,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* defined(SYSTEM5) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4940,10 +5705,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(SYSTEM5) */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! _PATH_UNIX */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4965,6 +5738,10 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* _AUX_SOURCE */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -4989,6 +5766,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* _AUX_SOURCE */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4997,6 +5778,7 @@ value|0
 end_define
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -5021,6 +5803,7 @@ index|]
 decl_stmt|;
 else|#
 directive|else
+comment|/* LA_TYPE == LA_INT */
 if|#
 directive|if
 name|LA_TYPE
@@ -5034,6 +5817,7 @@ index|]
 decl_stmt|;
 else|#
 directive|else
+comment|/* LA_TYPE == LA_SHORT */
 name|double
 name|avenrun
 index|[
@@ -5042,8 +5826,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* LA_TYPE == LA_SHORT */
 endif|#
 directive|endif
+comment|/* LA_TYPE == LA_INT */
 specifier|extern
 name|int
 name|errno
@@ -5063,7 +5849,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|_AUX_SOURCE
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|Nl
 index|[
@@ -5073,6 +5862,14 @@ operator|.
 name|n_name
 argument_list|,
 name|LA_AVENRUN
+argument_list|,
+sizeof|sizeof
+name|Nl
+index|[
+name|X_AVENRUN
+index|]
+operator|.
+name|n_name
 argument_list|)
 expr_stmt|;
 name|Nl
@@ -5089,6 +5886,7 @@ literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* _AUX_SOURCE */
 if|#
 directive|if
 name|defined
@@ -5119,6 +5917,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* defined(_AIX3) || defined(_AIX4) */
 if|if
 condition|(
 name|nlist
@@ -5132,6 +5931,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* defined(_AIX3) || defined(_AIX4) */
 block|{
 if|if
 condition|(
@@ -5142,7 +5942,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: nlist(%s): %s\n"
 argument_list|,
@@ -5155,10 +5955,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -5182,7 +5980,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: nlist(%s, %s) ==> 0\n"
 argument_list|,
@@ -5192,10 +5990,8 @@ name|LA_AVENRUN
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 ifdef|#
@@ -5212,6 +6008,7 @@ name|NAMELISTMASK
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* NAMELISTMASK */
 name|kmem
 operator|=
 name|open
@@ -5239,7 +6036,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: open(/dev/kmem): %s\n"
 argument_list|,
@@ -5250,10 +6047,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 operator|(
@@ -5265,7 +6060,7 @@ name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -5278,7 +6073,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: symbol address = %#lx\n"
 argument_list|,
@@ -5347,7 +6142,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: lseek or read: %s\n"
 argument_list|,
@@ -5358,10 +6153,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 if|#
@@ -5392,7 +6185,7 @@ directive|if
 name|LA_TYPE
 operator|==
 name|LA_SHORT
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %d"
 argument_list|,
@@ -5411,7 +6204,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|", %d, %d"
 argument_list|,
@@ -5428,7 +6221,8 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+comment|/* LA_TYPE == LA_SHORT */
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %ld"
 argument_list|,
@@ -5447,7 +6241,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|", %ld, %ld"
 argument_list|,
@@ -5464,7 +6258,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
+comment|/* LA_TYPE == LA_SHORT */
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5479,7 +6274,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -5521,7 +6316,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* LA_TYPE == LA_FLOAT */
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) */
 if|if
 condition|(
 name|tTd
@@ -5532,7 +6327,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %g"
 argument_list|,
@@ -5551,7 +6346,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|", %g, %g"
 argument_list|,
@@ -5566,7 +6361,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5581,7 +6376,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -5615,6 +6410,7 @@ operator|)
 return|;
 endif|#
 directive|endif
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_SHORT) */
 block|}
 end_function
 
@@ -5624,7 +6420,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LA_TYPE == LA_INT or LA_SHORT or LA_FLOAT */
+comment|/* (LA_TYPE == LA_INT) || (LA_TYPE == LA_FLOAT) || (LA_TYPE == LA_SHORT) */
 end_comment
 
 begin_if
@@ -5641,12 +6437,11 @@ directive|include
 file|<sys/ksym.h>
 end_include
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|getla
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|static
 name|int
@@ -5703,7 +6498,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: open(/dev/kmem): %s\n"
 argument_list|,
@@ -5714,10 +6509,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 operator|(
@@ -5729,7 +6522,7 @@ name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -5778,7 +6571,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: ioctl(MIOC_READKSYM) failed: %s\n"
 argument_list|,
@@ -5803,7 +6596,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %d"
 argument_list|,
@@ -5822,7 +6615,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|", %d, %d"
 argument_list|,
@@ -5837,7 +6630,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5852,7 +6645,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -5893,7 +6686,7 @@ name|FSHIFT
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -5919,6 +6712,7 @@ file|<sys/dg_sys_info.h>
 end_include
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -5950,7 +6744,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6065,6 +6859,7 @@ file|<sys/pstat.h>
 end_include
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -6109,7 +6904,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6158,6 +6953,7 @@ name|LA_SUBR
 end_if
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -6200,16 +6996,19 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|perror
+name|dprintf
 argument_list|(
-literal|"getla: getloadavg failed:"
+literal|"getla: getloadavg failed: %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -6221,7 +7020,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6301,6 +7100,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* defined(NX_CURRENT_COMPILER_RELEASE)&& NX_CURRENT_COMPILER_RELEASE> NX_COMPILER_RELEASE_3_0 */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -6312,7 +7115,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* defined(NX_CURRENT_COMPILER_RELEASE)&& NX_CURRENT_COMPILER_RELEASE> NX_COMPILER_RELEASE_3_0 */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -6361,9 +7169,14 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|perror
+name|dprintf
 argument_list|(
-literal|"getla: processor_set_default failed:"
+literal|"getla: processor_set_default failed: %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6408,9 +7221,14 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|perror
+name|dprintf
 argument_list|(
-literal|"getla: processor_set_info failed:"
+literal|"getla: processor_set_info failed: %s"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6427,7 +7245,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6435,6 +7253,7 @@ call|(
 name|int
 call|)
 argument_list|(
+operator|(
 name|info
 operator|.
 name|load_average
@@ -6444,9 +7263,10 @@ name|LOAD_SCALE
 operator|/
 literal|2
 operator|)
-argument_list|)
+operator|)
 operator|/
 name|LOAD_SCALE
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6509,7 +7329,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! _PATH_LOADAVG */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -6550,7 +7375,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: fopen(%s): %s\n"
 argument_list|,
@@ -6579,6 +7404,9 @@ operator|&
 name|avenrun
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -6600,7 +7428,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: fscanf() = %d: %s\n"
 argument_list|,
@@ -6626,7 +7454,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla(): %.2f\n"
 argument_list|,
@@ -6725,7 +7553,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: open(%s): %s\n"
 argument_list|,
@@ -6751,7 +7579,7 @@ name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6809,7 +7637,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: lseek or read: %s\n"
 argument_list|,
@@ -6834,7 +7662,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %ld"
 argument_list|,
@@ -6857,7 +7685,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|", %ld, %ld"
 argument_list|,
@@ -6880,7 +7708,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6895,7 +7723,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6943,6 +7771,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* LA_TYPE == LA_IRIX6 */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -6958,6 +7790,7 @@ file|<kstat.h>
 end_include
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7011,7 +7844,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: kstat_open(): %s\n"
 argument_list|,
@@ -7061,7 +7894,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: kstat_lookup(): %s\n"
 argument_list|,
@@ -7099,7 +7932,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: kstat_read(): %s\n"
 argument_list|,
@@ -7192,7 +8025,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! _PATH_AVENRUN */
+end_comment
+
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7304,7 +8142,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: avenrun = %d\n"
 argument_list|,
@@ -7335,7 +8173,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7429,7 +8267,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: table %s\n"
 argument_list|,
@@ -7440,10 +8278,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -7455,7 +8291,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: scale = %d\n"
 argument_list|,
@@ -7473,13 +8309,14 @@ condition|)
 name|ave
 operator|=
 operator|(
+operator|(
 name|tab
 operator|.
 name|tl_avenrun
 operator|.
 name|l
 index|[
-literal|0
+literal|2
 index|]
 operator|+
 operator|(
@@ -7494,6 +8331,7 @@ operator|/
 name|tab
 operator|.
 name|tl_lscale
+operator|)
 expr_stmt|;
 else|else
 name|ave
@@ -7508,7 +8346,7 @@ name|tl_avenrun
 operator|.
 name|d
 index|[
-literal|0
+literal|2
 index|]
 operator|+
 literal|0.5
@@ -7523,7 +8361,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7541,6 +8379,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* LA_TYPE == LA_ALPHAOSF */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -7550,6 +8392,7 @@ name|LA_ZERO
 end_if
 
 begin_function
+specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7563,15 +8406,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"getla: ZERO\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -7605,7 +8446,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: getloadavg.c,v 1.16 1991/06/21 12:51:15 paul Exp $"
+literal|"@(#)$OrigId: getloadavg.c,v 1.16 1991/06/21 12:51:15 paul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -7615,7 +8456,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !lint */
+comment|/* ! lint */
 end_comment
 
 begin_ifdef
@@ -7699,9 +8540,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -7719,21 +8558,88 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Parameters: **		pri -- the priority of the message in question. **		ctime -- the message creation time. ** **	Returns: **		TRUE -- if this message should be queued up for the **			time being. **		FALSE -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
+comment|/* **  SM_GETLA -- get the current load average and set macro ** **	Parameters: **		e -- the envelope for the load average macro. ** **	Returns: **		The current load average as an integer. ** **	Side Effects: **		Sets the load average macro ({load_avg}) if **		envelope e is not NULL. */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_function
 name|int
-name|get_num_procs_online
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
+name|sm_getla
+parameter_list|(
+name|e
+parameter_list|)
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
-end_decl_stmt
+block|{
+specifier|register
+name|int
+name|la
+decl_stmt|;
+name|la
+operator|=
+name|getla
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|labuf
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|labuf
+argument_list|,
+sizeof|sizeof
+name|labuf
+argument_list|,
+literal|"%d"
+argument_list|,
+name|CurrentLA
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+name|macid
+argument_list|(
+literal|"{load_avg}"
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|,
+name|newstr
+argument_list|(
+name|labuf
+argument_list|)
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|la
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Parameters: **		pri -- the priority of the message in question. **		ct -- the message creation time. ** **	Returns: **		TRUE -- if this message should be queued up for the **			time being. **		FALSE -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED1 */
+end_comment
 
 begin_function
 name|bool
@@ -7741,25 +8647,17 @@ name|shouldqueue
 parameter_list|(
 name|pri
 parameter_list|,
-name|ctime
+name|ct
 parameter_list|)
 name|long
 name|pri
 decl_stmt|;
 name|time_t
-name|ctime
+name|ct
 decl_stmt|;
 block|{
 name|bool
 name|rval
-decl_stmt|;
-name|int
-name|queuela
-init|=
-name|QueueLA
-operator|*
-name|get_num_procs_online
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -7770,7 +8668,7 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"shouldqueue: CurrentLA=%d, pri=%ld: "
 argument_list|,
@@ -7783,7 +8681,7 @@ if|if
 condition|(
 name|CurrentLA
 operator|<
-name|queuela
+name|QueueLA
 condition|)
 block|{
 if|if
@@ -7795,24 +8693,23 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"FALSE (CurrentLA< QueueLA)\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|FALSE
-operator|)
 return|;
 block|}
 if|#
 directive|if
 literal|0
 comment|/* this code is reported to cause oscillation around RefuseLA */
-block|if (CurrentLA>= RefuseLA&& QueueLA< RefuseLA) 	{ 		if (tTd(3, 30)) 			printf("TRUE (CurrentLA>= RefuseLA)\n"); 		return (TRUE); 	}
+block|if (CurrentLA>= RefuseLA&& QueueLA< RefuseLA) 	{ 		if (tTd(3, 30)) 			dprintf("TRUE (CurrentLA>= RefuseLA)\n"); 		return TRUE; 	}
 endif|#
 directive|endif
+comment|/* 0 */
 name|rval
 operator|=
 name|pri
@@ -7823,7 +8720,7 @@ operator|/
 operator|(
 name|CurrentLA
 operator|-
-name|queuela
+name|QueueLA
 operator|+
 literal|1
 operator|)
@@ -7838,7 +8735,7 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s (by calculation)\n"
 argument_list|,
@@ -7859,54 +8756,47 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		port -- port number (for error messages only) ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
+comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		name -- daemon name (for error messages only) **		e -- the current envelope. **		d -- number of daemon ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
 end_comment
 
 begin_function
 name|bool
 name|refuseconnections
 parameter_list|(
-name|port
+name|name
+parameter_list|,
+name|e
+parameter_list|,
+name|d
 parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
+decl_stmt|;
 name|int
-name|port
+name|d
 decl_stmt|;
 block|{
-name|int
-name|refusela
-init|=
-name|RefuseLA
-operator|*
-name|get_num_procs_online
-argument_list|()
-decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
 specifier|static
 name|time_t
 name|lastconn
-init|=
-operator|(
-name|time_t
-operator|)
-literal|0
+index|[
+name|MAXDAEMONS
+index|]
 decl_stmt|;
 specifier|static
 name|int
 name|conncnt
-init|=
-literal|0
-decl_stmt|;
-specifier|extern
-name|bool
-name|enoughdiskspace
-name|__P
-argument_list|(
-operator|(
-name|long
-operator|)
-argument_list|)
+index|[
+name|MAXDAEMONS
+index|]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7922,6 +8812,7 @@ name|TRUE
 return|;
 endif|#
 directive|endif
+comment|/* XLA */
 name|now
 operator|=
 name|curtime
@@ -7932,13 +8823,22 @@ condition|(
 name|now
 operator|!=
 name|lastconn
+index|[
+name|d
+index|]
 condition|)
 block|{
 name|lastconn
+index|[
+name|d
+index|]
 operator|=
 name|now
 expr_stmt|;
 name|conncnt
+index|[
+name|d
+index|]
 operator|=
 literal|0
 expr_stmt|;
@@ -7947,6 +8847,9 @@ elseif|else
 if|if
 condition|(
 name|conncnt
+index|[
+name|d
+index|]
 operator|++
 operator|>
 name|ConnRateThrottle
@@ -7961,9 +8864,11 @@ name|sm_setproctitle
 argument_list|(
 name|TRUE
 argument_list|,
-literal|"deferring connections on port %d: %d per second"
+name|e
 argument_list|,
-name|port
+literal|"deferring connections on daemon %s: %d per second"
+argument_list|,
+name|name
 argument_list|,
 name|ConnRateThrottle
 argument_list|)
@@ -7972,7 +8877,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>=
-literal|14
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(
@@ -7980,13 +8885,16 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"deferring connections on port %d: %d per second"
+literal|"deferring connections on daemon %s: %d per second"
 argument_list|,
-name|port
+name|name
 argument_list|,
 name|ConnRateThrottle
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 literal|1
@@ -8000,18 +8908,24 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|RefuseLA
+operator|>
+literal|0
+operator|&&
 name|CurrentLA
 operator|>=
-name|refusela
+name|RefuseLA
 condition|)
 block|{
 name|sm_setproctitle
 argument_list|(
 name|TRUE
 argument_list|,
-literal|"rejecting connections on port %d: load average: %d"
+name|e
 argument_list|,
-name|port
+literal|"rejecting connections on daemon %s: load average: %d"
+argument_list|,
+name|name
 argument_list|,
 name|CurrentLA
 argument_list|)
@@ -8020,7 +8934,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>=
-literal|14
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(
@@ -8028,56 +8942,11 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"rejecting connections on port %d: load average: %d"
+literal|"rejecting connections on daemon %s: load average: %d"
 argument_list|,
-name|port
+name|name
 argument_list|,
 name|CurrentLA
-argument_list|)
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|enoughdiskspace
-argument_list|(
-name|MinBlocksFree
-operator|+
-literal|1
-argument_list|)
-condition|)
-block|{
-name|sm_setproctitle
-argument_list|(
-name|TRUE
-argument_list|,
-literal|"rejecting connections on port %d: min free: %d"
-argument_list|,
-name|port
-argument_list|,
-name|MinBlocksFree
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|LogLevel
-operator|>=
-literal|14
-condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-name|NOQID
-argument_list|,
-literal|"rejecting connections on port %d: min free: %d"
-argument_list|,
-name|port
-argument_list|,
-name|MinBlocksFree
 argument_list|)
 expr_stmt|;
 return|return
@@ -8109,9 +8978,11 @@ name|sm_setproctitle
 argument_list|(
 name|TRUE
 argument_list|,
-literal|"rejecting connections on port %d: %d children, max %d"
+name|e
 argument_list|,
-name|port
+literal|"rejecting connections on daemon %s: %d children, max %d"
+argument_list|,
+name|name
 argument_list|,
 name|CurChildren
 argument_list|,
@@ -8122,7 +8993,7 @@ if|if
 condition|(
 name|LogLevel
 operator|>=
-literal|14
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(
@@ -8130,9 +9001,9 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"rejecting connections on port %d: %d children, max %d"
+literal|"rejecting connections on daemon %s: %d children, max %d"
 argument_list|,
-name|port
+name|name
 argument_list|,
 name|CurChildren
 argument_list|,
@@ -8263,6 +9134,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* ! SPT_TYPE */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -8293,6 +9168,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SPT_TYPE == SPT_PSTAT */
+end_comment
 
 begin_if
 if|#
@@ -8342,6 +9221,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* ! PS_STRINGS */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8373,15 +9256,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* ! NKPDE */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! PS_STRINGS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SPT_TYPE == SPT_PSSTRINGS */
+end_comment
 
 begin_if
 if|#
@@ -8407,6 +9302,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* SPT_TYPE == SPT_PSSTRINGS || SPT_TYPE == SPT_CHANGEARGV */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -8417,6 +9316,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SPT_TYPE == SPT_PSSTRINGS || SPT_TYPE == SPT_CHANGEARGV */
+end_comment
 
 begin_if
 if|#
@@ -8442,6 +9345,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SPT_TYPE == SPT_SYSMIPS */
+end_comment
 
 begin_if
 if|#
@@ -8495,10 +9402,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* PSARGSZ> MAXLINE */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SPT_TYPE == SPT_SCO */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -8517,6 +9432,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* ! SPT_PADCHAR */
+end_comment
 
 begin_endif
 endif|#
@@ -8546,10 +9465,15 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ! SPT_BUFSIZE */
+end_comment
+
+begin_comment
 comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -8564,6 +9488,7 @@ comment|/* pointer to argument vector */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|LastArgv
@@ -8574,6 +9499,40 @@ end_decl_stmt
 
 begin_comment
 comment|/* end of argv */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|SPT_TYPE
+operator|!=
+name|SPT_BUILTIN
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setproctitle
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SPT_TYPE != SPT_BUILTIN */
 end_comment
 
 begin_function
@@ -8706,7 +9665,7 @@ name|Argv
 operator|=
 name|argv
 expr_stmt|;
-comment|/* 	**  Determine how much space we can use for setproctitle.   	**  Use all contiguous argv and envp pointers starting at argv[0]  	*/
+comment|/* 	**  Determine how much space we can use for setproctitle. 	**  Use all contiguous argv and envp pointers starting at argv[0] 	*/
 for|for
 control|(
 name|i
@@ -8751,8 +9710,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-else|else
-continue|continue;
 block|}
 for|for
 control|(
@@ -8760,6 +9717,10 @@ name|i
 operator|=
 literal|0
 init|;
+name|LastArgv
+operator|!=
+name|NULL
+operator|&&
 name|envp
 index|[
 name|i
@@ -8797,8 +9758,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-else|else
-continue|continue;
 block|}
 block|}
 end_function
@@ -8816,6 +9775,7 @@ comment|/*VARARGS1*/
 end_comment
 
 begin_function
+specifier|static
 name|void
 ifdef|#
 directive|ifdef
@@ -8831,6 +9791,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
+comment|/* __STDC__ */
 function|setproctitle
 parameter_list|(
 name|fmt
@@ -8845,6 +9806,7 @@ decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
+comment|/* __STDC__ */
 block|{
 if|#
 directive|if
@@ -8852,13 +9814,13 @@ name|SPT_TYPE
 operator|!=
 name|SPT_NONE
 specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 name|SETPROC_STATIC
 name|char
@@ -8879,6 +9841,7 @@ name|pst
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_PSTAT */
 if|#
 directive|if
 name|SPT_TYPE
@@ -8907,6 +9870,7 @@ name|u
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_SCO */
 name|p
 operator|=
 name|buf
@@ -8915,11 +9879,18 @@ comment|/* print sendmail: heading for grep */
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|p
 argument_list|,
 literal|"sendmail: "
+argument_list|,
+name|SPACELEFT
+argument_list|(
+name|buf
+argument_list|,
+name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -8989,6 +9960,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_PSTAT */
 if|#
 directive|if
 name|SPT_TYPE
@@ -9008,6 +9980,7 @@ name|buf
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_PSSTRINGS */
 if|#
 directive|if
 name|SPT_TYPE
@@ -9024,6 +9997,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_SYSMIPS */
 if|#
 directive|if
 name|SPT_TYPE
@@ -9079,7 +10053,7 @@ name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 name|kmempid
@@ -9144,11 +10118,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_SCO */
 if|#
 directive|if
 name|SPT_TYPE
 operator|==
 name|SPT_REUSEARGV
+if|if
+condition|(
+name|LastArgv
+operator|==
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|i
@@ -9185,7 +10167,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|Argv
 index|[
@@ -9193,6 +10175,10 @@ literal|0
 index|]
 argument_list|,
 name|buf
+argument_list|,
+name|i
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|p
@@ -9227,6 +10213,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_REUSEARGV */
 if|#
 directive|if
 name|SPT_TYPE
@@ -9248,6 +10235,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SPT_TYPE == SPT_CHANGEARGV */
 endif|#
 directive|endif
 comment|/* SPT_TYPE != SPT_NONE */
@@ -9267,7 +10255,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SM_SETPROCTITLE -- set process task and set process title for ps ** **	Possibly set process status and call setproctitle() to **	change the ps display. ** **	Parameters: **		status -- whether or not to store as process status **		fmt -- a printf style format string. **		a, b, c -- possible parameters to fmt. ** **	Returns: **		none. */
+comment|/* **  SM_SETPROCTITLE -- set process task and set process title for ps ** **	Possibly set process status and call setproctitle() to **	change the ps display. ** **	Parameters: **		status -- whether or not to store as process status **		e -- the current envelope. **		fmt -- a printf style format string. **		a, b, c -- possible parameters to fmt. ** **	Returns: **		none. */
 end_comment
 
 begin_comment
@@ -9284,6 +10272,10 @@ parameter_list|(
 name|bool
 name|status
 parameter_list|,
+name|ENVELOPE
+modifier|*
+name|e
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -9293,9 +10285,12 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
+comment|/* __STDC__ */
 function|sm_setproctitle
 parameter_list|(
 name|status
+parameter_list|,
+name|e
 parameter_list|,
 name|fmt
 parameter_list|,
@@ -9303,6 +10298,10 @@ name|va_alist
 parameter_list|)
 name|bool
 name|status
+decl_stmt|;
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 specifier|const
 name|char
@@ -9312,6 +10311,7 @@ decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
+comment|/* __STDC__ */
 block|{
 name|char
 name|buf
@@ -9333,7 +10333,8 @@ name|vsnprintf
 argument_list|(
 name|buf
 argument_list|,
-name|SPT_BUFSIZE
+sizeof|sizeof
+name|buf
 argument_list|,
 name|fmt
 argument_list|,
@@ -9354,6 +10355,42 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ProcTitlePrefix
+operator|!=
+name|NULL
+condition|)
+block|{
+name|char
+name|prefix
+index|[
+name|SPT_BUFSIZE
+index|]
+decl_stmt|;
+name|expand
+argument_list|(
+name|ProcTitlePrefix
+argument_list|,
+name|prefix
+argument_list|,
+sizeof|sizeof
+name|prefix
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"%s: %s"
+argument_list|,
+name|prefix
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|setproctitle
 argument_list|(
 literal|"%s"
@@ -9390,12 +10427,14 @@ name|st
 decl_stmt|;
 else|#
 directive|else
+comment|/* WAITUNION */
 specifier|auto
 name|int
 name|st
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* WAITUNION */
 name|pid_t
 name|i
 decl_stmt|;
@@ -9415,6 +10454,7 @@ name|savesig
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* defined(ISC_UNIX) || defined(_SCO_unix_) */
 do|do
 block|{
 name|errno
@@ -9441,6 +10481,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(ISC_UNIX) || defined(_SCO_unix_) */
 name|i
 operator|=
 name|wait
@@ -9473,12 +10514,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(ISC_UNIX) || defined(_SCO_unix_) */
 if|if
 condition|(
 name|i
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|proc_list_drop
 argument_list|(
 name|i
@@ -9522,11 +10567,13 @@ name|w_status
 return|;
 else|#
 directive|else
+comment|/* WAITUNION */
 return|return
 name|st
 return|;
 endif|#
 directive|endif
+comment|/* WAITUNION */
 block|}
 end_function
 
@@ -9534,7 +10581,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. */
+comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. **		Control socket exits may restart/shutdown daemon. */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED0 */
 end_comment
 
 begin_function
@@ -9548,15 +10599,18 @@ name|sig
 decl_stmt|;
 block|{
 name|int
-name|olderrno
+name|save_errno
 init|=
 name|errno
+decl_stmt|;
+name|int
+name|st
 decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HASWAITPID
 specifier|auto
 name|int
@@ -9589,6 +10643,10 @@ operator|>
 literal|0
 condition|)
 block|{
+name|st
+operator|=
+name|status
+expr_stmt|;
 if|if
 condition|(
 name|count
@@ -9618,14 +10676,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|proc_list_drop
-argument_list|(
-name|pid
-argument_list|)
-expr_stmt|;
-block|}
 else|#
 directive|else
+comment|/* HASWAITPID */
 ifdef|#
 directive|ifdef
 name|WNOHANG
@@ -9656,10 +10709,12 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|proc_list_drop
-argument_list|(
-name|pid
-argument_list|)
+block|{
+name|st
+operator|=
+name|status
+operator|.
+name|w_status
 expr_stmt|;
 else|#
 directive|else
@@ -9683,16 +10738,73 @@ operator|)
 operator|>
 literal|0
 condition|)
-name|proc_list_drop
-argument_list|(
-name|pid
-argument_list|)
+block|{
+name|st
+operator|=
+name|status
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* WNOHANG */
 endif|#
 directive|endif
+comment|/* HASWAITPID */
+comment|/* Drop PID and check if it was a control socket child */
+if|if
+condition|(
+name|proc_list_drop
+argument_list|(
+name|pid
+argument_list|)
+operator|==
+name|PROC_CONTROL
+operator|&&
+name|WIFEXITED
+argument_list|(
+name|st
+argument_list|)
+condition|)
+block|{
+comment|/* if so, see if we need to restart or shutdown */
+if|if
+condition|(
+name|WEXITSTATUS
+argument_list|(
+name|st
+argument_list|)
+operator|==
+name|EX_RESTART
+condition|)
+block|{
+comment|/* emulate a SIGHUP restart */
+name|sighup
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+elseif|else
+if|if
+condition|(
+name|WEXITSTATUS
+argument_list|(
+name|st
+argument_list|)
+operator|==
+name|EX_SHUTDOWN
+condition|)
+block|{
+comment|/* emulate a SIGTERM shutdown */
+name|intsig
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
+block|}
 ifdef|#
 directive|ifdef
 name|SYS5SIGNALS
@@ -9708,42 +10820,25 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SYS5SIGNALS */
 name|errno
 operator|=
-name|olderrno
+name|save_errno
 expr_stmt|;
 return|return
 name|SIGFUNC_RETURN
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  PUTENV -- emulation of putenv() in terms of setenv() ** **	Not needed on Posix-compliant systems. **	This doesn't have full Posix semantics, but it's good enough **		for sendmail. ** **	Parameter: **		env -- the environment to put. ** **	Returns: **		none. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDPUTENV
-end_ifdef
-
-begin_if
 if|#
 directive|if
 name|NEEDPUTENV
 operator|==
 literal|2
-end_if
-
-begin_comment
 comment|/* no setenv(3) call available */
-end_comment
-
-begin_function
 name|int
 name|putenv
 parameter_list|(
@@ -9776,10 +10871,10 @@ modifier|*
 name|newenv
 decl_stmt|;
 specifier|static
-name|int
+name|bool
 name|first
 init|=
-literal|1
+name|TRUE
 decl_stmt|;
 specifier|extern
 name|char
@@ -9872,9 +10967,7 @@ operator|)
 name|str
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 block|}
@@ -9913,14 +11006,12 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 name|first
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 operator|(
 name|void
@@ -9978,10 +11069,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 comment|/* actually add in the new entry */
@@ -10010,23 +11099,12 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
-end_function
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
-comment|/* implement putenv() in terms of setenv() */
-end_comment
-
-begin_function
+comment|/* NEEDPUTENV == 2 */
 name|int
 name|putenv
 parameter_list|(
@@ -10090,11 +11168,11 @@ name|nbuf
 operator|-
 literal|1
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|env
-argument_list|,
 name|nbuf
+argument_list|,
+name|env
 argument_list|,
 name|l
 argument_list|)
@@ -10118,32 +11196,17 @@ literal|1
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
+comment|/* NEEDPUTENV == 2 */
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDPUTENV */
 comment|/* **  UNSETENV -- remove a variable from the environment ** **	Not needed on newer systems. ** **	Parameters: **		name -- the string name of the environment variable to be **			deleted from the current environment. ** **	Returns: **		none. ** **	Globals: **		environ -- a pointer to the current environment. ** **	Side Effects: **		Modifies environ. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASUNSETENV
-end_ifndef
-
-begin_function
 name|void
 name|unsetenv
 parameter_list|(
@@ -10247,38 +11310,19 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* !HASUNSETENV */
 comment|/* **  GETDTABLESIZE -- return number of file descriptors ** **	Only on non-BSD systems ** **	Parameters: **		none ** **	Returns: **		size of file descriptor table ** **	Side Effects: **		none */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SOLARIS
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<sys/resource.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* SOLARIS */
 name|int
 name|getdtsize
 parameter_list|()
@@ -10309,8 +11353,9 @@ name|rlim_cur
 return|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+comment|/* RLIMIT_NOFILE */
+if|#
+directive|if
 name|HASGETDTABLESIZE
 return|return
 name|getdtablesize
@@ -10318,6 +11363,7 @@ argument_list|()
 return|;
 else|#
 directive|else
+comment|/* HASGETDTABLESIZE */
 ifdef|#
 directive|ifdef
 name|_SC_OPEN_MAX
@@ -10329,30 +11375,22 @@ argument_list|)
 return|;
 else|#
 directive|else
+comment|/* _SC_OPEN_MAX */
 return|return
 name|NOFILE
 return|;
 endif|#
 directive|endif
+comment|/* _SC_OPEN_MAX */
 endif|#
 directive|endif
+comment|/* HASGETDTABLESIZE */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  UNAME -- get the UUCP name of this system. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASUNAME
-end_ifndef
-
-begin_function
 name|int
 name|uname
 parameter_list|(
@@ -10456,9 +11494,7 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 comment|/* try /usr/include/whoami.h -- has a #define somewhere */
@@ -10497,6 +11533,7 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 name|sscanf
@@ -10515,6 +11552,7 @@ operator|>
 literal|0
 condition|)
 break|break;
+block|}
 operator|(
 name|void
 operator|)
@@ -10535,173 +11573,56 @@ operator|!=
 literal|'\0'
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|TRUST_POPEN
+if|#
+directive|if
+literal|0
 comment|/* 	**  Popen is known to have security holes. 	*/
 comment|/* try uuname -l to return local name */
-if|if
-condition|(
-operator|(
-name|file
-operator|=
-name|popen
-argument_list|(
-literal|"uuname -l"
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fgets
-argument_list|(
-name|name
-argument_list|,
-name|NODE_LENGTH
-operator|+
-literal|1
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|pclose
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-name|n
-operator|=
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'\n'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|n
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|n
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|->
-name|nodename
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+block|if ((file = popen("uuname -l", "r")) != NULL) 	{ 		(void) fgets(name, NODE_LENGTH + 1, file); 		(void) pclose(file); 		n = strchr(name, '\n'); 		if (n != NULL) 			*n = '\0'; 		if (name->nodename[0] != '\0') 			return 0; 	}
 endif|#
 directive|endif
+comment|/* 0 */
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* HASUNAME */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* !HASUNAME */
 comment|/* **  INITGROUPS -- initialize groups ** **	Stub implementation for System V style systems */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASINITGROUPS
-end_ifndef
-
-begin_macro
 name|initgroups
 argument_list|(
 argument|name
 argument_list|,
 argument|basegid
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|basegid
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 literal|0
 return|;
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* !HASINITGROUPS */
 comment|/* **  SETGROUPS -- set group list ** **	Stub implementation for systems that don't have group lists */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|NGROUPS_MAX
-end_ifndef
-
-begin_function
 name|int
 name|setgroups
 parameter_list|(
@@ -10721,27 +11642,14 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* ! NGROUPS_MAX */
 comment|/* **  SETSID -- set session id (for non-POSIX systems) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
 name|HASSETSID
-end_ifndef
-
-begin_decl_stmt
 name|pid_t
 name|setsid
 name|__P
@@ -10815,6 +11723,7 @@ argument_list|()
 return|;
 else|#
 directive|else
+comment|/* SYS5SETPGRP */
 return|return
 name|setpgid
 argument_list|(
@@ -10826,41 +11735,22 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* SYS5SETPGRP */
 block|}
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* !HASSETSID */
 comment|/* **  FSYNC -- dummy fsync */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDFSYNC
-end_ifdef
-
-begin_macro
 name|fsync
 argument_list|(
 argument|fd
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -10877,40 +11767,25 @@ argument_list|)
 return|;
 else|#
 directive|else
+comment|/* O_SYNC */
 comment|/* nothing we can do */
 return|return
 literal|0
 return|;
 endif|#
 directive|endif
+comment|/* O_SYNC */
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDFSYNC */
 comment|/* **  DGUX_INET_ADDR -- inet_addr for DG/UX ** **	Data General DG/UX version of inet_addr returns a struct in_addr **	instead of a long.  This patches things.  Only needed on versions **	prior to 5.4.3. */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|DGUX_5_4_2
-end_ifdef
-
-begin_undef
 undef|#
 directive|undef
 name|inet_addr
-end_undef
-
-begin_function
 name|long
 name|dgux_inet_addr
 parameter_list|(
@@ -10938,35 +11813,15 @@ operator|.
 name|s_addr
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* DGUX_5_4_2 */
 comment|/* **  GETOPT -- for old systems or systems with bogus implementations */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDGETOPT
-end_ifdef
-
-begin_comment
 comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
-end_comment
-
-begin_comment
 comment|/* **  this version hacked to add `atend' flag to allow state machine **  to reset if invoked by the program to scan args for a 2nd time */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -10979,9 +11834,6 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-end_if
-
-begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
@@ -10989,34 +11841,13 @@ index|[]
 init|=
 literal|"@(#)getopt.c	4.3 (Berkeley) 3/9/86"
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_comment
+comment|/* defined(LIBC_SCCS)&& !defined(lint) */
 comment|/*  * get option letter from argument vector  */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|_CONVEX_SOURCE
-end_ifdef
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|optind
@@ -11025,100 +11856,57 @@ name|opterr
 decl_stmt|,
 name|optopt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|optarg
 decl_stmt|;
-end_decl_stmt
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_decl_stmt
+comment|/* _CONVEX_SOURCE */
 name|int
 name|opterr
 init|=
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* if error message should be printed */
-end_comment
-
-begin_decl_stmt
 name|int
 name|optind
 init|=
 literal|1
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* index into parent argv vector */
-end_comment
-
-begin_decl_stmt
 name|int
 name|optopt
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* character checked for validity */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|optarg
 init|=
 name|NULL
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* argument associated with option */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
+comment|/* _CONVEX_SOURCE */
 define|#
 directive|define
 name|BADCH
 value|(int)'?'
-end_define
-
-begin_define
 define|#
 directive|define
 name|EMSG
 value|""
-end_define
-
-begin_define
 define|#
 directive|define
 name|tell
 parameter_list|(
 name|s
 parameter_list|)
-value|if (opterr) {fputs(*nargv,stderr);fputs(s,stderr); \ 		fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);}
-end_define
-
-begin_function
+value|if (opterr) {fputs(*nargv,stderr);fputs(s,stderr); \ 			fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);}
 name|int
 name|getopt
 parameter_list|(
@@ -11370,34 +12158,17 @@ operator|)
 return|;
 comment|/* dump back option letter */
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDGETOPT */
 comment|/* **  VFPRINTF, VSPRINTF -- for old 4.3 BSD systems missing a real version */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDVPRINTF
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|MAXARG
 value|16
-end_define
-
-begin_macro
 name|vfprintf
 argument_list|(
 argument|fp
@@ -11406,31 +12177,19 @@ argument|fmt
 argument_list|,
 argument|ap
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -11551,9 +12310,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_macro
 name|vsprintf
 argument_list|(
 argument|s
@@ -11562,31 +12318,19 @@ argument|fmt
 argument_list|,
 argument|ap
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -11707,46 +12451,24 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDVPRINTF */
 comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		user -- the name of the user we are checking. **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
-end_comment
-
-begin_if
 if|#
 directive|if
 operator|!
 name|HASGETUSERSHELL
-end_if
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_PATH_SHELLS
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|_PATH_SHELLS
 value|"/etc/shells"
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* ! _PATH_SHELLS */
 if|#
 directive|if
 name|defined
@@ -11758,45 +12480,27 @@ name|defined
 argument_list|(
 name|_AIX4
 argument_list|)
-end_if
-
-begin_include
 include|#
 directive|include
 file|<userconf.h>
-end_include
-
-begin_if
 if|#
 directive|if
 name|_AIX4
 operator|>=
 literal|40200
-end_if
-
-begin_include
 include|#
 directive|include
 file|<userpw.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_include
+comment|/* _AIX4>= 40200 */
 include|#
 directive|include
 file|<usersec.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_decl_stmt
+comment|/* defined(_AIX3) || defined(_AIX4) */
+specifier|static
 name|char
 modifier|*
 name|DefaultUserShells
@@ -11837,6 +12541,7 @@ literal|"/usr/bin/posix/sh"
 block|,
 else|#
 directive|else
+comment|/* V4FS */
 literal|"/bin/rsh"
 block|,
 comment|/* restricted Bourne shell */
@@ -11855,8 +12560,10 @@ literal|"/bin/posix/sh"
 block|,
 endif|#
 directive|endif
+comment|/* V4FS */
 endif|#
 directive|endif
+comment|/* __hpux */
 if|#
 directive|if
 name|defined
@@ -11885,6 +12592,7 @@ literal|"/usr/bin/bsh"
 block|,
 endif|#
 directive|endif
+comment|/* defined(_AIX3) || defined(_AIX4) */
 if|#
 directive|if
 name|defined
@@ -11903,6 +12611,7 @@ literal|"/usr/bin/ksh"
 block|,
 endif|#
 directive|endif
+comment|/* defined(__svr4__) || defined(__svr5__) */
 ifdef|#
 directive|ifdef
 name|sgi
@@ -11925,24 +12634,17 @@ literal|"/usr/bin/tcsh"
 block|,
 endif|#
 directive|endif
+comment|/* sgi */
 name|NULL
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_define
+comment|/* !HASGETUSERSHELL */
 define|#
 directive|define
 name|WILDCARD_SHELL
 value|"/SENDMAIL/ANY/SHELL/"
-end_define
-
-begin_function
 name|bool
 name|usershellok
 parameter_list|(
@@ -12045,6 +12747,7 @@ name|NULL
 return|;
 else|#
 directive|else
+comment|/* HASGETUSERSHELL */
 if|#
 directive|if
 name|USEGETCONFATTR
@@ -12055,6 +12758,7 @@ name|v
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* USEGETCONFATTR */
 specifier|register
 name|FILE
 modifier|*
@@ -12165,6 +12869,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* USEGETCONFATTR */
 name|shellf
 operator|=
 name|fopen
@@ -12368,6 +13073,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|shellf
@@ -12378,6 +13086,9 @@ name|TRUE
 return|;
 block|}
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|shellf
@@ -12388,135 +13099,66 @@ name|FALSE
 return|;
 endif|#
 directive|endif
+comment|/* HASGETUSERSHELL */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  FREEDISKSPACE -- see how much free space is on the queue filesystem ** **	Only implemented if you have statfs. ** **	Parameters: **		dir -- the directory in question. **		bsize -- a variable into which the filesystem **			block size is stored. ** **	Returns: **		The number of bytes free on the queue filesystem. **		-1 if the statfs call fails. ** **	Side effects: **		Puts the filesystem block size into bsize. */
-end_comment
-
-begin_comment
+comment|/* **  FREEDISKSPACE -- see how much free space is on the queue filesystem ** **	Only implemented if you have statfs. ** **	Parameters: **		dir -- the directory in question. **		bsize -- a variable into which the filesystem **			block size is stored. ** **	Returns: **		The number of blocks free on the queue filesystem. **		-1 if the statfs call fails. ** **	Side effects: **		Puts the filesystem block size into bsize. */
 comment|/* statfs types */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_NONE
 value|0
-end_define
-
-begin_comment
 comment|/* no statfs implementation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_USTAT
 value|1
-end_define
-
-begin_comment
 comment|/* use ustat */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_4ARGS
 value|2
-end_define
-
-begin_comment
 comment|/* use four-argument statfs call */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_VFS
 value|3
-end_define
-
-begin_comment
 comment|/* use<sys/vfs.h> implementation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_MOUNT
 value|4
-end_define
-
-begin_comment
 comment|/* use<sys/mount.h> implementation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_STATFS
 value|5
-end_define
-
-begin_comment
 comment|/* use<sys/statfs.h> implementation */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|SFS_STATVFS
 value|6
-end_define
-
-begin_comment
 comment|/* use<sys/statvfs.h> implementation */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SFS_TYPE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|SFS_TYPE
 value|SFS_NONE
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* ! SFS_TYPE */
 if|#
 directive|if
 name|SFS_TYPE
 operator|==
 name|SFS_USTAT
-end_if
-
-begin_include
 include|#
 directive|include
 file|<ustat.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* SFS_TYPE == SFS_USTAT */
 if|#
 directive|if
 name|SFS_TYPE
@@ -12526,77 +13168,45 @@ operator|||
 name|SFS_TYPE
 operator|==
 name|SFS_STATFS
-end_if
-
-begin_include
 include|#
 directive|include
 file|<sys/statfs.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* SFS_TYPE == SFS_4ARGS || SFS_TYPE == SFS_STATFS */
 if|#
 directive|if
 name|SFS_TYPE
 operator|==
 name|SFS_VFS
-end_if
-
-begin_include
 include|#
 directive|include
 file|<sys/vfs.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* SFS_TYPE == SFS_VFS */
 if|#
 directive|if
 name|SFS_TYPE
 operator|==
 name|SFS_MOUNT
-end_if
-
-begin_include
 include|#
 directive|include
 file|<sys/mount.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* SFS_TYPE == SFS_MOUNT */
 if|#
 directive|if
 name|SFS_TYPE
 operator|==
 name|SFS_STATVFS
-end_if
-
-begin_include
 include|#
 directive|include
 file|<sys/statvfs.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* SFS_TYPE == SFS_STATVFS */
 name|long
 name|freediskspace
 parameter_list|(
@@ -12641,6 +13251,7 @@ name|SFS_BAVAIL
 value|f_tfree
 else|#
 directive|else
+comment|/* SFS_TYPE == SFS_USTAT */
 if|#
 directive|if
 name|defined
@@ -12661,6 +13272,7 @@ name|FSBLOCKSIZE
 value|1024L
 else|#
 directive|else
+comment|/* defined(ultrix) */
 if|#
 directive|if
 name|SFS_TYPE
@@ -12676,6 +13288,7 @@ name|FSBLOCKSIZE
 value|fs.f_frsize
 else|#
 directive|else
+comment|/* SFS_TYPE == SFS_STATVFS */
 name|struct
 name|statfs
 name|fs
@@ -12686,10 +13299,13 @@ name|FSBLOCKSIZE
 value|fs.f_bsize
 endif|#
 directive|endif
+comment|/* SFS_TYPE == SFS_STATVFS */
 endif|#
 directive|endif
+comment|/* defined(ultrix) */
 endif|#
 directive|endif
+comment|/* SFS_TYPE == SFS_USTAT */
 ifndef|#
 directive|ifndef
 name|SFS_BAVAIL
@@ -12699,6 +13315,7 @@ name|SFS_BAVAIL
 value|f_bavail
 endif|#
 directive|endif
+comment|/* ! SFS_BAVAIL */
 if|#
 directive|if
 name|SFS_TYPE
@@ -12730,6 +13347,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* SFS_TYPE == SFS_USTAT */
 if|#
 directive|if
 name|SFS_TYPE
@@ -12754,6 +13372,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* SFS_TYPE == SFS_4ARGS */
 if|#
 directive|if
 name|SFS_TYPE
@@ -12773,6 +13392,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* SFS_TYPE == SFS_STATVFS */
 if|#
 directive|if
 name|defined
@@ -12793,6 +13413,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* defined(ultrix) */
 if|if
 condition|(
 name|statfs
@@ -12807,12 +13428,16 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* defined(ultrix) */
 endif|#
 directive|endif
+comment|/* SFS_TYPE == SFS_STATVFS */
 endif|#
 directive|endif
+comment|/* SFS_TYPE == SFS_4ARGS */
 endif|#
 directive|endif
+comment|/* SFS_TYPE == SFS_USTAT */
 block|{
 if|if
 condition|(
@@ -12846,6 +13471,9 @@ operator|>
 name|LONG_MAX
 condition|)
 return|return
+operator|(
+name|long
+operator|)
 name|LONG_MAX
 return|;
 else|else
@@ -12860,35 +13488,31 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* SFS_TYPE != SFS_NONE */
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  ENOUGHDISKSPACE -- is there enough free space on the queue fs? ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
-end_comment
-
-begin_function
+comment|/* **  ENOUGHDISKSPACE -- is there enough free space on the queue fs? ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. **		log -- log message? ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
 name|bool
 name|enoughdiskspace
 parameter_list|(
 name|msize
+parameter_list|,
+name|log
 parameter_list|)
 name|long
 name|msize
 decl_stmt|;
+name|bool
+name|log
+decl_stmt|;
 block|{
 name|long
 name|bfree
-decl_stmt|,
+decl_stmt|;
+name|long
 name|bsize
 decl_stmt|;
 if|if
@@ -12911,7 +13535,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"enoughdiskspace: no threshold\n"
 argument_list|)
@@ -12920,9 +13544,6 @@ return|return
 name|TRUE
 return|;
 block|}
-if|if
-condition|(
-operator|(
 name|bfree
 operator|=
 name|freediskspace
@@ -12932,7 +13553,10 @@ argument_list|,
 operator|&
 name|bsize
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|bfree
 operator|>=
 literal|0
 condition|)
@@ -12946,7 +13570,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"enoughdiskspace: bavail=%ld, need=%ld\n"
 argument_list|,
@@ -12983,6 +13607,8 @@ condition|)
 block|{
 if|if
 condition|(
+name|log
+operator|&&
 name|LogLevel
 operator|>
 literal|0
@@ -13027,7 +13653,7 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"enoughdiskspace failure: min=%ld, need=%ld: %s\n"
 argument_list|,
@@ -13045,16 +13671,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  TRANSIENTERROR -- tell if an error code indicates a transient failure ** **	This looks at an errno value and tells if this is likely to **	go away if retried later. ** **	Parameters: **		err -- the errno code to classify. ** **	Returns: **		TRUE if this is probably transient. **		FALSE otherwise. */
-end_comment
-
-begin_function
 name|bool
 name|transienterror
 parameter_list|(
@@ -13110,6 +13727,7 @@ case|:
 comment|/* Connection timed out */
 endif|#
 directive|endif
+comment|/* ETIMEDOUT */
 ifdef|#
 directive|ifdef
 name|ESTALE
@@ -13119,6 +13737,7 @@ case|:
 comment|/* Stale NFS file handle */
 endif|#
 directive|endif
+comment|/* ESTALE */
 ifdef|#
 directive|ifdef
 name|ENETDOWN
@@ -13128,6 +13747,7 @@ case|:
 comment|/* Network is down */
 endif|#
 directive|endif
+comment|/* ENETDOWN */
 ifdef|#
 directive|ifdef
 name|ENETUNREACH
@@ -13137,6 +13757,7 @@ case|:
 comment|/* Network is unreachable */
 endif|#
 directive|endif
+comment|/* ENETUNREACH */
 ifdef|#
 directive|ifdef
 name|ENETRESET
@@ -13146,6 +13767,7 @@ case|:
 comment|/* Network dropped connection on reset */
 endif|#
 directive|endif
+comment|/* ENETRESET */
 ifdef|#
 directive|ifdef
 name|ECONNABORTED
@@ -13155,6 +13777,7 @@ case|:
 comment|/* Software caused connection abort */
 endif|#
 directive|endif
+comment|/* ECONNABORTED */
 ifdef|#
 directive|ifdef
 name|ECONNRESET
@@ -13164,6 +13787,7 @@ case|:
 comment|/* Connection reset by peer */
 endif|#
 directive|endif
+comment|/* ECONNRESET */
 ifdef|#
 directive|ifdef
 name|ENOBUFS
@@ -13173,6 +13797,7 @@ case|:
 comment|/* No buffer space available */
 endif|#
 directive|endif
+comment|/* ENOBUFS */
 ifdef|#
 directive|ifdef
 name|ESHUTDOWN
@@ -13182,6 +13807,7 @@ case|:
 comment|/* Can't send after socket shutdown */
 endif|#
 directive|endif
+comment|/* ESHUTDOWN */
 ifdef|#
 directive|ifdef
 name|ECONNREFUSED
@@ -13191,6 +13817,7 @@ case|:
 comment|/* Connection refused */
 endif|#
 directive|endif
+comment|/* ECONNREFUSED */
 ifdef|#
 directive|ifdef
 name|EHOSTDOWN
@@ -13200,6 +13827,7 @@ case|:
 comment|/* Host is down */
 endif|#
 directive|endif
+comment|/* EHOSTDOWN */
 ifdef|#
 directive|ifdef
 name|EHOSTUNREACH
@@ -13209,6 +13837,7 @@ case|:
 comment|/* No route to host */
 endif|#
 directive|endif
+comment|/* EHOSTUNREACH */
 ifdef|#
 directive|ifdef
 name|EDQUOT
@@ -13218,6 +13847,7 @@ case|:
 comment|/* Disc quota exceeded */
 endif|#
 directive|endif
+comment|/* EDQUOT */
 ifdef|#
 directive|ifdef
 name|EPROCLIM
@@ -13227,6 +13857,7 @@ case|:
 comment|/* Too many processes */
 endif|#
 directive|endif
+comment|/* EPROCLIM */
 ifdef|#
 directive|ifdef
 name|EUSERS
@@ -13236,6 +13867,7 @@ case|:
 comment|/* Too many users */
 endif|#
 directive|endif
+comment|/* EUSERS */
 ifdef|#
 directive|ifdef
 name|EDEADLK
@@ -13245,6 +13877,7 @@ case|:
 comment|/* Resource deadlock avoided */
 endif|#
 directive|endif
+comment|/* EDEADLK */
 ifdef|#
 directive|ifdef
 name|EISCONN
@@ -13254,6 +13887,7 @@ case|:
 comment|/* Socket already connected */
 endif|#
 directive|endif
+comment|/* EISCONN */
 ifdef|#
 directive|ifdef
 name|EINPROGRESS
@@ -13263,6 +13897,7 @@ case|:
 comment|/* Operation now in progress */
 endif|#
 directive|endif
+comment|/* EINPROGRESS */
 ifdef|#
 directive|ifdef
 name|EALREADY
@@ -13272,6 +13907,7 @@ case|:
 comment|/* Operation already in progress */
 endif|#
 directive|endif
+comment|/* EALREADY */
 ifdef|#
 directive|ifdef
 name|EADDRINUSE
@@ -13281,6 +13917,7 @@ case|:
 comment|/* Address already in use */
 endif|#
 directive|endif
+comment|/* EADDRINUSE */
 ifdef|#
 directive|ifdef
 name|EADDRNOTAVAIL
@@ -13290,6 +13927,7 @@ case|:
 comment|/* Can't assign requested address */
 endif|#
 directive|endif
+comment|/* EADDRNOTAVAIL */
 ifdef|#
 directive|ifdef
 name|ETXTBSY
@@ -13299,6 +13937,7 @@ case|:
 comment|/* (Apollo) file locked */
 endif|#
 directive|endif
+comment|/* ETXTBSY */
 if|#
 directive|if
 name|defined
@@ -13325,6 +13964,17 @@ case|:
 comment|/* Out of streams resources */
 endif|#
 directive|endif
+comment|/* defined(ENOSR)&& (!defined(ENOBUFS) || (ENOBUFS != ENOSR)) */
+ifdef|#
+directive|ifdef
+name|ENOLCK
+case|case
+name|ENOLCK
+case|:
+comment|/* No locks available */
+endif|#
+directive|endif
+comment|/* ENOLCK */
 case|case
 name|E_SM_OPENTIMEOUT
 case|:
@@ -13338,16 +13988,7 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		ext -- the filename extension. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
-end_comment
-
-begin_function
 name|bool
 name|lockfile
 parameter_list|(
@@ -13401,10 +14042,12 @@ name|ext
 operator|=
 literal|""
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|lfd
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 name|lfd
@@ -13475,7 +14118,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"lockfile(%s%s, action=%d, type=%d): "
 argument_list|,
@@ -13529,7 +14172,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
@@ -13551,7 +14194,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"(%s) "
 argument_list|,
@@ -13578,7 +14221,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
@@ -13636,6 +14279,7 @@ name|save_errno
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* F_GETFL */
 name|syserr
 argument_list|(
 literal|"cannot lockf(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
@@ -13666,6 +14310,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+comment|/* !HASFLOCK */
 if|if
 condition|(
 name|ext
@@ -13685,7 +14330,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"lockfile(%s%s, type=%o): "
 argument_list|,
@@ -13732,7 +14377,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
@@ -13754,7 +14399,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"(%s) "
 argument_list|,
@@ -13807,6 +14452,7 @@ name|save_errno
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* F_GETFL */
 name|syserr
 argument_list|(
 literal|"cannot flock(%s%s, fd=%d, type=%o, omode=%o, euid=%d)"
@@ -13837,6 +14483,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* !HASFLOCK */
 if|if
 condition|(
 name|tTd
@@ -13846,7 +14493,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"FAIL\n"
 argument_list|)
@@ -13859,34 +14506,17 @@ return|return
 name|FALSE
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  CHOWNSAFE -- tell if chown is "safe" (executable only by root) ** **	Unfortunately, given that we can't predict other systems on which **	a remote mounted (NFS) filesystem will be mounted, the answer is **	almost always that this is unsafe. ** **	Note also that many operating systems have non-compliant **	implementations of the _POSIX_CHOWN_RESTRICTED variable and the **	fpathconf() routine.  According to IEEE 1003.1-1990, if **	_POSIX_CHOWN_RESTRICTED is defined and not equal to -1, then **	no non-root process can give away the file.  However, vendors **	don't take NFS into account, so a comfortable value of **	_POSIX_CHOWN_RESTRICTED tells us nothing. ** **	Also, some systems (e.g., IRIX 6.2) return 1 from fpathconf() **	even on files where chown is not restricted.  Many systems get **	this wrong on NFS-based filesystems (that is, they say that chown **	is restricted [safe] on NFS filesystems where it may not be, since **	other systems can access the same filesystem and do file giveaway; **	only the NFS server knows for sure!)  Hence, it is important to **	get the value of SAFENFSPATHCONF correct -- it should be defined **	_only_ after testing (see test/t_pathconf.c) a system on an unsafe **	NFS-based filesystem to ensure that you can get meaningful results. **	If in doubt, assume unsafe! ** **	You may also need to tweak IS_SAFE_CHOWN -- it should be a **	condition indicating whether the return from pathconf indicates **	that chown is safe (typically either> 0 or>= 0 -- there isn't **	even any agreement about whether a zero return means that a file **	is or is not safe).  It defaults to "> 0". ** **	If the parent directory is safe (writable only by owner back **	to the root) then we can relax slightly and trust fpathconf **	in more circumstances.  This is really a crock -- if this is an **	NFS mounted filesystem then we really know nothing about the **	underlying implementation.  However, most systems pessimize and **	return an error (EINVAL or EOPNOTSUPP) on NFS filesystems, which **	we interpret as unsafe, as we should.  Thus, this heuristic gets **	us into a possible problem only on systems that have a broken **	pathconf implementation and which are also poorly configured **	(have :include: files in group- or world-writable directories). ** **	Parameters: **		fd -- the file descriptor to check. **		safedir -- set if the parent directory is safe. ** **	Returns: **		TRUE -- if the chown(2) operation is "safe" -- that is, **			only root can chown the file to an arbitrary user. **		FALSE -- if an arbitrary user can give away a file. */
-end_comment
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|IS_SAFE_CHOWN
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|IS_SAFE_CHOWN
 value|> 0
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* ! IS_SAFE_CHOWN */
 name|bool
 name|chownsafe
 parameter_list|(
@@ -13934,7 +14564,7 @@ decl_stmt|;
 comment|/* give the system administrator a chance to override */
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_ASSUMESAFECHOWN
 argument_list|,
@@ -13971,6 +14601,7 @@ name|IS_SAFE_CHOWN
 return|;
 else|#
 directive|else
+comment|/* SAFENFSPATHCONF */
 return|return
 name|safedir
 operator|&&
@@ -13983,10 +14614,12 @@ name|IS_SAFE_CHOWN
 return|;
 endif|#
 directive|endif
+comment|/* SAFENFSPATHCONF */
 else|#
 directive|else
+comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& \ */
 return|return
-name|bitset
+name|bitnset
 argument_list|(
 name|DBS_ASSUMESAFECHOWN
 argument_list|,
@@ -13995,69 +14628,37 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& \ */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  RESETLIMITS -- reset system controlled resource limits ** **	This is to avoid denial-of-service attacks ** **	Parameters: **		none ** **	Returns: **		none */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|HASSETRLIMIT
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|RLIMIT_NEEDS_SYS_TIME_H
-end_ifdef
-
-begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_include
+comment|/* RLIMIT_NEEDS_SYS_TIME_H */
 include|#
 directive|include
 file|<sys/resource.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
+comment|/* HASSETRLIMIT */
 ifndef|#
 directive|ifndef
 name|FD_SETSIZE
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|FD_SETSIZE
 value|256
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* ! FD_SETSIZE */
 name|void
 name|resetlimits
 parameter_list|()
@@ -14127,8 +14728,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* RLIMIT_NOFILE */
 else|#
 directive|else
+comment|/* HASSETRLIMIT */
 if|#
 directive|if
 name|HASULIMIT
@@ -14154,23 +14757,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HASULIMIT */
 endif|#
 directive|endif
+comment|/* HASSETRLIMIT */
 name|errno
 operator|=
 literal|0
 expr_stmt|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  GETCFNAME -- return the name of the .cf file. ** **	Some systems (e.g., NeXT) determine this dynamically. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|getcfname
@@ -14189,29 +14785,6 @@ if|#
 directive|if
 name|NETINFO
 block|{
-specifier|extern
-name|char
-modifier|*
-name|ni_propval
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
 name|char
 modifier|*
 name|cflocation
@@ -14243,20 +14816,12 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* NETINFO */
 return|return
 name|_PATH_SENDMAILCF
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  SETVENDOR -- process vendor code from V configuration line ** **	Parameters: **		vendor -- string representation of vendor. ** **	Returns: **		TRUE -- if ok. **		FALSE -- if vendor code could not be processed. ** **	Side Effects: **		It is reasonable to set mode flags here to tweak **		processing in other parts of the code if necessary. **		For example, if you are a vendor that uses $%y to **		indicate YP lookups, you could enable that here. */
-end_comment
-
-begin_function
 name|bool
 name|setvendor
 parameter_list|(
@@ -14313,6 +14878,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* SUN_EXTENSIONS */
 if|#
 directive|if
 name|defined
@@ -14346,20 +14912,12 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* defined(VENDOR_NAME)&& defined(VENDOR_CODE) */
 return|return
 name|FALSE
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  GETVENDOR -- return vendor name based on vendor code ** **	Parameters: **		vendorcode -- numeric representation of vendor. ** **	Returns: **		string containing vendor name. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|getvendor
@@ -14381,7 +14939,7 @@ name|defined
 argument_list|(
 name|VENDOR_CODE
 argument_list|)
-comment|/* 	**  Can't have the same switch case twice so need to  	**  handle VENDOR_CODE outside of switch.  It might 	**  match one of the existing VENDOR_* codes. 	*/
+comment|/* 	**  Can't have the same switch case twice so need to 	**  handle VENDOR_CODE outside of switch.  It might 	**  match one of the existing VENDOR_* codes. 	*/
 if|if
 condition|(
 name|vendorcode
@@ -14393,6 +14951,7 @@ name|VENDOR_NAME
 return|;
 endif|#
 directive|endif
+comment|/* defined(VENDOR_NAME)&& defined(VENDOR_CODE) */
 switch|switch
 condition|(
 name|vendorcode
@@ -14434,37 +14993,17 @@ literal|"Unknown"
 return|;
 block|}
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  VENDOR_PRE_DEFAULTS, VENDOR_POST_DEFAULTS -- set vendor-specific defaults ** **	Vendor_pre_defaults is called before reading the configuration **	file; vendor_post_defaults is called immediately after. ** **	Parameters: **		e -- the global environment to initialize. ** **	Returns: **		none. */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|SHARE_V1
-end_if
-
-begin_decl_stmt
 name|int
 name|DefShareUid
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* default share uid to run as -- unused??? */
-end_comment
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* SHARE_V1 */
 name|void
 name|vendor_pre_defaults
 parameter_list|(
@@ -14485,6 +15024,7 @@ name|OTHERUID
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SHARE_V1 */
 if|#
 directive|if
 name|defined
@@ -14503,10 +15043,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(SUN_EXTENSIONS)&& defined(SUN_DEFAULT_VALUES) */
 ifdef|#
 directive|ifdef
 name|apollo
-comment|/* stupid domain/os can't even open /etc/sendmail.cf without this */
+comment|/* 	**  stupid domain/os can't even open 	**  /etc/mail/sendmail.cf without this 	*/
 name|setuserenv
 argument_list|(
 literal|"ISP"
@@ -14523,10 +15064,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* apollo */
 block|}
-end_function
-
-begin_function
 name|void
 name|vendor_post_defaults
 parameter_list|(
@@ -14563,6 +15102,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __QNX__ */
 if|#
 directive|if
 name|defined
@@ -14581,17 +15121,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* defined(SUN_EXTENSIONS)&& defined(SUN_DEFAULT_VALUES) */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  VENDOR_DAEMON_SETUP -- special vendor setup needed for daemon mode */
-end_comment
-
-begin_function
 name|void
 name|vendor_daemon_setup
 parameter_list|(
@@ -14602,6 +15134,20 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|HASSETLOGIN
+operator|(
+name|void
+operator|)
+name|setlogin
+argument_list|(
+name|RunAsUserName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HASSETLOGIN */
 if|#
 directive|if
 name|SECUREWARE
@@ -14631,16 +15177,7 @@ endif|#
 directive|endif
 comment|/* SECUREWARE */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  VENDOR_SET_UID -- do setup for setting a user id ** **	This is called when we are still root. ** **	Parameters: **		uid -- the uid we are about to become. ** **	Returns: **		none. */
-end_comment
-
-begin_function
 name|void
 name|vendor_set_uid
 parameter_list|(
@@ -14650,7 +15187,7 @@ name|UID_T
 name|uid
 decl_stmt|;
 block|{
-comment|/*  	**  We need to setup the share groups (lnodes) 	**  and and auditing inforation (luid's) 	**  before we loose our ``root''ness. 	*/
+comment|/* 	**  We need to setup the share groups (lnodes) 	**  and add auditing information (luid's) 	**  before we loose our ``root''ness. 	*/
 if|#
 directive|if
 name|SHARE_V1
@@ -14672,6 +15209,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SHARE_V1 */
 if|#
 directive|if
 name|SECUREWARE
@@ -14685,60 +15223,32 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SECUREWARE */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  VALIDATE_CONNECTION -- check connection for rationality ** **	If the connection is rejected, this routine should log an **	appropriate message -- but should never issue any SMTP protocol. ** **	Parameters: **		sap -- a pointer to a SOCKADDR naming the peer. **		hostname -- the name corresponding to sap. **		e -- the current envelope. ** **	Returns: **		error message from rejection. **		NULL if not rejected. */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|TCPWRAPPERS
-end_if
-
-begin_include
 include|#
 directive|include
 file|<tcpd.h>
-end_include
-
-begin_comment
 comment|/* tcpwrappers does no logging, but you still have to declare these -- ugh */
-end_comment
-
-begin_decl_stmt
 name|int
 name|allow_severity
 init|=
 name|LOG_INFO
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|deny_severity
 init|=
 name|LOG_NOTICE
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* TCPWRAPPERS */
 if|#
 directive|if
 name|DAEMON
-end_if
-
-begin_function
 name|char
 modifier|*
 name|validate_connection
@@ -14771,6 +15281,7 @@ name|host
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* TCPWRAPPERS */
 if|if
 condition|(
 name|tTd
@@ -14780,7 +15291,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"validate_connection(%s, %s)\n"
 argument_list|,
@@ -14806,6 +15317,12 @@ name|sap
 argument_list|)
 argument_list|,
 name|e
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|,
+literal|4
 argument_list|)
 operator|!=
 name|EX_OK
@@ -14834,7 +15351,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ... validate_connection: BAD (rscheck)\n"
 argument_list|)
@@ -14845,86 +15362,34 @@ name|strlen
 argument_list|(
 name|MsgBuf
 argument_list|)
-operator|>
-literal|5
+operator|>=
+literal|3
 condition|)
-block|{
-if|if
-condition|(
-name|isascii
-argument_list|(
-name|MsgBuf
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|isdigit
-argument_list|(
-name|MsgBuf
-index|[
-literal|0
-index|]
-argument_list|)
-operator|&&
-name|isascii
-argument_list|(
-name|MsgBuf
-index|[
-literal|1
-index|]
-argument_list|)
-operator|&&
-name|isdigit
-argument_list|(
-name|MsgBuf
-index|[
-literal|1
-index|]
-argument_list|)
-operator|&&
-name|isascii
-argument_list|(
-name|MsgBuf
-index|[
-literal|2
-index|]
-argument_list|)
-operator|&&
-name|isdigit
-argument_list|(
-name|MsgBuf
-index|[
-literal|2
-index|]
-argument_list|)
-condition|)
-name|strcpy
-argument_list|(
-name|reject
-argument_list|,
-operator|&
-name|MsgBuf
-index|[
-literal|4
-index|]
-argument_list|)
-expr_stmt|;
-else|else
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|reject
 argument_list|,
 name|MsgBuf
+argument_list|,
+sizeof|sizeof
+name|reject
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-name|strcpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|reject
 argument_list|,
 literal|"Access denied"
+argument_list|,
+sizeof|sizeof
+name|reject
 argument_list|)
 expr_stmt|;
 return|return
@@ -14991,7 +15456,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ... validate_connection: BAD (tcpwrappers)\n"
 argument_list|)
@@ -15006,7 +15471,9 @@ name|sm_syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-name|NOQID
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"tcpwrappers (%s, %s) rejection"
 argument_list|,
@@ -15024,6 +15491,7 @@ return|;
 block|}
 endif|#
 directive|endif
+comment|/* TCPWRAPPERS */
 if|if
 condition|(
 name|tTd
@@ -15033,7 +15501,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"  ... validate_connection: OK\n"
 argument_list|)
@@ -15042,27 +15510,13 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* DAEMON */
 comment|/* **  STRTOL -- convert string to long integer ** **	For systems that don't have it in the C library. ** **	This is taken verbatim from the 4.4-Lite C library. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDSTRTOL
-end_ifdef
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -15075,9 +15529,6 @@ name|defined
 argument_list|(
 name|lint
 argument_list|)
-end_if
-
-begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
@@ -15085,22 +15536,10 @@ index|[]
 init|=
 literal|"@(#)strtol.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
-end_decl_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* LIBC_SCCS and not lint */
-end_comment
-
-begin_comment
+comment|/* defined(LIBC_SCCS)&& !defined(lint) */
 comment|/*  * Convert a string to a long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
-end_comment
-
-begin_function
 name|long
 name|strtol
 parameter_list|(
@@ -15453,32 +15892,16 @@ name|nptr
 operator|)
 expr_stmt|;
 return|return
-operator|(
 name|acc
-operator|)
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDSTRTOL */
 comment|/* **  STRSTR -- find first substring in string ** **	Parameters: **		big -- the big (full) string. **		little -- the little (sub) string. ** **	Returns: **		A pointer to the first instance of little in big. **		big if little is the null string. **		NULL if little is not contained in big. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEEDSTRSTR
-end_ifdef
-
-begin_function
 name|char
 modifier|*
 name|strstr
@@ -15564,37 +15987,248 @@ return|return
 name|NULL
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  SM_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have wierd problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. */
-end_comment
-
-begin_function
+comment|/* NEEDSTRSTR */
+comment|/* **  SM_GETHOSTBY{NAME,ADDR} -- compatibility routines for gethostbyXXX ** **	Some operating systems have wierd problems with the gethostbyXXX **	routines.  For example, Solaris versions at least through 2.3 **	don't properly deliver a canonical h_name field.  This tries to **	work around these problems. ** **	Support IPv6 as well as IPv4. */
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|NEEDSGETIPNODE
+operator|&&
+name|__RES
+operator|<
+literal|19990909
+ifndef|#
+directive|ifndef
+name|AI_DEFAULT
+define|#
+directive|define
+name|AI_DEFAULT
+value|0
+comment|/* dummy */
+endif|#
+directive|endif
+comment|/* ! AI_DEFAULT */
+ifndef|#
+directive|ifndef
+name|AI_ADDRCONFIG
+define|#
+directive|define
+name|AI_ADDRCONFIG
+value|0
+comment|/* dummy */
+endif|#
+directive|endif
+comment|/* ! AI_ADDRCONFIG */
+ifndef|#
+directive|ifndef
+name|AI_V4MAPPED
+define|#
+directive|define
+name|AI_V4MAPPED
+value|0
+comment|/* dummy */
+endif|#
+directive|endif
+comment|/* ! AI_V4MAPPED */
+ifndef|#
+directive|ifndef
+name|AI_ALL
+define|#
+directive|define
+name|AI_ALL
+value|0
+comment|/* dummy */
+endif|#
+directive|endif
+comment|/* ! AI_ALL */
+specifier|static
 name|struct
 name|hostent
 modifier|*
-name|sm_gethostbyname
+name|getipnodebyname
 parameter_list|(
 name|name
+parameter_list|,
+name|family
+parameter_list|,
+name|flags
+parameter_list|,
+name|err
 parameter_list|)
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|family
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|int
+modifier|*
+name|err
+decl_stmt|;
+block|{
+name|bool
+name|resv6
+init|=
+name|TRUE
+decl_stmt|;
+name|struct
+name|hostent
+modifier|*
+name|h
+decl_stmt|;
+if|if
+condition|(
+name|family
+operator|==
+name|AF_INET6
+condition|)
+block|{
+comment|/* From RFC2133, section 6.1 */
+name|resv6
+operator|=
+name|bitset
+argument_list|(
+name|RES_USE_INET6
+argument_list|,
+name|_res
+operator|.
+name|options
+argument_list|)
+expr_stmt|;
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_USE_INET6
+expr_stmt|;
+block|}
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|=
+name|gethostbyname
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+operator|*
+name|err
+operator|=
+name|h_errno
+expr_stmt|;
+if|if
+condition|(
+name|family
+operator|==
+name|AF_INET6
+operator|&&
+operator|!
+name|resv6
+condition|)
+name|_res
+operator|.
+name|options
+operator|&=
+operator|~
+name|RES_USE_INET6
+expr_stmt|;
+return|return
+name|h
+return|;
+block|}
+specifier|static
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyaddr
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|family
+parameter_list|,
+name|err
+parameter_list|)
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
+name|int
+name|family
+decl_stmt|;
+name|int
+modifier|*
+name|err
 decl_stmt|;
 block|{
 name|struct
 name|hostent
 modifier|*
 name|h
+decl_stmt|;
+name|h_errno
+operator|=
+literal|0
+expr_stmt|;
+name|h
+operator|=
+name|gethostbyaddr
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|,
+name|family
+argument_list|)
+expr_stmt|;
+operator|*
+name|err
+operator|=
+name|h_errno
+expr_stmt|;
+return|return
+name|h
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* NEEDSGETIPNODE&& NETINET6&& __RES< 19990909 */
+name|struct
+name|hostent
+modifier|*
+name|sm_gethostbyname
+parameter_list|(
+name|name
+parameter_list|,
+name|family
+parameter_list|)
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|family
+decl_stmt|;
+block|{
+name|struct
+name|hostent
+modifier|*
+name|h
+init|=
+name|NULL
 decl_stmt|;
 if|#
 directive|if
@@ -15667,7 +16301,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"_switch_gethostbyname_r(%s)... "
 argument_list|,
@@ -15696,6 +16330,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* SOLARIS == 20300 || SOLARIS == 203 */
 specifier|extern
 name|struct
 name|hostent
@@ -15712,7 +16347,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"__switch_gethostbyname(%s)... "
 argument_list|,
@@ -15728,10 +16363,31 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* SOLARIS == 20300 || SOLARIS == 203 */
 else|#
 directive|else
+comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) || (defined(sony_news)&& defined(__svr4)) */
 name|int
 name|nmaps
+decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|int
+name|flags
+init|=
+name|AI_DEFAULT
+operator||
+name|AI_ALL
+decl_stmt|;
+name|int
+name|err
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|int
+name|save_errno
 decl_stmt|;
 name|char
 modifier|*
@@ -15761,19 +16417,63 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"gethostbyname(%s)... "
+literal|"sm_gethostbyname(%s, %d)... "
 argument_list|,
 name|name
+argument_list|,
+name|family
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+if|#
+directive|if
+name|ADDRCONFIG_IS_BROKEN
+name|flags
+operator|&=
+operator|~
+name|AI_ADDRCONFIG
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* ADDRCONFIG_IS_BROKEN */
+name|h
+operator|=
+name|getipnodebyname
+argument_list|(
+name|name
+argument_list|,
+name|family
+argument_list|,
+name|flags
+argument_list|,
+operator|&
+name|err
+argument_list|)
+expr_stmt|;
+name|h_errno
+operator|=
+name|err
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
 name|h
 operator|=
 name|gethostbyname
 argument_list|(
 name|name
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|save_errno
+operator|=
+name|errno
 expr_stmt|;
 if|if
 condition|(
@@ -15791,7 +16491,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"failure\n"
 argument_list|)
@@ -15864,14 +16564,26 @@ name|hbuf
 operator|-
 literal|1
 condition|)
+block|{
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|NULL
 return|;
-name|strcpy
+block|}
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|hbuf
 argument_list|,
 name|name
+argument_list|,
+sizeof|sizeof
+name|hbuf
 argument_list|)
 expr_stmt|;
 name|shorten_hostname
@@ -15901,13 +16613,45 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"gethostbyname(%s)... "
+literal|"sm_gethostbyname(%s, %d)... "
 argument_list|,
 name|hbuf
+argument_list|,
+name|family
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|h
+operator|=
+name|getipnodebyname
+argument_list|(
+name|hbuf
+argument_list|,
+name|family
+argument_list|,
+name|AI_V4MAPPED
+operator||
+name|AI_ALL
+argument_list|,
+operator|&
+name|err
+argument_list|)
+expr_stmt|;
+name|h_errno
+operator|=
+name|err
+expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
 name|h
 operator|=
 name|gethostbyname
@@ -15915,11 +16659,19 @@ argument_list|(
 name|hbuf
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 block|}
 block|}
 block|}
 endif|#
 directive|endif
+comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) || (defined(sony_news)&& defined(__svr4)) */
 if|if
 condition|(
 name|tTd
@@ -15936,13 +16688,14 @@ name|h
 operator|==
 name|NULL
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"failure\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+block|{
+name|dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -15951,14 +16704,191 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|61
+argument_list|,
+literal|11
+argument_list|)
+condition|)
+block|{
+if|#
+directive|if
+name|NETINET6
+name|struct
+name|in6_addr
+name|ia6
+decl_stmt|;
+name|char
+name|buf6
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
+name|struct
+name|in_addr
+name|ia
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|h_aliases
+operator|!=
+name|NULL
+condition|)
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|h
+operator|->
+name|h_aliases
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+name|dprintf
+argument_list|(
+literal|"\talias: %s\n"
+argument_list|,
+name|h
+operator|->
+name|h_aliases
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|h
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|memmove
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|h
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+argument_list|,
+name|IN6ADDRSZ
+argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+name|anynet_ntop
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|buf6
+argument_list|,
+sizeof|sizeof
+name|buf6
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
+name|memmove
+argument_list|(
+operator|&
+name|ia
+argument_list|,
+name|h
+operator|->
+name|h_addr_list
+index|[
+name|i
+index|]
+argument_list|,
+name|INADDRSZ
+argument_list|)
+expr_stmt|;
+name|addr
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|inet_ntoa
+argument_list|(
+name|ia
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+if|if
+condition|(
+name|addr
+operator|!=
+name|NULL
+condition|)
+name|dprintf
+argument_list|(
+literal|"\taddr: %s\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+block|}
+block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return
 name|h
 return|;
 block|}
-end_function
-
-begin_function
 name|struct
 name|hostent
 modifier|*
@@ -15981,6 +16911,11 @@ name|int
 name|type
 decl_stmt|;
 block|{
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
 if|#
 directive|if
 operator|(
@@ -16015,7 +16950,7 @@ literal|203
 specifier|static
 name|struct
 name|hostent
-name|hp
+name|he
 decl_stmt|;
 specifier|static
 name|char
@@ -16031,7 +16966,8 @@ modifier|*
 name|_switch_gethostbyaddr_r
 parameter_list|()
 function_decl|;
-return|return
+name|hp
+operator|=
 name|_switch_gethostbyaddr_r
 argument_list|(
 name|addr
@@ -16041,7 +16977,7 @@ argument_list|,
 name|type
 argument_list|,
 operator|&
-name|hp
+name|he
 argument_list|,
 name|buf
 argument_list|,
@@ -16053,9 +16989,10 @@ argument_list|,
 operator|&
 name|h_errno
 argument_list|)
-return|;
+expr_stmt|;
 else|#
 directive|else
+comment|/* SOLARIS == 20300 || SOLARIS == 203 */
 specifier|extern
 name|struct
 name|hostent
@@ -16063,7 +17000,8 @@ modifier|*
 name|__switch_gethostbyaddr
 parameter_list|()
 function_decl|;
-return|return
+name|hp
+operator|=
 name|__switch_gethostbyaddr
 argument_list|(
 name|addr
@@ -16072,12 +17010,48 @@ name|len
 argument_list|,
 name|type
 argument_list|)
-return|;
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* SOLARIS == 20300 || SOLARIS == 203 */
 else|#
 directive|else
-return|return
+comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) */
+if|#
+directive|if
+name|NETINET6
+name|int
+name|err
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+if|#
+directive|if
+name|NETINET6
+name|hp
+operator|=
+name|getipnodebyaddr
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|,
+name|type
+argument_list|,
+operator|&
+name|err
+argument_list|)
+expr_stmt|;
+name|h_errno
+operator|=
+name|err
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6 */
+name|hp
+operator|=
 name|gethostbyaddr
 argument_list|(
 name|addr
@@ -16086,20 +17060,18 @@ name|len
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+return|return
+name|hp
 return|;
 endif|#
 directive|endif
+comment|/* (SOLARIS> 10000&& SOLARIS< 20400) || (defined(SOLARIS)&& SOLARIS< 204) */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  SM_GETPW{NAM,UID} -- wrapper for getpwnam and getpwuid */
-end_comment
-
-begin_function
 name|struct
 name|passwd
 modifier|*
@@ -16139,6 +17111,7 @@ argument_list|)
 return|;
 else|#
 directive|else
+comment|/* _AIX4 */
 return|return
 name|getpwnam
 argument_list|(
@@ -16147,10 +17120,8 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* _AIX4 */
 block|}
-end_function
-
-begin_function
 name|struct
 name|passwd
 modifier|*
@@ -16193,6 +17164,7 @@ argument_list|)
 return|;
 else|#
 directive|else
+comment|/* defined(_AIX4)&& 0 */
 return|return
 name|getpwuid
 argument_list|(
@@ -16201,35 +17173,18 @@ argument_list|)
 return|;
 endif|#
 directive|endif
+comment|/* defined(_AIX4)&& 0 */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  SECUREWARE_SETUP_SECURE -- Convex SecureWare setup ** **	Set up the trusted computing environment for C2 level security **	under SecureWare. ** **	Parameters: **		uid -- uid of the user to initialize in the TCB ** **	Returns: **		none ** **	Side Effects: **		Initialized the user in the trusted computing base */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|SECUREWARE
-end_if
-
-begin_include
 include|#
 directive|include
 file|<sys/security.h>
-end_include
-
-begin_include
 include|#
 directive|include
 file|<prot.h>
-end_include
-
-begin_function
 name|void
 name|secureware_setup_secure
 parameter_list|(
@@ -16345,25 +17300,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SECUREWARE */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  ADD_LOCAL_HOST_NAMES -- Add a hostname to class 'w' based on IP address ** **	Add hostnames to class 'w' based on the IP address read from **	the network interface. ** **	Parameters: **		sa -- a pointer to a SOCKADDR containing the address ** **	Returns: **		0 if successful, -1 if host lookup fails. */
-end_comment
-
-begin_function
+comment|/* **  ADD_HOSTNAMES -- Add a hostname to class 'w' based on IP address ** **	Add hostnames to class 'w' based on the IP address read from **	the network interface. ** **	Parameters: **		sa -- a pointer to a SOCKADDR containing the address ** **	Returns: **		0 if successful, -1 if host lookup fails. */
+specifier|static
 name|int
 name|add_hostnames
 parameter_list|(
@@ -16379,6 +17320,17 @@ name|hostent
 modifier|*
 name|hp
 decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|ha
+decl_stmt|;
+name|char
+name|hnb
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
 comment|/* lookup name with IP address */
 switch|switch
 condition|(
@@ -16389,6 +17341,9 @@ operator|.
 name|sa_family
 condition|)
 block|{
+if|#
+directive|if
+name|NETINET
 case|case
 name|AF_INET
 case|:
@@ -16424,11 +17379,52 @@ name|sa_family
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
+endif|#
+directive|endif
+comment|/* NETINET */
 if|#
 directive|if
-name|_FFR_LOG_UNSUPPORTED_FAMILIES
-comment|/* XXX: Give warning about unsupported family */
+name|NETINET6
+case|case
+name|AF_INET6
+case|:
+name|hp
+operator|=
+name|sm_gethostbyaddr
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|sa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|)
+argument_list|,
+name|sa
+operator|->
+name|sa
+operator|.
+name|sa_family
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+default|default:
+comment|/* Give warning about unsupported family */
 if|if
 condition|(
 name|LogLevel
@@ -16455,8 +17451,6 @@ name|sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|-
 literal|1
@@ -16479,6 +17473,35 @@ condition|(
 name|LogLevel
 operator|>
 literal|3
+operator|&&
+if|#
+directive|if
+name|NETINET6
+operator|!
+operator|(
+name|sa
+operator|->
+name|sa
+operator|.
+name|sa_family
+operator|==
+name|AF_INET6
+operator|&&
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|sa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|)
+operator|)
+operator|&&
+endif|#
+directive|endif
+comment|/* NETINET6 */
+name|TRUE
 condition|)
 name|sm_syslog
 argument_list|(
@@ -16499,10 +17522,12 @@ name|NAMED_BIND
 name|h_errno
 else|#
 directive|else
+comment|/* NAMED_BIND */
 operator|-
 literal|1
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
 argument_list|)
 expr_stmt|;
 name|errno
@@ -16554,7 +17579,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -16563,15 +17588,87 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|snprintf
+argument_list|(
+name|hnb
+argument_list|,
+sizeof|sizeof
+name|hnb
+argument_list|,
+literal|"[%s]"
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+operator|<
+sizeof|sizeof
+name|hnb
+operator|&&
+operator|!
+name|wordinclass
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|hnb
+argument_list|,
+literal|'w'
+argument_list|)
+condition|)
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|hnb
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|43
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"\ta.k.a.: %s (already in $=w)\n"
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* save all it aliases name */
-while|while
-condition|(
-operator|*
+for|for
+control|(
+name|ha
+operator|=
 name|hp
 operator|->
 name|h_aliases
-condition|)
+init|;
+name|ha
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|ha
+operator|!=
+name|NULL
+condition|;
+name|ha
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -16579,9 +17676,7 @@ operator|!
 name|wordinclass
 argument_list|(
 operator|*
-name|hp
-operator|->
-name|h_aliases
+name|ha
 argument_list|,
 literal|'w'
 argument_list|)
@@ -16592,9 +17687,7 @@ argument_list|(
 literal|'w'
 argument_list|,
 operator|*
-name|hp
-operator|->
-name|h_aliases
+name|ha
 argument_list|)
 expr_stmt|;
 if|if
@@ -16606,37 +17699,90 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
 operator|*
-name|hp
-operator|->
-name|h_aliases
+name|ha
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|snprintf
+argument_list|(
+name|hnb
+argument_list|,
+sizeof|sizeof
+name|hnb
+argument_list|,
+literal|"[%s]"
+argument_list|,
+operator|*
+name|ha
+argument_list|)
+operator|<
+sizeof|sizeof
+name|hnb
+operator|&&
+operator|!
+name|wordinclass
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|hnb
+argument_list|,
+literal|'w'
+argument_list|)
+condition|)
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|hnb
 argument_list|)
 expr_stmt|;
 block|}
-name|hp
-operator|->
-name|h_aliases
-operator|++
+else|else
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|43
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"\ta.k.a.: %s (already in $=w)\n"
+argument_list|,
+operator|*
+name|ha
+argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  LOAD_IF_NAMES -- load interface-specific names into $=w ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Loads $=w with the names of all the interfaces. */
-end_comment
-
-begin_if
+if|#
+directive|if
+operator|!
+name|NETINET
+define|#
+directive|define
+name|SIOCGIFCONF_IS_BROKEN
+value|1
+comment|/* XXX */
+endif|#
+directive|endif
+comment|/* !NETINET */
 if|#
 directive|if
 name|defined
@@ -16646,78 +17792,886 @@ argument_list|)
 operator|&&
 operator|!
 name|SIOCGIFCONF_IS_BROKEN
-end_if
-
-begin_struct_decl
 struct_decl|struct
 name|rtentry
 struct_decl|;
-end_struct_decl
-
-begin_struct_decl
 struct_decl|struct
 name|mbuf
 struct_decl|;
-end_struct_decl
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|SUNOS403
-end_ifndef
-
-begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_if
+comment|/* ! SUNOS403 */
 if|#
 directive|if
+operator|(
 name|_AIX4
 operator|>=
 literal|40300
-end_if
-
-begin_undef
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_NET_IF_H
+argument_list|)
 undef|#
 directive|undef
 name|__P
-end_undef
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_include
+comment|/* (_AIX4>= 40300)&& !defined(_NET_IF_H) */
 include|#
 directive|include
 file|<net/if.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* defined(SIOCGIFCONF)&& !SIOCGIFCONF_IS_BROKEN */
 name|void
 name|load_if_names
 parameter_list|()
 block|{
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|defined
+argument_list|(
+name|SIOCGLIFCONF
+argument_list|)
+name|int
+name|s
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|lifconf
+name|lifc
+decl_stmt|;
+name|struct
+name|lifnum
+name|lifn
+decl_stmt|;
+name|int
+name|numifs
+decl_stmt|;
+name|s
+operator|=
+name|socket
+argument_list|(
+name|InetMode
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+comment|/* get the list of known IP address from the kernel */
+ifdef|#
+directive|ifdef
+name|SIOCGLIFNUM
+name|lifn
+operator|.
+name|lifn_family
+operator|=
+name|AF_UNSPEC
+expr_stmt|;
+name|lifn
+operator|.
+name|lifn_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGLIFNUM
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|lifn
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* can't get number of interfaces -- fall back */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"SIOCGLIFNUM failed: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|numifs
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|numifs
+operator|=
+name|lifn
+operator|.
+name|lifn_count
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|42
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"system has %d interfaces\n"
+argument_list|,
+name|numifs
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|numifs
+operator|<
+literal|0
+condition|)
+endif|#
+directive|endif
+comment|/* SIOCGLIFNUM */
+name|numifs
+operator|=
+name|MAXINTERFACES
+expr_stmt|;
+if|if
+condition|(
+name|numifs
+operator|<=
+literal|0
+condition|)
+block|{
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|lifc
+operator|.
+name|lifc_len
+operator|=
+name|numifs
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lifreq
+argument_list|)
+expr_stmt|;
+name|lifc
+operator|.
+name|lifc_buf
+operator|=
+name|xalloc
+argument_list|(
+name|lifc
+operator|.
+name|lifc_len
+argument_list|)
+expr_stmt|;
+name|lifc
+operator|.
+name|lifc_family
+operator|=
+name|AF_UNSPEC
+expr_stmt|;
+name|lifc
+operator|.
+name|lifc_flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGLIFCONF
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|lifc
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"SIOCGLIFCONF failed: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* scan the list of IP address */
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|40
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"scanning for interface specific names, lifc_len=%d\n"
+argument_list|,
+name|lifc
+operator|.
+name|lifc_len
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|lifc
+operator|.
+name|lifc_len
+condition|;
+control|)
+block|{
+name|struct
+name|lifreq
+modifier|*
+name|ifr
+init|=
+operator|(
+expr|struct
+name|lifreq
+operator|*
+operator|)
+operator|&
+name|lifc
+operator|.
+name|lifc_buf
+index|[
+name|i
+index|]
+decl_stmt|;
+name|SOCKADDR
+modifier|*
+name|sa
+init|=
+operator|(
+name|SOCKADDR
+operator|*
+operator|)
+operator|&
+name|ifr
+operator|->
+name|lifr_addr
+decl_stmt|;
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+name|struct
+name|in6_addr
+name|ia6
+decl_stmt|;
+name|struct
+name|in_addr
+name|ia
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIOCGLIFFLAGS
+name|struct
+name|lifreq
+name|ifrf
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* SIOCGLIFFLAGS */
+name|char
+name|ip_addr
+index|[
+literal|256
+index|]
+decl_stmt|;
+name|char
+name|buf6
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+name|int
+name|af
+init|=
+name|ifr
+operator|->
+name|lifr_addr
+operator|.
+name|ss_family
+decl_stmt|;
+comment|/* 		**  We must close and recreate the socket each time 		**  since we don't know what type of socket it is now 		**  (each status function may change it). 		*/
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|s
+operator|=
+name|socket
+argument_list|(
+name|af
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|-
+literal|1
+condition|)
+return|return;
+comment|/* 		**  If we don't have a complete ifr structure, 		**  don't try to use it. 		*/
+if|if
+condition|(
+operator|(
+name|lifc
+operator|.
+name|lifc_len
+operator|-
+name|i
+operator|)
+operator|<
+sizeof|sizeof
+expr|*
+name|ifr
+condition|)
+break|break;
+ifdef|#
+directive|ifdef
+name|BSD4_4_SOCKADDR
+if|if
+condition|(
+name|sa
+operator|->
+name|sa
+operator|.
+name|sa_len
+operator|>
+sizeof|sizeof
+name|ifr
+operator|->
+name|lifr_addr
+condition|)
+name|i
+operator|+=
+sizeof|sizeof
+name|ifr
+operator|->
+name|lifr_name
+operator|+
+name|sa
+operator|->
+name|sa
+operator|.
+name|sa_len
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* BSD4_4_SOCKADDR */
+name|i
+operator|+=
+sizeof|sizeof
+expr|*
+name|ifr
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|20
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+name|sa
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|af
+operator|!=
+name|AF_INET
+operator|&&
+name|af
+operator|!=
+name|AF_INET6
+condition|)
+continue|continue;
+ifdef|#
+directive|ifdef
+name|SIOCGLIFFLAGS
+name|memset
+argument_list|(
+operator|&
+name|ifrf
+argument_list|,
+literal|'\0'
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lifreq
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|ifrf
+operator|.
+name|lifr_name
+argument_list|,
+name|ifr
+operator|->
+name|lifr_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifrf
+operator|.
+name|lifr_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGLIFFLAGS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ifrf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"SIOCGLIFFLAGS failed: %s\n"
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|41
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"\tflags: %lx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|ifrf
+operator|.
+name|lifr_flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|IFF_UP
+argument_list|,
+name|ifrf
+operator|.
+name|lifr_flags
+argument_list|)
+condition|)
+continue|continue;
+endif|#
+directive|endif
+comment|/* SIOCGLIFFLAGS */
+name|ip_addr
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* extract IP address from the list*/
+switch|switch
+condition|(
+name|af
+condition|)
+block|{
+case|case
+name|AF_INET6
+case|:
+name|ia6
+operator|=
+name|sa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+expr_stmt|;
+if|if
+condition|(
+name|ia6
+operator|.
+name|s6_addr
+operator|==
+name|in6addr_any
+operator|.
+name|s6_addr
+condition|)
+block|{
+name|addr
+operator|=
+name|anynet_ntop
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|buf6
+argument_list|,
+sizeof|sizeof
+name|buf6
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"WARNING: interface %s is UP with %s address"
+argument_list|,
+name|ifr
+operator|->
+name|lifr_name
+argument_list|,
+name|addr
+operator|==
+name|NULL
+condition|?
+literal|"(NULL)"
+else|:
+name|addr
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* save IP address in text from */
+name|addr
+operator|=
+name|anynet_ntop
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|buf6
+argument_list|,
+sizeof|sizeof
+name|buf6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|ip_addr
+argument_list|,
+sizeof|sizeof
+name|ip_addr
+argument_list|,
+literal|"[%.*s]"
+argument_list|,
+sizeof|sizeof
+name|ip_addr
+operator|-
+literal|3
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AF_INET
+case|:
+name|ia
+operator|=
+name|sa
+operator|->
+name|sin
+operator|.
+name|sin_addr
+expr_stmt|;
+if|if
+condition|(
+name|ia
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+operator|||
+name|ia
+operator|.
+name|s_addr
+operator|==
+name|INADDR_NONE
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"WARNING: interface %s is UP with %s address"
+argument_list|,
+name|ifr
+operator|->
+name|lifr_name
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ia
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* save IP address in text from */
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|ip_addr
+argument_list|,
+sizeof|sizeof
+name|ip_addr
+argument_list|,
+literal|"[%.*s]"
+argument_list|,
+sizeof|sizeof
+name|ip_addr
+operator|-
+literal|3
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|ia
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|*
+name|ip_addr
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|!
+name|wordinclass
+argument_list|(
+name|ip_addr
+argument_list|,
+literal|'w'
+argument_list|)
+condition|)
+block|{
+name|setclass
+argument_list|(
+literal|'w'
+argument_list|,
+name|ip_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"\ta.k.a.: %s\n"
+argument_list|,
+name|ip_addr
+argument_list|)
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|SIOCGLIFFLAGS
+comment|/* skip "loopback" interface "lo" */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|IFF_LOOPBACK
+argument_list|,
+name|ifrf
+operator|.
+name|lifr_flags
+argument_list|)
+condition|)
+continue|continue;
+endif|#
+directive|endif
+comment|/* SIOCGLIFFLAGS */
+operator|(
+name|void
+operator|)
+name|add_hostnames
+argument_list|(
+name|sa
+argument_list|)
+expr_stmt|;
+block|}
+name|free
+argument_list|(
+name|lifc
+operator|.
+name|lifc_buf
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* NETINET6&& defined(SIOCGLIFCONF) */
 if|#
 directive|if
 name|defined
@@ -16798,7 +18752,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"SIOCGIFNUM failed: %s\n"
 argument_list|,
@@ -16824,7 +18778,7 @@ argument_list|,
 literal|42
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"system has %d interfaces\n"
 argument_list|,
@@ -16839,9 +18793,10 @@ literal|0
 condition|)
 endif|#
 directive|endif
+comment|/* defined(SIOCGIFNUM)&& !SIOCGIFNUM_IS_BROKEN */
 name|numifs
 operator|=
-literal|512
+name|MAXINTERFACES
 expr_stmt|;
 if|if
 condition|(
@@ -16850,6 +18805,9 @@ operator|<=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -16908,9 +18866,9 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"SIOGIFCONF failed: %s\n"
+literal|"SIOCGIFCONF failed: %s\n"
 argument_list|,
 name|errstring
 argument_list|(
@@ -16918,6 +18876,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -16935,7 +18896,7 @@ argument_list|,
 literal|40
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"scanning for interface specific names, ifc_len=%d\n"
 argument_list|,
@@ -16958,6 +18919,9 @@ name|ifc_len
 condition|;
 control|)
 block|{
+name|int
+name|af
+decl_stmt|;
 name|struct
 name|ifreq
 modifier|*
@@ -16989,6 +18953,20 @@ name|ifr
 operator|->
 name|ifr_addr
 decl_stmt|;
+if|#
+directive|if
+name|NETINET6
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+name|struct
+name|in6_addr
+name|ia6
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 name|struct
 name|in_addr
 name|ia
@@ -17002,18 +18980,41 @@ name|ifrf
 decl_stmt|;
 endif|#
 directive|endif
+comment|/* SIOCGIFFLAGS */
 name|char
 name|ip_addr
 index|[
 literal|256
 index|]
 decl_stmt|;
-specifier|extern
+if|#
+directive|if
+name|NETINET6
 name|char
-modifier|*
-name|inet_ntoa
-parameter_list|()
-function_decl|;
+name|buf6
+index|[
+name|INET6_ADDRSTRLEN
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+comment|/* 		**  If we don't have a complete ifr structure, 		**  don't try to use it. 		*/
+if|if
+condition|(
+operator|(
+name|ifc
+operator|.
+name|ifc_len
+operator|-
+name|i
+operator|)
+operator|<
+sizeof|sizeof
+expr|*
+name|ifr
+condition|)
+break|break;
 ifdef|#
 directive|ifdef
 name|BSD4_4_SOCKADDR
@@ -17046,6 +19047,7 @@ expr_stmt|;
 else|else
 endif|#
 directive|endif
+comment|/* BSD4_4_SOCKADDR */
 name|i
 operator|+=
 sizeof|sizeof
@@ -17061,7 +19063,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -17071,24 +19073,40 @@ name|sa
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|af
+operator|=
 name|ifr
 operator|->
 name|ifr_addr
 operator|.
 name|sa_family
+expr_stmt|;
+if|if
+condition|(
+name|af
 operator|!=
 name|AF_INET
+if|#
+directive|if
+name|NETINET6
+operator|&&
+name|af
+operator|!=
+name|AF_INET6
+endif|#
+directive|endif
+comment|/* NETINET6 */
 condition|)
 continue|continue;
 ifdef|#
 directive|ifdef
 name|SIOCGIFFLAGS
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ifrf
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -17097,7 +19115,10 @@ name|ifreq
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+operator|(
+name|void
+operator|)
+name|strlcpy
 argument_list|(
 name|ifrf
 operator|.
@@ -17115,6 +19136,9 @@ name|ifr_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|s
@@ -17138,10 +19162,14 @@ argument_list|,
 literal|41
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
-literal|"\tflags: %x\n"
+literal|"\tflags: %lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ifrf
 operator|.
 name|ifr_flags
@@ -17153,12 +19181,14 @@ name|IFRFREF
 value|ifrf
 else|#
 directive|else
+comment|/* SIOCGIFFLAGS */
 define|#
 directive|define
 name|IFRFREF
 value|(*ifr)
 endif|#
 directive|endif
+comment|/* SIOCGIFFLAGS */
 if|if
 condition|(
 operator|!
@@ -17172,7 +19202,22 @@ name|ifr_flags
 argument_list|)
 condition|)
 continue|continue;
+name|ip_addr
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* extract IP address from the list*/
+switch|switch
+condition|(
+name|af
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
 name|ia
 operator|=
 name|sa
@@ -17239,6 +19284,122 @@ name|ia
 argument_list|)
 argument_list|)
 expr_stmt|;
+break|break;
+if|#
+directive|if
+name|NETINET6
+case|case
+name|AF_INET6
+case|:
+name|ia6
+operator|=
+name|sa
+operator|->
+name|sin6
+operator|.
+name|sin6_addr
+expr_stmt|;
+if|if
+condition|(
+name|ia6
+operator|.
+name|s6_addr
+operator|==
+name|in6addr_any
+operator|.
+name|s6_addr
+condition|)
+block|{
+name|addr
+operator|=
+name|anynet_ntop
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|buf6
+argument_list|,
+sizeof|sizeof
+name|buf6
+argument_list|)
+expr_stmt|;
+name|message
+argument_list|(
+literal|"WARNING: interface %s is UP with %s address"
+argument_list|,
+name|ifr
+operator|->
+name|ifr_name
+argument_list|,
+name|addr
+operator|==
+name|NULL
+condition|?
+literal|"(NULL)"
+else|:
+name|addr
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* save IP address in text from */
+name|addr
+operator|=
+name|anynet_ntop
+argument_list|(
+operator|&
+name|ia6
+argument_list|,
+name|buf6
+argument_list|,
+sizeof|sizeof
+name|buf6
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|addr
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|ip_addr
+argument_list|,
+sizeof|sizeof
+name|ip_addr
+argument_list|,
+literal|"[%.*s]"
+argument_list|,
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+name|ip_addr
+operator|-
+literal|3
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+block|}
+if|if
+condition|(
+name|ip_addr
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -17266,7 +19427,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|printf
+name|dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -17303,6 +19464,9 @@ operator|.
 name|ifc_buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|s
@@ -17313,17 +19477,78 @@ directive|undef
 name|IFRFREF
 endif|#
 directive|endif
+comment|/* defined(SIOCGIFCONF)&& !SIOCGIFCONF_IS_BROKEN */
+endif|#
+directive|endif
+comment|/* NETINET6&& defined(SIOCGLIFCONF) */
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* **  ISLOOPBACK -- is socket address in the loopback net? ** **	Parameters: **		sa -- socket address. ** **	Returns: **		TRUE -- is socket address in the loopback net? **		FALSE -- otherwise ** */
+name|bool
+name|isloopback
+parameter_list|(
+name|sa
+parameter_list|)
+name|SOCKADDR
+name|sa
+decl_stmt|;
+block|{
+if|#
+directive|if
+name|NETINET6
+if|if
+condition|(
+name|IN6_IS_ADDR_LOOPBACK
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sin6
+operator|.
+name|sin6_addr
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+else|#
+directive|else
+comment|/* NETINET6 */
+comment|/* XXX how to correctly extract IN_LOOPBACKNET part? */
+if|if
+condition|(
+operator|(
+operator|(
+name|ntohl
+argument_list|(
+name|sa
+operator|.
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+operator|&
+name|IN_CLASSA_NET
+operator|)
+operator|>>
+name|IN_CLASSA_NSHIFT
+operator|)
+operator|==
+name|IN_LOOPBACKNET
+condition|)
+return|return
+name|TRUE
+return|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
+return|return
+name|FALSE
+return|;
+block|}
 comment|/* **  GET_NUM_PROCS_ONLINE -- return the number of processors currently online ** **	Parameters: **		none. ** **	Returns: **		The number of processors online. */
-end_comment
-
-begin_function
+specifier|static
 name|int
 name|get_num_procs_online
 parameter_list|()
@@ -17333,9 +19558,77 @@ name|nproc
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|USESYSCTL
 if|#
 directive|if
-name|_FFR_SCALE_LA_BY_NUM_PROCS
+name|defined
+argument_list|(
+name|CTL_HW
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|HW_NCPU
+argument_list|)
+name|size_t
+name|sz
+decl_stmt|;
+name|int
+name|mib
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_HW
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|HW_NCPU
+expr_stmt|;
+name|sz
+operator|=
+operator|(
+name|size_t
+operator|)
+sizeof|sizeof
+name|nproc
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|nproc
+argument_list|,
+operator|&
+name|sz
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(CTL_HW)&& defined(HW_NCPUS) */
+else|#
+directive|else
+comment|/* USESYSCTL */
 ifdef|#
 directive|ifdef
 name|_SC_NPROCESSORS_ONLN
@@ -17349,10 +19642,57 @@ argument_list|(
 name|_SC_NPROCESSORS_ONLN
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+comment|/* _SC_NPROCESSORS_ONLN */
+ifdef|#
+directive|ifdef
+name|__hpux
+include|#
+directive|include
+file|<sys/pstat.h>
+name|struct
+name|pst_dynamic
+name|psd
+decl_stmt|;
+if|if
+condition|(
+name|pstat_getdynamic
+argument_list|(
+operator|&
+name|psd
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|psd
+argument_list|)
+argument_list|,
+operator|(
+name|size_t
+operator|)
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+name|nproc
+operator|=
+name|psd
+operator|.
+name|psd_proc_cnt
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* __hpux */
 endif|#
 directive|endif
+comment|/* _SC_NPROCESSORS_ONLN */
+endif|#
+directive|endif
+comment|/* USESYSCTL */
 if|if
 condition|(
 name|nproc
@@ -17367,20 +19707,92 @@ return|return
 name|nproc
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* **  SEED_RANDOM -- seed the random number generator ** **	Parameters: **		none ** **	Returns: **		none */
+name|void
+name|seed_random
+parameter_list|()
+block|{
+if|#
+directive|if
+name|HASSRANDOMDEV
+name|srandomdev
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASSRANDOMDEV */
+name|long
+name|seed
+decl_stmt|;
+name|struct
+name|timeval
+name|t
+decl_stmt|;
+name|seed
+operator|=
+operator|(
+name|long
+operator|)
+name|getpid
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|gettimeofday
+argument_list|(
+operator|&
+name|t
+argument_list|,
+name|NULL
+argument_list|)
+operator|>=
+literal|0
+condition|)
+name|seed
+operator|+=
+name|t
+operator|.
+name|tv_sec
+operator|+
+name|t
+operator|.
+name|tv_usec
+expr_stmt|;
+if|#
+directive|if
+name|HASRANDOM
+operator|(
+name|void
+operator|)
+name|srandom
+argument_list|(
+name|seed
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* HASRANDOM */
+operator|(
+name|void
+operator|)
+name|srand
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+name|seed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HASRANDOM */
+endif|#
+directive|endif
+comment|/* HASSRANDOMDEV */
+block|}
 comment|/* **  SM_SYSLOG -- syslog wrapper to keep messages under SYSLOG_BUFSIZE ** **	Parameters: **		level -- syslog level **		id -- envelope ID or NULL (NOQUEUE) **		fmt -- format string **		arg... -- arguments as implied by fmt. ** **	Returns: **		none */
-end_comment
-
-begin_comment
 comment|/* VARARGS3 */
-end_comment
-
-begin_function
 name|void
 ifdef|#
 directive|ifdef
@@ -17404,6 +19816,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
+comment|/* __STDC__ */
 function|sm_syslog
 parameter_list|(
 name|level
@@ -17430,6 +19843,7 @@ decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
+comment|/* __STDC__ */
 block|{
 specifier|static
 name|char
@@ -17441,8 +19855,6 @@ decl_stmt|;
 specifier|static
 name|size_t
 name|bufsize
-init|=
-name|MAXLINE
 decl_stmt|;
 name|char
 modifier|*
@@ -17452,12 +19864,21 @@ modifier|*
 name|end
 decl_stmt|;
 name|int
+name|save_errno
+decl_stmt|;
+name|int
 name|seq
 init|=
 literal|1
 decl_stmt|;
 name|int
 name|idlen
+decl_stmt|;
+name|char
+name|buf0
+index|[
+name|MAXLINE
+index|]
 decl_stmt|;
 specifier|extern
 name|int
@@ -17473,43 +19894,22 @@ modifier|*
 name|DoprEnd
 decl_stmt|;
 name|VA_LOCAL_DECL
-specifier|extern
-name|void
-name|sm_dopr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
+name|save_errno
+init|=
 name|SyslogErrno
 operator|=
 name|errno
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|id
 operator|==
 name|NULL
 condition|)
-block|{
 name|id
 operator|=
 literal|"NOQUEUE"
 expr_stmt|;
-name|idlen
-operator|=
-literal|9
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -17522,50 +19922,40 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|id
 operator|=
 literal|""
 expr_stmt|;
 name|idlen
 operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|idlen
-operator|=
 name|strlen
 argument_list|(
 name|id
-operator|+
-literal|2
 argument_list|)
 expr_stmt|;
-name|bufalloc
-label|:
 if|if
 condition|(
 name|buf
 operator|==
 name|NULL
 condition|)
+block|{
 name|buf
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|xalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
-operator|*
-name|bufsize
-argument_list|)
+name|buf0
 expr_stmt|;
+name|bufsize
+operator|=
+sizeof|sizeof
+name|buf0
+expr_stmt|;
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
 comment|/* do a virtual vsnprintf into buf */
 name|VA_START
 argument_list|(
@@ -17611,8 +20001,10 @@ comment|/* end of virtual vsnprintf */
 if|if
 condition|(
 name|SnprfOverflow
+operator|==
+literal|0
 condition|)
-block|{
+break|break;
 comment|/* String too small, redo with correct size */
 name|bufsize
 operator|+=
@@ -17620,6 +20012,12 @@ name|SnprfOverflow
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|buf
+operator|!=
+name|buf0
+condition|)
 name|free
 argument_list|(
 name|buf
@@ -17627,11 +20025,16 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|=
-name|NULL
+name|xalloc
+argument_list|(
+name|bufsize
+operator|*
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
+argument_list|)
 expr_stmt|;
-goto|goto
-name|bufalloc
-goto|;
 block|}
 if|if
 condition|(
@@ -17682,6 +20085,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* LOG */
 comment|/*XXX should do something more sensible */
 if|if
 condition|(
@@ -17713,6 +20117,21 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* LOG */
+if|if
+condition|(
+name|buf
+operator|==
+name|buf0
+condition|)
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 return|return;
 block|}
 name|begin
@@ -17840,6 +20259,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* LOG */
 name|fprintf
 argument_list|(
 name|stderr
@@ -17856,6 +20276,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* LOG */
 operator|*
 name|end
 operator|=
@@ -17888,6 +20309,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* LOG */
 name|fprintf
 argument_list|(
 name|stderr
@@ -17901,6 +20323,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* LOG */
 elseif|else
 if|if
 condition|(
@@ -17927,6 +20350,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* LOG */
 name|fprintf
 argument_list|(
 name|stderr
@@ -17942,17 +20366,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* LOG */
+if|if
+condition|(
+name|buf
+operator|==
+name|buf0
+condition|)
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  HARD_SYSLOG -- call syslog repeatedly until it works ** **	Needed on HP-UX, which apparently doesn't guarantee that **	syslog succeeds during interrupt handlers. */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -17965,64 +20395,36 @@ name|defined
 argument_list|(
 name|HPUX11
 argument_list|)
-end_if
-
-begin_define
 define|#
 directive|define
 name|MAXSYSLOGTRIES
 value|100
-end_define
-
-begin_undef
 undef|#
 directive|undef
 name|syslog
-end_undef
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|V4FS
-end_ifdef
-
-begin_define
 define|#
 directive|define
 name|XCNST
 value|const
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAST
 value|(const char *)
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
+comment|/* V4FS */
 define|#
 directive|define
 name|XCNST
-end_define
-
-begin_define
 define|#
 directive|define
 name|CAST
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_function
+comment|/* V4FS */
 name|void
 ifdef|#
 directive|ifdef
@@ -18041,6 +20443,7 @@ modifier|...
 parameter_list|)
 else|#
 directive|else
+comment|/* __STDC__ */
 function|hard_syslog
 parameter_list|(
 name|pri
@@ -18060,6 +20463,7 @@ decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
+comment|/* __STDC__ */
 block|{
 name|int
 name|i
@@ -18117,56 +20521,16 @@ condition|;
 control|)
 continue|continue;
 block|}
-end_function
-
-begin_undef
 undef|#
 directive|undef
 name|CAST
-end_undef
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  LOCAL_HOSTNAME_LENGTH ** **	This is required to get sendmail to compile against BIND 4.9.x **	on Ultrix. */
-end_comment
-
-begin_if
+comment|/* defined(__hpux)&& !defined(HPUX11) */
 if|#
 directive|if
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-operator|&&
-name|NAMED_BIND
-end_if
-
-begin_include
-include|#
-directive|include
-file|<resolv.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|__RES
-operator|>=
-literal|19931104
-operator|&&
-name|__RES
-operator|<
-literal|19950621
-end_if
-
-begin_function
+name|NEEDLOCAL_HOSTNAME_LENGTH
+comment|/* **  LOCAL_HOSTNAME_LENGTH ** **	This is required to get sendmail to compile against BIND 4.9.x **	on Ultrix. ** **	Unfortunately, a Compaq Y2K patch kit provides it without **	bumping __RES in /usr/include/resolv.h so we can't automatically **	figure out whether it is needed. */
 name|int
 name|local_hostname_length
 parameter_list|(
@@ -18255,26 +20619,10 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* NEEDLOCAL_HOSTNAME_LENGTH */
 comment|/* **  Compile-Time options */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|CompileOptions
@@ -18288,6 +20636,7 @@ literal|"HESIOD"
 block|,
 endif|#
 directive|endif
+comment|/* HESIOD */
 if|#
 directive|if
 name|HES_GETMAILHOST
@@ -18295,6 +20644,7 @@ literal|"HES_GETMAILHOST"
 block|,
 endif|#
 directive|endif
+comment|/* HES_GETMAILHOST */
 ifdef|#
 directive|ifdef
 name|LDAPMAP
@@ -18302,6 +20652,15 @@ literal|"LDAPMAP"
 block|,
 endif|#
 directive|endif
+comment|/* LDAPMAP */
+ifdef|#
+directive|ifdef
+name|MAP_NSD
+literal|"MAP_NSD"
+block|,
+endif|#
+directive|endif
+comment|/* MAP_NSD */
 ifdef|#
 directive|ifdef
 name|MAP_REGEX
@@ -18309,6 +20668,7 @@ literal|"MAP_REGEX"
 block|,
 endif|#
 directive|endif
+comment|/* MAP_REGEX */
 if|#
 directive|if
 name|LOG
@@ -18316,6 +20676,7 @@ literal|"LOG"
 block|,
 endif|#
 directive|endif
+comment|/* LOG */
 if|#
 directive|if
 name|MATCHGECOS
@@ -18323,6 +20684,7 @@ literal|"MATCHGECOS"
 block|,
 endif|#
 directive|endif
+comment|/* MATCHGECOS */
 if|#
 directive|if
 name|MIME7TO8
@@ -18330,6 +20692,7 @@ literal|"MIME7TO8"
 block|,
 endif|#
 directive|endif
+comment|/* MIME7TO8 */
 if|#
 directive|if
 name|MIME8TO7
@@ -18337,6 +20700,7 @@ literal|"MIME8TO7"
 block|,
 endif|#
 directive|endif
+comment|/* MIME8TO7 */
 if|#
 directive|if
 name|NAMED_BIND
@@ -18344,6 +20708,7 @@ literal|"NAMED_BIND"
 block|,
 endif|#
 directive|endif
+comment|/* NAMED_BIND */
 ifdef|#
 directive|ifdef
 name|NDBM
@@ -18351,6 +20716,7 @@ literal|"NDBM"
 block|,
 endif|#
 directive|endif
+comment|/* NDBM */
 if|#
 directive|if
 name|NETINET
@@ -18358,6 +20724,15 @@ literal|"NETINET"
 block|,
 endif|#
 directive|endif
+comment|/* NETINET */
+if|#
+directive|if
+name|NETINET6
+literal|"NETINET6"
+block|,
+endif|#
+directive|endif
+comment|/* NETINET6 */
 if|#
 directive|if
 name|NETINFO
@@ -18365,6 +20740,7 @@ literal|"NETINFO"
 block|,
 endif|#
 directive|endif
+comment|/* NETINFO */
 if|#
 directive|if
 name|NETISO
@@ -18372,6 +20748,7 @@ literal|"NETISO"
 block|,
 endif|#
 directive|endif
+comment|/* NETISO */
 if|#
 directive|if
 name|NETNS
@@ -18379,6 +20756,7 @@ literal|"NETNS"
 block|,
 endif|#
 directive|endif
+comment|/* NETNS */
 if|#
 directive|if
 name|NETUNIX
@@ -18386,6 +20764,7 @@ literal|"NETUNIX"
 block|,
 endif|#
 directive|endif
+comment|/* NETUNIX */
 if|#
 directive|if
 name|NETX25
@@ -18393,6 +20772,7 @@ literal|"NETX25"
 block|,
 endif|#
 directive|endif
+comment|/* NETX25 */
 ifdef|#
 directive|ifdef
 name|NEWDB
@@ -18400,6 +20780,7 @@ literal|"NEWDB"
 block|,
 endif|#
 directive|endif
+comment|/* NEWDB */
 ifdef|#
 directive|ifdef
 name|NIS
@@ -18407,6 +20788,7 @@ literal|"NIS"
 block|,
 endif|#
 directive|endif
+comment|/* NIS */
 ifdef|#
 directive|ifdef
 name|NISPLUS
@@ -18414,6 +20796,15 @@ literal|"NISPLUS"
 block|,
 endif|#
 directive|endif
+comment|/* NISPLUS */
+ifdef|#
+directive|ifdef
+name|PH_MAP
+literal|"PH_MAP"
+block|,
+endif|#
+directive|endif
+comment|/* PH_MAP */
 if|#
 directive|if
 name|QUEUE
@@ -18421,6 +20812,15 @@ literal|"QUEUE"
 block|,
 endif|#
 directive|endif
+comment|/* QUEUE */
+if|#
+directive|if
+name|SASL
+literal|"SASL"
+block|,
+endif|#
+directive|endif
+comment|/* SASL */
 if|#
 directive|if
 name|SCANF
@@ -18428,6 +20828,15 @@ literal|"SCANF"
 block|,
 endif|#
 directive|endif
+comment|/* SCANF */
+if|#
+directive|if
+name|SFIO
+literal|"SFIO"
+block|,
+endif|#
+directive|endif
+comment|/* SFIO */
 if|#
 directive|if
 name|SMTP
@@ -18435,6 +20844,7 @@ literal|"SMTP"
 block|,
 endif|#
 directive|endif
+comment|/* SMTP */
 if|#
 directive|if
 name|SMTPDEBUG
@@ -18442,6 +20852,15 @@ literal|"SMTPDEBUG"
 block|,
 endif|#
 directive|endif
+comment|/* SMTPDEBUG */
+if|#
+directive|if
+name|STARTTLS
+literal|"STARTTLS"
+block|,
+endif|#
+directive|endif
+comment|/* STARTTLS */
 ifdef|#
 directive|ifdef
 name|SUID_ROOT_FILES_OK
@@ -18449,6 +20868,7 @@ literal|"SUID_ROOT_FILES_OK"
 block|,
 endif|#
 directive|endif
+comment|/* SUID_ROOT_FILES_OK */
 if|#
 directive|if
 name|TCPWRAPPERS
@@ -18456,6 +20876,7 @@ literal|"TCPWRAPPERS"
 block|,
 endif|#
 directive|endif
+comment|/* TCPWRAPPERS */
 if|#
 directive|if
 name|USERDB
@@ -18463,6 +20884,7 @@ literal|"USERDB"
 block|,
 endif|#
 directive|endif
+comment|/* USERDB */
 if|#
 directive|if
 name|XDEBUG
@@ -18470,6 +20892,7 @@ literal|"XDEBUG"
 block|,
 endif|#
 directive|endif
+comment|/* XDEBUG */
 ifdef|#
 directive|ifdef
 name|XLA
@@ -18477,16 +20900,11 @@ literal|"XLA"
 block|,
 endif|#
 directive|endif
+comment|/* XLA */
 name|NULL
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* **  OS compile options. */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|OsCompileOptions
@@ -18500,6 +20918,23 @@ literal|"BOGUS_O_EXCL"
 block|,
 endif|#
 directive|endif
+comment|/* BOGUS_O_EXCL */
+if|#
+directive|if
+name|FAST_PID_RECYCLE
+literal|"FAST_PID_RECYCLE"
+block|,
+endif|#
+directive|endif
+comment|/* FAST_PID_RECYCLE */
+if|#
+directive|if
+name|HASFCHOWN
+literal|"HASFCHOWN"
+block|,
+endif|#
+directive|endif
+comment|/* HASFCHOWN */
 if|#
 directive|if
 name|HASFCHMOD
@@ -18507,6 +20942,7 @@ literal|"HASFCHMOD"
 block|,
 endif|#
 directive|endif
+comment|/* HASFCHMOD */
 if|#
 directive|if
 name|HASFLOCK
@@ -18514,6 +20950,7 @@ literal|"HASFLOCK"
 block|,
 endif|#
 directive|endif
+comment|/* HASFLOCK */
 if|#
 directive|if
 name|HASGETDTABLESIZE
@@ -18521,6 +20958,7 @@ literal|"HASGETDTABLESIZE"
 block|,
 endif|#
 directive|endif
+comment|/* HASGETDTABLESIZE */
 if|#
 directive|if
 name|HASGETUSERSHELL
@@ -18528,6 +20966,7 @@ literal|"HASGETUSERSHELL"
 block|,
 endif|#
 directive|endif
+comment|/* HASGETUSERSHELL */
 if|#
 directive|if
 name|HASINITGROUPS
@@ -18535,6 +20974,7 @@ literal|"HASINITGROUPS"
 block|,
 endif|#
 directive|endif
+comment|/* HASINITGROUPS */
 if|#
 directive|if
 name|HASLSTAT
@@ -18542,6 +20982,23 @@ literal|"HASLSTAT"
 block|,
 endif|#
 directive|endif
+comment|/* HASLSTAT */
+if|#
+directive|if
+name|HASRANDOM
+literal|"HASRANDOM"
+block|,
+endif|#
+directive|endif
+comment|/* HASRANDOM */
+if|#
+directive|if
+name|HASSETLOGIN
+literal|"HASSETLOGIN"
+block|,
+endif|#
+directive|endif
+comment|/* HASSETLOGIN */
 if|#
 directive|if
 name|HASSETREUID
@@ -18549,6 +21006,7 @@ literal|"HASSETREUID"
 block|,
 endif|#
 directive|endif
+comment|/* HASSETREUID */
 if|#
 directive|if
 name|HASSETRLIMIT
@@ -18556,6 +21014,7 @@ literal|"HASSETRLIMIT"
 block|,
 endif|#
 directive|endif
+comment|/* HASSETRLIMIT */
 if|#
 directive|if
 name|HASSETSID
@@ -18563,6 +21022,7 @@ literal|"HASSETSID"
 block|,
 endif|#
 directive|endif
+comment|/* HASSETSID */
 if|#
 directive|if
 name|HASSETUSERCONTEXT
@@ -18570,6 +21030,7 @@ literal|"HASSETUSERCONTEXT"
 block|,
 endif|#
 directive|endif
+comment|/* HASSETUSERCONTEXT */
 if|#
 directive|if
 name|HASSETVBUF
@@ -18577,6 +21038,7 @@ literal|"HASSETVBUF"
 block|,
 endif|#
 directive|endif
+comment|/* HASSETVBUF */
 if|#
 directive|if
 name|HASSNPRINTF
@@ -18584,6 +21046,7 @@ literal|"HASSNPRINTF"
 block|,
 endif|#
 directive|endif
+comment|/* HASSNPRINTF */
 if|#
 directive|if
 name|HAS_ST_GEN
@@ -18591,6 +21054,23 @@ literal|"HAS_ST_GEN"
 block|,
 endif|#
 directive|endif
+comment|/* HAS_ST_GEN */
+if|#
+directive|if
+name|HASSRANDOMDEV
+literal|"HASSRANDOMDEV"
+block|,
+endif|#
+directive|endif
+comment|/* HASSRANDOMDEV */
+if|#
+directive|if
+name|HASURANDOMDEV
+literal|"HASURANDOMDEV"
+block|,
+endif|#
+directive|endif
+comment|/* HASURANDOMDEV */
 if|#
 directive|if
 name|HASSTRERROR
@@ -18598,6 +21078,7 @@ literal|"HASSTRERROR"
 block|,
 endif|#
 directive|endif
+comment|/* HASSTRERROR */
 if|#
 directive|if
 name|HASULIMIT
@@ -18605,6 +21086,7 @@ literal|"HASULIMIT"
 block|,
 endif|#
 directive|endif
+comment|/* HASULIMIT */
 if|#
 directive|if
 name|HASUNAME
@@ -18612,6 +21094,7 @@ literal|"HASUNAME"
 block|,
 endif|#
 directive|endif
+comment|/* HASUNAME */
 if|#
 directive|if
 name|HASUNSETENV
@@ -18619,6 +21102,7 @@ literal|"HASUNSETENV"
 block|,
 endif|#
 directive|endif
+comment|/* HASUNSETENV */
 if|#
 directive|if
 name|HASWAITPID
@@ -18626,6 +21110,7 @@ literal|"HASWAITPID"
 block|,
 endif|#
 directive|endif
+comment|/* HASWAITPID */
 if|#
 directive|if
 name|IDENTPROTO
@@ -18633,6 +21118,7 @@ literal|"IDENTPROTO"
 block|,
 endif|#
 directive|endif
+comment|/* IDENTPROTO */
 if|#
 directive|if
 name|IP_SRCROUTE
@@ -18640,6 +21126,7 @@ literal|"IP_SRCROUTE"
 block|,
 endif|#
 directive|endif
+comment|/* IP_SRCROUTE */
 if|#
 directive|if
 name|O_EXLOCK
@@ -18652,6 +21139,7 @@ literal|"LOCK_ON_OPEN"
 block|,
 endif|#
 directive|endif
+comment|/* O_EXLOCK&& HASFLOCK&& !BOGUS_O_EXCL */
 if|#
 directive|if
 name|NEEDFSYNC
@@ -18659,6 +21147,7 @@ literal|"NEEDFSYNC"
 block|,
 endif|#
 directive|endif
+comment|/* NEEDFSYNC */
 if|#
 directive|if
 name|NOFTRUNCATE
@@ -18666,6 +21155,7 @@ literal|"NOFTRUNCATE"
 block|,
 endif|#
 directive|endif
+comment|/* NOFTRUNCATE */
 if|#
 directive|if
 name|RLIMIT_NEEDS_SYS_TIME_H
@@ -18673,6 +21163,7 @@ literal|"RLIMIT_NEEDS_SYS_TIME_H"
 block|,
 endif|#
 directive|endif
+comment|/* RLIMIT_NEEDS_SYS_TIME_H */
 if|#
 directive|if
 name|SAFENFSPATHCONF
@@ -18680,6 +21171,7 @@ literal|"SAFENFSPATHCONF"
 block|,
 endif|#
 directive|endif
+comment|/* SAFENFSPATHCONF */
 if|#
 directive|if
 name|SECUREWARE
@@ -18687,6 +21179,7 @@ literal|"SECUREWARE"
 block|,
 endif|#
 directive|endif
+comment|/* SECUREWARE */
 if|#
 directive|if
 name|SHARE_V1
@@ -18694,6 +21187,7 @@ literal|"SHARE_V1"
 block|,
 endif|#
 directive|endif
+comment|/* SHARE_V1 */
 if|#
 directive|if
 name|SIOCGIFCONF_IS_BROKEN
@@ -18701,6 +21195,7 @@ literal|"SIOCGIFCONF_IS_BROKEN"
 block|,
 endif|#
 directive|endif
+comment|/* SIOCGIFCONF_IS_BROKEN */
 if|#
 directive|if
 name|SIOCGIFNUM_IS_BROKEN
@@ -18708,6 +21203,23 @@ literal|"SIOCGIFNUM_IS_BROKEN"
 block|,
 endif|#
 directive|endif
+comment|/* SIOCGIFNUM_IS_BROKEN */
+if|#
+directive|if
+name|SNPRINTF_IS_BROKEN
+literal|"SNPRINTF_IS_BROKEN"
+block|,
+endif|#
+directive|endif
+comment|/* SNPRINTF_IS_BROKEN */
+if|#
+directive|if
+name|SO_REUSEADDR_IS_BROKEN
+literal|"SO_REUSEADDR_IS_BROKEN"
+block|,
+endif|#
+directive|endif
+comment|/* SO_REUSEADDR_IS_BROKEN */
 if|#
 directive|if
 name|SYS5SETPGRP
@@ -18715,6 +21227,7 @@ literal|"SYS5SETPGRP"
 block|,
 endif|#
 directive|endif
+comment|/* SYS5SETPGRP */
 if|#
 directive|if
 name|SYSTEM5
@@ -18722,6 +21235,7 @@ literal|"SYSTEM5"
 block|,
 endif|#
 directive|endif
+comment|/* SYSTEM5 */
 if|#
 directive|if
 name|USE_SA_SIGACTION
@@ -18729,6 +21243,7 @@ literal|"USE_SA_SIGACTION"
 block|,
 endif|#
 directive|endif
+comment|/* USE_SA_SIGACTION */
 if|#
 directive|if
 name|USE_SIGLONGJMP
@@ -18736,6 +21251,7 @@ literal|"USE_SIGLONGJMP"
 block|,
 endif|#
 directive|endif
+comment|/* USE_SIGLONGJMP */
 if|#
 directive|if
 name|USESETEUID
@@ -18743,10 +21259,11 @@ literal|"USESETEUID"
 block|,
 endif|#
 directive|endif
+comment|/* USESETEUID */
 name|NULL
 block|}
 decl_stmt|;
-end_decl_stmt
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.\n\ 	All rights reserved.\n\      Copyright (c) 1988, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
 begin_ifndef
@@ -37,10 +37,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|id
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.29 (Berkeley) 1/25/1999"
+literal|"@(#)$Id: mailstats.c,v 8.53.16.10 2000/07/18 05:51:15 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,42 +50,96 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* ! lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOT_SENDMAIL
-end_ifndef
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|NOT_SENDMAIL
-end_define
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EX_OK
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|EX_OK
+end_undef
+
+begin_comment
+comment|/* unistd.h may have another use for this */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* EX_OK */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<sendmail.h>
+file|<sysexits.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mailstats.h>
+file|<sendmail/sendmail.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pathnames.h>
+file|<sendmail/mailstats.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sendmail/pathnames.h>
 end_include
 
 begin_define
@@ -116,25 +170,15 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-name|struct
-name|statistics
-name|stat
-decl_stmt|;
 specifier|register
 name|int
 name|i
 decl_stmt|;
 name|int
 name|mno
+decl_stmt|;
+name|int
+name|save_errno
 decl_stmt|;
 name|int
 name|ch
@@ -185,6 +229,9 @@ name|dismsgs
 init|=
 literal|0
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 name|char
 name|mtable
 index|[
@@ -208,8 +255,9 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-name|time_t
-name|now
+name|struct
+name|statistics
+name|stats
 decl_stmt|;
 specifier|extern
 name|char
@@ -217,6 +265,15 @@ modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 name|cfile
 operator|=
 name|_PATH_SENDMAILCF
@@ -281,9 +338,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
-if|#
-directive|if
-name|_FFR_MAILSTATS_PROGMODE
 case|case
 literal|'p'
 case|:
@@ -292,35 +346,22 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'?'
 case|:
 default|default:
 name|usage
 label|:
-if|#
-directive|if
-name|_FFR_MAILSTATS_PROGMODE
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
-literal|"usage: mailstats [-o] [-C cffile] [-f stfile] -o -p\n"
+literal|"usage: mailstats [-C cffile] [-f stfile] [-o] [-p]\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|fputs
-argument_list|(
-literal|"usage: mailstats [-o] [-C cffile] [-f stfile] -o \n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|EX_USAGE
@@ -361,12 +402,20 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"mailstats: "
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 name|perror
 argument_list|(
@@ -386,7 +435,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -395,12 +444,16 @@ operator|++
 index|]
 argument_list|,
 literal|"prog"
+argument_list|,
+name|MNAMELEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -409,12 +462,16 @@ operator|++
 index|]
 argument_list|,
 literal|"*file*"
+argument_list|,
+name|MNAMELEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|mtable
 index|[
@@ -423,6 +480,10 @@ operator|++
 index|]
 argument_list|,
 literal|"*include*"
+argument_list|,
+name|MNAMELEN
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 while|while
@@ -559,9 +620,14 @@ block|}
 comment|/* this is the S or StatusFile option -- save it */
 if|if
 condition|(
-name|strlen
+name|strlcpy
 argument_list|(
+name|sfilebuf
+argument_list|,
 name|b
+argument_list|,
+sizeof|sizeof
+name|sfilebuf
 argument_list|)
 operator|>=
 sizeof|sizeof
@@ -583,13 +649,6 @@ name|EX_CONFIG
 argument_list|)
 expr_stmt|;
 block|}
-name|strcpy
-argument_list|(
-name|sfilebuf
-argument_list|,
-name|b
-argument_list|)
-expr_stmt|;
 name|b
 operator|=
 name|strchr
@@ -701,7 +760,7 @@ name|m
 operator|+
 name|MNAMELEN
 expr_stmt|;
-comment|/* is [MNAMELEN+1] */
+comment|/* is [MNAMELEN + 1] */
 while|while
 condition|(
 operator|*
@@ -837,9 +896,6 @@ name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|open
@@ -848,9 +904,14 @@ name|sfile
 argument_list|,
 name|O_RDONLY
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
 operator|<
 literal|0
+operator|)
 operator|||
 operator|(
 name|i
@@ -860,22 +921,33 @@ argument_list|(
 name|fd
 argument_list|,
 operator|&
-name|stat
+name|stats
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
 block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"mailstats: "
 argument_list|,
 name|stderr
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 name|perror
 argument_list|(
@@ -895,6 +967,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 literal|1
@@ -910,22 +985,33 @@ argument_list|(
 name|fd
 argument_list|,
 operator|&
-name|stat
+name|stats
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 operator|)
 operator|<
 literal|0
 condition|)
 block|{
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"mailstats: "
 argument_list|,
 name|stderr
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 name|perror
 argument_list|(
@@ -946,16 +1032,18 @@ operator|==
 literal|0
 condition|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|ARBPTR_T
 operator|)
 operator|&
-name|stat
+name|stats
+argument_list|,
+literal|'\0'
 argument_list|,
 sizeof|sizeof
-name|stat
+name|stats
 argument_list|)
 expr_stmt|;
 operator|(
@@ -964,7 +1052,7 @@ operator|)
 name|time
 argument_list|(
 operator|&
-name|stat
+name|stats
 operator|.
 name|stat_itime
 argument_list|)
@@ -980,7 +1068,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|stats
 operator|.
 name|stat_magic
 operator|!=
@@ -1005,7 +1093,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|stat
+name|stats
 operator|.
 name|stat_version
 operator|!=
@@ -1016,13 +1104,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mailstats version (%d) incompatible with %s version(%d)\n"
+literal|"mailstats version (%d) incompatible with %s version (%d)\n"
 argument_list|,
 name|STAT_VERSION
 argument_list|,
 name|sfile
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_version
 argument_list|)
@@ -1039,18 +1127,21 @@ condition|(
 name|i
 operator|!=
 sizeof|sizeof
-name|stat
+name|stats
 operator|||
-name|stat
+name|stats
 operator|.
 name|stat_size
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|stat
+name|stats
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 literal|"mailstats: file size changed.\n"
@@ -1070,6 +1161,9 @@ condition|(
 name|progmode
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&
@@ -1083,7 +1177,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|stat
+name|stats
 operator|.
 name|stat_itime
 argument_list|,
@@ -1103,7 +1197,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|stat
+name|stats
 operator|.
 name|stat_itime
 argument_list|)
@@ -1137,28 +1231,28 @@ control|)
 block|{
 if|if
 condition|(
-name|stat
+name|stats
 operator|.
 name|stat_nf
 index|[
 name|i
 index|]
 operator|||
-name|stat
+name|stats
 operator|.
 name|stat_nt
 index|[
 name|i
 index|]
 operator|||
-name|stat
+name|stats
 operator|.
 name|stat_nr
 index|[
 name|i
 index|]
 operator|||
-name|stat
+name|stats
 operator|.
 name|stat_nd
 index|[
@@ -1189,42 +1283,42 @@ name|format
 argument_list|,
 name|i
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_nf
 index|[
 name|i
 index|]
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_bf
 index|[
 name|i
 index|]
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_nt
 index|[
 name|i
 index|]
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_bt
 index|[
 name|i
 index|]
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_nr
 index|[
 name|i
 index|]
 argument_list|,
-name|stat
+name|stats
 operator|.
 name|stat_nd
 index|[
@@ -1253,7 +1347,7 @@ argument_list|)
 expr_stmt|;
 name|frmsgs
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_nf
 index|[
@@ -1262,7 +1356,7 @@ index|]
 expr_stmt|;
 name|frbytes
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_bf
 index|[
@@ -1271,7 +1365,7 @@ index|]
 expr_stmt|;
 name|tomsgs
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_nt
 index|[
@@ -1280,7 +1374,7 @@ index|]
 expr_stmt|;
 name|tobytes
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_bt
 index|[
@@ -1289,7 +1383,7 @@ index|]
 expr_stmt|;
 name|rejmsgs
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_nr
 index|[
@@ -1298,7 +1392,7 @@ index|]
 expr_stmt|;
 name|dismsgs
 operator|+=
-name|stat
+name|stats
 operator|.
 name|stat_nd
 index|[
@@ -1329,6 +1423,26 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" C %8ld %8ld %6ld\n"
+argument_list|,
+name|stats
+operator|.
+name|stat_cf
+argument_list|,
+name|stats
+operator|.
+name|stat_ct
+argument_list|,
+name|stats
+operator|.
+name|stat_cr
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -1351,6 +1465,9 @@ name|fd
 operator|>=
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -1381,12 +1498,37 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" C %8ld %10s  %8ld %10s    %6ld\n"
+argument_list|,
+name|stats
+operator|.
+name|stat_cf
+argument_list|,
+literal|""
+argument_list|,
+name|stats
+operator|.
+name|stat_ct
+argument_list|,
+literal|""
+argument_list|,
+name|stats
+operator|.
+name|stat_cr
+argument_list|)
+expr_stmt|;
 block|}
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
+return|return
+name|EX_OK
+return|;
 block|}
 end_function
 
