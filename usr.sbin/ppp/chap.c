@@ -5518,7 +5518,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
+name|strncasecmp
 argument_list|(
 name|ans
 argument_list|,
