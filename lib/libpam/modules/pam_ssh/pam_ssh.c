@@ -1790,11 +1790,6 @@ name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 block|}
-name|putenv
-argument_list|(
-name|env_string
-argument_list|)
-expr_stmt|;
 name|PAM_LOG
 argument_list|(
 literal|"Put to environment: %s"
