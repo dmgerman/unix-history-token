@@ -264,12 +264,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tina.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"fla.h"
 end_include
 
@@ -630,14 +624,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|lorandriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|tinadriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1034,20 +1020,6 @@ name|INTR_TYPE_NET
 block|,
 operator|&
 name|wldriver
-block|}
-block|,
-endif|#
-directive|endif
-if|#
-directive|if
-name|NTINA
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|tinadriver
 block|}
 block|,
 endif|#
