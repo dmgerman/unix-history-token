@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.18 1995/01/24 12:04:54 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.19 1995/01/31 11:41:44 dufault Exp $  */
 end_comment
 
 begin_define
@@ -2570,6 +2570,8 @@ name|sense_key_text
 index|[]
 init|=
 block|{
+literal|"NO SENSE"
+block|,
 literal|"RECOVERED ERROR"
 block|,
 literal|"NOT READY"
@@ -2670,8 +2672,6 @@ argument_list|,
 name|sense_key_text
 index|[
 name|key
-operator|-
-literal|1
 index|]
 argument_list|)
 expr_stmt|;
