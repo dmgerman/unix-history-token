@@ -3972,15 +3972,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: no carrier\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"no carrier\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4003,15 +4002,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: line error %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"line error %x\n"
 argument_list|,
 name|c
 operator|&
@@ -4315,15 +4313,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: bad fcs %x, pkt len %d\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"bad fcs %x, pkt len %d\n"
 argument_list|,
 name|sc
 operator|->
@@ -4390,15 +4387,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: too short (%d)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"too short (%d)\n"
 argument_list|,
 name|ilen
 argument_list|)
@@ -4711,15 +4707,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: no input mbufs!\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"no input mbufs!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4798,15 +4793,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: garbage received: 0x%x (need 0xFF)\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"garbage received: 0x%x (need 0xFF)\n"
 argument_list|,
 name|c
 argument_list|)
@@ -4866,15 +4860,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: missing UI (0x3), got 0x%x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"missing UI (0x3), got 0x%x\n"
 argument_list|,
 name|c
 argument_list|)
@@ -4947,15 +4940,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: bad protocol %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"bad protocol %x\n"
 argument_list|,
 operator|(
 name|sc
@@ -5001,15 +4993,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: packet too big\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"packet too big\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -5064,15 +5055,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: too few input mbufs!\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"too few input mbufs!\n"
 argument_list|)
 expr_stmt|;
 goto|goto
