@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_usrreq.c	6.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uipc_usrreq.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -623,6 +623,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
 block|}
 comment|/* END XXX */
 if|if
@@ -669,11 +674,13 @@ name|so_state
 operator|&
 name|SS_CANTSENDMORE
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EPIPE
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|unp
