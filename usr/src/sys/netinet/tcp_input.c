@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.90	83/03/25	*/
+comment|/*	tcp_input.c	1.90	83/03/27	*/
 end_comment
 
 begin_include
@@ -452,19 +452,6 @@ operator|.
 name|tcps_badsum
 operator|++
 expr_stmt|;
-if|if
-condition|(
-name|tcpprintfs
-condition|)
-name|printf
-argument_list|(
-literal|"tcp cksum %x\n"
-argument_list|,
-name|ti
-operator|->
-name|ti_sum
-argument_list|)
-expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -551,9 +538,7 @@ operator|.
 name|tcps_hdrops
 operator|++
 expr_stmt|;
-goto|goto
-name|drop
-goto|;
+return|return;
 block|}
 name|ti
 operator|=
@@ -3023,6 +3008,18 @@ expr_stmt|;
 return|return;
 name|drop
 label|:
+if|if
+condition|(
+name|om
+condition|)
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|om
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Drop space held by incoming segment and return. 	 */
 if|if
 condition|(
