@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.43 2003/02/01 04:47:29 shiba Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.45 2003/03/18 02:36:54 imp Exp   */
 end_comment
 
 begin_comment
@@ -5359,6 +5359,27 @@ define|#
 directive|define
 name|PCMCIA_STR_DLINK_DFE670TXD
 value|"D-Link DFE-670TXD"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_DLINK_DWL650H
+value|{ "D-Link Corporation", "D-Link DWL-650H 11Mbps WLAN Adapter", NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_DLINK_DWL650H
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_DLINK_DWL650H
+value|"D-Link DWL-650H"
 end_define
 
 begin_define
