@@ -2674,6 +2674,7 @@ name|m_flags
 operator||=
 name|M_SKIP_FIREWALL
 expr_stmt|;
+comment|/* If destination is now ourself drop to ip_input(). */
 if|if
 condition|(
 name|in_localip
@@ -2765,6 +2766,7 @@ else|else
 goto|goto
 name|again
 goto|;
+comment|/* Redo the routing table lookup. */
 block|}
 ifdef|#
 directive|ifdef
