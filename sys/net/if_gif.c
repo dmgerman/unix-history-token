@@ -311,6 +311,19 @@ name|gif_softc_list
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * XXX: gif_called is a recursion counter to prevent misconfiguration to  * cause unbounded looping in the network stack.  However, this is a flawed  * approach as it assumes non-reentrance in the stack.  This should be  * changed to use packet tags to track recusion..  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|gif_called
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 function_decl|(
@@ -1407,13 +1420,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-specifier|static
-name|int
-name|called
-init|=
-literal|0
-decl_stmt|;
-comment|/* XXX: MUTEX */
 ifdef|#
 directive|ifdef
 name|MAC
@@ -1446,7 +1452,7 @@ comment|/* 	 * gif may cause infinite recursion calls when misconfigured. 	 * We
 if|if
 condition|(
 operator|++
-name|called
+name|gif_called
 operator|>
 name|max_gif_nesting
 condition|)
@@ -1457,7 +1463,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"gif_output: recursively called too many times(%d)\n"
 argument_list|,
-name|called
+name|gif_called
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -1641,7 +1647,7 @@ goto|;
 block|}
 name|end
 label|:
-name|called
+name|gif_called
 operator|=
 literal|0
 expr_stmt|;
