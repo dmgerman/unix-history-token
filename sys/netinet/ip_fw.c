@@ -6120,11 +6120,9 @@ literal|0
 operator|||
 name|f
 operator|->
-name|fw_tcpf
-operator|!=
-name|f
-operator|->
-name|fw_tcpnf
+name|fw_ipflg
+operator|&
+name|IP_FW_IF_TCPMSK
 condition|)
 continue|continue;
 break|break;
