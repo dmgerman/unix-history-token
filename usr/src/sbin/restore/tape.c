@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.21 (Berkeley) %G%"
+literal|"@(#)tape.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,10 @@ name|blksread
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* blocks read since last header */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|long
@@ -177,6 +181,16 @@ end_decl_stmt
 begin_comment
 comment|/* restart has a valid frame */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|host
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -264,19 +278,6 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|RRESTORE
-name|char
-modifier|*
-name|host
-decl_stmt|,
-modifier|*
-name|tape
-decl_stmt|;
-endif|#
-directive|endif
-endif|RRESTORE
 name|char
 modifier|*
 name|strerror
@@ -313,11 +314,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RRESTORE
+if|if
+condition|(
+name|index
+argument_list|(
+name|source
+argument_list|,
+literal|':'
+argument_list|)
+condition|)
+block|{
 name|host
 operator|=
 name|source
 expr_stmt|;
-name|tape
+name|source
 operator|=
 name|index
 argument_list|(
@@ -326,41 +337,11 @@ argument_list|,
 literal|':'
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tape
-operator|==
-literal|0
-condition|)
-block|{
-name|nohost
-label|:
-name|msg
-argument_list|(
-literal|"need keyletter ``f'' and device ``host:tape''\n"
-argument_list|)
-expr_stmt|;
-name|done
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
-name|tape
+name|source
 operator|++
 operator|=
 literal|'\0'
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|magtape
-argument_list|,
-name|tape
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -376,15 +357,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* no longer need or want root privileges */
-else|#
-directive|else
+block|}
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|strcmp
@@ -475,6 +451,13 @@ name|pipein
 operator|++
 expr_stmt|;
 block|}
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+comment|/* no longer need or want root privileges */
 operator|(
 name|void
 operator|)
@@ -485,9 +468,6 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|RRESTORE
 block|}
 end_block
 
@@ -617,7 +597,8 @@ directive|ifdef
 name|RRESTORE
 if|if
 condition|(
-operator|(
+name|host
+condition|)
 name|mt
 operator|=
 name|rmtopen
@@ -626,12 +607,10 @@ name|magtape
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-else|#
-directive|else
+expr_stmt|;
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|pipein
@@ -640,10 +619,7 @@ name|mt
 operator|=
 literal|0
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|(
+else|else
 name|mt
 operator|=
 name|open
@@ -652,12 +628,13 @@ name|magtape
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mt
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 block|{
 name|perror
 argument_list|(
@@ -706,6 +683,9 @@ name|bct
 operator|--
 expr_stmt|;
 comment|/* push back this block */
+name|blksread
+operator|--
+expr_stmt|;
 name|cvtflag
 operator|++
 expr_stmt|;
@@ -1166,8 +1146,7 @@ begin_block
 block|{
 name|long
 name|newvol
-decl_stmt|;
-name|long
+decl_stmt|,
 name|savecnt
 decl_stmt|,
 name|i
@@ -1627,7 +1606,8 @@ directive|ifdef
 name|RRESTORE
 if|if
 condition|(
-operator|(
+name|host
+condition|)
 name|mt
 operator|=
 name|rmtopen
@@ -1636,16 +1616,10 @@ name|magtape
 argument_list|,
 literal|0
 argument_list|)
-operator|)
-operator|==
-operator|-
-literal|1
-condition|)
-else|#
-directive|else
-if|if
-condition|(
-operator|(
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|mt
 operator|=
 name|open
@@ -1654,13 +1628,14 @@ name|magtape
 argument_list|,
 literal|0
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|mt
 operator|==
 operator|-
 literal|1
 condition|)
-endif|#
-directive|endif
 block|{
 name|fprintf
 argument_list|(
@@ -1966,6 +1941,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RRESTORE
+if|if
+condition|(
+name|host
+condition|)
 name|rmtioctl
 argument_list|(
 name|MTFSF
@@ -1975,8 +1954,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|ioctl
@@ -2003,8 +1983,6 @@ argument_list|(
 literal|"ioctl MTFSF"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -3524,8 +3502,9 @@ decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-name|top
-label|:
+name|int
+name|seek_failed
+decl_stmt|;
 if|if
 condition|(
 name|bct
@@ -3616,6 +3595,10 @@ label|:
 ifdef|#
 directive|ifdef
 name|RRESTORE
+if|if
+condition|(
+name|host
+condition|)
 name|i
 operator|=
 name|rmtread
@@ -3629,8 +3612,9 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
+endif|#
+directive|endif
 name|i
 operator|=
 name|read
@@ -3646,27 +3630,32 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* 	 * Check for mid-tape short read error. 	 * If found, return rest of buffer. 	 */
+comment|/* 	 * Check for mid-tape short read error. 	 * If found, skip rest of buffer and start with the next. 	 */
 if|if
 condition|(
+operator|!
+name|pipein
+operator|&&
 name|numtrec
 operator|<
 name|ntrec
 operator|&&
 name|i
-operator|!=
+operator|>
 literal|0
 condition|)
 block|{
+name|dprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"mid-media short read error.\n"
+argument_list|)
+expr_stmt|;
 name|numtrec
 operator|=
 name|ntrec
 expr_stmt|;
-goto|goto
-name|top
-goto|;
 block|}
 comment|/* 	 * Handle partial block read. 	 */
 if|if
@@ -3711,6 +3700,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * Short read. Process the blocks read. 			 */
 if|if
 condition|(
 name|i
@@ -3719,8 +3709,10 @@ name|TP_BSIZE
 operator|!=
 literal|0
 condition|)
-name|panic
+name|vprintf
 argument_list|(
+name|stdout
+argument_list|,
 literal|"partial block read: %d should be %d\n"
 argument_list|,
 name|i
@@ -3845,6 +3837,11 @@ directive|ifdef
 name|RRESTORE
 if|if
 condition|(
+name|host
+condition|)
+name|seek_failed
+operator|=
+operator|(
 name|rmtseek
 argument_list|(
 name|i
@@ -3853,11 +3850,14 @@ literal|1
 argument_list|)
 operator|<
 literal|0
-condition|)
-else|#
-directive|else
-if|if
-condition|(
+operator|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+name|seek_failed
+operator|=
+operator|(
 name|lseek
 argument_list|(
 name|mt
@@ -3872,9 +3872,12 @@ name|long
 operator|)
 operator|-
 literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|seek_failed
 condition|)
-endif|#
-directive|endif
 block|{
 name|perror
 argument_list|(
@@ -3896,6 +3899,13 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"End-of-tape encountered\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4050,6 +4060,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RRESTORE
+if|if
+condition|(
+name|host
+condition|)
 name|i
 operator|=
 name|rmtread
@@ -4061,8 +4075,9 @@ operator|*
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+else|else
+endif|#
+directive|endif
 name|i
 operator|=
 name|read
@@ -4076,8 +4091,6 @@ operator|*
 name|TP_BSIZE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|i
@@ -4179,11 +4192,16 @@ return|return;
 ifdef|#
 directive|ifdef
 name|RRESTORE
+if|if
+condition|(
+name|host
+condition|)
 name|rmtclose
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
+else|else
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -4192,8 +4210,6 @@ argument_list|(
 name|mt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -5792,8 +5808,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|RRESTORE
 end_endif
+
+begin_comment
+comment|/* RRESTORE */
+end_comment
 
 begin_function
 name|u_char
