@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comsat.c	4.13 (Berkeley) %G%"
+literal|"@(#)comsat.c	4.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,17 +117,6 @@ name|dprintf
 value|if (debug) printf
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXUTMP
-value|100
-end_define
-
-begin_comment
-comment|/* down from init */
-end_comment
-
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -155,10 +144,10 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|utmp
+modifier|*
 name|utmp
-index|[
-literal|100
-index|]
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -177,11 +166,25 @@ end_decl_stmt
 begin_decl_stmt
 name|unsigned
 name|utmpmtime
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* last modification time for utmp */
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|utmpsize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last malloced size for utmp */
 end_comment
 
 begin_function_decl
@@ -201,6 +204,18 @@ end_function_decl
 begin_decl_stmt
 name|long
 name|lastmsgtime
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|realloc
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -535,11 +550,6 @@ name|struct
 name|stat
 name|statbf
 decl_stmt|;
-name|struct
-name|utmp
-modifier|*
-name|utp
-decl_stmt|;
 if|if
 condition|(
 name|time
@@ -594,6 +604,78 @@ name|statbf
 operator|.
 name|st_mtime
 expr_stmt|;
+if|if
+condition|(
+name|statbf
+operator|.
+name|st_size
+operator|>
+name|utmpsize
+condition|)
+block|{
+name|utmpsize
+operator|=
+name|statbf
+operator|.
+name|st_size
+operator|+
+literal|10
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|utmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|utmp
+condition|)
+name|utmp
+operator|=
+operator|(
+expr|struct
+name|utmp
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|utmp
+argument_list|,
+name|utmpsize
+argument_list|)
+expr_stmt|;
+else|else
+name|utmp
+operator|=
+operator|(
+expr|struct
+name|utmp
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|utmpsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|utmp
+condition|)
+block|{
+name|dprintf
+argument_list|(
+literal|"malloc failed\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|lseek
 argument_list|(
 name|uf
@@ -611,10 +693,9 @@ name|uf
 argument_list|,
 name|utmp
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|utmp
-argument_list|)
+name|statbf
+operator|.
+name|st_size
 argument_list|)
 operator|/
 sizeof|sizeof
