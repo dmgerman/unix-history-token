@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.10
+literal|3.11
 operator|%
 name|G
 operator|%
@@ -771,6 +771,19 @@ end_else
 begin_comment
 comment|/* 	**  Arrange to get this signal again. 	*/
 end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|reordersig
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 operator|(

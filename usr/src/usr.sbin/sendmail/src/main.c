@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.70
+literal|3.71
 operator|%
 name|G
 operator|%
@@ -1056,12 +1056,12 @@ name|TRUE
 expr_stmt|;
 name|QueueIntvl
 operator|=
-name|atoi
+name|convtime
 argument_list|(
 operator|&
 name|p
 index|[
-literal|1
+literal|2
 index|]
 argument_list|)
 expr_stmt|;
@@ -1294,24 +1294,44 @@ endif|DEBUG
 ifdef|#
 directive|ifdef
 name|DAEMON
-comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	*/
+comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	**	If we should also be processing the queue, start 	**	doing it in background. 	*/
 if|if
 condition|(
 name|Daemon
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|QUEUE
+if|if
+condition|(
+name|queuemode
+condition|)
+name|runqueue
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|QUEUE
 name|getrequests
 argument_list|()
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|DAEMON
 ifdef|#
 directive|ifdef
 name|SMTP
-comment|/* 	if (Smtp) 	{ # ifdef QUEUE 		if (queuemode) 			runqueue(TRUE); # endif QUEUE 		smtp(); 	} # endif SMTP  # ifdef QUEUE 	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
+comment|/* 	if (Smtp) 		smtp(); # endif SMTP  # ifdef QUEUE 	/* 	**  If collecting stuff from the queue, go start doing that. 	*/
 if|if
 condition|(
 name|queuemode
+operator|&&
+operator|!
+name|Daemon
 condition|)
 block|{
 name|runqueue
