@@ -15,11 +15,39 @@ directive|define
 name|_SYS_PCPU_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|LOCORE
 end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|"no assembler-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -38,12 +66,6 @@ include|#
 directive|include
 file|<machine/pcpu.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
 
 begin_struct_decl
 struct_decl|struct
@@ -164,13 +186,6 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|curthread
-value|PCPU_GET(curthread)
-end_define
-
-begin_define
-define|#
-directive|define
 name|CURPROC
 value|(curthread->td_proc)
 end_define
@@ -178,8 +193,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|curproc
-value|(curthread->td_proc)
+name|curkse
+value|(curthread->td_kse)
 end_define
 
 begin_define
@@ -192,12 +207,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|curkse
-value|(curthread->td_kse)
+name|curproc
+value|(curthread->td_proc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|curthread
+value|PCPU_GET(curthread)
 end_define
 
 begin_comment
-comment|/*  * MI PCPU support functions  *  * PCPU_LAZY_INC() -	Lazily increment a per-cpu stats counter, without  *			guarenteeing atomicy or even necessarily consistency.  *  *			XXX we need to create MD primitives to support  *			this to guarentee at least some level of consistency,  *			i.e. to prevent us from totally corrupting the   *			counters due to preemption in a multi-instruction  *			increment sequence for architectures that do not  *			support single-instruction memory increments.  */
+comment|/*  * MI PCPU support functions  *  * PCPU_LAZY_INC() -	Lazily increment a per-cpu stats counter, without  *			guarenteeing atomicity or even necessarily consistency.  *  *			XXX we need to create MD primitives to support  *			this to guarentee at least some level of consistency,  *			i.e., to prevent us from totally corrupting the   *			counters due to preemption in a multi-instruction  *			increment sequence for architectures that do not  *			support single-instruction memory increments.  */
 end_comment
 
 begin_define
@@ -292,25 +314,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !LOCORE */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _SYS_PCPU_H_ */
+comment|/* !_SYS_PCPU_H_ */
 end_comment
 
 end_unit
