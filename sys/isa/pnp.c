@@ -234,6 +234,19 @@ literal|0x800
 block|}
 block|,
 block|{
+literal|0xc5008c0e
+comment|/* SB64(CTL00c5) */
+block|,
+literal|0x22008c0e
+block|,
+name|PNP_QUIRK_EXTRA_IO
+block|,
+literal|0x400
+block|,
+literal|0x800
+block|}
+block|,
+block|{
 literal|0xe4008c0e
 comment|/* SB64(CTL00e4) */
 block|,
