@@ -542,7 +542,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|bootinfo_t
+name|bootinfo
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
@@ -1524,7 +1524,7 @@ name|int
 decl|2fh
 decl_stmt|;
 name|let
-literal|'s look if we have XMS 		cmp al,80h 		je wehaveit		; ok, we have it 		popa 	} 	return 0x110000l;		/* default load address */  no:	_asm popa 	return 0l;  	_asm { wehaveit:	mov ax,4310h 		int 2fh			; get xms entry point 		mov word ptr [xms_entry],bx 		mov word ptr [xms_entry+2],es  		mov ah,8h 		call [xms_entry]  		cmp ax,kb 		jb no  		mov dx,kb 		mov ah,9h 		call [xms_entry]	; get memory 		cmp ax,0 		je no			; sorry, no memory  		mov ah,0ch 		call [xms_entry]	; lock memory block (dx = handle) 		cmp ax,0 		je no 		mov lo,bx 		mov hi,dx 		popa 	} 	return (long)hi*0x10000l+(long)lo + 128l*1024l; }  void startprog(long hmaddress, long hmsize, long startaddr, long argv[]) { 	long GDTaddr=ptr2lin(FreeBSDGdt); 	long *stack=_MK_FP(0x9f00, 0);	/* prepare stack for starting the kernel */ 	unsigned int pmseg, pmoff; 	unsigned int segment, pcxoff, psioff; 	long h, BOOTaddr, ourret; 	unsigned char *page; 	int status;  	/* 	 * The MSVC 1.5 inline assembler is not able to work with 	 * 386 opcodes (ie. extended registers like eax). So we have 	 * to use a workaround (god save Micro$oft and their customers ;) 	 */  	_asm { 		mov segment,cs 		mov ax, offset our_return 		mov pmoff,ax 	} 	BOOTaddr = segment*0x10l; 	ourret = BOOTaddr + (long) pmoff;  	_asm { 		push ds  		mov ax,cs 		mov ds,ax 		mov bx,offset lab		; patch the far jump after 		mov byte ptr ds:[patch],bl	; switching gdt for FreeBSD 		mov byte ptr ds:[patch+1],bh  		mov bx,offset pcx 		mov pcxoff,bx 		mov bx,offset psi 		mov psioff,bx 		mov segment,ds  		pop ds 	}  	*((long *)_MK_FP(segment, pcxoff+1)) = hmsize; 	*((long *)_MK_FP(segment, psioff+1)) = hmaddress;  	h = ptr2lin(&VCPI);  	_asm { 		push ds 		mov ax,cs 		mov ds,ax  		mov bx,word ptr ss:[h] 		mov cx,word ptr ss:[h+2]  		mov byte ptr ds:[patch2+1],bl 		mov byte ptr ds:[patch2+2],bh 		mov byte ptr ds:[patch2+3],cl 		mov byte ptr ds:[patch2+4],ch  		pop ds 	}  	/* 	 * Setup the stack for executing the kernel. These parameters are 	 * put on the stack in reversed order (addresses are INCREMENTED)! 	 */  	*stack++ = startaddr;		/* that'
+literal|'s look if we have XMS 		cmp al,80h 		je wehaveit		; ok, we have it 		popa 	} 	return 0x110000l;		/* default load address */  no:	_asm popa 	return 0l;  	_asm { wehaveit:	mov ax,4310h 		int 2fh			; get xms entry point 		mov word ptr [xms_entry],bx 		mov word ptr [xms_entry+2],es  		mov ah,8h 		call [xms_entry]  		cmp ax,kb 		jb no  		mov dx,kb 		mov ah,9h 		call [xms_entry]	; get memory 		cmp ax,0 		je no			; sorry, no memory  		mov ah,0ch 		call [xms_entry]	; lock memory block (dx = handle) 		cmp ax,0 		je no 		mov lo,bx 		mov hi,dx 		popa 	} 	return (long)hi*0x10000l+(long)lo + 128l*1024l; }  void startprog(long hmaddress, long hmsize, long startaddr, long loadflags, 			   long bootdev) { 	long GDTaddr=ptr2lin(FreeBSDGdt); 	long *stack=_MK_FP(0x9f00, 0);	/* prepare stack for starting the kernel */ 	unsigned int pmseg, pmoff; 	unsigned int segment, pcxoff, psioff, pdioff; 	long h, BOOTaddr, ourret; 	unsigned char *page; 	int status;  	/* 	 * The MSVC 1.5 inline assembler is not able to work with 	 * 386 opcodes (ie. extended registers like eax). So we have 	 * to use a workaround (god save Micro$oft and their customers ;) 	 */  	_asm { 		mov segment,cs 		mov ax, offset our_return 		mov pmoff,ax 	} 	BOOTaddr = segment*0x10l; 	ourret = BOOTaddr + (long) pmoff;  	_asm { 		push ds  		mov ax,cs 		mov ds,ax 		mov bx,offset lab		; patch the far jump after 		mov byte ptr ds:[patch],bl	; switching gdt for FreeBSD 		mov byte ptr ds:[patch+1],bh  		mov bx,offset pcx 		mov pcxoff,bx 		mov bx,offset psi 		mov psioff,bx 		mov bx,offset pdi 		mov pdioff,bx 		mov segment,ds  		pop ds 	}  	*((long *)_MK_FP(segment, pcxoff+1)) = hmsize; 	*((long *)_MK_FP(segment, psioff+1)) = hmaddress; 	*((long *)_MK_FP(segment, pdioff+1)) = startaddr;  	h = ptr2lin(&VCPI);  	_asm { 		push ds 		mov ax,cs 		mov ds,ax  		mov bx,word ptr ss:[h] 		mov cx,word ptr ss:[h+2]  		mov byte ptr ds:[patch2+1],bl 		mov byte ptr ds:[patch2+2],bh 		mov byte ptr ds:[patch2+3],cl 		mov byte ptr ds:[patch2+4],ch  		pop ds 	}  	/* 	 * Setup the stack for executing the kernel. These parameters are 	 * put on the stack in reversed order (addresses are INCREMENTED)! 	 */  	*stack++ = startaddr;		/* that'
 name|s
 name|the
 name|startaddress
@@ -1548,20 +1548,14 @@ operator|*
 name|stack
 operator|++
 operator|=
-name|argv
-index|[
-literal|1
-index|]
+name|loadflags
 expr_stmt|;
 comment|/* howto */
 operator|*
 name|stack
 operator|++
 operator|=
-name|argv
-index|[
-literal|2
-index|]
+name|bootdev
 expr_stmt|;
 comment|/* bootdev */
 operator|*
@@ -2155,8 +2149,10 @@ name|_emit
 decl|0
 name|_emit
 decl|0
+name|pdi
+range|:
 name|_emit
-decl|0bfh
+literal|0bfh
 decl_stmt|;
 name|mov
 name|di

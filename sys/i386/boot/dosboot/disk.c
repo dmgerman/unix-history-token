@@ -58,6 +58,12 @@ directive|include
 file|"disklabe.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"diskslic.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -232,14 +238,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*#define EMBEDDED_DISKLABEL 1*/
-end_comment
-
-begin_comment
-comment|/*extern struct disklabel disklabel;*/
-end_comment
-
 begin_decl_stmt
 name|struct
 name|disklabel
@@ -324,7 +322,7 @@ operator|!
 name|We
 name|assume
 name|it
-literal|'s a floppy! 		; 		sub ax,ax 		mov bh,ah 		mov bl,2 		mov ch,79 		mov cl,15 		mov dh,1 		mov dl,1 	ok: 		mov ah,dh 		mov al,cl 		and al,3fh 		mov word ptr rt,ax  		xor bx,bx 		mov bl,cl 		and bl,0c0h 		shl bx,2 		mov bl,ch 		mov word ptr rt+2,bx 	} 	return rt; }  int devopen(void) { 	struct dos_partition *dptr; 	struct disklabel *dl; 	int dosdev = (int) inode.i_dev; 	int i; 	long di, sector; 	 	di = get_diskinfo(dosdev); 	spc = (spt = (int)SPT(di)) * (int)HEADS(di); 	if (dosdev == 2) 	{ 		boff = 0; 		part = (spt == 15 ? 3 : 1); 	} 	else 	{ #ifdef	EMBEDDED_DISKLABEL 		dl =&disklabel; #else	EMBEDDED_DISKLABEL 		Bread(dosdev, 0); 		dptr = (struct dos_partition *)(((char *)I_ADDR)+DOSPARTOFF); 		sector = LABELSECTOR; 		for (i = 0; i< NDOSPART; i++, dptr++) 			if (dptr->dp_typ == DOSPTYP_386BSD) { 				sector = dptr->dp_start + LABELSECTOR; 				slice = i+1; 				break; 			} 		Bread(dosdev, sector++); 		dl=((struct disklabel *)I_ADDR); 		disklabel = *dl;	/* structure copy (maybe useful later)*/ #endif	EMBEDDED_DISKLABEL 		if (dl->d_magic != DISKMAGIC) { 			printf("bad disklabel"); 			return 1; 		}  		if( (maj == 4) || (maj == 0) || (maj == 1)) { 			if (dl->d_type == DTYPE_SCSI) 				maj = 4; /* use scsi as boot dev */ 			else 				maj = 0; /* must be ESDI/IDE */ 		}  		boff = dl->d_partitions[part].p_offset; #ifdef DO_BAD144 		bsize = dl->d_partitions[part].p_size; 		do_bad144 = 0; 		if (dl->d_flags& D_BADSECT) { 		    /* this disk uses bad144 */ 		    int i; 		    long dkbbnum; 		    struct dkbad *dkbptr;  		    /* find the first readable bad144 sector */ 		    /* some of this code is copied from ufs/disk_subr.c */ 		    /* read a bad sector table */ 		    dkbbnum = dl->d_secperunit - dl->d_nsectors; 		    if (dl->d_secsize> DEV_BSIZE) 		      dkbbnum *= dl->d_secsize / DEV_BSIZE; 		    else 		      dkbbnum /= DEV_BSIZE / dl->d_secsize; 		    i = 0; 		    do_bad144 = 0; 		    do { 			/* XXX: what if the "DOS sector"< 512 bytes ??? */ 			Bread(dosdev, dkbbnum + i); 			dkbptr = (struct dkbad *) I_ADDR; /* XXX why is this not in<sys/dkbad.h> ??? */ #define DKBAD_MAGIC 0x4321 			if (dkbptr->bt_mbz == 0&& 			        dkbptr->bt_flag == DKBAD_MAGIC) { 			    dkb = *dkbptr;	/* structure copy */ 			    do_bad144 = 1; 			    break; 			} 			i += 2; 		    } while (i< 10&& (u_long) i< dl->d_nsectors); 		    if (!do_bad144) 		      printf("Bad badsect table\n"); 		    else 		      printf("Using bad144 bad sector at %ld\n", dkbbnum+i); 		} #endif 	} 	return 0; }  void devread(void) { 	long offset, sector = bnum; 	int dosdev = (int) inode.i_dev; 	for (offset = 0; offset< cnt; offset += BPS) 	{ 		Bread(dosdev, badsect(dosdev, sector++)); 		bcopy(I_ADDR, iodest+offset, BPS); 	} }  /* Read ahead buffer large enough for one track on a 1440K floppy.  For  * reading from floppies, the bootstrap has to be loaded on a 64K boundary  * to ensure that this buffer doesn'
+literal|'s a floppy! 		; 		sub ax,ax 		mov bh,ah 		mov bl,2 		mov ch,79 		mov cl,15 		mov dh,1 		mov dl,1 	ok: 		mov ah,dh 		mov al,cl 		and al,3fh 		mov word ptr rt,ax  		xor bx,bx 		mov bl,cl 		and bl,0c0h 		shl bx,2 		mov bl,ch 		mov word ptr rt+2,bx 	} 	return rt; }  int devopen(void) { 	struct dos_partition *dptr; 	struct disklabel *dl; 	int dosdev = (int) inode.i_dev; 	int i; 	long di, sector; 	 	di = get_diskinfo(dosdev); 	spc = (spt = (int)SPT(di)) * (int)HEADS(di); 	if (dosdev == 2) 	{ 		boff = 0; 		part = (spt == 15 ? 3 : 1); 	} 	else 	{ #ifdef	EMBEDDED_DISKLABEL 		dl =&disklabel; #else	EMBEDDED_DISKLABEL 		Bread(dosdev, 0); 		dptr = (struct dos_partition *)(((char *)I_ADDR)+DOSPARTOFF); 		sector = LABELSECTOR; 		slice = WHOLE_DISK_SLICE; 		for (i = 0; i< NDOSPART; i++, dptr++) 			if (dptr->dp_typ == DOSPTYP_386BSD) { 				slice = BASE_SLICE + i; 				sector = dptr->dp_start + LABELSECTOR; 				break; 			} 		Bread(dosdev, sector++); 		dl=((struct disklabel *)I_ADDR); 		disklabel = *dl;	/* structure copy (maybe useful later)*/ #endif	EMBEDDED_DISKLABEL 		if (dl->d_magic != DISKMAGIC) { 			printf("bad disklabel"); 			return 1; 		}  		if( (maj == 4) || (maj == 0) || (maj == 1)) { 			if (dl->d_type == DTYPE_SCSI) 				maj = 4; /* use scsi as boot dev */ 			else 				maj = 0; /* must be ESDI/IDE */ 		}  		boff = dl->d_partitions[part].p_offset; #ifdef DO_BAD144 		bsize = dl->d_partitions[part].p_size; 		do_bad144 = 0; 		if (dl->d_flags& D_BADSECT) { 		    /* this disk uses bad144 */ 		    int i; 		    long dkbbnum; 		    struct dkbad *dkbptr;  		    /* find the first readable bad sector table */ 		    /* some of this code is copied from ufs/ufs_disksubr.c */ 		    /* including the bugs :-( */ 		    /* read a bad sector table */  #define BAD144_PART	2	/* XXX scattered magic numbers */ #define BSD_PART	0	/* XXX should be 2 but bad144.c uses 0 */ 		    if (dl->d_partitions[BSD_PART].p_offset != 0) 			    dkbbnum = dl->d_partitions[BAD144_PART].p_offset 				      + dl->d_partitions[BAD144_PART].p_size; 		    else 			    dkbbnum = dl->d_secperunit; 		    dkbbnum -= dl->d_nsectors;  		    if (dl->d_secsize> DEV_BSIZE) 		      dkbbnum *= dl->d_secsize / DEV_BSIZE; 		    else 		      dkbbnum /= DEV_BSIZE / dl->d_secsize; 		    i = 0; 		    do_bad144 = 0; 		    do { 			/* XXX: what if the "DOS sector"< 512 bytes ??? */ 			Bread(dosdev, dkbbnum + i); 			dkbptr = (struct dkbad *) I_ADDR; /* XXX why is this not in<sys/dkbad.h> ??? */ #define DKBAD_MAGIC 0x4321 			if (dkbptr->bt_mbz == 0&& 			        dkbptr->bt_flag == DKBAD_MAGIC) { 			    dkb = *dkbptr;	/* structure copy */ 			    do_bad144 = 1; 			    break; 			} 			i += 2; 		    } while (i< 10&& (u_long) i< dl->d_nsectors); 		    if (!do_bad144) 		      printf("Bad badsect table\n"); 		    else 		      printf("Using bad144 bad sector at %ld\n", dkbbnum+i); 		} #endif 	} 	return 0; }  void devread(void) { 	long offset, sector = bnum; 	int dosdev = (int) inode.i_dev; 	for (offset = 0; offset< cnt; offset += BPS) 	{ 		Bread(dosdev, badsect(dosdev, sector++)); 		bcopy(I_ADDR, iodest+offset, BPS); 	} }  /* Read ahead buffer large enough for one track on a 1440K floppy.  For  * reading from floppies, the bootstrap has to be loaded on a 64K boundary  * to ensure that this buffer doesn'
 name|t
 name|cross
 name|a

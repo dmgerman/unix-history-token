@@ -7,7 +7,7 @@ begin_function_decl
 name|void
 name|dosboot
 parameter_list|(
-name|int
+name|long
 name|howto
 parameter_list|,
 name|char

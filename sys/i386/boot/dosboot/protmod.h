@@ -6,7 +6,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|struct
-name|bootinfo_t
+name|bootinfo
 name|bootinfo
 decl_stmt|;
 end_decl_stmt
@@ -58,8 +58,10 @@ name|long
 name|startaddr
 parameter_list|,
 name|long
-name|argv
-index|[]
+name|loadflags
+parameter_list|,
+name|long
+name|bootdev
 parameter_list|)
 function_decl|;
 end_function_decl

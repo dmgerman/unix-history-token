@@ -96,7 +96,7 @@ parameter_list|(
 name|int
 name|d
 parameter_list|,
-name|int
+name|long
 name|howto
 parameter_list|,
 name|char

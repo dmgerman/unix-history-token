@@ -162,6 +162,39 @@ begin_comment
 comment|/* print all potentially useful info */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RB_SERIAL
+value|0x1000
+end_define
+
+begin_comment
+comment|/* user serial port as console */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RB_CDROM
+value|0x2000
+end_define
+
+begin_comment
+comment|/* use cdrom as root */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RB_BOOTINFO
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* have `struct bootinfo *' arg */
+end_comment
+
 begin_comment
 comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  Except for that of the "magic  * number", each mask applies to the shifted value.  * Format:  *	 (4) (4) (4) (4)  (8)     (8)  *	--------------------------------  *	|MA | AD| CT| UN| PART  | TYPE |  *	--------------------------------  */
 end_comment
