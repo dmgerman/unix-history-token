@@ -137,6 +137,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|nis_isup
+parameter_list|(
+name|mnt_map
+modifier|*
+name|m
+parameter_list|,
+name|char
+modifier|*
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|nis_mtime
 parameter_list|(
 name|mnt_map
@@ -418,7 +433,7 @@ operator|==
 name|YP_TRUE
 condition|)
 block|{
-comment|/*      * Add to list of maps      */
+comment|/* add to list of maps */
 name|char
 modifier|*
 name|kp
@@ -457,14 +472,14 @@ argument_list|,
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/*      * We want more ...      */
+comment|/* we want more ... */
 return|return
 name|FALSE
 return|;
 block|}
 else|else
 block|{
-comment|/*      * NOMORE means end of map - otherwise log error      */
+comment|/* NOMORE means end of map - otherwise log error */
 if|if
 condition|(
 name|status
@@ -472,7 +487,7 @@ operator|!=
 name|YP_NOMORE
 condition|)
 block|{
-comment|/*        * Check what went wrong        */
+comment|/* check what went wrong */
 name|int
 name|e
 init|=
@@ -1359,6 +1374,12 @@ name|FALSE
 condition|)
 comment|/* terminate loop */
 break|break;
+comment|/*      * We have to manually free all char ** arguments to yp_first/yp_next      * outval must be freed *before* calling yp_next again, outkey can be      * freed as outkey_old *after* the call (this saves one call to      * strnsave).      */
+name|XFREE
+argument_list|(
+name|outval
+argument_list|)
+expr_stmt|;
 name|outkey_old
 operator|=
 name|outkey
@@ -1390,6 +1411,11 @@ name|outval
 argument_list|,
 operator|&
 name|outvallen
+argument_list|)
+expr_stmt|;
+name|XFREE
+argument_list|(
+name|outkey_old
 argument_list|)
 expr_stmt|;
 block|}

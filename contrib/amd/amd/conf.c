@@ -2334,6 +2334,29 @@ modifier|*
 name|val
 parameter_list|)
 block|{
+comment|/* check if map type exist */
+if|if
+condition|(
+operator|!
+name|mapc_type_exists
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"conf: no such map type \"%s\"\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|gopt
 operator|.
 name|map_type
@@ -3670,6 +3693,29 @@ modifier|*
 name|cfm
 parameter_list|)
 block|{
+comment|/* check if map type exist */
+if|if
+condition|(
+operator|!
+name|mapc_type_exists
+argument_list|(
+name|val
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"conf: no such map type \"%s\"\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 name|cfm
 operator|->
 name|cfm_type
