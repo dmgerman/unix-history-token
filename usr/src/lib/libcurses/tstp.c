@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tstp.c	5.7 (Berkeley) %G%"
+literal|"@(#)tstp.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,12 +59,12 @@ file|<unistd.h>
 end_include
 
 begin_comment
-comment|/*  * tstp --  *	Handle stop and start signals.  */
+comment|/*  * stop_signal_handler --  *	Handle stop signals.  */
 end_comment
 
 begin_function
 name|void
-name|tstp
+name|__stop_signal_handler
 parameter_list|(
 name|signo
 parameter_list|)
@@ -77,6 +77,8 @@ name|termios
 name|save
 decl_stmt|;
 name|sigset_t
+name|oset
+decl_stmt|,
 name|set
 decl_stmt|;
 comment|/* Get the current terminal state. */
@@ -91,27 +93,35 @@ name|save
 argument_list|)
 condition|)
 return|return;
-comment|/* Move the cursor to the end of the screen. */
-name|mvcur
+comment|/* 	 * Block every signal we can get our hands on.  This is because 	 * applications have timers going off that want to repaint the 	 * screen. 	 */
+operator|(
+name|void
+operator|)
+name|sigfillset
 argument_list|(
-literal|0
-argument_list|,
-name|COLS
-operator|-
-literal|1
-argument_list|,
-name|LINES
-operator|-
-literal|1
-argument_list|,
-literal|0
+operator|&
+name|set
 argument_list|)
 expr_stmt|;
-comment|/* End the window. */
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_BLOCK
+argument_list|,
+operator|&
+name|set
+argument_list|,
+operator|&
+name|oset
+argument_list|)
+expr_stmt|;
+comment|/* 	 * End the window, which also resets the terminal state to the 	 * original modes. 	 */
 name|endwin
 argument_list|()
 expr_stmt|;
-comment|/* Stop ourselves. */
+comment|/* Unblock SIGTSTP. */
 operator|(
 name|void
 operator|)
@@ -145,6 +155,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* Stop ourselves. */
 operator|(
 name|void
 operator|)
@@ -166,7 +177,7 @@ name|SIGTSTP
 argument_list|)
 expr_stmt|;
 comment|/* Time passes ... */
-comment|/* Reset the signal handler. */
+comment|/* Reset the curses SIGTSTP signal handler. */
 operator|(
 name|void
 operator|)
@@ -174,10 +185,10 @@ name|signal
 argument_list|(
 name|SIGTSTP
 argument_list|,
-name|tstp
+name|__stop_signal_handler
 argument_list|)
 expr_stmt|;
-comment|/* Reset the terminal state. */
+comment|/* Reset the terminal state its mode when we stopped. */
 operator|(
 name|void
 operator|)
@@ -192,9 +203,27 @@ name|save
 argument_list|)
 expr_stmt|;
 comment|/* Restart the screen. */
+name|__startwin
+argument_list|()
+expr_stmt|;
+comment|/* Repaint the screen. */
 name|wrefresh
 argument_list|(
 name|curscr
+argument_list|)
+expr_stmt|;
+comment|/* Reset the signals. */
+operator|(
+name|void
+operator|)
+name|sigprocmask
+argument_list|(
+name|SIG_SETMASK
+argument_list|,
+operator|&
+name|oset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
