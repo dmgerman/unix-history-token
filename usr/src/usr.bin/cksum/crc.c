@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crc.c	5.1 (Berkeley) %G%"
+literal|"@(#)crc.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,6 +658,8 @@ init|;
 name|nr
 operator|--
 condition|;
+operator|++
+name|p
 control|)
 block|{
 if|if
@@ -672,7 +674,6 @@ literal|24
 operator|^
 operator|*
 name|p
-operator|++
 operator|)
 condition|)
 block|{

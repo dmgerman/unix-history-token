@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cksum.c	5.2 (Berkeley) %G%"
+literal|"@(#)cksum.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -94,6 +100,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
 begin_function
 name|main
 parameter_list|(
@@ -131,6 +143,51 @@ name|char
 modifier|*
 name|fn
 decl_stmt|;
+name|int
+argument_list|(
+argument|*cfncn
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|void
+argument_list|(
+argument|*pfncn
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|unsigned
+name|long
+operator|)
+argument_list|)
+expr_stmt|;
+name|cfncn
+operator|=
+name|crc
+expr_stmt|;
+name|pfncn
+operator|=
+name|pcrc
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -142,7 +199,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|""
+literal|"o:"
 argument_list|)
 operator|)
 operator|!=
@@ -153,6 +210,61 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'o'
+case|:
+if|if
+condition|(
+operator|*
+name|optarg
+operator|==
+literal|'1'
+condition|)
+block|{
+name|cfncn
+operator|=
+name|csum1
+expr_stmt|;
+name|pfncn
+operator|=
+name|psum1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|optarg
+operator|==
+literal|'2'
+condition|)
+block|{
+name|cfncn
+operator|=
+name|csum2
+expr_stmt|;
+name|pfncn
+operator|=
+name|psum2
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cksum: illegal argument to -o option\n"
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+break|break;
 case|case
 literal|'?'
 case|:
@@ -239,7 +351,7 @@ block|}
 block|}
 if|if
 condition|(
-name|crc
+name|cfncn
 argument_list|(
 name|fd
 argument_list|,
@@ -274,18 +386,13 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|pfncn
 argument_list|(
-literal|"%lu %lu %s\n"
+name|fn
 argument_list|,
 name|val
 argument_list|,
 name|len
-argument_list|,
-name|fn
 argument_list|)
 expr_stmt|;
 operator|(
@@ -325,7 +432,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: cksum [file ...]\n"
+literal|"usage: cksum [-o 1 | 2] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
