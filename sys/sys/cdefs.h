@@ -1060,7 +1060,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This doesn't work in header files. But it may be better than nothing.  * The alternative is: #define __IDSTRING(name,string)  [nothing]  */
+comment|/*  * The following definition might not work well if used in header files,  * but it should be better than nothing.  If you want a "do nothing"  * version, then it should generate some harmless declaration, such as:  *    #define __IDSTRING(name,string)	struct __hack  */
 end_comment
 
 begin_define
@@ -1175,6 +1175,7 @@ name|__RCSID
 parameter_list|(
 name|s
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
@@ -1221,6 +1222,7 @@ name|__RCSID_SOURCE
 parameter_list|(
 name|s
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
@@ -1267,6 +1269,7 @@ name|__SCCSID
 parameter_list|(
 name|s
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
@@ -1313,6 +1316,7 @@ name|__COPYRIGHT
 parameter_list|(
 name|s
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
