@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.27 1999/12/31 02:49:14 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.30 2000/05/10 23:23:30 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -178,6 +178,42 @@ condition|)
 name|devmajor
 operator|=
 literal|13
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"vn"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|devmajor
+operator|=
+literal|43
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bcmp
+argument_list|(
+name|dname
+argument_list|,
+literal|"md"
+argument_list|,
+literal|2
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|devmajor
+operator|=
+literal|95
 expr_stmt|;
 else|else
 return|return
@@ -1062,7 +1098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove drive from the configuration.  * Caller must ensure that it isn't active  */
+comment|/*  * Remove drive from the configuration.  * Caller must ensure that it isn't active.  */
 end_comment
 
 begin_function
@@ -1086,12 +1122,15 @@ index|[
 name|driveno
 index|]
 decl_stmt|;
-name|int64_t
-name|nomagic
-init|=
-name|VINUM_NOMAGIC
+name|struct
+name|vinum_hdr
+modifier|*
+name|vhdr
 decl_stmt|;
-comment|/* no magic number */
+comment|/* buffer for header */
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|drive
@@ -1110,23 +1149,85 @@ name|state
 operator|==
 name|drive_up
 condition|)
-name|write_drive
+block|{
+name|vhdr
+operator|=
+operator|(
+expr|struct
+name|vinum_hdr
+operator|*
+operator|)
+name|Malloc
+argument_list|(
+name|VINUMHEADERLEN
+argument_list|)
+expr_stmt|;
+comment|/* allocate buffer */
+name|CHECKALLOC
+argument_list|(
+name|vhdr
+argument_list|,
+literal|"Can't allocate memory"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|read_drive
 argument_list|(
 name|drive
 argument_list|,
-comment|/* obliterate the magic, but leave a hint */
 operator|(
-name|char
+name|void
 operator|*
 operator|)
-operator|&
-name|nomagic
+name|vhdr
 argument_list|,
-literal|8
+name|VINUMHEADERLEN
 argument_list|,
 name|VINUM_LABEL_OFFSET
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|drive
+operator|->
+name|lasterror
+operator|=
+name|error
+expr_stmt|;
+else|else
+block|{
+name|vhdr
+operator|->
+name|magic
+operator|=
+name|VINUM_NOMAGIC
+expr_stmt|;
+comment|/* obliterate the magic, but leave the rest */
+name|write_drive
+argument_list|(
+name|drive
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|vhdr
+argument_list|,
+name|VINUMHEADERLEN
+argument_list|,
+name|VINUM_LABEL_OFFSET
+argument_list|)
+expr_stmt|;
+block|}
+name|Free
+argument_list|(
+name|vhdr
+argument_list|)
+expr_stmt|;
+block|}
 name|free_drive
 argument_list|(
 name|drive
@@ -3673,11 +3774,6 @@ comment|/* set if we have never configured before */
 name|int
 name|error
 decl_stmt|;
-name|struct
-name|nameidata
-name|nd
-decl_stmt|;
-comment|/* mount point credentials */
 name|char
 modifier|*
 name|config_text
@@ -4394,9 +4490,9 @@ name|LOG_ERR
 argument_list|,
 literal|"vinum: Config error on %s, aborting integration\n"
 argument_list|,
-name|nd
-operator|.
-name|ni_dirp
+name|drive
+operator|->
+name|devicename
 argument_list|)
 expr_stmt|;
 name|free_drive

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.10 2000/01/03 03:40:54 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998, 1999  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrevive.c,v 1.13 2000/05/10 22:43:01 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -565,10 +565,12 @@ name|plexblkno
 argument_list|,
 name|size
 argument_list|,
-literal|0
+name|rebuildparity
 argument_list|,
 operator|&
 name|lock
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* do the grunt work */
@@ -985,10 +987,6 @@ name|struct
 name|vinum_ioctl_msg
 modifier|*
 name|data
-parameter_list|,
-name|enum
-name|parityop
-name|op
 parameter_list|)
 block|{
 name|int
@@ -1003,9 +1001,6 @@ name|int
 name|size
 decl_stmt|;
 comment|/* I/O transfer size, bytes */
-name|int
-name|i
-decl_stmt|;
 name|int
 name|stripe
 decl_stmt|;
@@ -1025,9 +1020,8 @@ name|_ioctl_reply
 modifier|*
 name|reply
 decl_stmt|;
-name|u_int64_t
-modifier|*
-name|pstripep
+name|off_t
+name|pstripe
 decl_stmt|;
 comment|/* pointer to our stripe counter */
 name|struct
@@ -1035,15 +1029,30 @@ name|buf
 modifier|*
 name|pbp
 decl_stmt|;
-name|pbp
-operator|=
-name|NULL
-expr_stmt|;
+name|off_t
+name|errorloc
+decl_stmt|;
+comment|/* offset of parity error */
+name|enum
+name|parityop
+name|op
+decl_stmt|;
+comment|/* operation to perform */
 name|plexno
 operator|=
 name|data
 operator|->
 name|index
+expr_stmt|;
+name|op
+operator|=
+name|data
+operator|->
+name|op
+expr_stmt|;
+name|pbp
+operator|=
+name|NULL
 expr_stmt|;
 name|reply
 operator|=
@@ -1061,15 +1070,6 @@ operator|=
 name|EAGAIN
 expr_stmt|;
 comment|/* expect to repeat this call */
-name|reply
-operator|->
-name|msg
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 name|plex
 operator|=
 operator|&
@@ -1096,32 +1096,15 @@ name|EINVAL
 expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|op
-operator|==
-name|rebuildparity
-condition|)
-comment|/* point to our counter */
-name|pstripep
+name|pstripe
 operator|=
-operator|&
-name|plex
+name|data
 operator|->
-name|rebuildblock
-expr_stmt|;
-else|else
-name|pstripep
-operator|=
-operator|&
-name|plex
-operator|->
-name|checkblock
+name|offset
 expr_stmt|;
 name|stripe
 operator|=
-operator|*
-name|pstripep
+name|pstripe
 operator|/
 name|plex
 operator|->
@@ -1163,17 +1146,17 @@ name|parityrebuild
 argument_list|(
 name|plex
 argument_list|,
-operator|*
-name|pstripep
+name|pstripe
 argument_list|,
 name|size
 argument_list|,
 name|op
-operator|==
-name|checkparity
 argument_list|,
 operator|&
 name|lock
+argument_list|,
+operator|&
+name|errorloc
 argument_list|)
 expr_stmt|;
 comment|/* do the grunt work */
@@ -1183,10 +1166,28 @@ name|pbp
 operator|==
 name|NULL
 condition|)
+block|{
 comment|/* no buffer space */
+name|reply
+operator|->
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return;
 comment|/* chicken out */
+block|}
 comment|/*      * Now we have a result in the data buffer of      * the parity buffer header, which we have kept.      * Decide what to do with it.      */
+name|reply
+operator|->
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* until shown otherwise */
 if|if
 condition|(
 operator|(
@@ -1203,122 +1204,25 @@ block|{
 comment|/* no error */
 if|if
 condition|(
+operator|(
 name|op
 operator|==
-name|checkparity
+name|rebuildparity
+operator|)
+operator|||
+operator|(
+name|op
+operator|==
+name|rebuildandcheckparity
+operator|)
 condition|)
 block|{
-name|int
-modifier|*
-name|parity_buf
-decl_stmt|;
-name|int
-name|isize
-decl_stmt|;
-name|parity_buf
-operator|=
-operator|(
-name|int
-operator|*
-operator|)
-name|pbp
-operator|->
-name|b_data
-expr_stmt|;
-name|isize
-operator|=
-name|pbp
-operator|->
-name|b_bcount
-operator|/
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|isize
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|parity_buf
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
-block|{
-name|reply
-operator|->
-name|error
-operator|=
-name|EIO
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|reply
-operator|->
-name|msg
-argument_list|,
-literal|"Parity incorrect at offset 0x%lx\n"
-argument_list|,
-call|(
-name|u_long
-call|)
-argument_list|(
-operator|*
-name|pstripep
-operator|<<
-name|DEV_BSHIFT
-argument_list|)
-operator|*
-operator|(
-name|plex
-operator|->
-name|subdisks
-operator|-
-literal|1
-operator|)
-operator|+
-name|i
-operator|*
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-block|}
-else|else
-block|{
-comment|/* rebuildparity */
 name|pbp
 operator|->
 name|b_flags
 operator|&=
 operator|~
 name|B_READ
-expr_stmt|;
-name|pbp
-operator|->
-name|b_flags
-operator||=
-name|B_WRITE
 expr_stmt|;
 name|pbp
 operator|->
@@ -1347,10 +1251,58 @@ argument_list|(
 name|pbp
 argument_list|)
 expr_stmt|;
-comment|/* perform the I/O */
+comment|/* write the parity block */
 name|biowait
 argument_list|(
 name|pbp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+operator|(
+name|op
+operator|==
+name|checkparity
+operator|)
+operator|||
+operator|(
+name|op
+operator|==
+name|rebuildandcheckparity
+operator|)
+operator|)
+operator|&&
+operator|(
+name|errorloc
+operator|!=
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|op
+operator|==
+name|checkparity
+condition|)
+name|reply
+operator|->
+name|error
+operator|=
+name|EIO
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|reply
+operator|->
+name|msg
+argument_list|,
+literal|"Parity incorrect at offset 0x%llx\n"
+argument_list|,
+name|errorloc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1364,9 +1316,12 @@ name|EAGAIN
 condition|)
 block|{
 comment|/* still OK, */
-operator|*
-name|pstripep
-operator|+=
+name|plex
+operator|->
+name|checkblock
+operator|=
+name|pstripe
+operator|+
 operator|(
 name|pbp
 operator|->
@@ -1378,8 +1333,7 @@ expr_stmt|;
 comment|/* moved this much further down */
 if|if
 condition|(
-operator|*
-name|pstripep
+name|pstripe
 operator|>=
 name|SD
 index|[
@@ -1395,8 +1349,9 @@ name|sectors
 condition|)
 block|{
 comment|/* finished */
-operator|*
-name|pstripep
+name|plex
+operator|->
+name|checkblock
 operator|=
 literal|0
 expr_stmt|;
@@ -1406,6 +1361,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -1442,7 +1398,6 @@ argument_list|(
 name|pbp
 argument_list|)
 expr_stmt|;
-block|}
 name|unlockrange
 argument_list|(
 name|plexno
@@ -1454,7 +1409,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rebuild a parity stripe.  Return pointer to  * parity bp.  On return, the band is locked.  The  * caller must unlock the band and release the  * buffer header.  */
+comment|/*  * Rebuild a parity stripe.  Return pointer to  * parity bp.  On return,  *  * 1.  The band is locked.  The caller must unlock  *     the band and release the buffer header.  *  * 2.  All buffer headers except php have been  *     released.  The caller must release pbp.  *  * 3.  For checkparity and rebuildandcheckparity,  *     the parity is compared with the current  *     parity block.  If it's different, the  *     offset of the error is returned to  *     errorloc.  The caller can set the value of  *     the pointer to NULL if this is called for  *     rebuilding parity.  */
 end_comment
 
 begin_function
@@ -1474,15 +1429,19 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|int
-name|check
+name|enum
+name|parityop
+name|op
 parameter_list|,
-comment|/* 1 if only checking */
 name|struct
 name|rangelock
 modifier|*
 modifier|*
 name|lockp
+parameter_list|,
+name|off_t
+modifier|*
+name|errorloc
 parameter_list|)
 block|{
 name|int
@@ -1502,7 +1461,12 @@ name|int
 modifier|*
 name|parity_buf
 decl_stmt|;
-comment|/* the address supplied by geteblk */
+comment|/* buffer address for current parity block */
+name|int
+modifier|*
+name|newparity_buf
+decl_stmt|;
+comment|/* and for new parity block */
 name|int
 name|mysize
 decl_stmt|;
@@ -1518,6 +1482,10 @@ name|int
 name|psd
 decl_stmt|;
 comment|/* parity subdisk number */
+name|int
+name|newpsd
+decl_stmt|;
+comment|/* and "subdisk number" of new parity */
 name|struct
 name|buf
 modifier|*
@@ -1535,6 +1503,10 @@ name|int
 modifier|*
 name|sbuf
 decl_stmt|;
+name|int
+name|bufcount
+decl_stmt|;
+comment|/* number of buffers we need */
 name|stripe
 operator|=
 name|pstripe
@@ -1567,10 +1539,6 @@ comment|/* to keep the compiler happy */
 name|error
 operator|=
 literal|0
-expr_stmt|;
-name|pbp
-operator|=
-name|NULL
 expr_stmt|;
 comment|/*      * It's possible that the default transfer size      * we chose is not a factor of the stripe size.      * We *must* limit this operation to a single      * stripe, at least for RAID-5 rebuild, since      * the parity subdisk changes between stripes,      * so in this case we need to perform a short      * transfer.  Set variable mysize to reflect      * this.      */
 name|mysize
@@ -1608,6 +1576,21 @@ argument_list|)
 operator|)
 expr_stmt|;
 comment|/* number of ints in the buffer */
+name|bufcount
+operator|=
+name|plex
+operator|->
+name|subdisks
+operator|+
+literal|1
+expr_stmt|;
+comment|/* sd buffers plus result buffer */
+name|newpsd
+operator|=
+name|plex
+operator|->
+name|subdisks
+expr_stmt|;
 name|bpp
 operator|=
 operator|(
@@ -1618,9 +1601,7 @@ operator|*
 operator|)
 name|Malloc
 argument_list|(
-name|plex
-operator|->
-name|subdisks
+name|bufcount
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1631,7 +1612,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* array of pointers to bps */
-comment|/* First, issue requests for all subdisks in parallel */
+comment|/* First, build requests for all subdisks */
 for|for
 control|(
 name|sdno
@@ -1640,15 +1621,28 @@ literal|0
 init|;
 name|sdno
 operator|<
-name|plex
-operator|->
-name|subdisks
+name|bufcount
 condition|;
 name|sdno
 operator|++
 control|)
 block|{
 comment|/* for each subdisk */
+if|if
+condition|(
+operator|(
+name|sdno
+operator|!=
+name|psd
+operator|)
+operator|||
+operator|(
+name|op
+operator|!=
+name|rebuildparity
+operator|)
+condition|)
+block|{
 comment|/* Get a buffer header and initialize it. */
 name|s
 operator|=
@@ -1711,7 +1705,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"vinum: can't allocate buffer space\n"
+literal|"vinum: can't allocate buffer space for parity op.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1730,14 +1724,6 @@ name|sdno
 operator|==
 name|psd
 condition|)
-block|{
-name|pbp
-operator|=
-name|bpp
-index|[
-name|sdno
-index|]
-expr_stmt|;
 name|parity_buf
 operator|=
 operator|(
@@ -1753,17 +1739,25 @@ name|b_data
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|check
+name|sdno
+operator|==
+name|newpsd
 condition|)
-name|bzero
+comment|/* the new one? */
+name|bpp
+index|[
+name|sdno
+index|]
+operator|->
+name|b_dev
+operator|=
+name|VINUM_SD
 argument_list|(
-name|parity_buf
-argument_list|,
-name|mysize
+name|psd
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* write back to the parity SD */
+else|else
 name|bpp
 index|[
 name|sdno
@@ -1829,8 +1823,37 @@ name|b_blkno
 operator|=
 name|pstripe
 expr_stmt|;
-comment|/* read from here */
+comment|/* transfer from here */
 block|}
+block|}
+comment|/* Initialize result buffer */
+name|pbp
+operator|=
+name|bpp
+index|[
+name|newpsd
+index|]
+expr_stmt|;
+name|newparity_buf
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|bpp
+index|[
+name|newpsd
+index|]
+operator|->
+name|b_data
+expr_stmt|;
+name|bzero
+argument_list|(
+name|newparity_buf
+argument_list|,
+name|mysize
+argument_list|)
+expr_stmt|;
 comment|/*      * Now lock the stripe with the first non-parity      * bp as locking bp.      */
 operator|*
 name|lockp
@@ -1863,7 +1886,7 @@ argument_list|,
 name|plex
 argument_list|)
 expr_stmt|;
-comment|/*      * Then issue requests for all subdisks in      * parallel.  Don't transfer the parity stripe      * if we're rebuilding parity.  We have already      * initialized it to 0.      */
+comment|/*      * Then issue requests for all subdisks in      * parallel.  Don't transfer the parity stripe      * if we're rebuilding parity, unless we also      * want to check it.      */
 for|for
 control|(
 name|sdno
@@ -1880,7 +1903,7 @@ name|sdno
 operator|++
 control|)
 block|{
-comment|/* for each subdisk */
+comment|/* for each real subdisk */
 if|if
 condition|(
 operator|(
@@ -1889,7 +1912,11 @@ operator|!=
 name|psd
 operator|)
 operator|||
-name|check
+operator|(
+name|op
+operator|!=
+name|rebuildparity
+operator|)
 condition|)
 block|{
 name|BUF_LOCKINIT
@@ -1948,7 +1975,11 @@ operator|!=
 name|psd
 operator|)
 operator|||
-name|check
+operator|(
+name|op
+operator|!=
+name|rebuildparity
+operator|)
 condition|)
 block|{
 name|biowait
@@ -1980,45 +2011,15 @@ index|]
 operator|->
 name|b_error
 expr_stmt|;
-block|}
-block|}
-comment|/*      * Finally, do the xors.  To save time, we do      * the XOR wordwise.  This requires sectors to      * be a multiple of the length of an int, which      * is currently always the case.  We do this in      * a separate loop to avoid a race condition      * with the parity stripe.      */
-for|for
-control|(
-name|sdno
-operator|=
-literal|0
-init|;
-name|sdno
-operator|<
-name|plex
-operator|->
-name|subdisks
-condition|;
-name|sdno
-operator|++
-control|)
-block|{
-comment|/* for each subdisk */
+elseif|else
 if|if
 condition|(
-operator|(
 name|sdno
 operator|!=
 name|psd
-operator|)
-operator|||
-name|check
 condition|)
 block|{
-if|if
-condition|(
-name|error
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* still OK, */
+comment|/* update parity */
 name|sbuf
 operator|=
 operator|(
@@ -2050,7 +2051,7 @@ operator|(
 name|int
 operator|*
 operator|)
-name|parity_buf
+name|newparity_buf
 operator|)
 index|[
 name|i
@@ -2062,6 +2063,7 @@ name|i
 index|]
 expr_stmt|;
 comment|/* xor in the buffer */
+block|}
 block|}
 if|if
 condition|(
@@ -2091,6 +2093,104 @@ expr_stmt|;
 comment|/* give back our resources */
 block|}
 block|}
+comment|/*      * If we're checking, compare the calculated      * and the read parity block.  If they're      * different, return the plex-relative offset;      * otherwise return -1.      */
+if|if
+condition|(
+operator|(
+name|op
+operator|==
+name|checkparity
+operator|)
+operator|||
+operator|(
+name|op
+operator|==
+name|rebuildandcheckparity
+operator|)
+condition|)
+block|{
+operator|*
+name|errorloc
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* no error yet */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|isize
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|parity_buf
+index|[
+name|i
+index|]
+operator|!=
+name|newparity_buf
+index|[
+name|i
+index|]
+condition|)
+block|{
+operator|*
+name|errorloc
+operator|=
+call|(
+name|u_long
+call|)
+argument_list|(
+name|pstripe
+operator|<<
+name|DEV_BSHIFT
+argument_list|)
+operator|*
+operator|(
+name|plex
+operator|->
+name|subdisks
+operator|-
+literal|1
+operator|)
+operator|+
+name|i
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+block|}
+name|bpp
+index|[
+name|psd
+index|]
+operator|->
+name|b_flags
+operator||=
+name|B_INVAL
+expr_stmt|;
+name|brelse
+argument_list|(
+name|bpp
+index|[
+name|psd
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* give back our resources */
 block|}
 comment|/* release our resources */
 name|Free
@@ -2123,7 +2223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a subdisk by writing zeroes to the  * complete address space.  If check is set,  * check each transfer for correctness.  *  * Each call to this function writes (and maybe  * checks) a single block.  */
+comment|/*  * Initialize a subdisk by writing zeroes to the  * complete address space.  If verify is set,  * check each transfer for correctness.  *  * Each call to this function writes (and maybe  * checks) a single block.  */
 end_comment
 
 begin_function
@@ -2415,6 +2515,13 @@ name|LK_EXCLUSIVE
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_READ
+expr_stmt|;
 name|sdio
 argument_list|(
 name|bp

@@ -634,7 +634,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* have nothing to do with this */
 return|return;
 block|}
 comment|/* FALLTHROUGH */
@@ -938,11 +937,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vol
-operator|->
-name|reads
-operator|++
-expr_stmt|;
 name|plexno
 operator|=
 name|vol
@@ -1112,12 +1106,6 @@ name|vol
 operator|!=
 name|NULL
 condition|)
-block|{
-name|vol
-operator|->
-name|writes
-operator|++
-expr_stmt|;
 name|status
 operator|=
 name|build_write_request
@@ -1126,7 +1114,6 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* Not all the subdisks are up */
-block|}
 else|else
 block|{
 comment|/* plex I/O */
@@ -1269,9 +1256,6 @@ name|int
 name|reviveok
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|rqgroup
 modifier|*
@@ -1560,12 +1544,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * With the division of labour below (first count the requests, then      * issue them), it's possible that we don't need this splbio()      * protection.  But I'll try that some other time.      */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
+comment|/*      * We used to have an splbio() here anyway, out      * of superstition.  With the division of labour      * below (first count the requests, then issue      * them), it looks as if we don't need this      * splbio() protection.  In fact, as dillon      * points out, there's a race condition      * incrementing and decrementing rq->active and      * rqg->active.  This splbio() didn't help      * there, because the device strategy routine      * can sleep.  Solve this by putting shorter      * duration locks on the code.      */
+comment|/*      * This loop happens without any participation      * of the bottom half, so it requires no      * protection.      */
 for|for
 control|(
 name|rqg
@@ -1651,7 +1631,7 @@ operator|++
 expr_stmt|;
 comment|/* one more active request group */
 block|}
-comment|/* Now fire off the requests */
+comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish, so we need splbio() protection.      */
 for|for
 control|(
 name|rqg
@@ -1814,8 +1794,8 @@ name|vinum_conf
 operator|.
 name|active
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|VINUMDEBUG
 if|if
 condition|(
@@ -1933,11 +1913,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2149,15 +2124,15 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2379,15 +2354,15 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2533,15 +2508,15 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -2834,15 +2809,15 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -3565,7 +3540,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* subdisk is accessible, */
 name|bp
 operator|->
@@ -3581,7 +3555,6 @@ operator|.
 name|dev
 expr_stmt|;
 comment|/* drive device */
-block|}
 name|bp
 operator|->
 name|b_blkno
@@ -3803,12 +3776,6 @@ decl_stmt|;
 comment|/* user buffer */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|error
@@ -3819,6 +3786,12 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* free everything we're doing */
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
 name|biodone
 argument_list|(
 name|bp
@@ -3955,25 +3928,17 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|bp
 operator|->
 name|b_flags
 operator|&
 name|B_READ
+operator|)
+operator|==
+literal|0
 condition|)
-comment|/* reading, */
-name|set_sd_state
-argument_list|(
-name|sd
-operator|->
-name|sdno
-argument_list|,
-name|sd_crashed
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-else|else
+comment|/* writing, */
 name|set_sd_state
 argument_list|(
 name|sd
@@ -3985,18 +3950,30 @@ argument_list|,
 name|setstate_force
 argument_list|)
 expr_stmt|;
-block|}
-name|bp
+else|else
+name|set_sd_state
+argument_list|(
+name|sd
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
+name|sdno
+argument_list|,
+name|sd_crashed
+argument_list|,
+name|setstate_force
+argument_list|)
 expr_stmt|;
+block|}
 name|bp
 operator|->
 name|b_error
 operator|=
 name|EIO
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4018,15 +3995,15 @@ block|{
 comment|/* nothing to talk to, */
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|EIO
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4061,15 +4038,15 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|bp
-operator|->
 name|b_error
 operator|=
 name|ENOMEM
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
 expr_stmt|;
 name|biodone
 argument_list|(
@@ -4528,6 +4505,7 @@ operator|)
 comment|/* and it's not raw */
 operator|&&
 operator|(
+operator|(
 name|bp
 operator|->
 name|b_flags
@@ -4536,6 +4514,7 @@ name|B_READ
 operator|)
 operator|==
 literal|0
+operator|)
 comment|/* and it's a write */
 operator|&&
 operator|(
@@ -4941,6 +4920,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
