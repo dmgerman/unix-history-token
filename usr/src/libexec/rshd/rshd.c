@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.39 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.40 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1207,7 +1207,7 @@ name|cc
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c
@@ -1903,7 +1903,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"\0"
 argument_list|,
@@ -2817,7 +2817,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c
