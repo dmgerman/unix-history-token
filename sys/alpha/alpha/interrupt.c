@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_preemption.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -1777,9 +1771,6 @@ name|it_vector
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|PREEMPTION
 name|error
 operator|=
 name|ithread_schedule
@@ -1790,19 +1781,6 @@ operator|!
 name|cold
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|error
-operator|=
-name|ithread_schedule
-argument_list|(
-name|ithd
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|error
