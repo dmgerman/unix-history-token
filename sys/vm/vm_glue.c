@@ -84,6 +84,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|vm_pageout_free_min
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|avefree
 init|=
@@ -1638,13 +1645,6 @@ define|\
 value|(((p)->p_flag& (STRC|SSYS|SLOAD|SLOCK|SKEEP|SWEXIT|SPHYSIO)) == SLOAD)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|vm_pageout_free_min
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
 end_comment
@@ -1869,8 +1869,12 @@ operator|(
 name|swapinreq
 operator|&&
 name|vm_page_free_count
-operator|<
-name|vm_page_free_min
+operator|<=
+operator|(
+name|vm_page_free_reserved
+operator|+
+name|UPAGES
+operator|)
 operator|)
 condition|)
 block|{

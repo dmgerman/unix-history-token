@@ -4,7 +4,7 @@ comment|/*   * Copyright (c) 1991 Regents of the University of California.  * Al
 end_comment
 
 begin_comment
-comment|/*  * $Id$  */
+comment|/*  * $Id: vm_fault.c,v 1.12 1994/01/14 16:27:15 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2732,6 +2732,7 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* 	 * if there is no getmulti routine for this pager, then just allow 	 * one page to be read. 	 */
 if|if
 condition|(
 operator|!
@@ -2760,6 +2761,7 @@ return|return
 literal|1
 return|;
 block|}
+comment|/* 	 * try to do any readahead that we might have free pages for. 	 */
 name|rahead
 operator|=
 name|raheada
@@ -2786,6 +2788,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * if we don't have any free pages, then just read one page. 	 */
 if|if
 condition|(
 name|rahead
@@ -2982,7 +2985,7 @@ operator|)
 operator|/
 name|NBPG
 expr_stmt|;
-comment|/* see if we have space */
+comment|/* see if we have space (again) */
 if|if
 condition|(
 name|vm_page_free_count
@@ -3010,7 +3013,7 @@ name|vm_page_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * get our pages and block for them 		 */
+comment|/* 		 * get our pages and don't block for them 		 */
 for|for
 control|(
 name|i
@@ -3082,6 +3085,7 @@ literal|0
 condition|)
 break|break;
 block|}
+comment|/* 		 * if we could not get our block of pages, then 		 * free the readahead/readbehind pages. 		 */
 if|if
 condition|(
 name|i

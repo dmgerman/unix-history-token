@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  * from: @(#)swap_pager.c	7.4 (Berkeley) 5/7/91  *  * $Id: swap_pager.c,v 1.12 1994/01/14 16:27:12 davidg Exp $  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  * from: @(#)swap_pager.c	7.4 (Berkeley) 5/7/91  *  * $Id: swap_pager.c,v 1.13 1994/01/14 16:45:06 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -543,6 +543,8 @@ parameter_list|,
 name|size
 parameter_list|,
 name|prot
+parameter_list|,
+name|offset
 parameter_list|)
 name|caddr_t
 name|handle
@@ -553,6 +555,9 @@ name|size
 decl_stmt|;
 name|vm_prot_t
 name|prot
+decl_stmt|;
+name|vm_offset_t
+name|offset
 decl_stmt|;
 block|{
 specifier|register
@@ -1505,6 +1510,7 @@ specifier|static
 name|int
 name|in_reclaim
 decl_stmt|;
+comment|/*  * allow only one process to be in the swap_pager_reclaim subroutine  */
 name|s
 operator|=
 name|splbio
@@ -1859,6 +1865,7 @@ name|dstpager
 operator|->
 name|pg_data
 expr_stmt|;
+comment|/*  * remove the source pager from the swap_pager internal queue  */
 name|s
 operator|=
 name|splbio
@@ -1935,6 +1942,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/*  * clean all of the pages that are currently active and finished  */
 operator|(
 name|void
 operator|)
@@ -1950,7 +1958,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/*  * clear source block before destination object  */
+comment|/*  * clear source block before destination object  * (release allocated space)  */
 for|for
 control|(
 name|i
@@ -2066,6 +2074,7 @@ name|int
 modifier|*
 name|dstaddrp
 decl_stmt|;
+comment|/* 	 * see if the source has space allocated 	 */
 if|if
 condition|(
 name|srcaddrp
@@ -2076,6 +2085,7 @@ operator|!=
 name|SWB_EMPTY
 condition|)
 block|{
+comment|/* 		 * if the source is valid and the dest has no space, then 		 * copy the allocation from the srouce to the dest. 		 */
 if|if
 condition|(
 name|srcvalid
@@ -2095,6 +2105,7 @@ operator|&
 name|dstvalid
 argument_list|)
 expr_stmt|;
+comment|/* 				 * if the dest already has a valid block, deallocate the 				 * source block without copying. 				 */
 if|if
 condition|(
 operator|!
@@ -2171,6 +2182,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 		 * if the source is not empty at this point, then deallocate the space. 		 */
 if|if
 condition|(
 operator|*
@@ -2621,6 +2633,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * swap_pager_getmulti can get multiple pages.  */
+end_comment
+
 begin_function
 name|int
 name|swap_pager_getmulti
@@ -2673,6 +2689,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * swap_pager_getpage gets individual pages  */
+end_comment
 
 begin_function
 name|int
@@ -2728,6 +2748,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * swap_pager_putpage writes individual pages  */
+end_comment
 
 begin_function
 name|int
@@ -2885,6 +2909,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * _swap_pager_haspage returns TRUE if the pager has data that has  * been written out.    */
+end_comment
+
 begin_function
 specifier|static
 name|boolean_t
@@ -2999,6 +3027,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * swap_pager_haspage is the externally accessible version of  * _swap_pager_haspage above.  this routine takes a vm_pager_t  * for an argument instead of sw_pager_t.  */
+end_comment
+
 begin_function
 name|boolean_t
 name|swap_pager_haspage
@@ -3030,6 +3062,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * swap_pager_freepage is a convienience routine that clears the busy  * bit and deallocates a page.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -3053,6 +3089,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * swap_pager_ridpages is a convienience routine that deallocates all  * but the required page.  this is usually used in error returns that  * need to invalidate the "extra" readahead pages.  */
+end_comment
 
 begin_function
 specifier|static
@@ -3129,6 +3169,10 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * swap_pager_iodone1 is the completion routine for both reads and async writes  */
+end_comment
 
 begin_function
 name|void
@@ -3774,6 +3818,7 @@ name|first
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * at this point: 	 * "m" is a pointer to the array of vm_page_t for paging I/O 	 * "count" is the number of vm_page_t entries represented by "m" 	 * "object" is the vm_object_t for I/O 	 * "reqpage" is the index into "m" for the page actually faulted 	 */
 comment|/* 	 * For reads (pageins) and synchronous writes, we clean up 	 * all completed async pageouts. 	 */
 if|if
 condition|(
@@ -3831,7 +3876,7 @@ name|kva
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * we allocate a new kva for transfers> 1 page 	 * but for transfers == 1 page, the swap_pager_free list contains 	 * entries that have pre-allocated kva's 	 */
+comment|/* 	 * we allocate a new kva for transfers> 1 page 	 * but for transfers == 1 page, the swap_pager_free list contains 	 * entries that have pre-allocated kva's (for efficiency). 	 */
 if|if
 condition|(
 operator|(
@@ -3863,6 +3908,7 @@ operator|!
 name|kva
 condition|)
 block|{
+comment|/* 		 * if a kva has not been allocated, we can only do a one page transfer, 		 * so we free the other pages that might have been allocated by vm_fault. 		 */
 for|for
 control|(
 name|i
@@ -4034,6 +4080,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/* 		 * if any other pages have been allocated in this block, we 		 * only try to get one page. 		 */
 for|for
 control|(
 name|i
@@ -4152,6 +4199,7 @@ index|]
 argument_list|)
 condition|)
 block|{
+comment|/* 				 * if the allocation has failed, we try to reclaim space and 				 * retry. 				 */
 if|if
 condition|(
 operator|++
@@ -4167,6 +4215,7 @@ goto|goto
 name|retrygetspace
 goto|;
 block|}
+comment|/* 				 * here on swap space full. 				 */
 if|if
 condition|(
 name|spc
@@ -4228,6 +4277,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * map our page(s) into kva for I/O 	 */
 for|for
 control|(
 name|i
@@ -4269,6 +4319,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * get the base I/O offset into the swap file 	 */
 name|off
 operator|=
 name|swap_pager_block_offset
@@ -4499,6 +4550,7 @@ index|[
 name|reqpage
 index|]
 expr_stmt|;
+comment|/* 		 * the completion routine for async writes 		 */
 name|bp
 operator|->
 name|b_flags
@@ -4525,6 +4577,7 @@ name|bp
 operator|->
 name|b_bcount
 expr_stmt|;
+comment|/* 		 * allow the struct buf to refer back to the spc 		 */
 name|bp
 operator|->
 name|b_spc
@@ -4552,6 +4605,7 @@ argument_list|,
 name|spc_list
 argument_list|)
 expr_stmt|;
+comment|/* 		 * we remember that we have used a block for paging. 		 */
 name|swb
 operator|->
 name|swb_valid
@@ -4565,6 +4619,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * here for sync write or any read 		 */
 if|if
 condition|(
 operator|(
@@ -4576,6 +4631,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 			 * if we are writing, we remember that we have 			 * actually used a block for paging. 			 */
 name|swb
 operator|->
 name|swb_valid
@@ -4600,6 +4656,7 @@ name|sw_piip
 operator|++
 expr_stmt|;
 block|}
+comment|/* 		 * the completion routine for reads and sync writes 		 */
 name|bp
 operator|->
 name|b_flags
@@ -4613,6 +4670,7 @@ operator|=
 name|swap_pager_iodone1
 expr_stmt|;
 block|}
+comment|/* 	 * perform the I/O 	 */
 name|VOP_STRATEGY
 argument_list|(
 name|bp
@@ -4665,6 +4723,7 @@ name|VM_PAGER_PEND
 operator|)
 return|;
 block|}
+comment|/* 	 * wait for the sync I/O to complete 	 */
 while|while
 condition|(
 operator|(
@@ -4800,6 +4859,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * release the physical I/O buffer 	 */
 name|relpbuf
 argument_list|(
 name|bp
@@ -4810,6 +4870,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+comment|/* 	 * remove the mapping for kernel virtual 	 */
 name|pmap_remove
 argument_list|(
 name|vm_map_pmap
@@ -4826,6 +4887,7 @@ operator|*
 name|NBPG
 argument_list|)
 expr_stmt|;
+comment|/* 	 * if we have written the page, then indicate that the page 	 * is clean. 	 */
 if|if
 condition|(
 operator|(
@@ -4861,6 +4923,7 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * optimization, if a page has been read during the 		 * pageout process, we activate it. 		 */
 if|if
 condition|(
 name|pmap_is_referenced
@@ -4882,23 +4945,13 @@ name|reqpage
 index|]
 argument_list|)
 expr_stmt|;
-name|pmap_clear_reference
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-index|[
-name|reqpage
-index|]
-argument_list|)
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
 name|spc
 condition|)
 block|{
+comment|/* 		 * if we have used an spc, we need to free it. 		 */
 name|queue_enter
 argument_list|(
 operator|&
@@ -5310,6 +5363,7 @@ operator||=
 name|PG_CLEAN
 expr_stmt|;
 block|}
+comment|/* 	 * if a page has been read during pageout, then 	 * we activate the page. 	 */
 if|if
 condition|(
 name|pmap_is_referenced
@@ -5325,14 +5379,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_clear_reference
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* 	 * we wakeup any processes that are waiting on 	 * this page. 	 */
 name|PAGE_WAKEUP
 argument_list|(
 name|m
@@ -5358,15 +5405,6 @@ operator|->
 name|wire_count
 operator|==
 literal|0
-operator|&&
-operator|!
-name|pmap_is_wired
-argument_list|(
-name|VM_PAGE_TO_PHYS
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
 condition|)
 block|{
 name|pmap_page_protect
