@@ -103,6 +103,23 @@ directive|include
 file|<machine/sysarch.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
