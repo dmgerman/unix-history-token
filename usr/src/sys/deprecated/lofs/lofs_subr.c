@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_subr.c	1.1 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_subr.c	1.2 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -266,11 +266,10 @@ endif|#
 directive|endif
 name|MALLOC
 argument_list|(
-name|vp
-operator|->
-name|v_data
+name|a
 argument_list|,
-name|void
+expr|struct
+name|lofsnode
 operator|*
 argument_list|,
 sizeof|sizeof
@@ -285,27 +284,23 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|a
-operator|=
-name|LOFSP
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|a
 operator|->
 name|a_vnode
 operator|=
 name|vp
+expr_stmt|;
+name|vp
+operator|->
+name|v_data
+operator|=
+name|a
 expr_stmt|;
 name|VREF
 argument_list|(
 name|targetvp
 argument_list|)
 expr_stmt|;
-name|LOFSP
-argument_list|(
-name|vp
-argument_list|)
+name|a
 operator|->
 name|a_lofsvp
 operator|=
