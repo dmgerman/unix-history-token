@@ -2178,10 +2178,18 @@ block|}
 endif|#
 directive|endif
 comment|/* SYS_WINNT */
+name|memcpy
+argument_list|(
+operator|&
 name|ifreq
-operator|=
-operator|*
+argument_list|,
 name|ifr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ifreq
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|inter_list
 index|[
