@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)kbd.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1334,6 +1334,15 @@ name|s
 decl_stmt|,
 name|rr
 decl_stmt|;
+name|tp
+operator|=
+operator|&
+name|kbd_tty
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* Keyboard */
 name|rr
 operator|=
 name|siogetreg
@@ -1354,15 +1363,6 @@ name|sio
 operator|->
 name|sio_data
 expr_stmt|;
-name|tp
-operator|=
-operator|&
-name|kbd_tty
-index|[
-literal|0
-index|]
-expr_stmt|;
-comment|/* Keyboard */
 if|if
 condition|(
 operator|(
@@ -1392,6 +1392,56 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|rr
+operator|=
+name|siogetreg
+argument_list|(
+name|sio
+argument_list|)
+operator|)
+operator|&
+name|RR_RXRDY
+condition|)
+block|{
+name|code
+operator|=
+name|sio
+operator|->
+name|sio_data
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ISOPEN
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|(
+operator|*
+name|linesw
+index|[
+name|tp
+operator|->
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+name|code
+operator|,
+name|tp
+operator|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
