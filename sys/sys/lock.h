@@ -15,16 +15,6 @@ directive|define
 name|_SYS_LOCK_H_
 end_define
 
-begin_comment
-comment|/*  * XXX - compatability until lockmgr() goes away or all the #includes are  * updated.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lockmgr.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -36,6 +26,12 @@ include|#
 directive|include
 file|<sys/_lock.h>
 end_include
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Lock classes.  Each lock has a class which describes characteristics  * common to all types of locks of a given class.  *  * Spin locks in general must always protect against preemption, as it is  * an error to perform any type of context switch while holding a spin lock.  * Also, for an individual lock to be recursable, its class must allow  * recursion and the lock itself must explicitly allow recursion.  */
