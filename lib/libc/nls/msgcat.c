@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msgcat.c,v 1.10 1997/05/10 04:28:17 ache Exp $ */
+comment|/*	$Id: msgcat.c,v 1.11 1997/05/10 04:40:40 ache Exp $ */
 end_comment
 
 begin_comment
@@ -329,9 +329,14 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+ifndef|#
+directive|ifndef
+name|__NETBSD_SYSCALLS
 operator|||
 name|issetugid
 argument_list|()
+endif|#
+directive|endif
 condition|)
 name|nlspath
 operator|=

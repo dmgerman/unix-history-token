@@ -283,10 +283,15 @@ condition|(
 name|p
 operator|!=
 name|NULL
+ifndef|#
+directive|ifndef
+name|__NETBSD_SYSCALLS
 operator|&&
 operator|!
 name|issetugid
 argument_list|()
+endif|#
+directive|endif
 condition|)
 block|{
 if|if
