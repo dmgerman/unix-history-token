@@ -329,6 +329,13 @@ argument_list|)
 operator|)
 condition|)
 break|break;
+name|argv
+index|[
+name|MAX_ARGS
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 if|#
 directive|if
 name|WANT_GLOBBING
