@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,9 +486,19 @@ condition|)
 goto|goto
 name|state2
 goto|;
-else|else
+elseif|else
+if|if
+condition|(
+name|state
+operator|==
+literal|3
+condition|)
 goto|goto
 name|state3
+goto|;
+else|else
+goto|goto
+name|state4
 goto|;
 block|}
 name|handler
@@ -578,7 +588,12 @@ literal|".profile"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
+name|state2
+label|:
+name|state
+operator|=
+literal|3
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -590,30 +605,35 @@ operator|&&
 operator|(
 name|shinit
 operator|=
-name|getenv
+name|lookupvar
 argument_list|(
-literal|"SHINIT"
+literal|"ENV"
 argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|shinit
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|state
 operator|=
-literal|2
+literal|3
 expr_stmt|;
-name|evalstring
+name|read_profile
 argument_list|(
 name|shinit
 argument_list|)
 expr_stmt|;
 block|}
-name|state2
+name|state3
 label|:
 name|state
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -635,8 +655,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|state3
+name|state4
 label|:
+comment|/* XXX ??? - why isn't this before the "if" statement */
 name|cmdloop
 argument_list|(
 literal|1
@@ -769,6 +790,9 @@ condition|(
 name|Iflag
 operator|==
 literal|0
+operator|||
+operator|!
+name|top
 operator|||
 name|numeof
 operator|>=
