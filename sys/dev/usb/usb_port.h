@@ -104,6 +104,15 @@ end_define
 begin_typedef
 typedef|typedef
 name|struct
+name|proc
+modifier|*
+name|usb_proc_ptr
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
 name|device
 modifier|*
 name|device_ptr_t
@@ -445,6 +454,15 @@ directive|define
 name|Static
 value|static
 end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|proc
+modifier|*
+name|usb_proc_ptr
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -889,6 +907,15 @@ directive|define
 name|DECLARE_USB_DMA_T
 value|typedef char * usb_dma_t
 end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|proc
+modifier|*
+name|usb_proc_ptr
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* XXX Change this when FreeBSD has memset */
