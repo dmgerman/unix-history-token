@@ -4937,13 +4937,7 @@ argument_list|(
 name|kbdc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* 	 * Even if the keyboard doesn't seem to be present (err != 0), 	 * we shall enable the keyboard port and interrupt so that 	 * the driver will be operable when the keyboard is attached 	 * to the system later.  It is NOT recommended to hot-plug 	 * the AT keyboard, but many people do so... 	 */
 name|kbdc_set_device_mask
 argument_list|(
 name|kbdc
@@ -4953,27 +4947,23 @@ operator||
 name|KBD_KBD_CONTROL_BITS
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+name|setup_kbd_port
+argument_list|(
+name|kbdc
+argument_list|,
+name|TRUE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (err == 0) { 		kbdc_set_device_mask(kbdc, m | KBD_KBD_CONTROL_BITS); 	} else {
 comment|/* try to restore the command byte as before */
-name|set_controller_command_byte
-argument_list|(
-name|kbdc
-argument_list|,
-literal|0xff
-argument_list|,
-name|c
-argument_list|)
-expr_stmt|;
-name|kbdc_set_device_mask
-argument_list|(
-name|kbdc
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-block|}
+block|set_controller_command_byte(kbdc, 0xff, c); 		kbdc_set_device_mask(kbdc, m); 	}
+endif|#
+directive|endif
 name|kbdc_lock
 argument_list|(
 name|kbdc
