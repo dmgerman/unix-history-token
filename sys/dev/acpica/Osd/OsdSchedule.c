@@ -178,12 +178,18 @@ condition|(
 name|Priority
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|case OSD_PRIORITY_GPE: 	at->at_task.ta_priority = 4; 	break;
-endif|#
-directive|endif
+case|case
+name|OSD_PRIORITY_GPE
+case|:
+name|at
+operator|->
+name|at_task
+operator|.
+name|ta_priority
+operator|=
+literal|4
+expr_stmt|;
+break|break;
 case|case
 name|OSD_PRIORITY_HIGH
 case|:
