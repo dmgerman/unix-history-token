@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	5.11 (Berkeley) %G%"
+literal|"@(#)finger.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,37 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<lastlog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -126,6 +96,36 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -324,32 +324,6 @@ end_struct
 
 begin_decl_stmt
 name|char
-name|LASTLOG
-index|[]
-init|=
-literal|"/usr/adm/lastlog"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* last login info */
-end_comment
-
-begin_decl_stmt
-name|char
-name|USERLOG
-index|[]
-init|=
-literal|"/etc/utmp"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* who is logged in */
-end_comment
-
-begin_decl_stmt
-name|char
 name|PLAN
 index|[]
 init|=
@@ -507,7 +481,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* LASTLOG file descriptor */
+comment|/* _PATH_LASTLOG file descriptor */
 end_comment
 
 begin_decl_stmt
@@ -808,7 +782,7 @@ name|uf
 operator|=
 name|open
 argument_list|(
-name|USERLOG
+name|_PATH_UTMP
 argument_list|,
 literal|0
 argument_list|)
@@ -823,7 +797,7 @@ name|stderr
 argument_list|,
 literal|"finger: error opening %s\n"
 argument_list|,
-name|USERLOG
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -837,13 +811,8 @@ condition|(
 name|unquick
 condition|)
 block|{
-extern|extern _pw_stayopen;
 name|setpwent
 argument_list|()
-expr_stmt|;
-name|_pw_stayopen
-operator|=
-literal|1
 expr_stmt|;
 name|fwopen
 argument_list|()
@@ -1271,11 +1240,6 @@ operator|!
 name|match
 condition|)
 block|{
-extern|extern _pw_stayopen;
-name|_pw_stayopen
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|p
@@ -1490,7 +1454,7 @@ name|uf
 operator|=
 name|open
 argument_list|(
-name|USERLOG
+name|_PATH_UTMP
 argument_list|,
 literal|0
 argument_list|)
@@ -1505,7 +1469,7 @@ name|stderr
 argument_list|,
 literal|"finger: error opening %s\n"
 argument_list|,
-name|USERLOG
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4299,7 +4263,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * find the last log in of a user by checking the LASTLOG file.  * the entry is indexed by the uid, so this can only be done if  * the uid is known (which it isn't in quick mode)  */
+comment|/*  * find the last log in of a user by checking the _PATH_LASTLOG file.  * the entry is indexed by the uid, so this can only be done if  * the uid is known (which it isn't in quick mode)  */
 end_comment
 
 begin_macro
@@ -4316,7 +4280,7 @@ name|lf
 operator|=
 name|open
 argument_list|(
-name|LASTLOG
+name|_PATH_LASTLOG
 argument_list|,
 literal|0
 argument_list|)
@@ -4330,7 +4294,7 @@ name|stderr
 argument_list|,
 literal|"finger: %s open error\n"
 argument_list|,
-name|LASTLOG
+name|_PATH_LASTLOG
 argument_list|)
 expr_stmt|;
 block|}
@@ -4476,7 +4440,7 @@ name|stderr
 argument_list|,
 literal|"finger: %s read error\n"
 argument_list|,
-name|LASTLOG
+name|_PATH_LASTLOG
 argument_list|)
 expr_stmt|;
 name|pers
@@ -4557,7 +4521,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * find the idle time of a user by doing a stat on /dev/tty??,  * where tty?? has been gotten from USERLOG, supposedly.  */
+comment|/*  * find the idle time of a user by doing a stat on /dev/tty??,  * where tty?? has been gotten from _PATH_UTMP, supposedly.  */
 end_comment
 
 begin_expr_stmt
@@ -4586,7 +4550,7 @@ index|[
 literal|20
 index|]
 init|=
-literal|"/dev/"
+name|_PATH_DEV
 decl_stmt|;
 name|long
 name|t
