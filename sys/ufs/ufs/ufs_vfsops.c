@@ -567,7 +567,6 @@ name|ufhp
 parameter_list|,
 name|vpp
 parameter_list|)
-specifier|register
 name|struct
 name|mount
 modifier|*
@@ -585,7 +584,6 @@ modifier|*
 name|vpp
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|inode
 modifier|*
