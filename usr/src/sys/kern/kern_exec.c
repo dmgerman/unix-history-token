@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exec.c	6.7	84/08/29	*/
+comment|/*	kern_exec.c	6.8	84/11/20	*/
 end_comment
 
 begin_include
@@ -1902,6 +1902,26 @@ name|pagi
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flag
+operator|&
+name|IXMOD
+condition|)
+block|{
+comment|/* XXX */
+name|u
+operator|.
+name|u_error
+operator|=
+name|ETXTBSY
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 if|if
 condition|(
 name|ep

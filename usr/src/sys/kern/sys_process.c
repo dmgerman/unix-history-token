@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_process.c	6.2	84/08/29	*/
+comment|/*	sys_process.c	6.3	84/11/20	*/
 end_comment
 
 begin_include
@@ -679,10 +679,10 @@ operator|->
 name|x_iptr
 operator|->
 name|i_flag
-operator|&=
-operator|~
-name|ITEXT
+operator||=
+name|IXMOD
 expr_stmt|;
+comment|/* XXX */
 block|}
 name|i
 operator|=
