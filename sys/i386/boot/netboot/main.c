@@ -182,10 +182,6 @@ block|{
 name|int
 name|c
 decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
 specifier|extern
 name|char
 name|edata
@@ -194,23 +190,14 @@ decl_stmt|,
 name|end
 index|[]
 decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
+name|bzero
+argument_list|(
 name|edata
-init|;
-name|p
-operator|<
+argument_list|,
 name|end
-condition|;
-name|p
-operator|++
-control|)
-operator|*
-name|p
-operator|=
-literal|0
+operator|-
+name|edata
+argument_list|)
 expr_stmt|;
 comment|/* Zero BSS */
 ifdef|#
@@ -223,7 +210,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n\rBoot from Network (Y/N) ? "
+literal|"\nBoot from Network (Y/N) ? "
 argument_list|)
 expr_stmt|;
 name|c
@@ -320,12 +307,8 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\nBOOTP/TFTP/NFS bootstrap loader    ESC for menu\n\r"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\r\nSearching for adapter..."
+literal|"\nBOOTP/TFTP/NFS bootstrap loader    ESC for menu\n"
+literal|"\nSearching for adapter..."
 argument_list|)
 expr_stmt|;
 if|if
@@ -337,7 +320,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"No adapter found.\r\n"
+literal|"No adapter found.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -520,10 +503,21 @@ name|addr
 decl_stmt|,
 name|broadcast
 decl_stmt|;
+name|int
+name|swsize
+decl_stmt|;
 name|unsigned
 name|long
 name|pad
 decl_stmt|;
+name|config_buffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* clear; bootp might fill this up */
 comment|/* Initialize this early on */
 name|nfsdiskless
 operator|.
@@ -575,6 +569,8 @@ operator|(
 name|NFSMNT_WSIZE
 operator||
 name|NFSMNT_RSIZE
+operator||
+name|NFSMNT_RESVPORT
 operator|)
 expr_stmt|;
 name|nfsdiskless
@@ -595,6 +591,8 @@ operator|(
 name|NFSMNT_WSIZE
 operator||
 name|NFSMNT_RSIZE
+operator||
+name|NFSMNT_RESVPORT
 operator|)
 expr_stmt|;
 comment|/* Find a server to get BOOTP reply from */
@@ -682,6 +680,20 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*** check if have got info from bootp ***/
+if|if
+condition|(
+name|config_buffer
+index|[
+literal|0
+index|]
+condition|)
+goto|goto
+name|cfg_done
+goto|;
+ifndef|#
+directive|ifndef
+name|NO_TFTP
 comment|/* Now use TFTP to load configuration file */
 name|sprintf
 argument_list|(
@@ -769,6 +781,9 @@ condition|)
 goto|goto
 name|cfg_done
 goto|;
+endif|#
+directive|endif
+comment|/* not found; using default values... */
 name|sprintf
 argument_list|(
 name|config_buffer
@@ -1290,6 +1305,9 @@ operator|&
 name|nfsdiskless
 operator|.
 name|swap_fh
+argument_list|,
+operator|&
+name|swsize
 argument_list|)
 condition|)
 block|{
@@ -1310,6 +1328,32 @@ argument_list|(
 name|jmp_bootmenu
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|nfsdiskless
+operator|.
+name|swap_nblks
+condition|)
+block|{
+name|nfsdiskless
+operator|.
+name|swap_nblks
+operator|=
+name|swsize
+operator|/
+literal|1024
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Swap size is: %d blocks\n"
+argument_list|,
+name|nfsdiskless
+operator|.
+name|swap_nblks
 argument_list|)
 expr_stmt|;
 block|}
@@ -1570,6 +1614,8 @@ name|kernel
 argument_list|,
 operator|&
 name|kernel_handle
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3700,6 +3746,69 @@ return|;
 block|}
 end_block
 
+begin_function
+name|void
+name|bootp_string
+parameter_list|(
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|char
+modifier|*
+name|bootp_ptr
+parameter_list|)
+block|{
+name|char
+name|tmp_buf
+index|[
+literal|512
+index|]
+decl_stmt|;
+comment|/* oversized, but who cares ! */
+name|bzero
+argument_list|(
+name|tmp_buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tmp_buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|bootp_ptr
+operator|+
+literal|2
+argument_list|,
+name|tmp_buf
+argument_list|,
+name|TAG_LEN
+argument_list|(
+name|bootp_ptr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|config_buffer
+operator|+
+name|strlen
+argument_list|(
+name|config_buffer
+argument_list|)
+argument_list|,
+literal|"%s %s\n"
+argument_list|,
+name|name
+argument_list|,
+name|tmp_buf
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/************************************************************************** DECODE_RFC1048 - Decodes RFC1048 header **************************************************************************/
 end_comment
@@ -3855,6 +3964,84 @@ operator|)
 operator|&
 operator|~
 literal|3
+expr_stmt|;
+break|break;
+case|case
+name|RFC1048_ROOT_PATH
+case|:
+comment|/* XXX check len */
+name|bootp_string
+argument_list|(
+literal|"rootfs"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RFC1048_SWAP_PATH
+case|:
+name|bootp_string
+argument_list|(
+literal|"swapfs"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|RFC1048_SWAP_LEN
+case|:
+comment|/* T129 */
+name|sprintf
+argument_list|(
+name|config_buffer
+operator|+
+name|strlen
+argument_list|(
+name|config_buffer
+argument_list|)
+argument_list|,
+literal|"swapsize %d\n"
+argument_list|,
+name|ntohl
+argument_list|(
+operator|*
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
+name|p
+operator|+
+literal|2
+operator|)
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|130
+case|:
+comment|/* root mount options */
+name|bootp_string
+argument_list|(
+literal|"rootopts"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|131
+case|:
+comment|/* swap mount options */
+name|bootp_string
+argument_list|(
+literal|"swapopts"
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
