@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostent.c	5.1 (Berkeley) %G%"
+literal|"@(#)gethostent.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,21 @@ name|host_aliases
 index|[
 name|MAXALIASES
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|host_addrs
+index|[]
+init|=
+block|{
+name|hostaddr
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -378,9 +393,9 @@ expr_stmt|;
 comment|/* THIS STUFF IS INTERNET SPECIFIC */
 name|host
 operator|.
-name|h_addr
+name|h_addr_list
 operator|=
-name|hostaddr
+name|host_addrs
 expr_stmt|;
 operator|*
 operator|(

@@ -87,6 +87,17 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|host_addrs
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * The following is shared with gethostent.c  */
 end_comment
@@ -344,6 +355,12 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+expr_stmt|;
+name|host
+operator|.
+name|h_addr_list
+operator|=
+name|host_addrs
 expr_stmt|;
 name|host
 operator|.
