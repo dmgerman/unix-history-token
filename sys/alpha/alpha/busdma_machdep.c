@@ -1404,6 +1404,14 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+comment|/* 		 * The nobounce_dmamap map is not dynamically 		 * allocated, thus we should on no account try to 		 * free it. 		 */
+if|if
+condition|(
+name|map
+operator|!=
+operator|&
+name|nobounce_dmamap
+condition|)
 name|free
 argument_list|(
 name|map
