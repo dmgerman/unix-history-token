@@ -784,7 +784,7 @@ if|if
 condition|(
 name|error
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 name|NG_BTSOCKET_L2CAP_RAW_ALERT
@@ -3483,7 +3483,7 @@ name|rt
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3772,7 +3772,7 @@ name|rt
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4176,7 +4176,7 @@ name|rt
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4510,7 +4510,7 @@ name|rt
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5459,7 +5459,7 @@ name|msg
 argument_list|,
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -5583,7 +5583,7 @@ name|rt
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

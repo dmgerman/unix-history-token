@@ -2077,7 +2077,7 @@ name|vcc
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2191,7 +2191,7 @@ name|priv
 operator|->
 name|manage
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2301,7 +2301,7 @@ name|priv
 operator|->
 name|manage
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2438,7 +2438,7 @@ name|vcc
 operator|->
 name|hook
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;

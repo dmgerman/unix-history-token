@@ -1503,7 +1503,7 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -1627,7 +1627,7 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -4939,7 +4939,7 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5224,7 +5224,7 @@ name|msg
 argument_list|,
 name|path
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

@@ -742,7 +742,7 @@ name|priv
 operator|->
 name|enabled
 operator|==
-name|NULL
+literal|0
 condition|?
 literal|"<disabled>"
 else|:
