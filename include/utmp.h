@@ -65,7 +65,7 @@ begin_struct
 struct|struct
 name|lastlog
 block|{
-name|time_t
+name|int32_t
 name|ll_time
 decl_stmt|;
 name|char
@@ -106,7 +106,7 @@ index|[
 name|UT_HOSTSIZE
 index|]
 decl_stmt|;
-name|time_t
+name|int32_t
 name|ut_time
 decl_stmt|;
 block|}
