@@ -23,10 +23,10 @@ begin_struct
 struct|struct
 name|fpblock
 block|{
-name|u_long
-name|fpq_l
+name|u_int
+name|fpb_i
 index|[
-literal|8
+literal|16
 index|]
 decl_stmt|;
 block|}
@@ -43,12 +43,6 @@ name|fp_fb
 index|[
 literal|4
 index|]
-decl_stmt|;
-name|u_long
-name|fp_fsr
-decl_stmt|;
-name|u_long
-name|fp_fprs
 decl_stmt|;
 block|}
 struct|;
@@ -77,7 +71,7 @@ name|void
 name|fp_init_thread
 parameter_list|(
 name|struct
-name|pcb
+name|thread
 modifier|*
 parameter_list|)
 function_decl|;
@@ -100,7 +94,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fp_exception_other
+name|fp_exception
 parameter_list|(
 name|struct
 name|thread
@@ -108,6 +102,9 @@ modifier|*
 parameter_list|,
 name|struct
 name|trapframe
+modifier|*
+parameter_list|,
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
