@@ -565,6 +565,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|INVALID_BMAP
+value|-1
+end_define
+
 begin_comment
 comment|/* Look up a udf_node based on the ino_t passed in and return it's vnode */
 end_comment
@@ -3954,8 +3961,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>
-literal|0
 condition|)
 return|return
 operator|(
@@ -5171,8 +5176,7 @@ if|if
 condition|(
 name|error
 operator|==
-operator|-
-literal|1
+name|INVALID_BMAP
 condition|)
 block|{
 comment|/* 		 * This error means that the file *data* is stored in the 		 * allocation descriptor field of the file entry. 		 */
@@ -5695,12 +5699,11 @@ name|hash_id
 operator|+
 name|udfmp
 operator|->
-name|bsize
+name|part_start
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|INVALID_BMAP
 operator|)
 return|;
 case|case
