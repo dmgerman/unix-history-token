@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dirent.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -320,9 +320,11 @@ argument_list|(
 operator|*
 argument_list|)
 argument_list|(
+specifier|const
 name|void
 operator|*
 argument_list|,
+specifier|const
 name|void
 operator|*
 argument_list|)
