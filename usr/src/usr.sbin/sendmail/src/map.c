@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.21 (Berkeley) %G%"
+literal|"@(#)map.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4136,22 +4136,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|map
-operator|->
-name|map_domain
-operator|==
-name|NULL
-condition|)
-name|yp_get_default_domain
-argument_list|(
-operator|&
-name|map
-operator|->
-name|map_domain
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 operator|*
 name|map
 operator|->
@@ -4165,6 +4149,46 @@ name|map_file
 operator|=
 literal|"mail.aliases"
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|->
+name|map_domain
+operator|==
+name|NULL
+condition|)
+block|{
+name|yperr
+operator|=
+name|yp_get_default_domain
+argument_list|(
+operator|&
+name|map
+operator|->
+name|map_domain
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|yperr
+operator|!=
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"NIS map %s specified, but NIS not running\n"
+argument_list|,
+name|map
+operator|->
+name|map_file
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
+block|}
 comment|/* check to see if this map actually exists */
 name|yperr
 operator|=
