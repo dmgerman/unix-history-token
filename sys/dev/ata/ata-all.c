@@ -179,16 +179,6 @@ name|ata_cdevsw
 init|=
 block|{
 operator|.
-name|d_open
-operator|=
-name|nullopen
-block|,
-operator|.
-name|d_close
-operator|=
-name|nullclose
-block|,
-operator|.
 name|d_ioctl
 operator|=
 name|ata_ioctl

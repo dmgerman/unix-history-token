@@ -3982,11 +3982,6 @@ operator|=
 name|cryptoopen
 block|,
 operator|.
-name|d_close
-operator|=
-name|nullclose
-block|,
-operator|.
 name|d_read
 operator|=
 name|cryptoread

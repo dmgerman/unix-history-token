@@ -1161,7 +1161,7 @@ name|devsw
 operator|->
 name|d_open
 operator|=
-name|noopen
+name|nullopen
 expr_stmt|;
 if|if
 condition|(
@@ -1175,7 +1175,7 @@ name|devsw
 operator|->
 name|d_close
 operator|=
-name|noclose
+name|nullclose
 expr_stmt|;
 if|if
 condition|(

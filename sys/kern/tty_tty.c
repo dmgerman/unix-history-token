@@ -80,11 +80,6 @@ operator|=
 name|cttyopen
 block|,
 operator|.
-name|d_close
-operator|=
-name|nullclose
-block|,
-operator|.
 name|d_name
 operator|=
 literal|"ctty"

@@ -2080,11 +2080,6 @@ operator|=
 name|adlink_open
 block|,
 operator|.
-name|d_close
-operator|=
-name|nullclose
-block|,
-operator|.
 name|d_ioctl
 operator|=
 name|adlink_ioctl
