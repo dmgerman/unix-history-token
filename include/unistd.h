@@ -1252,9 +1252,9 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
+name|gid_t
 operator|,
-name|int
+name|gid_t
 operator|*
 operator|,
 name|int
@@ -1473,7 +1473,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
+name|gid_t
 operator|)
 argument_list|)
 decl_stmt|;
