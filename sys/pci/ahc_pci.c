@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.5 1998/12/15 08:23:10 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.5.2.1 1999/02/11 07:16:04 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -187,6 +187,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2940U2
 value|0x00109005ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_2930U2
+value|0x00119005ul
 end_define
 
 begin_define
@@ -465,7 +472,7 @@ name|ahc_softc
 modifier|*
 name|ahc
 parameter_list|,
-name|u_int8_t
+name|u_int
 modifier|*
 name|sxfrctl1
 parameter_list|)
@@ -492,7 +499,7 @@ name|seeprom_descriptor
 modifier|*
 name|sd
 parameter_list|,
-name|u_int8_t
+name|u_int
 modifier|*
 name|sxfrctl1
 parameter_list|)
@@ -784,6 +791,15 @@ case|:
 return|return
 operator|(
 literal|"Adaptec 3940 SCSI adapter"
+operator|)
+return|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2930U2
+case|:
+return|return
+operator|(
+literal|"Adaptec 2930 Ultra2 SCSI adapter"
 operator|)
 return|;
 break|break;
@@ -1265,6 +1281,9 @@ name|PCI_DEVICE_ID_ADAPTEC_AIC7890
 case|:
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940U2
+case|:
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2930U2
 case|:
 block|{
 name|ahc_t
@@ -2394,7 +2413,7 @@ name|ahc_softc
 modifier|*
 name|ahc
 parameter_list|,
-name|u_int8_t
+name|u_int
 modifier|*
 name|sxfrctl1
 parameter_list|)
@@ -2752,6 +2771,20 @@ name|max_targets
 operator|&
 name|CFMAXTARG
 decl_stmt|;
+name|u_int16_t
+name|discenable
+decl_stmt|;
+name|u_int16_t
+name|ultraenb
+decl_stmt|;
+name|discenable
+operator|=
+literal|0
+expr_stmt|;
+name|ultraenb
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2843,8 +2876,6 @@ index|]
 operator|&
 name|CFDISC
 condition|)
-name|ahc
-operator|->
 name|discenable
 operator||=
 name|target_mask
@@ -2877,8 +2908,6 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|ahc
-operator|->
 name|ultraenb
 operator||=
 name|target_mask
@@ -2898,8 +2927,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|ahc
-operator|->
 name|ultraenb
 operator||=
 name|target_mask
@@ -2921,8 +2948,6 @@ operator|==
 literal|0x04
 operator|&&
 operator|(
-name|ahc
-operator|->
 name|ultraenb
 operator|&
 name|target_mask
@@ -2942,8 +2967,6 @@ operator|&=
 operator|~
 name|CFXFER
 expr_stmt|;
-name|ahc
-operator|->
 name|ultraenb
 operator|&=
 operator|~
@@ -3012,8 +3035,6 @@ operator|)
 operator||
 operator|(
 operator|(
-name|ahc
-operator|->
 name|ultraenb
 operator|&
 name|target_mask
@@ -3190,8 +3211,6 @@ name|CFULTRAEN
 operator|)
 condition|)
 comment|/* Treat us as a non-ultra card */
-name|ahc
-operator|->
 name|ultraenb
 operator|=
 literal|0
@@ -3215,8 +3234,6 @@ name|DISC_DSB
 argument_list|,
 operator|~
 operator|(
-name|ahc
-operator|->
 name|discenable
 operator|&
 literal|0xff
@@ -3234,8 +3251,6 @@ argument_list|,
 operator|~
 operator|(
 operator|(
-name|ahc
-operator|->
 name|discenable
 operator|>>
 literal|8
@@ -3251,8 +3266,6 @@ name|ahc
 argument_list|,
 name|ULTRA_ENB
 argument_list|,
-name|ahc
-operator|->
 name|ultraenb
 operator|&
 literal|0xff
@@ -3267,8 +3280,6 @@ operator|+
 literal|1
 argument_list|,
 operator|(
-name|ahc
-operator|->
 name|ultraenb
 operator|>>
 literal|8
@@ -3371,7 +3382,7 @@ name|seeprom_descriptor
 modifier|*
 name|sd
 parameter_list|,
-name|u_int8_t
+name|u_int
 modifier|*
 name|sxfrctl1
 parameter_list|)
