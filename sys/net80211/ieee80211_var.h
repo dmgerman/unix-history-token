@@ -138,9 +138,14 @@ init|=
 literal|3
 block|,
 comment|/* 2GHz, OFDM */
-name|IEEE80211_MODE_TURBO
+name|IEEE80211_MODE_FH
 init|=
 literal|4
+block|,
+comment|/* 2GHz, GFSK */
+name|IEEE80211_MODE_TURBO
+init|=
+literal|5
 block|,
 comment|/* 5GHz, OFDM, 2x clock */
 block|}
@@ -291,9 +296,28 @@ begin_comment
 comment|/* Dynamic CCK-OFDM channel */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_GFSK
+value|0x0800
+end_define
+
+begin_comment
+comment|/* GFSK channel (FHSS PHY) */
+end_comment
+
 begin_comment
 comment|/*  * Useful combinations of channel characteristics.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CHAN_FHSS
+define|\
+value|(IEEE80211_CHAN_2GHZ | IEEE80211_CHAN_GFSK)
+end_define
 
 begin_define
 define|#
@@ -333,6 +357,17 @@ directive|define
 name|IEEE80211_CHAN_T
 define|\
 value|(IEEE80211_CHAN_5GHZ | IEEE80211_CHAN_OFDM | IEEE80211_CHAN_TURBO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_FHSS
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_FHSS) == IEEE80211_CHAN_FHSS)
 end_define
 
 begin_define
@@ -432,6 +467,17 @@ name|_c
 parameter_list|)
 define|\
 value|(((_c)->ic_flags& IEEE80211_CHAN_CCK) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IS_CHAN_GFSK
+parameter_list|(
+name|_c
+parameter_list|)
+define|\
+value|(((_c)->ic_flags& IEEE80211_CHAN_GFSK) != 0)
 end_define
 
 begin_comment

@@ -959,7 +959,7 @@ begin_define
 define|#
 directive|define
 name|IFM_IEEE80211_11A
-value|1
+value|0x00010000
 end_define
 
 begin_comment
@@ -970,7 +970,7 @@ begin_define
 define|#
 directive|define
 name|IFM_IEEE80211_11B
-value|2
+value|0x00020000
 end_define
 
 begin_comment
@@ -981,11 +981,22 @@ begin_define
 define|#
 directive|define
 name|IFM_IEEE80211_11G
-value|3
+value|0x00030000
 end_define
 
 begin_comment
 comment|/* 2Ghz, CCK mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_IEEE80211_FH
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* 2Ghz, GFSK mode */
 end_comment
 
 begin_comment
@@ -1540,7 +1551,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_IEEE80211_MODE_DESCRIPTIONS
-value|{			\ 	{ IFM_AUTO, "autoselect" },					\ 	{ IFM_IEEE80211_11A, "11a" },					\ 	{ IFM_IEEE80211_11B, "11b" },					\ 	{ IFM_IEEE80211_11G, "11g" },					\ 	{ 0, NULL },							\ }
+value|{			\ 	{ IFM_AUTO, "autoselect" },					\ 	{ IFM_IEEE80211_11A, "11a" },					\ 	{ IFM_IEEE80211_11B, "11b" },					\ 	{ IFM_IEEE80211_11G, "11g" },					\ 	{ IFM_IEEE80211_FH, "fh" },					\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define

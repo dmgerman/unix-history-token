@@ -2998,9 +2998,15 @@ condition|(
 name|chan
 operator|!=
 name|bchan
+operator|&&
+name|ic
+operator|->
+name|ic_phytype
+operator|!=
+name|IEEE80211_T_FH
 condition|)
 block|{
-comment|/* 			 * Frame was received on a channel different from the 			 * one indicated in the DS/FH params element id; 			 * silently discard it. 			 * 			 * NB: this can happen due to signal leakage. 			 */
+comment|/* 			 * Frame was received on a channel different from the 			 * one indicated in the DS params element id; 			 * silently discard it. 			 * 			 * NB: this can happen due to signal leakage. 			 *     But we should take it for FH phy because 			 *     the rssi value should be correct even for 			 *     different hop pattern in FH. 			 */
 name|IEEE80211_DPRINTF
 argument_list|(
 operator|(

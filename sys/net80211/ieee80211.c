@@ -252,9 +252,12 @@ comment|/* IEEE80211_MODE_11B */
 literal|"11g"
 block|,
 comment|/* IEEE80211_MODE_11G */
+literal|"FH"
+block|,
+comment|/* IEEE80211_MODE_FH */
 literal|"turbo"
 block|,
-comment|/* IEEE80211_MODE_TURBO	*/
+comment|/* IEEE80211_MODE_TURBO */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -470,6 +473,21 @@ operator||=
 literal|1
 operator|<<
 name|IEEE80211_MODE_11G
+expr_stmt|;
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_FHSS
+argument_list|(
+name|c
+argument_list|)
+condition|)
+name|ic
+operator|->
+name|ic_modecaps
+operator||=
+literal|1
+operator|<<
+name|IEEE80211_MODE_FH
 expr_stmt|;
 if|if
 condition|(
@@ -1145,25 +1163,15 @@ init|=
 block|{
 name|IFM_AUTO
 block|,
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
-name|IFM_MAKEMODE
-argument_list|(
+name|IFM_IEEE80211_FH
+block|,
 name|IFM_IEEE80211_11A
-argument_list|)
 operator||
 name|IFM_IEEE80211_TURBO
 block|, 		}
@@ -1904,6 +1912,14 @@ name|IEEE80211_MODE_11G
 expr_stmt|;
 break|break;
 case|case
+name|IFM_IEEE80211_FH
+case|:
+name|newphymode
+operator|=
+name|IEEE80211_MODE_FH
+expr_stmt|;
+break|break;
+case|case
 name|IFM_AUTO
 case|:
 name|newphymode
@@ -2530,10 +2546,7 @@ name|imr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2543,10 +2556,7 @@ name|imr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2556,10 +2566,17 @@ name|imr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_MODE_FH
+case|:
+name|imr
+operator|->
+name|ifm_active
+operator||=
+name|IFM_IEEE80211_FH
 expr_stmt|;
 break|break;
 case|case
@@ -2569,10 +2586,7 @@ name|imr
 operator|->
 name|ifm_active
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 operator||
 name|IFM_IEEE80211_TURBO
 expr_stmt|;
@@ -2746,6 +2760,11 @@ block|{
 literal|0
 block|}
 block|,
+comment|/* IEEE80211_MODE_FH */
+block|{
+literal|0
+block|}
+block|,
 comment|/* IEEE80211_MODE_TURBO	*/
 block|}
 decl_stmt|;
@@ -2876,6 +2895,9 @@ comment|/* IEEE80211_MODE_11B */
 name|IEEE80211_CHAN_PUREG
 block|,
 comment|/* IEEE80211_MODE_11G */
+name|IEEE80211_CHAN_FHSS
+block|,
+comment|/* IEEE80211_MODE_FH */
 name|IEEE80211_CHAN_T
 block|,
 comment|/* IEEE80211_MODE_TURBO	*/
@@ -3325,6 +3347,17 @@ return|;
 elseif|else
 if|if
 condition|(
+name|IEEE80211_IS_CHAN_FHSS
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+return|return
+name|IEEE80211_MODE_FH
+return|;
+elseif|else
+if|if
+condition|(
 name|chan
 operator|->
 name|ic_flags
@@ -3393,10 +3426,23 @@ block|{
 block|{
 literal|2
 operator||
-name|IFM_MAKEMODE
-argument_list|(
+name|IFM_IEEE80211_FH
+block|,
+name|IFM_IEEE80211_FH1
+block|}
+block|,
+block|{
+literal|4
+operator||
+name|IFM_IEEE80211_FH
+block|,
+name|IFM_IEEE80211_FH2
+block|}
+block|,
+block|{
+literal|2
+operator||
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS1
 block|}
@@ -3404,10 +3450,7 @@ block|,
 block|{
 literal|4
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS2
 block|}
@@ -3415,10 +3458,7 @@ block|,
 block|{
 literal|11
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS5
 block|}
@@ -3426,10 +3466,7 @@ block|,
 block|{
 literal|22
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS11
 block|}
@@ -3437,10 +3474,7 @@ block|,
 block|{
 literal|44
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS22
 block|}
@@ -3448,10 +3482,7 @@ block|,
 block|{
 literal|12
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM6
 block|}
@@ -3459,10 +3490,7 @@ block|,
 block|{
 literal|18
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM9
 block|}
@@ -3470,10 +3498,7 @@ block|,
 block|{
 literal|24
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM12
 block|}
@@ -3481,10 +3506,7 @@ block|,
 block|{
 literal|36
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM18
 block|}
@@ -3492,10 +3514,7 @@ block|,
 block|{
 literal|48
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM24
 block|}
@@ -3503,10 +3522,7 @@ block|,
 block|{
 literal|72
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM36
 block|}
@@ -3514,10 +3530,7 @@ block|,
 block|{
 literal|96
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM48
 block|}
@@ -3525,10 +3538,7 @@ block|,
 block|{
 literal|108
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM54
 block|}
@@ -3536,10 +3546,7 @@ block|,
 block|{
 literal|2
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS1
 block|}
@@ -3547,10 +3554,7 @@ block|,
 block|{
 literal|4
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS2
 block|}
@@ -3558,10 +3562,7 @@ block|,
 block|{
 literal|11
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS5
 block|}
@@ -3569,10 +3570,7 @@ block|,
 block|{
 literal|22
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_DS11
 block|}
@@ -3580,10 +3578,7 @@ block|,
 block|{
 literal|12
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM6
 block|}
@@ -3591,10 +3586,7 @@ block|,
 block|{
 literal|18
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM9
 block|}
@@ -3602,10 +3594,7 @@ block|,
 block|{
 literal|24
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM12
 block|}
@@ -3613,10 +3602,7 @@ block|,
 block|{
 literal|36
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM18
 block|}
@@ -3624,10 +3610,7 @@ block|,
 block|{
 literal|48
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM24
 block|}
@@ -3635,10 +3618,7 @@ block|,
 block|{
 literal|72
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM36
 block|}
@@ -3646,10 +3626,7 @@ block|,
 block|{
 literal|96
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM48
 block|}
@@ -3657,10 +3634,7 @@ block|,
 block|{
 literal|108
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 block|,
 name|IFM_IEEE80211_OFDM54
 block|}
@@ -3692,10 +3666,7 @@ name|IEEE80211_MODE_TURBO
 case|:
 name|mask
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11A
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3703,10 +3674,15 @@ name|IEEE80211_MODE_11B
 case|:
 name|mask
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11B
-argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_MODE_FH
+case|:
+name|mask
+operator||=
+name|IFM_IEEE80211_FH
 expr_stmt|;
 break|break;
 case|case
@@ -3724,28 +3700,11 @@ operator|==
 name|IEEE80211_T_FH
 condition|)
 block|{
-comment|/* must handle these specially */
-switch|switch
-condition|(
 name|mask
-condition|)
-block|{
-case|case
-literal|2
-case|:
-return|return
-name|IFM_IEEE80211_FH1
-return|;
-case|case
-literal|4
-case|:
-return|return
-name|IFM_IEEE80211_FH2
-return|;
-block|}
-return|return
-name|IFM_AUTO
-return|;
+operator||=
+name|IFM_IEEE80211_FH
+expr_stmt|;
+break|break;
 block|}
 comment|/* NB: hack, 11g matches both 11b+11a rates */
 comment|/* fall thru... */
@@ -3754,10 +3713,7 @@ name|IEEE80211_MODE_11G
 case|:
 name|mask
 operator||=
-name|IFM_MAKEMODE
-argument_list|(
 name|IFM_IEEE80211_11G
-argument_list|)
 expr_stmt|;
 break|break;
 block|}
