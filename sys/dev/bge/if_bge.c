@@ -14343,6 +14343,8 @@ operator|+
 name|ETHER_HDR_LEN
 operator|+
 name|ETHER_CRC_LEN
+operator|+
+name|ETHER_VLAN_ENCAP_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Load our MAC address. */
