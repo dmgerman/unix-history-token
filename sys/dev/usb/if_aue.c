@@ -2571,19 +2571,6 @@ operator|(
 name|UMATCH_NONE
 operator|)
 return|;
-name|printf
-argument_list|(
-literal|"vendor: %x device %x\n"
-argument_list|,
-name|uaa
-operator|->
-name|vendor
-argument_list|,
-name|uaa
-operator|->
-name|product
-argument_list|)
-expr_stmt|;
 name|t
 operator|=
 name|aue_devs
