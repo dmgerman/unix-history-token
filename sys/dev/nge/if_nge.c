@@ -4165,6 +4165,11 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|NGE_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
