@@ -921,6 +921,17 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+operator|(
+name|ch
+operator|&
+literal|0x7F
+operator|)
+operator|<
+literal|' '
+comment|/* locale-independent */
+operator|||
+operator|(
 operator|!
 name|isprint
 argument_list|(
@@ -932,14 +943,17 @@ name|isspace
 argument_list|(
 name|ch
 argument_list|)
+operator|)
+operator|)
 operator|&&
+name|strchr
+argument_list|(
+literal|"\a\f\t\v\b\r\n"
+argument_list|,
 name|ch
-operator|!=
-literal|'\007'
-operator|&&
-name|ch
-operator|!=
-literal|'\010'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
