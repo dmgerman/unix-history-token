@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.16	82/07/01	*/
+comment|/*	ufs_inode.c	4.17	82/07/03	*/
 end_comment
 
 begin_include
@@ -1081,6 +1081,12 @@ expr_stmt|;
 name|ip
 operator|->
 name|i_mode
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_rdev
 operator|=
 literal|0
 expr_stmt|;
