@@ -127,22 +127,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|srandom
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|time
-argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-comment|/* prime random numbers */
 while|while
 condition|(
 name|fread

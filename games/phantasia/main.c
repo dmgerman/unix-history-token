@@ -929,22 +929,9 @@ name|_PATH_VOID
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
-name|srandom
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|time
-argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-name|NULL
-argument_list|)
-argument_list|)
+name|srandomdev
+argument_list|()
 expr_stmt|;
-comment|/* prime random numbers */
 block|}
 end_block
 
