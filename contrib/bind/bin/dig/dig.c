@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 8.41 2000/04/20 07:36:04 vixie Exp $"
+literal|"$Id: dig.c,v 8.42 2000/07/17 07:36:52 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,6 +111,12 @@ begin_include
 include|#
 directive|include
 file|<isc/dst.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
 end_include
 
 begin_include
@@ -1188,6 +1194,21 @@ operator|&
 name|tv1
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|tv1
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|tv1
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/*  * Main section: once if cmd-line query  *               while !EOF if batch mode  */
@@ -3670,6 +3691,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|start_time
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|start_time
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|keyfile
@@ -3811,6 +3847,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|end_time
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|end_time
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|res
@@ -3939,6 +3990,21 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|tv2
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|tv2
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
+argument_list|)
+expr_stmt|;
 name|delay
 operator|=
 call|(
@@ -4013,7 +4079,7 @@ name|fputs
 argument_list|(
 literal|"\ notes:	defname and search don't work; use fully-qualified names.\n\ 	this is DiG version "
 name|VSTRING
-literal|"\n\ 	$Id: dig.c,v 8.41 2000/04/20 07:36:04 vixie Exp $\n\ "
+literal|"\n\ 	$Id: dig.c,v 8.42 2000/07/17 07:36:52 vixie Exp $\n\ "
 argument_list|,
 name|stderr
 argument_list|)

@@ -95,7 +95,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: named-xfer.c,v 8.93 2000/04/20 07:33:47 vixie Exp $"
+literal|"$Id: named-xfer.c,v 8.94 2000/07/11 05:38:27 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6016,6 +6016,10 @@ name|loop_cnt
 operator|=
 literal|0
 expr_stmt|;
+name|bp
+operator|=
+name|NULL
+expr_stmt|;
 do|do
 block|{
 name|u_char
@@ -6066,6 +6070,16 @@ block|}
 name|tmp
 operator|+=
 name|n
+expr_stmt|;
+if|if
+condition|(
+name|loop_cnt
+operator|==
+literal|0
+condition|)
+name|bp
+operator|=
+name|tmp
 expr_stmt|;
 comment|/* Are type, class, and ttl OK? */
 name|cp4
@@ -6172,10 +6186,6 @@ literal|0
 operator|)
 condition|)
 block|{
-name|bp
-operator|=
-name|tmp
-expr_stmt|;
 name|soa_cnt
 operator|++
 expr_stmt|;

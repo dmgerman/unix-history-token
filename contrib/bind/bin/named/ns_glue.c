@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_glue.c,v 8.16 2000/04/21 06:50:18 vixie Exp $"
+literal|"$Id: ns_glue.c,v 8.17 2000/07/17 07:36:52 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,6 +1078,21 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|ttp
+operator|->
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|ttp
+operator|->
+name|tv_usec
+operator|<
+literal|1000000
 argument_list|)
 expr_stmt|;
 block|}

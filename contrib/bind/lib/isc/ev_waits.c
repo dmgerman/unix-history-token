@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_waits.c,v 8.10 2000/02/04 07:25:50 vixie Exp $"
+literal|"$Id: ev_waits.c,v 8.11 2000/07/20 18:17:52 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -235,7 +235,6 @@ name|last
 operator|!=
 name|NULL
 condition|)
-block|{
 name|wl
 operator|->
 name|last
@@ -244,16 +243,13 @@ name|next
 operator|=
 name|new
 expr_stmt|;
-block|}
 else|else
-block|{
 name|wl
 operator|->
 name|first
 operator|=
 name|new
 expr_stmt|;
-block|}
 name|wl
 operator|->
 name|last

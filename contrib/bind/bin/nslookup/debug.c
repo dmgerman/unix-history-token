@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: debug.c,v 8.15 1999/10/13 16:39:16 vixie Exp $"
+literal|"$Id: debug.c,v 8.16 2000/07/11 05:59:32 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3207,6 +3207,49 @@ literal|2048
 index|]
 decl_stmt|;
 comment|/* XXX need to malloc/realloc. */
+name|char
+name|rrname
+index|[
+name|NS_MAXDNAME
+index|]
+decl_stmt|;
+name|cp2
+operator|=
+name|p_fqnname
+argument_list|(
+name|ocp
+argument_list|,
+name|msg
+argument_list|,
+name|NS_MAXCDNAME
+argument_list|,
+name|rrname
+argument_list|,
+sizeof|sizeof
+name|rrname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp2
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"(name truncated?)\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* compression error */
+block|}
 if|if
 condition|(
 name|ns_sprintrrf
@@ -3217,7 +3260,7 @@ name|eom
 operator|-
 name|msg
 argument_list|,
-literal|"?"
+name|rrname
 argument_list|,
 operator|(
 name|ns_class

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_signal.c,v 8.12 2000/04/21 06:54:12 vixie Exp $"
+literal|"$Id: ns_signal.c,v 8.13 2000/07/11 07:10:12 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -931,6 +931,35 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Unblock all signals that we expect to handle. */
+if|if
+condition|(
+name|sigprocmask
+argument_list|(
+name|SIG_UNBLOCK
+argument_list|,
+operator|&
+name|mask
+argument_list|,
+name|NULL
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|ns_panic
+argument_list|(
+name|ns_log_os
+argument_list|,
+literal|1
+argument_list|,
+literal|"sigblock failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostent_r.c,v 8.4 1999/01/18 07:46:52 vixie Exp $"
+literal|"$Id: gethostent_r.c,v 8.5 2000/07/11 05:46:35 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -648,9 +648,6 @@ expr_stmt|;
 name|cp
 operator|+=
 name|n
-expr_stmt|;
-name|i
-operator|++
 expr_stmt|;
 block|}
 name|hptr

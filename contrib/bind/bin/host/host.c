@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.36 2000/01/25 00:20:21 cyarnell Exp $"
+literal|"$Id: host.c,v 8.37 2000/07/11 07:06:14 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5278,7 +5278,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%s"
+literal|" %s"
 argument_list|,
 name|name
 argument_list|)
