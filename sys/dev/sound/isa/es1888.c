@@ -340,6 +340,10 @@ name|device_t
 name|parent
 parameter_list|)
 block|{
+comment|/*  * Only use this on alpha since PNPBIOS is a better solution on x86.  */
+ifdef|#
+directive|ifdef
+name|__alpha__
 name|u_int32_t
 name|lo
 decl_stmt|,
@@ -519,6 +523,8 @@ literal|"ESS1888"
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
