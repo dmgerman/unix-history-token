@@ -2730,6 +2730,13 @@ name|v_flag
 operator||=
 name|VDOOMED
 expr_stmt|;
+name|vp
+operator|->
+name|v_flag
+operator|&=
+operator|~
+name|VFREE
+expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
