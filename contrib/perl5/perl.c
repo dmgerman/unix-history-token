@@ -9383,6 +9383,36 @@ argument|) 		croak(
 literal|"Permission denied"
 argument|);
 comment|/* testing full pathname here */
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+operator|&&
+operator|(
+name|BSD
+operator|>=
+literal|199306
+operator|)
+operator|)
+ifdef|#
+directive|ifdef
+name|IAMSUID
+argument|{ 	    struct statfs stfs;  	    if (fstatfs(fileno(PL_rsfp),&stfs)<
+literal|0
+argument|) 		croak(
+literal|"Can't statfs filesystem of script \"%s\""
+argument|,PL_origfilename);  	    if (stfs.f_flags& MNT_NOSUID) 		croak(
+literal|"Permission denied"
+argument|); 	}
+endif|#
+directive|endif
+comment|/* IAMSUID */
+endif|#
+directive|endif
+comment|/* BSD */
 argument|if (tmpstatbuf.st_dev != PL_statbuf.st_dev || 		tmpstatbuf.st_ino != PL_statbuf.st_ino) { 		(void)PerlIO_close(PL_rsfp); 		if (PL_rsfp = PerlProc_popen(
 literal|"/bin/mail root"
 argument|,
