@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.13 (Berkeley) %G%"
+literal|"@(#)main.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,19 +67,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sgtty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -110,6 +122,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -607,12 +625,11 @@ name|timeout
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|dingdong
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|alarm
 argument_list|(
@@ -634,7 +651,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|jmp_buf
@@ -642,12 +659,11 @@ name|intrupt
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|interrupt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -664,7 +680,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|main
@@ -2321,9 +2337,6 @@ name|t
 decl_stmt|;
 name|char
 modifier|*
-name|fmt
-decl_stmt|,
-modifier|*
 name|slash
 decl_stmt|,
 name|db
@@ -2411,6 +2424,21 @@ break|break;
 case|case
 literal|'d'
 case|:
+block|{
+name|char
+name|fmt
+index|[]
+init|=
+literal|"%l:% %P on %A, %d %B %Y"
+decl_stmt|;
+name|fmt
+index|[
+literal|4
+index|]
+operator|=
+literal|'M'
+expr_stmt|;
+comment|/* I *hate* SCCS... */
 operator|(
 name|void
 operator|)
@@ -2419,18 +2447,6 @@ argument_list|(
 operator|&
 name|t
 argument_list|)
-expr_stmt|;
-comment|/* SCCS *likes* main.c... */
-name|fmt
-operator|=
-literal|"%l:% %P on %A, %d %B %Y"
-expr_stmt|;
-name|fmt
-index|[
-literal|4
-index|]
-operator|=
-literal|'M'
 expr_stmt|;
 operator|(
 name|void
@@ -2446,8 +2462,11 @@ argument_list|)
 argument_list|,
 name|fmt
 argument_list|,
+name|localtime
+argument_list|(
 operator|&
 name|t
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|puts
@@ -2456,6 +2475,7 @@ name|db
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 literal|'%'
 case|:
