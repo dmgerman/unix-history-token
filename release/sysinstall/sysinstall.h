@@ -198,6 +198,17 @@ comment|/* Status code for I/O error rather than normal EOF */
 end_comment
 
 begin_comment
+comment|/* Number of seconds to wait for data to come off even the slowest media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MEDIA_TIMEOUT
+value|300
+end_define
+
+begin_comment
 comment|/*  * I make some pretty gross assumptions about having a max of 50 chunks  * total - 8 slices and 42 partitions.  I can't easily display many more  * than that on the screen at once!  *  * For 2.1 I'll revisit this and try to make it more dynamic, but since  * this will catch 99.99% of all possible cases, I'm not too worried.  */
 end_comment
 
@@ -1355,6 +1366,17 @@ end_typedef
 
 begin_comment
 comment|/*** Externs ***/
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|AlarmWentOff
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Convenience variable for alarm_foo() stuff	*/
 end_comment
 
 begin_decl_stmt
@@ -4834,6 +4856,37 @@ end_function_decl
 begin_comment
 comment|/* system.c */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|alarm_clear
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|alarm_set
+parameter_list|(
+name|int
+name|delay
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|handler
+function_decl|)
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|extern
