@@ -81,6 +81,20 @@ begin_comment
 comment|/*  * Local static data  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISP2100_TARGET_MODE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ISP_TARGET_MODE
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -218,6 +232,11 @@ literal|0x31
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Local function prototypes.  */
@@ -3766,6 +3785,17 @@ name|isp_state
 operator|=
 name|ISP_INITSTATE
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ISP2100_TARGET_MODE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ISP_TARGET_MODE
+argument_list|)
 name|DISABLE_INTS
 argument_list|(
 name|isp
@@ -3785,17 +3815,6 @@ literal|13
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ISP2100_TARGET_MODE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ISP_TARGET_MODE
-argument_list|)
 if|if
 condition|(
 name|isp_modify_lun
@@ -3820,14 +3839,14 @@ name|isp_name
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 name|ENABLE_INTS
 argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
