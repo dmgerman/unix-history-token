@@ -7761,7 +7761,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|s
+name|r
 condition|)
 block|{
 name|free
