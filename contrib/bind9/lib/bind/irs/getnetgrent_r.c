@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetgrent_r.c,v 1.5.2.1.4.2 2004/04/13 04:59:29 marka Exp $"
+literal|"$Id: getnetgrent_r.c,v 1.5.2.1.4.3 2004/11/30 01:15:43 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,12 +108,6 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netgroup.h>
 end_include
 
 begin_include

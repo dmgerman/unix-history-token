@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen.c,v 1.3.206.2 2004/03/17 00:29:48 marka Exp $"
+literal|"$Id: gen.c,v 1.3.206.3 2004/09/16 00:57:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2368,14 +2368,26 @@ name|sprintf
 argument_list|(
 name|pattern
 argument_list|,
-literal|"%%%ds %%%ds %%%ds\n"
+literal|"%%%lus %%%lus %%%lus\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 sizeof|sizeof
 name|mapname
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 sizeof|sizeof
 name|accname
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 sizeof|sizeof
 name|options
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: name.h,v 1.95.2.3.2.11 2004/09/01 05:19:59 marka Exp $ */
+comment|/* $Id: name.h,v 1.95.2.3.2.12 2004/09/08 00:29:34 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -694,7 +694,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'label' refer to the 'n'th least significant label of 'name'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'label' refers to the same memory as 'name', so 'name' must not  *	be changed while 'label' is still in use.  *  * Requires:  *	n< dns_label_countlabels(name)  */
+comment|/*  * Make 'label' refer to the 'n'th least significant label of 'name'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'label' refers to the same memory as 'name', so 'name' must not  *	be changed while 'label' is still in use.  *  * Requires:  *	n< dns_name_countlabels(name)  */
 end_comment
 
 begin_function_decl
@@ -722,7 +722,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' refer to the 'n' labels including and following 'first'  * in 'source'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  * Requires:  *	'source' and 'target' are valid names.  *  *	first< dns_label_countlabels(name)  *  *	first + n<= dns_label_countlabels(name)  */
+comment|/*  * Make 'target' refer to the 'n' labels including and following 'first'  * in 'source'.  *  * Notes:  *	Numbering starts at 0.  *  *	Given "rc.vix.com.", the label 0 is "rc", and label 3 is the  *	root label.  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  * Requires:  *	'source' and 'target' are valid names.  *  *	first< dns_name_countlabels(name)  *  *	first + n<= dns_name_countlabels(name)  */
 end_comment
 
 begin_function_decl
@@ -741,7 +741,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Make 'target' refer to the same name as 'source'.  *  * Notes:  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  *	This call is functionally equivalent to:  *  *		dns_name_getlabelsequence(source, 0,  *					  dns_label_countlabels(source),  *					  target);  *  *	but is more efficient.  Also, dns_name_clone() works even if 'source'  *	is empty.  *  * Requires:  *  *	'source' is a valid name.  *  *	'target' is a valid name that is not read-only.  */
+comment|/*  * Make 'target' refer to the same name as 'source'.  *  * Notes:  *  *	'target' refers to the same memory as 'source', so 'source'  *	must not be changed while 'target' is still in use.  *  *	This call is functionally equivalent to:  *  *		dns_name_getlabelsequence(source, 0,  *					  dns_name_countlabels(source),  *					  target);  *  *	but is more efficient.  Also, dns_name_clone() works even if 'source'  *	is empty.  *  * Requires:  *  *	'source' is a valid name.  *  *	'target' is a valid name that is not read-only.  */
 end_comment
 
 begin_comment

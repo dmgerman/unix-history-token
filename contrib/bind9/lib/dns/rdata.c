@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: rdata.c,v 1.147.2.11.2.15 2004/03/12 10:31:25 marka Exp $ */
+comment|/* $Id: rdata.c,v 1.147.2.11.2.16 2004/10/06 05:37:40 marka Exp $ */
 end_comment
 
 begin_include
@@ -7540,7 +7540,7 @@ call|)
 argument_list|(
 name|callbacks
 argument_list|,
-literal|"%s:%u: %s: %s"
+literal|"%s:%u: warning: %s: %s"
 argument_list|,
 name|file
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: context.c,v 1.41.2.1.2.3 2004/03/06 08:15:30 marka Exp $ */
+comment|/* $Id: context.c,v 1.41.2.1.2.4 2004/09/17 05:50:31 marka Exp $ */
 end_comment
 
 begin_include
@@ -1484,25 +1484,21 @@ name|struct
 name|timeval
 name|timeout
 decl_stmt|;
-comment|/* 	 * Type of tv_sec is long, so make sure the unsigned long timeout 	 * does not overflow it. 	 */
+comment|/* 	 * Type of tv_sec is 32 bits long.  	 */
 if|if
 condition|(
 name|ctx
 operator|->
 name|timeout
 operator|<=
-operator|(
-name|unsigned
-name|int
-operator|)
-name|LONG_MAX
+literal|0x7FFFFFFFU
 condition|)
 name|timeout
 operator|.
 name|tv_sec
 operator|=
 operator|(
-name|long
+name|int
 operator|)
 name|ctx
 operator|->
@@ -1513,7 +1509,7 @@ name|timeout
 operator|.
 name|tv_sec
 operator|=
-name|LONG_MAX
+literal|0x7FFFFFFF
 expr_stmt|;
 name|timeout
 operator|.

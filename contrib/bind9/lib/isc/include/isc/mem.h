@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: mem.h,v 1.54.12.3 2004/03/08 09:04:52 marka Exp $ */
+comment|/* $Id: mem.h,v 1.54.12.4 2004/10/11 05:55:51 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|ISC_MEM_CHECKOVERRUN
-value|0
+value|1
 end_define
 
 begin_endif

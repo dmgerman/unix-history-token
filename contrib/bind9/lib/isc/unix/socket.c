@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: socket.c,v 1.207.2.19.2.13 2004/07/01 04:51:15 marka Exp $ */
+comment|/* $Id: socket.c,v 1.207.2.19.2.15 2004/11/18 21:31:16 marka Exp $ */
 end_comment
 
 begin_include
@@ -224,35 +224,12 @@ directive|ifndef
 name|ISC_SOCKADDR_LEN_T
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SOCKLEN_T_
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISC_SOCKADDR_LEN_T
-value|_BSD_SOCKLEN_T_
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|ISC_SOCKADDR_LEN_T
 value|unsigned int
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -2244,7 +2221,7 @@ name|cmsgp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 name|struct
 name|in6_pktinfo
 modifier|*
@@ -2361,7 +2338,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 name|pktinfop
 operator|=
 name|NULL
@@ -2403,7 +2380,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 if|if
 condition|(
 name|cmsgp
@@ -2965,7 +2942,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 argument_list|)
 if|if
 condition|(
@@ -5250,7 +5227,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 argument_list|)
 name|cmsgbuflen
 operator|=
@@ -5342,7 +5319,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|ISC_PLATFORM_HAVEIPV6
+name|ISC_PLATFORM_HAVEIN6PKTINFO
 argument_list|)
 name|cmsgbuflen
 operator|=
@@ -6455,6 +6432,9 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
+name|ISC_PLATFORM_HAVEIN6PKTINFO
+ifdef|#
+directive|ifdef
 name|IPV6_RECVPKTINFO
 comment|/* 2292bis */
 if|if
@@ -6614,6 +6594,9 @@ block|}
 endif|#
 directive|endif
 comment|/* IPV6_RECVPKTINFO */
+endif|#
+directive|endif
+comment|/* ISC_PLATFORM_HAVEIN6PKTINFO */
 ifdef|#
 directive|ifdef
 name|IPV6_USE_MIN_MTU

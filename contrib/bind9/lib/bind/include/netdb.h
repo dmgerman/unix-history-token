@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1980, 1983, 1988, 1993  * -  * Copyright (c) 1980, 1
 end_comment
 
 begin_comment
-comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.12.2.1.4.4 2004/03/16 02:19:19 marka Exp $  */
+comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 1.12.2.1.4.5 2004/11/30 01:15:42 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -3295,6 +3295,34 @@ name|char
 operator|*
 operator|,
 name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|setnetgrent_r
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|void
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

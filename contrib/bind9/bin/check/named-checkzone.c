@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.13.2.3.8.9 2004/03/06 10:21:11 marka Exp $ */
+comment|/* $Id: named-checkzone.c,v 1.13.2.3.8.11 2004/10/25 01:36:06 marka Exp $ */
 end_comment
 
 begin_include
@@ -35,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<isc/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/entropy.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/hash.h>
 end_include
 
 begin_include
@@ -147,6 +159,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|isc_entropy_t
+modifier|*
+name|ectx
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|dns_zone_t
 modifier|*
 name|zone
@@ -207,7 +229,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: named-checkzone [-djqvD] [-c class] [-o output] "
-literal|"[-t directory] [-w directory] [-k option] zonename filename\n"
+literal|"[-t directory] [-w directory] [-k (ignore|warn|fail)] "
+literal|"[-n (ignore|warn|fail)] zonename filename\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -415,13 +438,18 @@ name|strcmp
 argument_list|(
 name|isc_commandline_argument
 argument_list|,
-literal|"check-names"
+literal|"warn"
 argument_list|)
 condition|)
 block|{
 name|zone_options
 operator||=
 name|DNS_ZONEOPT_CHECKNAMES
+expr_stmt|;
+name|zone_options
+operator|&=
+operator|~
+name|DNS_ZONEOPT_CHECKNAMESFAIL
 expr_stmt|;
 block|}
 elseif|else
@@ -432,7 +460,7 @@ name|strcmp
 argument_list|(
 name|isc_commandline_argument
 argument_list|,
-literal|"check-names-fail"
+literal|"fail"
 argument_list|)
 condition|)
 block|{
@@ -441,6 +469,28 @@ operator||=
 name|DNS_ZONEOPT_CHECKNAMES
 operator||
 name|DNS_ZONEOPT_CHECKNAMESFAIL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"ignore"
+argument_list|)
+condition|)
+block|{
+name|zone_options
+operator|&=
+operator|~
+operator|(
+name|DNS_ZONEOPT_CHECKNAMES
+operator||
+name|DNS_ZONEOPT_CHECKNAMESFAIL
+operator|)
 expr_stmt|;
 block|}
 break|break;
@@ -662,6 +712,33 @@ name|lctx
 argument_list|)
 expr_stmt|;
 block|}
+name|RUNTIME_CHECK
+argument_list|(
+name|isc_entropy_create
+argument_list|(
+name|mctx
+argument_list|,
+operator|&
+name|ectx
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|isc_hash_create
+argument_list|(
+name|mctx
+argument_list|,
+name|ectx
+argument_list|,
+name|DNS_NAME_MAXWIRE
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
 name|dns_result_register
 argument_list|()
 expr_stmt|;
@@ -747,6 +824,15 @@ name|isc_log_destroy
 argument_list|(
 operator|&
 name|lctx
+argument_list|)
+expr_stmt|;
+name|isc_hash_destroy
+argument_list|()
+expr_stmt|;
+name|isc_entropy_detach
+argument_list|(
+operator|&
+name|ectx
 argument_list|)
 expr_stmt|;
 name|isc_mem_destroy

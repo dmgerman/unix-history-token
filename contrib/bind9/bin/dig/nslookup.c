@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.90.2.4.2.7 2004/08/18 23:25:58 marka Exp $ */
+comment|/* $Id: nslookup.c,v 1.90.2.4.2.8 2004/09/06 01:33:05 marka Exp $ */
 end_comment
 
 begin_include
@@ -1833,7 +1833,7 @@ literal|"Server:\t\t%s\n"
 argument_list|,
 name|query
 operator|->
-name|servname
+name|userarg
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2159,7 +2159,7 @@ literal|"Default server: %s\nAddress: %s\n"
 argument_list|,
 name|srv
 operator|->
-name|servername
+name|userarg
 argument_list|,
 name|sockstr
 argument_list|)
@@ -4139,10 +4139,16 @@ literal|0
 operator|)
 condition|)
 block|{
+name|isc_app_block
+argument_list|()
+expr_stmt|;
 name|set_nameserver
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|isc_app_unblock
+argument_list|()
 expr_stmt|;
 name|show_settings
 argument_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.124.2.4.2.7 2004/03/08 09:04:33 marka Exp $ */
+comment|/* $Id: xfrin.c,v 1.124.2.4.2.9 2004/10/13 22:28:42 marka Exp $ */
 end_comment
 
 begin_include
@@ -2183,14 +2183,6 @@ argument_list|(
 name|rdata
 argument_list|)
 decl_stmt|;
-name|CHECK
-argument_list|(
-name|ixfr_commit
-argument_list|(
-name|xfr
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|soa_serial
@@ -2200,6 +2192,14 @@ operator|->
 name|end_serial
 condition|)
 block|{
+name|CHECK
+argument_list|(
+name|ixfr_commit
+argument_list|(
+name|xfr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xfr
 operator|->
 name|state
@@ -2246,6 +2246,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|CHECK
+argument_list|(
+name|ixfr_commit
+argument_list|(
+name|xfr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|xfr
 operator|->
 name|state
@@ -4397,6 +4405,7 @@ name|rds
 operator|!=
 name|NULL
 condition|)
+block|{
 name|dns_rdataset_disassociate
 argument_list|(
 name|rds
@@ -4410,6 +4419,7 @@ operator|&
 name|rds
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rdl

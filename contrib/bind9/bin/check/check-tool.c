@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.c,v 1.4.12.5 2004/03/08 04:04:13 marka Exp $ */
+comment|/* $Id: check-tool.c,v 1.4.12.7 2004/11/30 01:15:40 marka Exp $ */
 end_comment
 
 begin_include
@@ -71,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<dns/fixedname.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/log.h>
 end_include
 
 begin_include
@@ -146,6 +152,8 @@ init|=
 name|DNS_ZONEOPT_CHECKNS
 operator||
 name|DNS_ZONEOPT_MANYERRORS
+operator||
+name|DNS_ZONEOPT_CHECKNAMES
 decl_stmt|;
 end_decl_stmt
 

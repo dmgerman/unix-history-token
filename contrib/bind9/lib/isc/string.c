@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: string.c,v 1.6.164.4 2004/03/16 05:50:24 marka Exp $ */
+comment|/* $Id: string.c,v 1.6.164.5 2004/09/16 01:00:58 marka Exp $ */
 end_comment
 
 begin_include
@@ -251,6 +251,8 @@ operator|=
 name|tolower
 argument_list|(
 name|c
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 comment|/* end ? */

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004  Internet Systems Consortium, Inc. ("ISC")  * C
 end_comment
 
 begin_comment
-comment|/* $Id: wks_11.c,v 1.44.12.7 2004/03/08 09:04:44 marka Exp $ */
+comment|/* $Id: wks_11.c,v 1.44.12.8 2004/09/16 01:00:58 marka Exp $ */
 end_comment
 
 begin_comment
@@ -464,6 +464,8 @@ name|service
 index|[
 name|i
 index|]
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|port

@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: eventlib.c,v 1.2.2.1.4.2 2004/03/17 01:49:41 marka Exp $"
+literal|"$Id: eventlib.c,v 1.2.2.1.4.4 2004/12/09 04:07:15 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,12 @@ directive|include
 file|"port_after.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|__evOptMonoTime
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Forward. */
 end_comment
@@ -164,6 +170,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|int
+name|__evOptMonoTime
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Public. */
