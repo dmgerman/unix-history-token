@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: utility.c,v 1.5.2.2 1997/12/19 07:33:33 charnier Exp $"
+literal|"$Id: utility.c,v 1.5.2.3 1997/12/28 22:19:54 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1457,6 +1457,25 @@ operator|*
 name|cp
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|putstr
+argument_list|(
+literal|"\r\n"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
 if|if
 condition|(
 operator|*
