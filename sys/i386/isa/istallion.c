@@ -1138,7 +1138,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	Hardware configuration info for ECP boards. These defines apply  *	to the directly accessable io ports of the ECP. There is a set of  *	defines for each ECP board type, ISA, EISA and MCA.  */
+comment|/*  *	Hardware configuration info for ECP boards. These defines apply  *	to the directly accessible io ports of the ECP. There is a set of  *	defines for each ECP board type, ISA, EISA and MCA.  */
 end_comment
 
 begin_define
@@ -1406,7 +1406,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/*  *	Hardware configuration info for ONboard and Brumby boards. These  *	defines apply to the directly accessable io ports of these boards.  */
+comment|/*  *	Hardware configuration info for ONboard and Brumby boards. These  *	defines apply to the directly accessible io ports of these boards.  */
 end_comment
 
 begin_define

@@ -961,7 +961,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  *	Hardware ID bits for the EasyIO and ECH boards. These defines apply  *	to the directly accessable io ports of these boards (not the cd1400  *	uarts - they are in scd1400.h).  */
+comment|/*  *	Hardware ID bits for the EasyIO and ECH boards. These defines apply  *	to the directly accessible io ports of these boards (not the cd1400  *	uarts - they are in scd1400.h).  */
 end_comment
 
 begin_define

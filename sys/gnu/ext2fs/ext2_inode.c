@@ -822,7 +822,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * Shorten the size of the file. If the file is not being 	 * truncated to a block boundry, the contents of the 	 * partial block following the end of the file must be 	 * zero'ed in case it ever become accessable again because 	 * of subsequent file growth. 	 */
+comment|/* 	 * Shorten the size of the file. If the file is not being 	 * truncated to a block boundry, the contents of the 	 * partial block following the end of the file must be 	 * zero'ed in case it ever become accessible again because 	 * of subsequent file growth. 	 */
 comment|/* I don't understand the comment above */
 name|offset
 operator|=

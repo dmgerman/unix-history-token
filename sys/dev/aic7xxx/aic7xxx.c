@@ -4562,7 +4562,7 @@ name|ahc
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create our DMA tags.  These tags define the kinds of device 	 * accessable memory allocations and memory mappings we will 	 * need to perform during normal operation. 	 * 	 * Unless we need to further restrict the allocation, we rely 	 * on the restrictions of the parent dmat, hence the common 	 * use of MAXADDR and MAXSIZE. 	 */
+comment|/* 	 * Create our DMA tags.  These tags define the kinds of device 	 * accessible memory allocations and memory mappings we will 	 * need to perform during normal operation. 	 * 	 * Unless we need to further restrict the allocation, we rely 	 * on the restrictions of the parent dmat, hence the common 	 * use of MAXADDR and MAXSIZE. 	 */
 comment|/* DMA tag for our hardware scb structures */
 if|if
 condition|(
