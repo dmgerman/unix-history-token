@@ -1061,6 +1061,17 @@ argument_list|,
 name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+name|senderr
+argument_list|(
+name|ENOBUFS
+argument_list|)
+expr_stmt|;
 name|llc
 operator|.
 name|llc_dsap
@@ -1260,7 +1271,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 name|senderr
 argument_list|(
