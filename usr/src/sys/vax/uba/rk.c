@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.14	%G%	*/
+comment|/*	rk.c	4.15	%G%	*/
 end_comment
 
 begin_include
@@ -2902,22 +2902,10 @@ literal|0
 operator|)
 return|;
 block|}
-name|ubp
-operator|->
-name|uba_dpr
-index|[
-operator|(
+name|ubapurge
+argument_list|(
 name|um
-operator|->
-name|um_ubinfo
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0x0f
-index|]
-operator||=
-name|UBA_BNE
+argument_list|)
 expr_stmt|;
 name|i
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.24	81/02/26	*/
+comment|/*	up.c	4.25	81/02/26	*/
 end_comment
 
 begin_include
@@ -95,12 +95,6 @@ begin_include
 include|#
 directive|include
 file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mba.h"
 end_include
 
 begin_include
@@ -3294,22 +3288,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Flush the buffered data path, and compute the 	 * byte and bit position of the error.  The variable i 	 * is the byte offset in the transfer, the variable byte 	 * is the offset from a page boundary in main memory. 	 */
-name|ubp
-operator|->
-name|uba_dpr
-index|[
-operator|(
+name|ubapurge
+argument_list|(
 name|um
-operator|->
-name|um_ubinfo
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0x0f
-index|]
-operator||=
-name|UBA_BNE
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
