@@ -193,8 +193,8 @@ modifier|*
 name|lp
 decl_stmt|;
 name|struct
-name|sockaddr_in
-name|sin
+name|sockaddr_storage
+name|ss
 decl_stmt|;
 name|int
 name|p
@@ -503,7 +503,7 @@ name|sval
 operator|=
 sizeof|sizeof
 argument_list|(
-name|sin
+name|ss
 argument_list|)
 expr_stmt|;
 if|if
@@ -518,7 +518,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|ss
 argument_list|,
 operator|&
 name|sval
@@ -536,7 +536,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|realhostname
+name|realhostname_sa
 argument_list|(
 name|rhost
 argument_list|,
@@ -545,10 +545,15 @@ name|rhost
 operator|-
 literal|1
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
-name|sin
-operator|.
-name|sin_addr
+name|ss
+argument_list|,
+name|sval
 argument_list|)
 expr_stmt|;
 name|rhost
