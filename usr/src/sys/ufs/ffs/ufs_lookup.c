@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.9	84/07/02	*/
+comment|/*	ufs_lookup.c	6.10	84/07/04	*/
 end_comment
 
 begin_include
@@ -594,7 +594,7 @@ name|dp
 operator|->
 name|i_fs
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|dp
 argument_list|)
@@ -1050,7 +1050,7 @@ operator|->
 name|nc_nxt
 expr_stmt|;
 block|}
-comment|/* 				 * Get the next inode in the path. 				 * See comment above other `iunlock' code for 				 * an explaination of the locking protocol. 				 */
+comment|/* 				 * Get the next inode in the path. 				 * See comment above other `IUNLOCK' code for 				 * an explaination of the locking protocol. 				 */
 name|pdp
 operator|=
 name|dp
@@ -1083,49 +1083,6 @@ operator|->
 name|i_count
 operator|++
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|dp
-operator|->
-name|i_count
-condition|)
-block|{
-name|dp
-operator|->
-name|i_count
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|isdotdot
-condition|)
-block|{
-name|iunlock
-argument_list|(
-name|pdp
-argument_list|)
-expr_stmt|;
-name|ilock
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ilock
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-name|iunlock
-argument_list|(
-name|pdp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 else|else
 block|{
 if|if
@@ -1133,7 +1090,7 @@ condition|(
 name|isdotdot
 condition|)
 block|{
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1151,7 +1108,7 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1177,7 +1134,7 @@ argument_list|(
 name|dp
 argument_list|)
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -2422,7 +2379,7 @@ index|]
 operator|.
 name|m_inodp
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|dp
 argument_list|)
@@ -2566,7 +2523,7 @@ condition|(
 name|isdotdot
 condition|)
 block|{
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -2639,7 +2596,7 @@ operator|.
 name|d_ino
 argument_list|)
 expr_stmt|;
-name|iunlock
+name|IUNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -3005,7 +2962,7 @@ name|dp
 operator|=
 name|rootdir
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|dp
 argument_list|)
@@ -3022,7 +2979,7 @@ name|dp
 operator|=
 name|pdp
 expr_stmt|;
-name|ilock
+name|ILOCK
 argument_list|(
 name|dp
 argument_list|)
