@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	8.8 (Berkeley) 4/18/94"
+literal|"@(#)newfs.c	8.13 (Berkeley) 5/1/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,7 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
@@ -843,7 +855,7 @@ if|if
 condition|(
 name|progname
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv
@@ -1247,6 +1259,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 else|else
@@ -1476,7 +1490,7 @@ index|]
 expr_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|special
 argument_list|,
@@ -1840,7 +1854,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -1856,7 +1870,12 @@ if|if
 condition|(
 name|cp
 operator|==
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+operator|-
+literal|1
 operator|||
 operator|(
 operator|*
@@ -2282,8 +2301,6 @@ name|MAXBSIZE
 argument_list|)
 operator|/
 name|bsize
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2553,7 +2570,7 @@ condition|(
 operator|!
 name|Nflag
 operator|&&
-name|bcmp
+name|memcmp
 argument_list|(
 name|pp
 argument_list|,
@@ -2668,7 +2685,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_MFS
+literal|"mfs"
 argument_list|,
 name|argv
 index|[
@@ -3049,9 +3066,11 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|blk
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
