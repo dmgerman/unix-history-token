@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/yylex.c,v 2.10 93/09/16 20:31:48 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/yylex.c,v 2.13 95/03/04 16:10:41 vern Exp $ */
 end_comment
 
 begin_include
@@ -46,6 +46,11 @@ name|int
 name|beglin
 init|=
 name|false
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|yytext
 decl_stmt|;
 if|if
 condition|(
@@ -85,7 +90,10 @@ condition|)
 block|{
 name|synerr
 argument_list|(
+name|_
+argument_list|(
 literal|"premature EOF"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sectnum
@@ -246,20 +254,6 @@ case|:
 name|fputs
 argument_list|(
 literal|"%x"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|WHITESPACE
-case|:
-operator|(
-name|void
-operator|)
-name|putc
-argument_list|(
-literal|' '
 argument_list|,
 name|stderr
 argument_list|)
@@ -458,13 +452,81 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|OPTION_OP
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s "
+argument_list|,
+name|yytext
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OPT_OUTFILE
+case|:
+case|case
+name|OPT_PREFIX
+case|:
+case|case
+name|CCE_ALNUM
+case|:
+case|case
+name|CCE_ALPHA
+case|:
+case|case
+name|CCE_BLANK
+case|:
+case|case
+name|CCE_CNTRL
+case|:
+case|case
+name|CCE_DIGIT
+case|:
+case|case
+name|CCE_GRAPH
+case|:
+case|case
+name|CCE_LOWER
+case|:
+case|case
+name|CCE_PRINT
+case|:
+case|case
+name|CCE_PUNCT
+case|:
+case|case
+name|CCE_SPACE
+case|:
+case|case
+name|CCE_UPPER
+case|:
+case|case
+name|CCE_XDIGIT
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s"
+argument_list|,
+name|yytext
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|0
 case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"End Marker"
+name|_
+argument_list|(
+literal|"End Marker\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -473,7 +535,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"*Something Weird* - tok: %d val: %d\n"
+argument_list|)
 argument_list|,
 name|toktype
 argument_list|,

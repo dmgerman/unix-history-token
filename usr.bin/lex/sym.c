@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: sym.c,v 1.2 94/01/04 14:33:06 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/sym.c,v 2.19 95/03/04 16:11:04 vern Exp $ */
 end_comment
 
 begin_include
@@ -205,7 +205,10 @@ name|NULL
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"symbol table memory allocation failed"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -218,6 +221,8 @@ index|[
 name|hash_val
 index|]
 operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|new_entry
@@ -612,7 +617,10 @@ argument_list|)
 condition|)
 name|synerr
 argument_list|(
+name|_
+argument_list|(
 literal|"name defined twice"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -714,15 +722,6 @@ argument_list|,
 name|current_max_scs
 argument_list|)
 expr_stmt|;
-name|actvsc
-operator|=
-name|reallocate_integer_array
-argument_list|(
-name|actvsc
-argument_list|,
-name|current_max_scs
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -752,10 +751,8 @@ name|copy_string
 parameter_list|()
 function_decl|;
 comment|/* Generate start condition definition, for use in BEGIN et al. */
-name|printf
+name|action_define
 argument_list|(
-literal|"#define %s %d\n"
-argument_list|,
 name|str
 argument_list|,
 name|lastsc
@@ -805,7 +802,10 @@ argument_list|)
 condition|)
 name|format_pinpoint_message
 argument_list|(
+name|_
+argument_list|(
 literal|"start condition %s declared twice"
+argument_list|)
 argument_list|,
 name|str
 argument_list|)

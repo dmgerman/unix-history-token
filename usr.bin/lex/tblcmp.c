@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/tblcmp.c,v 2.10 93/12/07 10:18:30 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/tblcmp.c,v 2.11 94/11/05 17:08:28 vern Exp $ */
 end_comment
 
 begin_include
@@ -739,16 +739,16 @@ operator|+
 name|old_max
 operator|)
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|MAX_XPAIRS_INCREMENT
 operator|*
 sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1001,16 +1001,16 @@ operator|*
 operator|)
 name|chk
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|current_max_xpairs
 operator|*
 sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|char
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* File created from flex.skel via mkskel.sh */
+comment|/* File created from flex.skl via mkskel.sh */
 end_comment
 
 begin_include
@@ -10,6 +10,7 @@ file|"flexdef.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|skel
@@ -22,13 +23,17 @@ literal|""
 block|,
 literal|"/* Scanner skeleton version:"
 block|,
-literal|" * $Header: /home/daffy/u0/vern/flex/flex-2.4.7/RCS/flex.skl,v 1.2 94/08/03 11:13:24 vern Exp $"
+literal|" * $Header: /home/daffy/u0/vern/flex/RCS/flex.skl,v 2.89 96/05/25 21:02:21 vern Exp $"
 block|,
 literal|" */"
 block|,
 literal|""
 block|,
 literal|"#define FLEX_SCANNER"
+block|,
+literal|"#define YY_FLEX_MAJOR_VERSION 2"
+block|,
+literal|"#define YY_FLEX_MINOR_VERSION 5"
 block|,
 literal|""
 block|,
@@ -90,7 +95,7 @@ literal|"#else	/* ! __cplusplus */"
 block|,
 literal|""
 block|,
-literal|"#ifdef __STDC__"
+literal|"#if __STDC__"
 block|,
 literal|""
 block|,
@@ -106,25 +111,31 @@ literal|"#endif	/* ! __cplusplus */"
 block|,
 literal|""
 block|,
-literal|""
-block|,
 literal|"#ifdef __TURBOC__"
+block|,
+literal|" #pragma warn -rch"
+block|,
+literal|" #pragma warn -use"
+block|,
+literal|"#include<io.h>"
+block|,
+literal|"#include<stdlib.h>"
 block|,
 literal|"#define YY_USE_CONST"
 block|,
+literal|"#define YY_USE_PROTOS"
+block|,
 literal|"#endif"
 block|,
 literal|""
 block|,
-literal|""
+literal|"#ifdef YY_USE_CONST"
 block|,
-literal|"#ifndef YY_USE_CONST"
+literal|"#define yyconst const"
 block|,
-literal|"#ifndef const"
+literal|"#else"
 block|,
-literal|"#define const"
-block|,
-literal|"#endif"
+literal|"#define yyconst"
 block|,
 literal|"#endif"
 block|,
@@ -178,11 +189,15 @@ literal|""
 block|,
 literal|"/* Translate the current start state into a value that can be later handed"
 block|,
-literal|" * to BEGIN to return to the state."
+literal|" * to BEGIN to return to the state.  The YYSTATE alias is for lex"
+block|,
+literal|" * compatibility."
 block|,
 literal|" */"
 block|,
 literal|"#define YY_START ((yy_start - 1) / 2)"
+block|,
+literal|"#define YYSTATE YY_START"
 block|,
 literal|""
 block|,
@@ -192,11 +207,7 @@ literal|"#define YY_STATE_EOF(state) (YY_END_OF_BUFFER + state + 1)"
 block|,
 literal|""
 block|,
-literal|"/* Special action meaning \"start processing a new file\".  Now included"
-block|,
-literal|" * only for backward compatibility with previous versions of flex."
-block|,
-literal|" */"
+literal|"/* Special action meaning \"start processing a new file\". */"
 block|,
 literal|"#define YY_NEW_FILE yyrestart( yyin )"
 block|,
@@ -223,22 +234,6 @@ block|,
 literal|"extern FILE *yyin, *yyout;"
 block|,
 literal|"%*"
-block|,
-literal|""
-block|,
-literal|"#ifdef __cplusplus"
-block|,
-literal|"extern \"C\" {"
-block|,
-literal|"#endif"
-block|,
-literal|"	extern int yywrap YY_PROTO(( void ));"
-block|,
-literal|"#ifdef __cplusplus"
-block|,
-literal|"	}"
-block|,
-literal|"#endif"
 block|,
 literal|""
 block|,
@@ -292,6 +287,8 @@ literal|"		/* Undo effects of setting up yytext. */ \\"
 block|,
 literal|"		*yy_cp = yy_hold_char; \\"
 block|,
+literal|"		YY_RESTORE_YY_MORE_OFFSET \\"
+block|,
 literal|"		yy_c_buf_p = yy_cp = yy_bp + n - YY_MORE_ADJ; \\"
 block|,
 literal|"		YY_DO_BEFORE_ACTION; /* set up yytext again */ \\"
@@ -303,6 +300,18 @@ block|,
 literal|""
 block|,
 literal|"#define unput(c) yyunput( c, yytext_ptr )"
+block|,
+literal|""
+block|,
+literal|"/* The following is because we cannot portably get our hands on size_t"
+block|,
+literal|" * (without autoconf's help, which isn't available because we want"
+block|,
+literal|" * flex-generated scanners to compile on their own)."
+block|,
+literal|" */"
+block|,
+literal|"typedef unsigned int yy_size_t;"
 block|,
 literal|""
 block|,
@@ -336,7 +345,7 @@ literal|"	 * characters."
 block|,
 literal|"	 */"
 block|,
-literal|"	int yy_buf_size;"
+literal|"	yy_size_t yy_buf_size;"
 block|,
 literal|""
 block|,
@@ -347,6 +356,18 @@ block|,
 literal|"	 */"
 block|,
 literal|"	int yy_n_chars;"
+block|,
+literal|""
+block|,
+literal|"	/* Whether we \"own\" the buffer - i.e., we know we created it,"
+block|,
+literal|"	 * and can realloc() it to grow it, and should free() it to"
+block|,
+literal|"	 * delete it."
+block|,
+literal|"	 */"
+block|,
+literal|"	int yy_is_our_buffer;"
 block|,
 literal|""
 block|,
@@ -361,6 +382,18 @@ block|,
 literal|"	 */"
 block|,
 literal|"	int yy_is_interactive;"
+block|,
+literal|""
+block|,
+literal|"	/* Whether we're considered to be at the beginning of a line."
+block|,
+literal|"	 * If so, '^' rules will be active on the next match, otherwise"
+block|,
+literal|"	 * not."
+block|,
+literal|"	 */"
+block|,
+literal|"	int yy_at_bol;"
 block|,
 literal|""
 block|,
@@ -466,9 +499,9 @@ literal|"static int yy_did_buffer_switch_on_eof;"
 block|,
 literal|""
 block|,
-literal|"static void yyunput YY_PROTO(( int c, char *buf_ptr ));"
-block|,
 literal|"void yyrestart YY_PROTO(( FILE *input_file ));"
+block|,
+literal|""
 block|,
 literal|"void yy_switch_to_buffer YY_PROTO(( YY_BUFFER_STATE new_buffer ));"
 block|,
@@ -480,27 +513,25 @@ literal|"void yy_delete_buffer YY_PROTO(( YY_BUFFER_STATE b ));"
 block|,
 literal|"void yy_init_buffer YY_PROTO(( YY_BUFFER_STATE b, FILE *file ));"
 block|,
+literal|"void yy_flush_buffer YY_PROTO(( YY_BUFFER_STATE b ));"
+block|,
+literal|"#define YY_FLUSH_BUFFER yy_flush_buffer( yy_current_buffer )"
+block|,
 literal|""
 block|,
-literal|"static int yy_start_stack_ptr = 0;"
+literal|"YY_BUFFER_STATE yy_scan_buffer YY_PROTO(( char *base, yy_size_t size ));"
 block|,
-literal|"static int yy_start_stack_depth = 0;"
+literal|"YY_BUFFER_STATE yy_scan_string YY_PROTO(( yyconst char *str ));"
 block|,
-literal|"static int *yy_start_stack = 0;"
-block|,
-literal|"static void yy_push_state YY_PROTO(( int new_state ));"
-block|,
-literal|"static void yy_pop_state YY_PROTO(( void ));"
-block|,
-literal|"static int yy_top_state YY_PROTO(( void ));"
+literal|"YY_BUFFER_STATE yy_scan_bytes YY_PROTO(( yyconst char *bytes, int len ));"
 block|,
 literal|"%*"
 block|,
 literal|""
 block|,
-literal|"static void *yy_flex_alloc YY_PROTO(( unsigned int ));"
+literal|"static void *yy_flex_alloc YY_PROTO(( yy_size_t ));"
 block|,
-literal|"static void *yy_flex_realloc YY_PROTO(( void *, unsigned int ));"
+literal|"static void *yy_flex_realloc YY_PROTO(( void *, yy_size_t ));"
 block|,
 literal|"static void yy_flex_free YY_PROTO(( void * ));"
 block|,
@@ -510,31 +541,39 @@ literal|"#define yy_new_buffer yy_create_buffer"
 block|,
 literal|""
 block|,
+literal|"#define yy_set_interactive(is_interactive) \\"
+block|,
+literal|"	{ \\"
+block|,
+literal|"	if ( ! yy_current_buffer ) \\"
+block|,
+literal|"		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \\"
+block|,
+literal|"	yy_current_buffer->yy_is_interactive = is_interactive; \\"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
+literal|"#define yy_set_bol(at_bol) \\"
+block|,
+literal|"	{ \\"
+block|,
+literal|"	if ( ! yy_current_buffer ) \\"
+block|,
+literal|"		yy_current_buffer = yy_create_buffer( yyin, YY_BUF_SIZE ); \\"
+block|,
+literal|"	yy_current_buffer->yy_at_bol = at_bol; \\"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
+literal|"#define YY_AT_BOL() (yy_current_buffer->yy_at_bol)"
+block|,
+literal|""
+block|,
 literal|"%% yytext/yyin/yyout/yy_state_type/yylineno etc. def's& init go here"
-block|,
-literal|""
-block|,
-literal|"#ifndef yytext_ptr"
-block|,
-literal|"static void yy_flex_strncpy YY_PROTO(( char *, const char *, int ));"
-block|,
-literal|"#endif"
-block|,
-literal|""
-block|,
-literal|"%- Standard (non-C++) definition"
-block|,
-literal|"#ifdef __cplusplus"
-block|,
-literal|"static int yyinput YY_PROTO(( void ));"
-block|,
-literal|"#else"
-block|,
-literal|"static int input YY_PROTO(( void ));"
-block|,
-literal|"#endif"
-block|,
-literal|"%*"
 block|,
 literal|""
 block|,
@@ -546,7 +585,7 @@ literal|"static yy_state_type yy_try_NUL_trans YY_PROTO(( yy_state_type current_
 block|,
 literal|"static int yy_get_next_buffer YY_PROTO(( void ));"
 block|,
-literal|"static void yy_fatal_error YY_PROTO(( const char msg[] ));"
+literal|"static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));"
 block|,
 literal|"%*"
 block|,
@@ -583,6 +622,110 @@ block|,
 literal|" * section 1."
 block|,
 literal|" */"
+block|,
+literal|""
+block|,
+literal|"#ifndef YY_SKIP_YYWRAP"
+block|,
+literal|"#ifdef __cplusplus"
+block|,
+literal|"extern \"C\" int yywrap YY_PROTO(( void ));"
+block|,
+literal|"#else"
+block|,
+literal|"extern int yywrap YY_PROTO(( void ));"
+block|,
+literal|"#endif"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"%-"
+block|,
+literal|"#ifndef YY_NO_UNPUT"
+block|,
+literal|"static void yyunput YY_PROTO(( int c, char *buf_ptr ));"
+block|,
+literal|"#endif"
+block|,
+literal|"%*"
+block|,
+literal|""
+block|,
+literal|"#ifndef yytext_ptr"
+block|,
+literal|"static void yy_flex_strncpy YY_PROTO(( char *, yyconst char *, int ));"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"#ifdef YY_NEED_STRLEN"
+block|,
+literal|"static int yy_flex_strlen YY_PROTO(( yyconst char * ));"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"#ifndef YY_NO_INPUT"
+block|,
+literal|"%- Standard (non-C++) definition"
+block|,
+literal|"#ifdef __cplusplus"
+block|,
+literal|"static int yyinput YY_PROTO(( void ));"
+block|,
+literal|"#else"
+block|,
+literal|"static int input YY_PROTO(( void ));"
+block|,
+literal|"#endif"
+block|,
+literal|"%*"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"#if YY_STACK_USED"
+block|,
+literal|"static int yy_start_stack_ptr = 0;"
+block|,
+literal|"static int yy_start_stack_depth = 0;"
+block|,
+literal|"static int *yy_start_stack = 0;"
+block|,
+literal|"#ifndef YY_NO_PUSH_STATE"
+block|,
+literal|"static void yy_push_state YY_PROTO(( int new_state ));"
+block|,
+literal|"#endif"
+block|,
+literal|"#ifndef YY_NO_POP_STATE"
+block|,
+literal|"static void yy_pop_state YY_PROTO(( void ));"
+block|,
+literal|"#endif"
+block|,
+literal|"#ifndef YY_NO_TOP_STATE"
+block|,
+literal|"static int yy_top_state YY_PROTO(( void ));"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"#else"
+block|,
+literal|"#define YY_NO_PUSH_STATE 1"
+block|,
+literal|"#define YY_NO_POP_STATE 1"
+block|,
+literal|"#define YY_NO_TOP_STATE 1"
+block|,
+literal|"#endif"
 block|,
 literal|""
 block|,
@@ -766,6 +909,10 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|"%% YY_RULE_SETUP definition goes here"
+block|,
+literal|""
+block|,
 literal|"YY_DECL"
 block|,
 literal|"	{"
@@ -785,6 +932,10 @@ block|,
 literal|"	if ( yy_init )"
 block|,
 literal|"		{"
+block|,
+literal|"		yy_init = 0;"
+block|,
+literal|""
 block|,
 literal|"#ifdef YY_USER_INIT"
 block|,
@@ -828,11 +979,7 @@ literal|"%*"
 block|,
 literal|""
 block|,
-literal|"		if ( yy_current_buffer )"
-block|,
-literal|"			yy_init_buffer( yy_current_buffer, yyin );"
-block|,
-literal|"		else"
+literal|"		if ( ! yy_current_buffer )"
 block|,
 literal|"			yy_current_buffer ="
 block|,
@@ -841,10 +988,6 @@ block|,
 literal|""
 block|,
 literal|"		yy_load_buffer_state();"
-block|,
-literal|""
-block|,
-literal|"		yy_init = 0;"
 block|,
 literal|"		}"
 block|,
@@ -890,7 +1033,7 @@ literal|"		YY_DO_BEFORE_ACTION;"
 block|,
 literal|""
 block|,
-literal|"%% code for yylineno update goes here, if -l option"
+literal|"%% code for yylineno update goes here"
 block|,
 literal|""
 block|,
@@ -916,13 +1059,15 @@ literal|"		{"
 block|,
 literal|"		/* Amount of text matched not including the EOB char. */"
 block|,
-literal|"		int yy_amount_of_matched_text = yy_cp - yytext_ptr - 1;"
+literal|"		int yy_amount_of_matched_text = (int) (yy_cp - yytext_ptr) - 1;"
 block|,
 literal|""
 block|,
 literal|"		/* Undo the effects of YY_DO_BEFORE_ACTION. */"
 block|,
 literal|"		*yy_cp = yy_hold_char;"
+block|,
+literal|"		YY_RESTORE_YY_MORE_OFFSET"
 block|,
 literal|""
 block|,
@@ -1168,6 +1313,100 @@ literal|""
 block|,
 literal|"%+"
 block|,
+literal|"yyFlexLexer::yyFlexLexer( istream* arg_yyin, ostream* arg_yyout )"
+block|,
+literal|"	{"
+block|,
+literal|"	yyin = arg_yyin;"
+block|,
+literal|"	yyout = arg_yyout;"
+block|,
+literal|"	yy_c_buf_p = 0;"
+block|,
+literal|"	yy_init = 1;"
+block|,
+literal|"	yy_start = 0;"
+block|,
+literal|"	yy_flex_debug = 0;"
+block|,
+literal|"	yylineno = 1;	// this will only get updated if %option yylineno"
+block|,
+literal|""
+block|,
+literal|"	yy_did_buffer_switch_on_eof = 0;"
+block|,
+literal|""
+block|,
+literal|"	yy_looking_for_trail_begin = 0;"
+block|,
+literal|"	yy_more_flag = 0;"
+block|,
+literal|"	yy_more_len = 0;"
+block|,
+literal|"	yy_more_offset = yy_prev_more_offset = 0;"
+block|,
+literal|""
+block|,
+literal|"	yy_start_stack_ptr = yy_start_stack_depth = 0;"
+block|,
+literal|"	yy_start_stack = 0;"
+block|,
+literal|""
+block|,
+literal|"	yy_current_buffer = 0;"
+block|,
+literal|""
+block|,
+literal|"#ifdef YY_USES_REJECT"
+block|,
+literal|"	yy_state_buf = new yy_state_type[YY_BUF_SIZE + 2];"
+block|,
+literal|"#else"
+block|,
+literal|"	yy_state_buf = 0;"
+block|,
+literal|"#endif"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
+literal|"yyFlexLexer::~yyFlexLexer()"
+block|,
+literal|"	{"
+block|,
+literal|"	delete yy_state_buf;"
+block|,
+literal|"	yy_delete_buffer( yy_current_buffer );"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
+literal|"void yyFlexLexer::switch_streams( istream* new_in, ostream* new_out )"
+block|,
+literal|"	{"
+block|,
+literal|"	if ( new_in )"
+block|,
+literal|"		{"
+block|,
+literal|"		yy_delete_buffer( yy_current_buffer );"
+block|,
+literal|"		yy_switch_to_buffer( yy_create_buffer( new_in, YY_BUF_SIZE ) );"
+block|,
+literal|"		}"
+block|,
+literal|""
+block|,
+literal|"	if ( new_out )"
+block|,
+literal|"		yyout = new_out;"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
 literal|"#ifdef YY_INTERACTIVE"
 block|,
 literal|"int yyFlexLexer::LexerInput( char* buf, int /* max_size */ )"
@@ -1270,7 +1509,7 @@ literal|"	{"
 block|,
 literal|"	register char *dest = yy_current_buffer->yy_ch_buf;"
 block|,
-literal|"	register char *source = yytext_ptr - 1; /* copy prev. char, too */"
+literal|"	register char *source = yytext_ptr;"
 block|,
 literal|"	register int number_to_move, i;"
 block|,
@@ -1294,7 +1533,7 @@ literal|"		if ( yy_c_buf_p - yytext_ptr - YY_MORE_ADJ == 1 )"
 block|,
 literal|"			{"
 block|,
-literal|"			/* We matched a singled characater, the EOB, so"
+literal|"			/* We matched a single character, the EOB, so"
 block|,
 literal|"			 * treat this as a final EOF."
 block|,
@@ -1330,7 +1569,7 @@ literal|""
 block|,
 literal|"	/* First move last chars to start of buffer. */"
 block|,
-literal|"	number_to_move = yy_c_buf_p - yytext_ptr;"
+literal|"	number_to_move = (int) (yy_c_buf_p - yytext_ptr) - 1;"
 block|,
 literal|""
 block|,
@@ -1382,17 +1621,45 @@ literal|"			YY_BUFFER_STATE b = yy_current_buffer;"
 block|,
 literal|""
 block|,
-literal|"			int yy_c_buf_p_offset = yy_c_buf_p - b->yy_ch_buf;"
+literal|"			int yy_c_buf_p_offset ="
+block|,
+literal|"				(int) (yy_c_buf_p - b->yy_ch_buf);"
 block|,
 literal|""
 block|,
-literal|"			b->yy_buf_size *= 2;"
+literal|"			if ( b->yy_is_our_buffer )"
 block|,
-literal|"			b->yy_ch_buf = (char *)"
+literal|"				{"
 block|,
-literal|"				yy_flex_realloc( (void *) b->yy_ch_buf,"
+literal|"				int new_size = b->yy_buf_size * 2;"
 block|,
-literal|"						 b->yy_buf_size );"
+literal|""
+block|,
+literal|"				if ( new_size<= 0 )"
+block|,
+literal|"					b->yy_buf_size += b->yy_buf_size / 8;"
+block|,
+literal|"				else"
+block|,
+literal|"					b->yy_buf_size *= 2;"
+block|,
+literal|""
+block|,
+literal|"				b->yy_ch_buf = (char *)"
+block|,
+literal|"					/* Include room in for 2 EOB chars. */"
+block|,
+literal|"					yy_flex_realloc( (void *) b->yy_ch_buf,"
+block|,
+literal|"							 b->yy_buf_size + 2 );"
+block|,
+literal|"				}"
+block|,
+literal|"			else"
+block|,
+literal|"				/* Can't grow it, we don't own it. */"
+block|,
+literal|"				b->yy_ch_buf = 0;"
 block|,
 literal|""
 block|,
@@ -1438,7 +1705,7 @@ literal|"	if ( yy_n_chars == 0 )"
 block|,
 literal|"		{"
 block|,
-literal|"		if ( number_to_move - YY_MORE_ADJ == 1 )"
+literal|"		if ( number_to_move == YY_MORE_ADJ )"
 block|,
 literal|"			{"
 block|,
@@ -1480,19 +1747,7 @@ literal|"	yy_current_buffer->yy_ch_buf[yy_n_chars + 1] = YY_END_OF_BUFFER_CHAR;"
 block|,
 literal|""
 block|,
-literal|"	/* yytext begins at the second character in yy_ch_buf; the first"
-block|,
-literal|"	 * character is the one which preceded it before reading in the latest"
-block|,
-literal|"	 * buffer; it needs to be kept around in case it's a newline, so"
-block|,
-literal|"	 * yy_get_previous_state() will have with '^' rules active."
-block|,
-literal|"	 */"
-block|,
-literal|""
-block|,
-literal|"	yytext_ptr =&yy_current_buffer->yy_ch_buf[1];"
+literal|"	yytext_ptr =&yy_current_buffer->yy_ch_buf[0];"
 block|,
 literal|""
 block|,
@@ -1598,6 +1853,8 @@ literal|""
 block|,
 literal|"%-"
 block|,
+literal|"#ifndef YY_NO_UNPUT"
+block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
 literal|"static void yyunput( int c, register char *yy_bp )"
@@ -1654,9 +1911,9 @@ literal|"			*--dest = *--source;"
 block|,
 literal|""
 block|,
-literal|"		yy_cp += dest - source;"
+literal|"		yy_cp += (int) (dest - source);"
 block|,
-literal|"		yy_bp += dest - source;"
+literal|"		yy_bp += (int) (dest - source);"
 block|,
 literal|"		yy_n_chars = yy_current_buffer->yy_buf_size;"
 block|,
@@ -1670,29 +1927,27 @@ literal|"		}"
 block|,
 literal|""
 block|,
-literal|"	if ( yy_cp> yy_bp&& yy_cp[-1] == '\\n' )"
-block|,
-literal|"		yy_cp[-2] = '\\n';"
-block|,
-literal|""
-block|,
 literal|"	*--yy_cp = (char) c;"
 block|,
 literal|""
 block|,
-literal|"%% update yylineno here, if doing -l"
+literal|"%% update yylineno here"
 block|,
 literal|""
 block|,
-literal|"	/* Note: the formal parameter *must* be called \"yy_bp\" for this"
+literal|"	yytext_ptr = yy_bp;"
 block|,
-literal|"	 * macro to now work correctly."
+literal|"	yy_hold_char = *yy_cp;"
 block|,
-literal|"	 */"
-block|,
-literal|"	YY_DO_BEFORE_ACTION; /* set up yytext again */"
+literal|"	yy_c_buf_p = yy_cp;"
 block|,
 literal|"	}"
+block|,
+literal|"%-"
+block|,
+literal|"#endif	/* ifndef YY_NO_UNPUT */"
+block|,
+literal|"%*"
 block|,
 literal|""
 block|,
@@ -1750,7 +2005,7 @@ literal|"		else"
 block|,
 literal|"			{ /* need more input */"
 block|,
-literal|"			yytext_ptr = yy_c_buf_p;"
+literal|"			int offset = yy_c_buf_p - yytext_ptr;"
 block|,
 literal|"			++yy_c_buf_p;"
 block|,
@@ -1768,9 +2023,7 @@ literal|"					if ( yywrap() )"
 block|,
 literal|"						{"
 block|,
-literal|"						yy_c_buf_p ="
-block|,
-literal|"						yytext_ptr + YY_MORE_ADJ;"
+literal|"						yy_c_buf_p = yytext_ptr + offset;"
 block|,
 literal|"						return EOF;"
 block|,
@@ -1778,7 +2031,9 @@ literal|"						}"
 block|,
 literal|""
 block|,
-literal|"					YY_NEW_FILE;"
+literal|"					if ( ! yy_did_buffer_switch_on_eof )"
+block|,
+literal|"						YY_NEW_FILE;"
 block|,
 literal|"#ifdef __cplusplus"
 block|,
@@ -1796,7 +2051,7 @@ literal|""
 block|,
 literal|"				case EOB_ACT_CONTINUE_SCAN:"
 block|,
-literal|"					yy_c_buf_p = yytext_ptr + YY_MORE_ADJ;"
+literal|"					yy_c_buf_p = yytext_ptr + offset;"
 block|,
 literal|"					break;"
 block|,
@@ -1831,6 +2086,10 @@ block|,
 literal|"	*yy_c_buf_p = '\\0';	/* preserve yytext */"
 block|,
 literal|"	yy_hold_char = *++yy_c_buf_p;"
+block|,
+literal|""
+block|,
+literal|"%% update BOL and yylineno"
 block|,
 literal|""
 block|,
@@ -2012,8 +2271,6 @@ literal|""
 block|,
 literal|"	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );"
 block|,
-literal|""
-block|,
 literal|"	if ( ! b )"
 block|,
 literal|"		YY_FATAL_ERROR( \"out of dynamic memory in yy_create_buffer()\" );"
@@ -2032,11 +2289,13 @@ literal|"	 */"
 block|,
 literal|"	b->yy_ch_buf = (char *) yy_flex_alloc( b->yy_buf_size + 2 );"
 block|,
-literal|""
-block|,
 literal|"	if ( ! b->yy_ch_buf )"
 block|,
 literal|"		YY_FATAL_ERROR( \"out of dynamic memory in yy_create_buffer()\" );"
+block|,
+literal|""
+block|,
+literal|"	b->yy_is_our_buffer = 1;"
 block|,
 literal|""
 block|,
@@ -2074,13 +2333,23 @@ literal|"%*"
 block|,
 literal|"	{"
 block|,
+literal|"	if ( ! b )"
+block|,
+literal|"		return;"
+block|,
+literal|""
+block|,
 literal|"	if ( b == yy_current_buffer )"
 block|,
 literal|"		yy_current_buffer = (YY_BUFFER_STATE) 0;"
 block|,
 literal|""
 block|,
-literal|"	yy_flex_free( (void *) b->yy_ch_buf );"
+literal|"	if ( b->yy_is_our_buffer )"
+block|,
+literal|"		yy_flex_free( (void *) b->yy_ch_buf );"
+block|,
+literal|""
 block|,
 literal|"	yy_flex_free( (void *) b );"
 block|,
@@ -2091,6 +2360,18 @@ block|,
 literal|""
 block|,
 literal|"%-"
+block|,
+literal|"#ifndef YY_ALWAYS_INTERACTIVE"
+block|,
+literal|"#ifndef YY_NEVER_INTERACTIVE"
+block|,
+literal|"extern int isatty YY_PROTO(( int ));"
+block|,
+literal|"#endif"
+block|,
+literal|"#endif"
+block|,
+literal|""
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
@@ -2106,29 +2387,87 @@ literal|"FILE *file;"
 block|,
 literal|"#endif"
 block|,
+literal|""
+block|,
 literal|"%+"
+block|,
+literal|"extern \"C\" int isatty YY_PROTO(( int ));"
 block|,
 literal|"void yyFlexLexer::yy_init_buffer( YY_BUFFER_STATE b, istream* file )"
 block|,
 literal|"%*"
 block|,
+literal|""
+block|,
 literal|"	{"
+block|,
+literal|"	yy_flush_buffer( b );"
+block|,
+literal|""
 block|,
 literal|"	b->yy_input_file = file;"
 block|,
-literal|""
-block|,
-literal|"	/* We put in the '\\n' and start reading from [1] so that an"
-block|,
-literal|"	 * initial match-at-newline will be true."
-block|,
-literal|"	 */"
+literal|"	b->yy_fill_buffer = 1;"
 block|,
 literal|""
 block|,
-literal|"	b->yy_ch_buf[0] = '\\n';"
+literal|"%-"
 block|,
-literal|"	b->yy_n_chars = 1;"
+literal|"#if YY_ALWAYS_INTERACTIVE"
+block|,
+literal|"	b->yy_is_interactive = 1;"
+block|,
+literal|"#else"
+block|,
+literal|"#if YY_NEVER_INTERACTIVE"
+block|,
+literal|"	b->yy_is_interactive = 0;"
+block|,
+literal|"#else"
+block|,
+literal|"	b->yy_is_interactive = file ? (isatty( fileno(file) )> 0) : 0;"
+block|,
+literal|"#endif"
+block|,
+literal|"#endif"
+block|,
+literal|"%+"
+block|,
+literal|"	b->yy_is_interactive = 0;"
+block|,
+literal|"%*"
+block|,
+literal|"	}"
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|"%-"
+block|,
+literal|"#ifdef YY_USE_PROTOS"
+block|,
+literal|"void yy_flush_buffer( YY_BUFFER_STATE b )"
+block|,
+literal|"#else"
+block|,
+literal|"void yy_flush_buffer( b )"
+block|,
+literal|"YY_BUFFER_STATE b;"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|"%+"
+block|,
+literal|"void yyFlexLexer::yy_flush_buffer( YY_BUFFER_STATE b )"
+block|,
+literal|"%*"
+block|,
+literal|"	{"
+block|,
+literal|"	b->yy_n_chars = 0;"
 block|,
 literal|""
 block|,
@@ -2140,39 +2479,235 @@ literal|"	 * a jam in that state."
 block|,
 literal|"	 */"
 block|,
+literal|"	b->yy_ch_buf[0] = YY_END_OF_BUFFER_CHAR;"
+block|,
 literal|"	b->yy_ch_buf[1] = YY_END_OF_BUFFER_CHAR;"
 block|,
-literal|"	b->yy_ch_buf[2] = YY_END_OF_BUFFER_CHAR;"
+literal|""
+block|,
+literal|"	b->yy_buf_pos =&b->yy_ch_buf[0];"
 block|,
 literal|""
 block|,
-literal|"	b->yy_buf_pos =&b->yy_ch_buf[1];"
+literal|"	b->yy_at_bol = 1;"
+block|,
+literal|"	b->yy_buffer_status = YY_BUFFER_NEW;"
 block|,
 literal|""
 block|,
-literal|"%-"
+literal|"	if ( b == yy_current_buffer )"
 block|,
-literal|"	b->yy_is_interactive = file ? isatty( fileno(file) ) : 0;"
+literal|"		yy_load_buffer_state();"
 block|,
-literal|"%+"
-block|,
-literal|"	b->yy_is_interactive = 0;"
+literal|"	}"
 block|,
 literal|"%*"
 block|,
 literal|""
 block|,
-literal|"	b->yy_fill_buffer = 1;"
+literal|""
+block|,
+literal|"#ifndef YY_NO_SCAN_BUFFER"
+block|,
+literal|"%-"
+block|,
+literal|"#ifdef YY_USE_PROTOS"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_buffer( char *base, yy_size_t size )"
+block|,
+literal|"#else"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_buffer( base, size )"
+block|,
+literal|"char *base;"
+block|,
+literal|"yy_size_t size;"
+block|,
+literal|"#endif"
+block|,
+literal|"	{"
+block|,
+literal|"	YY_BUFFER_STATE b;"
 block|,
 literal|""
+block|,
+literal|"	if ( size< 2 ||"
+block|,
+literal|"	     base[size-2] != YY_END_OF_BUFFER_CHAR ||"
+block|,
+literal|"	     base[size-1] != YY_END_OF_BUFFER_CHAR )"
+block|,
+literal|"		/* They forgot to leave room for the EOB's. */"
+block|,
+literal|"		return 0;"
+block|,
+literal|""
+block|,
+literal|"	b = (YY_BUFFER_STATE) yy_flex_alloc( sizeof( struct yy_buffer_state ) );"
+block|,
+literal|"	if ( ! b )"
+block|,
+literal|"		YY_FATAL_ERROR( \"out of dynamic memory in yy_scan_buffer()\" );"
+block|,
+literal|""
+block|,
+literal|"	b->yy_buf_size = size - 2;	/* \"- 2\" to take care of EOB's */"
+block|,
+literal|"	b->yy_buf_pos = b->yy_ch_buf = base;"
+block|,
+literal|"	b->yy_is_our_buffer = 0;"
+block|,
+literal|"	b->yy_input_file = 0;"
+block|,
+literal|"	b->yy_n_chars = b->yy_buf_size;"
+block|,
+literal|"	b->yy_is_interactive = 0;"
+block|,
+literal|"	b->yy_at_bol = 1;"
+block|,
+literal|"	b->yy_fill_buffer = 0;"
 block|,
 literal|"	b->yy_buffer_status = YY_BUFFER_NEW;"
 block|,
+literal|""
+block|,
+literal|"	yy_switch_to_buffer( b );"
+block|,
+literal|""
+block|,
+literal|"	return b;"
+block|,
 literal|"	}"
 block|,
+literal|"%*"
+block|,
+literal|"#endif"
+block|,
 literal|""
 block|,
 literal|""
+block|,
+literal|"#ifndef YY_NO_SCAN_STRING"
+block|,
+literal|"%-"
+block|,
+literal|"#ifdef YY_USE_PROTOS"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_string( yyconst char *str )"
+block|,
+literal|"#else"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_string( str )"
+block|,
+literal|"yyconst char *str;"
+block|,
+literal|"#endif"
+block|,
+literal|"	{"
+block|,
+literal|"	int len;"
+block|,
+literal|"	for ( len = 0; str[len]; ++len )"
+block|,
+literal|"		;"
+block|,
+literal|""
+block|,
+literal|"	return yy_scan_bytes( str, len );"
+block|,
+literal|"	}"
+block|,
+literal|"%*"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|"#ifndef YY_NO_SCAN_BYTES"
+block|,
+literal|"%-"
+block|,
+literal|"#ifdef YY_USE_PROTOS"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_bytes( yyconst char *bytes, int len )"
+block|,
+literal|"#else"
+block|,
+literal|"YY_BUFFER_STATE yy_scan_bytes( bytes, len )"
+block|,
+literal|"yyconst char *bytes;"
+block|,
+literal|"int len;"
+block|,
+literal|"#endif"
+block|,
+literal|"	{"
+block|,
+literal|"	YY_BUFFER_STATE b;"
+block|,
+literal|"	char *buf;"
+block|,
+literal|"	yy_size_t n;"
+block|,
+literal|"	int i;"
+block|,
+literal|""
+block|,
+literal|"	/* Get memory for full buffer, including space for trailing EOB's. */"
+block|,
+literal|"	n = len + 2;"
+block|,
+literal|"	buf = (char *) yy_flex_alloc( n );"
+block|,
+literal|"	if ( ! buf )"
+block|,
+literal|"		YY_FATAL_ERROR( \"out of dynamic memory in yy_scan_bytes()\" );"
+block|,
+literal|""
+block|,
+literal|"	for ( i = 0; i< len; ++i )"
+block|,
+literal|"		buf[i] = bytes[i];"
+block|,
+literal|""
+block|,
+literal|"	buf[len] = buf[len+1] = YY_END_OF_BUFFER_CHAR;"
+block|,
+literal|""
+block|,
+literal|"	b = yy_scan_buffer( buf, n );"
+block|,
+literal|"	if ( ! b )"
+block|,
+literal|"		YY_FATAL_ERROR( \"bad buffer in yy_scan_bytes()\" );"
+block|,
+literal|""
+block|,
+literal|"	/* It's okay to grow etc. this buffer, and we should throw it"
+block|,
+literal|"	 * away when we're done."
+block|,
+literal|"	 */"
+block|,
+literal|"	b->yy_is_our_buffer = 1;"
+block|,
+literal|""
+block|,
+literal|"	return b;"
+block|,
+literal|"	}"
+block|,
+literal|"%*"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
+literal|""
+block|,
+literal|"#ifndef YY_NO_PUSH_STATE"
 block|,
 literal|"%-"
 block|,
@@ -2200,7 +2735,7 @@ literal|"	if ( yy_start_stack_ptr>= yy_start_stack_depth )"
 block|,
 literal|"		{"
 block|,
-literal|"		int new_size;"
+literal|"		yy_size_t new_size;"
 block|,
 literal|""
 block|,
@@ -2242,9 +2777,13 @@ literal|"	BEGIN(new_state);"
 block|,
 literal|"	}"
 block|,
+literal|"#endif"
+block|,
 literal|""
 block|,
 literal|""
+block|,
+literal|"#ifndef YY_NO_POP_STATE"
 block|,
 literal|"%-"
 block|,
@@ -2268,9 +2807,13 @@ literal|"	BEGIN(yy_start_stack[yy_start_stack_ptr]);"
 block|,
 literal|"	}"
 block|,
+literal|"#endif"
+block|,
 literal|""
 block|,
 literal|""
+block|,
+literal|"#ifndef YY_NO_TOP_STATE"
 block|,
 literal|"%-"
 block|,
@@ -2288,7 +2831,15 @@ literal|"	return yy_start_stack[yy_start_stack_ptr - 1];"
 block|,
 literal|"	}"
 block|,
+literal|"#endif"
+block|,
 literal|""
+block|,
+literal|"#ifndef YY_EXIT_FAILURE"
+block|,
+literal|"#define YY_EXIT_FAILURE 2"
+block|,
+literal|"#endif"
 block|,
 literal|""
 block|,
@@ -2296,7 +2847,7 @@ literal|"%-"
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
-literal|"static void yy_fatal_error( const char msg[] )"
+literal|"static void yy_fatal_error( yyconst char msg[] )"
 block|,
 literal|"#else"
 block|,
@@ -2310,7 +2861,7 @@ literal|"	{"
 block|,
 literal|"	(void) fprintf( stderr, \"%s\\n\", msg );"
 block|,
-literal|"	exit( 1 );"
+literal|"	exit( YY_EXIT_FAILURE );"
 block|,
 literal|"	}"
 block|,
@@ -2320,13 +2871,13 @@ literal|"%+"
 block|,
 literal|""
 block|,
-literal|"void yyFlexLexer::LexerError( const char msg[] )"
+literal|"void yyFlexLexer::LexerError( yyconst char msg[] )"
 block|,
 literal|"	{"
 block|,
 literal|"	cerr<< msg<< '\\n';"
 block|,
-literal|"	exit( 1 );"
+literal|"	exit( YY_EXIT_FAILURE );"
 block|,
 literal|"	}"
 block|,
@@ -2352,7 +2903,7 @@ literal|"		/* Undo effects of setting up yytext. */ \\"
 block|,
 literal|"		yytext[yyleng] = yy_hold_char; \\"
 block|,
-literal|"		yy_c_buf_p = yytext + n - YY_MORE_ADJ; \\"
+literal|"		yy_c_buf_p = yytext + n; \\"
 block|,
 literal|"		yy_hold_char = *yy_c_buf_p; \\"
 block|,
@@ -2376,7 +2927,7 @@ literal|"#ifndef yytext_ptr"
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
-literal|"static void yy_flex_strncpy( char *s1, const char *s2, int n )"
+literal|"static void yy_flex_strncpy( char *s1, yyconst char *s2, int n )"
 block|,
 literal|"#else"
 block|,
@@ -2384,7 +2935,7 @@ literal|"static void yy_flex_strncpy( s1, s2, n )"
 block|,
 literal|"char *s1;"
 block|,
-literal|"const char *s2;"
+literal|"yyconst char *s2;"
 block|,
 literal|"int n;"
 block|,
@@ -2404,17 +2955,49 @@ literal|"#endif"
 block|,
 literal|""
 block|,
+literal|"#ifdef YY_NEED_STRLEN"
+block|,
+literal|"#ifdef YY_USE_PROTOS"
+block|,
+literal|"static int yy_flex_strlen( yyconst char *s )"
+block|,
+literal|"#else"
+block|,
+literal|"static int yy_flex_strlen( s )"
+block|,
+literal|"yyconst char *s;"
+block|,
+literal|"#endif"
+block|,
+literal|"	{"
+block|,
+literal|"	register int n;"
+block|,
+literal|"	for ( n = 0; s[n]; ++n )"
+block|,
+literal|"		;"
+block|,
+literal|""
+block|,
+literal|"	return n;"
+block|,
+literal|"	}"
+block|,
+literal|"#endif"
+block|,
+literal|""
+block|,
 literal|""
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
-literal|"static void *yy_flex_alloc( unsigned int size )"
+literal|"static void *yy_flex_alloc( yy_size_t size )"
 block|,
 literal|"#else"
 block|,
 literal|"static void *yy_flex_alloc( size )"
 block|,
-literal|"unsigned int size;"
+literal|"yy_size_t size;"
 block|,
 literal|"#endif"
 block|,
@@ -2428,7 +3011,7 @@ literal|""
 block|,
 literal|"#ifdef YY_USE_PROTOS"
 block|,
-literal|"static void *yy_flex_realloc( void *ptr, unsigned int size )"
+literal|"static void *yy_flex_realloc( void *ptr, yy_size_t size )"
 block|,
 literal|"#else"
 block|,
@@ -2436,13 +3019,27 @@ literal|"static void *yy_flex_realloc( ptr, size )"
 block|,
 literal|"void *ptr;"
 block|,
-literal|"unsigned int size;"
+literal|"yy_size_t size;"
 block|,
 literal|"#endif"
 block|,
 literal|"	{"
 block|,
-literal|"	return (void *) realloc( ptr, size );"
+literal|"	/* The cast to (char *) in the following accommodates both"
+block|,
+literal|"	 * implementations that use char* generic pointers, and those"
+block|,
+literal|"	 * that use void* generic pointers.  It works with the latter"
+block|,
+literal|"	 * because both ANSI C and C++ allow castless assignment from"
+block|,
+literal|"	 * any pointer type to void*, and deal with argument conversions"
+block|,
+literal|"	 * as though doing an assignment."
+block|,
+literal|"	 */"
+block|,
+literal|"	return (void *) realloc( (char *) ptr, size );"
 block|,
 literal|"	}"
 block|,
@@ -2465,6 +3062,22 @@ block|,
 literal|"	free( ptr );"
 block|,
 literal|"	}"
+block|,
+literal|""
+block|,
+literal|"#if YY_MAIN"
+block|,
+literal|"int main()"
+block|,
+literal|"	{"
+block|,
+literal|"	yylex();"
+block|,
+literal|"	return 0;"
+block|,
+literal|"	}"
+block|,
+literal|"#endif"
 block|,
 literal|0
 block|}

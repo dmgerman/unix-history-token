@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/flex-2.4.7/RCS/gen.c,v 1.3 94/08/03 11:37:45 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/gen.c,v 2.56 96/05/25 20:43:38 vern Exp $ */
 end_comment
 
 begin_include
@@ -123,7 +123,7 @@ name|char
 name|C_int_decl
 index|[]
 init|=
-literal|"static const int %s[%d] =\n    {   0,\n"
+literal|"static yyconst int %s[%d] =\n    {   0,\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|C_short_decl
 index|[]
 init|=
-literal|"static const short int %s[%d] =\n    {   0,\n"
+literal|"static yyconst short int %s[%d] =\n    {   0,\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,7 +143,7 @@ name|char
 name|C_long_decl
 index|[]
 init|=
-literal|"static const long int %s[%d] =\n    {   0,\n"
+literal|"static yyconst long int %s[%d] =\n    {   0,\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -153,7 +153,7 @@ name|char
 name|C_state_decl
 index|[]
 init|=
-literal|"static const yy_state_type %s[%d] =\n    {   0,\n"
+literal|"static yyconst yy_state_type %s[%d] =\n    {   0,\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,7 +181,7 @@ operator|>=
 literal|8
 condition|)
 block|{
-name|putchar
+name|outc
 argument_list|(
 literal|'\t'
 argument_list|)
@@ -198,7 +198,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|putchar
+name|outc
 argument_list|(
 literal|' '
 argument_list|)
@@ -338,7 +338,7 @@ argument_list|(
 literal|"goto yy_find_action;"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -372,9 +372,9 @@ operator|+
 literal|1
 decl_stmt|;
 comment|/* Table of verify for transition and offset to next state. */
-name|printf
+name|out_dec
 argument_list|(
-literal|"static const struct yy_trans_info yy_transition[%d] =\n"
+literal|"static yyconst struct yy_trans_info yy_transition[%d] =\n"
 argument_list|,
 name|tblend
 operator|+
@@ -383,9 +383,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"    {\n"
+literal|"    {"
 argument_list|)
 expr_stmt|;
 comment|/* We want the transition to be represented as the offset to the 	 * next state, not the actual state number, which is what it currently 	 * is.  The offset is base[nxt[i]] - (base of current state)].  That's 	 * just the difference between the starting points of the two involved 	 * states (to - from). 	 * 	 * First, though, we need to find some way to put in our end-of-buffer 	 * flags and states.  We do this by making a state with absolutely no 	 * transitions.  We put it at the end of the table. 	 */
@@ -668,20 +668,15 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
 literal|"    };\n"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
 comment|/* Table of pointers to start states. */
-name|printf
+name|out_dec
 argument_list|(
-literal|"static const struct yy_trans_info *yy_start_state_list[%d] =\n"
+literal|"static yyconst struct yy_trans_info *yy_start_state_list[%d] =\n"
 argument_list|,
 name|lastsc
 operator|*
@@ -690,9 +685,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"    {\n"
+literal|"    {"
 argument_list|)
 expr_stmt|;
 comment|/* } so vi doesn't get confused */
@@ -711,7 +706,7 @@ condition|;
 operator|++
 name|i
 control|)
-name|printf
+name|out_dec
 argument_list|(
 literal|"&yy_transition[%d],\n"
 argument_list|,
@@ -743,10 +738,6 @@ name|void
 name|genecs
 parameter_list|()
 block|{
-name|Char
-name|clower
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|i
@@ -756,7 +747,7 @@ decl_stmt|;
 name|int
 name|numrows
 decl_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 name|C_int_decl
 argument_list|,
@@ -840,7 +831,10 @@ condition|)
 block|{
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nEquivalence Classes:\n\n"
+argument_list|)
 argument_list|,
 name|stderr
 argument_list|)
@@ -963,7 +957,7 @@ argument_list|(
 literal|"yy_lp = yy_accept[yy_current_state];"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"find_rule: /* we branch to this label when backing up */"
 argument_list|)
@@ -1173,7 +1167,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Remember matched text in case we back up due to trailing 		 * context plus REJECT. 		 */
+comment|/* Remember matched text in case we back up due to 			 * trailing context plus REJECT. 			 */
 name|indent_up
 argument_list|()
 expr_stmt|;
@@ -1235,17 +1229,65 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
 comment|/* compressed */
 name|indent_puts
 argument_list|(
 literal|"yy_act = yy_accept[yy_current_state];"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|interactive
+operator|&&
+operator|!
+name|reject
+condition|)
+block|{
+comment|/* Do the guaranteed-needed backing up to figure out 			 * the match. 			 */
+name|indent_puts
+argument_list|(
+literal|"if ( yy_act == 0 )"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"{ /* have to back up */"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_cp = yy_last_accepting_cpos;"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_current_state = yy_last_accepting_state;"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_act = yy_accept[yy_current_state];"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"}"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/* genftbl - generates full transition table */
+comment|/* genftbl - generate full transition table */
 end_comment
 
 begin_function
@@ -1264,7 +1306,7 @@ name|num_rules
 operator|+
 literal|1
 decl_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 name|long_align
 condition|?
@@ -1328,7 +1370,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"state # %d accepts: [%d]\n"
+argument_list|)
 argument_list|,
 name|i
 argument_list|,
@@ -1404,7 +1449,7 @@ name|do_indent
 argument_list|()
 expr_stmt|;
 comment|/* lastdfa + 2 is the beginning of the templates */
-name|printf
+name|out_dec
 argument_list|(
 literal|"if ( yy_current_state>= %d )\n"
 argument_list|,
@@ -1502,7 +1547,7 @@ comment|/* } for vi */
 name|gen_backing_up
 argument_list|()
 expr_stmt|;
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1528,7 +1573,7 @@ expr_stmt|;
 name|indent_down
 argument_list|()
 expr_stmt|;
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1553,7 +1598,7 @@ expr_stmt|;
 comment|/* } for vi */
 name|indent_puts
 argument_list|(
-literal|"register const struct yy_trans_info *yy_trans_info;\n"
+literal|"register yyconst struct yy_trans_info *yy_trans_info;\n"
 argument_list|)
 expr_stmt|;
 name|indent_puts
@@ -1612,7 +1657,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1680,7 +1725,7 @@ if|if
 condition|(
 name|interactive
 condition|)
-name|printf
+name|out_dec
 argument_list|(
 literal|"while ( yy_base[yy_current_state] != %d );\n"
 argument_list|,
@@ -1688,7 +1733,7 @@ name|jambase
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|out_dec
 argument_list|(
 literal|"while ( yy_current_state != %d );\n"
 argument_list|,
@@ -1734,7 +1779,7 @@ name|int
 name|worry_about_NULs
 decl_stmt|;
 block|{
-comment|/* NOTE - changes in here should be reflected in get_next_match() */
+comment|/* NOTE - changes in here should be reflected in gen_next_match() */
 name|char
 name|char_map
 index|[
@@ -1917,7 +1962,8 @@ name|void
 name|gen_NUL_trans
 parameter_list|()
 block|{
-comment|/* NOTE - changes in here should be reflected in get_next_match() */
+comment|/* NOTE - changes in here should be reflected in gen_next_match() */
+comment|/* Only generate a definition for "yy_cp" if we'll generate code 	 * that uses it.  Otherwise lint and the like complain. 	 */
 name|int
 name|need_backing_up
 init|=
@@ -1933,14 +1979,23 @@ decl_stmt|;
 if|if
 condition|(
 name|need_backing_up
+operator|&&
+operator|(
+operator|!
+name|nultrans
+operator|||
+name|fullspd
+operator|||
+name|fulltbl
+operator|)
 condition|)
-comment|/* We'll need yy_cp lying around for the gen_backing_up(). */
+comment|/* We're going to need yy_cp lying around for the call 		 * below to gen_backing_up(). 		 */
 name|indent_puts
 argument_list|(
 literal|"register char *yy_cp = yy_c_buf_p;"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1970,7 +2025,7 @@ block|{
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"yy_current_state = yy_nxt[yy_current_state][%d];\n"
 argument_list|,
@@ -1992,7 +2047,7 @@ block|{
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"register int yy_c = %d;\n"
 argument_list|,
@@ -2001,7 +2056,7 @@ argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"register const struct yy_trans_info *yy_trans_info;\n"
+literal|"register yyconst struct yy_trans_info *yy_trans_info;\n"
 argument_list|)
 expr_stmt|;
 name|indent_puts
@@ -2045,25 +2100,39 @@ argument_list|(
 name|NUL_ec_str
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reject
-condition|)
-name|indent_puts
-argument_list|(
-literal|"*yy_state_ptr++ = yy_current_state;"
-argument_list|)
-expr_stmt|;
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"yy_is_jam = (yy_current_state == %d);\n"
 argument_list|,
 name|jamstate
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|reject
+condition|)
+block|{
+comment|/* Only stack this state if it's a transition we 			 * actually make.  If we stack it on a jam, then 			 * the state stack and yy_c_buf_p get out of sync. 			 */
+name|indent_puts
+argument_list|(
+literal|"if ( ! yy_is_jam )"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"*yy_state_ptr++ = yy_current_state;"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 comment|/* If we've entered an accepting state, back up; note that 	 * compressed tables have *already* done such backing up, so 	 * we needn't bother with it again. 	 */
 if|if
@@ -2077,7 +2146,7 @@ name|fulltbl
 operator|)
 condition|)
 block|{
-name|putchar
+name|outc
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -2123,17 +2192,25 @@ if|if
 condition|(
 name|fullspd
 condition|)
-name|indent_put2s
-argument_list|(
-literal|"yy_current_state = yy_start_state_list[yy_start%s];"
-argument_list|,
+block|{
+if|if
+condition|(
 name|bol_needed
-condition|?
-literal|" + (yy_bp[-1] == '\\n' ? 1 : 0)"
-else|:
-literal|""
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"yy_current_state = yy_start_state_list[yy_start + YY_AT_BOL()];"
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|indent_puts
+argument_list|(
+literal|"yy_current_state = yy_start_state_list[yy_start];"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|indent_puts
@@ -2145,24 +2222,11 @@ if|if
 condition|(
 name|bol_needed
 condition|)
-block|{
 name|indent_puts
 argument_list|(
-literal|"if ( yy_bp[-1] == '\\n' )"
+literal|"yy_current_state += YY_AT_BOL();"
 argument_list|)
 expr_stmt|;
-name|indent_up
-argument_list|()
-expr_stmt|;
-name|indent_puts
-argument_list|(
-literal|"++yy_current_state;"
-argument_list|)
-expr_stmt|;
-name|indent_down
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|reject
@@ -2217,15 +2281,6 @@ name|num_rules
 operator|+
 literal|1
 decl_stmt|;
-comment|/* *Everything* is done in terms of arrays starting at 1, so provide 	 * a null entry for the zero element of all C arrays. 	 */
-specifier|static
-name|char
-name|C_char_decl
-index|[]
-init|=
-literal|"static const YY_CHAR %s[%d] =\n    {   0,\n"
-decl_stmt|;
-comment|/* } for vi */
 name|acc_array
 operator|=
 name|allocate_integer_array
@@ -2284,7 +2339,7 @@ name|dfaacc_set
 operator|=
 name|EOB_accepting_list
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 name|long_align
 condition|?
@@ -2364,7 +2419,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"state # %d accepts: "
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -2547,7 +2605,7 @@ comment|/* We put a "cap" on the table associating lists of accepting 		 * numbe
 operator|++
 name|k
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 name|long_align
 condition|?
@@ -2598,7 +2656,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"state # %d accepts: [%d]\n"
+argument_list|)
 argument_list|,
 name|i
 argument_list|,
@@ -2653,12 +2714,15 @@ name|trace
 condition|)
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nMeta-Equivalence Classes:\n"
+argument_list|)
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 name|C_int_decl
 argument_list|,
@@ -2726,7 +2790,7 @@ name|lastdfa
 operator|+
 name|numtemps
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 operator|(
 name|tblend
@@ -2874,7 +2938,7 @@ block|}
 name|dataend
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 operator|(
 name|total_states
@@ -2919,7 +2983,7 @@ expr_stmt|;
 name|dataend
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 operator|(
 name|total_states
@@ -2954,16 +3018,17 @@ operator|++
 name|i
 control|)
 block|{
+comment|/* Note, the order of the following test is important. 		 * If chk[i] is 0, then nxt[i] is undefined. 		 */
 if|if
 condition|(
-name|nxt
+name|chk
 index|[
 name|i
 index|]
 operator|==
 literal|0
 operator|||
-name|chk
+name|nxt
 index|[
 name|i
 index|]
@@ -2990,7 +3055,7 @@ block|}
 name|dataend
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_str_dec
 argument_list|(
 operator|(
 name|total_states
@@ -3078,16 +3143,16 @@ block|{
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_str
 argument_list|(
 name|fmt
 argument_list|,
 name|arg
 argument_list|)
 expr_stmt|;
-name|putchar
+name|outn
 argument_list|(
-literal|'\n'
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -3111,7 +3176,7 @@ block|{
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 name|str
 argument_list|)
@@ -3149,6 +3214,9 @@ expr_stmt|;
 if|if
 condition|(
 name|yymore_used
+operator|&&
+operator|!
+name|yytext_is_array
 condition|)
 block|{
 name|indent_puts
@@ -3158,14 +3226,14 @@ argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"yyleng = yy_cp - yytext_ptr; \\"
+literal|"yyleng = (int) (yy_cp - yytext_ptr); \\"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 name|indent_puts
 argument_list|(
-literal|"yyleng = yy_cp - yy_bp; \\"
+literal|"yyleng = (int) (yy_cp - yy_bp); \\"
 argument_list|)
 expr_stmt|;
 comment|/* Now also deal with copying yytext_ptr to yytext if needed. */
@@ -3177,6 +3245,16 @@ condition|(
 name|yytext_is_array
 condition|)
 block|{
+if|if
+condition|(
+name|yymore_used
+condition|)
+name|indent_puts
+argument_list|(
+literal|"if ( yyleng + yy_more_offset>= YYLMAX ) \\"
+argument_list|)
+expr_stmt|;
+else|else
 name|indent_puts
 argument_list|(
 literal|"if ( yyleng>= YYLMAX ) \\"
@@ -3193,11 +3271,40 @@ expr_stmt|;
 name|indent_down
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|yymore_used
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"yy_flex_strncpy(&yytext[yy_more_offset], yytext_ptr, yyleng + 1 ); \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yyleng += yy_more_offset; \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_prev_more_offset = yy_more_offset; \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_more_offset = 0; \\"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"yy_flex_strncpy( yytext, yytext_ptr, yyleng + 1 ); \\"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|set_indent
 argument_list|(
@@ -3207,7 +3314,14 @@ expr_stmt|;
 name|skelout
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
+argument_list|(
+literal|"#define YY_NUM_RULES %d\n"
+argument_list|,
+name|num_rules
+argument_list|)
+expr_stmt|;
+name|out_dec
 argument_list|(
 literal|"#define YY_END_OF_BUFFER %d\n"
 argument_list|,
@@ -3351,7 +3465,7 @@ condition|(
 name|nultrans
 condition|)
 block|{
-name|printf
+name|out_str_dec
 argument_list|(
 name|C_state_decl
 argument_list|,
@@ -3380,7 +3494,7 @@ if|if
 condition|(
 name|fullspd
 condition|)
-name|printf
+name|out_dec
 argument_list|(
 literal|"&yy_transition[%d],\n"
 argument_list|,
@@ -3410,6 +3524,12 @@ name|ddebug
 condition|)
 block|{
 comment|/* Spit out table mapping rules to line numbers. */
+if|if
+condition|(
+operator|!
+name|C_plus_plus
+condition|)
+block|{
 name|indent_puts
 argument_list|(
 literal|"extern int yy_flex_debug;"
@@ -3420,7 +3540,8 @@ argument_list|(
 literal|"int yy_flex_debug = 1;\n"
 argument_list|)
 expr_stmt|;
-name|printf
+block|}
+name|out_str_dec
 argument_list|(
 name|long_align
 condition|?
@@ -3470,17 +3591,17 @@ operator|!
 name|C_plus_plus
 condition|)
 block|{
-name|puts
+name|outn
 argument_list|(
 literal|"static yy_state_type yy_state_buf[YY_BUF_SIZE + 2], *yy_state_ptr;"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"static char *yy_full_match;"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"static int yy_lp;"
 argument_list|)
@@ -3497,23 +3618,23 @@ operator|!
 name|C_plus_plus
 condition|)
 block|{
-name|puts
+name|outn
 argument_list|(
 literal|"static int yy_looking_for_trail_begin = 0;"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"static int yy_full_lp;"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"static int *yy_full_state;"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|out_hex
 argument_list|(
 literal|"#define YY_TRAILING_MASK 0x%x\n"
 argument_list|,
@@ -3524,7 +3645,7 @@ operator|)
 name|YY_TRAILING_MASK
 argument_list|)
 expr_stmt|;
-name|printf
+name|out_hex
 argument_list|(
 literal|"#define YY_TRAILING_HEAD_MASK 0x%x\n"
 argument_list|,
@@ -3536,23 +3657,23 @@ name|YY_TRAILING_HEAD_MASK
 argument_list|)
 expr_stmt|;
 block|}
-name|puts
+name|outn
 argument_list|(
 literal|"#define REJECT \\"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"{ \\"
 argument_list|)
 expr_stmt|;
 comment|/* } for vi */
-name|puts
+name|outn
 argument_list|(
 literal|"*yy_cp = yy_hold_char; /* undo effects of setting up yytext */ \\"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"yy_cp = yy_full_match; /* restore poss. backed-over text */ \\"
 argument_list|)
@@ -3562,34 +3683,34 @@ condition|(
 name|variable_trailing_context_rules
 condition|)
 block|{
-name|puts
+name|outn
 argument_list|(
 literal|"yy_lp = yy_full_lp; /* restore orig. accepting pos. */ \\"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"yy_state_ptr = yy_full_state; /* restore orig. state */ \\"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"yy_current_state = *yy_state_ptr; /* restore curr. state */ \\"
 argument_list|)
 expr_stmt|;
 block|}
-name|puts
+name|outn
 argument_list|(
 literal|"++yy_lp; \\"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"goto find_rule; \\"
 argument_list|)
 expr_stmt|;
 comment|/* { for vi */
-name|puts
+name|outn
 argument_list|(
 literal|"}"
 argument_list|)
@@ -3597,22 +3718,22 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|puts
+name|outn
 argument_list|(
 literal|"/* The intent behind this definition is that it'll catch"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|" * any uses of REJECT which flex missed."
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|" */"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"#define REJECT reject_used_but_not_detected"
 argument_list|)
@@ -3629,6 +3750,24 @@ operator|!
 name|C_plus_plus
 condition|)
 block|{
+if|if
+condition|(
+name|yytext_is_array
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"static int yy_more_offset = 0;"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"static int yy_prev_more_offset = 0;"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"static int yy_more_flag = 0;"
@@ -3640,6 +3779,61 @@ literal|"static int yy_more_len = 0;"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|yytext_is_array
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"#define yymore() (yy_more_offset = yy_flex_strlen( yytext ))"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_NEED_STRLEN"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_MORE_ADJ 0"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_RESTORE_YY_MORE_OFFSET \\"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"{ \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_more_offset = yy_prev_more_offset; \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yyleng -= yy_more_offset; \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"}"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"#define yymore() (yy_more_flag = 1)"
@@ -3650,6 +3844,12 @@ argument_list|(
 literal|"#define YY_MORE_ADJ yy_more_len"
 argument_list|)
 expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_RESTORE_YY_MORE_OFFSET"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3661,6 +3861,11 @@ expr_stmt|;
 name|indent_puts
 argument_list|(
 literal|"#define YY_MORE_ADJ 0"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_RESTORE_YY_MORE_OFFSET"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3675,48 +3880,53 @@ condition|(
 name|yytext_is_array
 condition|)
 block|{
-name|puts
+name|outn
 argument_list|(
 literal|"#ifndef YYLMAX"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"#define YYLMAX 8192"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"#endif\n"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"char yytext[YYLMAX];"
 argument_list|)
 expr_stmt|;
-name|puts
+name|outn
 argument_list|(
 literal|"char *yytext_ptr;"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|puts
+name|outn
 argument_list|(
 literal|"char *yytext;"
 argument_list|)
 expr_stmt|;
 block|}
-name|fputs
+name|out
 argument_list|(
 operator|&
 name|action_array
 index|[
 name|defs1_offset
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|line_directive_out
+argument_list|(
 name|stdout
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|skelout
@@ -3733,62 +3943,92 @@ condition|(
 name|use_read
 condition|)
 block|{
-name|printf
+name|outn
 argument_list|(
-literal|"\tif ( (result = read( fileno(yyin), (char *) buf, max_size ))< 0 ) \\\n"
+literal|"\tif ( (result = read( fileno(yyin), (char *) buf, max_size ))< 0 ) \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n"
+literal|"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|outn
 argument_list|(
-literal|"\tif ( yy_current_buffer->yy_is_interactive ) \\\n"
+literal|"\tif ( yy_current_buffer->yy_is_interactive ) \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\t{ \\\n"
+literal|"\t\t{ \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\tint c = getc( yyin ); \\\n"
+literal|"\t\tint c = '*', n; \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\tresult = c == EOF ? 0 : 1; \\\n"
+literal|"\t\tfor ( n = 0; n< max_size&& \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\tbuf[0] = (char) c; \\\n"
+literal|"\t\t\t     (c = getc( yyin )) != EOF&& c != '\\n'; ++n ) \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\t} \\\n"
+literal|"\t\t\tbuf[n] = (char) c; \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\\n"
+literal|"\t\tif ( c == '\\n' ) \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\t&& ferror( yyin ) ) \\\n"
+literal|"\t\t\tbuf[n++] = (char) c; \\"
 argument_list|)
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );\n"
+literal|"\t\tif ( c == EOF&& ferror( yyin ) ) \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\t\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" ); \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\t\tresult = n; \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\t\t} \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\telse if ( ((result = fread( buf, 1, max_size, yyin )) == 0) \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\t\t&& ferror( yyin ) ) \\"
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"\t\tYY_FATAL_ERROR( \"input in flex scanner failed\" );"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3796,16 +4036,67 @@ block|}
 name|skelout
 argument_list|()
 expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"#define YY_RULE_SETUP \\"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bol_needed
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"if ( yyleng> 0 ) \\"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"yy_current_buffer->yy_at_bol = \\"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"\t\t(yytext[yyleng - 1] == '\\n'); \\"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
+name|indent_puts
+argument_list|(
+literal|"YY_USER_ACTION"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+name|skelout
+argument_list|()
+expr_stmt|;
 comment|/* Copy prolog to output file. */
-name|fputs
+name|out
 argument_list|(
 operator|&
 name|action_array
 index|[
 name|prolog_offset
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|line_directive_out
+argument_list|(
 name|stdout
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|skelout
@@ -3819,6 +4110,9 @@ expr_stmt|;
 if|if
 condition|(
 name|yymore_used
+operator|&&
+operator|!
+name|yytext_is_array
 condition|)
 block|{
 name|indent_puts
@@ -3841,7 +4135,7 @@ argument_list|)
 expr_stmt|;
 name|indent_puts
 argument_list|(
-literal|"yy_more_len = yyleng;"
+literal|"yy_more_len = yy_c_buf_p - yytext_ptr;"
 argument_list|)
 expr_stmt|;
 name|indent_puts
@@ -3865,7 +4159,7 @@ name|gen_start_state
 argument_list|()
 expr_stmt|;
 comment|/* Note, don't use any indentation. */
-name|puts
+name|outn
 argument_list|(
 literal|"yy_match:"
 argument_list|)
@@ -3889,7 +4183,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|lex_compat
+name|do_yylineno
 condition|)
 block|{
 name|indent_puts
@@ -3977,6 +4271,10 @@ argument_list|()
 expr_stmt|;
 name|indent_puts
 argument_list|(
+name|C_plus_plus
+condition|?
+literal|"cerr<< \"--scanner backing up\\n\";"
+else|:
 literal|"fprintf( stderr, \"--scanner backing up\\n\" );"
 argument_list|)
 expr_stmt|;
@@ -3986,7 +4284,7 @@ expr_stmt|;
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"else if ( yy_act< %d )\n"
 argument_list|,
@@ -3996,6 +4294,24 @@ expr_stmt|;
 name|indent_up
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|C_plus_plus
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"cerr<< \"--accepting rule at line \"<< yy_rule_linenum[yy_act]<<"
+argument_list|)
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"         \"(\\\"\"<< yytext<< \"\\\")\\n\";"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"fprintf( stderr, \"--accepting rule at line %d (\\\"%s\\\")\\n\","
@@ -4006,13 +4322,14 @@ argument_list|(
 literal|"         yy_rule_linenum[yy_act], yytext );"
 argument_list|)
 expr_stmt|;
+block|}
 name|indent_down
 argument_list|()
 expr_stmt|;
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"else if ( yy_act == %d )\n"
 argument_list|,
@@ -4022,6 +4339,19 @@ expr_stmt|;
 name|indent_up
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|C_plus_plus
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"cerr<< \"--accepting default rule (\\\"\"<< yytext<< \"\\\")\\n\";"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"fprintf( stderr, \"--accepting default rule (\\\"%s\\\")\\n\","
@@ -4032,13 +4362,14 @@ argument_list|(
 literal|"         yytext );"
 argument_list|)
 expr_stmt|;
+block|}
 name|indent_down
 argument_list|()
 expr_stmt|;
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_dec
 argument_list|(
 literal|"else if ( yy_act == %d )\n"
 argument_list|,
@@ -4052,6 +4383,10 @@ argument_list|()
 expr_stmt|;
 name|indent_puts
 argument_list|(
+name|C_plus_plus
+condition|?
+literal|"cerr<< \"--(end of buffer or a NUL)\\n\";"
+else|:
 literal|"fprintf( stderr, \"--(end of buffer or a NUL)\\n\" );"
 argument_list|)
 expr_stmt|;
@@ -4061,19 +4396,33 @@ expr_stmt|;
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|outn
 argument_list|(
-literal|"else\n"
+literal|"else"
 argument_list|)
 expr_stmt|;
 name|indent_up
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|C_plus_plus
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"cerr<< \"--EOF (start condition \"<< YY_START<< \")\\n\";"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|indent_puts
 argument_list|(
 literal|"fprintf( stderr, \"--EOF (start condition %d)\\n\", YY_START );"
 argument_list|)
 expr_stmt|;
+block|}
 name|indent_down
 argument_list|()
 expr_stmt|;
@@ -4096,15 +4445,20 @@ expr_stmt|;
 name|gen_bu_action
 argument_list|()
 expr_stmt|;
-name|fputs
+name|out
 argument_list|(
 operator|&
 name|action_array
 index|[
 name|action_offset
 index|]
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|line_directive_out
+argument_list|(
 name|stdout
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* generate cases for any missing EOF rules */
@@ -4133,7 +4487,7 @@ block|{
 name|do_indent
 argument_list|()
 expr_stmt|;
-name|printf
+name|out_str
 argument_list|(
 literal|"case YY_STATE_EOF(%s):\n"
 argument_list|,
@@ -4172,7 +4526,7 @@ argument_list|()
 expr_stmt|;
 name|set_indent
 argument_list|(
-literal|7
+literal|4
 argument_list|)
 expr_stmt|;
 if|if
@@ -4227,15 +4581,6 @@ expr_stmt|;
 name|skelout
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|bol_needed
-condition|)
-name|indent_puts
-argument_list|(
-literal|"register char *yy_bp = yytext_ptr;\n"
-argument_list|)
-expr_stmt|;
 name|gen_start_state
 argument_list|()
 expr_stmt|;
@@ -4268,7 +4613,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|lex_compat
+name|do_yylineno
 condition|)
 block|{
 comment|/* update yylineno inside of unput() */
@@ -4292,10 +4637,72 @@ block|}
 name|skelout
 argument_list|()
 expr_stmt|;
+comment|/* Update BOL and yylineno inside of input(). */
+if|if
+condition|(
+name|bol_needed
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"yy_current_buffer->yy_at_bol = (c == '\\n');"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_yylineno
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"if ( yy_current_buffer->yy_at_bol )"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"++yylineno;"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|do_yylineno
+condition|)
+block|{
+name|indent_puts
+argument_list|(
+literal|"if ( c == '\\n' )"
+argument_list|)
+expr_stmt|;
+name|indent_up
+argument_list|()
+expr_stmt|;
+name|indent_puts
+argument_list|(
+literal|"++yylineno;"
+argument_list|)
+expr_stmt|;
+name|indent_down
+argument_list|()
+expr_stmt|;
+block|}
+name|skelout
+argument_list|()
+expr_stmt|;
 comment|/* Copy remainder of input to output. */
 name|line_directive_out
 argument_list|(
 name|stdout
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

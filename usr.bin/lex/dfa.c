@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Header: dfa.c,v 1.2 94/01/04 14:33:16 vern Exp $ */
+comment|/* $Header: /home/daffy/u0/vern/flex/RCS/dfa.c,v 2.26 95/04/20 13:53:14 vern Exp $ */
 end_comment
 
 begin_include
@@ -154,7 +154,10 @@ name|fprintf
 argument_list|(
 name|backing_up_file
 argument_list|,
+name|_
+argument_list|(
 literal|"State #%d is non-accepting -\n"
+argument_list|)
 argument_list|,
 name|ds
 argument_list|)
@@ -213,7 +216,6 @@ name|int
 modifier|*
 name|accset
 decl_stmt|;
-specifier|register
 name|int
 name|nacc
 decl_stmt|;
@@ -314,7 +316,10 @@ condition|)
 block|{
 name|line_warning
 argument_list|(
+name|_
+argument_list|(
 literal|"dangerous trailing context"
+argument_list|)
 argument_list|,
 name|rule_linenum
 index|[
@@ -473,7 +478,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|" associated rule line numbers:"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -600,7 +608,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|" out-transitions: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_character_set
@@ -639,7 +650,10 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
+name|_
+argument_list|(
 literal|"\n jam-transitions: EOF "
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|list_character_set
@@ -978,7 +992,10 @@ argument_list|)
 else|else
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"consistency check failed in epsclosure()"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1151,13 +1168,6 @@ decl_stmt|,
 name|targ
 decl_stmt|;
 name|int
-modifier|*
-name|epsclosure
-argument_list|()
-decl_stmt|,
-name|snstods
-argument_list|()
-decl_stmt|,
 name|symlist
 index|[
 name|CSIZE
@@ -1291,7 +1301,10 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\nDFA Dump:\n\n"
+argument_list|)
 argument_list|,
 name|stderr
 argument_list|)
@@ -1414,7 +1427,7 @@ argument_list|)
 expr_stmt|;
 name|dfaacc
 index|[
-name|i
+literal|0
 index|]
 operator|.
 name|dfaacc_state
@@ -1446,9 +1459,9 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* Unless -Ca, declare it "short" because it's a real 		 * long-shot that that won't be large enough. 		 */
-name|printf
+name|out_str_dec
 argument_list|(
-literal|"static const %s yy_nxt[][%d] =\n    {\n"
+literal|"static yyconst %s yy_nxt[][%d] =\n    {\n"
 argument_list|,
 comment|/* '}' so vi doesn't get too confused */
 name|long_align
@@ -1458,6 +1471,11 @@ else|:
 literal|"short"
 argument_list|,
 name|num_full_table_rows
+argument_list|)
+expr_stmt|;
+name|outn
+argument_list|(
+literal|"    {"
 argument_list|)
 expr_stmt|;
 comment|/* Generate 0 entries for state #0. */
@@ -1479,15 +1497,13 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Force ',' and dataflush() next call to mk2data().*/
-name|datapos
-operator|=
-name|NUMDATAITEMS
+name|dataflush
+argument_list|()
 expr_stmt|;
-comment|/* Force extra blank line next dataflush(). */
-name|dataline
-operator|=
-name|NUMDATALINES
+name|outn
+argument_list|(
+literal|"    },\n"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create the first states. */
@@ -1659,7 +1675,10 @@ argument_list|)
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"could not create unique end-of-buffer state"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -1734,7 +1753,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"state # %d:\n"
+argument_list|)
 argument_list|,
 name|ds
 argument_list|)
@@ -1987,12 +2009,6 @@ name|NIL
 expr_stmt|;
 block|}
 block|}
-name|numsnpairs
-operator|=
-name|numsnpairs
-operator|+
-name|totaltrans
-expr_stmt|;
 if|if
 condition|(
 name|caseins
@@ -2025,6 +2041,48 @@ operator|,
 operator|++
 name|j
 control|)
+block|{
+if|if
+condition|(
+name|state
+index|[
+name|i
+index|]
+operator|==
+literal|0
+operator|&&
+name|state
+index|[
+name|j
+index|]
+operator|!=
+literal|0
+condition|)
+comment|/* We're adding a transition. */
+operator|++
+name|totaltrans
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|state
+index|[
+name|i
+index|]
+operator|!=
+literal|0
+operator|&&
+name|state
+index|[
+name|j
+index|]
+operator|==
+literal|0
+condition|)
+comment|/* We're taking away a transition. */
+operator|--
+name|totaltrans
+expr_stmt|;
 name|state
 index|[
 name|i
@@ -2036,6 +2094,11 @@ name|j
 index|]
 expr_stmt|;
 block|}
+block|}
+name|numsnpairs
+operator|+=
+name|totaltrans
+expr_stmt|;
 if|if
 condition|(
 name|ds
@@ -2078,6 +2141,11 @@ condition|(
 name|fulltbl
 condition|)
 block|{
+name|outn
+argument_list|(
+literal|"    {"
+argument_list|)
+expr_stmt|;
 comment|/* Supply array's 0-element. */
 if|if
 condition|(
@@ -2127,15 +2195,13 @@ operator|-
 name|ds
 argument_list|)
 expr_stmt|;
-comment|/* Force ',' and dataflush() next call to mk2data().*/
-name|datapos
-operator|=
-name|NUMDATAITEMS
+name|dataflush
+argument_list|()
 expr_stmt|;
-comment|/* Force extra blank line next dataflush(). */
-name|dataline
-operator|=
-name|NUMDATALINES
+name|outn
+argument_list|(
+literal|"    },\n"
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -3030,7 +3096,10 @@ name|caseins
 condition|)
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"consistency check failed in symfollowset"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3232,7 +3301,10 @@ condition|)
 block|{
 name|flexfatal
 argument_list|(
+name|_
+argument_list|(
 literal|"bad transition character detected in sympartition()"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
