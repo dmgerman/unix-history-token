@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.8	81/03/09	*/
+comment|/*	Locore.c	4.9	81/04/28	*/
 end_comment
 
 begin_include
@@ -532,7 +532,7 @@ name|struct
 name|nexus
 name|nexus
 index|[
-name|NNEXUS
+name|MAXNNEXUS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1621,15 +1621,7 @@ end_decl_stmt
 
 begin_block
 block|{
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|mcrmap
-operator|=
-literal|0
-expr_stmt|;
+empty_stmt|;
 block|}
 end_block
 
