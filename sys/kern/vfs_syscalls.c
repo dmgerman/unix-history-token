@@ -911,6 +911,17 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|mp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 name|error
 operator|=
 name|VFS_QUOTACTL
