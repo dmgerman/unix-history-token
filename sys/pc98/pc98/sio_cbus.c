@@ -137,6 +137,13 @@ argument_list|,
 name|sio_isa_attach
 argument_list|)
 block|,
+name|DEVMETHOD
+argument_list|(
+name|device_detach
+argument_list|,
+name|siodetach
+argument_list|)
+block|,
 block|{
 literal|0
 block|,
