@@ -11,6 +11,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
 begin_function_decl
 specifier|extern
 name|char
@@ -21,7 +27,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *	This routine initializes the current and standard screen.  *  * %G% (Berkeley) @(#)initscr.c	1.2  */
+comment|/*  *	This routine initializes the current and standard screen.  *  * %G% (Berkeley) @(#)initscr.c	1.3  */
 end_comment
 
 begin_function
@@ -53,19 +59,50 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 name|My_term
-operator|&&
+condition|)
+name|setterm
+argument_list|(
+name|Def_term
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|isatty
 argument_list|(
 literal|2
 argument_list|)
 condition|)
-block|{
 name|_tty_ch
 operator|=
 literal|2
 expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|_tty_ch
+operator|=
+literal|0
+init|;
+name|_tty_ch
+operator|<
+name|NOFILE
+condition|;
+name|_tty_ch
+operator|++
+control|)
+if|if
+condition|(
+name|isatty
+argument_list|(
+name|_tty_ch
+argument_list|)
+condition|)
+break|break;
+block|}
 name|gettmode
 argument_list|()
 expr_stmt|;
@@ -106,12 +143,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
-name|setterm
-argument_list|(
-name|Def_term
-argument_list|)
-expr_stmt|;
 name|_puts
 argument_list|(
 name|TI
