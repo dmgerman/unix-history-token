@@ -223,19 +223,19 @@ begin_decl_stmt
 name|int
 name|s
 decl_stmt|,
-comment|/* main RAW socket	   */
+comment|/* main RAW socket */
 name|do_resolv
 decl_stmt|,
 comment|/* Would try to resolve all */
 name|do_acct
 decl_stmt|,
-comment|/* Show packet/byte count  */
+comment|/* Show packet/byte count */
 name|do_time
 decl_stmt|,
-comment|/* Show time stamps	   */
+comment|/* Show time stamps */
 name|do_quiet
 decl_stmt|,
-comment|/* Be quiet in add and flush  */
+comment|/* Be quiet in add and flush */
 name|do_force
 decl_stmt|,
 comment|/* Don't ask for confirmation */
