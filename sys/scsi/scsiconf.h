@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.20 1995/03/16 18:15:50 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsiconf.h,v 1.21 1995/03/21 11:21:05 dufault Exp $  */
 end_comment
 
 begin_ifndef
@@ -97,8 +97,18 @@ directive|include
 file|<scsi/scsi_driver.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_comment
-comment|/* Minor number fields:  *  * OLD STYLE SCSI devices:  *  * ???? ???? ???? ???N MMMMMMMM mmmmmmmm  *  * ?: Don't know; those bits didn't use to exist, currently always 0.  * N: New style device: must be zero.  * M: Major device number.  * m: old style minor device number.  *  * NEW (FIXED) SCSI devices:  *  * ???? SBBB LLLI IIIN MMMMMMMM mmmmmmmm  *  * ?: Not used yet.  * S: "Super" device; reserved for things like resetting the SCSI bus.  * B: Scsi bus  * L: Logical unit  * I: Scsi target  (XXX: Why 16?  Why that many in scsiconf.h?)  * N: New style device; must be one.  * M: Major device number  * m: Old style minor device number.  */
+comment|/* XXX For bootverbose (funny place) */
+end_comment
+
+begin_comment
+comment|/* Minor number fields:  *  * NON-FIXED SCSI devices:  *  * ???? ???? ???? ???N MMMMMMMM mmmmmmmm  *  * ?: Don't know; those bits didn't use to exist, currently always 0.  * N: New style device: must be zero.  * M: Major device number.  * m: old style minor device number.  *  * FIXED SCSI devices:  *  * ???? SBBB LLLI IIIN MMMMMMMM mmmmmmmm  *  * ?: Not used yet.  * S: "Super" device; reserved for things like resetting the SCSI bus.  * B: Scsi bus  * L: Logical unit  * I: Scsi target  (XXX: Why 16?  Why that many in scsiconf.h?)  * N: New style device; must be one.  * M: Major device number  * m: Old style minor device number.  */
 end_comment
 
 begin_define
@@ -154,7 +164,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCSI_NEW
+name|SCSI_FIXED
 parameter_list|(
 name|DEV
 parameter_list|)
@@ -673,14 +683,14 @@ begin_define
 define|#
 directive|define
 name|SCCONF_UNSPEC
-value|-1
+value|255
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCCONF_ANY
-value|-2
+value|254
 end_define
 
 begin_struct_decl
@@ -1092,7 +1102,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* XXX dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  */
+comment|/* XXX-HA: dufault@hda.com: SDEV_BOUNCE is set down in the adapter drivers  * in an sc_link structure to indicate that this host adapter requires  * ISA DMA bounce buffers.  I think the link structure should  * be associated only with the type drive and not the adapter driver,  * and the bounce flag should be in something associated with the  * adapter driver.  * XXX-HA And I added the "supports residuals properly" flag that ALSO goes  * in an adapter structure.  I figure I'll fix both at once.  */
 end_comment
 
 begin_define
@@ -1136,7 +1146,7 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* unit requires DMA bounce buffer */
+comment|/* XXX-HA: unit needs DMA bounce buffer */
 end_comment
 
 begin_define
@@ -1170,6 +1180,28 @@ end_define
 
 begin_comment
 comment|/* be noisy during boot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_RESIDS_WORK
+value|0x0400
+end_define
+
+begin_comment
+comment|/* XXX-HA: Residuals work */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDEV_TARGET_OPS
+value|0x0800
+end_define
+
+begin_comment
+comment|/* XXX-HA: Supports target ops  */
 end_comment
 
 begin_comment
@@ -1362,12 +1394,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCSI_ITSDONE
+value|0x10
+end_define
+
+begin_comment
+comment|/* the transfer is as done as it gets	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ITSDONE
 value|0x10
 end_define
 
 begin_comment
 comment|/* the transfer is as done as it gets	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_INUSE
+value|0x20
+end_define
+
+begin_comment
+comment|/* The scsi_xfer block is in use	*/
 end_comment
 
 begin_define
@@ -1467,6 +1521,28 @@ end_define
 
 begin_comment
 comment|/* Escape operation			*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_EOF
+value|0x4000
+end_define
+
+begin_comment
+comment|/* The operation should return EOF	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RESID_VALID
+value|0x8000
+end_define
+
+begin_comment
+comment|/* The resid field contains valid data	*/
 end_comment
 
 begin_comment
@@ -1708,6 +1784,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|errval
+name|scsi_reset_target
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_link
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|errval
+name|scsi_target_mode
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_link
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|errval
 name|scsi_change_def
@@ -1760,6 +1866,22 @@ name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|errval
+name|scsi_probe_bus
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|errval
@@ -1977,6 +2099,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|errval
+name|scsi_set_bus
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|scsi_link
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|scsi_sense_desc
@@ -1999,6 +2137,26 @@ argument_list|(
 operator|(
 expr|struct
 name|scsi_xfer
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|scsi_sense_qualifiers
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|scsi_xfer
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
 operator|*
 operator|)
 argument_list|)
@@ -2234,10 +2392,38 @@ begin_comment
 comment|/* XXX should go away */
 end_comment
 
+begin_decl_stmt
+name|void
+name|scsi_configure_start
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|scsi_configure_finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.16 1995/03/15 14:22:04 dufault Exp $  */
+comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.17 1995/03/28 07:57:22 bde Exp $  */
 end_comment
 
 begin_include
@@ -638,13 +638,6 @@ parameter_list|)
 block|{
 name|u_int32
 name|unit
-decl_stmt|,
-name|i
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|tbl
 decl_stmt|;
 name|struct
 name|scsi_data
@@ -793,7 +786,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ch%d: already open\n"
+literal|"ch%ld: already open\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -819,6 +812,7 @@ expr_stmt|;
 comment|/* 	 * Check that it is still responding and ok. 	 */
 if|if
 condition|(
+operator|(
 name|errcode
 operator|=
 operator|(
@@ -829,11 +823,12 @@ argument_list|,
 literal|0
 argument_list|)
 operator|)
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ch%d: not ready\n"
+literal|"ch%ld: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -852,6 +847,7 @@ block|}
 comment|/* 	 * Make sure data is loaded 	 */
 if|if
 condition|(
+operator|(
 name|errcode
 operator|=
 operator|(
@@ -863,6 +859,7 @@ name|SCSI_NOSLEEP
 operator||
 name|SCSI_NOMASK
 argument_list|)
+operator|)
 operator|)
 condition|)
 block|{
@@ -981,31 +978,11 @@ name|sc_link
 parameter_list|)
 block|{
 comment|/* struct ch_cmd_buf *args; */
-name|union
-name|scsi_cmd
-modifier|*
-name|scsi_cmd
-decl_stmt|;
-specifier|register
-name|i
-operator|,
-name|j
-expr_stmt|;
-name|u_int32
-name|opri
-decl_stmt|;
-name|errval
-name|errcode
-init|=
-literal|0
-decl_stmt|;
 name|unsigned
 name|char
 name|unit
 decl_stmt|;
 name|u_int32
-name|number
-decl_stmt|,
 name|flags
 decl_stmt|;
 name|errval
@@ -2187,6 +2164,7 @@ expr_stmt|;
 comment|/* 	 * Read in the pages 	 */
 if|if
 condition|(
+operator|(
 name|errcode
 operator|=
 name|scsi_scsi_cmd
@@ -2231,6 +2209,7 @@ name|SCSI_DATA_IN
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 if|if
@@ -2244,7 +2223,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"ch%d: could not mode sense\n"
+literal|"ch%ld: could not mode sense\n"
 argument_list|,
 name|unit
 argument_list|)

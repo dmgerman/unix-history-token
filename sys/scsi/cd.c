@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.36 1995/03/15 14:22:03 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.37 1995/03/21 11:21:00 dufault Exp $  */
 end_comment
 
 begin_define
@@ -982,7 +982,7 @@ name|opennings
 operator|=
 name|CDOUTSTANDING
 expr_stmt|;
-comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
+comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 * 	 * XXX dufault@hda.com: 	 * Need to handle this better in the case of no record.  Rather than 	 * a state driven sense handler I think we should make it so that 	 * the command can get the sense back so that it can selectively log 	 * errors. 	 */
 name|cd_get_parms
 argument_list|(
 name|unit
@@ -1021,7 +1021,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"drive empty"
+literal|"can't get the size\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1137,7 +1137,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"cd_open: dev=0x%x (unit %d,partition %d)\n"
+literal|"cd_open: dev=0x%lx (unit %ld,partition %ld)\n"
 operator|,
 name|dev
 operator|,
@@ -1332,7 +1332,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"partition %d> %d\n"
+literal|"partition %ld> %d\n"
 operator|,
 name|part
 operator|,
@@ -1376,7 +1376,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"part %d type UNUSED\n"
+literal|"part %ld type UNUSED\n"
 operator|,
 name|part
 operator|)
@@ -1533,7 +1533,7 @@ argument_list|,
 name|SDEV_DB2
 argument_list|,
 operator|(
-literal|"cd%ld: closing part %d\n"
+literal|"cd%d: closing part %d\n"
 operator|,
 name|unit
 operator|,
@@ -1898,7 +1898,7 @@ argument_list|,
 name|SDEV_DB2
 argument_list|,
 operator|(
-literal|"cdstart%d "
+literal|"cdstart%ld "
 operator|,
 name|unit
 operator|)
@@ -4711,13 +4711,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"cd%d: could not get size\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4818,7 +4811,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"cd%ld: %d %d byte blocks\n"
+literal|"cd%d: %ld %ld byte blocks\n"
 operator|,
 name|unit
 operator|,
@@ -5829,8 +5822,7 @@ name|unit
 decl_stmt|;
 block|{
 return|return
-operator|(
-name|scsi_scsi_cmd
+name|scsi_reset_target
 argument_list|(
 name|SCSI_LINK
 argument_list|(
@@ -5839,24 +5831,7 @@ name|cd_switch
 argument_list|,
 name|unit
 argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|CDRETRIES
-argument_list|,
-literal|2000
-argument_list|,
-name|NULL
-argument_list|,
-name|SCSI_RESET
 argument_list|)
-operator|)
 return|;
 block|}
 end_function

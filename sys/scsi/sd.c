@@ -201,35 +201,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SDUNITSHIFT
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDUNIT
-parameter_list|(
-name|DEV
-parameter_list|)
-value|SH3_UNIT(DEV)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SDSETUNIT
-parameter_list|(
-name|DEV
-parameter_list|,
-name|U
-parameter_list|)
-value|SH3SETUNIT((DEV), (U))
-end_define
-
-begin_define
-define|#
-directive|define
 name|PARTITION
 parameter_list|(
 name|dev
@@ -896,11 +867,11 @@ name|dp
 operator|->
 name|secsiz
 operator|=
-literal|512
+name|SECSIZE
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%luMB (%lu S), %u C %u H %u S/T %u B/S"
+literal|"%ldMB (%ld %d byte sectors)"
 argument_list|,
 name|dp
 operator|->
@@ -924,21 +895,12 @@ name|disksize
 argument_list|,
 name|dp
 operator|->
-name|cyls
-argument_list|,
-name|dp
-operator|->
-name|heads
-argument_list|,
-name|dp
-operator|->
-name|sectors
-argument_list|,
-name|dp
-operator|->
 name|secsiz
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SCSI_REPORT_GEOMETRY
 if|if
 condition|(
 operator|(
@@ -949,6 +911,8 @@ operator|&
 name|SDEV_BOOTVERBOSE
 operator|)
 condition|)
+endif|#
+directive|endif
 block|{
 name|printf
 argument_list|(
@@ -958,6 +922,23 @@ expr_stmt|;
 name|sc_print_addr
 argument_list|(
 name|sc_link
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"with %d cyls, %d heads, and an average %d sectors/track"
+argument_list|,
+name|dp
+operator|->
+name|cyls
+argument_list|,
+name|dp
+operator|->
+name|heads
+argument_list|,
+name|dp
+operator|->
+name|sectors
 argument_list|)
 expr_stmt|;
 block|}
@@ -1079,7 +1060,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"sd_open: dev=0x%x (unit %d, partition %d)\n"
+literal|"sd_open: dev=0x%lx (unit %ld, partition %d)\n"
 operator|,
 name|dev
 operator|,
@@ -1429,7 +1410,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"open %d %d\n"
+literal|"open %ld %ld\n"
 operator|,
 name|sdstrats
 operator|,
@@ -1652,20 +1633,6 @@ name|EIO
 expr_stmt|;
 goto|goto
 name|bad
-goto|;
-block|}
-comment|/* 	 * If it's a null transfer, return immediatly 	 */
-if|if
-condition|(
-name|bp
-operator|->
-name|b_bcount
-operator|==
-literal|0
-condition|)
-block|{
-goto|goto
-name|done
 goto|;
 block|}
 comment|/* 	 * Odd number of bytes 	 */
@@ -1961,7 +1928,11 @@ name|bp
 operator|->
 name|b_bcount
 operator|&
-literal|511
+operator|(
+name|SECSIZE
+operator|-
+literal|1
+operator|)
 condition|)
 block|{
 goto|goto
@@ -2990,7 +2961,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"%d cyls, %d heads, %d precomp, %d red_write, %d land_zone\n"
+literal|"%ld cyls, %d heads, %d precomp, %d red_write, %d land_zone\n"
 operator|,
 name|scsi_3btou
 argument_list|(
@@ -3415,6 +3386,40 @@ condition|)
 return|return
 name|SCSIRET_CONTINUE
 return|;
+if|if
+condition|(
+operator|(
+operator|(
+name|sense
+operator|->
+name|error_code
+operator|&
+name|SSD_ERRCODE
+operator|)
+operator|==
+literal|0x70
+operator|)
+operator|&&
+operator|(
+operator|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|flags
+operator|&
+name|SSD_KEY
+operator|)
+operator|==
+literal|0x05
+operator|)
+condition|)
+comment|/* No point in retrying Illegal Requests */
+return|return
+name|SCSIRET_CONTINUE
+return|;
 name|inqbuf
 operator|=
 operator|&
@@ -3546,9 +3551,6 @@ name|sx
 decl_stmt|;
 name|errval
 name|retval
-decl_stmt|;
-name|int
-name|c
 decl_stmt|;
 name|addr
 operator|=
@@ -3958,9 +3960,7 @@ name|xs
 operator|->
 name|resid
 operator|=
-name|blkcnt
-operator|*
-literal|512
+literal|0
 expr_stmt|;
 name|xs
 operator|->
@@ -3991,7 +3991,7 @@ name|datalen
 operator|=
 name|blkcnt
 operator|*
-literal|512
+name|SECSIZE
 expr_stmt|;
 comment|/* 		 * Pass all this info to the scsi driver. 		 */
 name|retval
@@ -4077,7 +4077,7 @@ name|int
 operator|)
 name|addr
 operator|+=
-literal|512
+name|SECSIZE
 operator|*
 name|blkcnt
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.30 1995/03/15 14:22:11 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.31 1995/03/21 11:21:08 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -1676,7 +1676,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"density code 0x%x, "
+literal|"density code 0x%lx, "
 argument_list|,
 name|st
 operator|->
@@ -1707,7 +1707,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d-byte"
+literal|"%ld-byte"
 argument_list|,
 name|st
 operator|->
@@ -1879,7 +1879,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: couldn't get device type, using default\n"
+literal|"st%ld: couldn't get device type, using default\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2125,7 +2125,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: %s is a known rogue\n"
+literal|"st%ld: %s is a known rogue\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2585,9 +2585,9 @@ return|;
 comment|/* 	 * Check that the device is ready to use (media loaded?) 	 * This time take notice of the return result 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
-operator|(
 name|scsi_test_unit_ready
 argument_list|(
 name|sc_link
@@ -3006,6 +3006,7 @@ expr_stmt|;
 comment|/* 	 * If the media is new, then make sure we give it a chance to 	 * to do a 'load' instruction. ( We assume it is new) 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_load
@@ -3016,6 +3017,7 @@ name|LD_LOAD
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -3044,12 +3046,14 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_touch_tape
 argument_list|(
 name|unit
 argument_list|)
+operator|)
 condition|)
 return|return
 name|errno
@@ -3058,6 +3062,7 @@ block|}
 comment|/* 	 * Load the physical device parameters 	 * loads: blkmin, blkmax 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_rd_blk_lim
@@ -3066,6 +3071,7 @@ name|unit
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -3075,6 +3081,7 @@ block|}
 comment|/* 	 * Load the media dependent parameters 	 * includes: media_blksiz,media_density,numblks 	 * As we have a tape in, it should be reflected here. 	 * If not you may need the "quirk" above. 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_mode_sense
@@ -3089,6 +3096,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -3193,6 +3201,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_decide_mode
@@ -3201,6 +3210,7 @@ name|unit
 argument_list|,
 name|FALSE
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -3210,6 +3220,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_mode_select
@@ -3222,11 +3233,12 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: Cannot set selected mode"
+literal|"st%ld: Cannot set selected mode"
 argument_list|,
 name|unit
 argument_list|)
@@ -3480,7 +3492,7 @@ operator|)
 case|:
 name|printf
 argument_list|(
-literal|"st%d: bad quirks\n"
+literal|"st%ld: bad quirks\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3555,7 +3567,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"Quirks force fixed mode(%d)\n"
+literal|"Quirks force fixed mode(%ld)\n"
 operator|,
 name|st
 operator|->
@@ -3636,7 +3648,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"blkmin == blkmax of %d\n"
+literal|"blkmin == blkmax of %ld\n"
 operator|,
 name|st
 operator|->
@@ -3846,7 +3858,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"Used media_blksiz of %d\n"
+literal|"Used media_blksiz of %ld\n"
 operator|,
 name|st
 operator|->
@@ -3966,6 +3978,7 @@ name|unsigned
 name|char
 name|unit
 decl_stmt|;
+comment|/* XXX Everywhere else unit is "u_int32". Please int? */
 name|u_int32
 name|opri
 decl_stmt|;
@@ -4031,7 +4044,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: bad request, must be multiple of %d\n"
+literal|"st%d: bad request, must be multiple of %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4074,7 +4087,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"st%d: bad request, must be between %d and %d\n"
+literal|"st%d: bad request, must be between %ld and %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4659,7 +4672,7 @@ name|badnews
 label|:
 name|printf
 argument_list|(
-literal|"st%d: oops not queued\n"
+literal|"st%ld: oops not queued\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -5014,7 +5027,7 @@ argument_list|,
 name|SDEV_DB1
 argument_list|,
 operator|(
-literal|"[ioctl: op=0x%x count=0x%x]\n"
+literal|"[ioctl: op=0x%x count=0x%lx]\n"
 operator|,
 name|mt
 operator|->
@@ -5420,6 +5433,7 @@ label|:
 comment|/* 	 * Check that the mode being asked for is aggreeable to the 	 * drive. If not, put it back the way it was. 	 */
 if|if
 condition|(
+operator|(
 name|errcode
 operator|=
 name|st_mode_select
@@ -5432,9 +5446,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
-comment|/* put it back as it was */
+comment|/* put back as it was */
 name|printf
 argument_list|(
 literal|"st%d: Cannot set selected mode"
@@ -5870,6 +5885,7 @@ expr_stmt|;
 comment|/* 	 * do the command, update the global values 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|scsi_scsi_cmd
@@ -5911,6 +5927,7 @@ name|flags
 operator||
 name|SCSI_DATA_IN
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -5947,7 +5964,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"(%d<= blksiz<= %d)\n"
+literal|"(%ld<= blksiz<= %ld)\n"
 operator|,
 name|st
 operator|->
@@ -6146,6 +6163,7 @@ expr_stmt|;
 comment|/* 	 * do the command,  	 * use the results to set blksiz, numblks and density 	 * or if we need it as a template for the mode select 	 * store it away. 	 */
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|scsi_scsi_cmd
@@ -6184,6 +6202,7 @@ name|flags
 operator||
 name|SCSI_DATA_IN
 argument_list|)
+operator|)
 condition|)
 block|{
 return|return
@@ -6251,7 +6270,7 @@ argument_list|,
 name|SDEV_DB3
 argument_list|,
 operator|(
-literal|"density code 0x%x, %d-byte blocks, write-%s, "
+literal|"density code 0x%lx, %ld-byte blocks, write-%s, "
 operator|,
 name|st
 operator|->
@@ -6695,6 +6714,7 @@ name|PAGE_HEADERLEN
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|st_mode_sense
@@ -6710,6 +6730,7 @@ name|pagesize
 argument_list|,
 name|ST_PAGE_CONFIGURATION
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -6729,7 +6750,7 @@ name|noisy_st
 condition|)
 name|printf
 argument_list|(
-literal|"drive reports value of %d, setting %d\n"
+literal|"drive reports value of %d, setting %ld\n"
 argument_list|,
 name|page
 operator|.
@@ -6797,7 +6818,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"st%d: bad value for compression mode\n"
+literal|"st%ld: bad value for compression mode\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6808,6 +6829,7 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
 name|retval
 operator|=
 name|st_mode_select
@@ -6821,6 +6843,7 @@ name|page
 argument_list|,
 name|pagesize
 argument_list|)
+operator|)
 condition|)
 block|{
 name|printf
@@ -8046,35 +8069,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NETBSD
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIGNAL_SHORT_READ
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGNAL_SHORT_READ
-value|bp->b_flags |= B_ERROR;
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Look at the returned sense and act on the error and detirmine  * The unix error number to pass back... (0 = report no error)  *                            (SCSIRET_CONTINUE = continue processing)  */
 end_comment
@@ -8120,15 +8114,6 @@ operator|->
 name|flags
 operator|&
 name|SCSI_SILENT
-decl_stmt|;
-name|struct
-name|buf
-modifier|*
-name|bp
-init|=
-name|xs
-operator|->
-name|bp
 decl_stmt|;
 name|u_int32
 name|unit
@@ -8189,13 +8174,35 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|st
+operator|->
+name|flags
+operator|&
+name|ST_FIXEDBLOCKS
+condition|)
+block|{
+name|info
+operator|=
+name|xs
+operator|->
+name|datalen
+operator|/
+name|st
+operator|->
+name|blksiz
+expr_stmt|;
+block|}
+else|else
+block|{
 name|info
 operator|=
 name|xs
 operator|->
 name|datalen
 expr_stmt|;
-comment|/* bad choice if fixed blocks */
+block|}
 block|}
 if|if
 condition|(
@@ -8217,6 +8224,25 @@ comment|/* let the generic code handle it */
 block|}
 if|if
 condition|(
+name|sense
+operator|->
+name|ext
+operator|.
+name|extended
+operator|.
+name|flags
+operator|&
+operator|(
+name|SSD_EOM
+operator||
+name|SSD_FILEMARK
+operator||
+name|SSD_ILI
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|st
 operator|->
 name|flags
@@ -8233,6 +8259,12 @@ operator|*
 name|st
 operator|->
 name|blksiz
+expr_stmt|;
+name|xs
+operator|->
+name|flags
+operator||=
+name|SCSI_RESID_VALID
 expr_stmt|;
 if|if
 condition|(
@@ -8253,21 +8285,6 @@ name|flags
 operator||=
 name|ST_EIO_PENDING
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|xs
-operator|->
-name|resid
-expr_stmt|;
-name|SIGNAL_SHORT_READ
-block|}
 block|}
 if|if
 condition|(
@@ -8288,21 +8305,6 @@ name|flags
 operator||=
 name|ST_AT_FILEMARK
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|xs
-operator|->
-name|resid
-expr_stmt|;
-name|SIGNAL_SHORT_READ
-block|}
 block|}
 if|if
 condition|(
@@ -8325,21 +8327,6 @@ name|ST_EIO_PENDING
 expr_stmt|;
 if|if
 condition|(
-name|bp
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|xs
-operator|->
-name|resid
-expr_stmt|;
-name|SIGNAL_SHORT_READ
-block|}
-if|if
-condition|(
 name|sense
 operator|->
 name|error_code
@@ -8351,15 +8338,18 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: block wrong size"
-literal|", %d blocks residual\n"
+literal|"st%ld: block wrong size"
+literal|", %ld blocks residual\n"
 argument_list|,
 name|unit
 argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This quirk code helps the drive read 			 * the first tape block, regardless of 			 * format.  That is required for these 			 * drives to return proper MODE SENSE 			 * information. 			 */
+comment|/*XXX*/
+comment|/* is this how it works ? */
+comment|/* check def of ILI for fixed blk tapes */
+comment|/* 			 	 * This quirk code helps the drive read 			 	 * the first tape block, regardless of 			 	 * format.  That is required for these 			 	 * drives to return proper MODE SENSE 			 	 * information. 			 	 */
 if|if
 condition|(
 operator|(
@@ -8388,7 +8378,7 @@ literal|512
 expr_stmt|;
 block|}
 block|}
-comment|/* 		 * If no data was tranfered, do it immediatly 		 */
+comment|/* 			 * If no data was tranfered, do it immediatly 			 */
 if|if
 condition|(
 name|xs
@@ -8400,19 +8390,13 @@ operator|->
 name|datalen
 condition|)
 block|{
-if|if
-condition|(
-name|st
+name|xs
 operator|->
 name|flags
-operator|&
-name|ST_EIO_PENDING
-condition|)
-block|{
-return|return
-name|EIO
-return|;
-block|}
+operator|&=
+operator|~
+name|SCSI_RESID_VALID
+expr_stmt|;
 if|if
 condition|(
 name|st
@@ -8422,26 +8406,47 @@ operator|&
 name|ST_AT_FILEMARK
 condition|)
 block|{
-if|if
-condition|(
-name|bp
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
 name|xs
 operator|->
-name|resid
+name|flags
+operator||=
+name|SCSI_EOF
 expr_stmt|;
-name|SIGNAL_SHORT_READ
-block|}
+name|st
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ST_AT_FILEMARK
+expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+name|st
+operator|->
+name|flags
+operator|&
+name|ST_EIO_PENDING
+condition|)
+block|{
+name|st
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ST_EIO_PENDING
+expr_stmt|;
+return|return
+name|EIO
+return|;
 block|}
+block|}
+return|return
+literal|0
+return|;
 block|}
 else|else
 block|{
@@ -8487,21 +8492,12 @@ operator|&
 name|SSD_FILEMARK
 condition|)
 block|{
-if|if
-condition|(
-name|bp
-condition|)
-name|bp
+name|xs
 operator|->
-name|b_resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
+name|flags
+operator||=
+name|SCSI_EOF
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 if|if
 condition|(
@@ -8523,7 +8519,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* 				 * the record was bigger than the read 				 */
+comment|/* 					 * the record was bigger than the read 					 */
 if|if
 condition|(
 operator|!
@@ -8531,7 +8527,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"st%d: %d-byte record "
+literal|"st%ld: %ld-byte record "
 literal|"too big\n"
 argument_list|,
 name|unit
@@ -8555,20 +8551,17 @@ name|resid
 operator|=
 name|info
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
-block|{
-name|bp
+name|xs
 operator|->
-name|b_resid
-operator|=
-name|info
+name|flags
+operator||=
+name|SCSI_RESID_VALID
 expr_stmt|;
-name|SIGNAL_SHORT_READ
 block|}
 block|}
+return|return
+literal|0
+return|;
 block|}
 name|key
 operator|=
@@ -8589,6 +8582,13 @@ operator|==
 literal|0x8
 condition|)
 block|{
+name|xs
+operator|->
+name|flags
+operator||=
+name|SCSI_EOF
+expr_stmt|;
+comment|/* some drives need this */
 comment|/* 		 * This quirk code helps the drive read the 		 * first tape block, regardless of format.  That 		 * is required for these drives to return proper 		 * MODE SENSE information. 		 */
 if|if
 condition|(
@@ -8643,27 +8643,10 @@ name|ST_BLANK_READ
 expr_stmt|;
 name|xs
 operator|->
-name|resid
-operator|=
-name|xs
-operator|->
-name|datalen
+name|flags
+operator||=
+name|SCSI_EOF
 expr_stmt|;
-if|if
-condition|(
-name|bp
-condition|)
-block|{
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|xs
-operator|->
-name|resid
-expr_stmt|;
-comment|/*return an EOF */
-block|}
 return|return
 operator|(
 name|ESUCCESS
@@ -8674,7 +8657,7 @@ block|}
 return|return
 name|SCSIRET_CONTINUE
 return|;
-comment|/* let the default/generic handler handle it */
+comment|/* Use the the generic handler */
 block|}
 end_function
 
@@ -8738,6 +8721,7 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_mode_sense
@@ -8752,6 +8736,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 goto|goto
@@ -8810,6 +8795,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_mode_select
@@ -8822,6 +8808,7 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 goto|goto
@@ -8841,6 +8828,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|errno
 operator|=
 name|st_rewind
@@ -8851,6 +8839,7 @@ name|FALSE
 argument_list|,
 literal|0
 argument_list|)
+operator|)
 condition|)
 block|{
 name|bad
