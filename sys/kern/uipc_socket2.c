@@ -924,7 +924,7 @@ condition|(
 name|head
 operator|->
 name|so_incqlen
-operator|>=
+operator|>
 name|head
 operator|->
 name|so_qlimit
