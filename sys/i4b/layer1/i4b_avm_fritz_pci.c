@@ -2227,7 +2227,7 @@ name|unit
 expr_stmt|;
 name|rid
 operator|=
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 operator|+
 literal|4
 expr_stmt|;
@@ -2345,7 +2345,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 operator|+
 literal|4
 argument_list|,
@@ -2415,7 +2415,7 @@ name|dev
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|PCI_MAP_REG_START
+name|PCIR_MAPS
 operator|+
 literal|4
 argument_list|,
