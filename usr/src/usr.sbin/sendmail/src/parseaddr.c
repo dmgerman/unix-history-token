@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	3.32	%G%"
+literal|"@(#)parseaddr.c	3.33	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2233,6 +2233,11 @@ name|mailer
 modifier|*
 name|m
 decl_stmt|;
+specifier|extern
+name|bool
+name|sameword
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|a
@@ -2290,15 +2295,13 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
+name|sameword
 argument_list|(
 operator|*
 name|tv
 argument_list|,
 literal|"error"
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 if|if
@@ -2387,7 +2390,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|sameword
 argument_list|(
 name|m
 operator|->
@@ -2396,8 +2399,6 @@ argument_list|,
 operator|*
 name|tv
 argument_list|)
-operator|==
-literal|0
 condition|)
 break|break;
 block|}
