@@ -57,6 +57,20 @@ directive|include
 file|<machine/critical.h>
 end_include
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+name|RQB_BPW
+operator|*
+name|RQB_LEN
+operator|)
+operator|==
+name|RQ_NQS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Global run queue.  */
 end_comment

@@ -15,6 +15,12 @@ directive|define
 name|_RUNQ_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/runq.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|kse
@@ -46,80 +52,6 @@ end_define
 begin_comment
 comment|/* Priorities per queue. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|RQB_LEN
-value|(2)
-end_define
-
-begin_comment
-comment|/* Number of priority status words. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQB_L2BPW
-value|(5)
-end_define
-
-begin_comment
-comment|/* Log2(sizeof(rqb_word_t) * NBBY)). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQB_BPW
-value|(1<<RQB_L2BPW)
-end_define
-
-begin_comment
-comment|/* Bits in an rqb_word_t. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RQB_BIT
-parameter_list|(
-name|pri
-parameter_list|)
-value|(1<< ((pri)& (RQB_BPW - 1)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RQB_WORD
-parameter_list|(
-name|pri
-parameter_list|)
-value|((pri)>> RQB_L2BPW)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RQB_FFS
-parameter_list|(
-name|word
-parameter_list|)
-value|(ffs(word))
-end_define
-
-begin_comment
-comment|/*  * Type of run queue status word.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|rqb_word_t
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  * Head of run queues.  */
