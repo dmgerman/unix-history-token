@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -128,6 +128,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SEGTABSIZE_SU
+parameter_list|(
+name|fs
+parameter_list|)
+define|\
+value|(((fs)->lfs_nseg * sizeof(SEGUSE) + \ 	((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
+end_define
+
 begin_comment
 comment|/* On-disk file information.  One per file with data blocks in the segment. */
 end_comment
@@ -163,91 +174,6 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* array of logical block numbers */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* In-memory description of a segment about to be written */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|segment
-name|SEGMENT
-typedef|;
-end_typedef
-
-begin_struct
-struct|struct
-name|segment
-block|{
-name|SEGMENT
-modifier|*
-name|nextp
-decl_stmt|;
-comment|/* links segments together */
-name|BUF
-modifier|*
-modifier|*
-name|bpp
-decl_stmt|;
-comment|/* pointer to buffer array */
-name|BUF
-modifier|*
-modifier|*
-name|cbpp
-decl_stmt|;
-comment|/* pointer to next available bp */
-name|BUF
-modifier|*
-name|ibp
-decl_stmt|;
-comment|/* buffer pointer to inode page */
-name|BUF
-modifier|*
-name|sbp
-decl_stmt|;
-comment|/* segment summary buffer pointer */
-name|void
-modifier|*
-name|segsum
-decl_stmt|;
-comment|/* segment Summary info */
-name|u_long
-name|seg_bytes_left
-decl_stmt|;
-comment|/* bytes left in segment */
-name|u_long
-name|sum_bytes_left
-decl_stmt|;
-comment|/* bytes left in summary block */
-name|daddr_t
-name|saddr
-decl_stmt|;
-comment|/* current disk address */
-name|daddr_t
-name|sum_addr
-decl_stmt|;
-comment|/* address of current summary */
-name|u_long
-name|ninodes
-decl_stmt|;
-comment|/* number of inodes in this segment */
-name|u_long
-name|nsums
-decl_stmt|;
-comment|/* number of SEGSUMs in this segment */
-name|u_long
-name|seg_number
-decl_stmt|;
-comment|/* number of this segment */
-name|FINFO
-modifier|*
-name|fip
-decl_stmt|;
-comment|/* current fileinfo pointer */
 block|}
 struct|;
 end_struct
@@ -329,6 +255,14 @@ name|daddr_t
 name|lfs_nextseg
 decl_stmt|;
 comment|/* address of next segment to write */
+name|daddr_t
+name|lfs_curseg
+decl_stmt|;
+comment|/* Current segment being written */
+name|daddr_t
+name|lfs_offset
+decl_stmt|;
+comment|/* offset in curseg for next partial */
 name|u_long
 name|lfs_tstamp
 decl_stmt|;
@@ -340,6 +274,10 @@ decl_stmt|;
 comment|/* minimum percentage of free blocks */
 comment|/* These fields can be computed from the others. */
 name|u_long
+name|lfs_dbpseg
+decl_stmt|;
+comment|/* disk blocks per segment */
+name|u_long
 name|lfs_inopb
 decl_stmt|;
 comment|/* inodes per block */
@@ -347,6 +285,10 @@ name|u_long
 name|lfs_ifpb
 decl_stmt|;
 comment|/* IFILE entries per block */
+name|u_long
+name|lfs_sepb
+decl_stmt|;
+comment|/* SEGUSE entries per block */
 name|u_long
 name|lfs_nindir
 decl_stmt|;
@@ -359,6 +301,10 @@ name|u_long
 name|lfs_nspf
 decl_stmt|;
 comment|/* number of sectors per fragment */
+name|u_long
+name|lfs_cleansz
+decl_stmt|;
+comment|/* cleaner info size in blocks */
 name|u_long
 name|lfs_segtabsz
 decl_stmt|;
@@ -426,9 +372,10 @@ modifier|*
 name|lfs_segtab
 decl_stmt|;
 comment|/* in-memory segment usage table */
-name|SEGMENT
+comment|/* XXX NOT USED */
+name|void
 modifier|*
-name|lfs_seglist
+name|XXXlfs_seglist
 decl_stmt|;
 comment|/* list of segments being written */
 name|u_long
@@ -534,29 +481,60 @@ value|di_spare[0]
 end_define
 
 begin_comment
-comment|/* Logical block numbers of indirect blocks. */
+comment|/* Address calculations for metadata located in the inode */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|S_INDIR
-value|-1
+parameter_list|(
+name|fs
+parameter_list|)
+value|-NDADDR
 end_define
 
 begin_define
 define|#
 directive|define
 name|D_INDIR
-value|-2
+parameter_list|(
+name|fs
+parameter_list|)
+value|(S_INDIR - NINDIR(fs) - 1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|T_INDIR
-value|-3
+parameter_list|(
+name|fs
+parameter_list|)
+value|(D_INDIR - NINDIR(fs) * NINDIR(fs) - 1)
 end_define
+
+begin_comment
+comment|/* Structure used to pass around logical block paths. */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_indir
+block|{
+name|long
+name|in_lbn
+decl_stmt|;
+comment|/* logical block number */
+name|int
+name|in_off
+decl_stmt|;
+comment|/* offset in buffer */
+block|}
+name|INDIR
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* Unassigned disk address. */
@@ -620,29 +598,44 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Segment table size, in blocks. */
+comment|/*  * Cleaner information structure.  This resides in the ifile and is used  * to pass information between the cleaner and the kernel.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SEGTABSIZE
-parameter_list|(
-name|fs
-parameter_list|)
-define|\
-value|(((fs)->fs_nseg * sizeof(SEGUSE) + \ 	    ((fs)->fs_bsize - 1))>> (fs)->fs_bshift)
-end_define
+begin_typedef
+typedef|typedef
+struct|struct
+name|_cleanerinfo
+block|{
+name|u_long
+name|clean
+decl_stmt|;
+comment|/* K: number of clean segments */
+name|u_long
+name|dirty
+decl_stmt|;
+comment|/* K: number of dirty segments */
+name|u_long
+name|last_seg
+decl_stmt|;
+comment|/* K: index of last seg written */
+name|time_t
+name|last_time
+decl_stmt|;
+comment|/* K: timestamp of last seg written */
+block|}
+name|CLEANERINFO
+typedef|;
+end_typedef
 
 begin_define
 define|#
 directive|define
-name|SEGTABSIZE_SU
+name|CLEANSIZE_SU
 parameter_list|(
 name|fs
 parameter_list|)
 define|\
-value|(((fs)->lfs_nseg * sizeof(SEGUSE) + \ 	    ((fs)->lfs_bsize - 1))>> (fs)->lfs_bshift)
+value|((sizeof(CLEANERINFO) + (fs)->lfs_bsize - 1)>> (fs)->lfs_bshift)
 end_define
 
 begin_comment
@@ -673,21 +666,17 @@ struct|struct
 name|segsum
 block|{
 name|u_long
-name|ss_cksum
+name|ss_sumsum
 decl_stmt|;
-comment|/* check sum */
+comment|/* check sum of summary block */
+name|u_long
+name|ss_datasum
+decl_stmt|;
+comment|/* check sum of data */
 name|daddr_t
 name|ss_next
 decl_stmt|;
 comment|/* next segment */
-name|daddr_t
-name|ss_prev
-decl_stmt|;
-comment|/* next segment */
-name|daddr_t
-name|ss_nextsum
-decl_stmt|;
-comment|/* next summary block */
 name|u_long
 name|ss_create
 decl_stmt|;
@@ -699,7 +688,7 @@ comment|/* number of file info structures */
 name|u_long
 name|ss_ninos
 decl_stmt|;
-comment|/* number of inode blocks */
+comment|/* number of inodes in summary */
 comment|/* FINFO's... */
 block|}
 struct|;
@@ -731,20 +720,6 @@ parameter_list|(
 name|fs
 parameter_list|)
 value|((fs)->lfs_inopb)
-end_define
-
-begin_comment
-comment|/* IFPB -- IFILE's per block */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFPB
-parameter_list|(
-name|fs
-parameter_list|)
-value|((fs)->lfs_ifpb)
 end_define
 
 begin_define
@@ -819,36 +794,8 @@ define|\
 value|((loc)>> (fs)->lfs_bshift)
 end_define
 
-begin_define
-define|#
-directive|define
-name|datosn
-parameter_list|(
-name|fs
-parameter_list|,
-name|daddr
-parameter_list|)
-comment|/* disk address to segment number */
-define|\
-value|(((daddr) - (fs)->lfs_sboffs[0]) / fsbtodb((fs), (fs)->lfs_ssize))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sntoda
-parameter_list|(
-name|fs
-parameter_list|,
-name|sn
-parameter_list|)
-comment|/* segment number to disk address */
-define|\
-value|((daddr_t)((sn) * ((fs)->lfs_ssize<< (fs)->lfs_fsbtodb) + \ 	    (fs)->lfs_sboffs[0]))
-end_define
-
 begin_comment
-comment|/* Read in the block containing a specific inode from the ifile. */
+comment|/* Read in the block with a specific inode from the ifile. */
 end_comment
 
 begin_define
@@ -864,8 +811,91 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	if (bread((F)->lfs_ivnode, (IN) / IFPB(F) + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(I) = (IFILE *)BP->b_un.b_addr + IN % IFPB(F); \ }
+value|{ \ 	if (bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(I) = (IFILE *)BP->b_un.b_addr + IN % (F)->lfs_ifpb; \ }
 end_define
+
+begin_comment
+comment|/* Read in the block with a specific segment usage entry from the ifile. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LFS_SEGENTRY
+parameter_list|(
+name|I
+parameter_list|,
+name|F
+parameter_list|,
+name|IN
+parameter_list|,
+name|BP
+parameter_list|)
+value|{ \ 	if (bread((F)->lfs_ivnode, (IN) / (F)->lfs_sepb + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&BP)) \ 		panic("lfs: ifile read"); \ 	(I) = (SEGUSE *)BP->b_un.b_addr + IN % (F)->lfs_sepb; \ }
+end_define
+
+begin_comment
+comment|/*  * Structures used by lfs_bmapv and lfs_markv to communicate information  * about inodes and data blocks.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|block_info
+block|{
+name|ino_t
+name|bi_inode
+decl_stmt|;
+comment|/* inode # */
+name|off_t
+name|bi_lbn
+decl_stmt|;
+comment|/* logical block w/in file */
+name|daddr_t
+name|bi_daddr
+decl_stmt|;
+comment|/* disk address of block */
+name|time_t
+name|bi_segcreate
+decl_stmt|;
+comment|/* origin segment create time */
+name|void
+modifier|*
+name|bi_bp
+decl_stmt|;
+comment|/* data buffer */
+block|}
+name|BLOCK_INFO
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|inode_info
+block|{
+name|ino_t
+name|ii_inode
+decl_stmt|;
+comment|/* inode # */
+name|daddr_t
+name|ii_daddr
+decl_stmt|;
+comment|/* disk address of block */
+name|time_t
+name|ii_segcreate
+decl_stmt|;
+comment|/* origin segment create time */
+name|struct
+name|dinode
+modifier|*
+name|ii_dinode
+decl_stmt|;
+comment|/* data buffer */
+block|}
+name|INODE_INFO
+typedef|;
+end_typedef
 
 end_unit
 
