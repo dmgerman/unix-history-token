@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.77 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.78 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.77 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.78 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3172,7 +3172,8 @@ name|hbuf
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+operator|!
+name|NoMXforCanon
 argument_list|)
 condition|)
 block|{

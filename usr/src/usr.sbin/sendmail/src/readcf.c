@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.80 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.81 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6500,6 +6500,25 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|q
+argument_list|,
+literal|"HasWildcardMX"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|NoMXforCanon
+operator|=
+operator|!
+name|clearmode
+expr_stmt|;
+continue|continue;
+block|}
 for|for
 control|(
 name|rfp
@@ -6581,11 +6600,14 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"_res.options = %x\n"
+literal|"_res.options = %x, HasWildcardMX = %d\n"
 argument_list|,
 name|_res
 operator|.
 name|options
+argument_list|,
+operator|!
+name|NoMXforCanon
 argument_list|)
 expr_stmt|;
 else|#
