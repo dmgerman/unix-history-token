@@ -1900,8 +1900,6 @@ decl_stmt|;
 name|off_t
 name|base_offset
 decl_stmt|,
-name|old_offset
-decl_stmt|,
 name|offset
 decl_stmt|;
 name|size_t
@@ -1977,23 +1975,13 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Early rejection of offsets that are invalid 	 */
+comment|/* 	 * Allow only offsets of zero to encourage the read/replace 	 * extended attribute semantic.  Otherwise we can't guarantee 	 * atomicity, as we don't provide locks for extended 	 * attributes. 	 */
 if|if
 condition|(
 name|uio
 operator|->
 name|uio_offset
-operator|>=
-name|attribute
-operator|->
-name|uele_fileheader
-operator|.
-name|uef_size
-operator|||
-name|uio
-operator|->
-name|uio_offset
-operator|<
+operator|!=
 literal|0
 condition|)
 return|return
@@ -2261,7 +2249,9 @@ name|vopunlock_exit
 goto|;
 block|}
 comment|/* allow for offset into the attr data */
-name|offset
+name|uio
+operator|->
+name|uio_offset
 operator|=
 name|base_offset
 operator|+
@@ -2270,10 +2260,6 @@ argument_list|(
 expr|struct
 name|ufs_extattr_header
 argument_list|)
-operator|+
-name|uio
-operator|->
-name|uio_offset
 expr_stmt|;
 comment|/* 	 * Figure out maximum to transfer -- use buffer size and local data 	 * limit. 	 */
 name|size
@@ -2287,23 +2273,7 @@ argument_list|,
 name|ueh
 operator|.
 name|ueh_len
-operator|-
-name|uio
-operator|->
-name|uio_offset
 argument_list|)
-expr_stmt|;
-name|old_offset
-operator|=
-name|uio
-operator|->
-name|uio_offset
-expr_stmt|;
-name|uio
-operator|->
-name|uio_offset
-operator|=
-name|offset
 expr_stmt|;
 name|old_size
 operator|=
@@ -2345,7 +2315,7 @@ name|uio
 operator|->
 name|uio_offset
 operator|=
-name|old_offset
+literal|0
 expr_stmt|;
 goto|goto
 name|vopunlock_exit
@@ -2355,7 +2325,7 @@ name|uio
 operator|->
 name|uio_offset
 operator|=
-name|old_offset
+literal|0
 expr_stmt|;
 name|uio
 operator|->
