@@ -22,13 +22,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"pcic.h"
+file|"crd.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"crd.h"
+file|"pcic.h"
 end_include
 
 begin_if
