@@ -1628,6 +1628,13 @@ name|kernel_debugging
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|kernel_writablecore
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

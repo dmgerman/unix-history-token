@@ -782,6 +782,28 @@ block|,
 literal|1
 block|}
 block|,
+block|{
+literal|"wcore"
+block|,
+name|no_argument
+block|,
+operator|&
+name|kernel_writablecore
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"w"
+block|,
+name|no_argument
+block|,
+operator|&
+name|kernel_writablecore
+block|,
+literal|1
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* Allow machine descriptions to add more options... */
@@ -1105,6 +1127,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'w'
+case|:
+name|kernel_writablecore
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 ifdef|#
@@ -1283,6 +1313,19 @@ argument_list|,
 name|gdb_stdout
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KERNEL_DEBUG
+name|fputs_unfiltered
+argument_list|(
+literal|"\   --kernel           Enable kernel debugging.\n\   --wcore            Make core file writable (only works for /dev/mem).\n\                      This option only works while debugging a kernel !!\n\ "
+argument_list|,
+name|gdb_stdout
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* KERNEL_DEBUGGING */
 ifdef|#
 directive|ifdef
 name|ADDITIONAL_OPTION_HELP
