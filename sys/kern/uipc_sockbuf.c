@@ -922,7 +922,7 @@ argument_list|(
 name|head
 argument_list|)
 expr_stmt|;
-name|wakeup
+name|wakeup_one
 argument_list|(
 operator|&
 name|head
