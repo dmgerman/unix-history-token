@@ -5396,6 +5396,19 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function
+specifier|static
+name|void
+name|cpu_idle_default
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* 	 * we must absolutely guarentee that hlt is the 	 * absolute next instruction after sti or we 	 * introduce a timing window. 	 */
+asm|__asm __volatile("sti; hlt");
+block|}
+end_function
+
 begin_comment
 comment|/*  * Note that we have to be careful here to avoid a race between checking  * sched_runnable() and actually halting.  If we don't do this, we may waste  * the time between calling hlt and the next interrupt even though there  * is a runnable process.  */
 end_comment
@@ -5431,19 +5444,37 @@ condition|(
 name|sched_runnable
 argument_list|()
 condition|)
-block|{
 name|enable_intr
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
-comment|/* 			 * we must absolutely guarentee that hlt is the 			 * absolute next instruction after sti or we 			 * introduce a timing window. 			 */
-asm|__asm __volatile("sti; hlt");
-block|}
+call|(
+modifier|*
+name|cpu_idle_hook
+call|)
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Other subsystems (e.g., ACPI) can hook this later. */
+end_comment
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|cpu_idle_hook
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+init|=
+name|cpu_idle_default
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Clear registers on exec  */
