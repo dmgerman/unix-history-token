@@ -341,6 +341,7 @@ name|struct
 name|is_softc
 modifier|*
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 parameter_list|,
@@ -3102,6 +3103,7 @@ name|is_softc
 modifier|*
 name|is
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|buf
