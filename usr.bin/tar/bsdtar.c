@@ -375,7 +375,7 @@ name|char
 modifier|*
 name|tar_opts
 init|=
-literal|"+Bb:C:cF:f:HhjkLlmnOoPprtT:UuvW:wX:xyZz"
+literal|"+Bb:C:cF:f:HhI:jkLlmnOoPprtT:UuvW:wX:xyZz"
 decl_stmt|;
 end_decl_stmt
 
