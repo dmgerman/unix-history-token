@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_PCCARD_CARD_H_
+name|_PCCARD_CARDINFO_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_PCCARD_CARD_H_
+name|_PCCARD_CARDINFO_H_
 end_define
 
 begin_ifndef
@@ -531,7 +531,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_PCCARD_CARD_H_ */
+comment|/* !_PCCARD_CARDINFO_H_ */
 end_comment
 
 end_unit
