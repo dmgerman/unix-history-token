@@ -98,6 +98,14 @@ file|"ncp_mod.h"
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|sysentoffset
 decl_stmt|;
@@ -2107,6 +2115,15 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|__progname
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap

@@ -146,11 +146,11 @@ operator|>=
 name|NCP_BINDERY_NAME_LEN
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"server name '%s' too long"
 argument_list|,
-literal|"Server name too long:%s\n"
+literal|0
 argument_list|,
 name|arg
 argument_list|)
@@ -203,11 +203,11 @@ operator|>=
 name|NCP_BINDERY_NAME_LEN
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"user name '%s' too long"
 argument_list|,
-literal|"User name too long:%s\n"
+literal|0
 argument_list|,
 name|arg
 argument_list|)
@@ -302,13 +302,11 @@ operator|>=
 literal|127
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"password too long"
 argument_list|,
-literal|"Password too long:%s\n"
-argument_list|,
-name|passwd
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -492,6 +490,10 @@ literal|0
 return|;
 while|while
 condition|(
+name|error
+operator|==
+literal|0
+operator|&&
 operator|(
 name|opt
 operator|=
@@ -788,16 +790,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"no default connection found"
 argument_list|,
-literal|"no default connection found: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1075,11 +1072,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"no server name specified"
 argument_list|,
-literal|"no server name specified\n"
+literal|0
 argument_list|)
 expr_stmt|;
 name|error
@@ -1112,20 +1109,15 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"can't find server %s"
 argument_list|,
-literal|"Can't find server %s, error=%s\n"
+name|error
 argument_list|,
 name|li
 operator|->
 name|server
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1148,11 +1140,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"no user name specified for server %s"
 argument_list|,
-literal|"no user name specified for server %s\n"
+literal|0
 argument_list|,
 name|li
 operator|->
@@ -1524,11 +1516,11 @@ operator|>
 literal|3
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"invalid NCP signature level option `%s'\ 			    (must be a number between 0 and 3)"
 argument_list|,
-literal|"Invalid NCP signature level option `%s' (must be number between 0 and 3)\n"
+literal|0
 argument_list|,
 name|arg
 argument_list|)
