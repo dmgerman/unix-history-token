@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: auth.c,v 1.18 1997/08/22 12:03:52 peter Exp $"
+literal|"$Id: auth.c,v 1.19 1997/10/10 06:02:54 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3734,16 +3734,23 @@ name|tty
 operator|+=
 literal|5
 expr_stmt|;
+if|if
+condition|(
+name|logout
+argument_list|(
+name|tty
+argument_list|)
+condition|)
+comment|/* Already entered (by login?) */
 name|logwtmp
 argument_list|(
 name|tty
 argument_list|,
-name|user
+literal|""
 argument_list|,
-name|remote_name
+literal|""
 argument_list|)
 expr_stmt|;
-comment|/* Add wtmp login entry */
 name|logged_in
 operator|=
 name|TRUE
@@ -3839,6 +3846,7 @@ operator|&
 name|utmp
 argument_list|)
 expr_stmt|;
+comment|/* This logs us in wtmp too */
 return|return
 operator|(
 name|UPAP_AUTHACK
