@@ -306,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|TWE_DEVICE_NAME
-value|"3ware 7000 series Storage Controller"
+value|"3ware Storage Controller"
 end_define
 
 begin_define

@@ -1644,6 +1644,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* get a command to handle the bio with */
+if|if
+condition|(
+name|twe_get_request
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|tr
+argument_list|)
+condition|)
+break|break;
 comment|/* see if there's work to be done */
 if|if
 condition|(
@@ -1658,27 +1670,12 @@ operator|)
 operator|==
 name|NULL
 condition|)
-break|break;
-comment|/* get a command to handle the bio with */
-if|if
-condition|(
-name|twe_get_request
+block|{
+name|twe_release_request
 argument_list|(
-name|sc
-argument_list|,
-operator|&
 name|tr
 argument_list|)
-condition|)
-block|{
-name|twe_enqueue_bio
-argument_list|(
-name|sc
-argument_list|,
-name|bp
-argument_list|)
 expr_stmt|;
-comment|/* failed, put the bio back */
 break|break;
 block|}
 comment|/* connect the bio to the command */
