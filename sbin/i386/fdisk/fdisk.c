@@ -3574,6 +3574,9 @@ name|flag
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_NOW
 if|if
 condition|(
 name|ioctl
@@ -3593,6 +3596,8 @@ argument_list|(
 literal|"ioctl DIOCWLABEL"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|write_disk
@@ -3629,6 +3634,9 @@ name|flag
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOT_NOW
 operator|(
 name|void
 operator|)
@@ -3642,6 +3650,8 @@ operator|&
 name|flag
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_block
