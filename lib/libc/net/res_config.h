@@ -43,16 +43,6 @@ end_comment
 begin_undef
 undef|#
 directive|undef
-name|ALLOW_UPDATES
-end_undef
-
-begin_comment
-comment|/* destroy your system security */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
 name|USELOOPBACK
 end_undef
 
@@ -70,10 +60,21 @@ begin_comment
 comment|/* verify gethostbyaddr() calls - WE DONT NEED IT  */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|ALLOW_UPDATES
+end_undef
+
+begin_comment
+comment|/* compile support for update REQUESTS - harmless */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MULTI_PTRS_ARE_ALIASES
+value|1
 end_define
 
 begin_comment

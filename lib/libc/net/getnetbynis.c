@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: getnetbynis.c,v 1.4 1995/10/22 14:39:06 phk Exp $"
+literal|"@(#)$Id: getnetbynis.c,v 1.5 1996/03/23 22:16:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbynis.c,v 1.4 1995/10/22 14:39:06 phk Exp $"
+literal|"$Id: getnetbynis.c,v 1.5 1996/03/23 22:16:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,17 +192,21 @@ parameter_list|(
 name|name
 parameter_list|,
 name|map
+parameter_list|,
+name|af
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|map
 decl_stmt|;
-end_function
-
-begin_block
+name|int
+name|af
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -247,6 +251,27 @@ index|[
 name|YPMAXRECORD
 index|]
 decl_stmt|;
+switch|switch
+condition|(
+name|af
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+break|break;
+default|default:
+case|case
+name|AF_INET6
+case|:
+name|errno
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|domain
@@ -514,7 +539,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -524,6 +549,7 @@ name|_getnetbynisname
 parameter_list|(
 name|name
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
@@ -548,13 +574,14 @@ name|_getnetbynisaddr
 parameter_list|(
 name|addr
 parameter_list|,
-name|type
+name|af
 parameter_list|)
+name|unsigned
 name|long
 name|addr
 decl_stmt|;
 name|int
-name|type
+name|af
 decl_stmt|;
 block|{
 name|char
@@ -586,15 +613,21 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|type
+name|af
 operator|!=
 name|AF_INET
 condition|)
+block|{
+name|errno
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 for|for
 control|(
 name|nn
@@ -785,6 +818,8 @@ argument_list|(
 name|str
 argument_list|,
 literal|"networks.byaddr"
+argument_list|,
+name|af
 argument_list|)
 return|;
 block|}

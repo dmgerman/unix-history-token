@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbydns.c,v 1.5 1996/01/13 09:03:51 peter Exp $"
+literal|"$Id: getnetbydns.c,v 1.6 1996/07/12 18:54:37 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,9 +524,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|<
 literal|0
+operator|)
+operator|||
+operator|!
+name|res_dnok
+argument_list|(
+name|bp
+argument_list|)
 condition|)
 break|break;
 name|cp
@@ -610,9 +618,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|<
 literal|0
+operator|)
+operator|||
+operator|!
+name|res_hnok
+argument_list|(
+name|bp
+argument_list|)
 condition|)
 block|{
 name|cp
@@ -897,6 +913,7 @@ parameter_list|,
 name|net_type
 parameter_list|)
 specifier|register
+name|unsigned
 name|long
 name|net
 decl_stmt|;

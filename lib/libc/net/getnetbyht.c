@@ -604,6 +604,7 @@ parameter_list|,
 name|type
 parameter_list|)
 specifier|register
+name|unsigned
 name|long
 name|net
 decl_stmt|;

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)$Id: gethostbynis.c,v 1.2 1996/03/16 21:25:58 wpaul Exp $"
+literal|"@(#)$Id: gethostbynis.c,v 1.3 1996/07/12 18:54:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbynis.c,v 1.2 1996/03/16 21:25:58 wpaul Exp $"
+literal|"$Id: gethostbynis.c,v 1.3 1996/07/12 18:54:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,17 +207,21 @@ parameter_list|(
 name|name
 parameter_list|,
 name|map
+parameter_list|,
+name|af
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|char
+modifier|*
 name|map
 decl_stmt|;
-end_function
-
-begin_block
+name|int
+name|af
+decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
@@ -261,6 +265,27 @@ index|[
 name|YPMAXRECORD
 index|]
 decl_stmt|;
+switch|switch
+condition|(
+name|af
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+break|break;
+default|default:
+case|case
+name|AF_INET6
+case|:
+name|errno
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 if|if
 condition|(
 name|domain
@@ -568,7 +593,7 @@ endif|#
 directive|endif
 comment|/* YP */
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -577,10 +602,16 @@ modifier|*
 name|_gethostbynisname
 parameter_list|(
 name|name
+parameter_list|,
+name|af
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|int
+name|af
 decl_stmt|;
 block|{
 return|return
@@ -589,6 +620,8 @@ argument_list|(
 name|name
 argument_list|,
 literal|"hosts.byname"
+argument_list|,
+name|af
 argument_list|)
 return|;
 block|}
@@ -604,8 +637,9 @@ name|addr
 parameter_list|,
 name|len
 parameter_list|,
-name|type
+name|af
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|addr
@@ -614,7 +648,7 @@ name|int
 name|len
 decl_stmt|;
 name|int
-name|type
+name|af
 decl_stmt|;
 block|{
 return|return
@@ -632,6 +666,8 @@ name|addr
 argument_list|)
 argument_list|,
 literal|"hosts.byaddr"
+argument_list|,
+name|af
 argument_list|)
 return|;
 block|}
