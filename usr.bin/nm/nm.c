@@ -1062,20 +1062,22 @@ name|ar_head
 operator|.
 name|ar_name
 argument_list|)
+operator|&&
+name|p
+index|[
+name|i
+index|]
+operator|&&
+name|p
+index|[
+name|i
+index|]
+operator|!=
+literal|' '
 condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-operator|*
-name|p
-operator|&&
-operator|*
-name|p
-operator|!=
-literal|' '
-condition|)
 name|ar_name
 index|[
 name|i
