@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.11 %G%"
+literal|"@(#)wwiomux.c	3.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,7 +390,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-continue|continue;
 block|}
 elseif|else
 if|if
@@ -402,6 +401,23 @@ condition|)
 block|{
 name|wwnwreadz
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|w
+operator|->
+name|ww_pty
+argument_list|)
+expr_stmt|;
+name|w
+operator|->
+name|ww_pty
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 block|}
 elseif|else
