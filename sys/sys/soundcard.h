@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * soundcard.h  *  * Copyright by Hannu Savolainen 1993  * Modified for the new FreeBSD sound driver by Luigi Rizzo, 1997  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -12,220 +16,14 @@ name|SOUNDCARD_H
 end_define
 
 begin_comment
-comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *   */
-end_comment
-
-begin_comment
 comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * diversity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   *   **********************************************************************   * PS.	The Hacker's Guide to VoxWare available from    *     nic.funet.fi:pub/OS/Linux/ALPHA/sound. The file is   *	snd-sdk-doc-0.1.ps.gz (gzipped postscript). It contains   *	some useful information about programming with VoxWare.   *	(NOTE! The pub/OS/Linux/ALPHA/ directories are hidden. You have   *	to cd inside them before the files are accessible.)   **********************************************************************   */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SOUND_VERSION
-value|301
-end_define
-
-begin_comment
-comment|/*  *	Supported card ID numbers (Should be somewhere else?)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_ADLIB
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PAS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MPU401
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SB16MIDI
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_UART6850
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_GUS16
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MSS
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MPU
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSS_MSS
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_SSCAPE_MSS
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_SB
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_TRXPRO_MPU
-value|18
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAD16_MPU
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232
-value|21
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_CS4232_MPU
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_MAUI
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PSEUDO_MSS
-value|24
-end_define
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_AWE32
-value|25
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SNDCARD_PCM86
-value|26
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * IOCTL Commands for /dev/sequencer  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -248,11 +46,473 @@ begin_comment
 comment|/* !_IOWR */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_comment
+comment|/*  * The first part of this file contains the new FreeBSD sound ioctl  * interface. Tries to minimize the number of different ioctls, and  * to be reasonably general.  *  * 970821: some of the new calls have not been implemented yet.  */
+end_comment
+
+begin_comment
+comment|/*  * the following three calls extend the generic file descriptor  * interface. AIONWRITE is the dual of FIONREAD, i.e. returns the max  * number of bytes for a write operation to be non-blocking.  *  * AIOGSIZE/AIOSSIZE are used to change the behaviour of the device,  * from a character device (default) to a block device. In block mode,  * (not to be confused with blocking mode) the main difference for the  * application is that select() will return only when a complete  * block can be read/written to the device, whereas in character mode  * select will return true when one byte can be exchanged. For audio  * devices, character mode makes select almost useless since one byte  * will always be ready by the next sample time (which is often only a  * handful of microseconds away).   * Use a size of 0 or 1 to return to character mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIONWRITE
+value|_IOR('A', 10, int)
+end_define
+
+begin_comment
+comment|/* get # bytes to write */
+end_comment
+
+begin_struct
+struct|struct
+name|snd_size
+block|{
+name|int
+name|play_size
+decl_stmt|;
+name|int
+name|rec_size
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AIOGSIZE
+value|_IOR('A', 11, struct snd_size)
+end_define
+
+begin_comment
+comment|/* read current blocksize */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSSIZE
+value|_IOWR('A', 11, struct snd_size)
+end_define
+
+begin_comment
+comment|/* sets blocksize */
+end_comment
+
+begin_comment
+comment|/*  * The following constants define supported audio formats. The  * encoding follows voxware conventions, i.e. 1 bit for each supported  * format. We extend it by using bit 31 (RO) to indicate full-duplex  * capability, and bit 29 (RO) to indicate that the card supports/  * needs different formats on capture& playback channels.  * Bit 29 (RW) is used to indicate/ask stereo.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_QUERY
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Return current fmt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_MU_LAW
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_A_LAW
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_IMA_ADPCM
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_U8
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_S16_LE
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Little endian signed 16*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_S16_BE
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* Big endian signed 16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_S8
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_U16_LE
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* Little endian U16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_U16_BE
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Big endian U16 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_MPEG
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* MPEG (2) audio */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_STEREO
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* can do/want stereo	*/
+end_comment
+
+begin_comment
+comment|/*  * the following are really capabilities  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_WEIRD
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* weird hardware...	*/
+end_comment
+
+begin_comment
+comment|/*      * AFMT_WEIRD reports that the hardware might need to operate      * with different formats in the playback and capture      * channels when operating in full duplex.      * As an example, SoundBlaster16 cards only support U8 in one      * direction and S16 in the other one, and applications should      * be aware of this limitation.      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AFMT_FULLDUPLEX
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* can do full duplex	*/
+end_comment
+
+begin_comment
+comment|/*  * The following structure is used to get/set format and sampling rate.  * While it would be better to have things such as stereo, bits per  * sample, endiannes, etc split in different variables, it turns out  * that formats are not that many, and not all combinations are possible.  * So we followed the Voxware approach of associating one bit to each  * format.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_snd_chan_param
+block|{
+name|u_long
+name|play_rate
+decl_stmt|;
+comment|/* sampling rate			*/
+name|u_long
+name|rec_rate
+decl_stmt|;
+comment|/* sampling rate			*/
+name|u_long
+name|play_format
+decl_stmt|;
+comment|/* everything describing the format	*/
+name|u_long
+name|rec_format
+decl_stmt|;
+comment|/* everything describing the format	*/
+block|}
+name|snd_chan_param
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AIOGFMT
+value|_IOR('f', 12, snd_chan_param)
+end_define
+
+begin_comment
+comment|/* get format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSFMT
+value|_IOWR('f', 12, snd_chan_param)
+end_define
+
+begin_comment
+comment|/* sets format */
+end_comment
+
+begin_comment
+comment|/*  * The following structure is used to get/set the mixer setting.  * Up to 32 mixers are supported, each one with up to 32 channels.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_snd_mix_param
+block|{
+name|u_char
+name|subdev
+decl_stmt|;
+comment|/* which output				*/
+name|u_char
+name|line
+decl_stmt|;
+comment|/* which input				*/
+name|u_char
+name|left
+decl_stmt|,
+name|right
+decl_stmt|;
+comment|/* volumes, 0..255, 0 = mute	*/
+block|}
+name|snd_mix_param
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* XXX AIOGMIX, AIOSMIX not implemented yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOGMIX
+value|_IOWR('A', 13, snd_mix_param)
+end_define
+
+begin_comment
+comment|/* return mixer status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSMIX
+value|_IOWR('A', 14, snd_mix_param)
+end_define
+
+begin_comment
+comment|/* sets mixer status   */
+end_comment
+
+begin_comment
+comment|/*  * channel specifiers used in AIOSTOP and AIOSYNC  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_PLAY
+value|0x1
+end_define
+
+begin_comment
+comment|/* play chan */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_CAPTURE
+value|0x2
+end_define
+
+begin_comment
+comment|/* capture chan */
+end_comment
+
+begin_comment
+comment|/* AIOSTOP stop& flush a channel, returns the residual count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSTOP
+value|_IOWR ('A', 15, int)
+end_define
+
+begin_comment
+comment|/* alternate method used to notify the sync condition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_SIGNAL
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_SELECT
+value|0x200
+end_define
+
+begin_comment
+comment|/* what the 'pos' field refers to */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_READY
+value|0x400
+end_define
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC_FREE
+value|0x800
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_snd_sync_parm
+block|{
+name|long
+name|chan
+decl_stmt|;
+comment|/* play or capture channel, plus modifier */
+name|long
+name|pos
+decl_stmt|;
+block|}
+name|snd_sync_parm
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AIOSYNC
+value|_IOWR ('A', 15, snd_sync_parm)
+end_define
+
+begin_comment
+comment|/* misc. synchronization */
+end_comment
+
+begin_comment
+comment|/*  * The following is used to return device capabilities. If the structure  * passed to the ioctl is zeroed, default values are returned for rate  * and formats, a bitmap of available mixers is returned, and values  * (inputs, different levels) for the first one are returned.  *  * If  formats, mixers, inputs are instantiated, then detailed info  * are returned depending on the call.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_snd_capabilities
+block|{
+name|u_long
+name|rate_min
+decl_stmt|,
+name|rate_max
+decl_stmt|;
+comment|/* min-max sampling rate */
+name|u_long
+name|formats
+decl_stmt|;
+name|u_long
+name|bufsize
+decl_stmt|;
+comment|/* DMA buffer size */
+name|u_long
+name|mixers
+decl_stmt|;
+comment|/* bitmap of available mixers */
+name|u_long
+name|inputs
+decl_stmt|;
+comment|/* bitmap of available inputs (per mixer) */
+name|u_short
+name|left
+decl_stmt|,
+name|right
+decl_stmt|;
+comment|/* how many levels are supported */
+block|}
+name|snd_capabilities
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|AIOGCAP
+value|_IOWR('A', 15, snd_capabilities)
+end_define
+
+begin_comment
+comment|/* get capabilities */
+end_comment
+
+begin_comment
+comment|/*  * here is the old (Voxware) ioctl interface  */
+end_comment
+
+begin_comment
+comment|/*  * IOCTL Commands for /dev/sequencer  */
+end_comment
 
 begin_define
 define|#
@@ -283,7 +543,7 @@ value|_IOWR('Q', 3, int)
 end_define
 
 begin_comment
-comment|/* Set/get timer resolution (hz) */
+comment|/* Set/get timer res.(hz) */
 end_comment
 
 begin_define
@@ -575,7 +835,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is propably too limited.  */
+comment|/*  *	Sample loading mechanism for internal synthesizers (/dev/sequencer)  *	The following patch_info structure has been designed to support  *	Gravis UltraSound. It tries to be universal format for uploading  *	sample based patches but is probably too limited.  */
 end_comment
 
 begin_struct
@@ -1150,7 +1410,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*******************************************  *	Midi controller numbers  *******************************************  * Controllers 0 to 31 (0x00 to 0x1f) and  * 32 to 63 (0x20 to 0x3f) are continuous  * controllers.  * In the MIDI 1.0 these controllers are sent using  * two messages. Controller numbers 0 to 31 are used  * to send the MSB and the controller numbers 32 to 63  * are for the LSB. Note that just 7 bits are used in MIDI bytes.  */
+comment|/*  *	Midi controller numbers  *  * Controllers 0 to 31 (0x00 to 0x1f) and 32 to 63 (0x20 to 0x3f)  * are continuous controllers.  * In the MIDI 1.0 these controllers are sent using two messages.  * Controller numbers 0 to 31 are used to send the MSB and the  * controller numbers 32 to 63 are for the LSB. Note that just 7 bits  * are used in MIDI bytes.  */
 end_comment
 
 begin_define
@@ -1175,7 +1435,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*		undefined		0x03 */
+comment|/*	undefined		0x03 */
 end_comment
 
 begin_define
@@ -1214,7 +1474,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/*		undefined		0x09 */
+comment|/*	undefined		0x09 */
 end_comment
 
 begin_define
@@ -1232,19 +1492,7 @@ value|0x0b
 end_define
 
 begin_comment
-comment|/*		undefined		0x0c */
-end_comment
-
-begin_comment
-comment|/*		undefined		0x0d */
-end_comment
-
-begin_comment
-comment|/*		undefined		0x0e */
-end_comment
-
-begin_comment
-comment|/*		undefined		0x0f */
+comment|/*	undefined		0x0c - 0x0f */
 end_comment
 
 begin_define
@@ -1276,31 +1524,15 @@ value|0x13
 end_define
 
 begin_comment
-comment|/*		undefined		0x14 - 0x1f */
+comment|/*	undefined		0x14 - 0x1f */
 end_comment
 
 begin_comment
-comment|/*		undefined		0x20 */
+comment|/*	undefined		0x20 */
 end_comment
 
 begin_comment
-comment|/* The controller numbers 0x21 to 0x3f are reserved for the */
-end_comment
-
-begin_comment
-comment|/* least significant bytes of the controllers 0x00 to 0x1f. */
-end_comment
-
-begin_comment
-comment|/* These controllers are not recognised by the driver. */
-end_comment
-
-begin_comment
-comment|/* Controllers 64 to 69 (0x40 to 0x45) are on/off switches. */
-end_comment
-
-begin_comment
-comment|/* 0=OFF and 127=ON (intermediate values are possible) */
+comment|/*  * The controller numbers 0x21 to 0x3f are reserved for the  * least significant bytes of the controllers 0x00 to 0x1f.  * These controllers are not recognised by the driver.  *  * Controllers 64 to 69 (0x40 to 0x45) are on/off switches.  * 0=OFF and 127=ON (intermediate values are possible)  */
 end_comment
 
 begin_define
@@ -1314,7 +1546,7 @@ begin_define
 define|#
 directive|define
 name|CTL_SUSTAIN
-value|0x40
+value|CTL_DAMPER_PEDAL
 end_define
 
 begin_comment
@@ -1325,7 +1557,7 @@ begin_define
 define|#
 directive|define
 name|CTL_HOLD
-value|0x40
+value|CTL_DAMPER_PEDAL
 end_define
 
 begin_comment
@@ -1354,7 +1586,7 @@ value|0x43
 end_define
 
 begin_comment
-comment|/*		undefined		0x44 */
+comment|/*	undefined		0x44 */
 end_comment
 
 begin_define
@@ -1365,7 +1597,7 @@ value|0x45
 end_define
 
 begin_comment
-comment|/*		undefined		0x46 - 0x4f */
+comment|/*	undefined		0x46 - 0x4f */
 end_comment
 
 begin_define
@@ -1397,7 +1629,7 @@ value|0x53
 end_define
 
 begin_comment
-comment|/*		undefined		0x54 - 0x5a */
+comment|/*	undefined		0x54 - 0x5a */
 end_comment
 
 begin_define
@@ -1432,7 +1664,7 @@ begin_define
 define|#
 directive|define
 name|CTL_CELESTE_DEPTH
-value|0x5e
+value|CTL_DETUNE_DEPTH
 end_define
 
 begin_comment
@@ -1489,11 +1721,11 @@ value|0x65
 end_define
 
 begin_comment
-comment|/*		undefined		0x66 - 0x78 */
+comment|/*	undefined		0x66 - 0x78 */
 end_comment
 
 begin_comment
-comment|/*		reserved		0x79 - 0x7f */
+comment|/*	reserved		0x79 - 0x7f */
 end_comment
 
 begin_comment
@@ -1588,7 +1820,7 @@ comment|/* Long events */
 end_comment
 
 begin_comment
-comment|/*  *	SEQ_FULLSIZE events are used for loading patches/samples to the  *	synthesizer devices. These events are passed directly to the driver  *	of the associated synthesizer device. There is no limit to the size  *	of the extended events. These events are not queued but executed  *	immediately when the write() is called (execution can take several  *	seconds of time).   *  *	When a SEQ_FULLSIZE message is written to the device, it must  *	be written using exactly one write() call. Other events cannot  *	be mixed to the same write.  *	  *	For FM synths (YM3812/OPL3) use struct sbi_instrument and write it to the   *	/dev/sequencer. Don't write other data together with the instrument structure  *	Set the key field of the structure to FM_PATCH. The device field is used to  *	route the patch to the corresponding device.  *  *	For Gravis UltraSound use struct patch_info. Initialize the key field  *      to GUS_PATCH.  */
+comment|/*  * SEQ_FULLSIZE events are used for loading patches/samples to the  * synthesizer devices. These events are passed directly to the driver  * of the associated synthesizer device. There is no limit to the size  * of the extended events. These events are not queued but executed  * immediately when the write() is called (execution can take several  * seconds of time).   *  * When a SEQ_FULLSIZE message is written to the device, it must  * be written using exactly one write() call. Other events cannot  * be mixed to the same write.  *   * For FM synths (YM3812/OPL3) use struct sbi_instrument and write  * it to the /dev/sequencer. Don't write other data together with  * the instrument structure Set the key field of the structure to  * FM_PATCH. The device field is used to route the patch to the  * corresponding device.  *  * For Gravis UltraSound use struct patch_info. Initialize the key field  * to GUS_PATCH.  */
 end_comment
 
 begin_define
@@ -1703,12 +1935,12 @@ name|FM_TYPE_OPL3
 value|0x01
 define|#
 directive|define
-name|SAMPLE_TYPE_GUS
+name|SAMPLE_TYPE_BASIC
 value|0x10
 define|#
 directive|define
-name|SAMPLE_TYPE_AWE32
-value|0x20
+name|SAMPLE_TYPE_GUS
+value|SAMPLE_TYPE_BASIC
 name|int
 name|perc_mode
 decl_stmt|;
@@ -1813,7 +2045,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/********************************************  * ioctl commands for the /dev/midi##  */
+comment|/*  * ioctl commands for the /dev/midi##  */
 end_comment
 
 begin_typedef
@@ -1861,7 +2093,7 @@ value|_IOWR('m', 2, mpu_command_rec)
 end_define
 
 begin_comment
-comment|/********************************************  * IOCTL commands for /dev/dsp and /dev/audio  */
+comment|/*  * IOCTL commands for /dev/dsp and /dev/audio  */
 end_comment
 
 begin_define
@@ -1909,9 +2141,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|SNDCTL_DSP_SAMPLESIZE
-value|SNDCTL_DSP_SETFMT
+name|SNDCTL_DSP_SETFMT
+value|_IOWR('P',5, int)
 end_define
+
+begin_comment
+comment|/* Selects ONE fmt*/
+end_comment
+
+begin_comment
+comment|/*  * SOUND_PCM_WRITE_CHANNELS is not that different  * from SNDCTL_DSP_STEREO  */
+end_comment
 
 begin_define
 define|#
@@ -1934,6 +2174,10 @@ name|SNDCTL_DSP_POST
 value|_IO  ('P', 8)
 end_define
 
+begin_comment
+comment|/*  * SNDCTL_DSP_SETBLKSIZE and the following two calls mostly do  * the same thing, i.e. set the block size used in DMA transfers.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1948,10 +2192,6 @@ name|SNDCTL_DSP_SETFRAGMENT
 value|_IOWR('P',10, int)
 end_define
 
-begin_comment
-comment|/*	Audio data formats (Note! U8=8 and S16_LE=16 for compatibility) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1961,118 +2201,6 @@ end_define
 
 begin_comment
 comment|/* Returns a mask */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCTL_DSP_SETFMT
-value|_IOWR('P',5, int)
-end_define
-
-begin_comment
-comment|/* Selects ONE fmt*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_QUERY
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* Return current fmt */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_MU_LAW
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFMT_A_LAW
-value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFMT_IMA_ADPCM
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFMT_U8
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFMT_S16_LE
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Little endian signed 16*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_S16_BE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Big endian signed 16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_S8
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|AFMT_U16_LE
-value|0x00000080
-end_define
-
-begin_comment
-comment|/* Little endian U16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_U16_BE
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Big endian U16 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AFMT_MPEG
-value|0x00000200
-end_define
-
-begin_comment
-comment|/* MPEG (2) audio */
 end_comment
 
 begin_comment
@@ -2087,7 +2215,7 @@ block|{
 name|int
 name|fragments
 decl_stmt|;
-comment|/* # of available fragments (partially used 			 * ones not counted) */
+comment|/* # of avail. frags (partly used ones not counted) */
 name|int
 name|fragstotal
 decl_stmt|;
@@ -2099,7 +2227,7 @@ comment|/* Size of a fragment in bytes */
 name|int
 name|bytes
 decl_stmt|;
-comment|/* Available space in bytes (includes 			 * partially used fragments) */
+comment|/* Avail. space in bytes (includes partly used fragments) */
 comment|/* Note! 'bytes' could be more than fragments*fragsize */
 block|}
 name|audio_buf_info
@@ -2119,6 +2247,10 @@ directive|define
 name|SNDCTL_DSP_GETISPACE
 value|_IOR ('P',13, audio_buf_info)
 end_define
+
+begin_comment
+comment|/*  * SNDCTL_DSP_NONBLOCK is the same (but less powerful, since the  * action cannot be undone) of FIONBIO. The same can be achieved  * by opening the device with O_NDELAY  */
+end_comment
 
 begin_define
 define|#
@@ -2142,7 +2274,7 @@ value|0x000000ff
 end_define
 
 begin_comment
-comment|/* Bits for revision level (0 to 255) */
+comment|/* revision level (0 to 255) */
 end_comment
 
 begin_define
@@ -2175,19 +2307,7 @@ value|0x00000400
 end_define
 
 begin_comment
-comment|/* Device has some kind of */
-end_comment
-
-begin_comment
-comment|/* internal buffers which may */
-end_comment
-
-begin_comment
-comment|/* cause some delays and */
-end_comment
-
-begin_comment
-comment|/* decrease precision of timing */
+comment|/*      * Device has some kind of internal buffers which may      * cause some delays and decrease precision of timing      */
 end_comment
 
 begin_define
@@ -2198,15 +2318,7 @@ value|0x00000800
 end_define
 
 begin_comment
-comment|/* Has a coprocessor */
-end_comment
-
-begin_comment
-comment|/* Sometimes it's a DSP */
-end_comment
-
-begin_comment
-comment|/* but usually not */
+comment|/* Has a coprocessor, sometimes it's a DSP but usually not */
 end_comment
 
 begin_define
@@ -2220,23 +2332,9 @@ begin_comment
 comment|/* Supports SETTRIGGER */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DSP_CAP_MMAP
-value|0x00002000
-end_define
-
 begin_comment
-comment|/* Supports mmap() */
+comment|/*  * What do these function do ?  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SNDCTL_DSP_GETCAPS
-value|_IOR ('P',15, int)
-end_define
 
 begin_define
 define|#
@@ -2287,6 +2385,10 @@ block|}
 name|count_info
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * GETIPTR and GETISPACE are not that different... same for out.  */
+end_comment
 
 begin_define
 define|#
@@ -2339,6 +2441,10 @@ name|SNDCTL_DSP_SETSYNCRO
 value|_IO  ('P', 21)
 end_define
 
+begin_comment
+comment|/*  * I guess these are the readonly version of the same  * functions that exist above as SNDCTL_DSP_...  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2365,150 +2471,6 @@ define|#
 directive|define
 name|SOUND_PCM_READ_FILTER
 value|_IOR ('P', 7, int)
-end_define
-
-begin_comment
-comment|/* Some alias names */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_WRITE_BITS
-value|SNDCTL_DSP_SETFMT
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_WRITE_RATE
-value|SNDCTL_DSP_SPEED
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_POST
-value|SNDCTL_DSP_POST
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_RESET
-value|SNDCTL_DSP_RESET
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SYNC
-value|SNDCTL_DSP_SYNC
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SUBDIVIDE
-value|SNDCTL_DSP_SUBDIVIDE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SETFRAGMENT
-value|SNDCTL_DSP_SETFRAGMENT
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETFMTS
-value|SNDCTL_DSP_GETFMTS
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SETFMT
-value|SNDCTL_DSP_SETFMT
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETOSPACE
-value|SNDCTL_DSP_GETOSPACE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETISPACE
-value|SNDCTL_DSP_GETISPACE
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_NONBLOCK
-value|SNDCTL_DSP_NONBLOCK
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETCAPS
-value|SNDCTL_DSP_GETCAPS
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETTRIGGER
-value|SNDCTL_DSP_GETTRIGGER
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SETTRIGGER
-value|SNDCTL_DSP_SETTRIGGER
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_SETSYNCRO
-value|SNDCTL_DSP_SETSYNCRO
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETIPTR
-value|SNDCTL_DSP_GETIPTR
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_GETOPTR
-value|SNDCTL_DSP_GETOPTR
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_MAPINBUF
-value|SNDCTL_DSP_MAPINBUF
-end_define
-
-begin_define
-define|#
-directive|define
-name|SOUND_PCM_MAPOUTBUF
-value|SNDCTL_DSP_MAPOUTBUF
 end_define
 
 begin_comment
@@ -2677,7 +2639,7 @@ value|_IOR ('C',  9, copr_msg)
 end_define
 
 begin_comment
-comment|/*********************************************  * IOCTL commands for /dev/mixer  */
+comment|/*  * IOCTL commands for /dev/mixer  */
 end_comment
 
 begin_comment
@@ -2688,7 +2650,7 @@ begin_define
 define|#
 directive|define
 name|SOUND_MIXER_NRDEVICES
-value|17
+value|25
 end_define
 
 begin_define
@@ -2842,12 +2804,96 @@ begin_comment
 comment|/* Input source 3  (line) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL1
+value|17
+end_define
+
 begin_comment
-comment|/* Some on/off settings (SOUND_SPECIAL_MIN - SOUND_SPECIAL_MAX) */
+comment|/* Digital (input) 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL2
+value|18
+end_define
+
+begin_comment
+comment|/* Digital (input) 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_DIGITAL3
+value|19
+end_define
+
+begin_comment
+comment|/* Digital (input) 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_PHONEIN
+value|20
+end_define
+
+begin_comment
+comment|/* Phone input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_PHONEOUT
+value|21
+end_define
+
+begin_comment
+comment|/* Phone output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_VIDEO
+value|22
+end_define
+
+begin_comment
+comment|/* Video/TV (audio) in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_RADIO
+value|23
+end_define
+
+begin_comment
+comment|/* Radio in */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOUND_MIXER_MONITOR
+value|24
+end_define
+
+begin_comment
+comment|/* Monitor (usually mic) volume */
 end_comment
 
 begin_comment
-comment|/* Not counted to SOUND_MIXER_NRDEVICES, but use the same number space */
+comment|/*  * Some on/off settings (SOUND_SPECIAL_MIN - SOUND_SPECIAL_MAX)  * Not counted to SOUND_MIXER_NRDEVICES, but use the same number space  */
 end_comment
 
 begin_define
@@ -2904,15 +2950,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SOUND_MIXER_NONE
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
 name|SOUND_DEVICE_LABELS
-value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	 "Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	 "Line1", "Line2", "Line3"}
+value|{ \ 	"Vol  ", "Bass ", "Trebl", "Synth", "Pcm  ", "Spkr ", "Line ", \ 	"Mic  ", "CD   ", "Mix  ", "Pcm2 ", "Rec  ", "IGain", "OGain", \ 	"Line1", "Line2", "Line3", "Digital1", "Digital2", "Digital3", \ 	"PhoneIn", "PhoneOut", "Video", "Radio", "Monitor"}
 end_define
 
 begin_define
 define|#
 directive|define
 name|SOUND_DEVICE_NAMES
-value|{ \ 	"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 	"mic", "cd", "mix", "pcm2", "rec", "igain", "ogain", \ 	"line1", "line2", "line3"}
+value|{ \ 	"vol", "bass", "treble", "synth", "pcm", "speaker", "line", \ 	"mic", "cd", "mix", "pcm2", "rec", "igain", "ogain", \ 	"line1", "line2", "line3", "dig1", "dig2", "dig3", \ 	"phin", "phout", "video", "radio", "monitor"}
 end_define
 
 begin_comment
@@ -3107,6 +3160,66 @@ end_define
 begin_define
 define|#
 directive|define
+name|SOUND_MASK_DIGITAL1
+value|(1<< SOUND_MIXER_DIGITAL1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_DIGITAL2
+value|(1<< SOUND_MIXER_DIGITAL2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_DIGITAL3
+value|(1<< SOUND_MIXER_DIGITAL3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_PHONEIN
+value|(1<< SOUND_MIXER_PHONEIN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_PHONEOUT
+value|(1<< SOUND_MIXER_PHONEOUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_RADIO
+value|(1<< SOUND_MIXER_RADIO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_VIDEO
+value|(1<< SOUND_MIXER_VIDEO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_MASK_MONITOR
+value|(1<< SOUND_MIXER_MONITOR)
+end_define
+
+begin_comment
+comment|/* Obsolete macros */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SOUND_MASK_MUTE
 value|(1<< SOUND_MIXER_MUTE)
 end_define
@@ -3253,6 +3366,10 @@ directive|define
 name|SOUND_MIXER_READ_LINE3
 value|MIXER_READ(SOUND_MIXER_LINE3)
 end_define
+
+begin_comment
+comment|/* Obsolete macros */
+end_comment
 
 begin_define
 define|#
@@ -3465,6 +3582,20 @@ define|#
 directive|define
 name|SOUND_MIXER_WRITE_RECSRC
 value|MIXER_WRITE(SOUND_MIXER_RECSRC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEFT_CHN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|RIGHT_CHN
+value|1
 end_define
 
 begin_comment
@@ -3728,17 +3859,14 @@ directive|ifndef
 name|USE_SIMPLE_MACROS
 end_ifndef
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|seqbuf_dump
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* This function must be provided by programs */
@@ -4328,10 +4456,165 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Here I have moved all the aliases for ioctl names.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SNDCTL_DSP_SAMPLESIZE
+value|SNDCTL_DSP_SETFMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_WRITE_BITS
+value|SNDCTL_DSP_SETFMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SETFMT
+value|SNDCTL_DSP_SETFMT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_WRITE_RATE
+value|SNDCTL_DSP_SPEED
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_POST
+value|SNDCTL_DSP_POST
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_RESET
+value|SNDCTL_DSP_RESET
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SYNC
+value|SNDCTL_DSP_SYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SUBDIVIDE
+value|SNDCTL_DSP_SUBDIVIDE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SETFRAGMENT
+value|SNDCTL_DSP_SETFRAGMENT
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETFMTS
+value|SNDCTL_DSP_GETFMTS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETOSPACE
+value|SNDCTL_DSP_GETOSPACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETISPACE
+value|SNDCTL_DSP_GETISPACE
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_NONBLOCK
+value|SNDCTL_DSP_NONBLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETCAPS
+value|SNDCTL_DSP_GETCAPS
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETTRIGGER
+value|SNDCTL_DSP_GETTRIGGER
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SETTRIGGER
+value|SNDCTL_DSP_SETTRIGGER
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_SETSYNCRO
+value|SNDCTL_DSP_SETSYNCRO
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETIPTR
+value|SNDCTL_DSP_GETIPTR
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_GETOPTR
+value|SNDCTL_DSP_GETOPTR
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_MAPINBUF
+value|SNDCTL_DSP_MAPINBUF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOUND_PCM_MAPOUTBUF
+value|SNDCTL_DSP_MAPOUTBUF
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SOUNDCARD_H */
+end_comment
 
 end_unit
 
