@@ -887,6 +887,12 @@ name|nc_rq
 operator|=
 name|rqp
 expr_stmt|;
+name|rqp
+operator|->
+name|conn
+operator|=
+name|conn
+expr_stmt|;
 if|if
 condition|(
 name|p
