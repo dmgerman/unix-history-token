@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LINT
+name|lint
 end_ifndef
 
 begin_decl_stmt
@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)showtc.c	1.7	(Berkeley) %G%"
+literal|"@(#)showtc.c	1.8	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,13 +110,6 @@ index|]
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|NOCAPS
-value|105
-end_define
-
 begin_struct
 struct|struct
 name|Caps
@@ -131,11 +124,45 @@ name|desc
 decl_stmt|;
 block|}
 name|capList
-index|[
-name|NOCAPS
-index|]
+index|[]
 init|=
 block|{
+literal|"AL"
+block|,
+literal|"Add N new blank lines"
+block|,
+literal|"CC"
+block|,
+literal|"Command char in prototype if settable"
+block|,
+literal|"DC"
+block|,
+literal|"Delete N characters"
+block|,
+literal|"DL"
+block|,
+literal|"Delete N lines"
+block|,
+literal|"DO"
+block|,
+literal|"Move cursor down N lines"
+block|,
+literal|"IC"
+block|,
+literal|"Insert N blank characters"
+block|,
+literal|"LE"
+block|,
+literal|"Move cursor left N positions"
+block|,
+literal|"RI"
+block|,
+literal|"Move cursor right N positions"
+block|,
+literal|"UP"
+block|,
+literal|"Move cursor up N lines"
+block|,
 literal|"ae"
 block|,
 literal|"End alternate character set"
@@ -158,7 +185,7 @@ literal|"Backspace if not ^H"
 block|,
 literal|"bl"
 block|,
-literal|"Audible Bell"
+literal|"Audible Bell (default ^G)"
 block|,
 literal|"bs"
 block|,
@@ -171,10 +198,6 @@ block|,
 literal|"bw"
 block|,
 literal|"Backspace wraps from col 0 to last col"
-block|,
-literal|"CC"
-block|,
-literal|"Command char in prototype if settable"
 block|,
 literal|"cd"
 block|,
@@ -202,39 +225,51 @@ literal|"Number of columns in a line"
 block|,
 literal|"cr"
 block|,
-literal|"Carriage return, (default ^M)"
+literal|"Carriage return (default ^M)"
 block|,
 literal|"cs"
 block|,
 literal|"Change scrolling region (vt100), like cm"
 block|,
+literal|"ct"
+block|,
+literal|"Clear all tab stops"
+block|,
 literal|"cv"
 block|,
 literal|"Like ch but vertical only."
-block|,
-literal|"da"
-block|,
-literal|"Display may be retained above"
 block|,
 literal|"dB"
 block|,
 literal|"Number of millisec of bs delay needed"
 block|,
-literal|"db"
-block|,
-literal|"Display may be retained below"
-block|,
 literal|"dC"
 block|,
 literal|"Number of millisec of cr delay needed"
 block|,
-literal|"dc"
-block|,
-literal|"Delete character"
-block|,
 literal|"dF"
 block|,
 literal|"Number of millisec of ff delay needed"
+block|,
+literal|"dN"
+block|,
+literal|"Number of millisec of nl delay needed"
+block|,
+literal|"dT"
+block|,
+literal|"Number of millisec of tab delay needed"
+block|,
+literal|"da"
+block|,
+literal|"Display may be retained above"
+block|,
+literal|"db"
+block|,
+literal|"Display may be retained below"
+block|,
+literal|"dc"
+block|,
+literal|"Delete character"
 block|,
 literal|"dl"
 block|,
@@ -244,10 +279,6 @@ literal|"dm"
 block|,
 literal|"Start Delete mode"
 block|,
-literal|"dN"
-block|,
-literal|"Number of millisec of nl delay needed"
-block|,
 literal|"do"
 block|,
 literal|"Down one line"
@@ -255,10 +286,6 @@ block|,
 literal|"ds"
 block|,
 literal|"Disable status display"
-block|,
-literal|"dT"
-block|,
-literal|"Number of millisec of tab delay needed"
 block|,
 literal|"ed"
 block|,
@@ -298,7 +325,7 @@ literal|"Home cursor (if no cm)"
 block|,
 literal|"hs"
 block|,
-literal|"Has 25th status line"
+literal|"Has status line"
 block|,
 literal|"hu"
 block|,
@@ -307,6 +334,10 @@ block|,
 literal|"hz"
 block|,
 literal|"Hazeltine; can't print ~'s"
+block|,
+literal|"i2"
+block|,
+literal|"Initialization string (used by sysline(1))"
 block|,
 literal|"ic"
 block|,
@@ -332,9 +363,45 @@ literal|"is"
 block|,
 literal|"Initialization string"
 block|,
-literal|"i2"
+literal|"k0"
 block|,
-literal|"Initialization string (used by sysline(1))"
+literal|"Sent by function key 0"
+block|,
+literal|"k1"
+block|,
+literal|"Sent by function key 1"
+block|,
+literal|"k2"
+block|,
+literal|"Sent by function key 2"
+block|,
+literal|"k3"
+block|,
+literal|"Sent by function key 3"
+block|,
+literal|"k4"
+block|,
+literal|"Sent by function key 4"
+block|,
+literal|"k5"
+block|,
+literal|"Sent by function key 5"
+block|,
+literal|"k6"
+block|,
+literal|"Sent by function key 6"
+block|,
+literal|"k7"
+block|,
+literal|"Sent by function key 7"
+block|,
+literal|"k8"
+block|,
+literal|"Sent by function key 8"
+block|,
+literal|"k9"
+block|,
+literal|"Sent by function key 9"
 block|,
 literal|"kb"
 block|,
@@ -342,7 +409,7 @@ literal|"Sent by backspace key"
 block|,
 literal|"kd"
 block|,
-literal|"Sent down arrow key"
+literal|"Sent by down arrow key"
 block|,
 literal|"ke"
 block|,
@@ -355,6 +422,10 @@ block|,
 literal|"kl"
 block|,
 literal|"Sent by left arrow key"
+block|,
+literal|"km"
+block|,
+literal|"Has a \"meta\" key (shift, sets parity bit)"
 block|,
 literal|"kn"
 block|,
@@ -375,6 +446,46 @@ block|,
 literal|"ku"
 block|,
 literal|"Sent by up arrow key"
+block|,
+literal|"l0"
+block|,
+literal|"Label on function key 0 (if not \"0\")"
+block|,
+literal|"l1"
+block|,
+literal|"Label on function key 1 (if not \"1\")"
+block|,
+literal|"l2"
+block|,
+literal|"Label on function key 2 (if not \"2\")"
+block|,
+literal|"l3"
+block|,
+literal|"Label on function key 3 (if not \"3\")"
+block|,
+literal|"l4"
+block|,
+literal|"Label on function key 4 (if not \"4\")"
+block|,
+literal|"l5"
+block|,
+literal|"Label on function key 5 (if not \"5\")"
+block|,
+literal|"l6"
+block|,
+literal|"Label on function key 6 (if not \"6\")"
+block|,
+literal|"l7"
+block|,
+literal|"Label on function key 7 (if not \"7\")"
+block|,
+literal|"l8"
+block|,
+literal|"Label on function key 8 (if not \"8\")"
+block|,
+literal|"l9"
+block|,
+literal|"Label on function key 9 (if not \"9\")"
 block|,
 literal|"le"
 block|,
@@ -420,6 +531,10 @@ literal|"ml"
 block|,
 literal|"Memory lock on above cursor."
 block|,
+literal|"mp"
+block|,
+literal|"Turn on protected attribute"
+block|,
 literal|"mr"
 block|,
 literal|"Enter reverse video mode"
@@ -452,13 +567,37 @@ literal|"os"
 block|,
 literal|"Terminal overstrikes"
 block|,
+literal|"pb"
+block|,
+literal|"Lowest baud where delays are required"
+block|,
 literal|"pc"
 block|,
 literal|"Pad character (rather than null)"
 block|,
+literal|"pl"
+block|,
+literal|"Program function key N to execute string S (terminfo only)"
+block|,
 literal|"pt"
 block|,
 literal|"Has hardware tabs (may need to use is)"
+block|,
+literal|"rc"
+block|,
+literal|"Restore cursor to position of last sc"
+block|,
+literal|"rf"
+block|,
+literal|"Name of file containing reset codes"
+block|,
+literal|"rs"
+block|,
+literal|"Reset terminal completely to sane modes"
+block|,
+literal|"sc"
+block|,
+literal|"Save cursor position"
 block|,
 literal|"se"
 block|,
@@ -479,6 +618,10 @@ block|,
 literal|"sr"
 block|,
 literal|"Scroll reverse (backwards)"
+block|,
+literal|"st"
+block|,
+literal|"Set a tab in all rows, current column"
 block|,
 literal|"ta"
 block|,
@@ -536,6 +679,10 @@ literal|"vs"
 block|,
 literal|"Sequence to start open/visual mode"
 block|,
+literal|"vt"
+block|,
+literal|"Virtual terminal number (not supported on all systems)"
+block|,
 literal|"xb"
 block|,
 literal|"Beehive (f1=escape, f2=ctrl C)"
@@ -558,6 +705,13 @@ literal|"Destructive tabs, magic so char (Teleray 1061)"
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|NOCAPS
+value|(sizeof capList / sizeof *capList)
+end_define
 
 begin_ifdef
 ifdef|#
