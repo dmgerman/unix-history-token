@@ -34,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +70,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -336,12 +355,11 @@ operator|)
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: ambiguous request\n"
+literal|"%s: ambiguous request"
 argument_list|,
 operator|&
 name|argv
@@ -353,12 +371,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|p
@@ -370,12 +382,11 @@ operator|*
 operator|)
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: unknown request\n"
+literal|"%s: unknown request"
 argument_list|,
 operator|&
 name|argv
@@ -387,12 +398,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|curcmd
 operator|=
 name|p
@@ -511,11 +516,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Couldn't initialize display.\n"
+literal|"couldn't initialize display"
 argument_list|)
 expr_stmt|;
 name|die
@@ -544,11 +547,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Couldn't set up load average window.\n"
+literal|"couldn't set up load average window"
 argument_list|)
 expr_stmt|;
 name|die
@@ -589,20 +590,13 @@ name|n_type
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"couldn't read namelist.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"couldn't read namelist"
 argument_list|)
 expr_stmt|;
-block|}
 name|gethostname
 argument_list|(
 name|hostname
