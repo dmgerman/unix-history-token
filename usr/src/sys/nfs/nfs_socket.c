@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -1843,6 +1849,17 @@ name|UIO_READ
 expr_stmt|;
 name|auio
 operator|.
+name|uio_procp
+operator|=
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|auio
+operator|.
 name|uio_offset
 operator|=
 literal|0
@@ -3265,7 +3282,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|int
@@ -3950,7 +3967,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -3960,14 +3977,14 @@ operator|*
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-name|p
+name|tl
 operator|+=
 literal|2
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|++
 operator|==
 name|rpc_msgdenied
@@ -3976,7 +3993,7 @@ block|{
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|==
 name|rpc_mismatch
 condition|)
@@ -4005,7 +4022,7 @@ if|if
 condition|(
 operator|*
 operator|++
-name|p
+name|tl
 operator|!=
 literal|0
 condition|)
@@ -4019,7 +4036,7 @@ argument_list|(
 name|long
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4031,7 +4048,7 @@ expr_stmt|;
 block|}
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -4043,14 +4060,14 @@ comment|/* 0 == ok */
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|==
 literal|0
 condition|)
 block|{
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -4061,7 +4078,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|!=
 literal|0
 condition|)
@@ -4073,7 +4090,7 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -4275,7 +4292,7 @@ decl_stmt|;
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -4454,7 +4471,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -4468,13 +4485,13 @@ operator|*
 name|retxid
 operator|=
 operator|*
-name|p
+name|tl
 operator|++
 expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|++
 operator|!=
 name|rpc_call
@@ -4494,7 +4511,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|++
 operator|!=
 name|rpc_vers
@@ -4514,7 +4531,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|++
 operator|!=
 name|prog
@@ -4534,7 +4551,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|p
+name|tl
 operator|++
 operator|!=
 name|vers
@@ -4559,7 +4576,7 @@ argument_list|(
 name|u_long
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -4590,7 +4607,7 @@ operator|>
 name|maxproc
 operator|||
 operator|*
-name|p
+name|tl
 operator|++
 operator|!=
 name|rpc_auth_unix
@@ -4614,7 +4631,7 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -4648,7 +4665,7 @@ name|int
 argument_list|,
 operator|*
 operator|++
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 if|if
@@ -4683,7 +4700,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -4702,7 +4719,7 @@ argument_list|(
 name|uid_t
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -4715,7 +4732,7 @@ argument_list|(
 name|gid_t
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
@@ -4726,7 +4743,7 @@ argument_list|(
 name|int
 argument_list|,
 operator|*
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 if|if
@@ -4753,7 +4770,7 @@ return|;
 block|}
 name|nfsm_disect
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -4798,12 +4815,12 @@ argument_list|(
 name|gid_t
 argument_list|,
 operator|*
-name|p
+name|tl
 operator|++
 argument_list|)
 expr_stmt|;
 else|else
-name|p
+name|tl
 operator|++
 expr_stmt|;
 name|cr
@@ -4833,7 +4850,7 @@ name|int
 argument_list|,
 operator|*
 operator|++
-name|p
+name|tl
 argument_list|)
 expr_stmt|;
 if|if
@@ -4971,7 +4988,7 @@ block|{
 specifier|register
 name|u_long
 modifier|*
-name|p
+name|tl
 decl_stmt|;
 specifier|register
 name|long
@@ -5017,7 +5034,7 @@ argument_list|,
 name|M_WAIT
 argument_list|)
 expr_stmt|;
-name|p
+name|tl
 operator|=
 name|mtod
 argument_list|(
@@ -5041,7 +5058,7 @@ operator|(
 operator|(
 name|caddr_t
 operator|)
-name|p
+name|tl
 operator|)
 operator|+
 name|mreq
@@ -5049,13 +5066,13 @@ operator|->
 name|m_len
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|retxid
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_reply
@@ -5068,19 +5085,19 @@ name|ERPCMISMATCH
 condition|)
 block|{
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_msgdenied
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_mismatch
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -5089,7 +5106,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -5100,19 +5117,19 @@ block|}
 else|else
 block|{
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|rpc_msgaccepted
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 literal|0
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 literal|0
@@ -5126,7 +5143,7 @@ case|case
 name|EPROGUNAVAIL
 case|:
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -5138,7 +5155,7 @@ case|case
 name|EPROGMISMATCH
 case|:
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -5147,7 +5164,7 @@ argument_list|)
 expr_stmt|;
 name|nfsm_build
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -5158,7 +5175,7 @@ name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|++
 operator|=
 name|txdr_unsigned
@@ -5167,7 +5184,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -5180,7 +5197,7 @@ case|case
 name|EPROCUNAVAIL
 case|:
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
@@ -5190,7 +5207,7 @@ expr_stmt|;
 break|break;
 default|default:
 operator|*
-name|p
+name|tl
 operator|=
 literal|0
 expr_stmt|;
@@ -5203,7 +5220,7 @@ condition|)
 block|{
 name|nfsm_build
 argument_list|(
-name|p
+name|tl
 argument_list|,
 name|u_long
 operator|*
@@ -5212,7 +5229,7 @@ name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
 operator|*
-name|p
+name|tl
 operator|=
 name|txdr_unsigned
 argument_list|(
