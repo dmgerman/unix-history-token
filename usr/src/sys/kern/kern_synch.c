@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	3.13	%G%	*/
+comment|/*	kern_synch.c	3.14	%G%	*/
 end_comment
 
 begin_include
@@ -1336,6 +1336,8 @@ operator|(
 name|SPAGI
 operator||
 name|SDETACH
+operator||
+name|SNUSIG
 operator|)
 operator|)
 expr_stmt|;
