@@ -40,12 +40,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -61,6 +55,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
 begin_comment
 comment|/*  * Swap two areas of size number of bytes.  Although qsort(3) permits random  * blocks of memory to be sorted, sorting pointers is almost certainly the  * common case (and, were it not, could easily be made so).  Regardless, it  * isn't worth optimizing; the SWAP's get sped up by the cache, and pointer  * arithmetic gets lost in the time required for comparison function calls.  */
 end_comment
@@ -74,27 +74,27 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	int cnt = size; \ 	char	ch; \ 	do { \ 		ch = *a; \ 		*a++ = *b; \ 		*b++ = ch; \ 	} while (--cnt); \ }
+value|{ \ 	cnt = size; \ 	do { \ 		ch = *a; \ 		*a++ = *b; \ 		*b++ = ch; \ 	} while (--cnt); \ }
 end_define
 
 begin_comment
-comment|/*  * Assign one block of size size to another.  */
+comment|/* Copy one block of size size to another. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ASSIGN
+name|COPY
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{ \ 	int cnt = size; \ 	char *t1 = a, *t2 = b; \ 	do { \ 		*t1++ = *t2++; \ 	} while (--cnt); \ }
+value|{ \ 	cnt = size; \ 	t1 = a; \ 	t2 = b; \ 	do { \ 		*t1++ = *t2++; \ 	} while (--cnt); \ }
 end_define
 
 begin_comment
-comment|/*  * Build the list into a heap, where a heap is defined such that for  * the records K1 ... KN, Kj/2>= Kj for 1<= j/2<= j<= N.  *  * There two cases.  If j == nmemb, select largest of Ki and Kj.  If  * j< nmemb, select largest of Ki, Kj and Kj+1.  *  */
+comment|/*  * Build the list into a heap, where a heap is defined such that for  * the records K1 ... KN, Kj/2>= Kj for 1<= j/2<= j<= N.  *  * There two cases.  If j == nmemb, select largest of Ki and Kj.  If  * j< nmemb, select largest of Ki, Kj and Kj+1.  */
 end_comment
 
 begin_define
@@ -104,25 +104,22 @@ name|CREATE
 parameter_list|(
 name|initval
 parameter_list|)
-value|{ \ 	int i,j; \ 	char *t,*p; \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		if (compar(p,t)<= 0) \ 			break; \ 		SWAP(t, p); \ 	} \ }
+value|{ \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		if (compar(p, t)<= 0) \ 			break; \ 		SWAP(t, p); \ 	} \ }
 end_define
 
 begin_comment
-comment|/*  * Select the top of the heap and 'heapify'.  Since by far the most expensive  * action is the call to the compar function, an considerable optimization  * in the average case can be achieved due to the fact that k, the displaced  * elememt, is ususally quite small, so it would be preferable to first  * heapify, always maintaining the invariant that the larger child is copied  * over its parent's record.  *  * Then, starting from the *bottom* of the heap, finding k's correct  * place, again maintianing the invariant.  As a result of the invariant  * no element is 'lost' when k is assigned it's correct place in the heap.  *  * The time savings from this optimization are on the order of 15-20% for the  * average case. See Knuth, Vol. 3, page 158, problem 18.  */
+comment|/*  * Select the top of the heap and 'heapify'.  Since by far the most expensive  * action is the call to the compar function, a considerable optimization  * in the average case can be achieved due to the fact that k, the displaced  * elememt, is ususally quite small, so it would be preferable to first  * heapify, always maintaining the invariant that the larger child is copied  * over its parent's record.  *  * Then, starting from the *bottom* of the heap, finding k's correct place,  * again maintianing the invariant.  As a result of the invariant no element  * is 'lost' when k is assigned its correct place in the heap.  *  * The time savings from this optimization are on the order of 15-20% for the  * average case. See Knuth, Vol. 3, page 158, problem 18.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SELECT
-parameter_list|(
-name|initval
-parameter_list|)
-value|{ \ 	int	i,j; \ 	char	*p,*t; \ 	for (i = initval; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		ASSIGN(t, p); \ 	} \ 	while (1) { \ 		j = i; \ 		i = j / 2; \ 		p = (char *)bot + j * size; \ 		t = (char *)bot + i * size; \ 		if ( j == initval || compar(k, t)< 0) { \ 			ASSIGN(p, k); \ 			break; \ 		} \ 		ASSIGN(p, t); \ 	} \ }
+value|{ \ 	for (i = 1; (j = i * 2)<= nmemb; i = j) { \ 		p = (char *)bot + j * size; \ 		if (j< nmemb&& compar(p, p + size)< 0) { \ 			p += size; \ 			++j; \ 		} \ 		t = (char *)bot + i * size; \ 		COPY(t, p); \ 	} \ 	for (;;) { \ 		j = i; \ 		i = j / 2; \ 		p = (char *)bot + j * size; \ 		t = (char *)bot + i * size; \ 		if (j == 1 || compar(k, t)< 0) { \ 			COPY(p, k); \ 			break; \ 		} \ 		COPY(p, t); \ 	} \ }
 end_define
 
 begin_comment
-comment|/*  * Heapsort -- Knuth, Vol. 3, page 145.  Runs in O (N lg N), both average  * and worst.  While heapsort is faster than the worst case of quicksort,  * the BSD quicksort does median selection so that the chance of finding  * a data set that will trigger the worst case is nonexistent.  Heapsort's  * only advantage over quicksort is that it requires no additional memory.  */
+comment|/*  * Heapsort -- Knuth, Vol. 3, page 145.  Runs in O (N lg N), both average  * and worst.  While heapsort is faster than the worst case of quicksort,  * the BSD quicksort does median selection so that the chance of finding  * a data set that will trigger the worst case is nonexistent.  Heapsort's  * only advantage over quicksort is that it requires little additional memory.  */
 end_comment
 
 begin_function_decl
@@ -170,27 +167,35 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|cnt
+decl_stmt|,
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|l
+decl_stmt|;
+specifier|register
 name|char
+name|ch
+decl_stmt|,
+modifier|*
+name|t1
+decl_stmt|,
+modifier|*
+name|t2
+decl_stmt|;
+name|char
+modifier|*
+name|k
+decl_stmt|,
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
 name|t
-decl_stmt|,
-modifier|*
-name|k
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-name|int
-name|l
 decl_stmt|;
 if|if
 condition|(
@@ -220,6 +225,25 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|k
+operator|=
+name|malloc
+argument_list|(
+name|size
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * Items are numbered from 1 to nmemb, so offset from size bytes 	 * below the starting address. 	 */
 name|bot
 operator|-=
@@ -252,18 +276,10 @@ operator|>
 literal|1
 condition|)
 block|{
-name|p
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|bot
-operator|+
-name|size
-expr_stmt|;
-name|t
-operator|=
+name|COPY
+argument_list|(
+name|k
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -273,30 +289,40 @@ operator|+
 name|nmemb
 operator|*
 name|size
-expr_stmt|;
-name|ASSIGN
-argument_list|(
-name|k
-argument_list|,
-name|t
 argument_list|)
 expr_stmt|;
-name|ASSIGN
+name|COPY
 argument_list|(
-name|t
+operator|(
+name|char
+operator|*
+operator|)
+name|bot
+operator|+
+name|nmemb
+operator|*
+name|size
 argument_list|,
-name|p
+operator|(
+name|char
+operator|*
+operator|)
+name|bot
+operator|+
+name|size
 argument_list|)
 expr_stmt|;
 operator|--
 name|nmemb
 expr_stmt|;
 name|SELECT
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|k
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
