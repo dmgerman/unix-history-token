@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	8.7 (Berkeley) %G%"
+literal|"@(#)df.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2173,7 +2173,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-in] [file | file_system ...]\n"
+literal|"usage: df [-in] [-t type] [file | file_system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
