@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.12 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.13 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.12 (Berkeley) %G%"
+literal|"@(#)queue.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2650,7 +2650,7 @@ index|[
 literal|1
 index|]
 argument_list|)
-operator|-
+operator|+
 name|WkTimeFact
 expr_stmt|;
 break|break;
