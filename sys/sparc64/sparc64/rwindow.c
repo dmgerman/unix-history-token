@@ -286,6 +286,19 @@ expr_stmt|;
 name|flushw
 argument_list|()
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pcb
+operator|->
+name|pcb_nsaved
+operator|<
+name|MAXWIN
+argument_list|,
+operator|(
+literal|"rwindow_save: pcb_nsaved> MAXWIN"
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
