@@ -4590,14 +4590,8 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
+comment|/*  * Stub to satisfy the reference to osigreturn in the syscall table.  This  * is needed even for newer arches that don't support old signals because  * the syscall table is machine-independent.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
 
 begin_function
 name|int
@@ -4610,21 +4604,27 @@ name|td
 parameter_list|,
 name|struct
 name|osigreturn_args
-comment|/* { 		struct osigcontext *sigcntxp; 	} */
 modifier|*
 name|uap
 parameter_list|)
 block|{
 return|return
-name|EOPNOTSUPP
+operator|(
+name|nosys
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|struct
+name|nosys_args
+operator|*
+operator|)
+name|uap
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */

@@ -3101,11 +3101,9 @@ return|return;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_43
-end_ifdef
+begin_comment
+comment|/*  * Stub to satisfy the reference to osigreturn in the syscall table.  This  * is needed even for newer arches that don't support old signals because  * the syscall table is machine-independent.  */
+end_comment
 
 begin_function
 name|int
@@ -3122,19 +3120,23 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-comment|/* XXX: To be done */
 return|return
 operator|(
-name|ENOSYS
+name|nosys
+argument_list|(
+name|td
+argument_list|,
+operator|(
+expr|struct
+name|nosys_args
+operator|*
+operator|)
+name|uap
+argument_list|)
 operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
