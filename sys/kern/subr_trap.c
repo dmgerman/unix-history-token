@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/trap.c,v 1.1.1.1 1993/06/12 14:58:05 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/i386/i386/trap.c,v 1.2 1993/07/27 10:52:20 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -682,6 +682,9 @@ condition|)
 return|return;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|MATH_EMULATE
 name|i
 operator|=
 name|math_emulate
@@ -697,6 +700,17 @@ operator|==
 literal|0
 condition|)
 return|return;
+else|#
+directive|else
+comment|/* MATH_EMULTATE */
+name|panic
+argument_list|(
+literal|"trap: math emulation necessary!"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MATH_EMULTATE */
 name|ucode
 operator|=
 name|FPE_FPU_NP_TRAP
