@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2347,21 +2347,23 @@ name|mntflags
 operator|&
 name|MNT_FORCE
 condition|)
+block|{
+if|if
+condition|(
+name|mp
+operator|==
+name|rootfs
+condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|mntflags
-operator|&
-name|MNT_FORCE
-condition|)
 name|flags
 operator||=
 name|FORCECLOSE
 expr_stmt|;
+block|}
 name|nmp
 operator|=
 name|VFSTONFS
