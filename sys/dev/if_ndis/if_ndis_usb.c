@@ -561,22 +561,14 @@ argument_list|,
 name|uaa
 argument_list|)
 expr_stmt|;
-name|driver_object
-modifier|*
-name|drv
-decl_stmt|;
-name|drv
-operator|=
+if|if
+condition|(
 name|windrv_lookup
 argument_list|(
 name|NULL
 argument_list|,
 literal|"USB Bus"
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|drv
 operator|==
 name|NULL
 condition|)
@@ -585,25 +577,6 @@ operator|(
 name|UMATCH_NONE
 operator|)
 return|;
-if|if
-condition|(
-literal|0
-condition|)
-block|{
-comment|/* Create PDO for this device instance */
-name|windrv_create_pdo
-argument_list|(
-name|drv
-argument_list|,
-name|self
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|uaa
@@ -648,6 +621,10 @@ name|ndis_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|driver_object
+modifier|*
+name|drv
+decl_stmt|;
 name|sc
 operator|=
 operator|(
@@ -662,6 +639,23 @@ operator|->
 name|ndis_dev
 operator|=
 name|self
+expr_stmt|;
+comment|/* Create PDO for this device instance */
+name|drv
+operator|=
+name|windrv_lookup
+argument_list|(
+name|NULL
+argument_list|,
+literal|"USB Bus"
+argument_list|)
+expr_stmt|;
+name|windrv_create_pdo
+argument_list|(
+name|drv
+argument_list|,
+name|self
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

@@ -2386,6 +2386,15 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+else|else
+name|sc
+operator|->
+name|ndis_block
+operator|->
+name|nmb_rlist
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* Install our RX and TX interrupt handlers. */
 name|sc
 operator|->
