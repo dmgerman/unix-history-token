@@ -2476,9 +2476,15 @@ decl_stmt|;
 comment|/* should block signals */
 name|f
 operator|=
-name|creat
+name|open
 argument_list|(
 name|n
+argument_list|,
+name|O_WRONLY
+operator||
+name|O_EXCL
+operator||
+name|O_CREAT
 argument_list|,
 name|FILMOD
 argument_list|)
