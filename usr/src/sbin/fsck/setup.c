@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.2 (Berkeley) %G%"
+literal|"@(#)setup.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,95 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+comment|/* 	 * Check and potentially fix certain fields in the super block. 	 */
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_optim
+operator|!=
+name|FS_OPTTIME
+operator|&&
+name|sblock
+operator|.
+name|fs_optim
+operator|!=
+name|FS_OPTSPACE
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"UNDEFINED OPTIMIZATION IN SUPERBLOCK"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"SET TO DEFAULT"
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_optim
+operator|=
+name|FS_OPTTIME
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+operator|(
+name|sblock
+operator|.
+name|fs_minfree
+operator|<
+literal|0
+operator|||
+name|sblock
+operator|.
+name|fs_minfree
+operator|>
+literal|99
+operator|)
+condition|)
+block|{
+name|pfatal
+argument_list|(
+literal|"IMPOSSIBLE MINFREE=%d IN SUPERBLOCK"
+argument_list|,
+name|sblock
+operator|.
+name|fs_minfree
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|reply
+argument_list|(
+literal|"SET TO DEFAULT"
+argument_list|)
+operator|==
+literal|1
+condition|)
+block|{
+name|sblock
+operator|.
+name|fs_minfree
+operator|=
+literal|10
+expr_stmt|;
+name|sbdirty
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Set all possible fields that could differ, then do check 	 * of whole super block against an alternate super block. 	 * When an alternate super-block is specified this check is skipped. 	 */
 if|if
