@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 1.2 1998/03/21 13:37:44 peter Exp $  */
+comment|/*  * Copyright (C) 1993-1997 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_fil.h	1.35 6/5/96  * $Id: ip_fil.h,v 1.3 1998/06/07 17:12:15 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -2004,6 +2004,7 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 operator|||
+expr|\
 operator|(
 name|_BSDI_VERSION
 operator|>=
@@ -2946,6 +2947,13 @@ operator|(
 name|_BSDI_VERSION
 operator|>=
 literal|199701
+operator|)
+operator|||
+expr|\
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
 operator|)
 end_if
 

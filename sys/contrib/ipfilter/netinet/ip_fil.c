@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 1.2 1998/03/21 11:34:02 peter Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.3 1998/03/27 18:03:13 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2093,10 +2093,17 @@ argument_list|(
 name|__OpenBSD__
 argument_list|)
 operator|||
+expr|\
 operator|(
 name|_BSDI_VERSION
 operator|>=
 literal|199701
+operator|)
+operator|||
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|300003
 operator|)
 end_if
 
