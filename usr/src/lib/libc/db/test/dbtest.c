@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.15 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -672,10 +672,6 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* Open the DB. */
-define|#
-directive|define
-name|BACKINGFILE
-value|"/tmp/__dbtest"
 if|if
 condition|(
 name|fname
@@ -683,16 +679,45 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|p
+operator|=
+name|getenv
+argument_list|(
+literal|"TMPDIR"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
+name|p
+operator|=
+literal|"/var/tmp"
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s/__dbtest"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|fname
 operator|=
-name|BACKINGFILE
+name|buf
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|unlink
 argument_list|(
-name|BACKINGFILE
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
