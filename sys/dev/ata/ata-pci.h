@@ -322,6 +322,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_DEC_21150_1
+value|0x00231011
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_HIGHPOINT_ID
 value|0x1103
 end_define
