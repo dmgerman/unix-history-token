@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pw_util.c,v 1.9 1997/10/27 07:53:19 charnier Exp $"
+literal|"$Id: pw_util.c,v 1.10 1998/10/13 14:52:33 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -759,6 +765,10 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|execlp
 argument_list|(
 name|editor
@@ -772,7 +782,7 @@ argument_list|)
 expr_stmt|;
 name|_exit
 argument_list|(
-literal|1
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
@@ -796,6 +806,13 @@ operator|&
 name|pstat
 argument_list|,
 name|WUNTRACED
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|WEXITSTATUS
+argument_list|(
+name|pstat
 argument_list|)
 expr_stmt|;
 if|if
@@ -838,10 +855,7 @@ argument_list|(
 name|pstat
 argument_list|)
 operator|&&
-name|WEXITSTATUS
-argument_list|(
-name|pstat
-argument_list|)
+name|errno
 operator|==
 literal|0
 condition|)
