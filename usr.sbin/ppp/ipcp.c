@@ -6487,6 +6487,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ip
+operator|.
+name|s_addr
+operator|==
+name|INADDR_ANY
+operator|||
 operator|!
 name|ncprange_containsip4
 argument_list|(
