@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)hpib.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -68,17 +68,6 @@ include|#
 directive|include
 file|"machine/isr.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|internalhpib
-init|=
-name|IOV
-argument_list|(
-literal|0x478000
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -172,6 +161,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* # of status tests for hpibid() calls */
+end_comment
+
+begin_decl_stmt
+name|int
+name|hpibdmathresh
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* byte count beyond which to attempt dma */
 end_comment
 
 begin_expr_stmt
