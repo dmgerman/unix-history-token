@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dhar.c	1.3	CWI 1.3	%G%"
+literal|"@(#)dhar.c	1.4	CWI 1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,8 @@ begin_if
 if|#
 directive|if
 name|tahoe
+operator|||
+name|sun
 end_if
 
 begin_define
@@ -333,7 +335,7 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|tahoe
+endif|tahoe || sun
 end_endif
 
 begin_if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lowest level io  *  * The Harris has a weird protocol, which wil be maintained by  * a different programme (now called harprot, will be changed into  * a typesetter spooler in near future).  *  * Due to thenature of the harris is a slight protocol to harprot  * necessary as well:  *	Operator messages are ruined if they aren't at the end of a buffer  *  * So to harprot we send a buffer with a header containing a bufferlenght  * and (for historical reasons, the amount of paper used.)  * The paper use will have to be counted by harprot in future.  * #ifdef tahoe  * For the sake of compbatibilty we will generate the same file format  * as on the vaxes #endif tahoe  *  */
+comment|/*  * lowest level io  *  * The Harris has a weird protocol, which wil be maintained by  * a different programme (now called harprot, will be changed into  * a typesetter spooler in near future).  *  * Due to thenature of the harris is a slight protocol to harprot  * necessary as well:  *	Operator messages are ruined if they aren't at the end of a buffer  *  * So to harprot we send a buffer with a header containing a bufferlenght  * and (for historical reasons, the amount of paper used.)  * The paper use will have to be counted by harprot in future.  * #if tahoe || sun  * For the sake of compbatibilty we will generate the same file format  * as on the vaxes #endif tahoe || sun  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)llio.c	1.2 (CWI) 88/03/18"
+literal|"@(#)llio.c	1.3 (CWI) 88/03/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,9 +300,11 @@ block|}
 endif|#
 directive|endif
 endif|vax
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|tahoe
+operator|||
+name|sun
 block|{
 name|char
 name|c1
@@ -449,7 +451,7 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|tahoe
+endif|tahoe || sun
 name|obufp
 operator|=
 name|obuf
