@@ -495,6 +495,12 @@ name|ksym_end
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|db_regs_t
+name|ddb_regs
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif

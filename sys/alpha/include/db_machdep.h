@@ -30,6 +30,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_simos.h"
 end_include
 
@@ -87,7 +93,14 @@ name|db_regs_t
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
 begin_decl_stmt
+specifier|extern
 name|db_regs_t
 name|ddb_regs
 decl_stmt|;
@@ -96,6 +109,11 @@ end_decl_stmt
 begin_comment
 comment|/* register state */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
