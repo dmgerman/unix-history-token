@@ -4883,9 +4883,7 @@ name|int
 name|b16
 init|=
 operator|(
-name|ch
-operator|->
-name|fmt
+name|format
 operator|&
 name|AFMT_S16_LE
 operator|)
@@ -4898,9 +4896,7 @@ name|int
 name|stereo
 init|=
 operator|(
-name|ch
-operator|->
-name|fmt
+name|format
 operator|&
 name|AFMT_STEREO
 operator|)
@@ -6484,6 +6480,20 @@ block|{
 case|case
 name|BD_F_MIX_CT1345
 case|:
+if|if
+condition|(
+name|sb
+operator|->
+name|bd_flags
+operator|&
+name|BD_F_ESS
+condition|)
+name|iomap
+operator|=
+operator|&
+name|ess_mix
+expr_stmt|;
+else|else
 name|iomap
 operator|=
 operator|&
@@ -6506,6 +6516,7 @@ literal|1
 return|;
 comment|/* XXX how about the SG NX Pro, iomap = sgnxpro_mix */
 block|}
+comment|/* Change left channel */
 name|regoffs
 operator|=
 operator|(
@@ -6524,13 +6535,10 @@ expr_stmt|;
 if|if
 condition|(
 name|regoffs
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+block|{
 name|val
 operator|=
 name|sb_getmixer
@@ -6563,25 +6571,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|*
-name|iomap
-operator|)
-index|[
-name|dev
-index|]
-index|[
-name|RIGHT_CHN
-index|]
-operator|.
-name|regno
-operator|!=
-name|regoffs
-condition|)
-block|{
-comment|/* Change register */
+block|}
+comment|/* Change right channel */
 name|regoffs
 operator|=
 operator|(
@@ -6636,12 +6627,6 @@ name|regoffs
 argument_list|,
 name|val
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|right
-operator|=
-name|left
 expr_stmt|;
 block|}
 else|else
@@ -6963,6 +6948,15 @@ comment|/* ESS1869 */
 name|s
 operator|=
 literal|"ESS1869"
+expr_stmt|;
+break|break;
+case|case
+literal|0x88187316
+case|:
+comment|/* ESS1888 */
+name|s
+operator|=
+literal|"ESS1888"
 expr_stmt|;
 break|break;
 block|}
