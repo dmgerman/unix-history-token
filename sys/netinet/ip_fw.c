@@ -7042,7 +7042,10 @@ label|:
 if|if
 condition|(
 name|fw_verbose
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|ip
 operator|!=
 name|NULL
@@ -7062,6 +7065,13 @@ argument_list|,
 name|oif
 argument_list|)
 expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"pullup failed\n"
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|dropit
 goto|;
