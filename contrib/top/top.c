@@ -2949,6 +2949,8 @@ name|new_message
 argument_list|(
 name|MT_standout
 argument_list|,
+literal|"%s"
+argument_list|,
 name|errmsg
 argument_list|)
 expr_stmt|;
