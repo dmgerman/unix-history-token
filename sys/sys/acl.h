@@ -171,13 +171,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACL_AFS_ID
-value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACL_TYPE_ACCESS
 value|0x00000000
 end_define
@@ -193,7 +186,28 @@ begin_define
 define|#
 directive|define
 name|ACL_TYPE_AFS
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_CODA
 value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_NTFS
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_TYPE_NWFS
+value|0x00000005
 end_define
 
 begin_comment
@@ -541,19 +555,8 @@ end_function_decl
 
 begin_function_decl
 name|__END_DECLS
-comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  */
+comment|/*  * Supported POSIX.1e ACL manipulation and assignment/retrieval API  * _np calls are local extensions that reflect an environment capable of  * opening file descriptors of directories, and allowing additional  * ACL type for different file systems (i.e., AFS)  */
 name|__BEGIN_DECLS
-name|int
-name|acl_calc_mask
-parameter_list|(
-name|acl_t
-modifier|*
-name|acl_p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|acl_delete_fd_np
 parameter_list|(
@@ -589,6 +592,16 @@ specifier|const
 name|char
 modifier|*
 name|path_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|acl_t
+name|acl_dup
+parameter_list|(
+name|acl_t
+name|acl
 parameter_list|)
 function_decl|;
 end_function_decl
