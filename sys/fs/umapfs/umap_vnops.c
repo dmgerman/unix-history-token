@@ -1497,6 +1497,7 @@ comment|/*  * We need to process our own vnode unlock and then clear the  * inte
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|umap_unlock
 parameter_list|(

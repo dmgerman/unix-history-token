@@ -1067,6 +1067,7 @@ comment|/*  * Setattr call. Disallow write attempts if the layer is mounted read
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|null_setattr
 parameter_list|(
