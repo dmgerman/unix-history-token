@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.57 (Berkeley) %G%"
+literal|"@(#)ls.c	5.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -813,9 +813,12 @@ name|f_recursive
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If not -F, -l -i, -s or -t options, don't require stat  	 * information. 	 */
+comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information. 	 */
 if|if
 condition|(
+operator|!
+name|f_inode
+operator|&&
 operator|!
 name|f_longform
 operator|&&
@@ -827,9 +830,6 @@ name|f_timesort
 operator|&&
 operator|!
 name|f_type
-operator|&&
-operator|!
-name|f_inode
 condition|)
 name|fts_options
 operator||=
