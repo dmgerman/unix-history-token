@@ -508,6 +508,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_LSEEK_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_LSEEK_DECLARED
+end_define
+
 begin_decl_stmt
 name|off_t
 name|lseek
@@ -523,6 +535,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|long
@@ -988,6 +1005,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_FTRUNCATE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_FTRUNCATE_DECLARED
+end_define
+
 begin_decl_stmt
 name|int
 name|ftruncate
@@ -1001,6 +1030,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1804,6 +1838,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_TRUNCATE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_TRUNCATE_DECLARED
+end_define
+
 begin_decl_stmt
 name|int
 name|truncate
@@ -1819,6 +1865,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
