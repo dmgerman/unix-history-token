@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.7 1996/03/18 22:49:58 nate Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.12.4.8 1996/03/19 17:05:51 nate Exp $  */
 end_comment
 
 begin_include
@@ -297,7 +297,7 @@ comment|/* parentdata */
 name|DC_UNCONFIGURED
 block|,
 comment|/* state */
-literal|"APM BIOS"
+literal|"Advanced Power Management BIOS"
 block|,
 name|DC_CLS_MISC
 comment|/* class */
@@ -385,12 +385,6 @@ operator|.
 name|kdc_state
 operator|=
 name|DC_UNCONFIGURED
-expr_stmt|;
-name|kdc_apm
-operator|.
-name|kdc_description
-operator|=
-literal|"APM BIOS"
 expr_stmt|;
 name|kdc_apm
 operator|.
@@ -592,7 +586,7 @@ block|{
 name|u_long
 name|cf
 decl_stmt|;
-asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		xorl	%3,%3 		movl	%3,%%esi 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1: 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
+asm|__asm __volatile(" 		pushfl 		cli 		lcall	_apm_addr 		movl	$0, %3 		jnc	1f 		incl	%3 	1: 		popfl 		"
 block|:
 literal|"=a"
 operator|(
@@ -634,6 +628,12 @@ operator|(
 operator|*
 name|ecx
 operator|)
+operator|:
+literal|"dx"
+operator|,
+literal|"si"
+operator|,
+literal|"memory"
 block|)
 function|;
 end_function
@@ -762,58 +762,6 @@ name|ebx
 decl_stmt|,
 name|ecx
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|eax
-operator|=
-operator|(
-name|APM_BIOS
-operator|<<
-literal|8
-operator|)
-operator||
-name|APM_INSTCHECK
-expr_stmt|;
-name|ebx
-operator|=
-literal|0x0
-expr_stmt|;
-name|ecx
-operator|=
-literal|0x0101
-expr_stmt|;
-name|i
-operator|=
-name|apm_int
-argument_list|(
-operator|&
-name|eax
-argument_list|,
-operator|&
-name|ebx
-argument_list|,
-operator|&
-name|ecx
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"[%04lx %04lx %04lx %ld %02x]\n"
-argument_list|,
-name|eax
-argument_list|,
-name|ebx
-argument_list|,
-name|ecx
-argument_list|,
-name|i
-argument_list|,
-name|apm_errno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|eax
 operator|=
 operator|(
@@ -853,58 +801,6 @@ name|eax
 operator|&
 literal|0xffff
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APM_DEBUG
-name|eax
-operator|=
-operator|(
-name|APM_BIOS
-operator|<<
-literal|8
-operator|)
-operator||
-name|APM_INSTCHECK
-expr_stmt|;
-name|ebx
-operator|=
-literal|0x0
-expr_stmt|;
-name|ecx
-operator|=
-literal|0x0101
-expr_stmt|;
-name|i
-operator|=
-name|apm_int
-argument_list|(
-operator|&
-name|eax
-argument_list|,
-operator|&
-name|ebx
-argument_list|,
-operator|&
-name|ecx
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"[%04lx %04lx %04lx %ld %02x]\n"
-argument_list|,
-name|eax
-argument_list|,
-name|ebx
-argument_list|,
-name|ecx
-argument_list|,
-name|i
-argument_list|,
-name|apm_errno
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -932,8 +828,6 @@ decl_stmt|,
 name|ebx
 decl_stmt|,
 name|ecx
-decl_stmt|,
-name|i
 decl_stmt|;
 name|eax
 operator|=
@@ -953,8 +847,8 @@ name|ecx
 operator|=
 name|engage
 expr_stmt|;
-name|i
-operator|=
+return|return
+operator|(
 name|apm_int
 argument_list|(
 operator|&
@@ -966,9 +860,7 @@ argument_list|,
 operator|&
 name|ecx
 argument_list|)
-expr_stmt|;
-return|return
-name|i
+operator|)
 return|;
 block|}
 end_function
@@ -1078,7 +970,6 @@ name|ecx
 operator|=
 name|PMST_SUSPEND
 expr_stmt|;
-asm|__asm("cli");
 if|if
 condition|(
 name|apm_int
@@ -1094,7 +985,6 @@ name|ecx
 argument_list|)
 condition|)
 block|{
-asm|__asm("sti");
 name|printf
 argument_list|(
 literal|"Entire system suspend failure: errcode = %ld\n"
@@ -1112,7 +1002,6 @@ return|return
 literal|1
 return|;
 block|}
-asm|__asm("sti");
 return|return
 literal|0
 return|;
@@ -1255,10 +1144,18 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("Add hook \"%s\"\n", ah->ah_name);
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
+name|printf
+argument_list|(
+literal|"Add hook \"%s\"\n"
+argument_list|,
+name|ah
+operator|->
+name|ah_name
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|s
@@ -1521,10 +1418,18 @@ operator|->
 name|ah_next
 control|)
 block|{
-if|#
-directive|if
-literal|0
-block|printf("Execute APM hook \"%s.\"\n", p->ah_name);
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
+name|printf
+argument_list|(
+literal|"Execute APM hook \"%s.\"\n"
+argument_list|,
+name|p
+operator|->
+name|ah_name
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -2598,7 +2503,7 @@ name|OPMEV_DEBUGMESSAGE
 parameter_list|(
 name|symbol
 parameter_list|)
-value|case symbol: \ 	printf("Original APM Event: " #symbol "\n");
+value|case symbol: \ 	printf("Received APM Event: " #symbol "\n");
 else|#
 directive|else
 define|#
@@ -2610,10 +2515,7 @@ parameter_list|)
 value|case symbol:
 endif|#
 directive|endif
-while|while
-condition|(
-literal|1
-condition|)
+do|do
 block|{
 name|apm_event
 operator|=
@@ -2622,13 +2524,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|apm_event
-operator|==
-name|PMEV_NOEVENT
-condition|)
-break|break;
 switch|switch
 condition|(
 name|apm_event
@@ -2729,6 +2624,12 @@ argument_list|)
 expr_stmt|;
 comment|/* adjust time to RTC */
 break|break;
+name|OPMEV_DEBUGMESSAGE
+argument_list|(
+name|PMEV_NOEVENT
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -2740,6 +2641,13 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+do|while
+condition|(
+name|apm_event
+operator|!=
+name|PMEV_NOEVENT
+condition|)
+do|;
 block|}
 end_function
 
@@ -2893,7 +2801,7 @@ directive|ifdef
 name|APM_DEBUG
 name|printf
 argument_list|(
-literal|" found APM BIOS version %04x\n"
+literal|"apm: APM BIOS version %04x\n"
 argument_list|,
 name|apm_version
 argument_list|)
@@ -3012,7 +2920,7 @@ name|sc
 operator|->
 name|cs_entry
 expr_stmt|;
-comment|/* Try to kick bios into 1.1 mode */
+comment|/* Try to kick bios into 1.1 or greater mode */
 name|apm_driver_version
 argument_list|()
 expr_stmt|;
@@ -3097,6 +3005,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
 name|printf
 argument_list|(
 literal|"apm: Engaged control %s\n"
@@ -3110,10 +3021,12 @@ name|disengaged
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|printf
 argument_list|(
-literal|" found APM BIOS version %d.%d\n"
+literal|"apm: found APM BIOS version %d.%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -3124,6 +3037,9 @@ operator|->
 name|minorversion
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
 name|printf
 argument_list|(
 literal|"apm: Slow Idling CPU %s\n"
@@ -3136,6 +3052,8 @@ name|slow_idle_cpu
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* enable power management */
 if|if
 condition|(
@@ -3154,13 +3072,18 @@ literal|1
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
 name|printf
 argument_list|(
-literal|"Warning: APM enable function failed! [%x]\n"
+literal|"apm: *Warning* enable function failed! [%x]\n"
 argument_list|,
 name|apm_errno
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* engage power managment (APM 1.1 or later) */
@@ -3192,13 +3115,23 @@ literal|1
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|APM_DEBUG
 name|printf
 argument_list|(
-literal|"Warning: APM engage function failed [%x]\n"
+literal|"apm: *Warning* engage function failed err=[%x]"
 argument_list|,
 name|apm_errno
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|" (Docked or using external power?).\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 comment|/* default suspend hook */
