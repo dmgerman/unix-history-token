@@ -233,6 +233,13 @@ block|}
 block|,
 comment|/* AKY0000 - 56K Plug&Play Modem */
 block|{
+literal|0x21107905
+block|,
+name|NULL
+block|}
+block|,
+comment|/* AKY1021 - 56K Plug&Play Modem */
+block|{
 literal|0x01405407
 block|,
 name|NULL
