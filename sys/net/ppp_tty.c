@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.33 1998/04/06 11:43:12 phk Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.34 1998/04/15 17:46:46 bde Exp $ */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__i386
+name|__i386__
 end_ifdef
 
 begin_include
@@ -599,7 +599,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|__i386
+name|__i386__
 name|int
 name|s
 decl_stmt|;

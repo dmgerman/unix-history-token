@@ -201,7 +201,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|__i386
+name|__i386__
 argument_list|)
 end_if
 
@@ -713,7 +713,7 @@ operator|||
 operator|!
 name|defined
 argument_list|(
-name|__i386
+name|__i386__
 argument_list|)
 end_if
 
