@@ -4414,7 +4414,9 @@ name|thishost
 operator|=
 name|hrp
 expr_stmt|;
-break|break;
+goto|goto
+name|found
+goto|;
 block|}
 ifdef|#
 directive|ifdef
@@ -4474,7 +4476,9 @@ name|thishost
 operator|=
 name|hrp
 expr_stmt|;
-break|break;
+goto|goto
+name|found
+goto|;
 block|}
 endif|#
 directive|endif
@@ -4486,6 +4490,8 @@ operator|->
 name|next
 expr_stmt|;
 block|}
+name|found
+label|:
 name|su
 operator|->
 name|su_port
