@@ -577,7 +577,7 @@ comment|/* Clist rounding. */
 end_comment
 
 begin_comment
-comment|/*  * File system parameters and macros.  *  * The file system is made out of blocks of at most MAXBSIZE units, with  * smaller units (fragments) only in the last direct block.  MAXBSIZE  * primarily determines the size of buffers in the buffer pool.  It may be  * made larger without any effect on existing file systems; however making  * it smaller make make some file systems unmountable.  Also, MAXBSIZE  * must be less than MAXPHYS!!!  DFLTBSIZE is the average amount of  * memory allocated by vfs_bio per nbuf.  BKVASIZE is the average amount  * of kernel virtual space allocated per nbuf.  BKVASIZE should be>=  * DFLTBSIZE.  If it is significantly bigger than DFLTBSIZE, then  * kva fragmentation causes fewer performance problems.  */
+comment|/*  * File system parameters and macros.  *  * MAXBSIZE -	Filesystems are made out of blocks of at most MAXBSIZE bytes  *		per block.  MAXBSIZE may be made larger without effecting  *		any existing filesystems as long as it does not exceed MAXPHYS,  *		and may be made smaller at the risk of not being able to use  *		filesystems which require a block size exceeding MAXBSIZE.  *  * BKVASIZE -	Nominal buffer space per buffer, in bytes.  BKVASIZE is the  *		minimum KVM memory reservation the kernel is willing to make.  *		Filesystems can of course request smaller chunks.  Actual   *		backing memory uses a chunk size of a page (PAGE_SIZE).  *  *		If you make BKVASIZE too small you risk seriously fragmenting  *		the buffer KVM map which may slow things down a bit.  If you  *		make it too big the kernel will not be able to optimally use   *		the KVM memory reserved for the buffer cache and will wind   *		up with too-few buffers.  *  *		The default is 16384, roughly 2x the block size used by a  *		normal UFS filesystem.  */
 end_comment
 
 begin_define
@@ -587,18 +587,26 @@ name|MAXBSIZE
 value|65536
 end_define
 
-begin_define
-define|#
-directive|define
-name|BKVASIZE
-value|8192
-end_define
+begin_comment
+comment|/* must be power of 2 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DFLTBSIZE
-value|4096
+name|BKVASIZE
+value|16384
+end_define
+
+begin_comment
+comment|/* must be power of 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BKVAMASK
+value|(BKVASIZE-1)
 end_define
 
 begin_define
