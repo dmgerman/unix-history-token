@@ -105,13 +105,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|volatile
-name|int
-name|smp_started
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|all_cpus
 decl_stmt|;

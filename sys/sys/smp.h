@@ -68,6 +68,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|volatile
 name|int
 name|smp_started
 decl_stmt|;
