@@ -317,6 +317,34 @@ directive|include
 file|<sys/cons.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DDB
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KDB
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|KDB must be enabled in order for DDB to work!
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
