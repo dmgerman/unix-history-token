@@ -1119,9 +1119,16 @@ comment|/* 			 * cdevs does not provide private mappings of any kind. 			 */
 comment|/* 			 * However, for XIG X server to continue to work, 			 * we should allow the superuser to do it anyway. 			 * We only allow it at securelevel< 1. 			 * (Because the XIG X server writes directly to video 			 * memory via /dev/mem, it should never work at any 			 * other securelevel. 			 * XXX this will have to go 			 */
 if|if
 condition|(
-name|securelevel
-operator|>=
+name|securelevel_ge
+argument_list|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_ucred
+argument_list|,
 literal|1
+argument_list|)
 condition|)
 name|disablexworkaround
 operator|=
