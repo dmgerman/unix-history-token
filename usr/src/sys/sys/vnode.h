@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -61,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|VN_MAXPRIVATE
-value|196
+value|184
 end_define
 
 begin_struct
@@ -73,9 +73,13 @@ name|v_flag
 decl_stmt|;
 comment|/* vnode flags (see below) */
 name|long
-name|v_count
+name|v_usecount
 decl_stmt|;
-comment|/* reference count */
+comment|/* reference count of users */
+name|long
+name|v_holdcnt
+decl_stmt|;
+comment|/* page& buffer references */
 name|u_short
 name|v_shlockc
 decl_stmt|;
@@ -84,6 +88,14 @@ name|u_short
 name|v_exlockc
 decl_stmt|;
 comment|/* count of exclusive locks */
+name|off_t
+name|v_lastr
+decl_stmt|;
+comment|/* last read (read-ahead) */
+name|u_long
+name|v_id
+decl_stmt|;
+comment|/* capability identifier */
 name|struct
 name|mount
 modifier|*
@@ -96,10 +108,6 @@ modifier|*
 name|v_op
 decl_stmt|;
 comment|/* vnode operations */
-name|u_long
-name|v_id
-decl_stmt|;
-comment|/* capability identifier */
 name|struct
 name|vnode
 modifier|*
@@ -132,13 +140,12 @@ modifier|*
 name|v_blockh
 decl_stmt|;
 comment|/* logical blocklist head */
-name|struct
-name|buf
-modifier|*
-modifier|*
-name|v_blockt
+name|long
+name|v_spare0
 decl_stmt|;
-comment|/* logical blocklist tail */
+name|long
+name|v_spare1
+decl_stmt|;
 name|enum
 name|vtype
 name|v_type
@@ -1012,21 +1019,19 @@ begin_struct
 struct|struct
 name|specinfo
 block|{
-name|dev_t
-name|si_rdev
-decl_stmt|;
-name|daddr_t
-name|si_lastr
-decl_stmt|;
 name|struct
-name|mount
+name|vnode
 modifier|*
-name|si_mounton
+modifier|*
+name|si_hashchain
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|si_specnext
+decl_stmt|;
+name|dev_t
+name|si_rdev
 decl_stmt|;
 block|}
 struct|;
@@ -1035,22 +1040,8 @@ end_struct
 begin_define
 define|#
 directive|define
-name|v_rdev
-value|v_specinfo->si_rdev
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_lastr
-value|v_specinfo->si_lastr
-end_define
-
-begin_define
-define|#
-directive|define
-name|v_mounton
-value|v_specinfo->si_mounton
+name|v_hashchain
+value|v_specinfo->si_hashchain
 end_define
 
 begin_define
@@ -1058,6 +1049,13 @@ define|#
 directive|define
 name|v_specnext
 value|v_specinfo->si_specnext
+end_define
+
+begin_define
+define|#
+directive|define
+name|v_rdev
+value|v_specinfo->si_rdev
 end_define
 
 begin_comment
@@ -1473,11 +1471,39 @@ name|VREF
 parameter_list|(
 name|vp
 parameter_list|)
-value|(vp)->v_count++;
+value|(vp)->v_usecount++;
 end_define
 
 begin_comment
 comment|/* increase reference to a vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VHOLD
+parameter_list|(
+name|vp
+parameter_list|)
+value|(vp)->v_holdcnt++;
+end_define
+
+begin_comment
+comment|/* increase buf or page ref to vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOLDRELE
+parameter_list|(
+name|vp
+parameter_list|)
+value|(vp)->v_holdcnt--;
+end_define
+
+begin_comment
+comment|/* decrease buf or page ref to vnode */
 end_comment
 
 begin_else
@@ -1493,6 +1519,26 @@ parameter_list|(
 name|vp
 parameter_list|)
 value|vref(vp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHOLD
+parameter_list|(
+name|vp
+parameter_list|)
+value|vhold(vp)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOLDRELE
+parameter_list|(
+name|vp
+parameter_list|)
+value|holdrele(vp)
 end_define
 
 begin_endif
