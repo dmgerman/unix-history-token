@@ -4,11 +4,11 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.a
 end_comment
 
 begin_comment
-comment|/* $Revision: 1.14 $ */
+comment|/* $Revision: 1.15 $ */
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.14 1993/12/19 00:54:59 wollman Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  * major changes by Julian Elischer (julian@jules.dialix.oz.au) May 1993  *  *      $Id: st.c,v 1.15 1994/01/29 10:30:41 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -3818,6 +3818,27 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
+comment|/*       	 * Use a bounce buffer if necessary 	 */
+ifndef|#
+directive|ifndef
+name|NOBOUNCE
+if|if
+condition|(
+name|st
+operator|->
+name|sc_link
+operator|->
+name|flags
+operator|&
+name|SDEV_BOUNCE
+condition|)
+name|vm_bounce_alloc
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Place it in the queue of activities for this tape 	 * at the end (a bit silly because we only have on user.. 	 * (but it could fork() )) 	 */
 name|dp
 operator|=
