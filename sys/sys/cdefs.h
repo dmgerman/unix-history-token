@@ -375,24 +375,14 @@ comment|/* !(__STDC__ || __cplusplus) */
 end_comment
 
 begin_comment
-comment|/*  * Compiler-dependent macros to help declare dead (non-returning) and  * pure (no side effects) functions, and unused variables.  They are  * null except for versions of gcc that are known to support the features  * properly (old versions of gcc-2 supported the dead and pure features  * in a different (wrong) way).  */
+comment|/*  * Compiler-dependent macros to help declare dead (non-returning) and  * pure (no side effects) functions, and unused variables.  They are  * null except for versions of gcc that are known to support the features  * properly (old versions of gcc-2 supported the dead and pure features  * in a different (wrong) way).  If we do not provide an implementation  * for a given compiler, let the compile fail if it is told to use  * a feature that we cannot live without.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|<
-literal|2
-operator|||
-name|__GNUC__
-operator|==
-literal|2
-operator|&&
-name|__GNUC_MINOR__
-operator|<
-literal|5
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|lint
+end_ifdef
 
 begin_define
 define|#
@@ -434,6 +424,45 @@ name|__section
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|<
+literal|2
+operator|||
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|<
+literal|5
+end_if
+
+begin_define
+define|#
+directive|define
+name|__dead2
+end_define
+
+begin_define
+define|#
+directive|define
+name|__pure2
+end_define
+
+begin_define
+define|#
+directive|define
+name|__unused
 end_define
 
 begin_endif
@@ -477,40 +506,8 @@ directive|define
 name|__unused
 end_define
 
-begin_define
-define|#
-directive|define
-name|__packed
-end_define
-
 begin_comment
-comment|/* XXX find this out, if we care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__aligned
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* XXX find this out, if we care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__section
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* XXX find this out, if we care */
+comment|/* XXX Find out what to do for __packed, __aligned and __section */
 end_comment
 
 begin_endif
@@ -581,6 +578,11 @@ name|x
 parameter_list|)
 value|__attribute__((__section__(x)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
