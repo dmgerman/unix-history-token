@@ -196,7 +196,7 @@ comment|/* PIO modes 0-2 */
 define|#
 directive|define
 name|ATA_RETIRED_PIO_MASK
-value|0x0003
+value|0x0300
 comment|/*052*/
 name|u_int16_t
 name|retired_dmamode
