@@ -89,6 +89,7 @@ end_ifndef
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|long
 name|wctype_t
 typedef|;

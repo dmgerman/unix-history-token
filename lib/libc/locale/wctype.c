@@ -188,7 +188,7 @@ comment|/* BSD extension */
 block|{
 name|NULL
 block|,
-literal|0L
+literal|0UL
 block|}
 block|,
 comment|/* Default */
