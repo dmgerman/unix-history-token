@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	5.13 (Berkeley) %G%"
+literal|"@(#)dirs.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -289,6 +289,22 @@ end_decl_stmt
 
 begin_comment
 comment|/* No file */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|dot
+index|[
+literal|2
+index|]
+init|=
+literal|"."
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* So it can be modified */
 end_comment
 
 begin_function_decl
@@ -623,7 +639,7 @@ name|i
 operator|=
 name|dirlookup
 argument_list|(
-literal|"."
+name|dot
 argument_list|)
 expr_stmt|;
 if|if
