@@ -122,6 +122,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|name1
@@ -553,6 +554,10 @@ decl_stmt|,
 modifier|*
 name|fraction
 decl_stmt|;
+name|flen
+operator|=
+name|NULL
+expr_stmt|;
 name|fraction
 operator|=
 name|NULL
@@ -685,10 +690,12 @@ operator|)
 operator|>
 name|MAXNUM
 operator|||
+operator|(
 name|fraction
 operator|!=
 name|NULL
 operator|&&
+operator|(
 operator|(
 name|flen
 operator|=
@@ -699,6 +706,8 @@ argument_list|)
 operator|)
 operator|>
 name|MAXNUM
+operator|)
+operator|)
 condition|)
 name|errx
 argument_list|(

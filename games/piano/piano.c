@@ -5,6 +5,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
@@ -605,17 +606,6 @@ name|argv
 index|[]
 parameter_list|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
