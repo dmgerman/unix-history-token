@@ -1924,12 +1924,6 @@ operator|->
 name|pp_vendor
 operator|!=
 literal|0
-operator|&&
-name|ent
-operator|->
-name|pp_product
-operator|!=
-literal|0
 condition|;
 name|ent
 operator|=
