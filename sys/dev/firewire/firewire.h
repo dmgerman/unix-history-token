@@ -53,6 +53,7 @@ struct|struct
 name|fw_isobufreq
 block|{
 struct|struct
+name|fw_bufspec
 block|{
 name|unsigned
 name|int
@@ -1668,11 +1669,16 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UNIT2MIN
+name|MAKEMINOR
 parameter_list|(
-name|x
+name|f
+parameter_list|,
+name|u
+parameter_list|,
+name|s
 parameter_list|)
-value|(((x)& 0xff)<< 8)
+define|\
+value|unit2minor((f) | (((u)& 0xff)<< 8) | (s& 0xff))
 end_define
 
 begin_define
@@ -1688,7 +1694,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEV2DMACH
+name|DEV2SUB
 parameter_list|(
 name|x
 parameter_list|)

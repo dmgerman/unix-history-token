@@ -7637,25 +7637,11 @@ block|{
 case|case
 name|T_DIRECT
 case|:
-comment|/*  		 * XXX Convert Direct Access device to RBC. 		 * I've never seen FireWire DA devices which support READ_6. 		 */
 if|#
 directive|if
-literal|1
-if|if
-condition|(
-name|SID_TYPE
-argument_list|(
-name|inq
-argument_list|)
-operator|==
-name|T_DIRECT
-condition|)
-name|inq
-operator|->
-name|device
-operator||=
-name|T_RBC
-expr_stmt|;
+literal|0
+comment|/*  		 * XXX Convert Direct Access device to RBC. 		 * I've never seen FireWire DA devices which support READ_6. 		 */
+block|if (SID_TYPE(inq) == T_DIRECT) 			inq->device |= T_RBC;
 comment|/*  T_DIRECT == 0 */
 endif|#
 directive|endif
@@ -7663,7 +7649,7 @@ comment|/* fall through */
 case|case
 name|T_RBC
 case|:
-comment|/* enable tag queuing */
+comment|/* enable tagged queuing */
 if|#
 directive|if
 literal|1
