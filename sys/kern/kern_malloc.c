@@ -553,6 +553,12 @@ name|type
 decl_stmt|;
 if|#
 directive|if
+literal|0
+block|if (size == 0) 		Debugger("zero size malloc");
+endif|#
+directive|endif
+if|#
+directive|if
 name|defined
 argument_list|(
 name|INVARIANTS
@@ -816,6 +822,31 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+operator|(
+name|u_long
+operator|)
+name|addr
+operator|&
+literal|3
+condition|)
+block|{
+comment|/* XXX: Jeff: find better value for 3 */
+name|printf
+argument_list|(
+literal|"free(9)'ing unaligned pointer %p\n"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+name|Debugger
+argument_list|(
+literal|"Don't do that..."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|size
 operator|=
 literal|0
