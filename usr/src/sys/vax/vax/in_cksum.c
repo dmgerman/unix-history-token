@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* in_cksum.c 1.7 81/10/29 */
+comment|/* inet_cksum.c 1.7 81/10/29 */
 end_comment
 
 begin_include
@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../inet/inet.h"
+file|"../net/inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../inet/inet_systm.h"
+file|"../net/inet_systm.h"
 end_include
 
 begin_comment
@@ -36,7 +36,7 @@ comment|/*  * Checksum routine for TCP/IP headers.  This  * is very heavily used
 end_comment
 
 begin_expr_stmt
-name|cksum
+name|inet_cksum
 argument_list|(
 name|m
 argument_list|,
@@ -86,7 +86,7 @@ literal|0
 decl_stmt|;
 name|COUNT
 argument_list|(
-name|CKSUM
+name|INET_CKSUM
 argument_list|)
 expr_stmt|;
 for|for
