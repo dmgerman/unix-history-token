@@ -211,6 +211,7 @@ enum|;
 end_enum
 
 begin_function_decl
+specifier|static
 name|int
 name|copy
 parameter_list|(
@@ -227,6 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|mastercmp
 parameter_list|(

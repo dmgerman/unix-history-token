@@ -169,9 +169,11 @@ decl_stmt|,
 name|rval
 decl_stmt|,
 name|to_fd
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|wcount
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|wresid
 decl_stmt|;
 name|char
@@ -531,6 +533,9 @@ name|wcount
 operator|,
 name|wresid
 operator|-=
+operator|(
+name|size_t
+operator|)
 name|wcount
 control|)
 block|{
