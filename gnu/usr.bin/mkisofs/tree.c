@@ -233,6 +233,21 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  WALNUT CREEK CDROM HACK  -- rab 950126 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|trans_tbl
+index|[]
+init|=
+literal|"00_TRANS.TBL"
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -914,7 +929,7 @@ operator|&&
 operator|!
 name|find_file_hash
 argument_list|(
-literal|"TRANS.TBL"
+name|trans_tbl
 argument_list|)
 operator|&&
 operator|(
@@ -1159,15 +1174,32 @@ name|tablesize
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|1
+comment|/* WALNUT CREEK -- 950126 */
 name|iso9660_file_length
 argument_list|(
-literal|"TRANS.TBL"
+name|trans_tbl
+argument_list|,
+name|table
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|iso9660_file_length
+argument_list|(
+name|trans_tbl
 argument_list|,
 name|table
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|use_RockRidge
@@ -1191,7 +1223,7 @@ name|generate_rock_ridge_attributes
 argument_list|(
 literal|""
 argument_list|,
-literal|"TRANS.TBL"
+name|trans_tbl
 argument_list|,
 name|table
 argument_list|,
