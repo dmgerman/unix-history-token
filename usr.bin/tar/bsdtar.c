@@ -1409,6 +1409,12 @@ case|:
 comment|/* SUSv2; note that GNU -o conflicts */
 name|bsdtar
 operator|->
+name|option_no_owner
+operator|=
+literal|1
+expr_stmt|;
+name|bsdtar
+operator|->
 name|extract_flags
 operator|&=
 operator|~
@@ -1879,6 +1885,41 @@ argument_list|,
 literal|"cru"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bsdtar
+operator|->
+name|option_no_owner
+condition|)
+block|{
+name|only_mode
+argument_list|(
+name|bsdtar
+argument_list|,
+name|mode
+argument_list|,
+literal|"-o"
+argument_list|,
+literal|"xc"
+argument_list|)
+expr_stmt|;
+comment|/* Warn about nonsensical -co combination, but ignore it. */
+if|if
+condition|(
+name|mode
+operator|==
+literal|'c'
+condition|)
+name|bsdtar_warnc
+argument_list|(
+name|bsdtar
+argument_list|,
+literal|0
+argument_list|,
+literal|"-o is incompatible with -c"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|bsdtar

@@ -96,6 +96,10 @@ name|option_interactive
 decl_stmt|;
 comment|/* -w */
 name|char
+name|option_no_owner
+decl_stmt|;
+comment|/* -o */
+name|char
 name|option_no_subdirs
 decl_stmt|;
 comment|/* -d */
