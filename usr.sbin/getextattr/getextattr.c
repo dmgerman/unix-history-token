@@ -82,7 +82,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"getextattr [-s] [attrnamespace] [attrname] "
+literal|"getextattr [-ls] [attrnamespace] [attrname] "
 literal|"[filename ...]\n"
 argument_list|)
 expr_stmt|;
