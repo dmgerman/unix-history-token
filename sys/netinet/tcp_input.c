@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.69 1998/01/27 09:15:08 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_input.c	8.12 (Berkeley) 5/24/95  *	$Id: tcp_input.c,v 1.70 1998/02/26 05:25:28 dg Exp $  */
 end_comment
 
 begin_include
@@ -3128,35 +3128,19 @@ goto|goto
 name|trimthenstep6
 goto|;
 block|}
-comment|/* 	 * If the state is SYN_RECEIVED: 	 *	if seg contains SYN/ACK, send a RST. 	 *	if seg contains an ACK, but not for our SYN/ACK, send a RST. 	 */
+comment|/* 	 * If the state is SYN_RECEIVED: 	 *	if seg contains an ACK, but not for our SYN/ACK, send a RST. 	 */
 case|case
 name|TCPS_SYN_RECEIVED
 case|:
 if|if
 condition|(
+operator|(
 name|tiflags
 operator|&
 name|TH_ACK
-condition|)
-block|{
-if|if
-condition|(
-name|tiflags
-operator|&
-name|TH_SYN
-condition|)
-block|{
-name|tcpstat
-operator|.
-name|tcps_badsyn
-operator|++
-expr_stmt|;
-goto|goto
-name|dropwithreset
-goto|;
-block|}
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 name|SEQ_LEQ
 argument_list|(
 name|ti
@@ -3178,11 +3162,11 @@ name|tp
 operator|->
 name|snd_max
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|dropwithreset
 goto|;
-block|}
 break|break;
 comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains an ACK, but not for our SYN, drop the input. 	 *	if seg contains a RST, then drop the connection. 	 *	if seg does not contain SYN, then drop it. 	 * Otherwise this is an acceptable SYN segment 	 *	initialize tp->rcv_nxt and tp->irs 	 *	if seg contains ack then advance tp->snd_una 	 *	if SYN has been acked change to ESTABLISHED else SYN_RCVD state 	 *	arrange for segment to be acked (eventually) 	 *	continue processing rest of data/controls, beginning with URG 	 */
 case|case
