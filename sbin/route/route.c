@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.9 1996/07/09 19:02:28 julian Exp $"
+literal|"$Id: route.c,v 1.10 1996/07/23 01:18:47 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4482,8 +4482,14 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
+name|rtm_addrs
+operator||=
+name|RTA_NETMASK
+expr_stmt|;
 return|return
 operator|(
+name|forcehost
+operator|||
 name|su
 operator|->
 name|sat

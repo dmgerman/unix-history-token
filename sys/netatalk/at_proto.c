@@ -189,9 +189,10 @@ literal|0
 block|,
 name|rn_inithead
 block|,
+literal|8
+operator|*
 operator|(
-operator|(
-name|caddr_t
+name|u_long
 operator|)
 operator|&
 operator|(
@@ -204,12 +205,6 @@ literal|0
 operator|)
 operator|->
 name|sat_addr
-operator|-
-operator|(
-name|caddr_t
-operator|)
-literal|0
-operator|)
 block|,
 expr|sizeof
 operator|(

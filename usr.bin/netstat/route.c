@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.16 1996/06/15 17:08:40 peter Exp $"
+literal|"$Id: route.c,v 1.17 1996/07/23 01:18:17 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2042,6 +2042,13 @@ case|:
 block|{
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|RTF_HOST
+operator|)
+operator|&&
 name|mask
 condition|)
 name|cp

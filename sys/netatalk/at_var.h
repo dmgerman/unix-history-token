@@ -43,7 +43,7 @@ decl_stmt|;
 define|#
 directive|define
 name|aa_dstaddr
-value|aa_netmask
+value|aa_broadaddr;
 name|struct
 name|sockaddr_at
 name|aa_netmask
