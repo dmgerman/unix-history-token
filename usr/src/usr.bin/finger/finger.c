@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)finger.c	4.4 (Berkeley) %G%"
+literal|"@(#)finger.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4416,7 +4416,7 @@ decl_stmt|;
 name|char
 name|buffer
 index|[
-literal|40
+literal|256
 index|]
 decl_stmt|,
 modifier|*
