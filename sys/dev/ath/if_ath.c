@@ -7741,9 +7741,7 @@ operator|<=
 name|ATH_MAX_SCATTER
 argument_list|,
 operator|(
-literal|"%s: too many DMA segments %u"
-operator|,
-name|__func__
+literal|"too many DMA segments %u"
 operator|,
 name|nseg
 operator|)
@@ -7756,9 +7754,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: error %u on bus_dma callback"
-operator|,
-name|__func__
+literal|"error %u on bus_dma callback"
 operator|,
 name|error
 operator|)
@@ -9638,9 +9634,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: error %u on bus_dma callback"
-operator|,
-name|__func__
+literal|"error %u on bus_dma callback"
 operator|,
 name|error
 operator|)
@@ -11194,23 +11188,6 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|m_next
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"m_next %p (1)"
-operator|,
-name|m
-operator|->
-name|m_next
-operator|)
-argument_list|)
-expr_stmt|;
 name|bf
 operator|->
 name|bf_m
@@ -11294,9 +11271,7 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"%s: multi-segment packet; nseg %u"
-operator|,
-name|__func__
+literal|"multi-segment packet; nseg %u"
 operator|,
 name|bf
 operator|->
@@ -12134,23 +12109,6 @@ goto|;
 block|}
 name|rx_accept
 label|:
-name|KASSERT
-argument_list|(
-name|m
-operator|->
-name|m_next
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"m_next %p (3)"
-operator|,
-name|m
-operator|->
-name|m_next
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Sync and unmap the frame.  At this point we're 		 * committed to passing the mbuf somewhere so clear 		 * bf_m; this means a new sk_buff must be allocated 		 * when the rx descriptor is setup again to receive 		 * another frame. 		 */
 name|bus_dmamap_sync
 argument_list|(
@@ -13868,7 +13826,7 @@ operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"ath_tx_start: packet not one segment; nseg %u"
+literal|"packet not one segment; nseg %u"
 operator|,
 name|bf
 operator|->
