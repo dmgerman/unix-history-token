@@ -2906,7 +2906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Used to map a range of physical addresses into kernel  *	virtual address space.  *  *	The value passed in '*virt' is a suggested virtual address for  *	the mapping. Architectures which can support a direct-mapped  *	physical to virtual region can return the appropriate address  *	within that region, leaving '*virt' unchanged. Other  *	architectures should map the pages starting at '*virt' and  *	update '*virt' with the first usable address after the mapped  *	region.  */
+comment|/*  *	Used to map a range of physical addresses into kernel  *	virtual address space.  *  *	For now, VM is already on, we only need to map the  *	specified memory.  */
 end_comment
 
 begin_function
@@ -2914,7 +2914,6 @@ name|vm_offset_t
 name|pmap_map
 parameter_list|(
 name|vm_offset_t
-modifier|*
 name|virt
 parameter_list|,
 name|vm_offset_t
@@ -2927,11 +2926,33 @@ name|int
 name|prot
 parameter_list|)
 block|{
-return|return
-name|ALPHA_PHYS_TO_K0SEG
+while|while
+condition|(
+name|start
+operator|<
+name|end
+condition|)
+block|{
+name|pmap_kenter
 argument_list|(
+name|virt
+argument_list|,
 name|start
 argument_list|)
+expr_stmt|;
+name|virt
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+name|start
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|virt
+operator|)
 return|;
 block|}
 end_function

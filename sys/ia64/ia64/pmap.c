@@ -582,6 +582,21 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vm_zone_t
+name|pvbootzone
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|vm_zone
+name|pvbootzone_store
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|pv_entry_count
 init|=
@@ -612,6 +627,15 @@ name|struct
 name|pv_entry
 modifier|*
 name|pvinit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|pv_entry
+modifier|*
+name|pvbootinit
 decl_stmt|;
 end_decl_stmt
 
@@ -871,6 +895,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|boot_pvs
+decl_stmt|;
 comment|/* 	 * Setup RIDs. We use the bits above pmap_ridbits for a 	 * generation counter, saving generation zero for 	 * 'invalid'. RIDs 0..7 are reserved for the kernel. 	 */
 name|pmap_nextrid
 operator|=
@@ -1030,6 +1057,51 @@ literal|28
 operator|<<
 literal|2
 operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * We need some PVs to cope with pmap_kenter() calls prior to 	 * pmap_init(). This is all a bit flaky and needs to be 	 * rethought, probably by avoiding the zone allocator 	 * entirely. 	 */
+name|boot_pvs
+operator|=
+literal|32768
+expr_stmt|;
+name|pvbootzone
+operator|=
+operator|&
+name|pvbootzone_store
+expr_stmt|;
+name|pvbootinit
+operator|=
+operator|(
+expr|struct
+name|pv_entry
+operator|*
+operator|)
+name|pmap_steal_memory
+argument_list|(
+name|boot_pvs
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pv_entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|zbootinit
+argument_list|(
+name|pvbootzone
+argument_list|,
+literal|"PV ENTRY"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pv_entry
+argument_list|)
+argument_list|,
+name|pvbootinit
+argument_list|,
+name|boot_pvs
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up proc0's PCB. 	 */
@@ -2179,52 +2251,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 	 * We can get called a few times really early before 	 * pmap_init() has finished allocating the pvzone (mostly as a 	 * result of the call to kmem_alloc() in pmap_init(). We allow 	 * a small number of entries to be allocated statically to 	 * cover this. 	 */
 if|if
 condition|(
 operator|!
 name|pvinit
 condition|)
-block|{
-define|#
-directive|define
-name|PV_BOOTSTRAP_NEEDED
-value|512
-specifier|static
-name|struct
-name|pv_entry
-name|pvbootentries
-index|[
-name|PV_BOOTSTRAP_NEEDED
-index|]
-decl_stmt|;
-specifier|static
-name|int
-name|pvbootnext
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|pvbootnext
-operator|==
-name|PV_BOOTSTRAP_NEEDED
-condition|)
-name|panic
-argument_list|(
-literal|"get_pv_entry: called too many times"
-literal|" before pmap_init is finished"
-argument_list|)
-expr_stmt|;
 return|return
-operator|&
-name|pvbootentries
-index|[
-name|pvbootnext
-operator|++
-index|]
+name|zalloc
+argument_list|(
+name|pvbootzone
+argument_list|)
 return|;
-block|}
 name|pv_entry_count
 operator|++
 expr_stmt|;
@@ -3673,7 +3710,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Used to map a range of physical addresses into kernel  *	virtual address space.  *  *	The value passed in '*virt' is a suggested virtual address for  *	the mapping. Architectures which can support a direct-mapped  *	physical to virtual region can return the appropriate address  *	within that region, leaving '*virt' unchanged. Other  *	architectures should map the pages starting at '*virt' and  *	update '*virt' with the first usable address after the mapped  *	region.  */
+comment|/*  *	Used to map a range of physical addresses into kernel  *	virtual address space.  *  *	For now, VM is already on, we only need to map the  *	specified memory.  */
 end_comment
 
 begin_function
@@ -3681,7 +3718,6 @@ name|vm_offset_t
 name|pmap_map
 parameter_list|(
 name|vm_offset_t
-modifier|*
 name|virt
 parameter_list|,
 name|vm_offset_t
@@ -3694,11 +3730,34 @@ name|int
 name|prot
 parameter_list|)
 block|{
-return|return
-name|IA64_PHYS_TO_RR7
+comment|/* 	 * XXX We should really try to use larger pagesizes here to 	 * cut down the number of PVs used. 	 */
+while|while
+condition|(
+name|start
+operator|<
+name|end
+condition|)
+block|{
+name|pmap_kenter
 argument_list|(
+name|virt
+argument_list|,
 name|start
 argument_list|)
+expr_stmt|;
+name|virt
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+name|start
+operator|+=
+name|PAGE_SIZE
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|virt
+operator|)
 return|;
 block|}
 end_function
