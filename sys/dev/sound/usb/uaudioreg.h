@@ -109,33 +109,6 @@ name|UDESCSUB_AC_EXTENSION
 value|8
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-name|__FreeBSD_version
-operator|<=
-literal|500014
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|UPACKED
-value|__attribute__ ((packed))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* The first fields are identical to usb_endpoint_descriptor_t */
 end_comment
