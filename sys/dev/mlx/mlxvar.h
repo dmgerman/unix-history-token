@@ -439,7 +439,7 @@ name|time_t
 name|mlx_lastpoll
 decl_stmt|;
 comment|/* last time_second we polled for status */
-name|int
+name|u_int16_t
 name|mlx_lastevent
 decl_stmt|;
 comment|/* sequence number of the last event we recorded */
@@ -448,17 +448,29 @@ name|mlx_currevent
 decl_stmt|;
 comment|/* sequence number last time we looked */
 name|int
-name|mlx_rebuild
+name|mlx_background
 decl_stmt|;
-comment|/* if>= 0, drive is being rebuilt */
-name|u_int32_t
+comment|/* if != 0 rebuild or check is in progress */
+define|#
+directive|define
+name|MLX_BACKGROUND_CHECK
+value|1
+comment|/* we started a check */
+define|#
+directive|define
+name|MLX_BACKGROUND_REBUILD
+value|2
+comment|/* we started a rebuild */
+define|#
+directive|define
+name|MLX_BACKGROUND_SPONTANEOUS
+value|3
+comment|/* it just happened somehow */
+name|struct
+name|mlx_rebuild_status
 name|mlx_rebuildstat
 decl_stmt|;
-comment|/* blocks left to rebuild if active */
-name|int
-name|mlx_check
-decl_stmt|;
-comment|/* if>= 0, drive is being checked */
+comment|/* last rebuild status */
 name|struct
 name|mlx_pause
 name|mlx_pause
@@ -476,6 +488,11 @@ directive|define
 name|MLX_SPINUP_REPORTED
 value|(1<<0)
 comment|/* "spinning up drives" message displayed */
+define|#
+directive|define
+name|MLX_EVENTLOG_BUSY
+value|(1<<1)
+comment|/* currently reading event log */
 comment|/* interface-specific accessor functions */
 name|int
 name|mlx_iftype
@@ -808,6 +825,13 @@ name|mlx_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|mlxd_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Mylex System Disk driver  */
 end_comment
@@ -818,6 +842,9 @@ name|mlxd_softc
 block|{
 name|device_t
 name|mlxd_dev
+decl_stmt|;
+name|dev_t
+name|mlxd_dev_t
 decl_stmt|;
 name|struct
 name|mlx_softc

@@ -22,12 +22,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -229,7 +223,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|mlxd_devclass
 decl_stmt|;
@@ -240,15 +233,6 @@ specifier|static
 name|struct
 name|cdevsw
 name|mlxddisk_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|disks_registered
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
