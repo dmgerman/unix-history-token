@@ -446,7 +446,10 @@ name|i
 operator|=
 name|max
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 literal|0
@@ -543,7 +546,10 @@ name|thresh
 operator|=
 name|max
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 literal|1
@@ -552,7 +558,10 @@ expr_stmt|;
 else|else
 name|thresh
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 expr_stmt|;
 name|noscale

@@ -2938,7 +2938,10 @@ argument_list|()
 expr_stmt|;
 name|j
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 expr_stmt|;
 if|if
@@ -3314,7 +3317,10 @@ expr_stmt|;
 block|}
 name|i
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 expr_stmt|;
 if|if

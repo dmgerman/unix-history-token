@@ -156,7 +156,10 @@ name|length
 operator|=
 name|quant
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 name|HOR
@@ -1068,7 +1071,10 @@ name|i
 operator|=
 name|quant
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 name|VERT
@@ -1445,7 +1451,10 @@ index|]
 operator|=
 name|quant
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 name|HOR
@@ -1527,7 +1536,10 @@ index|]
 operator|=
 name|quant
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 name|VERT

@@ -1390,7 +1390,10 @@ if|if
 condition|(
 name|n
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 condition|)
 block|{
@@ -1761,7 +1764,10 @@ index|[
 name|j
 index|]
 operator|=
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 expr_stmt|;
 name|noscale
@@ -1867,7 +1873,10 @@ name|i
 operator|=
 name|quant
 argument_list|(
-name|atoi
+operator|(
+name|int
+operator|)
+name|atoi0
 argument_list|()
 argument_list|,
 name|VERT

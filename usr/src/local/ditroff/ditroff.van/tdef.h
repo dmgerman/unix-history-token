@@ -1681,16 +1681,6 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|atoi
-parameter_list|(
-name|i
-parameter_list|)
-value|((int) atoi0(i))
-end_define
-
 begin_function_decl
 specifier|extern
 name|long
