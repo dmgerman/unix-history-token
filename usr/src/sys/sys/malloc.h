@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)malloc.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -367,7 +367,7 @@ name|kmemxtob
 parameter_list|(
 name|addr
 parameter_list|)
-value|(kmembase + (addr) * CLBYTES)
+value|(kmembase + (addr) * NBPG)
 end_define
 
 begin_define
@@ -377,7 +377,7 @@ name|btokmemx
 parameter_list|(
 name|addr
 parameter_list|)
-value|(((addr) - kmembase) / CLBYTES)
+value|(((addr) - kmembase) / NBPG)
 end_define
 
 begin_define
