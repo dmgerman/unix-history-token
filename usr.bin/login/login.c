@@ -1626,6 +1626,14 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+if|if
+condition|(
+name|rootlogin
+operator|&&
+operator|!
+name|rootok
+condition|)
+block|{
 comment|/* pretend password okay */
 name|rval
 operator|=
@@ -1634,6 +1642,7 @@ expr_stmt|;
 goto|goto
 name|ttycheck
 goto|;
+block|}
 block|}
 block|}
 name|fflag
