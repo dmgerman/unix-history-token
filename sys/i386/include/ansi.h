@@ -210,12 +210,14 @@ begin_if
 if|#
 directive|if
 name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
 operator|&&
 operator|(
 name|__GNUC__
 operator|>
-literal|2
+literal|3
 operator|||
 name|__GNUC__
 operator|==

@@ -206,7 +206,9 @@ begin_if
 if|#
 directive|if
 name|defined
+argument_list|(
 name|__GNUC__
+argument_list|)
 end_if
 
 begin_define
