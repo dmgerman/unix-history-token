@@ -239,9 +239,6 @@ name|struct
 name|atmio_openvcc
 modifier|*
 name|arg
-parameter_list|,
-name|u_int
-name|async
 parameter_list|)
 block|{
 name|u_int
@@ -534,7 +531,7 @@ name|vcc
 operator|->
 name|vflags
 operator|=
-name|async
+literal|0
 expr_stmt|;
 name|vcc
 operator|->
@@ -955,6 +952,14 @@ name|v
 operator|.
 name|param
 operator|.
+name|flags
+operator||=
+name|ATMIO_FLAG_ASYNC
+expr_stmt|;
+name|v
+operator|.
+name|param
+operator|.
 name|vpi
 operator|=
 name|ATM_PH_VPI
@@ -1042,8 +1047,6 @@ name|sc
 argument_list|,
 operator|&
 name|v
-argument_list|,
-name|PATM_VCC_ASYNC
 argument_list|)
 operator|)
 return|;
@@ -1242,9 +1245,11 @@ if|if
 condition|(
 name|vcc
 operator|->
-name|vflags
+name|vcc
+operator|.
+name|flags
 operator|&
-name|PATM_VCC_ASYNC
+name|ATMIO_FLAG_ASYNC
 condition|)
 goto|goto
 name|done
@@ -1941,8 +1946,6 @@ name|atmio_openvcc
 operator|*
 operator|)
 name|data
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 break|break;
