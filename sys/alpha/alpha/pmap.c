@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.13 1999/01/21 08:29:02 dillon Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	from:	i386 Id: pmap.c,v 1.193 1998/04/19 15:22:48 bde Exp  *		with some ideas from NetBSD's alpha pmap  *	$Id: pmap.c,v 1.14 1999/01/24 06:04:50 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -2564,12 +2564,12 @@ condition|)
 block|{
 name|tpmap
 operator|=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|p
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 expr_stmt|;
 name|tpmap
 operator|->
@@ -5803,12 +5803,12 @@ condition|)
 block|{
 name|pmap
 operator|=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|p
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 expr_stmt|;
 operator|*
 name|pmap_lev1pte
@@ -8583,12 +8583,12 @@ operator|||
 operator|(
 name|pmap
 operator|!=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|curproc
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 operator|)
 condition|)
 return|return;
@@ -9336,12 +9336,12 @@ operator|||
 operator|(
 name|pmap
 operator|!=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|curproc
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -11035,12 +11035,12 @@ name|pmap
 decl_stmt|;
 name|pmap
 operator|=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|p
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11160,12 +11160,12 @@ name|pmap
 decl_stmt|;
 name|pmap
 operator|=
-operator|&
+name|vmspace_pmap
+argument_list|(
 name|p
 operator|->
 name|p_vmspace
-operator|->
-name|vm_pmap
+argument_list|)
 expr_stmt|;
 name|pmap
 operator|->
@@ -11216,7 +11216,7 @@ argument_list|)
 end_if
 
 begin_endif
-unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index; 	for (p = allproc.lh_first; p != NULL; p = p->p_list.le_next) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap =&p->p_vmspace->vm_pmap; 			for(i=0;i<1024;i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j=0;j<1024;j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE((pa& PG_FRAME)); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	return npte; }
+unit|pmap_pid_dump(int pid) { 	pmap_t pmap; 	struct proc *p; 	int npte = 0; 	int index; 	for (p = allproc.lh_first; p != NULL; p = p->p_list.le_next) { 		if (p->p_pid != pid) 			continue;  		if (p->p_vmspace) { 			int i,j; 			index = 0; 			pmap = vmspace_pmap(p->p_vmspace); 			for(i=0;i<1024;i++) { 				pd_entry_t *pde; 				pt_entry_t *pte; 				unsigned base = i<< PDRSHIFT; 				 				pde =&pmap->pm_pdir[i]; 				if (pde&& pmap_pde_v(pde)) { 					for(j=0;j<1024;j++) { 						unsigned va = base + (j<< PAGE_SHIFT); 						if (va>= (vm_offset_t) VM_MIN_KERNEL_ADDRESS) { 							if (index) { 								index = 0; 								printf("\n"); 							} 							return npte; 						} 						pte = pmap_pte_quick( pmap, va); 						if (pte&& pmap_pte_v(pte)) { 							vm_offset_t pa; 							vm_page_t m; 							pa = *(int *)pte; 							m = PHYS_TO_VM_PAGE((pa& PG_FRAME)); 							printf("va: 0x%x, pt: 0x%x, h: %d, w: %d, f: 0x%x", 								va, pa, m->hold_count, m->wire_count, m->flags); 							npte++; 							index++; 							if (index>= 2) { 								index = 0; 								printf("\n"); 							} else { 								printf(" "); 							} 						} 					} 				} 			} 		} 	} 	return npte; }
 endif|#
 directive|endif
 end_endif
