@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)ww.h	3.33 %G%	  */
+comment|/*  * @(#)ww.h	3.34 %G%	  */
 end_comment
 
 begin_include
@@ -1437,16 +1437,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((x)> (y) ? (x) : (y))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sigmask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< (s) - 1)
 end_define
 
 end_unit
