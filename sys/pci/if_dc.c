@@ -680,6 +680,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -15311,6 +15312,7 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+modifier|*
 name|m_head
 parameter_list|)
 block|{
@@ -15351,6 +15353,7 @@ for|for
 control|(
 name|m
 operator|=
+operator|*
 name|m_head
 init|;
 name|m
@@ -15399,6 +15402,7 @@ name|m
 operator|=
 name|m_defrag
 argument_list|(
+operator|*
 name|m_head
 argument_list|,
 name|M_DONTWAIT
@@ -15415,6 +15419,7 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+operator|*
 name|m_head
 operator|=
 name|m
@@ -15446,6 +15451,7 @@ index|[
 name|idx
 index|]
 argument_list|,
+operator|*
 name|m_head
 argument_list|,
 name|dc_dma_map_txbuf
@@ -15492,6 +15498,7 @@ index|[
 name|idx
 index|]
 operator|=
+operator|*
 name|m_head
 expr_stmt|;
 name|bus_dmamap_sync
@@ -15734,6 +15741,7 @@ name|dc_encap
 argument_list|(
 name|sc
 argument_list|,
+operator|&
 name|m_head
 argument_list|)
 condition|)
