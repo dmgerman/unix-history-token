@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_shm.c,v 1.1 1994/09/13 14:47:03 dfr Exp $ */
+comment|/*	$Id: sysv_shm.c,v 1.2 1994/09/16 17:43:22 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -963,8 +963,6 @@ condition|)
 return|return
 name|EINVAL
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -990,6 +988,10 @@ name|IPC_R
 operator||
 name|IPC_W
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1340,8 +1342,6 @@ directive|ifdef
 name|COMPAT_43
 name|int
 name|error
-decl_stmt|,
-name|segnum
 decl_stmt|;
 name|struct
 name|ucred
@@ -1389,8 +1389,6 @@ block|{
 case|case
 name|IPC_STAT
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -1404,6 +1402,10 @@ name|shm_perm
 argument_list|,
 name|IPC_R
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1480,8 +1482,6 @@ name|shmseg
 operator|->
 name|shm_internal
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyout
@@ -1501,6 +1501,10 @@ argument_list|(
 name|outbuf
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1577,8 +1581,6 @@ decl_stmt|;
 block|{
 name|int
 name|error
-decl_stmt|,
-name|segnum
 decl_stmt|;
 name|struct
 name|ucred
@@ -1626,8 +1628,6 @@ block|{
 case|case
 name|IPC_STAT
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -1641,12 +1641,14 @@ name|shm_perm
 argument_list|,
 name|IPC_R
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyout
@@ -1665,6 +1667,10 @@ argument_list|(
 name|inbuf
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1673,8 +1679,6 @@ break|break;
 case|case
 name|IPC_SET
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -1688,12 +1692,14 @@ name|shm_perm
 argument_list|,
 name|IPC_M
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
 return|;
-if|if
-condition|(
 name|error
 operator|=
 name|copyin
@@ -1713,6 +1719,10 @@ argument_list|(
 name|inbuf
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1780,8 +1790,6 @@ break|break;
 case|case
 name|IPC_RMID
 case|:
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -1795,6 +1803,10 @@ name|shm_perm
 argument_list|,
 name|IPC_M
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1955,8 +1967,6 @@ name|mode
 operator||=
 name|SHMSEG_WANTED
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -1974,6 +1984,10 @@ literal|"shmget"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -1982,8 +1996,6 @@ return|return
 name|EAGAIN
 return|;
 block|}
-if|if
-condition|(
 name|error
 operator|=
 name|ipcperm
@@ -1997,6 +2009,10 @@ name|shm_perm
 argument_list|,
 name|mode
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 name|error
@@ -2582,11 +2598,6 @@ name|mode
 decl_stmt|,
 name|error
 decl_stmt|;
-name|struct
-name|shmid_ds
-modifier|*
-name|shmseg
-decl_stmt|;
 name|mode
 operator|=
 name|uap
@@ -2917,11 +2928,6 @@ name|struct
 name|shmmap_state
 modifier|*
 name|shmmap_s
-decl_stmt|;
-name|struct
-name|shmid_ds
-modifier|*
-name|shmseg
 decl_stmt|;
 name|int
 name|i

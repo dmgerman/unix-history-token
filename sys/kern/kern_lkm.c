@@ -313,8 +313,6 @@ operator||=
 name|LKM_WANT
 expr_stmt|;
 comment|/* 		 * Sleep pending unlock; we use tsleep() to allow 		 * an alarm out of the open. 		 */
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -333,6 +331,10 @@ literal|"lkmopn"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -561,13 +563,6 @@ name|lmc_stat
 modifier|*
 name|statp
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|funcp
-function_decl|)
-parameter_list|()
-function_decl|;
 name|char
 name|istr
 index|[
@@ -809,8 +804,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* copy in buffer full of data */
-if|if
-condition|(
 name|err
 operator|=
 name|copyin
@@ -835,6 +828,10 @@ name|offset
 argument_list|,
 name|i
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 break|break;
 if|if
@@ -1034,8 +1031,6 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* call entry(load)... (assigns "private" portion) */
-if|if
-condition|(
 name|err
 operator|=
 operator|(
@@ -1053,6 +1048,10 @@ name|LKM_E_LOAD
 operator|,
 name|LKM_VERSION
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 block|{
 comment|/* 			 * Module may refuse loading or may have a 			 * version mismatch... 			 */
@@ -1139,8 +1138,6 @@ condition|)
 block|{
 comment|/* unload by name */
 comment|/* 			 * Copy name and lookup id from all loaded 			 * modules.  May fail. 			 */
-if|if
-condition|(
 name|err
 operator|=
 name|copyinstr
@@ -1157,6 +1154,10 @@ literal|1
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 break|break;
 comment|/* 			 * look up id... 			 */

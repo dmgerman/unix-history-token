@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.5 1994/08/02 07:42:46 davidg Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty.c	8.8 (Berkeley) 1/21/94  * $Id: tty.c,v 1.6 1994/08/18 09:16:21 davidg Exp $  */
 end_comment
 
 begin_include
@@ -85,6 +85,18 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/signalvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
@@ -1488,7 +1500,7 @@ parameter_list|(
 name|c
 parameter_list|)
 define|\
-value|((c) == '\n' || ((c) == cc[VEOF] ||				\ 	(c) == cc[VEOL] || (c) == cc[VEOL2])&& (c) != _POSIX_VDISABLE)
+value|((c) == '\n' || (((c) == cc[VEOF] ||				\ 	(c) == cc[VEOL] || (c) == cc[VEOL2])&& (c) != _POSIX_VDISABLE))
 end_define
 
 begin_comment
@@ -1598,8 +1610,6 @@ name|tp
 operator|->
 name|t_iflag
 expr_stmt|;
-if|if
-condition|(
 name|err
 operator|=
 operator|(
@@ -1610,6 +1620,10 @@ argument_list|,
 name|TTY_ERRORMASK
 argument_list|)
 operator|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 condition|)
 block|{
 name|CLR
@@ -1695,6 +1709,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|ISSET
 argument_list|(
 name|err
@@ -1708,6 +1723,7 @@ name|iflag
 argument_list|,
 name|INPCK
 argument_list|)
+operator|)
 operator|||
 name|ISSET
 argument_list|(
@@ -3756,8 +3772,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -3775,6 +3789,10 @@ name|ttybg
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -4015,14 +4033,16 @@ case|case
 name|TIOCDRAIN
 case|:
 comment|/* wait till output drained */
-if|if
-condition|(
 name|error
 operator|=
 name|ttywait
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -4250,14 +4270,16 @@ operator|==
 name|TIOCSETAF
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|ttywait
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|splx
@@ -4971,6 +4993,7 @@ name|p
 argument_list|)
 operator|||
 operator|(
+operator|(
 name|p
 operator|->
 name|p_session
@@ -4990,6 +5013,7 @@ operator|!=
 name|p
 operator|->
 name|p_session
+operator|)
 operator|)
 condition|)
 return|return
@@ -5276,6 +5300,7 @@ name|nread
 operator|>
 literal|0
 operator|||
+operator|(
 operator|!
 name|ISSET
 argument_list|(
@@ -5295,6 +5320,7 @@ name|t_state
 argument_list|,
 name|TS_CARR_ON
 argument_list|)
+operator|)
 condition|)
 goto|goto
 name|win
@@ -5526,8 +5552,6 @@ argument_list|,
 name|TS_ASLEEP
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -5547,6 +5571,10 @@ name|ttyout
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 block|}
@@ -5885,6 +5913,7 @@ block|}
 comment|/* 	 * Block further input iff: current input> threshold 	 * AND input is available to user program. 	 */
 if|if
 condition|(
+operator|(
 name|total
 operator|>=
 name|TTYHOG
@@ -5910,7 +5939,9 @@ name|t_lflag
 argument_list|,
 name|ICANON
 argument_list|)
+operator|)
 operator|||
+operator|(
 name|tp
 operator|->
 name|t_canq
@@ -5927,6 +5958,7 @@ name|VSTOP
 index|]
 operator|!=
 name|_POSIX_VDISABLE
+operator|)
 condition|)
 block|{
 if|if
@@ -6725,8 +6757,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -6744,6 +6774,10 @@ name|ttybg
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -6960,8 +6994,6 @@ condition|(
 name|first
 condition|)
 block|{
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -6979,6 +7011,10 @@ name|ttybg
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 goto|goto
@@ -7586,8 +7622,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -7605,6 +7639,10 @@ name|ttybg
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 goto|goto
 name|out
@@ -7795,8 +7833,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -7814,6 +7850,10 @@ name|ttybuf
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 goto|goto
@@ -7913,8 +7953,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|ttysleep
@@ -7932,6 +7970,10 @@ name|ttybuf
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 break|break;
 goto|goto
@@ -8941,6 +8983,7 @@ name|ECHOCTL
 argument_list|)
 operator|&&
 operator|(
+operator|(
 name|ISSET
 argument_list|(
 name|c
@@ -8957,6 +9000,7 @@ operator|&&
 name|c
 operator|!=
 literal|'\n'
+operator|)
 operator|||
 name|ISSET
 argument_list|(
@@ -9495,6 +9539,7 @@ value|(((a) * NBPG) / 1024)
 comment|/* Print percentage cpu, resident set size. */
 name|tmp
 operator|=
+operator|(
 name|pick
 operator|->
 name|p_pctcpu
@@ -9504,6 +9549,7 @@ operator|+
 name|FSCALE
 operator|/
 literal|2
+operator|)
 operator|>>
 name|FSHIFT
 expr_stmt|;
@@ -10022,8 +10068,6 @@ name|tp
 operator|->
 name|t_gen
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -10036,6 +10080,10 @@ name|wmesg
 argument_list|,
 name|timo
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(

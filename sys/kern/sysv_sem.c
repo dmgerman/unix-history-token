@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.1 1994/09/13 14:47:00 dfr Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.2 1994/09/17 13:24:17 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -107,11 +107,6 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|vm_offset_t
-name|whocares1
-decl_stmt|,
-name|whocares2
 decl_stmt|;
 if|if
 condition|(
@@ -3057,8 +3052,6 @@ decl_stmt|,
 name|eval
 decl_stmt|;
 name|int
-name|all_ok
-decl_stmt|,
 name|do_wakeup
 decl_stmt|,
 name|do_undos

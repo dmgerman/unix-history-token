@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.1 1994/09/13 14:46:57 dfr Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.2 1994/09/17 13:24:16 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -132,11 +132,6 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|vm_offset_t
-name|whocares1
-decl_stmt|,
-name|whocares2
 decl_stmt|;
 comment|/* 	 * msginfo.msgssz should be a power of two for efficiency reasons. 	 * It is also pretty silly if msginfo.msgssz is less than 8 	 * or greater than about 256 so ... 	 */
 name|i
@@ -710,8 +705,6 @@ operator|->
 name|p_ucred
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|rval
 decl_stmt|,
 name|eval
