@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.8	%G%	*/
+comment|/*	kern_synch.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -1606,34 +1606,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|UCBIPC
-if|if
-condition|(
-name|u
-operator|.
-name|u_pofile
-index|[
-name|n
-index|]
-operator|&
-name|ISPORT
-condition|)
-name|u
-operator|.
-name|u_oport
-index|[
-name|n
-index|]
-operator|->
-name|pt_count
-operator|++
-expr_stmt|;
-else|else
-block|{
-endif|#
-directive|endif
 name|u
 operator|.
 name|u_ofile
@@ -1668,13 +1640,6 @@ operator|->
 name|i_vfdcnt
 operator|++
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UCBIPC
-block|}
-endif|#
-directive|endif
-endif|UCBIPC
 block|}
 name|u
 operator|.
