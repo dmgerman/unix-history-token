@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.13 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3155,6 +3155,10 @@ operator|->
 name|di_blocks
 operator|=
 name|nblocks
+operator|<<
+name|lfsp
+operator|->
+name|lfs_fsbtodb
 expr_stmt|;
 comment|/* If we ever need something longer than 32 bits, this changes */
 name|dip
@@ -3254,9 +3258,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|dip
-operator|->
-name|di_blocks
+name|nblocks
 condition|;
 name|i
 operator|++
