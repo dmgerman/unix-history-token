@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sd.c,v 4.300 91/06/27 20:42:56 root Rel41 $ SONY  *  *	@(#)sd.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: sd.c,v 4.300 91/06/27 20:42:56 root Rel41 $ SONY  *  *	@(#)sd.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -10543,46 +10543,11 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|dp
-operator|->
-name|b_forw
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
 name|im
 operator|->
 name|im_tab
 operator|.
 name|b_actf
-operator|==
-name|NULL
-condition|)
-name|im
-operator|->
-name|im_tab
-operator|.
-name|b_actf
-operator|=
-name|dp
-expr_stmt|;
-else|else
-name|im
-operator|->
-name|im_tab
-operator|.
-name|b_actl
-operator|->
-name|b_forw
-operator|=
-name|dp
-expr_stmt|;
-name|im
-operator|->
-name|im_tab
-operator|.
-name|b_actl
 operator|=
 name|dp
 expr_stmt|;
@@ -10665,21 +10630,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|im
-operator|->
-name|im_tab
-operator|.
-name|b_actf
-operator|=
-name|dp
-operator|->
-name|b_forw
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
+return|return;
 comment|/* 	 * Mark controller busy, and 	 * determine destination of this request. 	 */
 name|im
 operator|->
@@ -14047,9 +13998,7 @@ name|im_tab
 operator|.
 name|b_actf
 operator|=
-name|dp
-operator|->
-name|b_forw
+literal|0
 expr_stmt|;
 name|dp
 operator|->
@@ -14069,7 +14018,7 @@ name|b_actf
 operator|=
 name|bp
 operator|->
-name|av_forw
+name|b_actf
 expr_stmt|;
 if|if
 condition|(
