@@ -2529,6 +2529,11 @@ operator|*
 operator|)
 name|arg
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|psignal
 argument_list|(
 name|p
@@ -2558,6 +2563,11 @@ operator|->
 name|p_realtimer
 operator|.
 name|it_value
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2657,6 +2667,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|splx
@@ -2665,6 +2680,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*NOTREACHED*/
 block|}
 end_function
 
