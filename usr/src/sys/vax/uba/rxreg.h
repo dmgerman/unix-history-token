@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rxreg.h	4.6	83/05/06	*/
+comment|/*	rxreg.h	4.7	83/05/07	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
 
 begin_comment
 comment|/*  * RX02 registers  */
@@ -323,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|RXIOC_FORMAT
-value|(('d'<<8)|1)
+value|_IOW(d, 1, int)
 end_define
 
 begin_comment
@@ -334,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|RXIOC_WDDS
-value|(('d'<<8)|2)
+value|_IOW(d, 2, int)
 end_define
 
 begin_comment
@@ -349,7 +355,7 @@ begin_define
 define|#
 directive|define
 name|RXIOC_RDDSMK
-value|(('d'<<8)|3)
+value|_IOR(d, 3, int)
 end_define
 
 begin_comment
@@ -364,22 +370,11 @@ begin_define
 define|#
 directive|define
 name|RXIOC_GDENS
-value|(('d'<<8)|4)
+value|_IOR(d, 4, int)
 end_define
 
 begin_comment
 comment|/* return density of current disk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RXIOC_MASK
-value|0x0ffff
-end_define
-
-begin_comment
-comment|/* mask for ioctl codes */
 end_comment
 
 begin_ifdef
