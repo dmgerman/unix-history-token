@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -214,6 +220,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|usage
 name|__P
@@ -268,7 +290,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 while|while
@@ -560,7 +582,7 @@ argument_list|)
 operator|)
 operator|)
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|warnx
@@ -584,6 +606,9 @@ name|endp
 argument_list|,
 name|p
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|len
 operator|+
 literal|1
@@ -779,6 +804,10 @@ literal|" "
 argument_list|,
 name|user_from_uid
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sb
 operator|.
 name|st_uid
@@ -788,6 +817,10 @@ argument_list|)
 argument_list|,
 name|group_from_gid
 argument_list|(
+operator|(
+name|unsigned
+name|long
+operator|)
 name|sb
 operator|.
 name|st_gid
@@ -905,7 +938,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 comment|/* Can't mv(1) a mount point. */
@@ -1156,6 +1189,9 @@ name|bp
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|size_t
+operator|)
 name|sbp
 operator|->
 name|st_blksize
@@ -1257,6 +1293,9 @@ name|from_fd
 argument_list|,
 name|bp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|blen
 argument_list|)
 operator|)
@@ -1271,6 +1310,9 @@ name|to_fd
 argument_list|,
 name|bp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|nread
 argument_list|)
 operator|!=
@@ -1457,6 +1499,9 @@ name|fchflags
 argument_list|(
 name|to_fd
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sbp
 operator|->
 name|st_flags
@@ -1654,6 +1699,10 @@ name|from
 argument_list|,
 name|to
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1768,6 +1817,10 @@ literal|"-rf"
 argument_list|,
 name|from
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
