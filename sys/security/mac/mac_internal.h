@@ -7,6 +7,12 @@ begin_comment
 comment|/*  * MAC Framework sysctl namespace.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_DECL
+end_ifdef
+
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
@@ -50,6 +56,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SYSCTL_DECL */
+end_comment
+
 begin_comment
 comment|/*  * MAC Framework global types and typedefs.  */
 end_comment
@@ -64,6 +79,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MALLOC_DECLARE
+end_ifdef
+
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
@@ -71,6 +92,11 @@ name|M_MACTEMP
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * MAC Framework global variables.  */
