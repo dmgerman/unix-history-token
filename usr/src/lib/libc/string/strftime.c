@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strftime.c	5.4 (Berkeley) %G%"
+literal|"@(#)strftime.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -499,7 +499,7 @@ condition|(
 operator|!
 name|_fmt
 argument_list|(
-literal|"%a %b %d %X %Z %Y"
+literal|"%m/%d/%y %H:%M:%S"
 argument_list|,
 name|t
 argument_list|)
@@ -912,7 +912,7 @@ condition|(
 operator|!
 name|_fmt
 argument_list|(
-literal|"%a %b %d %Y"
+literal|"%m/%d/%y"
 argument_list|,
 name|t
 argument_list|)
