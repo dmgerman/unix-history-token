@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.11 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -98,18 +104,6 @@ begin_include
 include|#
 directive|include
 file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -148,6 +142,18 @@ directive|include
 file|<protocols/rwhod.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_comment
 comment|/*  * Alarm interval. Don't forget to change the down time check in ruptime  * if this is changed.  */
 end_comment
@@ -169,10 +175,6 @@ name|AF_INET
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_extern
-extern|extern	errno;
-end_extern
 
 begin_decl_stmt
 name|char
@@ -289,12 +291,12 @@ name|WHDRSIZE
 value|(sizeof (mywd) - sizeof (mywd.wd_we))
 end_define
 
-begin_define
-define|#
-directive|define
-name|RWHODIR
-value|"/usr/spool/rwho"
-end_define
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -363,13 +365,15 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-specifier|extern
-name|char
+decl_stmt|,
 modifier|*
 name|index
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|getuid
@@ -527,15 +531,27 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|RWHODIR
+name|stderr
+argument_list|,
+literal|"rwhod: %s: %s\n"
+argument_list|,
+name|_PATH_RWHODIR
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -634,41 +650,15 @@ name|utmpf
 operator|=
 name|open
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 name|O_RDONLY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|utmpf
-operator|<
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|creat
-argument_list|(
-literal|"/etc/utmp"
+operator||
+name|O_CREAT
 argument_list|,
 literal|0644
 argument_list|)
-argument_list|)
 expr_stmt|;
-name|utmpf
-operator|=
-name|open
-argument_list|(
-literal|"/etc/utmp"
-argument_list|,
-name|O_RDONLY
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|utmpf
@@ -680,7 +670,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/etc/utmp: %m"
+literal|"%s: %m"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1358,12 +1350,10 @@ end_macro
 begin_block
 block|{
 specifier|register
-name|int
-name|i
-decl_stmt|;
 name|struct
-name|stat
-name|stb
+name|neighbor
+modifier|*
+name|np
 decl_stmt|;
 specifier|register
 name|struct
@@ -1377,6 +1367,14 @@ name|wd_we
 decl_stmt|,
 modifier|*
 name|wlast
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|stat
+name|stb
 decl_stmt|;
 name|int
 name|cc
@@ -1392,15 +1390,18 @@ name|now
 init|=
 name|time
 argument_list|(
-literal|0
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
 argument_list|)
 decl_stmt|;
-specifier|register
-name|struct
-name|neighbor
+name|char
 modifier|*
-name|np
-decl_stmt|;
+name|strerror
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|alarmcount
@@ -1566,9 +1567,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"/etc/utmp"
+name|stderr
+argument_list|,
+literal|"rwhod: %s: %s\n"
+argument_list|,
+name|_PATH_UTMP
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1956,7 +1966,7 @@ name|utmpent
 operator|&&
 name|chdir
 argument_list|(
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 condition|)
 block|{
@@ -1966,7 +1976,7 @@ name|LOG_ERR
 argument_list|,
 literal|"chdir(%s): %m"
 argument_list|,
-name|RWHODIR
+name|_PATH_RWHODIR
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2011,7 +2021,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 operator|&
 name|sb
@@ -2076,7 +2086,7 @@ if|if
 condition|(
 name|nlist
 argument_list|(
-literal|"/vmunix"
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -2086,7 +2096,9 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"/vmunix namelist botch"
+literal|"%s: namelist botch"
+argument_list|,
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|sleep
@@ -2102,9 +2114,11 @@ name|kmemf
 operator|=
 name|open
 argument_list|(
-literal|"/dev/kmem"
+name|_PATH_KMEM
 argument_list|,
 name|O_RDONLY
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2118,7 +2132,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"/dev/kmem: %m"
+literal|"%s: %m"
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit

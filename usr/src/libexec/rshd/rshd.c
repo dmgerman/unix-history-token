@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.20 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -119,12 +125,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -132,6 +132,12 @@ begin_include
 include|#
 directive|include
 file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -471,7 +477,7 @@ name|homedir
 block|,
 name|shell
 block|,
-literal|"PATH=/usr/ucb:/bin:/usr/bin:"
+name|_PATH_DEFPATH
 block|,
 name|username
 block|,
@@ -1661,7 +1667,7 @@ operator|&&
 operator|!
 name|access
 argument_list|(
-literal|"/etc/nologin"
+name|_PATH_NOLOGIN
 argument_list|,
 name|F_OK
 argument_list|)
@@ -2092,7 +2098,7 @@ name|pwd
 operator|->
 name|pw_shell
 operator|=
-literal|"/bin/sh"
+name|_PATH_BSHELL
 expr_stmt|;
 operator|(
 name|void
