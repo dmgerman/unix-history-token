@@ -5689,7 +5689,7 @@ name|Fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-dnrv] [-w wait] [-m max_ttl] [-M min_ttl] \ [-P proto]\n\t [-p port#] [-q nqueries] [-t tos] [-s src_addr] [-g gateway] \ \n\t host [data_size]\n"
+literal|"Usage: %s [-Sdnrv] [-w wait] [-m max_ttl] [-M min_ttl] \ [-P proto]\n\t [-p port#] [-q nqueries] [-t tos] [-s src_addr] [-g gateway] \ \n\t host [data_size]\n"
 argument_list|,
 name|prog
 argument_list|)
