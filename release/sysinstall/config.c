@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.55 1996/07/03 01:31:06 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.56 1996/07/05 00:55:13 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1101,7 +1101,9 @@ begin_function
 name|void
 name|configSysconfig
 parameter_list|(
-name|void
+name|char
+modifier|*
+name|config
 parameter_list|)
 block|{
 name|FILE
@@ -1137,7 +1139,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/sysconfig"
+name|config
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1150,15 +1152,18 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to open /etc/sysconfig file!  Things may work\n"
-literal|"rather strangely as a result of this."
+literal|"Unable to open %s file!  This is bad!"
+argument_list|,
+name|config
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Writing configuration changes to /etc/sysconfig file.."
+literal|"Writing configuration changes to %s file.."
+argument_list|,
+name|config
 argument_list|)
 expr_stmt|;
 name|nlines
@@ -1207,9 +1212,11 @@ expr_stmt|;
 block|}
 name|msgDebug
 argument_list|(
-literal|"Read %d lines from sysconfig.\n"
+literal|"Read %d lines from %s.\n"
 argument_list|,
 name|nlines
+argument_list|,
+name|config
 argument_list|)
 expr_stmt|;
 comment|/* Now do variable substitutions */
@@ -1388,7 +1395,9 @@ condition|)
 block|{
 name|msgDebug
 argument_list|(
-literal|"Writing sysconfig out to debugging screen..\n"
+literal|"Writing %s out to debugging screen..\n"
+argument_list|,
+name|config
 argument_list|)
 expr_stmt|;
 name|fp
@@ -1406,7 +1415,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/sysconfig"
+name|config
 argument_list|,
 literal|"w"
 argument_list|)
