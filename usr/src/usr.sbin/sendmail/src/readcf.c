@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.104 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.105 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5714,9 +5714,9 @@ argument_list|(
 name|opt
 argument_list|)
 condition|?
-literal|"setoption %s (%c).%s=%s"
+literal|"setoption %s (%c).%s="
 else|:
-literal|"setoption %s (0x%x).%s=%s"
+literal|"setoption %s (0x%x).%s="
 argument_list|,
 name|o
 operator|->
@@ -5739,7 +5739,10 @@ condition|?
 literal|""
 else|:
 name|subopt
-argument_list|,
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|val
 argument_list|)
 expr_stmt|;

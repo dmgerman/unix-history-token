@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.11 (Berkeley) %G%"
+literal|"@(#)macro.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,13 +772,23 @@ argument_list|,
 literal|14
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"macid(%s) => "
-argument_list|,
+literal|"macid("
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|") => "
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
