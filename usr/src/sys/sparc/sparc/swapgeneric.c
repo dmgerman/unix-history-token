@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * fake swapgeneric.c -- should do this differently.  *  *	@(#)swapgeneric.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)swapgeneric.c	8.2 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * fake swapgeneric.c -- should do this differently.  */
 end_comment
 
 begin_include
