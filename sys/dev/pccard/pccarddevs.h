@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.68 2003/08/21 17:49:50 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.69 2003/08/21 18:05:35 imp Exp   */
 end_comment
 
 begin_comment
@@ -650,6 +650,10 @@ begin_comment
 comment|/* Microsoft Corporation */
 end_comment
 
+begin_comment
+comment|/*  * The following vendor IDs are byte-swapped from what the company is assigned.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -670,39 +674,6 @@ end_define
 
 begin_comment
 comment|/* BreezeCOM */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_NEWMEDIA2
-value|0x10cd
-end_define
-
-begin_comment
-comment|/* NewMedia */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_PLANEX_2
-value|0x14ea
-end_define
-
-begin_comment
-comment|/* PLANEX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_ACTIONTEC
-value|0x1668
-end_define
-
-begin_comment
-comment|/* ACTIONTEC */
 end_comment
 
 begin_define
@@ -736,6 +707,76 @@ end_define
 
 begin_comment
 comment|/* Lexar Media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_COMPEX
+value|0x8a01
+end_define
+
+begin_comment
+comment|/* Compex Corporation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ZONET
+value|0x8a01
+end_define
+
+begin_comment
+comment|/* Zonet Technology Inc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ELSA
+value|0xd601
+end_define
+
+begin_comment
+comment|/* Elsa */
+end_comment
+
+begin_comment
+comment|/*  * The following vendor IDs are not, as far as I can tell, actually  * assigned to these people.  However, all the ones starting with '0xc'  * look coherent enough that maybe somebody other than PCMCIA is  * assigning numbers in that range.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_NEWMEDIA2
+value|0x10cd
+end_define
+
+begin_comment
+comment|/* NewMedia */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_PLANEX_2
+value|0x14ea
+end_define
+
+begin_comment
+comment|/* PLANEX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_ACTIONTEC
+value|0x1668
+end_define
+
+begin_comment
+comment|/* ACTIONTEC */
 end_comment
 
 begin_define
@@ -780,28 +821,6 @@ end_define
 
 begin_comment
 comment|/* Edimax Technology Inc. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_COMPEX
-value|0x8a01
-end_define
-
-begin_comment
-comment|/* Compex Corporation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_ZONET
-value|0x8a01
-end_define
-
-begin_comment
-comment|/* Zonet Technology Inc. */
 end_comment
 
 begin_define
@@ -901,17 +920,6 @@ end_define
 
 begin_comment
 comment|/* EMTAC Technology Corporation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_VENDOR_ELSA
-value|0xd601
-end_define
-
-begin_comment
-comment|/* Elsa */
 end_comment
 
 begin_comment
