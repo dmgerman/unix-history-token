@@ -1476,13 +1476,6 @@ name|SA_CDEV_MAJOR
 value|14
 end_define
 
-begin_define
-define|#
-directive|define
-name|SA_BDEV_MAJOR
-value|5
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1545,7 +1538,8 @@ comment|/* maxio */
 literal|0
 block|,
 comment|/* bmaj */
-name|SA_BDEV_MAJOR
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
