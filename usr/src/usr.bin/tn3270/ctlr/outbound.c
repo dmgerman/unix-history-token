@@ -92,6 +92,19 @@ parameter_list|)
 value|{ \ 					if (position< Lowest) { \ 					    Lowest = position; \ 					} \ 					if (position> Highest) { \ 					    Highest = position; \ 					} \ 				    }
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|LastWasTerminated
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* was "control" = 1 last time? */
+end_comment
+
 begin_comment
 comment|/* some globals */
 end_comment
@@ -109,8 +122,6 @@ end_if
 begin_decl_stmt
 name|int
 name|OutputClock
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -121,8 +132,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|TransparentClock
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -283,6 +292,22 @@ end_decl_stmt
 
 begin_escape
 end_escape
+
+begin_comment
+comment|/*  * ctlrinit()  *  *	Initialize all data from the 'data' portion to their startup values.  */
+end_comment
+
+begin_function
+name|void
+name|ctlrinit
+parameter_list|()
+block|{
+name|LastWasTerminated
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* What we know is that table is of size ScreenSize */
@@ -593,13 +618,6 @@ specifier|static
 name|int
 name|Wcc
 decl_stmt|;
-specifier|static
-name|int
-name|LastWasTerminated
-init|=
-literal|1
-decl_stmt|;
-comment|/* was "control" = 1 last time? */
 name|origCount
 operator|=
 name|count
@@ -1815,6 +1833,123 @@ name|count
 operator|)
 return|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Init3270()  *  * Initialize any 3270 (controller) variables to an initial state  * in preparation for accepting a connection.  */
+end_comment
+
+begin_function
+name|void
+name|Init3270
+parameter_list|()
+block|{
+name|OptInit
+argument_list|()
+expr_stmt|;
+comment|/* initialize mappings */
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|Host
+argument_list|,
+sizeof|sizeof
+name|Host
+argument_list|)
+expr_stmt|;
+comment|/* Clear host */
+name|bzero
+argument_list|(
+name|Orders
+argument_list|,
+sizeof|sizeof
+name|Orders
+argument_list|)
+expr_stmt|;
+name|Orders
+index|[
+name|ORDER_SF
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_SBA
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_IC
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_PT
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_RA
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_EUA
+index|]
+operator|=
+name|Orders
+index|[
+name|ORDER_YALE
+index|]
+operator|=
+literal|1
+expr_stmt|;
+comment|/* What is an order */
+name|DeleteAllFields
+argument_list|()
+expr_stmt|;
+comment|/* Clear screen */
+name|Lowest
+operator|=
+name|HighestScreen
+argument_list|()
+operator|+
+literal|1
+expr_stmt|;
+name|Highest
+operator|=
+name|LowestScreen
+argument_list|()
+operator|-
+literal|1
+expr_stmt|;
+name|CursorAddress
+operator|=
+name|BufferAddress
+operator|=
+name|SetBufferAddress
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|UnLocked
+operator|=
+literal|1
+expr_stmt|;
+name|OutputClock
+operator|=
+literal|1
+expr_stmt|;
+name|TransparentClock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 block|}
 end_function
 

@@ -170,8 +170,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|HadAid
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -182,9 +180,32 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|shifted
+decl_stmt|,
+comment|/* Shift state of terminal */
+name|alted
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Alt state of terminal */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|InsertMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* is the terminal in insert mode? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|XFormattedScreen
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -223,8 +244,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"3270pc.out"
+file|"kbd.out"
 end_include
+
+begin_comment
+comment|/* Get keyboard mapping function */
+end_comment
 
 begin_comment
 comment|/* the following are global variables */
@@ -2102,26 +2127,9 @@ specifier|register
 name|int
 name|j
 decl_stmt|;
-specifier|static
-name|int
-name|InsertMode
-init|=
-literal|0
-decl_stmt|;
-comment|/* is the terminal in insert mode? */
 name|enum
 name|ctlrfcn
 name|ctlrfcn
-decl_stmt|;
-specifier|static
-name|int
-name|shifted
-init|=
-literal|0
-decl_stmt|,
-name|alted
-init|=
-literal|0
 decl_stmt|;
 define|#
 directive|define
@@ -2213,14 +2221,10 @@ block|}
 block|}
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|FCN_RESET
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|FCN_MASTER_RESET
+name|PURE3274
 argument_list|)
 if|if
 condition|(
@@ -2254,7 +2258,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* defined(FCN_RESET)&& defined(FCN_MASTER_RESET) */
+comment|/* !defined(PURE3274) */
 if|if
 condition|(
 operator|!
@@ -2793,9 +2797,10 @@ block|}
 break|break;
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|FCN_ERASE
+name|PURE3274
 argument_list|)
 case|case
 name|FCN_ERASE
@@ -2838,15 +2843,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_ERASE) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_WERASE
-argument_list|)
 case|case
 name|FCN_WERASE
 case|:
@@ -2965,15 +2961,6 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* defined(WERASE) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_FERASE
-argument_list|)
 case|case
 name|FCN_FERASE
 case|:
@@ -3009,15 +2996,6 @@ argument_list|()
 expr_stmt|;
 block|}
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_FERASE) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_RESET
-argument_list|)
 case|case
 name|FCN_RESET
 case|:
@@ -3026,15 +3004,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_RESET) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_MASTER_RESET
-argument_list|)
 case|case
 name|FCN_MASTER_RESET
 case|:
@@ -3048,7 +3017,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* defined(FCN_MASTER_RESET) */
+comment|/* !defined(PURE3274) */
 case|case
 name|FCN_UP
 case|:
@@ -3542,9 +3511,10 @@ directive|endif
 comment|/* NOTUSED */
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|FCN_ESCAPE
+name|PURE3274
 argument_list|)
 case|case
 name|FCN_ESCAPE
@@ -3564,15 +3534,24 @@ name|ConnectScreen
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_ESCAPE)  #if	defined(FCN_DISC) 	    case FCN_DISC: 		StopScreen(1); 		suspend(); 		setconnmode(); 		ConnectScreen(); 		break; #endif	/* defined(FCN_DISC) */
-if|#
-directive|if
-name|defined
+case|case
+name|FCN_DISC
+case|:
+name|StopScreen
 argument_list|(
-name|FCN_RESHOW
+literal|1
 argument_list|)
+expr_stmt|;
+name|suspend
+argument_list|()
+expr_stmt|;
+name|setconnmode
+argument_list|()
+expr_stmt|;
+name|ConnectScreen
+argument_list|()
+expr_stmt|;
+break|break;
 case|case
 name|FCN_RESHOW
 case|:
@@ -3580,15 +3559,6 @@ name|RefreshScreen
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_RESHOW) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_SETTAB
-argument_list|)
 case|case
 name|FCN_SETTAB
 case|:
@@ -3603,15 +3573,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_SETTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_DELTAB
-argument_list|)
 case|case
 name|FCN_DELTAB
 case|:
@@ -3626,15 +3587,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_DELTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_CLRTAB
-argument_list|)
 comment|/* 		 * Clear all tabs, home line, and left margin. 		 */
 case|case
 name|FCN_CLRTAB
@@ -3671,15 +3623,6 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_CLRTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_COLTAB
-argument_list|)
 case|case
 name|FCN_COLTAB
 case|:
@@ -3687,15 +3630,6 @@ name|ColTab
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_COLTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_COLBAK
-argument_list|)
 case|case
 name|FCN_COLBAK
 case|:
@@ -3703,15 +3637,6 @@ name|ColBak
 argument_list|()
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_COLBAK) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_INDENT
-argument_list|)
 case|case
 name|FCN_INDENT
 case|:
@@ -3726,15 +3651,6 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_INDENT) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_UNDENT
-argument_list|)
 case|case
 name|FCN_UNDENT
 case|:
@@ -3749,15 +3665,6 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_UNDENT) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_SETMRG
-argument_list|)
 case|case
 name|FCN_SETMRG
 case|:
@@ -3769,15 +3676,6 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_SETMRG) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_SETHOM
-argument_list|)
 case|case
 name|FCN_SETHOM
 case|:
@@ -3789,15 +3687,6 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_SETHOM) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_WORDTAB
-argument_list|)
 comment|/* 		 * Point to first character of next unprotected word on 		 * screen. 		 */
 case|case
 name|FCN_WORDTAB
@@ -3883,15 +3772,6 @@ operator|=
 name|i
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_WORDTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_WORDBACKTAB
-argument_list|)
 case|case
 name|FCN_WORDBACKTAB
 case|:
@@ -3976,15 +3856,6 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(FCN_WORDBACKTAB) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_WORDEND
-argument_list|)
 comment|/* Point to last non-blank character of this/next 			 * unprotected word. 			 */
 case|case
 name|FCN_WORDEND
@@ -4070,15 +3941,6 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
-comment|/* defined(WORDEND) */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FCN_FIELDEND
-argument_list|)
 comment|/* Get to last non-blank of this/next unprotected 			 * field. 			 */
 case|case
 name|FCN_FIELDEND
@@ -4138,7 +4000,7 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* defined(FCN_FIELDEND) */
+comment|/* !defined(PURE3274) */
 default|default:
 comment|/* We don't handle this yet */
 name|RingBell
