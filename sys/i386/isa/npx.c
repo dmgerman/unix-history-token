@@ -1618,32 +1618,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|flags
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"flags 0x%x "
-argument_list|,
-name|flags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|npx_irq13
 condition|)
-block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"using IRQ 13 interface\n"
+literal|"IRQ 13 interface\n"
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|npx_ex16
@@ -1663,7 +1647,6 @@ argument_list|,
 literal|"WARNING: no FPU!\n"
 argument_list|)
 expr_stmt|;
-block|}
 name|npxinit
 argument_list|(
 name|__INITIAL_NPXCW__
