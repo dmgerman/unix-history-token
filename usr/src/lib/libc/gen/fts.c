@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.34 (Berkeley) %G%"
+literal|"@(#)fts.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1421,7 +1421,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* Rebuild if only got the names and now traversing. */
+comment|/* Rebuild if only read the names and now traversing. */
 if|if
 condition|(
 name|sp
@@ -1456,7 +1456,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 		 * Cd to the subdirectory, reading it if haven't already.  If 		 * the read fails for any reason, or the directory is empty, 		 * the fts_info field of the current node is set by fts_build. 		 * If have already read and now fail to chdir, whack the list 		 * to make the names come out right, and set the parent state 		 * so the application will eventually get an error condition. 		 * If haven't read and fail to chdir, check to see if we're 		 * at the root node -- if so, we have to get back or the root 		 * node may be inaccessible. 		 */
+comment|/* 		 * Cd to the subdirectory. 		 * 		 * If have already read and now fail to chdir, whack the list 		 * to make the names come out right, and set the parent errno 		 * so the application will eventually get an error condition. 		 * Set the FTS_DONTCHDIR flag so that when we logically change 		 * directories back to the parent we don't do a chdir. 		 * 		 * If haven't read do so.  If the read fails, fts_build sets 		 * FTS_STOP or the fts_info field of the node. 		 */
 if|if
 condition|(
 name|sp
@@ -1547,71 +1547,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-if|if
-condition|(
-name|p
-operator|->
-name|fts_level
-operator|==
-name|FTS_ROOTLEVEL
-operator|&&
-operator|!
-name|ISSET
-argument_list|(
-name|FTS_NOCHDIR
-argument_list|)
-operator|&&
-name|FCHDIR
-argument_list|(
-name|sp
-argument_list|,
-name|sp
-operator|->
-name|fts_rfd
-argument_list|)
-condition|)
-block|{
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|sp
-operator|->
-name|fts_rfd
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
-name|SET
-argument_list|(
-name|FTS_STOP
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-name|p
-operator|->
-name|fts_flags
-operator||=
-name|FTS_DONTCHDIR
-expr_stmt|;
-name|p
-operator|->
-name|fts_info
-operator|=
-name|FTS_DP
-expr_stmt|;
 return|return
 operator|(
 name|p
@@ -1864,6 +1799,7 @@ name|NULL
 operator|)
 return|;
 block|}
+comment|/* Nul terminate the pathname. */
 name|sp
 operator|->
 name|fts_path
@@ -1875,7 +1811,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Change to starting directory.  If at a root node or came through a 	 * symlink, go back through the file descriptor.  Otherwise, just cd 	 * up one directory. 	 */
+comment|/* 	 * Return to the parent directory.  If at a root node or came through 	 * a symlink, go back through the file descriptor.  Otherwise, cd up 	 * one directory. 	 */
 if|if
 condition|(
 name|p
@@ -1887,6 +1823,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|ISSET
+argument_list|(
+name|FTS_NOCHDIR
+argument_list|)
+operator|&&
 name|FCHDIR
 argument_list|(
 name|sp
@@ -1926,16 +1868,6 @@ name|NULL
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|sp
-operator|->
-name|fts_rfd
-argument_list|)
-expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3172,11 +3104,25 @@ condition|(
 operator|!
 name|nitems
 condition|)
+block|{
+if|if
+condition|(
+name|type
+operator|==
+name|BREAD
+condition|)
+name|cur
+operator|->
+name|fts_info
+operator|=
+name|FTS_DP
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* Sort the entries. */
 if|if
 condition|(
