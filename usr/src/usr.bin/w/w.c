@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.29 (Berkeley) %G%"
+literal|"@(#)w.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1474,6 +1474,23 @@ operator|->
 name|next
 control|)
 block|{
+if|if
+condition|(
+name|ep
+operator|->
+name|proc
+operator|==
+literal|0
+condition|)
+block|{
+name|ep
+operator|->
+name|args
+operator|=
+literal|"-"
+expr_stmt|;
+continue|continue;
+block|}
 name|ep
 operator|->
 name|args
