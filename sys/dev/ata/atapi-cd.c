@@ -7291,9 +7291,11 @@ name|bp
 operator|->
 name|b_data
 argument_list|,
-name|bp
+name|count
+operator|*
+name|cdp
 operator|->
-name|b_bcount
+name|block_size
 argument_list|,
 operator|(
 name|bp
