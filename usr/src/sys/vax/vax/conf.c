@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.56	82/10/13	*/
+comment|/*	conf.c	4.57	82/10/17	*/
 end_comment
 
 begin_include
@@ -63,6 +63,9 @@ end_if
 
 begin_decl_stmt
 name|int
+name|hpopen
+argument_list|()
+decl_stmt|,
 name|hpstrategy
 argument_list|()
 decl_stmt|,
@@ -84,6 +87,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|hpopen
+value|nodev
+end_define
 
 begin_define
 define|#
@@ -239,6 +249,9 @@ end_if
 
 begin_decl_stmt
 name|int
+name|rkopen
+argument_list|()
+decl_stmt|,
 name|rkstrategy
 argument_list|()
 decl_stmt|,
@@ -263,6 +276,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|rkopen
+value|nodev
+end_define
 
 begin_define
 define|#
@@ -741,6 +761,9 @@ end_if
 
 begin_decl_stmt
 name|int
+name|upopen
+argument_list|()
+decl_stmt|,
 name|upstrategy
 argument_list|()
 decl_stmt|,
@@ -762,6 +785,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|upopen
+value|nodev
+end_define
 
 begin_define
 define|#
@@ -931,6 +961,9 @@ end_if
 
 begin_decl_stmt
 name|int
+name|idcopen
+argument_list|()
+decl_stmt|,
 name|idcstrategy
 argument_list|()
 decl_stmt|,
@@ -952,6 +985,13 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|idcopen
+value|nodev
+end_define
 
 begin_define
 define|#
@@ -1071,7 +1111,7 @@ name|bdevsw
 index|[]
 init|=
 block|{
-name|nulldev
+name|hpopen
 block|,
 name|nulldev
 block|,
@@ -1093,7 +1133,7 @@ block|,
 name|B_TAPE
 block|,
 comment|/*1*/
-name|nulldev
+name|upopen
 block|,
 name|nulldev
 block|,
@@ -1104,7 +1144,7 @@ block|,
 literal|0
 block|,
 comment|/*2*/
-name|nulldev
+name|rkopen
 block|,
 name|nulldev
 block|,
@@ -1192,7 +1232,7 @@ block|,
 name|B_TAPE
 block|,
 comment|/*10*/
-name|nodev
+name|idcopen
 block|,
 name|nodev
 block|,
@@ -1203,8 +1243,26 @@ block|,
 literal|0
 block|,
 comment|/*11*/
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nblkdev
+init|=
+sizeof|sizeof
+argument_list|(
+name|bdevsw
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|bdevsw
+index|[
 literal|0
-block|, }
+index|]
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -2272,11 +2330,7 @@ argument_list|()
 decl_stmt|,
 name|ikwrite
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|ikioctl
 argument_list|()
 decl_stmt|,
@@ -2364,11 +2418,7 @@ argument_list|()
 decl_stmt|,
 name|pswrite
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|psioctl
 argument_list|()
 decl_stmt|,
@@ -2764,7 +2814,7 @@ literal|0
 block|,
 name|mmselect
 block|,
-name|nulldev
+name|hpopen
 block|,
 name|nulldev
 block|,
@@ -2923,7 +2973,7 @@ literal|0
 block|,
 name|vaselect
 block|,
-name|nulldev
+name|rkopen
 block|,
 name|nulldev
 block|,
@@ -2961,7 +3011,7 @@ name|dh11
 block|,
 name|ttselect
 block|,
-name|nulldev
+name|upopen
 block|,
 name|nulldev
 block|,
@@ -3151,7 +3201,7 @@ literal|0
 block|,
 name|nodev
 block|,
-name|nulldev
+name|idcopen
 block|,
 name|nulldev
 block|,
@@ -3322,9 +3372,26 @@ block|,
 literal|0
 block|,
 name|seltrue
-block|,
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nchrdev
+init|=
+sizeof|sizeof
+argument_list|(
+name|cdevsw
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|cdevsw
+index|[
 literal|0
-block|,	 }
+index|]
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

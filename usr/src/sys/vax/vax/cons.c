@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	4.16	82/10/13	*/
+comment|/*	cons.c	4.17	82/10/17	*/
 end_comment
 
 begin_comment
@@ -184,15 +184,11 @@ name|u_uid
 operator|!=
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|EBUSY
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|mtpr
 argument_list|(
 name|RXCS
@@ -217,6 +213,8 @@ operator||
 name|TXCS_IE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 operator|(
 operator|*
 name|linesw
@@ -233,7 +231,8 @@ name|dev
 operator|,
 name|tp
 operator|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -540,7 +539,10 @@ init|=
 operator|&
 name|cons
 decl_stmt|;
-name|cmd
+name|int
+name|error
+decl_stmt|;
+name|error
 operator|=
 operator|(
 operator|*
@@ -563,13 +565,17 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|cmd
-operator|==
+name|error
+operator|>=
 literal|0
 condition|)
-return|return;
-if|if
-condition|(
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|error
+operator|=
 name|ttioctl
 argument_list|(
 name|tp
@@ -580,15 +586,22 @@ name|addr
 argument_list|,
 name|flag
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|<
 literal|0
 condition|)
-name|u
-operator|.
-name|u_error
+name|error
 operator|=
 name|ENOTTY
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 

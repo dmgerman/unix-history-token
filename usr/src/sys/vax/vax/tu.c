@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	4.8	82/10/13	*/
+comment|/*	tu.c	4.9	82/10/17	*/
 end_comment
 
 begin_if
@@ -859,15 +859,11 @@ operator|&
 name|DNUM
 index|]
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 if|if
 condition|(
 name|tutimer
@@ -933,7 +929,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/*  	 * Must initialize, reset the cassette 	 * and wait for things to settle down. 	 */
 name|tureset
@@ -1023,6 +1023,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 

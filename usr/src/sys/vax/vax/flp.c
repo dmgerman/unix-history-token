@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	flp.c	4.8	82/10/13	*/
+comment|/*	flp.c	4.9	82/10/17	*/
 end_comment
 
 begin_if
@@ -148,15 +148,11 @@ name|cpu
 operator|!=
 name|VAX_780
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 endif|#
 directive|endif
 if|if
@@ -167,15 +163,11 @@ name|fl_state
 operator|!=
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|fltab
 operator|.
 name|fl_state
@@ -197,6 +189,11 @@ name|fl_active
 operator|=
 name|FL_IDLE
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
