@@ -357,6 +357,8 @@ name|dirp
 decl_stmt|;
 name|int
 name|arraysz
+decl_stmt|,
+name|statres
 decl_stmt|;
 name|seteuid
 argument_list|(
@@ -498,8 +500,8 @@ argument_list|(
 name|euid
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|statres
+operator|=
 name|stat
 argument_list|(
 name|d
@@ -509,16 +511,20 @@ argument_list|,
 operator|&
 name|stbuf
 argument_list|)
-operator|<
-literal|0
-condition|)
-continue|continue;
-comment|/* Doesn't exist */
+expr_stmt|;
 name|seteuid
 argument_list|(
 name|uid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|statres
+operator|<
+literal|0
+condition|)
+continue|continue;
+comment|/* Doesn't exist */
 name|q
 operator|=
 operator|(
