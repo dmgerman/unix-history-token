@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.22	%G%"
+literal|"@(#)savemail.c	3.23	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,7 +733,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  ERRHDR -- Output the header for error mail. ** **	This is the edit filter to error mailbacks. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. ** **	Returns: **		none ** **	Side Effects: **		Outputs the current message with an appropriate **		error header. */
+comment|/* **  ERRHDR -- Output the header for error mail. ** **	This is the edit filter to error mailbacks. ** **	Parameters: **		xfile -- the transcript file. **		fp -- the output file. **		xdot -- if set, use smtp hidden dot algorithm. ** **	Returns: **		none ** **	Side Effects: **		Outputs the current message with an appropriate **		error header. */
 end_comment
 
 begin_expr_stmt
@@ -742,6 +742,8 @@ operator|(
 name|fp
 operator|,
 name|m
+operator|,
+name|xdot
 operator|)
 specifier|register
 name|FILE
@@ -756,6 +758,12 @@ name|struct
 name|mailer
 modifier|*
 name|m
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|xdot
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,6 +1105,8 @@ name|Mailer
 index|[
 literal|1
 index|]
+argument_list|,
+name|xdot
 argument_list|)
 expr_stmt|;
 block|}
