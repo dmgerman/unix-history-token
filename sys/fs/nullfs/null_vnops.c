@@ -1813,6 +1813,23 @@ name|lock
 modifier|*
 name|vnlock
 decl_stmt|;
+comment|/* 	 * Use the interlock to protect the clearing of v_data to 	 * prevent faults in null_lock(). 	 */
+name|VI_LOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|v_data
+operator|=
+name|NULL
+expr_stmt|;
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lowervp
@@ -1829,12 +1846,6 @@ name|lowervp
 argument_list|)
 expr_stmt|;
 block|}
-name|vp
-operator|->
-name|v_data
-operator|=
-name|NULL
-expr_stmt|;
 name|vp
 operator|->
 name|v_object
