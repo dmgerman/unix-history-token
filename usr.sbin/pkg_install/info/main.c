@@ -42,7 +42,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdfikrpIvhl:"
+literal|"acde:fikrpIvhl:"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|PlayPen
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|CheckPkg
 init|=
 name|NULL
 decl_stmt|;
@@ -254,6 +263,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'e'
+case|:
+name|CheckPkg
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 case|case
@@ -312,6 +329,9 @@ name|start
 operator|&&
 operator|!
 name|AllInstalled
+operator|&&
+operator|!
+name|CheckPkg
 condition|)
 name|usage
 argument_list|(
