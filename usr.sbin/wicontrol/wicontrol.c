@@ -97,6 +97,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_ieee80211.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
@@ -104,6 +110,12 @@ begin_include
 include|#
 directive|include
 file|<dev/wi/wi_hostap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/wi/if_wireg.h>
 end_include
 
 begin_include
