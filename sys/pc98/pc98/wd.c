@@ -4656,9 +4656,9 @@ argument|) { 			wderror((struct buf *)NULL, du,
 literal|"wddump: timeout waiting to to give command"
 argument|); 			return (EIO); 		} 		while (blkcnt !=
 literal|0
-argument|) { 			if (is_physical_memory((vm_offset_t)addr)) 				pmap_enter(kernel_pmap, (vm_offset_t)CADDR1, 					   trunc_page((vm_offset_t)addr), VM_PROT_READ, TRUE); 			else 				pmap_enter(kernel_pmap, (vm_offset_t)CADDR1, 					   trunc_page(
+argument|) { 			if (is_physical_memory((vm_offset_t)addr)) 				pmap_kenter((vm_offset_t)CADDR1, 					   trunc_page((vm_offset_t)addr)); 			else 				pmap_kenter((vm_offset_t)CADDR1, 					   trunc_page(
 literal|0
-argument|), VM_PROT_READ, TRUE);
+argument|));
 comment|/* Ready to send data? */
 argument|DELAY(
 literal|5
