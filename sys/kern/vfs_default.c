@@ -432,7 +432,7 @@ operator|(
 name|vop_t
 operator|*
 operator|)
-name|vop_revoke
+name|vop_panic
 block|}
 block|,
 block|{
