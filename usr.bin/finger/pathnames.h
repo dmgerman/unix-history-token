@@ -19,6 +19,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_PATH_NOFINGER
+value|".nofinger"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_PLAN
 value|".plan"
 end_define
@@ -28,6 +35,13 @@ define|#
 directive|define
 name|_PATH_PROJECT
 value|".project"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PUBKEY
+value|".pubkey"
 end_define
 
 begin_ifndef
