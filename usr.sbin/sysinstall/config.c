@@ -2101,7 +2101,11 @@ name|rcOld
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|write_header
+condition|)
 block|{
 name|fprintf
 argument_list|(
