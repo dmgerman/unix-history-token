@@ -15,50 +15,6 @@ directive|define
 name|_UFS_FFS_EXTERN_H
 end_define
 
-begin_comment
-comment|/*  * Sysctl values for the fast filesystem.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FFS_REALLOCBLKS
-value|3
-end_define
-
-begin_comment
-comment|/* block reallocation enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FFS_ASYNCFREE
-value|4
-end_define
-
-begin_comment
-comment|/* asynchronous block freeing enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FFS_MAXID
-value|5
-end_define
-
-begin_comment
-comment|/* number of valid ffs ids */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FFS_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "doreallocblks", CTLTYPE_INT }, \ 	{ "doasyncfree", CTLTYPE_INT }, \ }
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|buf
@@ -364,7 +320,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|vnode
+name|inode
 operator|*
 operator|,
 name|ino_t

@@ -251,6 +251,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Setting the mode to zero needs to wait for the inode 		 * to be written just as does a change to the link count. 		 * So, rather than creating a new entry point to do the 		 * same thing, we just use softdep_change_linkcnt(). 		 */
 name|ip
 operator|->
 name|i_rdev
@@ -276,6 +277,18 @@ operator||=
 name|IN_CHANGE
 operator||
 name|IN_UPDATE
+expr_stmt|;
+if|if
+condition|(
+name|DOINGSOFTDEP
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+name|softdep_change_linkcnt
+argument_list|(
+name|ip
+argument_list|)
 expr_stmt|;
 name|UFS_VFREE
 argument_list|(

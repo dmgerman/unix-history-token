@@ -157,6 +157,126 @@ value|((ufs_daddr_t)(2))
 end_define
 
 begin_comment
+comment|/*  * Sysctl values for the fast filesystem.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_REFCNT
+value|1
+end_define
+
+begin_comment
+comment|/* adjust inode reference count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_ADJ_BLKCNT
+value|2
+end_define
+
+begin_comment
+comment|/* adjust inode used block count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_BLK_FREE
+value|3
+end_define
+
+begin_comment
+comment|/* free range of blocks in map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_DIR_FREE
+value|4
+end_define
+
+begin_comment
+comment|/* free specified dir inodes in map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_FILE_FREE
+value|5
+end_define
+
+begin_comment
+comment|/* free specified file inodes in map */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_SET_FLAGS
+value|6
+end_define
+
+begin_comment
+comment|/* set filesystem flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|7
+end_define
+
+begin_comment
+comment|/* number of valid ffs ids */
+end_comment
+
+begin_comment
+comment|/*  * Command structure passed in to the filesystem to adjust filesystem values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_CMD_VERSION
+value|0x05181979
+end_define
+
+begin_comment
+comment|/* version ID */
+end_comment
+
+begin_struct
+struct|struct
+name|fsck_cmd
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* version of command structure */
+name|int
+name|handle
+decl_stmt|;
+comment|/* reference to filesystem to be changed */
+name|off_t
+name|value
+decl_stmt|;
+comment|/* inode or block number to be affected */
+name|long
+name|size
+decl_stmt|;
+comment|/* amount or range to be adjusted */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Per cylinder group information; summarized in blocks allocated  * from first cylinder group data blocks.  These blocks have to be  * read in from fs_csaddr (size fs_cssize) in addition to the  * super block.  */
 end_comment
 
