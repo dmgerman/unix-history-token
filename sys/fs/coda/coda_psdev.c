@@ -803,11 +803,11 @@ condition|)
 name|myprintf
 argument_list|(
 operator|(
-literal|"Error %d unmounting vfs in vcclose(%d)\n"
+literal|"Error %d unmounting vfs in vcclose(%s)\n"
 operator|,
 name|err
 operator|,
-name|minor
+name|devtoname
 argument_list|(
 name|dev
 argument_list|)
