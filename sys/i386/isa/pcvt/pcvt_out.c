@@ -4372,10 +4372,6 @@ condition|)
 name|kbd_code_init1
 argument_list|()
 expr_stmt|;
-comment|/* update keyboard led's */
-name|update_led
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
