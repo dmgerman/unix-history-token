@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	5.7 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -777,10 +777,6 @@ if|if
 condition|(
 operator|*
 name|p
-operator|||
-name|num
-operator|!=
-literal|0
 condition|)
 name|err
 argument_list|(
@@ -789,6 +785,12 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|num
+operator|!=
+literal|0
+condition|)
 name|flags
 operator|=
 name|num
