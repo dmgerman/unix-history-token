@@ -15468,7 +15468,7 @@ block|}
 block|}
 if|if
 condition|(
-name|bundle_SetRoute
+name|rt_Set
 argument_list|(
 name|arg
 operator|->
@@ -15832,7 +15832,7 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
-name|bundle_SetRoute
+name|rt_Set
 argument_list|(
 name|arg
 operator|->
