@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,43 +14,43 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|"sys/param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|"sys/systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dkstat.h>
+file|"sys/dkstat.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|"sys/conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
+file|"sys/reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|"../include/cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<luna68k/dev/device.h>
+file|"../dev/device.h"
 end_include
 
 begin_comment
@@ -1668,32 +1668,6 @@ operator|->
 name|hw_secid
 operator|=
 literal|0
-expr_stmt|;
-name|hw
-operator|++
-expr_stmt|;
-name|setup_hw
-argument_list|(
-name|hw
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0x51000004
-argument_list|,
-literal|0x5
-argument_list|,
-name|D_KEYBOARD
-argument_list|,
-literal|0x5
-argument_list|)
-expr_stmt|;
-name|hw
-operator|->
-name|hw_secid
-operator|=
-literal|1
 expr_stmt|;
 name|hw
 operator|++
