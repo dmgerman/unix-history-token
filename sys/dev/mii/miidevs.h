@@ -4,7 +4,7 @@ comment|/*	$Id$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	Id  */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	Id: miidevs,v 1.1 1999/08/21 17:40:43 wpaul Exp   */
 end_comment
 
 begin_comment
