@@ -15,6 +15,27 @@ directive|define
 name|_IP_FW_H
 end_define
 
+begin_if
+if|#
+directive|if
+name|IPFW2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip_fw2.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !IPFW2, good old ipfw */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1296,6 +1317,76 @@ value|0x40000
 end_define
 
 begin_comment
+comment|/*  * arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip_fw_args
+block|{
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+comment|/* the mbuf chain		*/
+name|struct
+name|ifnet
+modifier|*
+name|oif
+decl_stmt|;
+comment|/* output interface		*/
+name|struct
+name|sockaddr_in
+modifier|*
+name|next_hop
+decl_stmt|;
+comment|/* forward address		*/
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+decl_stmt|;
+comment|/* matching rule		*/
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+comment|/* for bridged packets		*/
+name|struct
+name|route
+modifier|*
+name|ro
+decl_stmt|;
+comment|/* for dummynet			*/
+name|struct
+name|sockaddr_in
+modifier|*
+name|dst
+decl_stmt|;
+comment|/* for dummynet			*/
+name|int
+name|flags
+decl_stmt|;
+comment|/* for dummynet			*/
+name|struct
+name|ipfw_flow_id
+name|f_id
+decl_stmt|;
+comment|/* grabbed from IP header	*/
+name|u_int16_t
+name|divert_rule
+decl_stmt|;
+comment|/* divert cookie		*/
+name|u_int32_t
+name|retval
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Function definitions.  */
 end_comment
 
@@ -1317,15 +1408,31 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|ip
+name|sockopt
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|sockopt
+name|dn_flow_set
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|flush_pipe_ptrs
+parameter_list|(
+name|struct
+name|dn_flow_set
+modifier|*
+name|match
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* used by dummynet */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -1333,33 +1440,9 @@ name|int
 name|ip_fw_chk_t
 parameter_list|(
 name|struct
-name|ip
+name|ip_fw_args
 modifier|*
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|u_int16_t
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-modifier|*
+name|args
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1428,6 +1511,15 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IPFW2 */
 end_comment
 
 begin_endif

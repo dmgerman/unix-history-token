@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2002 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -171,18 +171,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * MT_DUMMYNET is a new (fake) mbuf type that is prepended to the  * packet when it comes out of a pipe. The definition  * ought to go in /sys/sys/mbuf.h but here it is less intrusive.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MT_DUMMYNET
-value|MT_CONTROL
-end_define
-
-begin_comment
-comment|/*  * struct dn_pkt identifies a packet in the dummynet queue. The  * first part is really an m_hdr for implementation purposes, and some  * fields are saved there. When passing the packet back to the ip_input/  * ip_output()/bdg_forward, the struct is prepended to the mbuf chain with type  * MT_DUMMYNET, and contains the pointer to the matching rule.  *  * Note: there is no real need to make this structure contain an m_hdr,  * in the future this should be changed to a normal data structure.  */
+comment|/*  * struct dn_pkt identifies a packet in the dummynet queue, but  * is also used to tag packets passed back to the various destinations  * (ip_input(), ip_output(), bdg_forward()  and so on).  * As such the first part of the structure must be a struct m_hdr,  * followed by dummynet-specific parameters. The m_hdr must be  * initialized with  *   mh_type	= MT_TAG;  *   mh_flags	= PACKET_TYPE_DUMMYNET;  *   mh_next	=<pointer to the actual mbuf>  *  * mh_nextpkt, mh_data are free for dummynet use (mh_nextpkt is used to  * build a linked list of packets in a dummynet queue).  */
 end_comment
 
 begin_struct
@@ -195,26 +184,26 @@ name|hdr
 decl_stmt|;
 define|#
 directive|define
-name|dn_next
-value|hdr.mh_nextpkt
-comment|/* next element in queue */
-define|#
-directive|define
 name|DN_NEXT
 parameter_list|(
 name|x
 parameter_list|)
-value|(struct dn_pkt *)(x)->dn_next
+value|(struct dn_pkt *)(x)->hdr.mh_nextpkt
 define|#
 directive|define
 name|dn_m
 value|hdr.mh_next
 comment|/* packet to be forwarded */
-define|#
-directive|define
+name|struct
+name|ip_fw
+modifier|*
+name|rule
+decl_stmt|;
+comment|/* matching rule */
+name|int
 name|dn_dir
-value|hdr.mh_flags
-comment|/* action when pkt extracted from a queue */
+decl_stmt|;
+comment|/* action when packet comes out. */
 define|#
 directive|define
 name|DN_TO_IP_OUT
@@ -227,10 +216,18 @@ define|#
 directive|define
 name|DN_TO_BDG_FWD
 value|3
+define|#
+directive|define
+name|DN_TO_ETH_DEMUX
+value|4
+define|#
+directive|define
+name|DN_TO_ETH_OUT
+value|5
 name|dn_key
 name|output_time
 decl_stmt|;
-comment|/* when the pkt is due for delivery */
+comment|/* when the pkt is due for delivery	*/
 name|struct
 name|ifnet
 modifier|*
@@ -250,7 +247,7 @@ comment|/* route, for ip_output. MUST COPY	*/
 name|int
 name|flags
 decl_stmt|;
-comment|/* flags, for ip_output (IPv6 ?) */
+comment|/* flags, for ip_output (IPv6 ?)	*/
 block|}
 struct|;
 end_struct
@@ -260,7 +257,7 @@ comment|/*  * Overall structure of dummynet (with WF2Q+):  In dummynet, packets 
 end_comment
 
 begin_comment
-comment|/*  * per flow queue. This contains the flow identifier, the queue  * of packets, counters, and parameters used to support both RED and  * WF2Q+.  */
+comment|/*  * per flow queue. This contains the flow identifier, the queue  * of packets, counters, and parameters used to support both RED and  * WF2Q+.  *  * A dn_flow_queue is created and initialized whenever a packet for  * a new flow arrives.  */
 end_comment
 
 begin_struct
@@ -346,14 +343,14 @@ name|S
 decl_stmt|,
 name|F
 decl_stmt|;
-comment|/* start-time, finishing time */
-comment|/* setting F< S means the timestamp is invalid. We only need      * to test this when the queue is empty.      */
+comment|/* start time, finish time */
+comment|/*      * Setting F< S means the timestamp is invalid. We only need      * to test this when the queue is empty.      */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * flow_set descriptor. Contains the "template" parameters for the  * queue configuration, and pointers to the hash table of dn_flow_queue's.  *  * The hash table is an array of lists -- we identify the slot by  * hashing the flow-id, then scan the list looking for a match.  * The size of the hash table (buckets) is configurable on a per-queue  * basis.  */
+comment|/*  * flow_set descriptor. Contains the "template" parameters for the  * queue configuration, and pointers to the hash table of dn_flow_queue's.  *  * The hash table is an array of lists -- we identify the slot by  * hashing the flow-id, then scan the list looking for a match.  * The size of the hash table (buckets) is configurable on a per-queue  * basis.  *  * A dn_flow_set is created whenever a new queue or pipe is created (in the  * latter case, the structure is located inside the struct dn_pipe).  */
 end_comment
 
 begin_struct
@@ -379,14 +376,6 @@ name|DN_HAVE_FLOW_MASK
 value|0x0001
 define|#
 directive|define
-name|DN_IS_PIPE
-value|0x4000
-define|#
-directive|define
-name|DN_IS_QUEUE
-value|0x8000
-define|#
-directive|define
 name|DN_IS_RED
 value|0x0002
 define|#
@@ -397,7 +386,15 @@ define|#
 directive|define
 name|DN_QSIZE_IS_BYTES
 value|0x0008
-comment|/* queue measured in bytes */
+comment|/* queue size is measured in bytes */
+define|#
+directive|define
+name|DN_IS_PIPE
+value|0x4000
+define|#
+directive|define
+name|DN_IS_QUEUE
+value|0x8000
 name|struct
 name|dn_pipe
 modifier|*
@@ -444,7 +441,6 @@ name|u_int32_t
 name|last_expired
 decl_stmt|;
 comment|/* do not expire too frequently */
-comment|/* XXX some RED parameters as well ? */
 name|int
 name|backlogged
 decl_stmt|;
@@ -539,7 +535,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *   * For WF2Q support it also has 4 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   backlogged_heap, all flows in the two heaps above, sorted by  *	start time. This is used to compute the virtual time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *  */
+comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *   * For WF2Q+ support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *   */
 end_comment
 
 begin_struct
@@ -600,12 +596,12 @@ comment|/* sum of weights of all active sessions */
 name|int
 name|numbytes
 decl_stmt|;
-comment|/* bit i can transmit (more or less). */
+comment|/* bits I can transmit (more or less). */
 name|dn_key
 name|sched_time
 decl_stmt|;
-comment|/* first time pipe is scheduled in ready_heap */
-comment|/* the tx clock can come from an interface. In this case, the      * name is below, and the pointer is filled when the rule is      * configured. We identify this by setting the if_name to a      * non-empty string.      */
+comment|/* time pipe was scheduled in ready_heap */
+comment|/*      * When the tx clock come from an interface (if_name[0] != '\0'), its name      * is stored below, whereas the ifp is filled when the rule is configured.      */
 name|char
 name|if_name
 index|[
@@ -672,46 +668,24 @@ typedef|typedef
 name|int
 name|ip_dn_io_t
 parameter_list|(
-name|int
-name|pipe
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
 parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-name|rule
+name|int
+name|pipe_nr
 parameter_list|,
 name|int
-name|flags
+name|dir
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|fwa
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_comment
-comment|/* ip_{in,out}put.c, bridge.c */
-end_comment
 
 begin_decl_stmt
 specifier|extern

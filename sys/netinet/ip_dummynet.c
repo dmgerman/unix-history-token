@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2002 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -23,7 +23,7 @@ value|x
 end_define
 
 begin_comment
-comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 011031: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
+comment|/*  * This module implements IP dummynet, a bandwidth limiter/delay emulator  * used in conjunction with the ipfw package.  * Description of the data structures used is in ip_dummynet.h  * Here you mainly find the following blocks of code:  *  + variable declarations;  *  + heap management functions;  *  + scheduler and dummynet functions;  *  + configuration and initialization.  *  * NOTA BENE: critical sections are protected by splimp()/splx()  *    pairs. One would think that splnet() is enough as for most of  *    the netinet code, but it is not so because when used with  *    bridging, dummynet is invoked at splimp().  *  * Most important Changes:  *  * 011004: KLDable  * 010124: Fixed WF2Q behaviour  * 010122: Fixed spl protection.  * 000601: WF2Q support  * 000106: large rewrite, use heaps to handle very many pipes.  * 980513:	initial release  *  * include files marked with XXX are probably not needed  */
 end_comment
 
 begin_include
@@ -53,16 +53,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/queue.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -70,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -751,47 +747,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|ip_dn_io_t
 name|dummynet_io
-parameter_list|(
-name|int
-name|pipe
-parameter_list|,
-name|int
-name|dir
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|struct
-name|route
-modifier|*
-name|ro
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-name|rule
-parameter_list|,
-name|int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -815,22 +776,6 @@ name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * ip_fw_chain_head is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
-end_comment
-
-begin_extern
-extern|extern LIST_HEAD (ip_fw_head
-operator|,
-extern|ip_fw
-end_extern
-
-begin_expr_stmt
-unit|)
-name|ip_fw_chain_head
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -1764,7 +1709,7 @@ argument_list|(
 name|pkt
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_DUMMYNET 	 *     m_next = actual mbuf to be processed by ip_input/output 	 *     m_data = the matching rule 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
+comment|/* 	 * The actual mbuf is preceded by a struct dn_pkt, resembling an mbuf 	 * (NOT A REAL one, just a small block of malloc'ed memory) with 	 *     m_type = MT_TAG, m_flags = PACKET_TAG_DUMMYNET 	 *     dn_m (m_next) = actual mbuf to be processed by ip_input/output 	 * and some other fields. 	 * The block IS FREED HERE because it contains parameters passed 	 * to the called routine. 	 */
 switch|switch
 condition|(
 name|pkt
@@ -1842,8 +1787,12 @@ operator|->
 name|dn_m
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
-else|else
+comment|/* fallthrough */
+case|case
+name|DN_TO_ETH_DEMUX
+case|:
 block|{
 name|struct
 name|mbuf
@@ -1921,6 +1870,15 @@ name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 		 * on return it will supply the pointer to the actual packet 		 * (originally pkt->dn_m, but could be something else now) if 		 * it has not consumed it. 		 */
+if|if
+condition|(
+name|pkt
+operator|->
+name|dn_dir
+operator|==
+name|DN_TO_BDG_FWD
+condition|)
+block|{
 name|m
 operator|=
 name|bdg_forward_ptr
@@ -1944,7 +1902,37 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|ether_demux
+argument_list|(
+name|NULL
+argument_list|,
+name|eh
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+comment|/* which consumes the mbuf */
+block|}
 break|break ;
+case|case
+name|DN_TO_ETH_OUT
+case|:
+name|ether_output_frame
+argument_list|(
+name|pkt
+operator|->
+name|ifp
+argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+name|pkt
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|printf
 argument_list|(
@@ -3830,6 +3818,11 @@ name|struct
 name|dn_flow_set
 modifier|*
 name|fs
+parameter_list|,
+name|struct
+name|ipfw_flow_id
+modifier|*
+name|id
 parameter_list|)
 block|{
 name|int
@@ -3869,8 +3862,8 @@ expr_stmt|;
 else|else
 block|{
 comment|/* first, do the masking */
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|&=
 name|fs
@@ -3879,8 +3872,8 @@ name|flow_mask
 operator|.
 name|dst_ip
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|&=
 name|fs
@@ -3889,8 +3882,8 @@ name|flow_mask
 operator|.
 name|src_ip
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_port
 operator|&=
 name|fs
@@ -3899,8 +3892,8 @@ name|flow_mask
 operator|.
 name|dst_port
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_port
 operator|&=
 name|fs
@@ -3909,8 +3902,8 @@ name|flow_mask
 operator|.
 name|src_port
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|proto
 operator|&=
 name|fs
@@ -3919,8 +3912,8 @@ name|flow_mask
 operator|.
 name|proto
 expr_stmt|;
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|flags
 operator|=
 literal|0
@@ -3931,8 +3924,8 @@ name|i
 operator|=
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|)
 operator|&
@@ -3941,8 +3934,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_ip
 operator|>>
 literal|15
@@ -3953,8 +3946,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|<<
 literal|1
@@ -3965,8 +3958,8 @@ operator|)
 operator|^
 operator|(
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_ip
 operator|>>
 literal|16
@@ -3976,22 +3969,22 @@ literal|0xffff
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|dst_port
 operator|<<
 literal|1
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|src_port
 operator|)
 operator|^
 operator|(
-name|last_pkt
-operator|.
+name|id
+operator|->
 name|proto
 operator|)
 expr_stmt|;
@@ -4033,8 +4026,7 @@ if|if
 condition|(
 name|bcmp
 argument_list|(
-operator|&
-name|last_pkt
+name|id
 argument_list|,
 operator|&
 operator|(
@@ -4207,7 +4199,8 @@ name|q
 operator|->
 name|id
 operator|=
-name|last_pkt
+operator|*
+name|id
 expr_stmt|;
 block|}
 return|return
@@ -4614,13 +4607,78 @@ argument|int pipe_nr
 argument_list|,
 argument|struct ip_fw *rule
 argument_list|)
-block|{     struct
+block|{
+if|#
+directive|if
+name|IPFW2
+name|ipfw_insn_pipe
+operator|*
+name|cmd
+operator|=
+operator|(
+name|ipfw_insn_pipe
+operator|*
+operator|)
+operator|(
+name|rule
+operator|->
+name|cmd
+operator|+
+name|rule
+operator|->
+name|act_ofs
+operator|)
+block|;     struct
 name|dn_flow_set
 operator|*
 name|fs
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|dn_flow_set
+operator|*
+operator|)
+operator|(
+name|cmd
+operator|->
+name|pipe_ptr
+operator|)
 block|;
+if|if
+condition|(
+name|fs
+operator|!=
+name|NULL
+condition|)
+return|return
+name|fs
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|cmd
+operator|->
+name|o
+operator|.
+name|opcode
+operator|==
+name|O_QUEUE
+condition|)
+else|#
+directive|else
+comment|/* !IPFW2 */
+name|struct
+name|dn_flow_set
+modifier|*
+name|fs
+init|=
+name|NULL
+decl_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 operator|(
@@ -4633,6 +4691,9 @@ operator|)
 operator|==
 name|IP_FW_F_QUEUE
 condition|)
+endif|#
+directive|endif
+comment|/* !IPFW2 */
 for|for
 control|(
 name|fs
@@ -4698,7 +4759,38 @@ name|fs
 operator|)
 expr_stmt|;
 block|}
+end_if
+
+begin_if
+if|#
+directive|if
+name|IPFW2
+end_if
+
+begin_expr_stmt
+operator|(
+expr|struct
+name|dn_flow_set
+operator|*
+operator|)
+operator|(
+name|cmd
+operator|->
+name|pipe_ptr
+operator|)
+operator|=
+name|fs
+expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* record for the future */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_if
 if|if
@@ -4719,6 +4811,11 @@ begin_comment
 comment|/* record for the future */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_return
 return|return
 name|fs
@@ -4727,33 +4824,30 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  */
+comment|/*  * dummynet hook for packets. Below 'pipe' is a pipe or a queue  * depending on whether WF2Q or fixed bw is used.  *  * pipe_nr	pipe or queue the packet is destined for.  * dir		where shall we send the packet after dummynet.  * m		the mbuf with the packet  * ifp		the 'ifp' parameter from the caller.  *		NULL in ip_input, destination interface in ip_output,  *		real_dst in bdg_forward  * ro		route parameter (only used in ip_output, NULL otherwise)  * dst		destination address, only used by ip_output  * rule		matching rule, in case of multiple passes  * flags	flags from the caller, only used in ip_output  *   */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+unit|static
+name|int
 name|dummynet_io
-argument_list|(
-argument|int pipe_nr
-argument_list|,
-argument|int dir
-argument_list|,
-comment|/* pipe_nr can also be a fs_nr */
-argument|struct mbuf *m
-argument_list|,
-argument|struct ifnet *ifp
-argument_list|,
-argument|struct route *ro
-argument_list|,
-argument|struct sockaddr_in *dst
-argument_list|,
-argument|struct ip_fw *rule
-argument_list|,
-argument|int flags
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|pipe_nr
+parameter_list|,
+name|int
+name|dir
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|fwa
+parameter_list|)
 block|{
 name|struct
 name|dn_pkt
@@ -4788,35 +4882,67 @@ name|NULL
 decl_stmt|;
 name|int
 name|s
-decl_stmt|;
-name|s
-operator|=
+init|=
 name|splimp
 argument_list|()
-expr_stmt|;
+decl_stmt|;
+if|#
+directive|if
+name|IPFW2
+name|int
+name|is_pipe
+init|=
+operator|(
+name|fwa
+operator|->
+name|rule
+operator|->
+name|cmd
+index|[
+name|fwa
+operator|->
+name|rule
+operator|->
+name|act_ofs
+index|]
+operator|.
+name|opcode
+operator|==
+name|O_PIPE
+operator|)
+decl_stmt|;
+else|#
+directive|else
+name|int
+name|is_pipe
+init|=
+operator|(
+name|fwa
+operator|->
+name|rule
+operator|->
+name|fw_flg
+operator|&
+name|IP_FW_F_COMMAND
+operator|)
+operator|==
+name|IP_FW_F_PIPE
+decl_stmt|;
+endif|#
+directive|endif
 name|pipe_nr
 operator|&=
 literal|0xffff
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fs
-operator|=
-name|rule
-operator|->
-name|pipe_ptr
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/*      * this is a dummynet rule, so we expect a O_PIPE or O_QUEUE rule      */
 name|fs
 operator|=
 name|locate_flowset
 argument_list|(
 name|pipe_nr
 argument_list|,
+name|fwa
+operator|->
 name|rule
 argument_list|)
 expr_stmt|;
@@ -4830,7 +4956,6 @@ goto|goto
 name|dropit
 goto|;
 comment|/* this queue/pipe does not exist! */
-block|}
 name|pipe
 operator|=
 name|fs
@@ -4905,6 +5030,13 @@ operator|=
 name|find_queue
 argument_list|(
 name|fs
+argument_list|,
+operator|&
+operator|(
+name|fwa
+operator|->
+name|f_id
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5048,19 +5180,22 @@ name|hdr
 operator|.
 name|mh_type
 operator|=
-name|MT_DUMMYNET
+name|MT_TAG
 expr_stmt|;
-operator|(
-expr|struct
-name|ip_fw
-operator|*
-operator|)
 name|pkt
 operator|->
 name|hdr
 operator|.
-name|mh_data
+name|mh_flags
 operator|=
+name|PACKET_TAG_DUMMYNET
+expr_stmt|;
+name|pkt
+operator|->
+name|rule
+operator|=
+name|fwa
+operator|->
 name|rule
 expr_stmt|;
 name|DN_NEXT
@@ -5086,7 +5221,9 @@ name|pkt
 operator|->
 name|ifp
 operator|=
-name|ifp
+name|fwa
+operator|->
+name|oif
 expr_stmt|;
 if|if
 condition|(
@@ -5101,14 +5238,22 @@ operator|->
 name|ro
 operator|=
 operator|*
+operator|(
+name|fwa
+operator|->
 name|ro
+operator|)
 expr_stmt|;
 if|if
 condition|(
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_rt
 condition|)
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_rt
@@ -5118,6 +5263,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|fwa
+operator|->
 name|dst
 operator|==
 operator|(
@@ -5126,11 +5273,15 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
+name|fwa
+operator|->
 name|ro
 operator|->
 name|ro_dst
 condition|)
 comment|/* dst points into ro */
+name|fwa
+operator|->
 name|dst
 operator|=
 operator|(
@@ -5151,12 +5302,16 @@ name|pkt
 operator|->
 name|dn_dst
 operator|=
+name|fwa
+operator|->
 name|dst
 expr_stmt|;
 name|pkt
 operator|->
 name|flags
 operator|=
+name|fwa
+operator|->
 name|flags
 expr_stmt|;
 block|}
@@ -5216,15 +5371,7 @@ goto|;
 comment|/*      * If we reach this point the flow was previously idle, so we need      * to schedule it. This involves different actions for fixed-rate or      * WF2Q queues.      */
 if|if
 condition|(
-operator|(
-name|rule
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-operator|)
-operator|==
-name|IP_FW_F_PIPE
+name|is_pipe
 condition|)
 block|{
 comment|/* 	 * Fixed-rate queue: just insert into the ready_heap. 	 */
@@ -5553,7 +5700,7 @@ return|return
 name|ENOBUFS
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Below, the rt_unref is only needed when (pkt->dn_dir == DN_TO_IP_OUT)  * Doing this would probably save us the initial bzero of dn_pkt  */
@@ -5848,11 +5995,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|ip_fw
-modifier|*
-name|rule
-decl_stmt|;
-name|struct
 name|dn_flow_set
 modifier|*
 name|fs
@@ -5869,19 +6011,10 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
 name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* prevent future matches... */
 name|p
@@ -6077,22 +6210,14 @@ if|if
 condition|(
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|==
 name|r
 condition|)
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
@@ -6200,22 +6325,14 @@ if|if
 condition|(
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|==
 name|r
 condition|)
 name|pkt
 operator|->
-name|hdr
-operator|.
-name|mh_data
+name|rule
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
@@ -7821,11 +7938,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|struct
-name|ip_fw
-modifier|*
-name|rule
-decl_stmt|;
 if|if
 condition|(
 name|p
@@ -7967,32 +8079,15 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* remove references to this pipe from the ip_fw rules. */
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-if|if
-condition|(
-name|rule
-operator|->
-name|pipe_ptr
-operator|==
 operator|&
 operator|(
 name|b
 operator|->
 name|fs
 operator|)
-condition|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* remove all references to this pipe from flow_sets */
 for|for
@@ -8188,27 +8283,10 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* remove references to this flow_set from the ip_fw rules. */
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-if|if
-condition|(
-name|rule
-operator|->
-name|pipe_ptr
-operator|==
 name|b
-condition|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8911,7 +8989,39 @@ operator|->
 name|sopt_dir
 operator|==
 name|SOPT_SET
-operator|&&
+condition|)
+block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500034
+name|error
+operator|=
+name|securelevel_ge
+argument_list|(
+name|sopt
+operator|->
+name|sopt_td
+operator|->
+name|td_ucred
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+else|#
+directive|else
+if|if
+condition|(
 name|securelevel
 operator|>=
 literal|3
@@ -8921,6 +9031,9 @@ operator|(
 name|EPERM
 operator|)
 return|;
+endif|#
+directive|endif
+block|}
 switch|switch
 condition|(
 name|sopt

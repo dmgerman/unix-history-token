@@ -86,6 +86,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+operator|(
+name|IPFW2
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -363,13 +372,6 @@ end_decl_stmt
 begin_comment
 comment|/* counter for ipfw_report(NULL...) */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|ipfw_flow_id
-name|last_pkt
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -1145,7 +1147,7 @@ modifier|*
 name|ip
 parameter_list|,
 name|int
-name|offset
+name|ip_off
 parameter_list|,
 name|int
 name|ip_len
@@ -1173,49 +1175,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
+name|ip_fw_chk_t
 name|ip_fw_chk
-parameter_list|(
-name|struct
-name|ip
-modifier|*
-modifier|*
-name|pip
-parameter_list|,
-name|int
-name|hlen
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|oif
-parameter_list|,
-name|u_int16_t
-modifier|*
-name|cookie
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-name|m
-parameter_list|,
-name|struct
-name|ip_fw
-modifier|*
-modifier|*
-name|flow_id
-parameter_list|,
-name|struct
-name|sockaddr_in
-modifier|*
-modifier|*
-name|next_hop
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -2328,7 +2293,7 @@ modifier|*
 name|ip
 parameter_list|,
 name|int
-name|offset
+name|ip_off
 parameter_list|,
 name|int
 name|ip_len
@@ -2443,6 +2408,13 @@ index|]
 decl_stmt|;
 name|int
 name|len
+decl_stmt|;
+name|int
+name|offset
+init|=
+name|ip_off
+operator|&
+name|IP_OFFMASK
 decl_stmt|;
 name|count
 operator|=
@@ -2684,9 +2656,6 @@ name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
@@ -2748,8 +2717,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 default|default:
 name|action
 operator|=
@@ -3127,8 +3094,6 @@ break|break;
 block|}
 if|if
 condition|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 operator|(
@@ -3170,8 +3135,6 @@ operator|<<
 literal|3
 argument_list|,
 operator|(
-name|ip
-operator|->
 name|ip_off
 operator|&
 name|IP_MF
@@ -4659,6 +4622,11 @@ name|struct
 name|ip_fw
 modifier|*
 name|rule
+parameter_list|,
+name|struct
+name|ip_fw_args
+modifier|*
+name|args
 parameter_list|)
 block|{
 name|struct
@@ -4681,14 +4649,16 @@ name|DEB
 argument_list|(
 argument|printf(
 literal|"-- install state type %d 0x%08x %u -> 0x%08x %u\n"
-argument|,        type,        (last_pkt.src_ip), (last_pkt.src_port),        (last_pkt.dst_ip), (last_pkt.dst_port) );
+argument|,        type,        (args->f_id.src_ip), (args->f_id.src_port),        (args->f_id.dst_ip), (args->f_id.dst_port) );
 argument_list|)
 name|q
 operator|=
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|NULL
 argument_list|)
@@ -4773,7 +4743,9 @@ comment|/* bidir rule */
 name|add_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|DYN_KEEP_STATE
 argument_list|,
@@ -4839,7 +4811,9 @@ name|id
 operator|.
 name|proto
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|proto
 expr_stmt|;
@@ -4853,7 +4827,9 @@ name|id
 operator|.
 name|src_ip
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_ip
 expr_stmt|;
@@ -4867,7 +4843,9 @@ name|id
 operator|.
 name|dst_ip
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_ip
 expr_stmt|;
@@ -4881,7 +4859,9 @@ name|id
 operator|.
 name|src_port
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_port
 expr_stmt|;
@@ -4895,7 +4875,9 @@ name|id
 operator|.
 name|dst_port
 operator|=
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_port
 expr_stmt|;
@@ -4962,7 +4944,9 @@ block|}
 name|add_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|DYN_LIMIT
 argument_list|,
@@ -4991,7 +4975,9 @@ block|}
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 name|NULL
 argument_list|)
@@ -5106,7 +5092,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parameters:  *  *	pip	Pointer to packet header (struct ip **)  *	hlen	Packet header length  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*m	The packet; we set to NULL when/if we nuke it.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
+comment|/*  * Parameters:  *  *	*m	The packet; we set to NULL when/if we nuke it.  *	oif	Outgoing interface, or NULL if packet is incoming  *	*cookie Skip up to the first rule past this rule number;  *		upon return, non-zero port number for divert or tee.  *		Special case: cookie == NULL on input for bridging.  *	*flow_id pointer to the last matching rule (in/out)  *	*next_hop socket we are forwarding to (in/out).  *  * Return value:  *  *	IP_FW_PORT_DENY_FLAG	the packet must be dropped.  *	0	The packet is to be accepted and routed normally OR  *      	the packet was denied/rejected and has been dropped;  *		in the latter case, *m is equal to NULL upon return.  *	port	Divert the packet to port, with these caveats:  *  *		- If IP_FW_PORT_TEE_FLAG is set, tee the packet instead  *		  of diverting it (ie, 'ipfw tee').  *  *		- If IP_FW_PORT_DYNT_FLAG is set, interpret the lower  *		  16 bits as a dummynet pipe number instead of diverting  */
 end_comment
 
 begin_function
@@ -5115,42 +5101,71 @@ name|int
 name|ip_fw_chk
 parameter_list|(
 name|struct
-name|ip
+name|ip_fw_args
 modifier|*
-modifier|*
-name|pip
-parameter_list|,
-name|int
-name|hlen
-parameter_list|,
-name|struct
-name|ifnet
-modifier|*
-name|oif
-parameter_list|,
-name|u_int16_t
-modifier|*
-name|cookie
-parameter_list|,
+name|args
+parameter_list|)
+block|{
+comment|/* 	 * grab things into variables to minimize diffs. 	 * XXX this has to be cleaned up later. 	 */
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|m
-parameter_list|,
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|m
+operator|)
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|oif
+init|=
+name|args
+operator|->
+name|oif
+decl_stmt|;
+name|u_int16_t
+modifier|*
+name|cookie
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|divert_rule
+operator|)
+decl_stmt|;
 name|struct
 name|ip_fw
 modifier|*
 modifier|*
 name|flow_id
-parameter_list|,
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|rule
+operator|)
+decl_stmt|;
 name|struct
 name|sockaddr_in
 modifier|*
 modifier|*
 name|next_hop
-parameter_list|)
-block|{
+init|=
+operator|&
+operator|(
+name|args
+operator|->
+name|next_hop
+operator|)
+decl_stmt|;
 name|struct
 name|ip_fw
 modifier|*
@@ -5164,8 +5179,15 @@ name|ip
 modifier|*
 name|ip
 init|=
+name|mtod
+argument_list|(
 operator|*
-name|pip
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
 decl_stmt|;
 name|struct
 name|ifnet
@@ -5187,11 +5209,32 @@ name|ifnet
 modifier|*
 name|tif
 decl_stmt|;
+name|u_int
+name|hlen
+init|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+decl_stmt|;
+name|struct
+name|ether_header
+modifier|*
+name|eh
+init|=
+name|NULL
+decl_stmt|;
 name|u_short
+name|ip_off
+init|=
+literal|0
+decl_stmt|,
 name|offset
 init|=
 literal|0
 decl_stmt|;
+comment|/* local copy of addresses for faster matching */
 name|u_short
 name|src_port
 init|=
@@ -5207,7 +5250,6 @@ name|src_ip
 decl_stmt|,
 name|dst_ip
 decl_stmt|;
-comment|/* XXX */
 name|u_int8_t
 name|proto
 init|=
@@ -5217,14 +5259,13 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX */
 name|u_int16_t
 name|skipto
-decl_stmt|,
-name|bridgeCookie
 decl_stmt|;
 name|u_int16_t
 name|ip_len
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|dyn_checked
@@ -5246,26 +5287,48 @@ init|=
 name|NULL
 decl_stmt|;
 comment|/* Special hack for bridging (as usual) */
-if|if
-condition|(
-name|cookie
-operator|==
-name|NULL
-condition|)
-block|{
-name|bridgeCookie
-operator|=
-literal|0
-expr_stmt|;
-name|cookie
-operator|=
-operator|&
-name|bridgeCookie
-expr_stmt|;
 define|#
 directive|define
 name|BRIDGED
-value|(cookie ==&bridgeCookie)
+value|(args->eh != NULL)
+if|if
+condition|(
+name|BRIDGED
+condition|)
+block|{
+comment|/* this is a bridged packet */
+name|eh
+operator|=
+name|args
+operator|->
+name|eh
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|m
+operator|)
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|&&
+name|ntohs
+argument_list|(
+name|eh
+operator|->
+name|ether_type
+argument_list|)
+operator|==
+name|ETHERTYPE_IP
+condition|)
 name|hlen
 operator|=
 name|ip
@@ -5275,6 +5338,15 @@ operator|<<
 literal|2
 expr_stmt|;
 block|}
+else|else
+name|hlen
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
+expr_stmt|;
 comment|/* Grab and reset cookie */
 name|skipto
 operator|=
@@ -5292,7 +5364,15 @@ name|PULLUP_TO
 parameter_list|(
 name|len
 parameter_list|)
-value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				ip = NULL ;				\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 				*pip = ip;				\ 			    }						\ 			} while (0)
+value|do {						\ 			    if ((*m)->m_len< (len)) {			\ 				if ((*m = m_pullup(*m, (len))) == 0)	\ 				    goto bogusfrag;			\ 				ip = mtod(*m, struct ip *);		\ 			    }						\ 			} while (0)
+if|if
+condition|(
+name|hlen
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* this is an IP packet */
 comment|/* 	 * Collect parameters into local variables for faster matching. 	 */
 name|proto
 operator|=
@@ -5314,24 +5394,18 @@ name|ip_dst
 expr_stmt|;
 if|if
 condition|(
-literal|0
-operator|&&
 name|BRIDGED
 condition|)
 block|{
-comment|/* not yet... */
-name|offset
+comment|/* bridged packets are as on the wire */
+name|ip_off
 operator|=
-operator|(
 name|ntohs
 argument_list|(
 name|ip
 operator|->
 name|ip_off
 argument_list|)
-operator|&
-name|IP_OFFMASK
-operator|)
 expr_stmt|;
 name|ip_len
 operator|=
@@ -5345,15 +5419,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|offset
+name|ip_off
 operator|=
-operator|(
 name|ip
 operator|->
 name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
 expr_stmt|;
 name|ip_len
 operator|=
@@ -5362,6 +5432,12 @@ operator|->
 name|ip_len
 expr_stmt|;
 block|}
+name|offset
+operator|=
+name|ip_off
+operator|&
+name|IP_OFFMASK
+expr_stmt|;
 if|if
 condition|(
 name|offset
@@ -5525,10 +5601,13 @@ default|default :
 break|break;
 block|}
 block|}
+block|}
 undef|#
 directive|undef
 name|PULLUP_TO
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_ip
 operator|=
@@ -5539,7 +5618,9 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_ip
 operator|=
@@ -5550,13 +5631,17 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|proto
 operator|=
 name|proto
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|src_port
 operator|=
@@ -5565,7 +5650,9 @@ argument_list|(
 name|src_port
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|dst_port
 operator|=
@@ -5574,7 +5661,9 @@ argument_list|(
 name|dst_port
 argument_list|)
 expr_stmt|;
-name|last_pkt
+name|args
+operator|->
+name|f_id
 operator|.
 name|flags
 operator|=
@@ -5747,7 +5836,9 @@ operator|=
 name|lookup_dyn_rule
 argument_list|(
 operator|&
-name|last_pkt
+name|args
+operator|->
+name|f_id
 argument_list|,
 operator|&
 name|direction
@@ -6743,7 +6834,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ip
+name|m
 operator|!=
 name|NULL
 condition|)
@@ -6753,7 +6844,7 @@ name|NULL
 argument_list|,
 name|ip
 argument_list|,
-name|offset
+name|ip_off
 argument_list|,
 name|ip_len
 argument_list|,
@@ -6810,6 +6901,8 @@ condition|(
 name|install_state
 argument_list|(
 name|f
+argument_list|,
+name|args
 argument_list|)
 condition|)
 comment|/* error or limit violation */
@@ -6848,6 +6941,10 @@ name|IP_FW_F_PRN
 operator|)
 operator|&&
 name|fw_verbose
+operator|&&
+name|hlen
+operator|>
+literal|0
 condition|)
 name|ipfw_report
 argument_list|(
@@ -6986,9 +7083,6 @@ operator||
 name|IP_FW_PORT_DYNT_FLAG
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
@@ -7026,8 +7120,6 @@ literal|0
 operator|)
 return|;
 comment|/* Allow the packet */
-endif|#
-directive|endif
 block|}
 comment|/* Deny/reject this packet using this rule */
 break|break;
@@ -7387,6 +7479,52 @@ block|{
 name|fcp
 operator|->
 name|next_rule_ptr
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|flush_pipe_ptrs
+parameter_list|(
+name|struct
+name|dn_flow_set
+modifier|*
+name|match
+parameter_list|)
+block|{
+name|struct
+name|ip_fw
+modifier|*
+name|fcp
+decl_stmt|;
+name|LIST_FOREACH
+argument_list|(
+argument|fcp
+argument_list|,
+argument|&ip_fw_chain_head
+argument_list|,
+argument|next
+argument_list|)
+block|{
+if|if
+condition|(
+name|match
+operator|==
+name|NULL
+operator|||
+name|fcp
+operator|->
+name|pipe_ptr
+operator|==
+name|match
+condition|)
+name|fcp
+operator|->
+name|pipe_ptr
 operator|=
 name|NULL
 expr_stmt|;
@@ -8712,14 +8850,9 @@ case|:
 case|case
 name|IP_FW_F_SKIPTO
 case|:
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 case|case
 name|IP_FW_F_FWD
 case|:
-endif|#
-directive|endif
 case|case
 name|IP_FW_F_UID
 case|:
@@ -9517,15 +9650,7 @@ directive|else
 literal|"divert disabled, "
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPFIREWALL_FORWARD
 literal|"rule-based forwarding enabled, "
-else|#
-directive|else
-literal|"rule-based forwarding disabled, "
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|IPFIREWALL_DEFAULT_TO_ACCEPT
@@ -9775,6 +9900,15 @@ name|SI_ORDER_ANY
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !IPFW2 */
+end_comment
 
 end_unit
 
