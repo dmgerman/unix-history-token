@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.21 %G%"
+literal|"@(#)fdec.c 1.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -631,6 +631,22 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|PC
+if|if
+condition|(
+name|monflg
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Only the module containing the \"program\" statement"
+argument_list|)
+expr_stmt|;
+name|cerror
+argument_list|(
+literal|"can be profiled with ``pxp''.\n"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|opt
