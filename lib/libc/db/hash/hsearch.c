@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)hsearch.c	8.2 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -158,6 +158,8 @@ literal|0600
 argument_list|,
 operator|&
 name|info
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_utils.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)rec_utils.c	8.2 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,7 @@ operator|->
 name|index
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We always copy big data to make it contigous.  Otherwise, we 	 * leave the page pinned and don't copy unless the user specified 	 * concurrent access. 	 */
 if|if
 condition|(
 name|rl
@@ -185,8 +186,25 @@ operator|(
 name|RET_ERROR
 operator|)
 return|;
+name|data
+operator|->
+name|data
+operator|=
+name|t
+operator|->
+name|bt_dbuf
+expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_LOCK
+argument_list|)
+condition|)
 block|{
 comment|/* Use +1 in case the first record retrieved is 0 length. */
 if|if
@@ -268,7 +286,6 @@ name|rl
 operator|->
 name|dsize
 expr_stmt|;
-block|}
 name|data
 operator|->
 name|data
@@ -277,6 +294,26 @@ name|t
 operator|->
 name|bt_dbuf
 expr_stmt|;
+block|}
+else|else
+block|{
+name|data
+operator|->
+name|size
+operator|=
+name|rl
+operator|->
+name|dsize
+expr_stmt|;
+name|data
+operator|->
+name|data
+operator|=
+name|rl
+operator|->
+name|bytes
+expr_stmt|;
+block|}
 name|retkey
 label|:
 if|if
@@ -290,6 +327,7 @@ operator|(
 name|RET_SUCCESS
 operator|)
 return|;
+comment|/* We have to copy the key, it's not on the page. */
 if|if
 condition|(
 sizeof|sizeof

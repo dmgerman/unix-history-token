@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)rec_close.c	8.2 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,42 @@ decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+name|t
+operator|=
+name|dbp
+operator|->
+name|internal
+expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|__rec_sync
@@ -130,12 +166,6 @@ name|RET_ERROR
 operator|)
 return|;
 comment|/* Committed to closing. */
-name|t
-operator|=
-name|dbp
-operator|->
-name|internal
-expr_stmt|;
 name|rval
 operator|=
 name|RET_SUCCESS
@@ -287,6 +317,36 @@ name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|flags

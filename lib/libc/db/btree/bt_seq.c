@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_seq.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)bt_seq.c	8.2 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,13 +172,43 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-comment|/* 	 * If scan unitialized as yet, or starting at a specific record, set 	 * the scan to a specific key.  Both bt_seqset and bt_seqadv pin the 	 * page the cursor references if they're successful. 	 */
 name|t
 operator|=
 name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* 	 * If scan unitialized as yet, or starting at a specific record, set 	 * the scan to a specific key.  Both bt_seqset and bt_seqadv pin the 	 * page the cursor references if they're successful. 	 */
 switch|switch
 condition|(
 name|flags
@@ -294,6 +324,16 @@ name|e
 operator|.
 name|index
 expr_stmt|;
+comment|/* 		 * If the user is doing concurrent access, we copied the 		 * key/data, toss the page. 		 */
+if|if
+condition|(
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|B_DB_LOCK
+argument_list|)
+condition|)
 name|mpool_put
 argument_list|(
 name|t
@@ -306,6 +346,15 @@ name|page
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|e
+operator|.
+name|page
 expr_stmt|;
 name|SET
 argument_list|(

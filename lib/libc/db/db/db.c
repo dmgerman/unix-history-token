@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)db.c	8.3 (Berkeley) 9/13/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -107,6 +113,30 @@ modifier|*
 name|openinfo
 decl_stmt|;
 block|{
+define|#
+directive|define
+name|DB_FLAGS
+value|(DB_LOCK | DB_SHMEM | DB_TXN)
+define|#
+directive|define
+name|USE_OPEN_FLAGS
+define|\
+value|(O_CREAT | O_EXCL | O_EXLOCK | O_NONBLOCK | O_RDONLY |		\ 	 O_RDWR | O_SHLOCK | O_TRUNC)
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+operator|~
+operator|(
+name|USE_OPEN_FLAGS
+operator||
+name|DB_FLAGS
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
 switch|switch
 condition|(
 name|type
@@ -122,10 +152,16 @@ argument_list|(
 name|fname
 argument_list|,
 name|flags
+operator|&
+name|USE_OPEN_FLAGS
 argument_list|,
 name|mode
 argument_list|,
 name|openinfo
+argument_list|,
+name|flags
+operator|&
+name|DB_FLAGS
 argument_list|)
 operator|)
 return|;
@@ -139,10 +175,16 @@ argument_list|(
 name|fname
 argument_list|,
 name|flags
+operator|&
+name|USE_OPEN_FLAGS
 argument_list|,
 name|mode
 argument_list|,
 name|openinfo
+argument_list|,
+name|flags
+operator|&
+name|DB_FLAGS
 argument_list|)
 operator|)
 return|;
@@ -156,10 +198,16 @@ argument_list|(
 name|fname
 argument_list|,
 name|flags
+operator|&
+name|USE_OPEN_FLAGS
 argument_list|,
 name|mode
 argument_list|,
 name|openinfo
+argument_list|,
+name|flags
+operator|&
+name|DB_FLAGS
 argument_list|)
 operator|)
 return|;

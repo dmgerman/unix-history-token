@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_close.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)bt_close.c	8.2 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,6 +127,36 @@ name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 comment|/* 	 * Delete any already deleted record that we've been saving 	 * because the cursor pointed to it. 	 */
 if|if
 condition|(
@@ -290,6 +320,43 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
+name|t
+operator|=
+name|dbp
+operator|->
+name|internal
+expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* Sync doesn't currently take any flags. */
 if|if
 condition|(
 name|flags
@@ -307,12 +374,6 @@ name|RET_ERROR
 operator|)
 return|;
 block|}
-name|t
-operator|=
-name|dbp
-operator|->
-name|internal
-expr_stmt|;
 if|if
 condition|(
 name|ISSET

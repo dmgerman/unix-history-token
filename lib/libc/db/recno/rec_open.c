@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)rec_open.c	8.4 (Berkeley) 9/7/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__DBINTERFACE_PRIVATE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -115,6 +121,8 @@ parameter_list|,
 name|mode
 parameter_list|,
 name|openinfo
+parameter_list|,
+name|dflags
 parameter_list|)
 specifier|const
 name|char
@@ -125,6 +133,8 @@ name|int
 name|flags
 decl_stmt|,
 name|mode
+decl_stmt|,
+name|dflags
 decl_stmt|;
 specifier|const
 name|RECNOINFO
@@ -281,6 +291,8 @@ name|S_IWUSR
 argument_list|,
 operator|&
 name|btopeninfo
+argument_list|,
+name|dflags
 argument_list|)
 expr_stmt|;
 block|}
@@ -298,6 +310,8 @@ operator||
 name|S_IWUSR
 argument_list|,
 name|NULL
+argument_list|,
+name|dflags
 argument_list|)
 expr_stmt|;
 if|if
@@ -591,7 +605,7 @@ name|bt_msize
 argument_list|,
 name|PROT_READ
 argument_list|,
-literal|0
+name|MAP_PRIVATE
 argument_list|,
 name|rfd
 argument_list|,
@@ -885,6 +899,37 @@ name|dbp
 operator|->
 name|internal
 expr_stmt|;
+comment|/* Toss any page pinned across calls. */
+if|if
+condition|(
+name|t
+operator|->
+name|bt_pinned
+operator|!=
+name|NULL
+condition|)
+block|{
+name|mpool_put
+argument_list|(
+name|t
+operator|->
+name|bt_mp
+argument_list|,
+name|t
+operator|->
+name|bt_pinned
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|t
+operator|->
+name|bt_pinned
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+comment|/* In-memory database can't have a file descriptor. */
 if|if
 condition|(
 name|ISSET

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)btree.h	8.1 (Berkeley) 6/4/93  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)btree.h	8.3 (Berkeley) 9/14/93  */
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|PAGE
+name|_page
 block|{
 name|pgno_t
 name|pgno
@@ -207,7 +207,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BINTERNAL
+name|_binternal
 block|{
 name|size_t
 name|ksize
@@ -301,7 +301,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|RINTERNAL
+name|_rinternal
 block|{
 name|recno_t
 name|nrecs
@@ -370,7 +370,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BLEAF
+name|_bleaf
 block|{
 name|size_t
 name|ksize
@@ -471,7 +471,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|RLEAF
+name|_rleaf
 block|{
 name|size_t
 name|dsize
@@ -563,7 +563,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|EPGNO
+name|_epgno
 block|{
 name|pgno_t
 name|pgno
@@ -581,7 +581,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 struct|struct
-name|EPG
+name|_epg
 block|{
 name|PAGE
 modifier|*
@@ -604,7 +604,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BTMETA
+name|_btmeta
 block|{
 name|u_long
 name|m_magic
@@ -650,7 +650,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|BTREE
+name|_btree
 block|{
 name|MPOOL
 modifier|*
@@ -662,6 +662,15 @@ modifier|*
 name|bt_dbp
 decl_stmt|;
 comment|/* pointer to enclosing DB */
+name|EPG
+name|bt_cur
+decl_stmt|;
+comment|/* current (pinned) page */
+name|PAGE
+modifier|*
+name|bt_pinned
+decl_stmt|;
+comment|/* page pinned across calls */
 name|EPGNO
 name|bt_bcursor
 decl_stmt|;
@@ -795,7 +804,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|BTREE
+name|_btree
 operator|*
 operator|,
 name|recno_t
@@ -877,6 +886,11 @@ value|0x00040
 comment|/* read-only tree */
 define|#
 directive|define
+name|R_RECNO
+value|0x00080
+comment|/* record oriented tree */
+define|#
+directive|define
 name|B_SEQINIT
 value|0x00100
 comment|/* sequential scan initialized */
@@ -902,11 +916,6 @@ value|0x01000
 comment|/* memory mapped file. */
 define|#
 directive|define
-name|R_RECNO
-value|0x00080
-comment|/* record oriented tree */
-define|#
-directive|define
 name|R_INMEM
 value|0x02000
 comment|/* in-memory file */
@@ -920,6 +929,21 @@ directive|define
 name|R_RDONLY
 value|0x08000
 comment|/* read-only file */
+define|#
+directive|define
+name|B_DB_LOCK
+value|0x10000
+comment|/* DB_LOCK specified. */
+define|#
+directive|define
+name|B_DB_SHMEM
+value|0x20000
+comment|/* DB_SHMEM specified. */
+define|#
+directive|define
+name|B_DB_TXN
+value|0x40000
+comment|/* DB_TXN specified. */
 name|u_long
 name|bt_flags
 decl_stmt|;
