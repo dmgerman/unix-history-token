@@ -222,6 +222,26 @@ name|nswbuf
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|maxswzone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max swmeta KVA storage */
+end_comment
+
+begin_decl_stmt
+name|int
+name|maxbcache
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max buffer cache KVA storage */
+end_comment
+
 begin_comment
 comment|/* maximum # of sf_bufs (sendfile(2) zero-copy virtual buffers) */
 end_comment
@@ -356,6 +376,40 @@ literal|"kern.nbuf"
 argument_list|,
 operator|&
 name|nbuf
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_SWZONE_SIZE_MAX
+name|maxswzone
+operator|=
+name|VM_SWZONE_SIZE_MAX
+expr_stmt|;
+endif|#
+directive|endif
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxswzone"
+argument_list|,
+operator|&
+name|maxswzone
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VM_BCACHE_SIZE_MAX
+name|maxbcache
+operator|=
+name|VM_BCACHE_SIZE_MAX
+expr_stmt|;
+endif|#
+directive|endif
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"kern.maxbcache"
+argument_list|,
+operator|&
+name|maxbcache
 argument_list|)
 expr_stmt|;
 name|ncallout
