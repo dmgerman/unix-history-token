@@ -1202,11 +1202,11 @@ value|257
 end_define
 
 begin_comment
-comment|/*  * Local port number conventions:  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  * The default range is IPPORT_HIFIRSTAUTO through  * IPPORT_HILASTAUTO, although that is settable by sysctl.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH changes the range of candidate port numbers  * into the "high" range.  These are reserved for client outbound connections  * which do not want to be filtered by any firewalls.  Note that by default  * this is the same as IP_PORTRANGE_DEFAULT.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  This  * convention is based on "vouchsafe" principles only.  It is only secure  * if you trust the remote host to restrict these ports.  *  * The default range of ports and the high range can be changed by  * sysctl(3).  (net.inet.ip.port{hi,low}{first,last}_auto)  *  * Changing those values has bad security implications if you are  * using a a stateless firewall that is allowing packets outside of that  * range in order to allow transparent outgoing connections.  *  * Such a firewall configuration will generally depend on the use of these  * default values.  If you change them, you may find your Security  * Administrator looking for you with a heavy object.  *  * For a slightly more orthodox text view on this:  *  *            ftp://ftp.isi.edu/in-notes/iana/assignments/port-numbers  *  *    port numbers are divided into three ranges:  *  *                0 -  1023 Well Known Ports  *             1024 - 49151 Registered Ports  *            49152 - 65535 Dynamic and/or Private Ports  *  */
+comment|/*  * Local port number conventions:  *  * When a user does a bind(2) or connect(2) with a port number of zero,  * a non-conflicting local port address is chosen.  * The default range is IPPORT_RESERVED through  * IPPORT_USERRESERVED, although that is settable by sysctl.  *  * A user may set the IPPROTO_IP option IP_PORTRANGE to change this  * default assignment range.  *  * The value IP_PORTRANGE_DEFAULT causes the default behavior.  *  * The value IP_PORTRANGE_HIGH changes the range of candidate port numbers  * into the "high" range.  These are reserved for client outbound connections  * which do not want to be filtered by any firewalls.  *  * The value IP_PORTRANGE_LOW changes the range to the "low" are  * that is (by convention) restricted to privileged processes.  This  * convention is based on "vouchsafe" principles only.  It is only secure  * if you trust the remote host to restrict these ports.  *  * The default range of ports and the high range can be changed by  * sysctl(3).  (net.inet.ip.port{hi,low}{first,last}_auto)  *  * Changing those values has bad security implications if you are  * using a a stateless firewall that is allowing packets outside of that  * range in order to allow transparent outgoing connections.  *  * Such a firewall configuration will generally depend on the use of these  * default values.  If you change them, you may find your Security  * Administrator looking for you with a heavy object.  *  * For a slightly more orthodox text view on this:  *  *            ftp://ftp.isi.edu/in-notes/iana/assignments/port-numbers  *  *    port numbers are divided into three ranges:  *  *                0 -  1023 Well Known Ports  *             1024 - 49151 Registered Ports  *            49152 - 65535 Dynamic and/or Private Ports  *  */
 end_comment
 
 begin_comment
-comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)  */
+comment|/*  * Ports< IPPORT_RESERVED are reserved for  * privileged processes (e.g. root).         (IP_PORTRANGE_LOW)  * Ports> IPPORT_USERRESERVED are reserved  * for servers, not necessarily privileged.  (IP_PORTRANGE_DEFAULT)  */
 end_comment
 
 begin_define
@@ -1216,8 +1216,15 @@ name|IPPORT_RESERVED
 value|1024
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPPORT_USERRESERVED
+value|5000
+end_define
+
 begin_comment
-comment|/*  * Default local port range, used by both IP_PORTRANGE_DEFAULT  * and IP_PORTRANGE_HIGH.  */
+comment|/*  * Default local port range to use by setting IP_PORTRANGE_HIGH  */
 end_comment
 
 begin_define

@@ -236,24 +236,24 @@ begin_decl_stmt
 name|int
 name|ipport_firstauto
 init|=
-name|IPPORT_HIFIRSTAUTO
+name|IPPORT_RESERVED
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 49152 */
+comment|/* 1024 */
 end_comment
 
 begin_decl_stmt
 name|int
 name|ipport_lastauto
 init|=
-name|IPPORT_HILASTAUTO
+name|IPPORT_USERRESERVED
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 65535 */
+comment|/* 5000 */
 end_comment
 
 begin_decl_stmt
