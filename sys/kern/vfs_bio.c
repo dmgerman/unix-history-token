@@ -1741,6 +1741,15 @@ parameter_list|)
 block|{
 name|GIANT_REQUIRED
 expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|m
+operator|->
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -8398,6 +8407,11 @@ name|mnt_stat
 operator|.
 name|f_iosize
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|toff
@@ -8419,11 +8433,6 @@ operator|+=
 name|tinc
 control|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -8436,11 +8445,6 @@ name|off
 operator|+
 name|toff
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|obj
 argument_list|)
 expr_stmt|;
 if|if
@@ -8513,11 +8517,21 @@ goto|goto
 name|notinmem
 goto|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
 name|notinmem
 label|:
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10670,11 +10684,6 @@ operator|->
 name|b_npages
 expr_stmt|;
 block|}
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|obj
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Step 2.  We've loaded the pages into the buffer, 			 * we have to figure out if we can still have B_CACHE 			 * set.  Note that B_CACHE is set according to the 			 * byte-granular range ( bcount and size ), new the 			 * aligned range ( newbsize ). 			 * 			 * The VM test is against m->valid, which is DEV_BSIZE 			 * aligned.  Needless to say, the validity of the data 			 * needs to also be DEV_BSIZE aligned.  Note that this 			 * fails with NFS if the server or some other client 			 * extends the file's EOF.  If our buffer is resized,  			 * B_CACHE may remain set! XXX 			 */
 name|toff
 operator|=
@@ -10777,6 +10786,11 @@ operator|=
 name|PAGE_SIZE
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Step 3, fixup the KVM pmap.  Remember that 			 * bp->b_data is relative to bp->b_offset, but  			 * bp->b_offset may be offset into the first page. 			 */
 name|bp
 operator|->
