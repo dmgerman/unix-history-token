@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)db.c	8.2 (Berkeley) %G%"
+literal|"@(#)db.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ define|#
 directive|define
 name|USE_OPEN_FLAGS
 define|\
-value|(O_CREAT | O_EXCL | O_EXLOCK | O_RDONLY | O_RDWR |		\ 	    O_SHLOCK | O_TRUNC)
+value|(O_CREAT | O_EXCL | O_EXLOCK | O_NONBLOCK | O_RDONLY |		\ 	 O_RDWR | O_SHLOCK | O_TRUNC)
 if|if
 condition|(
 operator|(
