@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.26 1999/06/02 15:58:51 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.27 1999/06/10 00:17:26 brian Exp $  */
 end_comment
 
 begin_include
@@ -1954,6 +1954,8 @@ name|piip
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|len
 decl_stmt|;
 name|struct
 name|mbuf
@@ -2192,11 +2194,8 @@ argument_list|,
 name|fptr
 argument_list|)
 expr_stmt|;
-operator|*
-name|last
+name|len
 operator|=
-name|mbuf_Alloc
-argument_list|(
 name|ntohs
 argument_list|(
 operator|(
@@ -2210,6 +2209,13 @@ operator|)
 operator|->
 name|ip_len
 argument_list|)
+expr_stmt|;
+operator|*
+name|last
+operator|=
+name|mbuf_Alloc
+argument_list|(
+name|len
 argument_list|,
 name|MB_ALIASIN
 argument_list|)
@@ -2224,12 +2230,7 @@ argument_list|)
 argument_list|,
 name|fptr
 argument_list|,
-operator|(
-operator|*
-name|last
-operator|)
-operator|->
-name|cnt
+name|len
 argument_list|)
 expr_stmt|;
 name|free
