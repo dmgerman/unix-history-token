@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	4.1 (Berkeley) %G%"
+literal|"@(#)res_debug.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -423,13 +423,8 @@ literal|", type = %s"
 argument_list|,
 name|p_type
 argument_list|(
-name|ntohs
+name|getshort
 argument_list|(
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -448,13 +443,8 @@ literal|", class = %s\n\n"
 argument_list|,
 name|p_class
 argument_list|(
-name|ntohs
+name|getshort
 argument_list|(
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -789,13 +779,8 @@ name|p_type
 argument_list|(
 name|type
 operator|=
-name|ntohs
+name|getshort
 argument_list|(
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -816,13 +801,8 @@ name|p_class
 argument_list|(
 name|class
 operator|=
-name|ntohs
+name|getshort
 argument_list|(
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -837,15 +817,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", ttl = %d"
+literal|", ttl = %ld"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_int
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -863,13 +838,8 @@ literal|", dlen = %d\n"
 argument_list|,
 name|dlen
 operator|=
-name|ntohs
+name|getshort
 argument_list|(
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -902,16 +872,22 @@ block|{
 case|case
 name|C_IN
 case|:
-name|inaddr
-operator|.
-name|s_addr
-operator|=
-operator|*
+name|bcopy
+argument_list|(
+name|cp
+argument_list|,
 operator|(
-name|u_long
+name|char
 operator|*
 operator|)
-name|cp
+operator|&
+name|inaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1117,15 +1093,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n\tserial=%d"
+literal|"\n\tserial=%ld"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1139,15 +1110,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", refresh=%d"
+literal|", refresh=%ld"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1161,15 +1127,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", retry=%d"
+literal|", retry=%ld"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1183,15 +1144,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", expire=%d"
+literal|", expire=%ld"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1205,15 +1161,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", min=%d\n"
+literal|", min=%ld\n"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|u_long
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1256,15 +1207,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t%d\n"
+literal|"\t%ld\n"
 argument_list|,
-name|ntohl
+name|getlong
 argument_list|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
 name|cp
 argument_list|)
 argument_list|)
@@ -1293,16 +1239,22 @@ operator|+
 literal|1
 condition|)
 break|break;
-name|inaddr
-operator|.
-name|s_addr
-operator|=
-operator|*
+name|bcopy
+argument_list|(
+name|cp
+argument_list|,
 operator|(
-name|u_long
+name|char
 operator|*
 operator|)
-name|cp
+operator|&
+name|inaddr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|inaddr
+argument_list|)
+argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
