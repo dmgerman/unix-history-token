@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkubglue.c	1.12 (Berkeley) %G%"
+literal|"@(#)mkubglue.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -563,14 +563,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"#if defined(VAX750) || defined(VAX730)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"\tincl\t_cnt+V_INTR\n#endif\n\trei\n\n"
+literal|"\tincl\t_cnt+V_INTR\n\trei\n\n"
 argument_list|)
 expr_stmt|;
 block|}
