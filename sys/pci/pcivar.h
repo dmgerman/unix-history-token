@@ -15,23 +15,6 @@ directive|define
 name|_PCIVAR_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PCI_COMPAT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|PCI_COMPAT
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -494,6 +477,54 @@ name|u_int32_t
 name|pci_numdevs
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Only if the prerequisites are present */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SYS_BUS_H_
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_SYS_PCIIO_H_
+argument_list|)
+end_if
+
+begin_struct
+struct|struct
+name|pci_devinfo
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|pci_devinfo
+argument_list|)
+name|pci_links
+expr_stmt|;
+name|struct
+name|resource_list
+name|resources
+decl_stmt|;
+name|pcicfgregs
+name|cfg
+decl_stmt|;
+name|struct
+name|pci_conf
+name|conf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* externally visible functions */
@@ -1029,14 +1060,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* for compatibility to FreeBSD-2.2 version of PCI code */
+comment|/* for compatibility to FreeBSD-2.2 and 3.x versions of PCI code */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PCI_COMPAT
-end_ifdef
 
 begin_if
 if|#
@@ -1063,6 +1088,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_OLDPCI
+end_ifdef
 
 begin_comment
 comment|/* all this is going some day */
@@ -1105,12 +1136,6 @@ end_define
 begin_comment
 comment|/* just copied from old PCI code for now ... */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_OLDPCI
-end_ifdef
 
 begin_struct
 struct|struct
@@ -1166,11 +1191,6 @@ function_decl|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1346,12 +1366,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_OLDPCI
-end_ifdef
-
 begin_struct_decl
 struct_decl|struct
 name|module
@@ -1392,13 +1406,8 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* PCI_COMPAT */
+comment|/* COMPAT_OLDPCI */
 end_comment
 
 begin_endif
