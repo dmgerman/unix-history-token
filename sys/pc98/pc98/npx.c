@@ -551,13 +551,6 @@ name|bool_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|NPXIRQ
-value|8
-end_define
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1069,6 +1062,9 @@ name|IO_ICU1
 operator|+
 literal|2
 argument_list|,
+operator|(
+name|u_int8_t
+operator|)
 operator|~
 name|IRQ_SLAVE
 argument_list|)
