@@ -1023,6 +1023,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|ifmedia
+name|arl_ifmedia
+decl_stmt|;
 block|}
 struct|;
 end_struct
