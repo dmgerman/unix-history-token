@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24.2.12 1997/06/10 09:44:06 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.24.2.13 1997/06/11 03:59:33 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -816,6 +816,10 @@ argument_list|,
 literal|"Disconnected!\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uptime
+condition|)
 name|LogPrintf
 argument_list|(
 name|LogPHASE
@@ -829,6 +833,10 @@ argument_list|)
 operator|-
 name|uptime
 argument_list|)
+expr_stmt|;
+name|uptime
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -3261,10 +3269,14 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|excode
+operator|=
 name|DoChat
 argument_list|(
 name|ScriptBuffer
 argument_list|)
+operator|)
 operator|>
 literal|0
 condition|)
@@ -3296,10 +3308,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|excode
+operator|=
 name|DoChat
 argument_list|(
 name|ScriptBuffer
 argument_list|)
+operator|)
 operator|>
 literal|0
 condition|)
@@ -3319,6 +3335,20 @@ return|return
 name|EX_DONE
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|excode
+operator|==
+operator|-
+literal|1
+condition|)
+name|excode
+operator|=
+name|EX_SIG
+expr_stmt|;
+else|else
+block|{
 name|LogPrintf
 argument_list|(
 name|LogWARN
@@ -3326,15 +3356,28 @@ argument_list|,
 literal|"DialModem: login failed.\n"
 argument_list|)
 expr_stmt|;
-name|ModemTimeout
-argument_list|()
-expr_stmt|;
-comment|/* Dummy call to check modem status */
 name|excode
 operator|=
 name|EX_NOLOGIN
 expr_stmt|;
 block|}
+name|ModemTimeout
+argument_list|()
+expr_stmt|;
+comment|/* Dummy call to check modem status */
+block|}
+elseif|else
+if|if
+condition|(
+name|excode
+operator|==
+operator|-
+literal|1
+condition|)
+name|excode
+operator|=
+name|EX_SIG
+expr_stmt|;
 else|else
 block|{
 name|LogPrintf
