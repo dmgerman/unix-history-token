@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)login.c	4.8 (Berkeley) %G%"
+literal|"@(#)login.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1466,11 +1466,32 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARPAVAX
+if|if
+condition|(
+name|pwd
+operator|->
+name|pw_gid
+operator|==
+literal|31
+condition|)
+name|umask
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+else|else
+else|#
+directive|else
 name|umask
 argument_list|(
 literal|022
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|showmotd
 argument_list|()
 expr_stmt|;
