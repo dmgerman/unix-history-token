@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.103 2002/09/27 15:37:38 provos Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.104 2004/07/17 20:16:13 mycroft Exp $	*/
 end_comment
 
 begin_include
@@ -3570,6 +3570,30 @@ operator|->
 name|dmabuf
 decl_stmt|;
 name|int
+name|sync
+init|=
+name|xfer
+operator|->
+name|flags
+operator|&
+name|USBD_SYNCHRONOUS
+decl_stmt|;
+name|int
+name|erred
+init|=
+name|xfer
+operator|->
+name|status
+operator|==
+name|USBD_CANCELLED
+operator|||
+name|xfer
+operator|->
+name|status
+operator|==
+name|USBD_TIMEOUT
+decl_stmt|;
+name|int
 name|repeat
 init|=
 name|pipe
@@ -4017,13 +4041,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|(
-name|xfer
-operator|->
-name|flags
-operator|&
-name|USBD_SYNCHRONOUS
-operator|)
+name|sync
 operator|&&
 operator|!
 name|polling
@@ -4042,19 +4060,7 @@ block|{
 comment|/* XXX should we stop the queue on all errors? */
 if|if
 condition|(
-operator|(
-name|xfer
-operator|->
-name|status
-operator|==
-name|USBD_CANCELLED
-operator|||
-name|xfer
-operator|->
-name|status
-operator|==
-name|USBD_TIMEOUT
-operator|)
+name|erred
 operator|&&
 name|pipe
 operator|->
