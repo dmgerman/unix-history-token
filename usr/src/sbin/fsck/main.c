@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.2 (Berkeley) %G%"
+literal|"@(#)main.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -919,42 +919,6 @@ name|dinode
 name|zino
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|setbit
-parameter_list|(
-name|a
-parameter_list|,
-name|i
-parameter_list|)
-value|((a)[(i)/NBBY] |= 1<<((i)%NBBY))
-end_define
-
-begin_define
-define|#
-directive|define
-name|clrbit
-parameter_list|(
-name|a
-parameter_list|,
-name|i
-parameter_list|)
-value|((a)[(i)/NBBY]&= ~(1<<((i)%NBBY)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|isset
-parameter_list|(
-name|a
-parameter_list|,
-name|i
-parameter_list|)
-value|((a)[(i)/NBBY]& (1<<((i)%NBBY)))
-end_define
 
 begin_define
 define|#
