@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)start.c	4.5	(Berkeley)	%G%"
+literal|"@(#)start.c	4.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,22 +39,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DIR
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|start
@@ -73,12 +62,12 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|direct
+name|dirent
 name|dbuf
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|ep
 init|=
@@ -97,9 +86,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BSD4_2
 name|DIR
 modifier|*
 name|dp
@@ -126,35 +112,6 @@ define|#
 directive|define
 name|CLOSEDIR
 value|closedir(dp)
-else|#
-directive|else
-name|int
-name|f
-decl_stmt|;
-define|#
-directive|define
-name|OPENDIR
-parameter_list|(
-name|s
-parameter_list|)
-value|((f = open(s, 0))>= 0)
-define|#
-directive|define
-name|DIRLOOP
-parameter_list|(
-name|s
-parameter_list|)
-value|while (read(f, s, sizeof *s) == sizeof *s)
-define|#
-directive|define
-name|EPSTRLEN
-value|strlen(ep->d_name)
-define|#
-directive|define
-name|CLOSEDIR
-value|close(f)
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

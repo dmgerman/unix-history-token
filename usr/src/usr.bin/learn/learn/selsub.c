@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selsub.c	4.6	(Berkeley)	%G%"
+literal|"@(#)selsub.c	4.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,22 +842,11 @@ block|}
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DIR
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<dirent.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|cntlessons
@@ -884,16 +873,13 @@ end_comment
 begin_block
 block|{
 comment|/* and lessons skipped by good students */
-if|#
-directive|if
-name|BSD4_2
 name|struct
-name|direct
+name|dirent
 name|dbuf
 decl_stmt|;
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|ep
 init|=
@@ -979,31 +965,6 @@ operator|-
 literal|2
 return|;
 comment|/* minus . and .. */
-else|#
-directive|else
-name|struct
-name|stat
-name|statbuf
-decl_stmt|;
-name|stat
-argument_list|(
-name|sname
-argument_list|,
-operator|&
-name|statbuf
-argument_list|)
-expr_stmt|;
-return|return
-name|statbuf
-operator|.
-name|st_size
-operator|/
-literal|16
-operator|-
-literal|2
-return|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.6	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.7	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -741,26 +741,19 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
-name|status
-decl_stmt|,
 name|pid
 decl_stmt|,
 name|w
 decl_stmt|;
-specifier|register
-name|int
-argument_list|(
-operator|*
+name|sig_t
 name|istat
-argument_list|)
-argument_list|()
 decl_stmt|,
-argument_list|(
-operator|*
 name|qstat
-argument_list|)
-argument_list|()
+decl_stmt|;
+name|int
+name|status
 decl_stmt|;
 name|istat
 operator|=
@@ -857,6 +850,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -864,6 +860,9 @@ argument_list|,
 name|istat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
