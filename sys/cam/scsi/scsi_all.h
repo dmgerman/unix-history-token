@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 1.6 1998/12/05 22:10:14 mjacob Exp $  */
+comment|/*  * Largely written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_all.h,v 1.6.2.1 1999/05/09 01:27:31 ken Exp $  */
 end_comment
 
 begin_comment
@@ -25,6 +25,106 @@ include|#
 directive|include
 file|<sys/cdefs.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_scsi.h"
+end_include
+
+begin_comment
+comment|/*  * This is the number of seconds we wait for devices to settle after a SCSI  * bus reset.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SCSI_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SCSI_DELAY
+value|2000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * If someone sets this to 0, we assume that they want the minimum  * allowable bus settle delay.  All devices need _some_ sort of bus settle  * delay, so we'll set it to a minimum value of 100ms.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|SCSI_DELAY
+operator|==
+literal|0
+operator|)
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|SCSI_DELAY
+end_undef
+
+begin_define
+define|#
+directive|define
+name|SCSI_DELAY
+value|100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Make sure the user isn't using seconds instead of milliseconds.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|SCSI_DELAY
+operator|<
+literal|100
+operator|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"SCSI_DELAY is in milliseconds, not seconds!  Please use a larger value"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * SCSI command format  */
