@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	5.21 (Berkeley) %G%"
+literal|"@(#)ftp.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,11 +303,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: unknown host\n"
+name|stderr
+argument_list|,
+literal|"ftp: %s: "
 argument_list|,
 name|host
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|code
