@@ -696,6 +696,12 @@ literal|"OPUS"
 block|}
 block|,
 block|{
+literal|0x39
+block|,
+literal|"plan9"
+block|}
+block|,
+block|{
 literal|0x40
 block|,
 literal|"VENIX 286"
