@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopq] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  *<num>	print message number<num>  */
+comment|/*  * msgs - a user bulletin board program  *  * usage:  *	msgs [fhlopqr] [[-]number]	to read messages  *	msgs -s				to place messages  *	msgs -c [-days]			to clean up the bulletin board  *  * prompt commands are:  *	y	print message  *	n	flush message, go to next message  *	q	flush message, quit  *	p	print message, turn on 'pipe thru more' mode  *	P	print message, turn off 'pipe thru more' mode  *	-	reprint last message  *	s[-][<num>] [<filename>]	save message  *	m[-][<num>]	mail with message in temp mbox  *	x	exit without flushing this message  *<num>	print message number<num>  */
 end_comment
 
 begin_define
@@ -621,6 +621,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|bool
+name|restricted
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|jmp_buf
 name|tstpbuf
 decl_stmt|;
@@ -920,6 +928,15 @@ name|YES
 expr_stmt|;
 break|break;
 case|case
+literal|'r'
+case|:
+comment|/* restricted */
+name|restricted
+operator|=
+name|YES
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 comment|/* sending TO msgs */
@@ -933,7 +950,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: msgs [fhlopq] [[-]number]\n"
+literal|"usage: msgs [fhlopqr] [[-]number]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2623,6 +2640,10 @@ name|FILE
 modifier|*
 name|outf
 decl_stmt|;
+name|char
+modifier|*
+name|env_pager
+decl_stmt|;
 if|if
 condition|(
 name|use_pager
@@ -2646,6 +2667,20 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|env_pager
+operator|=
+name|getenv
+argument_list|(
+literal|"PAGER"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|cmdbuf
@@ -2655,6 +2690,17 @@ argument_list|,
 name|Lpp
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|strcpy
+argument_list|(
+name|cmdbuf
+argument_list|,
+name|env_pager
+argument_list|)
+expr_stmt|;
+block|}
 name|outf
 operator|=
 name|popen
@@ -3152,6 +3198,7 @@ comment|/* 	 * Handle 'mail' and 'save' here. 	 */
 if|if
 condition|(
 operator|(
+operator|(
 name|inch
 operator|=
 name|inbuf
@@ -3165,6 +3212,10 @@ operator|||
 name|inch
 operator|==
 literal|'m'
+operator|)
+operator|&&
+operator|!
+name|restricted
 condition|)
 block|{
 if|if
