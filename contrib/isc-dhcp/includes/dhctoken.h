@@ -619,6 +619,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ALWAYS_REPLY_RFC1048
+value|335
+end_define
+
+begin_define
+define|#
+directive|define
 name|is_identifier
 parameter_list|(
 name|x

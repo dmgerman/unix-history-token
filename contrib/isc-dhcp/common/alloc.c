@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: alloc.c,v 1.13.2.1 1998/11/24 22:17:15 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: alloc.c,v 1.13.2.2 1999/03/26 16:39:36 mellon Exp $ Copyright (c) 1995, 1996 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -926,6 +926,21 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|ptr
+operator|->
+name|prl
+condition|)
+name|dfree
+argument_list|(
+name|ptr
+operator|->
+name|prl
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|ptr
 operator|->
 name|next

@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: icmp.c,v 1.7.2.1 1998/06/25 21:11:29 mellon Exp $ Copyright (c) 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: icmp.c,v 1.7.2.2 1999/03/29 23:20:00 mellon Exp $ Copyright (c) 1997, 1998 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,13 +112,6 @@ name|int
 name|protocol
 init|=
 literal|1
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|from
-decl_stmt|;
-name|int
-name|fd
 decl_stmt|;
 name|int
 name|state

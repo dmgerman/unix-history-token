@@ -19,7 +19,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: bpf.c,v 1.19.2.8 1999/02/23 22:09:56 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: bpf.c,v 1.19.2.9 1999/03/29 22:07:12 mellon Exp $ Copyright (c) 1995, 1996, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1724,6 +1724,24 @@ begin_function
 name|int
 name|can_unicast_without_arp
 parameter_list|()
+block|{
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|can_receive_unicast_unconfigured
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
 block|{
 return|return
 literal|1

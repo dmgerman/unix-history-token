@@ -23,7 +23,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"$Id: socket.c,v 1.26.2.10 1999/02/23 22:09:55 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$Id: socket.c,v 1.26.2.11 1999/03/29 22:07:14 mellon Exp $ Copyright (c) 1995, 1996, 1997, 1998, 1999 The Internet Software Consortium.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -1061,6 +1061,37 @@ block|{
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|can_receive_unicast_unconfigured
+parameter_list|(
+name|ip
+parameter_list|)
+name|struct
+name|interface_info
+modifier|*
+name|ip
+decl_stmt|;
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SOCKET_CAN_RECEIVE_UNICAST_UNCONFIGURED
+argument_list|)
+return|return
+literal|1
+return|;
+else|#
+directive|else
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
