@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.2 %G%"
+literal|"@(#)tree.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +395,9 @@ expr_stmt|;
 break|break;
 case|case
 name|O_LCON
+case|:
+case|case
+name|O_CONT
 case|:
 case|case
 name|O_DELETE
