@@ -88,6 +88,10 @@ block|,
 name|DEVSTAT_WRITE
 init|=
 literal|0x02
+block|,
+name|DEVSTAT_FREE
+init|=
+literal|0x03
 block|}
 name|devstat_trans_flags
 typedef|;
@@ -297,13 +301,17 @@ name|int
 name|unit_number
 decl_stmt|;
 name|u_int64_t
+name|bytes_read
+decl_stmt|;
+comment|/* 						      * Total bytes read 						      * from a device. 						      */
+name|u_int64_t
 name|bytes_written
 decl_stmt|;
 comment|/* 						      * Total bytes written 						      * to a device. 						      */
 name|u_int64_t
-name|bytes_read
+name|bytes_freed
 decl_stmt|;
-comment|/* 						      * Total bytes read 						      * from a device. 						      */
+comment|/* 						      * Total bytes freed 						      * from a device. 						      */
 name|u_int64_t
 name|num_reads
 decl_stmt|;
@@ -312,6 +320,10 @@ name|u_int64_t
 name|num_writes
 decl_stmt|;
 comment|/* 						      * Total number of 						      * write requests to  						      * the device. 						      */
+name|u_int64_t
+name|num_frees
+decl_stmt|;
+comment|/* 						      * Total number of 						      * free requests to  						      * the device. 						      */
 name|u_int64_t
 name|num_other
 decl_stmt|;
@@ -372,6 +384,12 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|buf
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 name|void
@@ -446,6 +464,22 @@ name|tag_type
 parameter_list|,
 name|devstat_trans_flags
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|devstat_end_transaction_buf
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+name|struct
+name|buf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
