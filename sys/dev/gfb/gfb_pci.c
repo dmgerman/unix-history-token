@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_fb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -193,12 +199,6 @@ end_endif
 begin_comment
 comment|/* __alpha__ */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_fb.h"
-end_include
 
 begin_if
 if|#
