@@ -169,7 +169,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|sockaddr_in
-name|sin
+name|s_in
 init|=
 block|{
 name|AF_INET
@@ -601,11 +601,11 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|s_in
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sin
+name|s_in
 argument_list|)
 argument_list|)
 operator|<

@@ -72,6 +72,33 @@ begin_asm
 asm|asm(".long 0xc000c000");
 end_asm
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* more needed for alignment on i486/gcc-2.3.3 */
+end_comment
+
+begin_asm
+asm|asm(".long 0xc000c000");
+end_asm
+
+begin_asm
+asm|asm(".long 0xc000c000");
+end_asm
+
+begin_asm
+asm|asm(".long 0xc000c000");
+end_asm
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|unsigned

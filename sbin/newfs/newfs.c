@@ -146,6 +146,19 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_function_decl
+name|int
+name|fatal
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -2868,16 +2881,11 @@ end_comment
 begin_macro
 name|fatal
 argument_list|(
-argument|fmt
+argument|char *fmt
+argument_list|,
+argument|...
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
