@@ -303,32 +303,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-specifier|const
-name|struct
-name|pccard_product
-modifier|*
-name|pccard_product_lookup
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-specifier|const
-name|struct
-name|pccard_product
-modifier|*
-name|tab
-parameter_list|,
-name|size_t
-name|ent_size
-parameter_list|,
-name|pccard_product_match_fn
-name|matchfn
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|pccard_card_gettype
 parameter_list|(
@@ -1533,7 +1507,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|struct
 name|pccard_product
