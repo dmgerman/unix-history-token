@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)remote.c	5.9 (Berkeley) %G%"
+literal|"@(#)remote.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,6 +52,30 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tip.h"
+end_include
 
 begin_comment
 comment|/*  * Attributes to be gleened from remote host description  *   data base.  */
