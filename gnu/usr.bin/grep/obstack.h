@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* obstack.h - object stack macros    Copyright (C) 1988, 1992 Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* obstack.h - object stack macros    Copyright (C) 1988,89,90,91,92,93,94,96,97, 98 Free Software Foundation, Inc.     the C library, however.  The master source lives in /gd/gnu/lib.  NOTE: The canonical source of this file is maintained with the GNU C Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -14,69 +14,54 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__OBSTACKS__
+name|_OBSTACK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__OBSTACKS__
+name|_OBSTACK_H
+value|1
 end_define
 
-begin_escape
-end_escape
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
 
-begin_comment
-comment|/* We use subtraction of (char *)0 instead of casting to int    because on word-addressable machines a simple cast to int    may ignore the byte-within-word field of the pointer.  */
-end_comment
-
-begin_ifndef
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
+comment|/* We use subtraction of (char *) 0 instead of casting to int    because on word-addressable machines a simple cast to int    may ignore the byte-within-word field of the pointer.  */
 ifndef|#
 directive|ifndef
 name|__PTR_TO_INT
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|__PTR_TO_INT
 parameter_list|(
 name|P
 parameter_list|)
-value|((P) - (char *)0)
-end_define
-
-begin_endif
+value|((P) - (char *) 0)
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|__INT_TO_PTR
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|__INT_TO_PTR
 parameter_list|(
 name|P
 parameter_list|)
-value|((P) + (char *)0)
-end_define
-
-begin_endif
+value|((P) + (char *) 0)
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* We need the type of the resulting object.  In ANSI C it is ptrdiff_t    but in traditional C it is usually long.  If we are in ANSI C and    don't already have ptrdiff_t get it.  */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -84,14 +69,13 @@ argument_list|(
 name|__STDC__
 argument_list|)
 operator|&&
+name|__STDC__
+operator|&&
 operator|!
 name|defined
 argument_list|(
 name|offsetof
 argument_list|)
-end_if
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -103,91 +87,100 @@ name|defined
 argument_list|(
 name|IN_GCC
 argument_list|)
-end_if
-
-begin_comment
-comment|/* On Next machine, the system's stddef.h screws up if included    after we have defined just ptrdiff_t, so include all of gstddef.h.    Otherwise, define just ptrdiff_t, which is all we need.  */
-end_comment
-
-begin_ifndef
+comment|/* On Next machine, the system's stddef.h screws up if included    after we have defined just ptrdiff_t, so include all of stddef.h.    Otherwise, define just ptrdiff_t, which is all we need.  */
 ifndef|#
 directive|ifndef
 name|__NeXT__
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|__need_ptrdiff_t
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* While building GCC, the stddef.h that goes with GCC has this name.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"gstddef.h"
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
+endif|#
+directive|endif
 include|#
 directive|include
 file|<stddef.h>
-end_include
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
-
-begin_define
+argument_list|)
+operator|&&
+name|__STDC__
 define|#
 directive|define
 name|PTR_INT_TYPE
 value|ptrdiff_t
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|PTR_INT_TYPE
 value|long
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_struct
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_LIBC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|HAVE_STRING_H
+argument_list|)
+include|#
+directive|include
+file|<string.h>
+define|#
+directive|define
+name|_obstack_memcpy
+parameter_list|(
+name|To
+parameter_list|,
+name|From
+parameter_list|,
+name|N
+parameter_list|)
+value|memcpy ((To), (From), (N))
+else|#
+directive|else
+ifdef|#
+directive|ifdef
+name|memcpy
+define|#
+directive|define
+name|_obstack_memcpy
+parameter_list|(
+name|To
+parameter_list|,
+name|From
+parameter_list|,
+name|N
+parameter_list|)
+value|memcpy ((To), (From), (N))
+else|#
+directive|else
+define|#
+directive|define
+name|_obstack_memcpy
+parameter_list|(
+name|To
+parameter_list|,
+name|From
+parameter_list|,
+name|N
+parameter_list|)
+value|bcopy ((From), (To), (N))
+endif|#
+directive|endif
+endif|#
+directive|endif
 struct|struct
 name|_obstack_chunk
 comment|/* Lives at front of each chunk. */
@@ -212,9 +205,6 @@ decl_stmt|;
 comment|/* objects begin here */
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|obstack
 comment|/* control current object in current chunk */
@@ -252,6 +242,50 @@ name|int
 name|alignment_mask
 decl_stmt|;
 comment|/* Mask of alignment for each object. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
+name|__STDC__
+comment|/* These prototypes vary based on `use_extra_arg', and we use      casts to the prototypeless function type in all assignments,      but having prototypes here quiets -Wstrict-prototypes.  */
+name|struct
+name|_obstack_chunk
+modifier|*
+function_decl|(
+modifier|*
+name|chunkfun
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|freefun
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|_obstack_chunk
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+modifier|*
+name|extra_arg
+decl_stmt|;
+comment|/* first arg for chunk alloc/dealloc funcs */
+else|#
+directive|else
 name|struct
 name|_obstack_chunk
 modifier|*
@@ -275,6 +309,8 @@ modifier|*
 name|extra_arg
 decl_stmt|;
 comment|/* first arg for chunk alloc/dealloc funcs */
+endif|#
+directive|endif
 name|unsigned
 name|use_extra_arg
 range|:
@@ -287,21 +323,23 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* There is a possibility that the current 				   chunk contains a zero-length object.  This 				   prevents freeing the chunk if we allocate 				   a bigger chunk to replace it. */
+name|unsigned
+name|alloc_failed
+range|:
+literal|1
+decl_stmt|;
+comment|/* No longer used, as we now call the failed 				   handler on error, but retained for binary 				   compatibility.  */
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/* Declare the external functions we use; they are in obstack.c.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
-
-begin_function_decl
+argument_list|)
+operator|&&
+name|__STDC__
 specifier|extern
 name|void
 name|_obstack_newchunk
@@ -313,9 +351,6 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|void
 name|_obstack_free
@@ -328,11 +363,8 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_obstack_begin
 parameter_list|(
 name|struct
@@ -348,20 +380,22 @@ modifier|*
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|long
+parameter_list|)
 parameter_list|,
 name|void
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_obstack_begin_1
 parameter_list|(
 name|struct
@@ -377,76 +411,76 @@ modifier|*
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|long
+parameter_list|)
 parameter_list|,
 name|void
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
 parameter_list|,
 name|void
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_else
+specifier|extern
+name|int
+name|_obstack_memory_used
+parameter_list|(
+name|struct
+name|obstack
+modifier|*
+parameter_list|)
+function_decl|;
 else|#
 directive|else
-end_else
-
-begin_function_decl
 specifier|extern
 name|void
 name|_obstack_newchunk
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
 name|void
 name|_obstack_free
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_obstack_begin
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_obstack_begin_1
 parameter_list|()
 function_decl|;
-end_function_decl
-
-begin_endif
+specifier|extern
+name|int
+name|_obstack_memory_used
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
-end_endif
-
-begin_escape
-end_escape
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
-
-begin_comment
+argument_list|)
+operator|&&
+name|__STDC__
 comment|/* Do the function-declarations after the structs    but before defining the macros.  */
-end_comment
-
-begin_function_decl
 name|void
 name|obstack_init
 parameter_list|(
@@ -456,9 +490,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_alloc
@@ -472,9 +503,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_copy
@@ -492,9 +520,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_copy0
@@ -512,9 +537,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_free
 parameter_list|(
@@ -528,9 +550,6 @@ modifier|*
 name|block
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_blank
 parameter_list|(
@@ -543,9 +562,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_grow
 parameter_list|(
@@ -562,9 +578,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_grow0
 parameter_list|(
@@ -581,9 +594,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_1grow
 parameter_list|(
@@ -596,9 +606,6 @@ name|int
 name|data_char
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_ptr_grow
 parameter_list|(
@@ -612,9 +619,6 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_int_grow
 parameter_list|(
@@ -627,9 +631,6 @@ name|int
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_finish
@@ -640,9 +641,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|obstack_object_size
 parameter_list|(
@@ -652,9 +650,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|obstack_room
 parameter_list|(
@@ -664,9 +659,18 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
+name|void
+name|obstack_make_room
+parameter_list|(
+name|struct
+name|obstack
+modifier|*
+name|obstack
+parameter_list|,
+name|int
+name|size
+parameter_list|)
+function_decl|;
 name|void
 name|obstack_1grow_fast
 parameter_list|(
@@ -679,9 +683,6 @@ name|int
 name|data_char
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_ptr_grow_fast
 parameter_list|(
@@ -695,9 +696,6 @@ modifier|*
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_int_grow_fast
 parameter_list|(
@@ -710,9 +708,6 @@ name|int
 name|data
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|obstack_blank_fast
 parameter_list|(
@@ -725,9 +720,6 @@ name|int
 name|size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_base
@@ -738,9 +730,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|obstack_next_free
@@ -751,9 +740,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|obstack_alignment_mask
 parameter_list|(
@@ -763,9 +749,6 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|obstack_chunk_size
 parameter_list|(
@@ -775,29 +758,56 @@ modifier|*
 name|obstack
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_endif
+name|int
+name|obstack_memory_used
+parameter_list|(
+name|struct
+name|obstack
+modifier|*
+name|obstack
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* __STDC__ */
-end_comment
-
-begin_comment
 comment|/* Non-ANSI C cannot really support alternative functions for these macros,    so we do not declare them.  */
-end_comment
-
-begin_escape
-end_escape
-
-begin_comment
+comment|/* Error handler called when `obstack_chunk_alloc' failed to allocate    more memory.  This can be set to a user defined function.  The    default action is to print a message and abort.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
+name|__STDC__
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|obstack_alloc_failed_handler
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|obstack_alloc_failed_handler
+function_decl|)
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
+comment|/* Exit value used when `print_and_abort' is used.  */
+specifier|extern
+name|int
+name|obstack_exit_failure
+decl_stmt|;
 comment|/* Pointer to beginning of object being allocated or to be allocated next.    Note that this might not be the final address of the object    because a new chunk might be needed to hold the final size.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_base
@@ -805,13 +815,7 @@ parameter_list|(
 name|h
 parameter_list|)
 value|((h)->object_base)
-end_define
-
-begin_comment
 comment|/* Size for allocating ordinary chunks.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_chunk_size
@@ -819,13 +823,7 @@ parameter_list|(
 name|h
 parameter_list|)
 value|((h)->chunk_size)
-end_define
-
-begin_comment
 comment|/* Pointer to next byte not yet allocated in current chunk.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_next_free
@@ -833,13 +831,7 @@ parameter_list|(
 name|h
 parameter_list|)
 value|((h)->next_free)
-end_define
-
-begin_comment
 comment|/* Mask specifying low bits that should be clear in address of an object.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_alignment_mask
@@ -847,9 +839,89 @@ parameter_list|(
 name|h
 parameter_list|)
 value|((h)->alignment_mask)
-end_define
-
-begin_define
+comment|/* To prevent prototype warnings provide complete argument list in    standard C version.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
+operator|&&
+name|__STDC__
+define|#
+directive|define
+name|obstack_init
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|_obstack_begin ((h), 0, 0, \ 		  (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
+define|#
+directive|define
+name|obstack_begin
+parameter_list|(
+name|h
+parameter_list|,
+name|size
+parameter_list|)
+define|\
+value|_obstack_begin ((h), (size), 0, \ 		  (void *(*) (long)) obstack_chunk_alloc, (void (*) (void *)) obstack_chunk_free)
+define|#
+directive|define
+name|obstack_specify_allocation
+parameter_list|(
+name|h
+parameter_list|,
+name|size
+parameter_list|,
+name|alignment
+parameter_list|,
+name|chunkfun
+parameter_list|,
+name|freefun
+parameter_list|)
+define|\
+value|_obstack_begin ((h), (size), (alignment), \ 		    (void *(*) (long)) (chunkfun), (void (*) (void *)) (freefun))
+define|#
+directive|define
+name|obstack_specify_allocation_with_arg
+parameter_list|(
+name|h
+parameter_list|,
+name|size
+parameter_list|,
+name|alignment
+parameter_list|,
+name|chunkfun
+parameter_list|,
+name|freefun
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|_obstack_begin_1 ((h), (size), (alignment), \ 		    (void *(*) (void *, long)) (chunkfun), \ 		    (void (*) (void *, void *)) (freefun), (arg))
+define|#
+directive|define
+name|obstack_chunkfun
+parameter_list|(
+name|h
+parameter_list|,
+name|newchunkfun
+parameter_list|)
+define|\
+value|((h) -> chunkfun = (struct _obstack_chunk *(*)(void *, long)) (newchunkfun))
+define|#
+directive|define
+name|obstack_freefun
+parameter_list|(
+name|h
+parameter_list|,
+name|newfreefun
+parameter_list|)
+define|\
+value|((h) -> freefun = (void (*)(void *, struct _obstack_chunk *)) (newfreefun))
+else|#
+directive|else
 define|#
 directive|define
 name|obstack_init
@@ -858,9 +930,6 @@ name|h
 parameter_list|)
 define|\
 value|_obstack_begin ((h), 0, 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ()) obstack_chunk_free)
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_begin
@@ -871,9 +940,6 @@ name|size
 parameter_list|)
 define|\
 value|_obstack_begin ((h), (size), 0, \ 		  (void *(*) ()) obstack_chunk_alloc, (void (*) ()) obstack_chunk_free)
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_specify_allocation
@@ -890,9 +956,6 @@ name|freefun
 parameter_list|)
 define|\
 value|_obstack_begin ((h), (size), (alignment), \ 		    (void *(*) ()) (chunkfun), (void (*) ()) (freefun))
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_specify_allocation_with_arg
@@ -911,9 +974,28 @@ name|arg
 parameter_list|)
 define|\
 value|_obstack_begin_1 ((h), (size), (alignment), \ 		    (void *(*) ()) (chunkfun), (void (*) ()) (freefun), (arg))
-end_define
-
-begin_define
+define|#
+directive|define
+name|obstack_chunkfun
+parameter_list|(
+name|h
+parameter_list|,
+name|newchunkfun
+parameter_list|)
+define|\
+value|((h) -> chunkfun = (struct _obstack_chunk *(*)()) (newchunkfun))
+define|#
+directive|define
+name|obstack_freefun
+parameter_list|(
+name|h
+parameter_list|,
+name|newfreefun
+parameter_list|)
+define|\
+value|((h) -> freefun = (void (*)()) (newfreefun))
+endif|#
+directive|endif
 define|#
 directive|define
 name|obstack_1grow_fast
@@ -923,9 +1005,6 @@ parameter_list|,
 name|achar
 parameter_list|)
 value|(*((h)->next_free)++ = achar)
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_blank_fast
@@ -935,12 +1014,13 @@ parameter_list|,
 name|n
 parameter_list|)
 value|((h)->next_free += (n))
-end_define
-
-begin_escape
-end_escape
-
-begin_if
+define|#
+directive|define
+name|obstack_memory_used
+parameter_list|(
+name|h
+parameter_list|)
+value|_obstack_memory_used (h)
 if|#
 directive|if
 name|defined
@@ -952,37 +1032,27 @@ name|defined
 argument_list|(
 name|__STDC__
 argument_list|)
-end_if
-
-begin_if
+operator|&&
+name|__STDC__
+comment|/* NextStep 2.0 cc is really gcc 1.93 but it defines __GNUC__ = 2 and    does not implement __extension__.  But that compiler doesn't define    __GNUC_MINOR__.  */
 if|#
 directive|if
 name|__GNUC__
 operator|<
 literal|2
 operator|||
-name|defined
-argument_list|(
-name|NeXT
-argument_list|)
-end_if
-
-begin_define
+operator|(
+name|__NeXT__
+operator|&&
+operator|!
+name|__GNUC_MINOR__
+operator|)
 define|#
 directive|define
 name|__extension__
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* For GNU C, if not -traditional,    we can define these macros to compute all args only once    without using a global variable.    Also, we can avoid using the `temp' slot, to make faster code.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_object_size
@@ -991,9 +1061,6 @@ name|OBSTACK
 parameter_list|)
 define|\
 value|__extension__								\   ({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->next_free - __o->object_base); })
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_room
@@ -1002,13 +1069,16 @@ name|OBSTACK
 parameter_list|)
 define|\
 value|__extension__								\   ({ struct obstack *__o = (OBSTACK);					\      (unsigned) (__o->chunk_limit - __o->next_free); })
-end_define
-
-begin_comment
-comment|/* Note that the call to _obstack_newchunk is enclosed in (..., 0)    so that we can avoid having void expressions    in the arms of the conditional expression.    Casting the third operand to void was tried before,    but some compilers won't accept it.  */
-end_comment
-
-begin_define
+define|#
+directive|define
+name|obstack_make_room
+parameter_list|(
+name|OBSTACK
+parameter_list|,
+name|length
+parameter_list|)
+define|\
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->chunk_limit - __o->next_free< __len)			\      _obstack_newchunk (__o, __len);					\    (void) 0; })
 define|#
 directive|define
 name|obstack_grow
@@ -1020,10 +1090,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    bcopy (where, __o->next_free, __len);				\    __o->next_free += __len;						\    (void) 0; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len> __o->chunk_limit)			\      _obstack_newchunk (__o, __len);					\    _obstack_memcpy (__o->next_free, (char *) (where), __len);		\    __o->next_free += __len;						\    (void) 0; })
 define|#
 directive|define
 name|obstack_grow0
@@ -1035,10 +1102,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->next_free + __len + 1> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, __len + 1), 0) : 0),			\    bcopy (where, __o->next_free, __len),				\    __o->next_free += __len,						\    *(__o->next_free)++ = 0;						\    (void) 0; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->next_free + __len + 1> __o->chunk_limit)			\      _obstack_newchunk (__o, __len + 1);				\    _obstack_memcpy (__o->next_free, (char *) (where), __len);		\    __o->next_free += __len;						\    *(__o->next_free)++ = 0;						\    (void) 0; })
 define|#
 directive|define
 name|obstack_1grow
@@ -1048,14 +1112,8 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + 1> __o->chunk_limit)				\     ? (_obstack_newchunk (__o, 1), 0) : 0),				\    *(__o->next_free)++ = (datum);					\    (void) 0; })
-end_define
-
-begin_comment
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + 1> __o->chunk_limit)				\      _obstack_newchunk (__o, 1);					\    *(__o->next_free)++ = (datum);					\    (void) 0; })
 comment|/* These assume that the obstack alignment is good enough for pointers or ints,    and that the data added so far to the current object    shares that much alignment.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_ptr_grow
@@ -1065,10 +1123,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (void *)> __o->chunk_limit)		\     ? (_obstack_newchunk (__o, sizeof (void *)), 0) : 0),		\    *((void **)__o->next_free)++ = ((void *)datum);			\    (void) 0; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (void *)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (void *));				\    *((void **)__o->next_free)++ = ((void *)datum);			\    (void) 0; })
 define|#
 directive|define
 name|obstack_int_grow
@@ -1078,10 +1133,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    ((__o->next_free + sizeof (int)> __o->chunk_limit)			\     ? (_obstack_newchunk (__o, sizeof (int)), 0) : 0),			\    *((int *)__o->next_free)++ = ((int)datum);				\    (void) 0; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    if (__o->next_free + sizeof (int)> __o->chunk_limit)		\      _obstack_newchunk (__o, sizeof (int));				\    *((int *)__o->next_free)++ = ((int)datum);				\    (void) 0; })
 define|#
 directive|define
 name|obstack_ptr_grow_fast
@@ -1090,10 +1142,7 @@ name|h
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((void **)(h)->next_free)++ = (void *)aptr)
-end_define
-
-begin_define
+value|(*((void **) (h)->next_free)++ = (void *)aptr)
 define|#
 directive|define
 name|obstack_int_grow_fast
@@ -1102,10 +1151,7 @@ name|h
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *)(h)->next_free)++ = (int)aint)
-end_define
-
-begin_define
+value|(*((int *) (h)->next_free)++ = (int) aint)
 define|#
 directive|define
 name|obstack_blank
@@ -1115,10 +1161,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    ((__o->chunk_limit - __o->next_free< __len)				\     ? (_obstack_newchunk (__o, __len), 0) : 0);				\    __o->next_free += __len;						\    (void) 0; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    int __len = (length);						\    if (__o->chunk_limit - __o->next_free< __len)			\      _obstack_newchunk (__o, __len);					\    __o->next_free += __len;						\    (void) 0; })
 define|#
 directive|define
 name|obstack_alloc
@@ -1129,9 +1172,6 @@ name|length
 parameter_list|)
 define|\
 value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_blank (__h, (length));					\    obstack_finish (__h); })
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_copy
@@ -1144,9 +1184,6 @@ name|length
 parameter_list|)
 define|\
 value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_grow (__h, (where), (length));				\    obstack_finish (__h); })
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_copy0
@@ -1159,13 +1196,7 @@ name|length
 parameter_list|)
 define|\
 value|__extension__								\ ({ struct obstack *__h = (OBSTACK);					\    obstack_grow0 (__h, (where), (length));				\    obstack_finish (__h); })
-end_define
-
-begin_comment
 comment|/* The local variable is named __o1 to avoid a name conflict    when obstack_blank is called.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_finish
@@ -1173,10 +1204,7 @@ parameter_list|(
 name|OBSTACK
 parameter_list|)
 define|\
-value|__extension__								\ ({ struct obstack *__o1 = (OBSTACK);					\    void *value = (void *) __o1->object_base;				\    if (__o1->next_free == value)					\      __o1->maybe_empty_object = 1;					\    __o1->next_free							\      = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\& ~ (__o1->alignment_mask));			\    ((__o1->next_free - (char *)__o1->chunk				\> __o1->chunk_limit - (char *)__o1->chunk)				\     ? (__o1->next_free = __o1->chunk_limit) : 0);			\    __o1->object_base = __o1->next_free;					\    value; })
-end_define
-
-begin_define
+value|__extension__								\ ({ struct obstack *__o1 = (OBSTACK);					\    void *value;								\    value = (void *) __o1->object_base;					\    if (__o1->next_free == value)					\      __o1->maybe_empty_object = 1;					\    __o1->next_free							\      = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\& ~ (__o1->alignment_mask));			\    if (__o1->next_free - (char *)__o1->chunk				\> __o1->chunk_limit - (char *)__o1->chunk)			\      __o1->next_free = __o1->chunk_limit;				\    __o1->object_base = __o1->next_free;					\    value; })
 define|#
 directive|define
 name|obstack_free
@@ -1187,21 +1215,9 @@ name|OBJ
 parameter_list|)
 define|\
 value|__extension__								\ ({ struct obstack *__o = (OBSTACK);					\    void *__obj = (OBJ);							\    if (__obj> (void *)__o->chunk&& __obj< (void *)__o->chunk_limit)  \      __o->next_free = __o->object_base = __obj;				\    else (obstack_free) (__o, __obj); })
-end_define
-
-begin_escape
-end_escape
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
 comment|/* not __GNUC__ or not __STDC__ */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|obstack_object_size
@@ -1210,9 +1226,6 @@ name|h
 parameter_list|)
 define|\
 value|(unsigned) ((h)->next_free - (h)->object_base)
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_room
@@ -1221,9 +1234,17 @@ name|h
 parameter_list|)
 define|\
 value|(unsigned) ((h)->chunk_limit - (h)->next_free)
-end_define
-
-begin_define
+comment|/* Note that the call to _obstack_newchunk is enclosed in (..., 0)    so that we can avoid having void expressions    in the arms of the conditional expression.    Casting the third operand to void was tried before,    but some compilers won't accept it.  */
+define|#
+directive|define
+name|obstack_make_room
+parameter_list|(
+name|h
+parameter_list|,
+name|length
+parameter_list|)
+define|\
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0))
 define|#
 directive|define
 name|obstack_grow
@@ -1235,10 +1256,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   bcopy (where, (h)->next_free, (h)->temp),				\   (h)->next_free += (h)->temp)
-end_define
-
-begin_define
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\   (h)->next_free += (h)->temp)
 define|#
 directive|define
 name|obstack_grow0
@@ -1250,10 +1268,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   bcopy (where, (h)->next_free, (h)->temp),				\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
-end_define
-
-begin_define
+value|( (h)->temp = (length),							\   (((h)->next_free + (h)->temp + 1> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), (h)->temp + 1), 0) : 0),			\   _obstack_memcpy ((h)->next_free, (char *) (where), (h)->temp),	\   (h)->next_free += (h)->temp,						\   *((h)->next_free)++ = 0)
 define|#
 directive|define
 name|obstack_1grow
@@ -1263,10 +1278,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + 1> (h)->chunk_limit)				\    ? (_obstack_newchunk ((h), 1), 0) : 0),				\   *((h)->next_free)++ = (datum))
-end_define
-
-begin_define
+value|( (((h)->next_free + 1> (h)->chunk_limit)				\    ? (_obstack_newchunk ((h), 1), 0) : 0),				\   (*((h)->next_free)++ = (datum)))
 define|#
 directive|define
 name|obstack_ptr_grow
@@ -1276,10 +1288,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   *((char **)(((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *)datum))
-end_define
-
-begin_define
+value|( (((h)->next_free + sizeof (char *)> (h)->chunk_limit)		\    ? (_obstack_newchunk ((h), sizeof (char *)), 0) : 0),		\   (*((char **) (((h)->next_free+=sizeof(char *))-sizeof(char *))) = ((char *) datum)))
 define|#
 directive|define
 name|obstack_int_grow
@@ -1289,10 +1298,7 @@ parameter_list|,
 name|datum
 parameter_list|)
 define|\
-value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   *((int *)(((h)->next_free+=sizeof(int))-sizeof(int))) = ((int)datum))
-end_define
-
-begin_define
+value|( (((h)->next_free + sizeof (int)> (h)->chunk_limit)			\    ? (_obstack_newchunk ((h), sizeof (int)), 0) : 0),			\   (*((int *) (((h)->next_free+=sizeof(int))-sizeof(int))) = ((int) datum)))
 define|#
 directive|define
 name|obstack_ptr_grow_fast
@@ -1301,10 +1307,7 @@ name|h
 parameter_list|,
 name|aptr
 parameter_list|)
-value|(*((char **)(h)->next_free)++ = (char *)aptr)
-end_define
-
-begin_define
+value|(*((char **) (h)->next_free)++ = (char *) aptr)
 define|#
 directive|define
 name|obstack_int_grow_fast
@@ -1313,10 +1316,7 @@ name|h
 parameter_list|,
 name|aint
 parameter_list|)
-value|(*((int *)(h)->next_free)++ = (int)aint)
-end_define
-
-begin_define
+value|(*((int *) (h)->next_free)++ = (int) aint)
 define|#
 directive|define
 name|obstack_blank
@@ -1326,10 +1326,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|( (h)->temp = (length),							\   (((h)->chunk_limit - (h)->next_free< (h)->temp)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   (h)->next_free += (h)->temp)
-end_define
-
-begin_define
+value|( (h)->temp = (length),							\   (((h)->chunk_limit - (h)->next_free< (h)->temp)			\    ? (_obstack_newchunk ((h), (h)->temp), 0) : 0),			\   ((h)->next_free += (h)->temp))
 define|#
 directive|define
 name|obstack_alloc
@@ -1340,9 +1337,6 @@ name|length
 parameter_list|)
 define|\
 value|(obstack_blank ((h), (length)), obstack_finish ((h)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_copy
@@ -1355,9 +1349,6 @@ name|length
 parameter_list|)
 define|\
 value|(obstack_grow ((h), (where), (length)), obstack_finish ((h)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_copy0
@@ -1370,9 +1361,6 @@ name|length
 parameter_list|)
 define|\
 value|(obstack_grow0 ((h), (where), (length)), obstack_finish ((h)))
-end_define
-
-begin_define
 define|#
 directive|define
 name|obstack_finish
@@ -1380,16 +1368,15 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|( ((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object = 1), 0)					\    : 0),								\   (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *)(h)->chunk					\> (h)->chunk_limit - (char *)(h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp))
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+value|( ((h)->next_free == (h)->object_base					\    ? (((h)->maybe_empty_object = 1), 0)					\    : 0),								\   (h)->temp = __PTR_TO_INT ((h)->object_base),				\   (h)->next_free							\     = __INT_TO_PTR ((__PTR_TO_INT ((h)->next_free)+(h)->alignment_mask)	\& ~ ((h)->alignment_mask)),				\   (((h)->next_free - (char *) (h)->chunk				\> (h)->chunk_limit - (char *) (h)->chunk)				\    ? ((h)->next_free = (h)->chunk_limit) : 0),				\   (h)->object_base = (h)->next_free,					\   __INT_TO_PTR ((h)->temp))
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__STDC__
-end_ifdef
-
-begin_define
+argument_list|)
+operator|&&
+name|__STDC__
 define|#
 directive|define
 name|obstack_free
@@ -1399,15 +1386,9 @@ parameter_list|,
 name|obj
 parameter_list|)
 define|\
-value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
-end_define
-
-begin_else
+value|( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (((obstack_free) ((h), (h)->temp + (char *) (h)->chunk), 0), 0)))
 else|#
 directive|else
-end_else
-
-begin_define
 define|#
 directive|define
 name|obstack_free
@@ -1417,21 +1398,20 @@ parameter_list|,
 name|obj
 parameter_list|)
 define|\
-value|( (h)->temp = (char *)(obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (_obstack_free ((h), (h)->temp + (char *) (h)->chunk), 0)))
-end_define
-
-begin_endif
+value|( (h)->temp = (char *) (obj) - (char *) (h)->chunk,			\   (((h)->temp> 0&& (h)->temp< (h)->chunk_limit - (char *) (h)->chunk)\    ? (int) ((h)->next_free = (h)->object_base				\ 	    = (h)->temp + (char *) (h)->chunk)				\    : (_obstack_free ((h), (h)->temp + (char *) (h)->chunk), 0)))
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+comment|/* not __GNUC__ or not __STDC__ */
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
 begin_comment
-comment|/* not __GNUC__ or not __STDC__ */
+comment|/* C++ */
 end_comment
 
 begin_endif
@@ -1439,8 +1419,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* not __OBSTACKS__ */
+comment|/* obstack.h */
 end_comment
 
 end_unit
