@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	5.2 (Berkeley) %G%	*/
+comment|/*	@(#)defs.h	5.3 (Berkeley) %G%	*/
 end_comment
 
 begin_comment
@@ -43,21 +43,6 @@ end_include
 
 begin_comment
 comment|/*  * Signals.  Adb catches SIGINT and SIGQUIT; the variables sigint and  * sigquit hold the original state for adb's children.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|int
-function_decl|(
-modifier|*
-name|sig_t
-function_decl|)
-parameter_list|()
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/* for signal syscall */
 end_comment
 
 begin_decl_stmt

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.10 (Berkeley) %G%"
+literal|"@(#)ed.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
 begin_include
@@ -361,25 +361,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|oldhup
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|oldquit
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -672,7 +664,7 @@ modifier|*
 name|p2
 decl_stmt|;
 specifier|extern
-name|int
+name|void
 name|onintr
 argument_list|()
 decl_stmt|,
@@ -682,13 +674,9 @@ decl_stmt|,
 name|onhup
 argument_list|()
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
+name|sig_t
 name|oldintr
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 name|oldquit
 operator|=
 name|signal
@@ -2469,20 +2457,12 @@ block|}
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|onintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|onintr
-argument_list|)
-expr_stmt|;
+comment|/* not necessary: (void)signal(SIGINT, onintr); */
 name|putchr
 argument_list|(
 literal|'\n'
@@ -2498,29 +2478,15 @@ name|Q
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|onhup
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-name|signal
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_IGN
-argument_list|)
-expr_stmt|;
+comment|/* not necessary: (void)signal(SIGINT, SIG_IGN); */
+comment|/* not necessary: (void)signal(SIGHUP, SIG_IGN); */
 if|if
 condition|(
 name|dol
@@ -2565,7 +2531,7 @@ name|quit
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|error
@@ -3451,12 +3417,11 @@ end_macro
 begin_block
 block|{
 specifier|register
-argument_list|(
-operator|*
+name|sig_t
 name|savint
-argument_list|)
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|pid
 decl_stmt|,
 name|rpid
@@ -3554,12 +3519,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|quit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -3593,7 +3556,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|delete

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ comment|/* label for error jumps */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|fault
 parameter_list|()
 function_decl|;
@@ -1016,20 +1016,15 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fault
-argument_list|(
-argument|sig
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sig
+parameter_list|)
 name|int
 name|sig
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* (void) signal(sig, fault); */
 comment|/* unnecessary */
@@ -1068,7 +1063,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Panic announces an internally detected error.  */

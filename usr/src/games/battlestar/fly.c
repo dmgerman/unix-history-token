@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fly.c	5.2 (Berkeley) %G%"
+literal|"@(#)fly.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,15 +116,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|oldsig
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|succumb
