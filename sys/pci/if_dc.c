@@ -11791,6 +11791,7 @@ argument_list|,
 name|DC_NETCFG_TX_ON
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -11823,6 +11824,22 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|DC_ISR
+argument_list|)
+operator|&
+name|DC_INTRS
+operator|)
+operator|==
+literal|0
+condition|)
+return|return ;
 name|ifp
 operator|=
 operator|&
@@ -11832,7 +11849,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Supress unwanted interrupts */
+comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
 operator|!
