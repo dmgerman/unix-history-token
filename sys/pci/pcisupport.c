@@ -6679,7 +6679,7 @@ literal|0x800510c8
 case|:
 return|return
 operator|(
-literal|"NeoMagic MagicMedia 256ZX Audio controller"
+literal|"NeoMagic MagicMedia 256AX Audio controller"
 operator|)
 return|;
 case|case
