@@ -2554,7 +2554,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: nsock=0"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4483,7 +4483,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %d>= %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8098,7 +8098,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: bad fd"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8125,7 +8125,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: is mux"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8157,7 +8157,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: not off"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8247,7 +8247,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: bad fd"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8274,7 +8274,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: is mux"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8307,7 +8307,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s: not on"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|sep
 operator|->
@@ -8333,7 +8333,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: nsock=0"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
