@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.9 (Berkeley) %G%"
+literal|"@(#)headers.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,40 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|31
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|hi
+operator|->
+name|hi_field
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"no header match\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"header match, hi_flags=%o\n"
+argument_list|,
+name|hi
+operator|->
+name|hi_flags
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* see if this is a resent message */
 if|if
@@ -1497,11 +1531,7 @@ name|h
 operator|->
 name|h_value
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e
@@ -1617,11 +1647,7 @@ name|h
 operator|->
 name|h_value
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e
