@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.62	82/10/04	*/
+comment|/*	machdep.c	4.63	82/10/05	*/
 end_comment
 
 begin_include
@@ -1126,7 +1126,7 @@ goto|goto
 name|check
 goto|;
 block|}
-comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 * We must correct for the fact that VMS keeps local time 	 * while UNIX wants GMT. 	 */
+comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 * (Unfortunately, VMS keeps local time, so when you run UNIX 	 * and VMS, VMS runs on GMT...). 	 */
 if|if
 condition|(
 name|todr
