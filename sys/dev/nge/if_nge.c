@@ -5841,7 +5841,7 @@ name|m_pkthdr
 operator|.
 name|csum_flags
 operator||=
-name|CSUM_IP_CHECKED
+name|CSUM_IP_VALID
 expr_stmt|;
 block|}
 if|#
