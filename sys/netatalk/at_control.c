@@ -341,14 +341,12 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|struct
 name|ifaddr
 modifier|*
 name|ifa
+decl_stmt|,
+modifier|*
+name|ifa0
 decl_stmt|;
 comment|/*      * If we have an ifp, then find the matching at_ifaddr if it exists      */
 if|if
@@ -615,33 +613,32 @@ operator|)
 literal|0
 condition|)
 block|{
-name|m
+name|aa0
 operator|=
-name|m_getclr
+name|malloc
 argument_list|(
-name|M_WAIT
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|at_ifaddr
+argument_list|)
 argument_list|,
-name|MT_IFADDR
+name|M_IFADDR
+argument_list|,
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-operator|(
+name|bzero
+argument_list|(
+name|aa0
+argument_list|,
+sizeof|sizeof
+argument_list|(
 expr|struct
-name|mbuf
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|ENOBUFS
-operator|)
-return|;
-block|}
+name|ifaddr
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -667,14 +664,7 @@ condition|)
 block|{
 name|aa
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|at_ifaddr
-operator|*
-argument_list|)
+name|aa0
 expr_stmt|;
 name|aa
 operator|->
@@ -707,14 +697,7 @@ name|aa
 operator|->
 name|aa_next
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|at_ifaddr
-operator|*
-argument_list|)
+name|aa0
 expr_stmt|;
 block|}
 block|}
@@ -722,26 +705,14 @@ else|else
 block|{
 name|at_ifaddr
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|at_ifaddr
-operator|*
-argument_list|)
+name|aa0
 expr_stmt|;
 block|}
+comment|/*  	     * Don't Add a reference for the aa itself! 	     * I fell into this trap. IFAFREE tests for<=0 	     * not<= 1 like RTFREE 	     */
+comment|/* aa->aa_ifa.ifa_refcnt++; DON'T DO THIS!! */
 name|aa
 operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|at_ifaddr
-operator|*
-argument_list|)
+name|aa0
 expr_stmt|;
 comment|/* 	     * Find the end of the interface's addresses 	     * and link our new one on the end  	     */
 if|if
@@ -797,6 +768,14 @@ operator|)
 name|aa
 expr_stmt|;
 block|}
+comment|/* 	     * Add a reference for the linking into the ifp_if_addrlist. 	     */
+name|aa
+operator|->
+name|aa_ifa
+operator|.
+name|ifa_refcnt
+operator|++
+expr_stmt|;
 comment|/* 	     * As the at_ifaddr contains the actual sockaddrs, 	     * and the ifaddr itself, link them al together correctly. 	     */
 name|aa
 operator|->
@@ -1189,6 +1168,15 @@ name|aa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * remove the ifaddr from the interface 	 */
+name|ifa0
+operator|=
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+name|aa
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1199,12 +1187,7 @@ operator|->
 name|if_addrlist
 operator|)
 operator|==
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|aa
+name|ifa0
 condition|)
 block|{
 name|ifp
@@ -1229,12 +1212,7 @@ name|ifa
 operator|->
 name|ifa_next
 operator|!=
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|aa
+name|ifa0
 operator|)
 condition|)
 block|{
@@ -1245,7 +1223,7 @@ operator|->
 name|ifa_next
 expr_stmt|;
 block|}
-comment|/* 	     * if we found it, remove it, otherwise we screwed up. 	     */
+comment|/* 	     * if we found it, remove it, otherwise we screwed up. 	     * decrement the reference count by one. 	     */
 if|if
 condition|(
 name|ifa
@@ -1254,17 +1232,12 @@ name|ifa_next
 condition|)
 block|{
 name|ifa
+operator|=
+name|ifa
 operator|->
 name|ifa_next
 operator|=
-operator|(
-operator|(
-expr|struct
-name|ifaddr
-operator|*
-operator|)
-name|aa
-operator|)
+name|ifa0
 operator|->
 name|ifa_next
 expr_stmt|;
@@ -1278,6 +1251,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * refs goes from 1->0 if no external refs. note..  	 * This will not free it ... looks for -1. 	 */
+name|IFAFREE
+argument_list|(
+name|ifa0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Now remove the at_ifaddr from the parallel structure 	 * as well, or we'd be in deep trouble 	 */
 name|aa0
 operator|=
@@ -1351,13 +1330,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Now dump the memory we were using 	 */
-name|m_free
+comment|/* 	 * Now dump the memory we were using. 	 * Decrement the reference count. 	 * This should probably be the last reference 	 * as the count will go from 0 to -1. 	 * (unless there is still a route referencing this) 	 */
+name|IFAFREE
 argument_list|(
-name|dtom
-argument_list|(
-name|aa0
-argument_list|)
+name|ifa0
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1431,14 +1407,6 @@ decl_stmt|;
 block|{
 name|int
 name|error
-decl_stmt|;
-name|struct
-name|at_addr
-name|addr
-decl_stmt|;
-name|struct
-name|at_addr
-name|mask
 decl_stmt|;
 if|if
 condition|(
