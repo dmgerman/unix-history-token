@@ -15,6 +15,212 @@ begin_comment
 comment|/*  * net/if_atm.h  */
 end_comment
 
+begin_comment
+comment|/*  * Classification of ATM cards.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_PCA200E
+value|1
+end_define
+
+begin_comment
+comment|/* Fore/Marconi PCA200-E */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_HE155
+value|2
+end_define
+
+begin_comment
+comment|/* Fore/Marconi HE155 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_HE622
+value|3
+end_define
+
+begin_comment
+comment|/* Fore/Marconi HE622 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_ENI155P
+value|4
+end_define
+
+begin_comment
+comment|/* Efficient networks 155p */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_ADP155P
+value|5
+end_define
+
+begin_comment
+comment|/* Adaptec 155p */
+end_comment
+
+begin_comment
+comment|/* map to strings and vendors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_DEVICE_NAMES
+define|\
+value|{ "Unknown",	"Unknown" },				\ 	{ "PCA200-E",	"Fore/Marconi" },			\ 	{ "HE155",	"Fore/Marconi" },			\ 	{ "HE622",	"Fore/Marconi" },			\ 	{ "ENI155p",	"Efficient Networks" },			\ 	{ "ADP155p",	"Adaptec" },
+end_define
+
+begin_comment
+comment|/*  * This is the common link layer MIB for all ATM interfaces. Much of the  * information here is needed for ILMI. This will be augmented by statistics  * at some point.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifatm_mib
+block|{
+comment|/* configuration data */
+name|uint8_t
+name|device
+decl_stmt|;
+comment|/* type of card */
+name|u_char
+name|esi
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* end system identifier (MAC) */
+name|uint32_t
+name|serial
+decl_stmt|;
+comment|/* card serial number */
+name|uint32_t
+name|hw_version
+decl_stmt|;
+comment|/* card version */
+name|uint32_t
+name|sw_version
+decl_stmt|;
+comment|/* firmware version (if any) */
+name|uint32_t
+name|pcr
+decl_stmt|;
+comment|/* supported peak cell rate */
+name|uint32_t
+name|media
+decl_stmt|;
+comment|/* physical media */
+name|uint8_t
+name|vpi_bits
+decl_stmt|;
+comment|/* number of used bits in VPI field */
+name|uint8_t
+name|vci_bits
+decl_stmt|;
+comment|/* number of used bits in VCI field */
+name|uint16_t
+name|max_vpcs
+decl_stmt|;
+comment|/* maximum number of VPCs */
+name|uint32_t
+name|max_vccs
+decl_stmt|;
+comment|/* maximum number of VCCs */
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Common fields for all ATM interfaces. Each driver's softc must start with  * this structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ifatm
+block|{
+name|struct
+name|ifnet
+name|ifnet
+decl_stmt|;
+comment|/* required by if_var.h */
+name|struct
+name|ifatm_mib
+name|mib
+decl_stmt|;
+comment|/* exported data */
+name|void
+modifier|*
+name|phy
+decl_stmt|;
+comment|/* usually SUNI */
+name|void
+modifier|*
+name|ngpriv
+decl_stmt|;
+comment|/* netgraph link */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Peak cell rates for various physical media. Note, that there are  * different opinions on what the correct values are.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_155M
+value|353208
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_622M
+value|1412830
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATM_RATE_24G
+value|5651320
+end_define
+
 begin_if
 if|#
 directive|if

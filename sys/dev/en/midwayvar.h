@@ -373,10 +373,10 @@ name|en_softc
 block|{
 comment|/* bsd glue */
 name|struct
-name|ifnet
-name|enif
+name|ifatm
+name|ifatm
 decl_stmt|;
-comment|/* network ifnet handle */
+comment|/* ATM network ifnet handle */
 name|device_t
 name|dev
 decl_stmt|;
@@ -583,16 +583,6 @@ decl_stmt|;
 comment|/* memory zones */
 name|uma_zone_t
 name|map_zone
-decl_stmt|;
-comment|/* board info */
-name|uint8_t
-name|macaddr
-index|[
-literal|6
-index|]
-decl_stmt|;
-name|uint32_t
-name|serial
 decl_stmt|;
 ifdef|#
 directive|ifdef

@@ -535,7 +535,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"adp_busreset: Adaptec ATM did "
 literal|"NOT reset!\n"
@@ -696,7 +698,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_unit
 operator|=
@@ -704,7 +708,9 @@ name|unit
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_name
 operator|=
@@ -1070,7 +1076,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -1171,7 +1179,9 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator|&
@@ -1184,14 +1194,18 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"still running\n"
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator|&=
@@ -1210,7 +1224,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Deallocate resources. 	 */
@@ -1350,7 +1366,11 @@ sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
-name|macaddr
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|esi
 argument_list|)
 condition|;
 name|lcv
@@ -1358,7 +1378,11 @@ operator|++
 control|)
 name|sc
 operator|->
-name|macaddr
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|esi
 index|[
 name|lcv
 index|]
@@ -1987,7 +2011,11 @@ sizeof|sizeof
 argument_list|(
 name|sc
 operator|->
-name|macaddr
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|esi
 argument_list|)
 condition|;
 name|i
@@ -1995,7 +2023,11 @@ operator|++
 control|)
 name|sc
 operator|->
-name|macaddr
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|esi
 index|[
 name|i
 index|]
@@ -2014,6 +2046,10 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
 name|serial
 operator|=
 literal|0
@@ -2034,12 +2070,20 @@ control|)
 block|{
 name|sc
 operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
 name|serial
 operator|<<=
 literal|8
 expr_stmt|;
 name|sc
 operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
 name|serial
 operator||=
 name|eni_get_byte

@@ -110,7 +110,7 @@ name|FL
 parameter_list|,
 name|PRINT
 parameter_list|)
-value|do {						\ 	if ((SC)->debug& DBG_##FL) {					\ 		if_printf(&(SC)->enif, "%s: "#FL": ", __func__);	\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
+value|do {						\ 	if ((SC)->debug& DBG_##FL) {					\ 		if_printf(&(SC)->ifatm.ifnet, "%s: "#FL": ", __func__);	\ 		printf PRINT;						\ 		printf("\n");						\ 	}								\     } while (0)
 end_define
 
 begin_enum
@@ -308,6 +308,12 @@ begin_include
 include|#
 directive|include
 file|<net/if.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_media.h>
 end_include
 
 begin_include
@@ -1456,7 +1462,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"packet len=%d"
 argument_list|,
@@ -1676,7 +1684,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"cannot create DMA map %d\n"
 argument_list|,
@@ -2945,7 +2955,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"loading TX map failed %d\n"
 argument_list|,
@@ -3028,7 +3040,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_opackets
 operator|++
@@ -3040,7 +3054,9 @@ if|if
 condition|(
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_bpf
 operator|!=
@@ -3141,7 +3157,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 name|tx
 operator|.
@@ -5602,7 +5620,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"reset\n"
 argument_list|)
@@ -6018,7 +6038,9 @@ condition|(
 operator|(
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator|&
@@ -6047,7 +6069,9 @@ expr_stmt|;
 comment|/* to be safe */
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator|&=
@@ -6070,7 +6094,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator||=
@@ -7925,13 +7951,17 @@ literal|" in slot %d!"
 argument_list|,
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_name
 argument_list|,
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_unit
 argument_list|,
@@ -8203,11 +8233,15 @@ operator|=
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_ipackets
 operator|++
@@ -8240,7 +8274,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 name|m
 argument_list|)
@@ -8252,7 +8288,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 operator|&
 name|ah
@@ -9650,7 +9688,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"invalid AAL5 length\n"
 argument_list|)
@@ -9672,7 +9712,9 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_ierrors
 operator|++
@@ -9691,7 +9733,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"CRC error\n"
 argument_list|)
@@ -9713,7 +9757,9 @@ literal|0
 expr_stmt|;
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_ierrors
 operator|++
@@ -10132,7 +10178,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"loading RX map failed "
 literal|"%d\n"
@@ -10595,9 +10643,12 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
-literal|"unexpected interrupt=0x%b, resetting\n"
+literal|"unexpected interrupt=0x%b, "
+literal|"resetting\n"
 argument_list|,
 name|reg
 argument_list|,
@@ -10620,7 +10671,9 @@ directive|endif
 comment|/* DDB */
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_flags
 operator|&=
@@ -10652,7 +10705,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (reg& MID_INT_SUNI) 		if_printf(&sc->enif, "interrupt from SUNI (probably carrier " 		    "change)\n");
+block|if (reg& MID_INT_SUNI) 		if_printf(&sc->ifatm.ifnet, "interrupt from SUNI (probably " 		    "carrier change)\n");
 endif|#
 directive|endif
 name|kick
@@ -12100,7 +12153,9 @@ init|=
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 decl_stmt|;
 name|int
 name|sz
@@ -12300,7 +12355,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"ATM midway v%d, board IDs %d.%d, %s%s%s, "
 literal|"%ldKB on-board RAM\n"
@@ -12369,6 +12426,118 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
+comment|/* 	 * fill in common ATM interface stuff 	 */
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|hw_version
+operator|=
+operator|(
+name|MID_VER
+argument_list|(
+name|reg
+argument_list|)
+operator|<<
+literal|16
+operator|)
+operator||
+operator|(
+name|MID_MID
+argument_list|(
+name|reg
+argument_list|)
+operator|<<
+literal|8
+operator|)
+operator||
+name|MID_DID
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|MID_DID
+argument_list|(
+name|reg
+argument_list|)
+operator|&
+literal|0x4
+condition|)
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|media
+operator|=
+name|IFM_ATM_UTP_155
+expr_stmt|;
+else|else
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|media
+operator|=
+name|IFM_ATM_MM_155
+expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|pcr
+operator|=
+name|ATM_RATE_155M
+expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|vpi_bits
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|vci_bits
+operator|=
+name|MID_VCI_BITS
+expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|max_vccs
+operator|=
+name|MID_N_VC
+expr_stmt|;
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|max_vpcs
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -12376,6 +12545,16 @@ operator|->
 name|is_adaptec
 condition|)
 block|{
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|device
+operator|=
+name|ATM_DEVICE_ADP155P
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -12395,7 +12574,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"passed 64 byte DMA test\n"
 argument_list|)
@@ -12406,10 +12587,12 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
-literal|"FAILED DMA TEST: burst=%d, "
-literal|"alburst=%d\n"
+literal|"FAILED DMA TEST: "
+literal|"burst=%d, alburst=%d\n"
 argument_list|,
 name|sc
 operator|->
@@ -12423,14 +12606,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|sc
+operator|->
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|device
+operator|=
+name|ATM_DEVICE_ENI155P
+expr_stmt|;
 name|if_printf
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
-literal|"maximum DMA burst length = %d bytes%s\n"
+literal|"maximum DMA burst length = %d "
+literal|"bytes%s\n"
 argument_list|,
 name|sc
 operator|->
@@ -12455,7 +12651,9 @@ block|}
 comment|/* 	 * link into network subsystem and prepare card 	 */
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 operator|.
 name|if_softc
 operator|=
@@ -12848,7 +13046,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"EN_NTX/EN_TXSZ too big\n"
 argument_list|)
@@ -13015,7 +13215,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"EN_NTX/EN_TXSZ/EN_RXSZ too big\n"
 argument_list|)
@@ -13225,27 +13427,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|bzero
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|stats
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|stats
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|if_printf
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"%d %dKB receive buffers, %d %dKB transmit "
 literal|"buffers\n"
@@ -13266,13 +13455,20 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
-literal|"end station identifier (mac address) %6D\n"
+literal|"end station identifier (mac address) "
+literal|"%6D\n"
 argument_list|,
 name|sc
 operator|->
-name|macaddr
+name|ifatm
+operator|.
+name|mib
+operator|.
+name|esi
 argument_list|,
 literal|":"
 argument_list|)
@@ -14670,7 +14866,9 @@ argument_list|(
 operator|&
 name|sc
 operator|->
-name|enif
+name|ifatm
+operator|.
+name|ifnet
 argument_list|,
 literal|"dumping device at level 0x%b\n"
 argument_list|,
