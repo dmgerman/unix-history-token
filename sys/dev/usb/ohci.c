@@ -914,7 +914,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2537,7 +2537,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 name|thesc
 operator|=
 name|sc
@@ -2743,7 +2743,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -2838,7 +2838,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -3533,7 +3533,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -3665,7 +3665,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5031,7 +5031,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5811,7 +5811,7 @@ name|stat
 expr_stmt|;
 if|#
 directive|if
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5938,7 +5938,7 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -6363,7 +6363,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -10584,7 +10584,7 @@ name|xfer
 expr_stmt|;
 if|#
 directive|if
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -10662,7 +10662,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UHCI_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -10700,7 +10700,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* moved splx(s) because of indefinite printing of TD's */
 name|splx
 argument_list|(
 name|s
