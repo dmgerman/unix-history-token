@@ -10274,6 +10274,7 @@ name|sa_mtime
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Issue the NFS request and get the rpc response. 	 * 	 * Only NFSv3 responses returning an error of 0 actually return 	 * a file handle that can be converted into newvp without having 	 * to do an extra lookup rpc. 	 */
 name|nfsm_request
 argument_list|(
 name|dvp
@@ -10296,8 +10297,9 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|error
+operator|==
+literal|0
 condition|)
 name|nfsm_mtofh
 argument_list|(
@@ -10318,9 +10320,10 @@ name|wccflag
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * out code jumps -> here, mrep is also freed. 	 */
 name|nfsm_reqdone
 expr_stmt|;
-comment|/* 	 * Kludge: Map EEXIST => 0 assuming that it is a reply to a retry. 	 */
+comment|/* 	 * If we get an EEXIST error, silently convert it to no-error 	 * in case of an NFS retry. 	 */
 if|if
 condition|(
 name|error
@@ -10331,6 +10334,64 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If we do not have (or no longer have) an error, and we could 	 * not extract the newvp from the response due to the request being 	 * NFSv2 or the error being EEXIST.  We have to do a lookup in order 	 * to obtain a newvp to return.   	 */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|&&
+name|newvp
+operator|==
+name|NULL
+condition|)
+block|{
+name|struct
+name|nfsnode
+modifier|*
+name|np
+init|=
+name|NULL
+decl_stmt|;
+name|error
+operator|=
+name|nfs_lookitup
+argument_list|(
+name|dvp
+argument_list|,
+name|cnp
+operator|->
+name|cn_nameptr
+argument_list|,
+name|cnp
+operator|->
+name|cn_namelen
+argument_list|,
+name|cnp
+operator|->
+name|cn_cred
+argument_list|,
+name|cnp
+operator|->
+name|cn_proc
+argument_list|,
+operator|&
+name|np
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
+condition|)
+name|newvp
+operator|=
+name|NFSTOV
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
@@ -10347,6 +10408,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 operator|*
 name|ap
 operator|->
@@ -10354,6 +10416,7 @@ name|a_vpp
 operator|=
 name|newvp
 expr_stmt|;
+block|}
 name|VTONFS
 argument_list|(
 name|dvp
