@@ -2193,9 +2193,9 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|LITTLE
+name|LITTLE_ENDIAN
 return|return
 operator|(
 name|c
@@ -2236,9 +2236,9 @@ argument_list|()
 expr_stmt|;
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|LITTLE
+name|LITTLE_ENDIAN
 name|c
 operator|=
 operator|(
@@ -2568,9 +2568,9 @@ condition|)
 block|{
 if|#
 directive|if
-name|ENDIAN
+name|BYTE_ORDER
 operator|==
-name|LITTLE
+name|LITTLE_ENDIAN
 operator|(
 name|void
 operator|)
