@@ -598,7 +598,7 @@ name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
-literal|"elf64 kernel"
+literal|"elf kernel"
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,7 +613,7 @@ name|file_findfile
 argument_list|(
 name|NULL
 argument_list|,
-literal|"elf32 kernel"
+literal|"elf64 kernel"
 argument_list|)
 expr_stmt|;
 if|if
