@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.17		%G%"
+literal|"@(#)sendmail.h	8.18		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2562,6 +2562,17 @@ end_define
 
 begin_comment
 comment|/* try with the null byte */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_LOCKED
+value|0x0400
+end_define
+
+begin_comment
+comment|/* this map is currently locked */
 end_comment
 
 begin_define
