@@ -1,43 +1,33 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/* $Header: rnd.c,v 1.7 88/07/28 19:10:55 arnold Exp $ */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)rnd.c	5.1 (Berkeley) %G%"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
+begin_include
+include|#
+directive|include
+file|"random.h"
+end_include
 
 begin_comment
 comment|/*  * code for when the good (berkeley) random number generator is around  */
 end_comment
 
-begin_macro
+begin_function
+name|long
 name|rnd
-argument_list|(
-argument|num
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|num
+parameter_list|)
+name|long
+name|num
+decl_stmt|;
 block|{
+specifier|extern
+name|long
+name|random
+parameter_list|()
+function_decl|;
 return|return
 operator|(
 name|random
@@ -47,16 +37,17 @@ name|num
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|srnd
-argument_list|(
-argument|num
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|num
+parameter_list|)
+name|long
+name|num
+decl_stmt|;
 block|{
 name|srandom
 argument_list|(
@@ -64,7 +55,7 @@ name|num
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1195,8 +1186,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|NO_RANDOM
 end_endif
+
+begin_comment
+comment|/* NO_RANDOM */
+end_comment
 
 end_unit
 

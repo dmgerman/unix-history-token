@@ -1,17 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/* $Header: strfile.h,v 1.10 88/07/28 19:11:02 arnold Exp $ */
 end_comment
 
-begin_comment
-comment|/* @(#)strfile.h	1.2 (Berkeley) 5/14/81 */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STRFILE__
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAXDELIMS
-value|3
+name|__STRFILE__
 end_define
 
 begin_comment
@@ -32,48 +33,60 @@ name|STR_ORDERED
 value|0x2
 end_define
 
-begin_struct
+begin_define
+define|#
+directive|define
+name|STR_ENDSTRING
+parameter_list|(
+name|line
+parameter_list|,
+name|tbl
+parameter_list|)
+value|((line)[0] == (tbl).str_delim&& (line)[1] == (tbl).str_delim)
+end_define
+
+begin_typedef
+typedef|typedef
 struct|struct
-name|strfile
 block|{
 comment|/* information table */
 name|unsigned
-name|int
+name|long
 name|str_numstr
 decl_stmt|;
 comment|/* # of strings in the file */
 name|unsigned
-name|int
+name|long
 name|str_longlen
 decl_stmt|;
 comment|/* length of longest string */
 name|unsigned
-name|int
+name|long
 name|str_shortlen
 decl_stmt|;
 comment|/* length of shortest string */
-name|long
-name|str_delims
-index|[
-name|MAXDELIMS
-index|]
-decl_stmt|;
-comment|/* delimiter markings */
-name|int
+name|unsigned
+name|char
 name|str_flags
 decl_stmt|;
 comment|/* bit field for flags */
+name|char
+name|str_delim
+decl_stmt|;
+comment|/* delimiting character */
 block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|strfile
 name|STRFILE
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __STRFILE__ */
+end_comment
 
 end_unit
 
