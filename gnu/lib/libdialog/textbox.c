@@ -1721,9 +1721,12 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-literal|' '
+literal|'F'
 case|:
 comment|/* Next page */
+case|case
+literal|'f'
+case|:
 case|case
 name|KEY_NPAGE
 case|:

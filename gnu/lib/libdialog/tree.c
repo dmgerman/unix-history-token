@@ -2105,6 +2105,9 @@ case|case
 name|KEY_PPAGE
 case|:
 case|case
+literal|'B'
+case|:
+case|case
 literal|'b'
 case|:
 if|if
@@ -2136,6 +2139,9 @@ expr_stmt|;
 break|break;
 case|case
 name|KEY_NPAGE
+case|:
+case|case
+literal|'F'
 case|:
 case|case
 literal|'f'
