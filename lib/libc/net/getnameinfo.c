@@ -892,24 +892,14 @@ condition|)
 return|return
 name|ENI_MEMORY
 return|;
-comment|/* 				 * Shift the host string to allocate 				 * space for the scope ID part. 				 */
-name|memmove
-argument_list|(
-name|host
-operator|+
-name|scopelen
-operator|+
-literal|1
-argument_list|,
-name|host
-argument_list|,
-name|numaddrlen
-argument_list|)
-expr_stmt|;
-comment|/* copy the scope ID and the delimiter */
+comment|/* 				 * Construct<numeric-addr><delim><scopeid> 				 */
 name|memcpy
 argument_list|(
 name|host
+operator|+
+name|numaddrlen
+operator|+
+literal|1
 argument_list|,
 name|ifname
 argument_list|,
@@ -918,18 +908,18 @@ argument_list|)
 expr_stmt|;
 name|host
 index|[
-name|scopelen
+name|numaddrlen
 index|]
 operator|=
 name|SCOPE_DELIMITER
 expr_stmt|;
 name|host
 index|[
-name|scopelen
+name|numaddrlen
 operator|+
 literal|1
 operator|+
-name|numaddrlen
+name|scopelen
 index|]
 operator|=
 literal|'\0'
