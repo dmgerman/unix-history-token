@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: symbol.c,v 1.3 1993/11/22 19:04:45 jkh Exp $		- symbol table routines  */
+comment|/*  * $Id: symbol.c,v 1.4 1994/02/13 20:41:46 jkh Exp $		- symbol table routines  */
 end_comment
 
 begin_comment
@@ -11,18 +11,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -47,6 +35,18 @@ begin_include
 include|#
 directive|include
 file|<stab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -306,7 +306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the hash code for symbol name KEY.  */
+comment|/*  * Compute the hash code for symbol name KEY.  */
 end_comment
 
 begin_function
@@ -375,7 +375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Get the symbol table entry for the global symbol named KEY.    Create one if there is none.  */
+comment|/*  * Get the symbol table entry for the global symbol named KEY.  * Create one if there is none.  */
 end_comment
 
 begin_function
@@ -429,7 +429,6 @@ name|link
 control|)
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|key
@@ -438,6 +437,8 @@ name|bp
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 name|bp
@@ -681,7 +682,6 @@ name|link
 control|)
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|key
@@ -690,6 +690,8 @@ name|bp
 operator|->
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 name|bp

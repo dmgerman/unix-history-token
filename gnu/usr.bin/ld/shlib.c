@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: shlib.c,v 1.9 1994/01/29 02:03:15 jtc Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: shlib.c,v 1.8 1994/02/13 20:41:43 jkh Exp $  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -114,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_SEARCH_DIRS
-value|"/usr/lib", "/usr/X386/lib", "/usr/local/lib"
+value|"/usr/lib", "/usr/X11R6/lib", "/usr/X386/lib", "/usr/local/lib"
 end_define
 
 begin_endif
@@ -203,30 +209,27 @@ end_function
 
 begin_function
 name|void
-name|std_search_dirs
+name|add_search_path
 parameter_list|(
-name|paths
+name|path
 parameter_list|)
 name|char
 modifier|*
-name|paths
+name|path
 decl_stmt|;
 block|{
+specifier|register
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|n
-decl_stmt|;
 if|if
 condition|(
-name|paths
-operator|!=
+name|path
+operator|==
 name|NULL
 condition|)
+return|return;
 comment|/* Add search directories from `paths' */
 while|while
 condition|(
@@ -236,7 +239,7 @@ operator|=
 name|strsep
 argument_list|(
 operator|&
-name|paths
+name|path
 argument_list|,
 literal|":"
 argument_list|)
@@ -252,11 +255,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|paths
+name|path
 condition|)
 operator|*
 operator|(
-name|paths
+name|path
 operator|-
 literal|1
 operator|)
@@ -264,6 +267,19 @@ operator|=
 literal|':'
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|std_search_path
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|,
+name|n
+decl_stmt|;
 comment|/* Append standard search directories */
 name|n
 operator|=
@@ -432,6 +448,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -512,6 +529,16 @@ name|n2
 condition|)
 return|return
 literal|1
+return|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"cmpndewey: cant happen"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_block
@@ -710,8 +737,6 @@ condition|)
 block|{
 name|int
 name|n
-decl_stmt|,
-name|j
 decl_stmt|,
 name|might_take_it
 init|=

@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.1 1994/01/28 21:01:22 pk Exp $"
+literal|"$Id: malloc.c,v 1.1 1994/02/13 20:44:09 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1940,9 +1946,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"munmap"
+literal|"morepages: munmap %p"
+argument_list|,
+name|addr
 argument_list|)
 expr_stmt|;
 block|}

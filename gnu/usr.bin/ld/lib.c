@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.8 1993/12/22 23:28:11 jkh Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.9 1994/02/13 20:41:37 jkh Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -85,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -154,19 +172,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Search the library ENTRY, already open on descriptor DESC. This means  * deciding which library members to load, making a chain of `struct  * file_entry' for those members, and entering their global symbols in the  * hash table.  */
+comment|/*  * Search the library ENTRY, already open on descriptor FD. This means  * deciding which library members to load, making a chain of `struct  * file_entry' for those members, and entering their global symbols in the  * hash table.  */
 end_comment
 
 begin_function
 name|void
 name|search_library
 parameter_list|(
-name|desc
+name|fd
 parameter_list|,
 name|entry
 parameter_list|)
 name|int
-name|desc
+name|fd
 decl_stmt|;
 name|struct
 name|file_entry
@@ -206,7 +224,7 @@ name|subentry
 operator|=
 name|decode_library_subfile
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|,
@@ -246,7 +264,7 @@ argument_list|)
 condition|)
 name|symdef_library
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|,
@@ -256,7 +274,7 @@ expr_stmt|;
 else|else
 name|linear_library
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|)
@@ -265,7 +283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Construct and return a file_entry for a library member. The library's  * file_entry is library_entry, and the library is open on DESC.  * SUBFILE_OFFSET is the byte index in the library of this member's header.  * We store the length of the member into *LENGTH_LOC.  */
+comment|/*  * Construct and return a file_entry for a library member. The library's  * file_entry is library_entry, and the library is open on FD.  * SUBFILE_OFFSET is the byte index in the library of this member's header.  * We store the length of the member into *LENGTH_LOC.  */
 end_comment
 
 begin_function
@@ -275,7 +293,7 @@ name|file_entry
 modifier|*
 name|decode_library_subfile
 parameter_list|(
-name|desc
+name|fd
 parameter_list|,
 name|library_entry
 parameter_list|,
@@ -284,7 +302,7 @@ parameter_list|,
 name|length_loc
 parameter_list|)
 name|int
-name|desc
+name|fd
 decl_stmt|;
 name|struct
 name|file_entry
@@ -331,7 +349,7 @@ name|subentry
 decl_stmt|;
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subfile_offset
 argument_list|,
@@ -342,7 +360,7 @@ name|bytes_read
 operator|=
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|&
 name|hdr1
@@ -367,11 +385,16 @@ name|hdr1
 operator|!=
 name|bytes_read
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformed library archive "
+literal|1
 argument_list|,
+literal|"%s: malformed library archive"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|library_entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -390,11 +413,27 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted header of archive member in "
+literal|1
 argument_list|,
+literal|"%s: malformatted header of archive member: %.*s"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|library_entry
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hdr1
+operator|.
+name|ar_name
+argument_list|)
+argument_list|,
+name|hdr1
+operator|.
+name|ar_name
 argument_list|)
 expr_stmt|;
 name|subentry
@@ -554,7 +593,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|name
 argument_list|,
@@ -563,11 +602,27 @@ argument_list|)
 operator|!=
 name|namelen
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted header of archive member in "
+literal|1
 argument_list|,
+literal|"%s: malformatted archive member: %.*s"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|library_entry
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hdr1
+operator|.
+name|ar_name
+argument_list|)
+argument_list|,
+name|hdr1
+operator|.
+name|ar_name
 argument_list|)
 expr_stmt|;
 name|name
@@ -636,24 +691,6 @@ name|name
 expr_stmt|;
 name|subentry
 operator|->
-name|symbols
-operator|=
-literal|0
-expr_stmt|;
-name|subentry
-operator|->
-name|strings
-operator|=
-literal|0
-expr_stmt|;
-name|subentry
-operator|->
-name|subfiles
-operator|=
-literal|0
-expr_stmt|;
-name|subentry
-operator|->
 name|starting_offset
 operator|=
 name|starting_offset
@@ -666,22 +703,16 @@ name|library_entry
 expr_stmt|;
 name|subentry
 operator|->
-name|chain
-operator|=
-literal|0
-expr_stmt|;
-name|subentry
-operator|->
-name|flags
-operator|=
-literal|0
-expr_stmt|;
-name|subentry
-operator|->
 name|total_size
 operator|=
 name|content_length
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|subentry->symbols = 0; 	subentry->strings = 0; 	subentry->subfiles = 0; 	subentry->chain = 0; 	subentry->flags = 0;
+endif|#
+directive|endif
 operator|(
 operator|*
 name|length_loc
@@ -711,7 +742,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Search a library that has a __.SYMDEF member. DESC is a descriptor on  * which the library is open. The file pointer is assumed to point at the  * __.SYMDEF data. ENTRY is the library's file_entry. MEMBER_LENGTH is the  * length of the __.SYMDEF data.  */
+comment|/*  * Search a library that has a __.SYMDEF member. FD is a descriptor on  * which the library is open. The file pointer is assumed to point at the  * __.SYMDEF data. ENTRY is the library's file_entry. MEMBER_LENGTH is the  * length of the __.SYMDEF data.  */
 end_comment
 
 begin_function
@@ -719,14 +750,14 @@ specifier|static
 name|void
 name|symdef_library
 parameter_list|(
-name|desc
+name|fd
 parameter_list|,
 name|entry
 parameter_list|,
 name|member_length
 parameter_list|)
 name|int
-name|desc
+name|fd
 decl_stmt|;
 name|struct
 name|file_entry
@@ -792,7 +823,7 @@ name|bytes_read
 operator|=
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|symdef_data
 argument_list|,
@@ -805,11 +836,16 @@ name|bytes_read
 operator|!=
 name|member_length
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted __.SYMDEF in "
+literal|1
 argument_list|,
+literal|"%s: malformatted __.SYMDEF"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|nsymdefs
@@ -849,11 +885,16 @@ argument_list|)
 operator|>
 name|member_length
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted __.SYMDEF in "
+literal|1
 argument_list|,
+literal|"%s: malformatted __.SYMDEF"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|symdef_base
@@ -910,11 +951,16 @@ argument_list|)
 operator|>
 name|member_length
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted __.SYMDEF in "
+literal|1
 argument_list|,
+literal|"%s: malformatted __.SYMDEF"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sym_name_base
@@ -992,11 +1038,16 @@ literal|1
 operator|)
 operator|)
 condition|)
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"malformatted __.SYMDEF in "
+literal|1
 argument_list|,
+literal|"%s: malformatted __.SYMDEF"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1155,7 +1206,7 @@ name|subentry
 operator|=
 name|decode_library_subfile
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|,
@@ -1171,8 +1222,10 @@ name|subentry
 operator|==
 literal|0
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"invalid offset for %s in symbol table of %s"
 argument_list|,
 name|sym_name_base
@@ -1193,7 +1246,7 @@ argument_list|)
 expr_stmt|;
 name|read_entry_symbols
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -1206,7 +1259,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|malloc
+name|alloca
 argument_list|(
 name|subentry
 operator|->
@@ -1215,7 +1268,7 @@ argument_list|)
 expr_stmt|;
 name|read_entry_strings
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -1237,6 +1290,12 @@ name|subentry
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|subentry
+operator|->
+name|symbols
+condition|)
 name|free
 argument_list|(
 name|subentry
@@ -1259,7 +1318,7 @@ literal|1
 expr_stmt|;
 name|read_entry_relocation
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -1329,21 +1388,14 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-block|}
-comment|/* 			 * We'll read the strings again if we need them 			 * again. 			 */
-name|free
-argument_list|(
-name|subentry
-operator|->
-name|strings
-argument_list|)
-expr_stmt|;
+comment|/* 				 * We'll read the strings again 				 * if we need them. 			 */
 name|subentry
 operator|->
 name|strings
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 block|}
 name|free
@@ -1355,7 +1407,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search a library that has no __.SYMDEF. ENTRY is the library's file_entry.  * DESC is the descriptor it is open on.  */
+comment|/*  * Search a library that has no __.SYMDEF. ENTRY is the library's file_entry.  * FD is the descriptor it is open on.  */
 end_comment
 
 begin_function
@@ -1363,12 +1415,12 @@ specifier|static
 name|void
 name|linear_library
 parameter_list|(
-name|desc
+name|fd
 parameter_list|,
 name|entry
 parameter_list|)
 name|int
-name|desc
+name|fd
 decl_stmt|;
 name|struct
 name|file_entry
@@ -1416,7 +1468,7 @@ name|subentry
 operator|=
 name|decode_library_subfile
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|,
@@ -1434,7 +1486,7 @@ condition|)
 return|return;
 name|read_entry_symbols
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -1456,7 +1508,7 @@ argument_list|)
 expr_stmt|;
 name|read_entry_strings
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -1477,6 +1529,12 @@ name|subentry
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|subentry
+operator|->
+name|symbols
+condition|)
 name|free
 argument_list|(
 name|subentry
@@ -1494,7 +1552,7 @@ else|else
 block|{
 name|read_entry_relocation
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|subentry
 argument_list|)
@@ -2051,7 +2109,15 @@ if|if
 condition|(
 name|iscommon
 condition|)
-comment|/* 					 * But this member wants it to be 					 * a common; ignore it. 					continue; 			}  			if (iscommon) { 				/* 				 * New symbol is common, just takes its 				 * size, but don't load. 				 */
+comment|/* 					 * But this member wants it to be 					 * a common; ignore it. 					 */
+continue|continue;
+block|}
+if|if
+condition|(
+name|iscommon
+condition|)
+block|{
+comment|/* 				 * New symbol is common, just takes its 				 * size, but don't load. 				 */
 name|sp
 operator|->
 name|common_size
@@ -2105,14 +2171,14 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the symbols of dynamic entity ENTRY into core. Assume it is already  * open, on descriptor DESC.  */
+comment|/*  * Read the symbols of dynamic entity ENTRY into core. Assume it is already  * open, on descriptor FD.  */
 end_comment
 
 begin_function
 name|void
 name|read_shared_object
 parameter_list|(
-name|desc
+name|fd
 parameter_list|,
 name|entry
 parameter_list|)
@@ -2122,7 +2188,7 @@ modifier|*
 name|entry
 decl_stmt|;
 name|int
-name|desc
+name|fd
 decl_stmt|;
 block|{
 name|struct
@@ -2165,15 +2231,17 @@ operator|)
 condition|)
 name|read_header
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
 comment|/* Read DYNAMIC structure (first in data segment) */
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|text_offset
 argument_list|(
@@ -2188,12 +2256,30 @@ name|a_text
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|&
 name|dyn
@@ -2206,11 +2292,16 @@ sizeof|sizeof
 name|dyn
 condition|)
 block|{
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"premature eof in data segment of "
+literal|1
 argument_list|,
+literal|"%s: premature EOF reading _dynamic"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2229,11 +2320,20 @@ name|d_version
 condition|)
 block|{
 default|default:
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"unsupported _DYNAMIC version "
+literal|1
 argument_list|,
+literal|"%s: unsupported _DYNAMIC version: %d"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
+argument_list|)
+argument_list|,
+name|dyn
+operator|.
+name|d_version
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2251,9 +2351,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Read Section Dispatch Table (from data segment) */
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|text_offset
 argument_list|(
@@ -2287,12 +2389,30 @@ operator|)
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|&
 name|sdt
@@ -2304,15 +2424,18 @@ operator|!=
 sizeof|sizeof
 name|sdt
 condition|)
-block|{
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"premature eof in data segment of "
+literal|1
 argument_list|,
+literal|"%s: premature EOF reading sdt"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 name|md_swapin_section_dispatch_table
 argument_list|(
 operator|&
@@ -2395,9 +2518,11 @@ name|localsymbol
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|text_offset
 argument_list|(
@@ -2429,12 +2554,30 @@ operator|)
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|(
 name|char
@@ -2447,15 +2590,18 @@ argument_list|)
 operator|!=
 name|n
 condition|)
-block|{
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"premature eof while reading object symbols "
+literal|1
 argument_list|,
+literal|"%s: premature EOF reading symbols "
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|has_nz
@@ -2640,9 +2786,11 @@ name|sdt
 operator|.
 name|sdt_strings
 expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 operator|->
@@ -2666,12 +2814,30 @@ operator|)
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|entry
 operator|->
@@ -2682,15 +2848,18 @@ argument_list|)
 operator|!=
 name|n
 condition|)
-block|{
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"premature eof while reading object strings "
+literal|1
 argument_list|,
+literal|"%s: premature EOF reading strings"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 name|enter_file_symbols
 argument_list|(
 name|entry
@@ -2786,9 +2955,11 @@ name|superfile
 operator|=
 name|entry
 expr_stmt|;
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|offset
 operator|-
@@ -2810,12 +2981,30 @@ operator|)
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|&
 name|sod
@@ -2831,15 +3020,18 @@ argument_list|(
 name|sod
 argument_list|)
 condition|)
-block|{
-name|fatal_with_file
+name|errx
 argument_list|(
-literal|"premature eof while reading sod "
+literal|1
 argument_list|,
+literal|"%s: premature EOF reding sod"
+argument_list|,
+name|get_file_name
+argument_list|(
 name|entry
 argument_list|)
+argument_list|)
 expr_stmt|;
-block|}
 name|md_swapin_sod
 argument_list|(
 operator|&
@@ -2848,12 +3040,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|lseek
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 operator|(
 name|off_t
@@ -2880,13 +3071,31 @@ operator|)
 argument_list|,
 name|L_SET
 argument_list|)
+operator|==
+operator|(
+name|off_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: lseek"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
 name|read
 argument_list|(
-name|desc
+name|fd
 argument_list|,
 name|name
 argument_list|,
@@ -2939,8 +3148,10 @@ name|libname
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"no shared -l%s.%d.%d available"
 argument_list|,
 name|name
@@ -3021,7 +3232,7 @@ name|prev
 operator|=
 name|subentry
 expr_stmt|;
-name|desc
+name|fd
 operator|=
 name|file_open
 argument_list|(
@@ -3221,7 +3432,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|error
+name|warnx
 argument_list|(
 literal|"%s: malformed silly archive"
 argument_list|,
@@ -3336,13 +3547,13 @@ name|p
 decl_stmt|;
 block|{
 name|int
-name|desc
-decl_stmt|;
-name|int
 name|i
 decl_stmt|;
 name|int
-name|len
+name|fd
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|int
 name|major
@@ -3400,7 +3611,7 @@ condition|(
 name|fname
 operator|&&
 operator|(
-name|desc
+name|fd
 operator|=
 name|open
 argument_list|(
@@ -3441,9 +3652,12 @@ operator|~
 name|E_SEARCH_DIRS
 expr_stmt|;
 return|return
-name|desc
+name|fd
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 name|fname
@@ -3538,7 +3752,7 @@ block|{
 specifier|register
 name|char
 modifier|*
-name|string
+name|path
 init|=
 name|concat
 argument_list|(
@@ -3552,11 +3766,11 @@ argument_list|,
 name|fname
 argument_list|)
 decl_stmt|;
-name|desc
+name|fd
 operator|=
 name|open
 argument_list|(
-name|string
+name|path
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3565,7 +3779,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|desc
+name|fd
 operator|>
 literal|0
 condition|)
@@ -3574,7 +3788,7 @@ name|p
 operator|->
 name|filename
 operator|=
-name|string
+name|path
 expr_stmt|;
 name|p
 operator|->
@@ -3585,14 +3799,25 @@ name|E_SEARCH_DIRS
 expr_stmt|;
 break|break;
 block|}
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
-name|string
+name|path
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|fname
+argument_list|)
+expr_stmt|;
 return|return
-name|desc
+name|fd
 return|;
 block|}
 end_function

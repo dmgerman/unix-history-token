@@ -1,30 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.15 1994/02/13 20:42:53 jkh Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.16 1994/04/13 20:52:40 ats Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<machine/vmparam.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
 end_include
 
 begin_include
@@ -85,13 +67,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAP_FILE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|MAP_ANON
 value|0
 end_define
@@ -100,6 +75,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -122,7 +103,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -411,6 +410,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|char
+modifier|*
+name|__progname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|errno
 decl_stmt|;
@@ -444,10 +450,30 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|__main_progname
+index|[]
+init|=
+literal|"main"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 name|main_progname
 init|=
-literal|"main"
+name|__main_progname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|us
+index|[]
+init|=
+literal|"/usr/libexec/ld.so"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,9 +509,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
-name|dlopen
+name|__dlopen
 name|__P
 argument_list|(
 operator|(
@@ -499,8 +526,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|dlclose
+name|__dlclose
 name|__P
 argument_list|(
 operator|(
@@ -512,9 +540,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|void
 modifier|*
-name|dlsym
+name|__dlsym
 name|__P
 argument_list|(
 operator|(
@@ -529,8 +558,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
-name|dlctl
+name|__dlctl
 name|__P
 argument_list|(
 operator|(
@@ -547,18 +577,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|ld_entry
 name|ld_entry
 init|=
 block|{
-name|dlopen
+name|__dlopen
 block|,
-name|dlclose
+name|__dlclose
 block|,
-name|dlsym
+name|__dlsym
 block|,
-name|dlctl
+name|__dlctl
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -573,19 +604,6 @@ name|char
 operator|*
 operator|,
 operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|init_brk
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -663,8 +681,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
 specifier|inline
+name|void
 name|check_text_reloc
 name|__P
 argument_list|(
@@ -956,11 +974,6 @@ name|relocation_info
 modifier|*
 name|reloc
 decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|envp
-decl_stmt|;
 name|struct
 name|so_debug
 modifier|*
@@ -1087,7 +1100,7 @@ name|addr
 argument_list|)
 expr_stmt|;
 block|}
-name|progname
+name|__progname
 operator|=
 literal|"ld.so"
 expr_stmt|;
@@ -1168,13 +1181,33 @@ expr_stmt|;
 comment|/* In case we ever implement this */
 block|}
 comment|/* Setup directory search */
-name|std_search_dirs
+name|add_search_path
+argument_list|(
+name|getenv
+argument_list|(
+literal|"LD_RUN_PATH"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|add_search_path
 argument_list|(
 name|getenv
 argument_list|(
 literal|"LD_LIBRARY_PATH"
 argument_list|)
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"LD_NOSTD_PATH"
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|std_search_path
+argument_list|()
 expr_stmt|;
 comment|/* Load required objects into the process address space */
 name|load_objects
@@ -1377,14 +1410,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
-literal|"mprotect"
-argument_list|)
-operator|,
-name|fatal
-argument_list|(
-literal|"Cannot set breakpoint (%s)\n"
+literal|1
+argument_list|,
+literal|"Cannot set breakpoint (%s)"
 argument_list|,
 name|main_progname
 argument_list|)
@@ -1392,10 +1422,17 @@ expr_stmt|;
 block|}
 name|md_set_breakpoint
 argument_list|(
+operator|(
+name|long
+operator|)
 name|crtp
 operator|->
 name|crt_bp
 argument_list|,
+operator|(
+name|long
+operator|*
+operator|)
 operator|&
 name|ddp
 operator|->
@@ -1419,9 +1456,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
-literal|"mprotect"
+literal|1
+argument_list|,
+literal|"Cannot re-protect breakpoint (%s)"
+argument_list|,
+name|main_progname
 argument_list|)
 expr_stmt|;
 block|}
@@ -1551,7 +1592,7 @@ name|smp
 operator|=
 name|alloc_link_map
 argument_list|(
-literal|"/usr/libexec/ld.so"
+name|us
 argument_list|,
 operator|(
 expr|struct
@@ -1721,12 +1762,14 @@ name|sodp
 operator|->
 name|sod_library
 condition|?
-literal|"%s: lib%s.so.%d.%d: %s\n"
+literal|"%s: lib%s.so.%d.%d"
 else|:
-literal|"%s: %s: %s\n"
+literal|"%s: %s"
 decl_stmt|;
-name|fatal
+name|err
 argument_list|(
+literal|1
+argument_list|,
 name|fmt
 argument_list|,
 name|main_progname
@@ -1740,11 +1783,6 @@ argument_list|,
 name|sodp
 operator|->
 name|sod_minor
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1864,7 +1902,7 @@ name|sod_library
 condition|)
 name|printf
 argument_list|(
-literal|"\t-l%s.%d => %s (%#x)\n"
+literal|"\t-l%s.%d => %s (%p)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1882,7 +1920,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\t%s => %s (%#x)\n"
+literal|"\t%s => %s (%p)\n"
 argument_list|,
 name|name
 argument_list|,
@@ -1903,7 +1941,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a new link map for an shared object NAME loaded at ADDR as a  * result of the presence of link object LOP in the link map PARENT.  */
+comment|/*  * Allocate a new link map for shared object NAME loaded at ADDR as a  * result of the presence of link object LOP in the link map PARENT.  */
 end_comment
 
 begin_function
@@ -2016,7 +2054,10 @@ name|smp
 operator|->
 name|som_path
 operator|=
+name|strdup
+argument_list|(
 name|path
+argument_list|)
 expr_stmt|;
 name|smp
 operator|->
@@ -2432,9 +2473,15 @@ return|return
 name|NULL
 return|;
 block|}
+if|#
+directive|if
+literal|0
+block|if (mmap(addr + hdr.a_text, hdr.a_data, 				PROT_READ|PROT_WRITE|PROT_EXEC, 				MAP_FILE|MAP_FIXED|MAP_COPY, 				fd, hdr.a_text) == (caddr_t)-1) { 		(void)close(fd); 		return NULL; 	}
+endif|#
+directive|endif
 if|if
 condition|(
-name|mmap
+name|mprotect
 argument_list|(
 name|addr
 operator|+
@@ -2451,25 +2498,9 @@ operator||
 name|PROT_WRITE
 operator||
 name|PROT_EXEC
-argument_list|,
-name|MAP_FILE
-operator||
-name|MAP_FIXED
-operator||
-name|MAP_COPY
-argument_list|,
-name|fd
-argument_list|,
-name|hdr
-operator|.
-name|a_text
 argument_list|)
-operator|==
-operator|(
-name|caddr_t
-operator|)
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 block|{
 operator|(
@@ -2518,8 +2549,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"open: %s"
+argument_list|,
 literal|"/dev/zero"
 argument_list|)
 expr_stmt|;
@@ -2639,8 +2672,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 specifier|inline
+name|void
 name|check_text_reloc
 parameter_list|(
 name|r
@@ -2771,14 +2804,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
-literal|"mprotect"
-argument_list|)
-operator|,
-name|fatal
-argument_list|(
-literal|"Cannot enable writes to %s:%s\n"
+literal|1
+argument_list|,
+literal|"Cannot enable writes to %s:%s"
 argument_list|,
 name|main_progname
 argument_list|,
@@ -3056,8 +3086,10 @@ name|np
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Undefined symbol \"%s\" in %s:%s\n"
 argument_list|,
 name|sym
@@ -3236,13 +3268,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|err
 argument_list|(
-literal|"mprotect"
-argument_list|)
-operator|,
-name|fatal
-argument_list|(
+literal|1
+argument_list|,
 literal|"Cannot disable writes to %s:%s\n"
 argument_list|,
 name|main_progname
@@ -3449,8 +3478,8 @@ end_comment
 
 begin_function
 specifier|static
-name|int
 specifier|inline
+name|int
 name|hash_string
 parameter_list|(
 name|key
@@ -3888,8 +3917,6 @@ argument_list|)
 decl_stmt|;
 name|long
 name|hashval
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|rrs_hash
@@ -3944,9 +3971,15 @@ operator|*
 name|src_map
 condition|)
 continue|continue;
+name|restart
+label|:
 comment|/* 		 * Compute bucket in which the symbol might be found. 		 */
 for|for
 control|(
+name|hashval
+operator|=
+literal|0
+operator|,
 name|cp
 operator|=
 name|name
@@ -4117,6 +4150,38 @@ condition|)
 comment|/* Nothing in this bucket */
 continue|continue;
 comment|/* 		 * We have a symbol with the name we're looking for. 		 */
+if|if
+condition|(
+name|np
+operator|->
+name|nz_type
+operator|==
+name|N_INDR
+operator|+
+name|N_EXT
+condition|)
+block|{
+comment|/* 			 * Next symbol gives the aliased name. Restart 			 * search with new name and confine to this map. 			 */
+name|name
+operator|=
+name|stringbase
+operator|+
+operator|(
+operator|++
+name|np
+operator|)
+operator|->
+name|nz_strx
+expr_stmt|;
+operator|*
+name|src_map
+operator|=
+name|smp
+expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 if|if
 condition|(
 name|np
@@ -4348,8 +4413,10 @@ name|smp
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Call to binder from unknown location: %#x\n"
 argument_list|,
 name|jsp
@@ -4408,8 +4475,10 @@ name|np
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"Undefined symbol \"%s\" called from %s:%s at %#x"
 argument_list|,
 name|sym
@@ -5254,10 +5323,35 @@ return|return
 name|hint
 return|;
 block|}
+comment|/* Not found in hints, try directory search */
+name|hint
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|findshlib
+argument_list|(
+name|name
+argument_list|,
+operator|&
+name|major
+argument_list|,
+operator|&
+name|minor
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hint
+condition|)
+return|return
+name|hint
+return|;
 block|}
-else|else
-block|{
-comment|/* No LD_LIBRARY_PATH, check default */
+comment|/* No LD_LIBRARY_PATH or lib not found in there; check default */
 name|hint
 operator|=
 name|findhint
@@ -5278,7 +5372,6 @@ condition|)
 return|return
 name|hint
 return|;
-block|}
 comment|/* No hints available for name */
 operator|*
 name|usehints
@@ -5397,9 +5490,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 modifier|*
-name|dlopen
+name|__dlopen
 parameter_list|(
 name|name
 parameter_list|,
@@ -5471,7 +5565,10 @@ operator|=
 operator|(
 name|long
 operator|)
+name|strdup
+argument_list|(
 name|name
+argument_list|)
 expr_stmt|;
 name|sodp
 operator|->
@@ -5585,8 +5682,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|dlclose
+name|__dlclose
 parameter_list|(
 name|fd
 parameter_list|)
@@ -5654,7 +5752,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|unmap_object(smp); 	free(smp->som_sod); 	free(smp);
+block|unmap_object(smp); 	free(smp->som_sod->sod_name); 	free(smp->som_sod); 	free(smp);
 endif|#
 directive|endif
 return|return
@@ -5664,9 +5762,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 modifier|*
-name|dlsym
+name|__dlsym
 parameter_list|(
 name|fd
 parameter_list|,
@@ -5774,8 +5873,9 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|dlctl
+name|__dlctl
 parameter_list|(
 name|fd
 parameter_list|,
