@@ -2860,6 +2860,14 @@ block|}
 block|}
 else|else
 block|{
+name|SOCKBUF_LOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sbspace
@@ -2874,6 +2882,14 @@ operator|-
 literal|512
 condition|)
 block|{
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
+argument_list|)
+expr_stmt|;
 name|m_freem
 argument_list|(
 name|m
@@ -2888,7 +2904,7 @@ name|out
 goto|;
 block|}
 comment|/* 		 * According to RFC961 (Assigned Protocols), 		 * the urgent pointer points to the last octet 		 * of urgent data.  We continue, however, 		 * to consider it to indicate the first octet 		 * of data past the urgent section. 		 * Otherwise, snd_up should be one lower. 		 */
-name|sbappendstream
+name|sbappendstream_locked
 argument_list|(
 operator|&
 name|so
@@ -2896,6 +2912,14 @@ operator|->
 name|so_snd
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|SOCKBUF_UNLOCK
+argument_list|(
+operator|&
+name|so
+operator|->
+name|so_snd
 argument_list|)
 expr_stmt|;
 if|if
