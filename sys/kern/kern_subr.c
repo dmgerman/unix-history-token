@@ -346,7 +346,9 @@ if|if
 condition|(
 name|error
 condition|)
-break|break;
+goto|goto
+name|out
+goto|;
 break|break;
 case|case
 name|UIO_SYSSPACE
@@ -427,6 +429,8 @@ operator|-=
 name|cnt
 expr_stmt|;
 block|}
+name|out
+label|:
 if|if
 condition|(
 name|td
