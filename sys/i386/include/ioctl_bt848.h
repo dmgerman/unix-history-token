@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id$  */
+comment|/*  * extensions to ioctl_meteor.h for the bt848 cards  *  * $Id: ioctl_bt848.h,v 1.19 1998/09/30 21:06:55 sos Exp $  */
 end_comment
 
 begin_comment
@@ -822,6 +822,20 @@ define|#
 directive|define
 name|METEOR_DEV2
 value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEOR_DEV3
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
+name|METEOR_DEV_SVIDEO
+value|0x00006000
 end_define
 
 begin_comment
