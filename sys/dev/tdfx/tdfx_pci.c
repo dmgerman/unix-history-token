@@ -3052,7 +3052,6 @@ operator|-
 name|EINVAL
 return|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -3105,7 +3104,6 @@ operator|-
 name|EINVAL
 return|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
