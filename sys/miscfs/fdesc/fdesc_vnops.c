@@ -841,6 +841,27 @@ name|fd
 operator|=
 literal|0
 expr_stmt|;
+comment|/* the only time a leading 0 is acceptable is if it's "0" */
+if|if
+condition|(
+operator|*
+name|pname
+operator|==
+literal|'0'
+operator|&&
+name|nlen
+operator|!=
+literal|1
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 while|while
 condition|(
 name|nlen
