@@ -567,6 +567,11 @@ name|td_kse
 operator|=
 name|NULL
 expr_stmt|;
+name|cpu_thread_link
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
