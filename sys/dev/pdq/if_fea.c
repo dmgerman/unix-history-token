@@ -1354,7 +1354,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_fea
+name|fea
 argument_list|,
 name|eisa
 argument_list|,
@@ -1370,13 +1370,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* MODULE_DEPEND(if_fea, eisa, 1, 1, 1); */
+comment|/* MODULE_DEPEND(fea, eisa, 1, 1, 1); */
 end_comment
 
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_fea
+name|fea
 argument_list|,
 name|fddi
 argument_list|,

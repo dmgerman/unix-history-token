@@ -927,7 +927,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|if_fpa
+name|fpa
 argument_list|,
 name|pci
 argument_list|,
@@ -942,14 +942,26 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* MODULE_DEPEND(if_fpa, pci, 1, 1, 1); */
-end_comment
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|fpa
+argument_list|,
+name|pci
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|if_fpa
+name|fpa
 argument_list|,
 name|fddi
 argument_list|,
