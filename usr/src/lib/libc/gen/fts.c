@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.5 (Berkeley) %G%"
+literal|"@(#)fts.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -110,18 +116,6 @@ name|fts_stat
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Special case a root of "/" so that slashes aren't appended causing  * paths to be written as "//foo".  */
@@ -550,6 +544,42 @@ operator|=
 name|parent
 expr_stmt|;
 block|}
+comment|/* 	 * allocate a dummy pointer and make ftsread think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|sp
+operator|->
+name|fts_cur
+operator|=
+name|fts_alloc
+argument_list|(
+literal|""
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+condition|)
+goto|goto
+name|mem2
+goto|;
+name|sp
+operator|->
+name|fts_cur
+operator|->
+name|fts_link
+operator|=
+name|root
+expr_stmt|;
+name|sp
+operator|->
+name|fts_cur
+operator|->
+name|fts_info
+operator|=
+name|FTS_NS
+expr_stmt|;
 comment|/* start out with at least 1K+ of path space */
 if|if
 condition|(
@@ -565,27 +595,8 @@ argument_list|)
 argument_list|)
 condition|)
 goto|goto
-name|mem2
+name|mem3
 goto|;
-comment|/* 	 * some minor trickiness.  Set the pointers so that ftsread thinks 	 * we've just finished the node before the root(s); set p->fts_info 	 * to FTS_NS so that everything about the "current" node is ignored. 	 * Rather than allocate a dummy node use the root's parent's link 	 * pointer.  This is handled specially in ftsclose() as well. 	 */
-name|sp
-operator|->
-name|fts_cur
-operator|=
-name|parent
-expr_stmt|;
-name|parent
-operator|->
-name|fts_link
-operator|=
-name|root
-expr_stmt|;
-name|parent
-operator|->
-name|fts_info
-operator|=
-name|FTS_NS
-expr_stmt|;
 comment|/* 	 * if using chdir(2), do a getwd() to insure that we can get back 	 * here; this could be avoided for some paths, but probably not 	 * worth the effort.  Slashes, symbolic links, and ".." are all 	 * fairly nasty problems.  Note, if we can't get the current 	 * working directory we run anyway, just more slowly. 	 */
 if|if
 condition|(
@@ -627,6 +638,22 @@ operator|(
 name|sp
 operator|)
 return|;
+name|mem3
+label|:
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|sp
+operator|->
+name|fts_cur
+argument_list|)
+expr_stmt|;
 name|mem2
 label|:
 name|fts_lfree
@@ -823,26 +850,8 @@ name|sp
 operator|->
 name|fts_cur
 condition|)
-comment|/* check for never having read anything */
-if|if
-condition|(
-name|sp
-operator|->
-name|fts_cur
-operator|->
-name|fts_level
-operator|==
-name|ROOTPARENTLEVEL
-condition|)
-name|fts_lfree
-argument_list|(
-name|sp
-operator|->
-name|fts_cur
-argument_list|)
-expr_stmt|;
-else|else
 block|{
+comment|/* 		 * this still works if we haven't read anything -- the dummy 		 * structure points to the root list, so we step through to 		 * the end of the root list which has a valid parent pointer. 		 */
 for|for
 control|(
 name|p
@@ -1296,7 +1305,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* 	 * user may have called ftsset on pointer returned by 	 * ftschildren; handle it here. 	 */
+comment|/* 	 * user may have called ftsset on pointer returned by ftschildren; 	 * handle it here. 	 */
 for|for
 control|(
 name|p
@@ -1401,11 +1410,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cd
-condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1422,6 +1426,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cd
+operator|&&
 name|p
 operator|->
 name|fts_path
@@ -1472,8 +1478,6 @@ name|p
 operator|)
 return|;
 block|}
-block|}
-else|else
 name|cd
 operator|=
 literal|1
