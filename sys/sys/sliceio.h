@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: mtio.h,v 1.10 1997/02/22 09:45:37 peter Exp $  */
+comment|/*  * $Id: sliceio.h,v 1.1 1998/04/19 23:32:43 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -173,6 +173,17 @@ end_define
 
 begin_comment
 comment|/* set sub info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SLCIOCTRANSBAD
+value|_IOWR('S', 6, daddr_t)
+end_define
+
+begin_comment
+comment|/* map bad144 sector */
 end_comment
 
 begin_endif
