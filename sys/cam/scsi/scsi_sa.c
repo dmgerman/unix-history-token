@@ -922,8 +922,6 @@ block|,
 literal|"*"
 block|}
 block|,
-name|SA_QUIRK_NOCOMP
-operator||
 name|SA_QUIRK_NODREAD
 block|,
 literal|0
