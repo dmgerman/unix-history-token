@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kgclock.c	6.1	83/07/29	*/
+comment|/*	kgclock.c	6.2	84/08/20	*/
 end_comment
 
 begin_include
@@ -165,6 +165,18 @@ name|klbase
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|usekgclock
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* if zero, kgclock is disabled */
+end_comment
+
 begin_macro
 name|kgprobe
 argument_list|(
@@ -265,6 +277,12 @@ block|{
 if|if
 condition|(
 name|klbase
+operator|&&
+name|usekgclock
+operator|&&
+name|phz
+operator|==
+literal|0
 condition|)
 name|klbase
 operator|->
@@ -329,6 +347,23 @@ specifier|static
 name|long
 name|calibrate
 decl_stmt|;
+if|if
+condition|(
+name|usekgclock
+operator|==
+literal|0
+condition|)
+block|{
+name|phz
+operator|=
+literal|0
+expr_stmt|;
+name|otime
+operator|=
+literal|0
+expr_stmt|;
+return|return;
+block|}
 name|klbase
 operator|->
 name|tbuf
