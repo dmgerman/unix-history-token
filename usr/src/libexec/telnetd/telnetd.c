@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	8.3 (Berkeley) %G%"
+literal|"@(#)telnetd.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,7 +1824,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SO_SEC_MULTI */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1832,6 +1832,8 @@ operator|*
 operator|)
 operator|&
 name|dv
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2758,11 +2760,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2773,6 +2775,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2802,11 +2817,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2817,6 +2832,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2846,11 +2874,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2861,6 +2889,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 elseif|else
 if|if
@@ -2891,11 +2932,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2906,6 +2947,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2915,11 +2969,11 @@ name|TELOPT_TTYPE
 argument_list|)
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|ttytype_sbbuf
-argument_list|,
 name|nfrontp
+argument_list|,
+name|ttytype_sbbuf
 argument_list|,
 sizeof|sizeof
 name|ttytype_sbbuf
@@ -2930,6 +2984,19 @@ operator|+=
 sizeof|sizeof
 name|ttytype_sbbuf
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, ttytype_sbbuf +
+literal|2
+argument|, 					sizeof ttytype_sbbuf -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -3222,11 +3289,11 @@ argument_list|(
 name|baseline
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|ttytype_sbbuf
-argument_list|,
 name|nfrontp
+argument_list|,
+name|ttytype_sbbuf
 argument_list|,
 sizeof|sizeof
 name|ttytype_sbbuf
@@ -3237,6 +3304,19 @@ operator|+=
 sizeof|sizeof
 name|ttytype_sbbuf
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, ttytype_sbbuf +
+literal|2
+argument|, 					sizeof ttytype_sbbuf -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 while|while
 condition|(
 name|sequenceIs
@@ -3555,7 +3635,7 @@ name|defined
 argument_list|(
 name|_SC_CRAY_SECURE_SYS
 argument_list|)
-comment|/* 	 *	set ttyp line security label  	 */
+comment|/* 	 *	set ttyp line security label 	 */
 if|if
 condition|(
 name|secflag
@@ -3665,7 +3745,7 @@ name|fatal
 argument_list|(
 name|net
 argument_list|,
-literal|"Couldn't resolve your address into a host name.\r\n\          Please contact your net administrator"
+literal|"Couldn't resolve your address into a host name.\r\n\ 	 Please contact your net administrator"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3682,7 +3762,11 @@ operator|->
 name|h_name
 argument_list|)
 operator|<=
-operator|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 operator|(
 name|utmp_len
 operator|<
@@ -3693,7 +3777,7 @@ operator|-
 name|utmp_len
 else|:
 name|utmp_len
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -5429,6 +5513,18 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* off by one XXX */
+name|DIAG
+argument_list|(
+name|TD_OPTIONS
+argument_list|,
+name|printoption
+argument_list|(
+literal|"td: send IAC"
+argument_list|,
+name|DM
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -5508,6 +5604,19 @@ name|nfrontp
 operator|+=
 literal|6
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, 						    (unsigned char *)nfrontp-
+literal|4
+argument|,
+literal|4
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 block|}
 name|pcc
