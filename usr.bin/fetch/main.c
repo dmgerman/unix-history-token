@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.3 1996/06/22 21:42:14 jkh Exp $ */
+comment|/* $Id: main.c,v 1.4 1996/06/22 23:24:13 jkh Exp $ */
 end_comment
 
 begin_include
@@ -1084,21 +1084,6 @@ operator|=
 name|ftpGetSize
 argument_list|(
 name|ftp
-argument_list|,
-name|file_to_get
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|<
-literal|0
-condition|)
-name|ftperr
-argument_list|(
-name|ftp
-argument_list|,
-literal|"%s: "
 argument_list|,
 name|file_to_get
 argument_list|)
