@@ -726,9 +726,10 @@ block|}
 block|}
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"D %-21s State: %s\tDevice %s\n"
+literal|"D %-21s State: %s\tDevice %s\tAvail: %qd/%qd MB"
 argument_list|,
 name|drive
 operator|.
@@ -746,8 +747,70 @@ argument_list|,
 name|drive
 operator|.
 name|devicename
+argument_list|,
+name|drive
+operator|.
+name|sectors_available
+operator|*
+name|DEV_BSIZE
+operator|/
+name|MEGABYTE
+argument_list|,
+operator|(
+name|drive
+operator|.
+name|label
+operator|.
+name|drive_size
+operator|/
+name|MEGABYTE
+operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|.
+name|label
+operator|.
+name|drive_size
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+comment|/* can't print percentages */
+else|else
+name|printf
+argument_list|(
+literal|" (%d%%)\n"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+operator|(
+name|drive
+operator|.
+name|sectors_available
+operator|*
+literal|100
+operator|*
+name|DEV_BSIZE
+operator|)
+operator|/
+name|drive
+operator|.
+name|label
+operator|.
+name|drive_size
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|stats
@@ -1020,7 +1083,7 @@ block|{
 name|printf
 argument_list|(
 literal|"Volume %s:\tSize: %qd bytes (%qd MB)\n"
-literal|"\t\tState: %s\n\t\tOpen by PID: %d\n\t\tFlags: %s%s\n"
+literal|"\t\tState: %s\n\t\tFlags: %s%s%s\n"
 argument_list|,
 name|vol
 operator|.
@@ -1061,7 +1124,13 @@ argument_list|)
 argument_list|,
 name|vol
 operator|.
-name|pid
+name|flags
+operator|&
+name|VF_OPEN
+condition|?
+literal|"open "
+else|:
+literal|""
 argument_list|,
 operator|(
 name|vol
@@ -3998,9 +4067,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|j
-decl_stmt|;
 name|struct
 name|volume
 name|vol
@@ -4029,6 +4095,28 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: \tprintconfig<outfile>\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_GETCONFIG
+argument_list|,
+operator|&
+name|vinum_conf
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't get vinum config"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4201,7 +4289,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"volume %s readpol prefer %s"
+literal|"volume %s readpol prefer %s\n"
 argument_list|,
 name|vol
 operator|.
@@ -4225,7 +4313,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"volume %s"
+literal|"volume %s\n"
 argument_list|,
 name|vol
 operator|.
@@ -4251,10 +4339,10 @@ name|i
 operator|++
 control|)
 block|{
-name|get_volume_info
+name|get_plex_info
 argument_list|(
 operator|&
-name|vol
+name|plex
 argument_list|,
 name|i
 argument_list|)
@@ -4272,18 +4360,11 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"plex name %s state %s org %s "
+literal|"plex name %s org %s "
 argument_list|,
 name|plex
 operator|.
 name|name
-argument_list|,
-name|plex_state
-argument_list|(
-name|plex
-operator|.
-name|state
-argument_list|)
 argument_list|,
 name|plex_org
 argument_list|(
@@ -4354,44 +4435,6 @@ argument_list|,
 literal|"vol %s "
 argument_list|,
 name|vol
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|plex
-operator|.
-name|subdisks
-condition|;
-name|j
-operator|++
-control|)
-block|{
-name|get_plex_sd_info
-argument_list|(
-operator|&
-name|sd
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|of
-argument_list|,
-literal|" sd %s"
-argument_list|,
-name|sd
 operator|.
 name|name
 argument_list|)
