@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.33 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4585,10 +4585,6 @@ argument|TS_TTSTOP
 argument_list|,
 literal|'S'
 argument_list|,
-argument|TS_HUPCLS
-argument_list|,
-literal|'H'
-argument_list|,
 argument|TS_TBLOCK
 argument_list|,
 literal|'K'
@@ -4883,11 +4879,19 @@ argument|); 		putf(fp->f_flag&FWRITE,
 literal|'W'
 argument|); 		putf(fp->f_flag&FAPPEND,
 literal|'A'
-argument|); 		putf(fp->f_flag&FSHLOCK,
+argument|);
+ifdef|#
+directive|ifdef
+name|FSHLOCK
+comment|/* currently gone */
+argument|putf(fp->f_flag&FSHLOCK,
 literal|'S'
 argument|); 		putf(fp->f_flag&FEXLOCK,
 literal|'X'
-argument|); 		putf(fp->f_flag&FASYNC,
+argument|);
+endif|#
+directive|endif
+argument|putf(fp->f_flag&FASYNC,
 literal|'I'
 argument|); 		printf(
 literal|"  %3d"
