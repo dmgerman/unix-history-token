@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_buf.c	5.1 (Berkeley) %G%"
+literal|"@(#)hash_buf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -459,11 +459,24 @@ decl_stmt|;
 name|SEGMENT
 name|segp
 decl_stmt|;
+name|bp
+operator|=
+name|LRU
+expr_stmt|;
+comment|/*  	If LRU buffer is pinned, the buffer pool is too small. 	We need to allocate more buffers     */
 if|if
 condition|(
 name|hashp
 operator|->
 name|nbufs
+operator|||
+operator|(
+name|bp
+operator|->
+name|flags
+operator|&
+name|BUF_PIN
+operator|)
 condition|)
 block|{
 comment|/* Allocate a new one */
@@ -521,16 +534,32 @@ block|}
 else|else
 block|{
 comment|/* Kick someone out */
-name|bp
-operator|=
-name|LRU
-expr_stmt|;
 name|BUF_REMOVE
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/*  	    Set oaddr before __put_page so that you get it  	    before bytes are swapped 	*/
+comment|/*  	    If this is an overflow page with addr 0, it's already 	    been flushed back in an overflow chain and initialized 	*/
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|addr
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|flags
+operator|&
+name|BUF_BUCKET
+operator|)
+condition|)
+block|{
+comment|/*  		Set oaddr before __put_page so that you get it  		before bytes are swapped 	    */
 name|shortp
 operator|=
 operator|(
@@ -593,7 +622,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*  	    Update the pointer to this page (i.e. invalidate it).  	    If this is a new file (i.e. we created it at open time),  	    make sure that we mark pages which have been written to  	    disk so we retrieve them from disk later, rather than 	    allocating new pages. 	*/
+comment|/*  		Update the pointer to this page (i.e. invalidate it).  		If this is a new file (i.e. we created it at open time),  		make sure that we mark pages which have been written to  		disk so we retrieve them from disk later, rather than 		allocating new pages. 	    */
 if|if
 condition|(
 name|IS_BUCKET
@@ -686,7 +715,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	    Since overflow pages can only be access by means of 	    their bucket, free overflow pages associated with this 	    bucket. 	*/
+comment|/* 		Since overflow pages can only be access by means of 		their bucket, free overflow pages associated with this 		bucket. 	    */
 for|for
 control|(
 name|xbp
@@ -811,6 +840,7 @@ argument_list|(
 name|xbp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* Now assign this buffer */
