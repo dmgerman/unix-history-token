@@ -1769,7 +1769,7 @@ operator|->
 name|it_lock
 argument_list|)
 expr_stmt|;
-comment|/* only disable the interrupt in hardware if there are no 	   other handlers sharing it */
+comment|/*  	 * Only disable the interrupt in hardware if there are no 	 * other handlers sharing it. 	 */
 if|if
 condition|(
 name|num_handlers
