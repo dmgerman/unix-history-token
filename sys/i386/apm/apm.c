@@ -197,8 +197,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Used by the apm_saver screen saver module */
+end_comment
+
 begin_decl_stmt
-specifier|static
 name|int
 name|apm_display
 name|__P
@@ -208,6 +211,13 @@ name|int
 name|newstate
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|apm_softc
+name|apm_softc
 decl_stmt|;
 end_decl_stmt
 
@@ -318,14 +328,6 @@ directive|define
 name|APMDEV_CTL
 value|8
 end_define
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|apm_softc
-name|apm_softc
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
