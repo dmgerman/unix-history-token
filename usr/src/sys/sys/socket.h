@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -530,8 +530,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_COIP
 value|20
+end_define
+
+begin_comment
+comment|/* connection-oriented IP, aka ST II */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|21
 end_define
 
 begin_comment
@@ -735,6 +746,13 @@ end_define
 begin_comment
 comment|/* really just proto family, no AF */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_COIP
+value|AF_COIP
+end_define
 
 begin_define
 define|#
