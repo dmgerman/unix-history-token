@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2000 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual.    To get some idea how the block sorting algorithms in this file    work, read my paper       On the Performance of BWT Sorting Algorithms   in Proceedings of the IEEE Data Compression Conference 2000,   Snowbird, Utah, USA, 27-30 March 2000.  The main sort in this   file implements the algorithm called  cache  in the paper. --*/
+comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2002 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual.    To get some idea how the block sorting algorithms in this file    work, read my paper       On the Performance of BWT Sorting Algorithms   in Proceedings of the IEEE Data Compression Conference 2000,   Snowbird, Utah, USA, 27-30 March 2000.  The main sort in this   file implements the algorithm called  cache  in the paper. --*/
 end_comment
 
 begin_include
@@ -5359,21 +5359,18 @@ block|}
 block|}
 name|AssertH
 argument_list|(
-name|copyStart
-index|[
-name|ss
-index|]
-operator|-
+argument|(copyStart[ss]-
 literal|1
-operator|==
-name|copyEnd
-index|[
-name|ss
-index|]
+argument|== copyEnd[ss])                 ||
+comment|/* Extremely rare case missing in bzip2-1.0.0 and 1.0.1.                    Necessity for this case is demonstrated by compressing                     a sequence of approximately 48.5 million of character                     251; 1.0.0/1.0.1 will then die here. */
+argument|(copyStart[ss] ==
+literal|0
+argument|&& copyEnd[ss] == nblock-
+literal|1
+argument|)
 argument_list|,
 literal|1007
 argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j

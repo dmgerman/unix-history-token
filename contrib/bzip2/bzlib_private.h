@@ -16,7 +16,7 @@ comment|/*-------------------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2000 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
+comment|/*--   This file is a part of bzip2 and/or libbzip2, a program and   library for lossless, block-sorting data compression.    Copyright (C) 1996-2002 Julian R Seward.  All rights reserved.    Redistribution and use in source and binary forms, with or without   modification, are permitted provided that the following conditions   are met:    1. Redistributions of source code must retain the above copyright      notice, this list of conditions and the following disclaimer.    2. The origin of this software must not be misrepresented; you must       not claim that you wrote the original software.  If you use this       software in a product, an acknowledgment in the product       documentation would be appreciated but is not required.    3. Altered source versions must be plainly marked as such, and must      not be misrepresented as being the original software.    4. The name of the author may not be used to endorse or promote       products derived from this software without specific prior written       permission.    THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.    Julian Seward, Cambridge, UK.   jseward@acm.org   bzip2/libbzip2 version 1.0 of 21 March 2000    This program is based on (at least) the work of:      Mike Burrows      David Wheeler      Peter Fenwick      Alistair Moffat      Radford Neal      Ian H. Witten      Robert Sedgewick      Jon L. Bentley    For more information on these sources, see the manual. --*/
 end_comment
 
 begin_ifndef
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|BZ_VERSION
-value|"1.0.1, 23-June-2000"
+value|"1.0.2, 30-Dec-2001"
 end_define
 
 begin_typedef
@@ -517,6 +517,54 @@ name|ppp
 parameter_list|)
 value|(strm->bzfree)(strm->opaque,(ppp))
 end_define
+
+begin_comment
+comment|/*-- Header bytes. --*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BZ_HDR_B
+value|0x42
+end_define
+
+begin_comment
+comment|/* 'B' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BZ_HDR_Z
+value|0x5a
+end_define
+
+begin_comment
+comment|/* 'Z' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BZ_HDR_h
+value|0x68
+end_define
+
+begin_comment
+comment|/* 'h' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BZ_HDR_0
+value|0x30
+end_define
+
+begin_comment
+comment|/* '0' */
+end_comment
 
 begin_comment
 comment|/*-- Constants for the back end. --*/
