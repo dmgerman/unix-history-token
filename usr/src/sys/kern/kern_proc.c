@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.20	%G%	*/
+comment|/*	kern_proc.c	3.21	%G%	*/
 end_comment
 
 begin_include
@@ -109,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"../h/vlimit.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/file.h"
 end_include
 
 begin_comment
@@ -1033,7 +1039,6 @@ name|ds
 decl_stmt|,
 name|ss
 decl_stmt|;
-specifier|register
 name|int
 name|overlay
 decl_stmt|;
@@ -1260,6 +1265,46 @@ operator|!=
 literal|1
 condition|)
 block|{
+specifier|register
+name|struct
+name|file
+modifier|*
+name|fp
+decl_stmt|;
+for|for
+control|(
+name|fp
+operator|=
+name|file
+init|;
+name|fp
+operator|<
+operator|&
+name|file
+index|[
+name|NFILE
+index|]
+condition|;
+name|fp
+operator|++
+control|)
+if|if
+condition|(
+name|fp
+operator|->
+name|f_inode
+operator|==
+name|ip
+operator|&&
+operator|(
+name|fp
+operator|->
+name|f_flag
+operator|&
+name|FWRITE
+operator|)
+condition|)
+block|{
 name|u
 operator|.
 name|u_error
@@ -1269,6 +1314,7 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 comment|/* 	 * find text and data sizes 	 * try them out for possible 	 * exceed of max sizes 	 */
 name|ts
