@@ -718,6 +718,177 @@ begin_comment
 comment|/* XOFF 2 character (R/W) */
 end_comment
 
+begin_comment
+comment|/* 16950 register #1.  Access enabled by ACR[7].  Also requires !LCR[7]. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_asr
+value|1
+end_define
+
+begin_comment
+comment|/* additional status register (R[0-7]/W[0-1]) */
+end_comment
+
+begin_comment
+comment|/* 16950 register #3.  R/W access enabled by ACR[7]. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_rfl
+value|3
+end_define
+
+begin_comment
+comment|/* receiver fifo level (R) */
+end_comment
+
+begin_comment
+comment|/*  * 16950 register #4.  Access enabled by ACR[7].  Also requires  * !LCR_EFR_ENABLE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_tfl
+value|4
+end_define
+
+begin_comment
+comment|/* transmitter fifo level (R) */
+end_comment
+
+begin_comment
+comment|/*  * 16950 register #5.  Accessible if !LCR_EFR_ENABLE.  Read access also  * requires ACR[6].  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_icr
+value|5
+end_define
+
+begin_comment
+comment|/* index control register (R/W) */
+end_comment
+
+begin_comment
+comment|/*  * 16950 register #7.  It is the same as com_scr except it has a different  * abbreviation in the manufacturer's data sheet and it also serves as an  * index into the Indexed Control register set.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_spr
+value|com_scr
+end_define
+
+begin_comment
+comment|/* scratch pad (and index) register (R/W) */
+end_comment
+
+begin_comment
+comment|/*  * 16950 indexed control registers #[0-0x13].  Access is via index in SPR,  * data in ICR (if ICR is accessible).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_acr
+value|0
+end_define
+
+begin_comment
+comment|/* additional control register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACR_ASE
+value|0x80
+end_define
+
+begin_comment
+comment|/* ASR/RFL/TFL enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACR_ICRE
+value|0x40
+end_define
+
+begin_comment
+comment|/* ICR enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACR_TLE
+value|0x20
+end_define
+
+begin_comment
+comment|/* TTL/RTL enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_cpr
+value|1
+end_define
+
+begin_comment
+comment|/* clock prescaler register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_tcr
+value|2
+end_define
+
+begin_comment
+comment|/* times clock register (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_ttl
+value|4
+end_define
+
+begin_comment
+comment|/* transmitter trigger level (R/W) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|com_rtl
+value|5
+end_define
+
+begin_comment
+comment|/* receiver trigger level (R/W) */
+end_comment
+
+begin_comment
+comment|/* ... */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
