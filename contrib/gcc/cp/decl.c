@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Process declarations and variables for C compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002  Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Process declarations and variables for C compiler.    Copyright (C) 1988, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,    2001, 2002, 2003  Free Software Foundation, Inc.    Contributed by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -23416,6 +23416,32 @@ condition|)
 break|break;
 block|}
 block|}
+comment|/* The name might be from an enclosing class of the current scope.  */
+if|if
+condition|(
+operator|!
+name|val
+operator|&&
+operator|!
+name|nonclass
+operator|&&
+name|current_class_type
+condition|)
+name|val
+operator|=
+name|qualify_lookup
+argument_list|(
+name|lookup_nested_field
+argument_list|(
+name|name
+argument_list|,
+operator|!
+name|yylex
+argument_list|)
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 comment|/* Now lookup in namespace scopes.  */
 if|if
 condition|(
@@ -25338,7 +25364,7 @@ name|tree_cons
 argument_list|(
 name|NULL_TREE
 argument_list|,
-name|c_size_type_node
+name|size_type_node
 argument_list|,
 name|void_list_node
 argument_list|)
@@ -35136,17 +35162,18 @@ block|{
 comment|/* Motion 10 at San Diego: If a static const integral data member is      initialized with an integral constant expression, the initializer      may appear either in the declaration (within the class), or in      the definition, but not both.  If it appears in the class, the      member is a member constant.  The file-scope definition is always      required.  */
 if|if
 condition|(
-name|CLASS_TYPE_P
+operator|!
+name|ARITHMETIC_TYPE_P
 argument_list|(
 name|type
 argument_list|)
-operator|||
+operator|&&
 name|TREE_CODE
 argument_list|(
 name|type
 argument_list|)
-operator|==
-name|REFERENCE_TYPE
+operator|!=
+name|ENUMERAL_TYPE
 condition|)
 block|{
 name|error
