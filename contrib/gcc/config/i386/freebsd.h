@@ -873,7 +873,7 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
+value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *%s@GOT(%%ebx)\n",				\       TARGET_AOUT ? "mcount" : ".mcount");				\   else									\     fprintf (FILE, "\tcall %s\n", TARGET_AOUT ? "mcount" : ".mcount");	\ }
 end_define
 
 begin_define
@@ -884,7 +884,7 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");		\       else								\ 	fprintf (FILE, "\tcall mexitcount\n");				\     }									\ }
+value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *%s@GOT(%%ebx)\n",			\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\       else								\ 	fprintf (FILE, "\tcall %s\n",					\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\     }									\ }
 end_define
 
 begin_undef

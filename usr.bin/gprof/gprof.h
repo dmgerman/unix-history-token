@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<a.out.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -368,6 +362,7 @@ begin_struct
 struct|struct
 name|nl
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -798,38 +793,6 @@ comment|/* scale factor converting samples to pc 				   values: each sample cove
 end_comment
 
 begin_decl_stmt
-name|char
-modifier|*
-name|strtab
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* string table in core */
-end_comment
-
-begin_decl_stmt
-name|long
-name|ssiz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of the string table */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|exec
-name|xbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* exec header of a.out */
-end_comment
-
-begin_decl_stmt
 name|unsigned
 name|char
 modifier|*
@@ -967,6 +930,16 @@ end_comment
 
 begin_decl_stmt
 name|bool
+name|uflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* suppress symbols hidden from C */
+end_comment
+
+begin_decl_stmt
+name|bool
 name|zflag
 decl_stmt|;
 end_decl_stmt
@@ -1054,6 +1027,22 @@ end_comment
 
 begin_function_decl
 name|int
+name|aout_getnfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|arccmp
 parameter_list|()
 function_decl|;
@@ -1103,18 +1092,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* 		done(); 		findcalls(); 		flatprofheader(); 		flatprofline(); */
+comment|/* 		done(); */
 end_comment
 
 begin_function_decl
-name|bool
-name|funcsymbol
-parameter_list|()
+name|int
+name|elf_getnfile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* 		getnfile(); 		getpfile(); 		getstrtab(); 		getsymtab(); 		gettextspace(); 		gprofheader(); 		gprofline(); 		main(); */
+comment|/* 		findcalls(); 		flatprofheader(); 		flatprofline(); */
+end_comment
+
+begin_comment
+comment|/* 		getpfile(); 		gprofheader(); 		gprofline(); 		main(); */
 end_comment
 
 begin_function_decl
