@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.1 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.2 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -2029,7 +2029,7 @@ name|va_ctime
 operator|=
 name|vap
 operator|->
-name|va_ctime
+name|va_mtime
 expr_stmt|;
 name|vap
 operator|->
@@ -2633,7 +2633,9 @@ case|:
 if|if
 condition|(
 operator|(
-name|i
+name|dt
+operator|->
+name|d_fileno
 operator|-
 name|FD_STDIN
 operator|)
@@ -2649,7 +2651,9 @@ name|fdp
 operator|->
 name|fd_ofiles
 index|[
-name|i
+name|dt
+operator|->
+name|d_fileno
 operator|-
 name|FD_STDIN
 index|]
@@ -2661,6 +2665,9 @@ break|break;
 block|}
 name|bzero
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|dp
 argument_list|,
 name|UIO_MX
