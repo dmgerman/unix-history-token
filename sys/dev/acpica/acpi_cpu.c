@@ -1555,21 +1555,6 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* If this is the first device probed, check for quirks. */
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|acpi_cpu_quirks
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/*      * Probe for throttling and Cx state support.      * If none of these is present, free up unused resources.      */
 name|thr_ret
 operator|=
@@ -3220,6 +3205,22 @@ operator|&
 name|cpu_ndevices
 argument_list|)
 expr_stmt|;
+comment|/* Check for quirks via the first CPU device. */
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|cpu_devices
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|acpi_cpu_quirks
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/*      * Make sure all the processors' Cx counts match.  We should probably      * also check the contents of each.  However, no known systems have      * non-matching Cx counts so we'll deal with this later.      */
 name|count
 operator|=
@@ -3309,6 +3310,14 @@ name|void
 name|acpi_cpu_startup_throttling
 parameter_list|()
 block|{
+comment|/* If throttling is not usable, don't initialize it. */
+if|if
+condition|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_THROTTLE
+condition|)
+return|return;
 comment|/* Initialise throttling states */
 name|cpu_throttle_max
 operator|=
@@ -3455,6 +3464,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/*      * Set up the list of Cx states, eliminating C3 states by truncating      * cpu_cx_count if quirks indicate C3 is not usable.      */
 name|sc
 operator|=
 name|device_get_softc
@@ -3493,6 +3503,28 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpu_quirks
+operator|&
+name|CPU_QUIRK_NO_C3
+operator|)
+operator|==
+literal|0
+operator|||
+name|sc
+operator|->
+name|cpu_cx_states
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|!=
+name|ACPI_STATE_C3
+condition|)
 name|sbuf_printf
 argument_list|(
 operator|&
@@ -3514,6 +3546,12 @@ operator|.
 name|trans_lat
 argument_list|)
 expr_stmt|;
+else|else
+name|cpu_cx_count
+operator|=
+name|i
+expr_stmt|;
+block|}
 name|sbuf_trim
 argument_list|(
 operator|&
@@ -4302,6 +4340,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|device_t
+name|acpi_dev
+decl_stmt|;
 comment|/*      * C3 on multiple CPUs requires using the expensive flush cache      * instruction.      */
 if|if
 condition|(
@@ -4313,9 +4354,6 @@ name|cpu_quirks
 operator||=
 name|CPU_QUIRK_NO_BM_CTRL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 comment|/* Look for various quirks of the PIIX4 part. */
 name|acpi_dev
 operator|=
@@ -4369,8 +4407,6 @@ default|default:
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
