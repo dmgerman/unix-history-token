@@ -2484,7 +2484,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Declarations for these vfs default operations are located in   * kern/vfs_default.c, they should be used instead of making "dummy"   * functions or casting entries in the VFS op table to "enopnotsupp()".  */
+comment|/*  * Declarations for these vfs default operations are located in  * kern/vfs_default.c, they should be used instead of making "dummy"  * functions or casting entries in the VFS op table to "enopnotsupp()".  */
 end_comment
 
 begin_decl_stmt

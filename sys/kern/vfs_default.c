@@ -681,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vop_nostrategy:  *  *	Strategy routine for VFS devices that have none.  *  *	BIO_ERROR and B_INVAL must be cleared prior to calling any strategy  *	routine.  Typically this is done for a BIO_READ strategy call.  *	Typically B_INVAL is assumed to already be clear prior to a write   *	and should not be cleared manually unless you just made the buffer  *	invalid.  BIO_ERROR should be cleared either way.  */
+comment|/*  *	vop_nostrategy:  *  *	Strategy routine for VFS devices that have none.  *  *	BIO_ERROR and B_INVAL must be cleared prior to calling any strategy  *	routine.  Typically this is done for a BIO_READ strategy call.  *	Typically B_INVAL is assumed to already be clear prior to a write  *	and should not be cleared manually unless you just made the buffer  *	invalid.  BIO_ERROR should be cleared either way.  */
 end_comment
 
 begin_function
@@ -812,7 +812,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vop_stdpathconf:  *   * Standard implementation of POSIX pathconf, to get information about limits  * for a filesystem.  * Override per filesystem for the case where the filesystem has smaller  * limits.  */
+comment|/*  * vop_stdpathconf:  *  * Standard implementation of POSIX pathconf, to get information about limits  * for a filesystem.  * Override per filesystem for the case where the filesystem has smaller  * limits.  */
 end_comment
 
 begin_function
@@ -1289,7 +1289,7 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * This code cannot be used until all the non-locking filesystems 	 * (notably NFS) are converted to properly lock and release nodes. 	 * Also, certain vnode operations change the locking state within 	 * the operation (create, mknod, remove, link, rename, mkdir, rmdir, 	 * and symlink). Ideally these operations should not change the 	 * lock state, but should be changed to let the caller of the 	 * function unlock them. Otherwise all intermediate vnode layers 	 * (such as union, umapfs, etc) must catch these functions to do 	 * the necessary locking at their layer. Note that the inactive 	 * and lookup operations also change their lock state, but this  	 * cannot be avoided, so these two operations will always need 	 * to be handled in intermediate layers. 	 */
+comment|/* 	 * This code cannot be used until all the non-locking filesystems 	 * (notably NFS) are converted to properly lock and release nodes. 	 * Also, certain vnode operations change the locking state within 	 * the operation (create, mknod, remove, link, rename, mkdir, rmdir, 	 * and symlink). Ideally these operations should not change the 	 * lock state, but should be changed to let the caller of the 	 * function unlock them. Otherwise all intermediate vnode layers 	 * (such as union, umapfs, etc) must catch these functions to do 	 * the necessary locking at their layer. Note that the inactive 	 * and lookup operations also change their lock state, but this 	 * cannot be avoided, so these two operations will always need 	 * to be handled in intermediate layers. 	 */
 name|struct
 name|vnode
 modifier|*
@@ -1465,7 +1465,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 	 * This code cannot be used until all the non-locking filesystems 	 * (notably NFS) are converted to properly lock and release nodes. 	 * Also, certain vnode operations change the locking state within 	 * the operation (create, mknod, remove, link, rename, mkdir, rmdir, 	 * and symlink). Ideally these operations should not change the 	 * lock state, but should be changed to let the caller of the 	 * function unlock them. Otherwise all intermediate vnode layers 	 * (such as union, umapfs, etc) must catch these functions to do 	 * the necessary locking at their layer. Note that the inactive 	 * and lookup operations also change their lock state, but this  	 * cannot be avoided, so these two operations will always need 	 * to be handled in intermediate layers. 	 */
+comment|/* 	 * This code cannot be used until all the non-locking filesystems 	 * (notably NFS) are converted to properly lock and release nodes. 	 * Also, certain vnode operations change the locking state within 	 * the operation (create, mknod, remove, link, rename, mkdir, rmdir, 	 * and symlink). Ideally these operations should not change the 	 * lock state, but should be changed to let the caller of the 	 * function unlock them. Otherwise all intermediate vnode layers 	 * (such as union, umapfs, etc) must catch these functions to do 	 * the necessary locking at their layer. Note that the inactive 	 * and lookup operations also change their lock state, but this 	 * cannot be avoided, so these two operations will always need 	 * to be handled in intermediate layers. 	 */
 name|struct
 name|vnode
 modifier|*
@@ -2142,7 +2142,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bmap_args
-comment|/* {   		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
+comment|/* { 		struct vnode *a_vp; 		daddr_t  a_bn; 		struct vnode **a_vpp; 		daddr_t *a_bnp; 		int *a_runp; 		int *a_runb; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2692,7 +2692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * vfs default ops  * used to fill the vfs function table to get reasonable default return values.  */
+comment|/*  * vfs default ops  * used to fill the vfs function table to get reasonable default return values.  */
 end_comment
 
 begin_function
