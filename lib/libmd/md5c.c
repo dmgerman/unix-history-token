@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  * $FreeBSD$  */
-end_comment
-
-begin_comment
-comment|/* Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All rights reserved.  License to copy and use this software is granted provided that it is identified as the "RSA Data Security, Inc. MD5 Message-Digest Algorithm" in all material mentioning or referencing this software or this function.  License is also granted to make and use derivative works provided that such works are identified as "derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm" in all material mentioning or referencing the derived work.  RSA Data Security, Inc. makes no representations concerning either the merchantability of this software or the suitability of this software for any particular purpose. It is provided "as is" without express or implied warranty of any kind.  These notices must be retained in any copies of any part of this documentation and/or software.  */
+comment|/*  * MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm  *  * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All  * rights reserved.  *  * License to copy and use this software is granted provided that it  * is identified as the "RSA Data Security, Inc. MD5 Message-Digest  * Algorithm" in all material mentioning or referencing this software  * or this function.  *  * License is also granted to make and use derivative works provided  * that such works are identified as "derived from the RSA Data  * Security, Inc. MD5 Message-Digest Algorithm" in all material  * mentioning or referencing the derived work.  *  * RSA Data Security, Inc. makes no representations concerning either  * the merchantability of this software or the suitability of this  * software for any particular purpose. It is provided "as is"  * without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this  * documentation and/or software.  *  * $Id: md5c.c,v 1.6 1996/12/22 10:27:25 phk Exp $  *  * This code is the same as the code published by RSA Inc.  It has been  * edited for clarity and style only.  */
 end_comment
 
 begin_include
@@ -13,175 +9,54 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<string.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"md5.h"
+file|<sys/md5.h>
 end_include
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-modifier|*
-name|POINTER
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|UINT2
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|UINT4
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|PROTO_LIST
-parameter_list|(
-name|list
-parameter_list|)
-value|list
-end_define
-
-begin_comment
-comment|/* Constants for MD5Transform routine.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S11
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|S12
-value|12
-end_define
-
-begin_define
-define|#
-directive|define
-name|S13
-value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|S14
-value|22
-end_define
-
-begin_define
-define|#
-directive|define
-name|S21
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|S22
-value|9
-end_define
-
-begin_define
-define|#
-directive|define
-name|S23
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
-name|S24
-value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|S31
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|S32
-value|11
-end_define
-
-begin_define
-define|#
-directive|define
-name|S33
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|S34
-value|23
-end_define
-
-begin_define
-define|#
-directive|define
-name|S41
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|S42
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|S43
-value|15
-end_define
-
-begin_define
-define|#
-directive|define
-name|S44
-value|21
-end_define
 
 begin_decl_stmt
 specifier|static
 name|void
 name|MD5Transform
-name|PROTO_LIST
+name|__P
 argument_list|(
 operator|(
-name|UINT4
+name|u_int32_t
 index|[
 literal|4
 index|]
@@ -196,6 +71,45 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|memset
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|bzero(x,z);
+end_define
+
+begin_define
+define|#
+directive|define
+name|memcpy
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|)
+value|bcopy(y, x, z)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -227,7 +141,7 @@ comment|/* i386 */
 end_comment
 
 begin_comment
-comment|/* Encodes input (UINT4) into output (unsigned char). Assumes len is   a multiple of 4.  */
+comment|/*  * Encodes input (u_int32_t) into output (unsigned char). Assumes len is  * a multiple of 4.  */
 end_comment
 
 begin_function
@@ -246,7 +160,7 @@ name|char
 modifier|*
 name|output
 decl_stmt|;
-name|UINT4
+name|u_int32_t
 modifier|*
 name|input
 decl_stmt|;
@@ -378,7 +292,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Decodes input (unsigned char) into output (UINT4). Assumes len is   a multiple of 4.  */
+comment|/*  * Decodes input (unsigned char) into output (u_int32_t). Assumes len is  * a multiple of 4.  */
 end_comment
 
 begin_function
@@ -392,7 +306,7 @@ name|input
 parameter_list|,
 name|len
 parameter_list|)
-name|UINT4
+name|u_int32_t
 modifier|*
 name|output
 decl_stmt|;
@@ -441,7 +355,7 @@ index|]
 operator|=
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|input
 index|[
@@ -452,7 +366,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|input
 index|[
@@ -468,7 +382,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|input
 index|[
@@ -484,7 +398,7 @@ operator||
 operator|(
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|input
 index|[
@@ -651,7 +565,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* F, G, H and I are basic MD5 functions.  */
+comment|/* F, G, H and I are basic MD5 functions. */
 end_comment
 
 begin_define
@@ -711,7 +625,7 @@ value|((y) ^ ((x) | (~z)))
 end_define
 
 begin_comment
-comment|/* ROTATE_LEFT rotates x left n bits.  */
+comment|/* ROTATE_LEFT rotates x left n bits. */
 end_comment
 
 begin_define
@@ -727,7 +641,7 @@ value|(((x)<< (n)) | ((x)>> (32-(n))))
 end_define
 
 begin_comment
-comment|/* FF, GG, HH, and II transformations for rounds 1, 2, 3, and 4. Rotation is separate from addition to prevent recomputation.  */
+comment|/*  * FF, GG, HH, and II transformations for rounds 1, 2, 3, and 4.  * Rotation is separate from addition to prevent recomputation.  */
 end_comment
 
 begin_define
@@ -749,7 +663,7 @@ name|s
 parameter_list|,
 name|ac
 parameter_list|)
-value|{ \  (a) += F ((b), (c), (d)) + (x) + (UINT4)(ac); \  (a) = ROTATE_LEFT ((a), (s)); \  (a) += (b); \   }
+value|{ \ 	(a) += F ((b), (c), (d)) + (x) + (u_int32_t)(ac); \ 	(a) = ROTATE_LEFT ((a), (s)); \ 	(a) += (b); \ 	}
 end_define
 
 begin_define
@@ -771,7 +685,7 @@ name|s
 parameter_list|,
 name|ac
 parameter_list|)
-value|{ \  (a) += G ((b), (c), (d)) + (x) + (UINT4)(ac); \  (a) = ROTATE_LEFT ((a), (s)); \  (a) += (b); \   }
+value|{ \ 	(a) += G ((b), (c), (d)) + (x) + (u_int32_t)(ac); \ 	(a) = ROTATE_LEFT ((a), (s)); \ 	(a) += (b); \ 	}
 end_define
 
 begin_define
@@ -793,7 +707,7 @@ name|s
 parameter_list|,
 name|ac
 parameter_list|)
-value|{ \  (a) += H ((b), (c), (d)) + (x) + (UINT4)(ac); \  (a) = ROTATE_LEFT ((a), (s)); \  (a) += (b); \   }
+value|{ \ 	(a) += H ((b), (c), (d)) + (x) + (u_int32_t)(ac); \ 	(a) = ROTATE_LEFT ((a), (s)); \ 	(a) += (b); \ 	}
 end_define
 
 begin_define
@@ -815,11 +729,11 @@ name|s
 parameter_list|,
 name|ac
 parameter_list|)
-value|{ \  (a) += I ((b), (c), (d)) + (x) + (UINT4)(ac); \  (a) = ROTATE_LEFT ((a), (s)); \  (a) += (b); \   }
+value|{ \ 	(a) += I ((b), (c), (d)) + (x) + (u_int32_t)(ac); \ 	(a) = ROTATE_LEFT ((a), (s)); \ 	(a) += (b); \ 	}
 end_define
 
 begin_comment
-comment|/* MD5 initialization. Begins an MD5 operation, writing a new context.  */
+comment|/* MD5 initialization. Begins an MD5 operation, writing a new context. */
 end_comment
 
 begin_function
@@ -832,7 +746,6 @@ name|MD5_CTX
 modifier|*
 name|context
 decl_stmt|;
-comment|/* context */
 block|{
 name|context
 operator|->
@@ -850,7 +763,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Load magic initialization constants. */
+comment|/* Load magic initialization constants.  */
 name|context
 operator|->
 name|state
@@ -891,7 +804,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MD5 block update operation. Continues an MD5 message-digest   operation, processing another message block, and updating the   context.  */
+comment|/*   * MD5 block update operation. Continues an MD5 message-digest  * operation, processing another message block, and updating the  * context.  */
 end_comment
 
 begin_function
@@ -908,19 +821,16 @@ name|MD5_CTX
 modifier|*
 name|context
 decl_stmt|;
-comment|/* context */
 specifier|const
 name|unsigned
 name|char
 modifier|*
 name|input
 decl_stmt|;
-comment|/* input block */
 name|unsigned
 name|int
 name|inputLen
 decl_stmt|;
-comment|/* length of input block */
 block|{
 name|unsigned
 name|int
@@ -965,7 +875,7 @@ index|]
 operator|+=
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|inputLen
 operator|<<
@@ -975,7 +885,7 @@ operator|)
 operator|<
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|inputLen
 operator|<<
@@ -999,7 +909,7 @@ index|]
 operator|+=
 operator|(
 operator|(
-name|UINT4
+name|u_int32_t
 operator|)
 name|inputLen
 operator|>>
@@ -1023,7 +933,8 @@ block|{
 name|memcpy
 argument_list|(
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 operator|&
 name|context
@@ -1034,7 +945,8 @@ name|index
 index|]
 argument_list|,
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 name|input
 argument_list|,
@@ -1095,7 +1007,8 @@ comment|/* Buffer remaining input */
 name|memcpy
 argument_list|(
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 operator|&
 name|context
@@ -1106,7 +1019,8 @@ name|index
 index|]
 argument_list|,
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 operator|&
 name|input
@@ -1123,7 +1037,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MD5 finalization. Ends an MD5 message-digest operation, writing the   the message digest and zeroizing the context.  */
+comment|/*  * MD5 finalization. Ends an MD5 message-digest operation, writing the  * the message digest and zeroizing the context.  */
 end_comment
 
 begin_function
@@ -1141,12 +1055,10 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-comment|/* message digest */
 name|MD5_CTX
 modifier|*
 name|context
 decl_stmt|;
-comment|/* context */
 block|{
 name|unsigned
 name|char
@@ -1250,7 +1162,8 @@ comment|/* Zeroize sensitive information. */
 name|memset
 argument_list|(
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 name|context
 argument_list|,
@@ -1267,7 +1180,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* MD5 basic transformation. Transforms state based on block.  */
+comment|/* MD5 basic transformation. Transforms state based on block. */
 end_comment
 
 begin_function
@@ -1279,7 +1192,7 @@ name|state
 parameter_list|,
 name|block
 parameter_list|)
-name|UINT4
+name|u_int32_t
 name|state
 index|[
 literal|4
@@ -1294,7 +1207,7 @@ literal|64
 index|]
 decl_stmt|;
 block|{
-name|UINT4
+name|u_int32_t
 name|a
 init|=
 name|state
@@ -1338,6 +1251,22 @@ literal|64
 argument_list|)
 expr_stmt|;
 comment|/* Round 1 */
+define|#
+directive|define
+name|S11
+value|7
+define|#
+directive|define
+name|S12
+value|12
+define|#
+directive|define
+name|S13
+value|17
+define|#
+directive|define
+name|S14
+value|22
 name|FF
 argument_list|(
 name|a
@@ -1675,6 +1604,22 @@ argument_list|)
 expr_stmt|;
 comment|/* 16 */
 comment|/* Round 2 */
+define|#
+directive|define
+name|S21
+value|5
+define|#
+directive|define
+name|S22
+value|9
+define|#
+directive|define
+name|S23
+value|14
+define|#
+directive|define
+name|S24
+value|20
 name|GG
 argument_list|(
 name|a
@@ -2012,6 +1957,22 @@ argument_list|)
 expr_stmt|;
 comment|/* 32 */
 comment|/* Round 3 */
+define|#
+directive|define
+name|S31
+value|4
+define|#
+directive|define
+name|S32
+value|11
+define|#
+directive|define
+name|S33
+value|16
+define|#
+directive|define
+name|S34
+value|23
 name|HH
 argument_list|(
 name|a
@@ -2349,6 +2310,22 @@ argument_list|)
 expr_stmt|;
 comment|/* 48 */
 comment|/* Round 4 */
+define|#
+directive|define
+name|S41
+value|6
+define|#
+directive|define
+name|S42
+value|10
+define|#
+directive|define
+name|S43
+value|15
+define|#
+directive|define
+name|S44
+value|21
 name|II
 argument_list|(
 name|a
@@ -2717,7 +2694,8 @@ comment|/* Zeroize sensitive information. */
 name|memset
 argument_list|(
 operator|(
-name|POINTER
+name|void
+operator|*
 operator|)
 name|x
 argument_list|,
