@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.4 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -791,6 +791,15 @@ operator|->
 name|fi_cip
 operator|->
 name|clean
+operator|<
+name|max_free_segs
+operator|&&
+operator|(
+name|fsp
+operator|->
+name|fi_cip
+operator|->
+name|clean
 operator|<=
 name|MIN_SEGS
 argument_list|(
@@ -809,6 +818,7 @@ operator|<
 name|max_free_segs
 operator|*
 name|BUSY_LIM
+operator|)
 condition|)
 block|{
 name|printf
