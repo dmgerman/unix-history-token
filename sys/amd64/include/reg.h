@@ -278,6 +278,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Register set accessible via /proc/$pid/dbregs.  */
+end_comment
+
 begin_struct
 struct|struct
 name|dbreg
