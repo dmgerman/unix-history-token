@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_inode.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ufs_inode.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3959,6 +3959,18 @@ begin_comment
 comment|/*  * Remove any inodes in the inode cache belonging to dev.  *  * There should not be any active ones, return error if any are found  * (nb: this is a user error, not a system err).  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|busyprt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* patch to print out busy inodes */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4019,6 +4031,11 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
+name|int
+name|busy
+init|=
+literal|0
+decl_stmt|;
 for|for
 control|(
 name|ip
@@ -4039,15 +4056,16 @@ name|QUOTA
 if|if
 condition|(
 name|ip
-operator|!=
+operator|==
 name|iq
-operator|&&
+operator|||
 name|ip
 operator|->
 name|i_dev
-operator|==
+operator|!=
 name|dev
 condition|)
+continue|continue;
 else|#
 directive|else
 if|if
@@ -4055,9 +4073,10 @@ condition|(
 name|ip
 operator|->
 name|i_dev
-operator|==
+operator|!=
 name|dev
 condition|)
+continue|continue;
 endif|#
 directive|endif
 if|if
@@ -4069,13 +4088,47 @@ argument_list|)
 operator|->
 name|v_count
 condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-else|else
 block|{
+name|busy
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|busyprt
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|"%s %d on dev 0x%x count %d type %d\n"
+argument_list|,
+literal|"iflush: busy inode "
+argument_list|,
+name|ip
+operator|->
+name|i_number
+argument_list|,
+name|ip
+operator|->
+name|i_dev
+argument_list|,
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+operator|->
+name|v_count
+argument_list|,
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+operator|->
+name|v_type
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|remque
 argument_list|(
 name|ip
@@ -4093,7 +4146,7 @@ name|i_back
 operator|=
 name|ip
 expr_stmt|;
-comment|/* 				 * as v_count == 0, the inode was on the free 				 * list already, just leave it there, it will 				 * fall off the bottom eventually. We could 				 * perhaps move it to the head of the free 				 * list, but as umounts are done so 				 * infrequently, we would gain very little, 				 * while making the code bigger. 				 */
+comment|/* 		 * As v_count == 0, the inode was on the free list already, 		 * just leave it there, it will fall off the bottom eventually. 		 * We could perhaps move it to the head of the free list, 		 * but as umounts are done so infrequently, we would gain 		 * very little, while making the code bigger. 		 */
 ifdef|#
 directive|ifdef
 name|QUOTA
@@ -4134,7 +4187,15 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-block|}
+if|if
+condition|(
+name|busy
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 return|return
 operator|(
 literal|0
