@@ -2080,6 +2080,11 @@ operator|(
 name|EBADF
 operator|)
 return|;
+name|fhold
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 comment|/* note: can't use iovlen until iovcnt is validated */
 name|iovlen
 operator|=
@@ -2110,11 +2115,19 @@ name|iovcnt
 operator|>
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|needfree
+operator|=
+name|NULL
+expr_stmt|;
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -2446,6 +2459,11 @@ name|cnt
 expr_stmt|;
 name|done
 label|:
+name|fdrop
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|needfree
