@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.38 1998/06/09 08:30:32 jb Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: malloc.c,v 1.39 1998/06/18 09:13:16 peter Exp $  *  */
 end_comment
 
 begin_comment
@@ -4382,12 +4382,12 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|malloc_func
 operator|=
 literal|" in malloc():"
-expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4480,12 +4480,12 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|malloc_func
 operator|=
 literal|" in free():"
-expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4498,11 +4498,9 @@ argument_list|(
 literal|"recursive call.\n"
 argument_list|)
 expr_stmt|;
-name|malloc_active
-operator|--
-expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 name|ifree
 argument_list|(
 name|ptr
@@ -4517,6 +4515,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|malloc_active
 operator|--
 expr_stmt|;
@@ -4545,12 +4544,12 @@ name|void
 modifier|*
 name|r
 decl_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 name|malloc_func
 operator|=
 literal|" in realloc():"
-expr_stmt|;
-name|THREAD_LOCK
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
