@@ -1029,6 +1029,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_cpu_idle
+value|cpu_idle
+end_define
+
+begin_define
+define|#
+directive|define
 name|_cpu_num_to_apic_id
 value|cpu_num_to_apic_id
 end_define

@@ -4862,6 +4862,87 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Hook to idle the CPU when possible.   This is disabled by default for  * the SMP case as there is a small window of opportunity whereby a ready  * process is delayed to the next clock tick.  It should be safe to enable  * for SMP if power is a concern.  *  * On -stable, cpu_idle() is called with interrupts disabled and must  * return with them enabled.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_idle_hlt
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|cpu_idle_hlt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cpu_idle_hlt
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|cpu_idle_hlt
+argument_list|,
+literal|0
+argument_list|,
+literal|"Idle loop HLT enable"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|cpu_idle
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|cpu_idle_hlt
+condition|)
+block|{
+comment|/* 		 * We must guarentee that hlt is exactly the instruction 		 * following the sti. 		 */
+asm|__asm __volatile("sti; hlt");
+block|}
+else|else
+block|{
+asm|__asm __volatile("sti");
+block|}
+block|}
+end_function
+
+begin_comment
 comment|/*  * Clear registers on exec  */
 end_comment
 
