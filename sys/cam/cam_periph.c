@@ -5819,7 +5819,7 @@ block|}
 default|default:
 name|panic
 argument_list|(
-literal|"Unhandled error action %x\n"
+literal|"Unhandled error action %x"
 argument_list|,
 name|err_action
 argument_list|)
