@@ -9055,6 +9055,24 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+name|EFBIG
+condition|)
+block|{
+comment|/* XXX packet requires too many descriptors */
+name|bf
+operator|->
+name|bf_nseg
+operator|=
+name|ATH_TXDESC
+operator|+
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|error
 operator|!=
 literal|0
 condition|)
