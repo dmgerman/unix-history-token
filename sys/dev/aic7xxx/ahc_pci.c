@@ -3452,6 +3452,34 @@ name|enable
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* 	 * Clear any outstanding parity error 	 * and ensure that parity error reporting 	 * is enabled. 	 */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQCTL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRPARERR
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRBRKADRINT
+argument_list|)
+expr_stmt|;
 comment|/* Now see if we can do parity */
 name|ahc_ext_scbram_config
 argument_list|(
@@ -3583,7 +3611,19 @@ name|TRUE
 expr_stmt|;
 name|done
 label|:
-comment|/* Clear any resulting parity error */
+comment|/* 	 * Disable parity error reporting until we 	 * can load instruction ram. 	 */
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SEQCTL
+argument_list|,
+name|PERRORDIS
+operator||
+name|FAILDIS
+argument_list|)
+expr_stmt|;
+comment|/* Clear any latched parity error */
 name|ahc_outb
 argument_list|(
 name|ahc
@@ -3611,7 +3651,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: External SRAM, %dns access%s\n"
+literal|"%s: External SRAM, %s access%s\n"
 argument_list|,
 name|ahc_name
 argument_list|(
@@ -3620,9 +3660,9 @@ argument_list|)
 argument_list|,
 name|fast
 condition|?
-literal|10
+literal|"fast"
 else|:
-literal|20
+literal|"slow"
 argument_list|,
 name|pcheck
 condition|?
