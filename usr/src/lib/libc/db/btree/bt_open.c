@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_open.c	5.27 (Berkeley) %G%"
+literal|"@(#)bt_open.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1679,7 +1679,7 @@ name|u_long
 name|x
 decl_stmt|;
 comment|/* XXX: 32-bit assumption. */
-name|char
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
