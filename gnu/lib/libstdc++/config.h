@@ -985,9 +985,12 @@ begin_comment
 comment|/* Define to 1 if you have the `frexpl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_FREXPL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_FREXPL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the `fwide' function. */
@@ -1231,9 +1234,12 @@ begin_comment
 comment|/* Define to 1 if you have the `ldexpl' function. */
 end_comment
 
-begin_comment
-comment|/* #undef HAVE_LDEXPL */
-end_comment
+begin_define
+define|#
+directive|define
+name|HAVE_LDEXPL
+value|1
+end_define
 
 begin_comment
 comment|/* Define to 1 if you have the<libintl.h> header file. */
