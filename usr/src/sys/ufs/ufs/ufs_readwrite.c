@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -20,7 +20,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|blksize(a)
+value|blksize(a, b, c)
 end_define
 
 begin_define
@@ -1120,6 +1120,8 @@ operator|=
 name|lfs_balloc
 argument_list|(
 name|vp
+argument_list|,
+name|blkoffset
 argument_list|,
 name|xfersize
 argument_list|,
