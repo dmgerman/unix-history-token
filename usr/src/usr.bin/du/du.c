@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.16 (Berkeley) %G%"
+literal|"@(#)du.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +237,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aksx"
+literal|"asx"
 argument_list|)
 operator|)
 operator|!=
@@ -254,21 +254,6 @@ case|:
 name|aflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'k'
-case|:
-comment|/* Delete before 4.4BSD. */
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"du: -k no longer supported\n"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
