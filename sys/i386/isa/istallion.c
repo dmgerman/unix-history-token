@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * istallion.c  -- stallion intelligent multiport serial driver.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: istallion.c,v 1.8 1997/02/22 09:36:43 peter Exp $  */
 end_comment
 
 begin_comment
@@ -451,7 +451,7 @@ specifier|const
 name|stli_drvversion
 index|[]
 init|=
-literal|"0.0.5"
+literal|"1.0.0"
 decl_stmt|;
 end_decl_stmt
 
@@ -7025,6 +7025,9 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 if|#
 directive|if
 name|DEBUG
@@ -7111,7 +7114,9 @@ operator|&
 name|HUPCL
 condition|)
 block|{
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|stli_mkasysigs
@@ -7166,8 +7171,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7329,6 +7336,8 @@ name|bits
 decl_stmt|;
 name|int
 name|rc
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -7357,7 +7366,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 comment|/*  *	Slave is already closing this port. This can happen if a hangup  *	occurs on this port. So we must wait until it is complete. The  *	order of opens and closes may not be preserved across shared  *	memory, so we must wait until it is complete.  */
@@ -7395,8 +7406,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7497,8 +7510,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7551,8 +7566,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7561,8 +7578,10 @@ operator|)
 return|;
 block|}
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7639,6 +7658,8 @@ name|bits
 decl_stmt|;
 name|int
 name|rc
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -7667,7 +7688,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 comment|/*  *	Slave is already closing this port. This can happen if a hangup  *	occurs on this port.  */
@@ -7710,8 +7733,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7819,8 +7844,10 @@ operator|==
 literal|0
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7867,8 +7894,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -7877,8 +7906,10 @@ operator|)
 return|;
 block|}
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -7946,6 +7977,8 @@ parameter_list|)
 block|{
 name|int
 name|rc
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -7982,7 +8015,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 while|while
@@ -8019,8 +8054,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -8078,8 +8115,10 @@ condition|(
 name|rc
 condition|)
 block|{
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -8088,8 +8127,10 @@ operator|)
 return|;
 block|}
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8327,9 +8368,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|disable_intr
-argument_list|()
-expr_stmt|;
 name|EBRDENABLE
 argument_list|(
 name|brdp
@@ -8636,9 +8674,6 @@ argument_list|(
 name|brdp
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
 block|}
 if|#
 directive|if
@@ -8819,6 +8854,9 @@ name|unsigned
 name|long
 name|ftype
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 if|#
 directive|if
 name|DEBUG
@@ -8886,7 +8924,9 @@ operator|)
 name|NULL
 condition|)
 return|return;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 if|if
@@ -9003,8 +9043,10 @@ name|stli_rxtmplen
 operator|=
 literal|0
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -11280,8 +11322,12 @@ name|brdp
 decl_stmt|;
 name|int
 name|brdnr
+decl_stmt|,
+name|x
 decl_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 comment|/*  *	Check each board and do any servicing required.  */
@@ -11370,8 +11416,10 @@ name|brdp
 argument_list|)
 expr_stmt|;
 block|}
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
@@ -16128,6 +16176,8 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|rc
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -16148,7 +16198,9 @@ name|rc
 operator|=
 literal|0
 expr_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|EBRDENABLE
@@ -16603,8 +16655,10 @@ argument_list|(
 name|brdp
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -18155,6 +18209,8 @@ decl_stmt|,
 name|n
 decl_stmt|,
 name|error
+decl_stmt|,
+name|x
 decl_stmt|;
 if|#
 directive|if
@@ -18248,7 +18304,9 @@ name|uiop
 operator|->
 name|uio_offset
 expr_stmt|;
-name|disable_intr
+name|x
+operator|=
+name|spltty
 argument_list|()
 expr_stmt|;
 name|EBRDENABLE
@@ -18337,8 +18395,10 @@ argument_list|(
 name|brdp
 argument_list|)
 expr_stmt|;
-name|enable_intr
-argument_list|()
+name|splx
+argument_list|(
+name|x
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
