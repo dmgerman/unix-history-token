@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2024,7 +2024,14 @@ name|vp
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 name|vput
 argument_list|(
 name|vp
