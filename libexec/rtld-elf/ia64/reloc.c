@@ -2122,6 +2122,22 @@ name|pltres
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * When there are no PLT relocations, the DT_IA64_PLT_RESERVE entry 	 * is bogus. Do not setup the BOR pointers in that case. An example 	 * of where this happens is /usr/lib/libxpg4.so.3. 	 */
+if|if
+condition|(
+name|obj
+operator|->
+name|pltrelasize
+operator|==
+literal|0
+operator|&&
+name|obj
+operator|->
+name|pltrelsize
+operator|==
+literal|0
+condition|)
+return|return;
 comment|/* 	 * Find the PLT RESERVE section. 	 */
 for|for
 control|(
