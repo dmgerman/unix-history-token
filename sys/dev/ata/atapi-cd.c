@@ -3338,26 +3338,6 @@ condition|)
 return|return
 name|ENXIO
 return|;
-if|if
-condition|(
-name|flags
-operator|&
-name|FWRITE
-condition|)
-block|{
-if|if
-condition|(
-name|count_dev
-argument_list|(
-name|dev
-argument_list|)
-operator|>
-literal|1
-condition|)
-return|return
-name|EBUSY
-return|;
-block|}
 comment|/* wait if drive is not finished loading the medium */
 while|while
 condition|(
