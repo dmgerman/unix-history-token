@@ -131,6 +131,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|mc_wstate
+value|mc_in[5]
+end_define
+
+begin_define
+define|#
+directive|define
 name|_MC_VERSION_SHIFT
 value|0
 end_define
