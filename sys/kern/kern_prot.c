@@ -5095,7 +5095,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * NOT MPSAFE?  */
+comment|/*  * MPSAFE  */
 end_comment
 
 begin_comment
