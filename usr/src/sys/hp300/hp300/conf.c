@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.14 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *      @(#)conf.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -232,6 +232,10 @@ define|\
 value|dev_decl(n,open); dev_decl(n,close); dev_decl(n,strategy); \ 	dev_decl(n,ioctl); dev_decl(n,dump); dev_decl(n,size)
 end_define
 
+begin_comment
+comment|/* disk without close routine */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -242,6 +246,22 @@ parameter_list|,
 name|n
 parameter_list|)
 value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), dev_size_init(c,n), 0 }
+end_define
+
+begin_comment
+comment|/* disk with close routine */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bdev_ldisk_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), \ 	dev_init(c,n,strategy), dev_init(c,n,ioctl), \ 	dev_init(c,n,dump), dev_size_init(c,n), 0 }
 end_define
 
 begin_define
@@ -387,7 +407,7 @@ name|bdev_notdef
 argument_list|()
 block|,
 comment|/* 1 */
-name|bdev_disk_init
+name|bdev_ldisk_init
 argument_list|(
 name|NRD
 argument_list|,
@@ -399,7 +419,7 @@ name|bdev_swap_init
 argument_list|()
 block|,
 comment|/* 3: swap pseudo-device */
-name|bdev_disk_init
+name|bdev_ldisk_init
 argument_list|(
 name|NSD
 argument_list|,
@@ -555,6 +575,22 @@ parameter_list|,
 name|n
 parameter_list|)
 value|{ \ 	dev_init(c,n,open), (dev_type_close((*))) nullop, dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
+end_define
+
+begin_comment
+comment|/* open, close, read, write, ioctl, strategy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_ldisk_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	dev_init(c,n,write), dev_init(c,n,ioctl), (dev_type_stop((*))) enodev, \ 	(dev_type_reset((*))) nullop, 0, seltrue, (dev_type_map((*))) enodev, \ 	dev_init(c,n,strategy) }
 end_define
 
 begin_comment
@@ -1122,7 +1158,7 @@ name|ct
 argument_list|)
 block|,
 comment|/* 7: cs80 cartridge tape */
-name|cdev_disk_init
+name|cdev_ldisk_init
 argument_list|(
 name|NSD
 argument_list|,
@@ -1130,7 +1166,7 @@ name|sd
 argument_list|)
 block|,
 comment|/* 8: scsi disk */
-name|cdev_disk_init
+name|cdev_ldisk_init
 argument_list|(
 name|NRD
 argument_list|,
