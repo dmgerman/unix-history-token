@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.45	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.46	%G% */
 end_comment
 
 begin_ifdef
@@ -830,6 +830,17 @@ end_define
 
 begin_comment
 comment|/* match one token in a class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHREPL
+value|'\023'
+end_define
+
+begin_comment
+comment|/* replacement on RHS for above */
 end_comment
 
 begin_define
