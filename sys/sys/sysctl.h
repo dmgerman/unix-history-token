@@ -347,6 +347,43 @@ value|struct sysctl_oid *oidp, void *arg1, int arg2, \ 	struct sysctl_req *req
 end_define
 
 begin_comment
+comment|/* definitions for sysctl_req 'lock' member */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_UNLOCKED
+value|0
+end_define
+
+begin_comment
+comment|/* not locked and not wired */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_LOCKED
+value|1
+end_define
+
+begin_comment
+comment|/* locked and not wired */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_WIRED
+value|2
+end_define
+
+begin_comment
+comment|/* locked and wired */
+end_comment
+
+begin_comment
 comment|/*  * This describes the access space for a sysctl request.  This is needed  * so that we can use the interface from the kernel or from user-space.  */
 end_comment
 
@@ -363,6 +400,7 @@ comment|/* used for access checking */
 name|int
 name|lock
 decl_stmt|;
+comment|/* locking/wiring state */
 name|void
 modifier|*
 name|oldptr

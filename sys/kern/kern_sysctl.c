@@ -4216,7 +4216,7 @@ name|req
 operator|.
 name|lock
 operator|=
-literal|1
+name|REQ_LOCKED
 expr_stmt|;
 name|SYSCTL_LOCK
 argument_list|()
@@ -4241,7 +4241,7 @@ name|req
 operator|.
 name|lock
 operator|==
-literal|2
+name|REQ_WIRED
 condition|)
 name|vsunlock
 argument_list|(
@@ -4495,7 +4495,7 @@ name|req
 operator|->
 name|lock
 operator|==
-literal|1
+name|REQ_LOCKED
 operator|&&
 name|req
 operator|->
@@ -4732,7 +4732,7 @@ name|req
 operator|->
 name|lock
 operator|==
-literal|1
+name|REQ_LOCKED
 operator|&&
 name|req
 operator|->
@@ -4760,7 +4760,7 @@ name|req
 operator|->
 name|lock
 operator|=
-literal|2
+name|REQ_WIRED
 expr_stmt|;
 block|}
 block|}
@@ -4849,7 +4849,7 @@ name|req
 operator|->
 name|lock
 operator|=
-literal|0
+name|REQ_UNLOCKED
 expr_stmt|;
 if|if
 condition|(
@@ -5695,7 +5695,7 @@ name|req
 operator|.
 name|lock
 operator|=
-literal|1
+name|REQ_LOCKED
 expr_stmt|;
 name|SYSCTL_LOCK
 argument_list|()
@@ -5780,7 +5780,7 @@ name|req
 operator|.
 name|lock
 operator|==
-literal|2
+name|REQ_WIRED
 condition|)
 name|vsunlock
 argument_list|(
