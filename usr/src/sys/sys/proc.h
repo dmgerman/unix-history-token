@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	3.2	%H%	*/
+comment|/*	proc.h	3.3	%H%	*/
 end_comment
 
 begin_comment
@@ -55,17 +55,29 @@ name|char
 name|p_slptime
 decl_stmt|;
 comment|/* time since last block */
-name|int
-name|p_flag
+name|char
+name|p_cursig
 decl_stmt|;
 name|int
 name|p_sig
 decl_stmt|;
 comment|/* signals pending to this process */
-name|int
-name|p_ignsig
+name|long
+name|p_siga0
 decl_stmt|;
-comment|/* ignored signals */
+comment|/* low bit of 2 bit signal action */
+name|long
+name|p_siga1
+decl_stmt|;
+comment|/* high bit of 2 bit signal action */
+define|#
+directive|define
+name|p_ignsig
+value|p_siga0
+comment|/* ignored signal mask */
+name|int
+name|p_flag
+decl_stmt|;
 name|short
 name|p_uid
 decl_stmt|;
@@ -156,6 +168,12 @@ name|short
 name|p_idhash
 decl_stmt|;
 comment|/* hashed based on p_pid for kill+exit+... */
+name|struct
+name|proc
+modifier|*
+name|p_pptr
+decl_stmt|;
+comment|/* pointer to process structure of parent */
 block|}
 struct|;
 end_struct
@@ -629,15 +647,21 @@ comment|/* nice for cpu usage */
 name|char
 name|xp_slptime
 decl_stmt|;
-name|int
-name|xp_flag
+name|char
+name|p_cursig
 decl_stmt|;
 name|int
 name|xp_sig
 decl_stmt|;
 comment|/* signals pending to this process */
 name|int
-name|xp_ignsig
+name|xp_siga0
+decl_stmt|;
+name|int
+name|xp_siga1
+decl_stmt|;
+name|int
+name|xp_flag
 decl_stmt|;
 name|short
 name|xp_uid
