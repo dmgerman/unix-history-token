@@ -3187,17 +3187,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|sc
-operator|->
-name|dev
-operator|,
-literal|"intr\n"
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3619,19 +3608,6 @@ modifier|*
 name|h
 parameter_list|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"pcic_attach_card h %p h->dev %p\n"
-operator|,
-name|h
-operator|,
-name|h
-operator|->
-name|dev
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3644,13 +3620,6 @@ name|PCIC_FLAG_CARDP
 operator|)
 condition|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"Calling MI attach function\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* call the MI attach function */
 name|CARD_ATTACH_CARD
 argument_list|(
@@ -3693,19 +3662,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"pcic_detach_card h %p h->dev %p\n"
-operator|,
-name|h
-operator|,
-name|h
-operator|->
-name|dev
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|h
@@ -5458,13 +5414,6 @@ name|windowp
 operator|=
 name|win
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX this is pretty gross */
-block|if (sc->iot != pcihp->iot) 		panic("pcic_chip_io_map iot is bogus");
-endif|#
-directive|endif
 name|DPRINTF
 argument_list|(
 operator|(
@@ -5487,40 +5436,6 @@ name|u_long
 operator|)
 name|size
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX wtf is this doing here? */
-name|printf
-argument_list|(
-literal|" port 0x%lx"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ioaddr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|size
-operator|>
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"-0x%lx"
-argument_list|,
-operator|(
-name|u_long
-operator|)
-name|ioaddr
-operator|+
-operator|(
-name|u_long
-operator|)
-name|size
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|h
@@ -6195,13 +6110,6 @@ argument_list|,
 name|child
 argument_list|)
 decl_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"pcic_chip_socket_disable\n"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* power down the socket */
 name|pcic_write
 argument_list|(
@@ -7257,23 +7165,6 @@ argument_list|,
 name|child
 argument_list|)
 decl_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"%p %p %d %d %#x\n"
-operator|,
-name|dev
-operator|,
-name|child
-operator|,
-name|type
-operator|,
-name|rid
-operator|,
-name|flags
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|type
