@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	5.1 (Berkeley) %G%"
+literal|"@(#)rexecd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1197,21 +1197,21 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|setuid
-argument_list|(
-name|pwd
-operator|->
-name|pw_uid
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|setgid
 argument_list|(
 name|pwd
 operator|->
 name|pw_gid
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setuid
+argument_list|(
+name|pwd
+operator|->
+name|pw_uid
 argument_list|)
 expr_stmt|;
 name|environ
