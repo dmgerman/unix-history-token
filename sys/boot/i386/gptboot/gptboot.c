@@ -551,8 +551,6 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|opts
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
