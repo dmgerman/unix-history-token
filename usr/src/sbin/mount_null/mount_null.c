@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_null.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)mount_null.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,9 +58,11 @@ name|subdir
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
@@ -223,6 +225,16 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|||
+name|subdir
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|target
+argument_list|)
 condition|)
 block|{
 operator|(
@@ -232,7 +244,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"mount_null: %s (%s) is a sub directory of %s\n"
+literal|"mount_null: %s (%s) and %s are not distinct paths\n"
 argument_list|,
 name|argv
 index|[
@@ -315,10 +327,12 @@ name|p
 parameter_list|,
 name|dir
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|dir
@@ -367,6 +381,13 @@ name|l
 index|]
 operator|==
 literal|'/'
+operator|||
+name|p
+index|[
+name|l
+index|]
+operator|==
+literal|'\0'
 operator|)
 condition|)
 return|return
