@@ -5563,7 +5563,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 1.8 1995/12/02 18:17:13 peter Exp $"
+literal|"@(#)$Id: conf.c,v 1.9 1995/12/06 07:56:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6678,8 +6678,20 @@ expr_stmt|;
 name|PS_STRINGS
 operator|->
 name|ps_argvstr
+index|[
+literal|0
+index|]
 operator|=
 name|buf
+expr_stmt|;
+name|PS_STRINGS
+operator|->
+name|ps_argvstr
+index|[
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
