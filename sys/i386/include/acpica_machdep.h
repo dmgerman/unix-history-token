@@ -93,16 +93,33 @@ parameter_list|()
 value|wbinvd()
 end_define
 
-begin_define
-define|#
-directive|define
-name|asm
-value|__asm
-end_define
-
 begin_comment
-comment|/*! [Begin] no source code translation  *  * A brief explanation as GNU inline assembly is a bit hairy  *  %0 is the output parameter in EAX ("=a")  *  %1 and %2 are the input parameters in ECX ("c")  *  and an immediate value ("i") respectively  *  All actual register references are preceded with "%%" as in "%%edx"  *  Immediate values in the assembly are preceded by "$" as in "$0x1"  *  The final asm parameter are the operation altered non-output registers.  */
+comment|/* Section 5.2.9.1:  global lock acquire/release functions */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_acquire_global_lock
+parameter_list|(
+name|uint32_t
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_release_global_lock
+parameter_list|(
+name|uint32_t
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -114,7 +131,7 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \         asm("1:     movl %1,%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "btsl   $0x1,%%edx;" \             "adcl   $0x0,%%edx;" \             "lock;  cmpxchgl %%edx,%1;" \             "jnz    1b;" \             "cmpb   $0x3,%%dl;" \             "sbbl   %%eax,%%eax" \             : "=a" (Acq), "+m" (GLptr) : "i" (~1L) : "edx"); \     } while(0)
+value|((Acq) = acpi_acquire_global_lock(GLptr))
 end_define
 
 begin_define
@@ -127,12 +144,19 @@ parameter_list|,
 name|Acq
 parameter_list|)
 define|\
-value|do { \         asm("1:     movl %1,%%eax;" \             "movl   %%eax,%%edx;" \             "andl   %2,%%edx;" \             "lock;  cmpxchgl %%edx,%1;" \             "jnz    1b;" \             "andl   $0x1,%%eax" \             : "=a" (Acq), "+m" (GLptr) : "i" (~3L) : "edx"); \     } while(0)
+value|((Acq) = acpi_release_global_lock(GLptr))
 end_define
 
 begin_comment
-comment|/*  * Math helper asm macros  */
+comment|/*! [Begin] no source code translation  *  * Math helper asm macros  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|asm
+value|__asm
+end_define
 
 begin_define
 define|#
