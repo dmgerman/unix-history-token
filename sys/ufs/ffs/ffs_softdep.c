@@ -9567,6 +9567,16 @@ condition|(
 name|i
 operator|==
 name|DAHASHSZ
+operator|&&
+operator|(
+name|pagedep
+operator|->
+name|pd_state
+operator|&
+name|ONWORKLIST
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|LIST_REMOVE
