@@ -8618,10 +8618,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|av
+name|ac
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|warnx
