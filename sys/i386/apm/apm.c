@@ -2752,6 +2752,14 @@ init|=
 operator|&
 name|apm_softc
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|initialized
+condition|)
+return|return;
 switch|switch
 condition|(
 name|state
