@@ -1002,17 +1002,6 @@ case|case
 name|T_HASH
 case|:
 comment|/* tweak some parameters for performance */
-name|bzero
-argument_list|(
-operator|&
-name|hinfo
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|hinfo
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|hinfo
 operator|.
 name|nelem
