@@ -1249,6 +1249,13 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|" add! default HISADDR\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
 literal|" set timeout 0\n"
 argument_list|)
 expr_stmt|;
