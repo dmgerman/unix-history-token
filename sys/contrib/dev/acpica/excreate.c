@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 68 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCreateBufferField  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Execute CreateField operators: CreateBitFieldOp,  *              CreateByteFieldOp, CreateWordFieldOp, CreateDWordFieldOp,  *              CreateFieldOp (which define fields in buffers)  *  * ALLOCATION:  Deletes CreateFieldOp's count operand descriptor  *  *  *  ACPI SPECIFICATION REFERENCES:  *  DefCreateBitField   :=  CreateBitFieldOp    SrcBuf  BitIdx    NameString  *  DefCreateByteField  :=  CreateByteFieldOp   SrcBuf  ByteIdx   NameString  *  DefCreateDWordField :=  CreateDWordFieldOp  SrcBuf  ByteIdx   NameString  *  DefCreateField      :=  CreateFieldOp       SrcBuf  BitIdx    NumBits     NameString  *  DefCreateWordField  :=  CreateWordFieldOp   SrcBuf  ByteIdx   NameString  *  BitIndex            :=  TermArg=>Integer  *  ByteIndex           :=  TermArg=>Integer  *  NumBits             :=  TermArg=>Integer  *  SourceBuff          :=  TermArg=>Buffer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCreateBufferField  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              Operands            - List of operands for the opcode  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Execute CreateField operators: CreateBitFieldOp,  *              CreateByteFieldOp, CreateWordFieldOp, CreateDWordFieldOp,  *              CreateFieldOp (which define fields in buffers)  *  * ALLOCATION:  Deletes CreateFieldOp's count operand descriptor  *  *  *  ACPI SPECIFICATION REFERENCES:  *  DefCreateBitField   :=  CreateBitFieldOp    SrcBuf  BitIdx    NameString  *  DefCreateByteField  :=  CreateByteFieldOp   SrcBuf  ByteIdx   NameString  *  DefCreateDWordField :=  CreateDWordFieldOp  SrcBuf  ByteIdx   NameString  *  DefCreateField      :=  CreateFieldOp       SrcBuf  BitIdx    NumBits     NameString  *  DefCreateWordField  :=  CreateWordFieldOp   SrcBuf  ByteIdx   NameString  *  BitIndex            :=  TermArg=>Integer  *  ByteIndex           :=  TermArg=>Integer  *  NumBits             :=  TermArg=>Integer  *  SourceBuff          :=  TermArg=>Buffer  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -79,7 +79,7 @@ name|AcpiExCreateBufferField
 parameter_list|(
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 parameter_list|,
 name|UINT32
 name|AmlLength
@@ -170,9 +170,9 @@ name|Extra
 operator|->
 name|Extra
 operator|.
-name|Pcode
+name|AmlStart
 operator|=
-name|AmlPtr
+name|AmlStart
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -182,7 +182,7 @@ name|Extra
 operator|->
 name|Extra
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;
@@ -387,35 +387,28 @@ literal|"ExCreateAlias"
 argument_list|)
 expr_stmt|;
 comment|/* Get the source/alias operands (both namespace nodes) */
-name|Status
+name|SourceNode
 operator|=
-name|AcpiDsObjStackPopObject
-argument_list|(
 operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
+name|ACPI_NAMESPACE_NODE
 operator|*
 operator|)
-operator|&
-name|SourceNode
-argument_list|,
 name|WalkState
-argument_list|)
+operator|->
+name|Operands
+index|[
+name|WalkState
+operator|->
+name|NumOperands
+operator|-
+literal|1
+index|]
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
+name|WalkState
+operator|->
+name|NumOperands
+operator|--
 expr_stmt|;
-block|}
 comment|/*      * Don't pop it, it gets removed in the calling routine      */
 name|AliasNode
 operator|=
@@ -461,7 +454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateEvent  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Create a new event object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateEvent  *  * PARAMETERS:  WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new event object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -598,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMutex  *  * PARAMETERS:  InterpreterMode     - Current running mode (load1/Load2/Exec)  *              Operands            - List of operands for the opcode  *  * RETURN:      Status  *  * DESCRIPTION: Create a new mutex object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMutex  *  * PARAMETERS:  WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new mutex object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -631,30 +624,24 @@ name|WALK_OPERANDS
 argument_list|)
 expr_stmt|;
 comment|/* Get the operand */
-name|Status
-operator|=
-name|AcpiDsObjStackPopObject
-argument_list|(
-operator|&
 name|SyncDesc
-argument_list|,
+operator|=
 name|WalkState
-argument_list|)
+operator|->
+name|Operands
+index|[
+name|WalkState
+operator|->
+name|NumOperands
+operator|-
+literal|1
+index|]
 expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
+name|WalkState
+operator|->
+name|NumOperands
+operator|--
 expr_stmt|;
-block|}
 comment|/* Attempt to allocate a new object */
 name|ObjDesc
 operator|=
@@ -789,7 +776,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateRegion  *  * PARAMETERS:  AmlPtr              - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              Operands            - List of operands for the opcode  *              InterpreterMode     - Load1/Load2/Execute  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateRegion  *  * PARAMETERS:  AmlStart            - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              Operands            - List of operands for the opcode  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -798,7 +785,7 @@ name|AcpiExCreateRegion
 parameter_list|(
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 parameter_list|,
 name|UINT32
 name|AmlLength
@@ -949,9 +936,9 @@ name|Extra
 operator|->
 name|Extra
 operator|.
-name|Pcode
+name|AmlStart
 operator|=
-name|AmlPtr
+name|AmlStart
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -961,7 +948,7 @@ name|Extra
 operator|->
 name|Extra
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;
@@ -1085,6 +1072,38 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateTableRegion  *  * PARAMETERS:  WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new DataTableRegion object  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExCreateTableRegion
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"ExCreateTableRegion"
+argument_list|)
+expr_stmt|;
+comment|/*     ACPI_OPERAND_OBJECT     *ObjDesc;     ObjDesc = AcpiUtCreateInternalObject (ACPI_TYPE_REGION);     if (!ObjDesc)     {         Status = AE_NO_MEMORY;         goto Cleanup;     }   Cleanup: */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -1460,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlPtr          - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              MethodFlags     - AML method flag byte  *              Method          - Method Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExCreateMethod  *  * PARAMETERS:  AmlStart        - First byte of the method's AML  *              AmlLength       - AML byte count for this method  *              MethodFlags     - AML method flag byte  *              Method          - Method Node  *  * RETURN:      Status  *  * DESCRIPTION: Create a new method object  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -1469,7 +1488,7 @@ name|AcpiExCreateMethod
 parameter_list|(
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 parameter_list|,
 name|UINT32
 name|AmlLength
@@ -1521,15 +1540,15 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 operator|=
-name|AmlPtr
+name|AmlStart
 expr_stmt|;
 name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;

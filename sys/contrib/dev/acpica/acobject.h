@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acobject.h - Definition of ACPI_OPERAND_OBJECT  (Internal object only)  *       $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -135,6 +135,22 @@ value|0x1
 end_define
 
 begin_comment
+comment|/*  * Fields common to both Strings and Buffers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_COMMON_BUFFER_INFO
+define|\
+value|UINT32                      Length; \     NATIVE_CHAR                 *Pointer;
+end_define
+
+begin_comment
+comment|/* String value in AML stream or in allocated space */
+end_comment
+
+begin_comment
 comment|/******************************************************************************  *  * Individual Object Descriptors  *  *****************************************************************************/
 end_comment
 
@@ -186,14 +202,7 @@ struct|struct
 comment|/* STRING - has length and pointer - Null terminated, ASCII characters only */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|UINT32
-name|Length
-decl_stmt|;
-name|NATIVE_CHAR
-modifier|*
-name|Pointer
-decl_stmt|;
-comment|/* String value in AML stream or in allocated space */
+name|ACPI_COMMON_BUFFER_INFO
 block|}
 name|ACPI_OBJECT_STRING
 typedef|;
@@ -205,14 +214,7 @@ struct|struct
 comment|/* BUFFER - has length and pointer - not null terminated */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
-name|UINT32
-name|Length
-decl_stmt|;
-name|UINT8
-modifier|*
-name|Pointer
-decl_stmt|;
-comment|/* points to the buffer in allocated space */
+name|ACPI_COMMON_BUFFER_INFO
 block|}
 name|ACPI_OBJECT_BUFFER
 typedef|;
@@ -311,7 +313,7 @@ name|UINT8
 name|ParamCount
 decl_stmt|;
 name|UINT32
-name|PcodeLength
+name|AmlLength
 decl_stmt|;
 name|void
 modifier|*
@@ -319,7 +321,7 @@ name|Semaphore
 decl_stmt|;
 name|UINT8
 modifier|*
-name|Pcode
+name|AmlStart
 decl_stmt|;
 name|UINT8
 name|Concurrency
@@ -773,11 +775,11 @@ name|UINT16
 name|WordFill1
 decl_stmt|;
 name|UINT32
-name|PcodeLength
+name|AmlLength
 decl_stmt|;
 name|UINT8
 modifier|*
-name|Pcode
+name|AmlStart
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*

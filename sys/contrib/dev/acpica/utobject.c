@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 54 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -200,7 +200,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INFO
 operator|,
-literal|"**** Object %p is a Pcode Ptr\n"
+literal|"**** Object %p points into an ACPI table\n"
 operator|,
 name|Object
 operator|)
@@ -471,82 +471,6 @@ name|AcpiUtDeleteGenericCache
 argument_list|(
 name|ACPI_MEM_LIST_OPERAND
 argument_list|)
-expr_stmt|;
-name|return_VOID
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtInitStaticObject  *  * PARAMETERS:  ObjDesc             - Pointer to a "static" object - on stack  *                                    or in the data segment.  *  * RETURN:      None.  *  * DESCRIPTION: Initialize a static object.  Sets flags to disallow dynamic  *              deletion of the object.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|void
-name|AcpiUtInitStaticObject
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjDesc
-parameter_list|)
-block|{
-name|FUNCTION_TRACE_PTR
-argument_list|(
-literal|"UtInitStaticObject"
-argument_list|,
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_VOID
-expr_stmt|;
-block|}
-comment|/*      * Clear the entire descriptor      */
-name|MEMSET
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|ObjDesc
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/*      * Initialize the header fields      * 1) This is an ACPI_OPERAND_OBJECT  descriptor      * 2) The size is the full object (worst case)      * 3) The flags field indicates static allocation      * 4) Reference count starts at one (not really necessary since the      *    object can't be deleted, but keeps everything sane)      */
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|DataType
-operator|=
-name|ACPI_DESC_TYPE_INTERNAL
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Flags
-operator|=
-name|AOPOBJ_STATIC_ALLOCATION
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|ReferenceCount
-operator|=
-literal|1
 expr_stmt|;
 name|return_VOID
 expr_stmt|;

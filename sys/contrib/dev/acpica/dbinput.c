@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 68 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -117,6 +117,8 @@ begin_decl_stmt
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_DbBuffer
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -1536,7 +1538,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
-name|AcpiUtDumpCurrentAllocations
+name|AcpiUtDumpAllocations
 argument_list|(
 operator|(
 name|UINT32

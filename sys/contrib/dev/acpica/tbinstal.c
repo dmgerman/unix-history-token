@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 42 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -546,7 +546,7 @@ name|Allocation
 expr_stmt|;
 name|TableDesc
 operator|->
-name|AmlPointer
+name|AmlStart
 operator|=
 operator|(
 name|UINT8

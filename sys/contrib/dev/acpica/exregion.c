@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exregion - ACPI default OpRegion (address space) handlers  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemMemorySpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System Memory address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemMemorySpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                    accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System Memory address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -265,7 +265,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* TBD: should these pointers go to 64-bit in all cases ? */
+comment|/* Save the physical address and mapping size */
 name|MemInfo
 operator|->
 name|MappedPhysicalAddress
@@ -444,7 +444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemIoSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System IO address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemIoSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                    accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the System IO address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -570,7 +570,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciConfigSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                      accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the PCI Config address space (Op Region)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciConfigSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                    accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the PCI Config address space (Op Region)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -715,6 +715,102 @@ name|AE_BAD_PARAMETER
 expr_stmt|;
 break|break;
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCmosSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                    accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the CMOS address space (Op Region)  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExCmosSpaceHandler
+parameter_list|(
+name|UINT32
+name|Function
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+parameter_list|,
+name|UINT32
+name|BitWidth
+parameter_list|,
+name|UINT32
+modifier|*
+name|Value
+parameter_list|,
+name|void
+modifier|*
+name|HandlerContext
+parameter_list|,
+name|void
+modifier|*
+name|RegionContext
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"ExCmosSpaceHandler"
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExPciBarSpaceHandler  *  * PARAMETERS:  Function            - Read or Write operation  *              Address             - Where in the space to read or write  *              BitWidth            - Field width in bits (8, 16, or 32)  *              Value               - Pointer to in or out value  *              HandlerContext      - Pointer to Handler's context  *              RegionContext       - Pointer to context specific to the  *                                    accessed region  *  * RETURN:      Status  *  * DESCRIPTION: Handler for the PCI BarTarget address space (Op Region)  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiExPciBarSpaceHandler
+parameter_list|(
+name|UINT32
+name|Function
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+name|Address
+parameter_list|,
+name|UINT32
+name|BitWidth
+parameter_list|,
+name|UINT32
+modifier|*
+name|Value
+parameter_list|,
+name|void
+modifier|*
+name|HandlerContext
+parameter_list|,
+name|void
+modifier|*
+name|RegionContext
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
+name|FUNCTION_TRACE
+argument_list|(
+literal|"ExPciBarSpaceHandler"
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

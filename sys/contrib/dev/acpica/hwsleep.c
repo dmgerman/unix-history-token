@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 21 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 22 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -355,7 +355,9 @@ expr_stmt|;
 name|disable
 argument_list|()
 expr_stmt|;
-comment|/* TODO: disable all non-wake GPEs here */
+name|AcpiHwDisableNonWakeupGpes
+argument_list|()
+expr_stmt|;
 name|PM1AControl
 operator|=
 operator|(
@@ -533,6 +535,9 @@ name|WAK_STS
 argument_list|)
 condition|)
 do|;
+name|AcpiHwEnableNonWakeupGpes
+argument_list|()
+expr_stmt|;
 name|enable
 argument_list|()
 expr_stmt|;
@@ -645,7 +650,9 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* _WAK returns stuff - do we want to look at it? */
-comment|/* Re-enable GPEs */
+name|AcpiHwEnableNonWakeupGpes
+argument_list|()
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 102 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -570,7 +570,7 @@ comment|/* Debug only - display leftover memory allocation, if any */
 ifdef|#
 directive|ifdef
 name|ACPI_DBG_TRACK_ALLOCATIONS
-name|AcpiUtDumpCurrentAllocations
+name|AcpiUtDumpAllocations
 argument_list|(
 name|ACPI_UINT32_MAX
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 22 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconvrt - Object conversion routines  *              $Revision: 23 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -650,10 +650,8 @@ decl_stmt|;
 name|ACPI_INTEGER
 name|Digit
 decl_stmt|;
-name|BOOLEAN
-name|LeadingZero
-init|=
-name|TRUE
+name|UINT32
+name|Remainder
 decl_stmt|;
 name|UINT32
 name|Length
@@ -662,6 +660,11 @@ sizeof|sizeof
 argument_list|(
 name|ACPI_INTEGER
 argument_list|)
+decl_stmt|;
+name|BOOLEAN
+name|LeadingZero
+init|=
+name|TRUE
 decl_stmt|;
 name|FUNCTION_ENTRY
 argument_list|()
@@ -674,6 +677,10 @@ block|{
 case|case
 literal|10
 case|:
+name|Remainder
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -707,13 +714,18 @@ name|j
 operator|++
 control|)
 block|{
-name|Digit
-operator|=
-name|ACPI_DIVIDE
+name|AcpiUtShortDivide
 argument_list|(
+operator|&
 name|Digit
 argument_list|,
 literal|10
+argument_list|,
+operator|&
+name|Digit
+argument_list|,
+operator|&
+name|Remainder
 argument_list|)
 expr_stmt|;
 block|}
@@ -747,12 +759,7 @@ call|)
 argument_list|(
 name|ASCII_ZERO
 operator|+
-name|ACPI_MODULO
-argument_list|(
-name|Digit
-argument_list|,
-literal|10
-argument_list|)
+name|Remainder
 argument_list|)
 expr_stmt|;
 name|k

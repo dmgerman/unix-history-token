@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML execution for monadic (1 operand) operators  *              $Revision: 110 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML execution for monadic (1 operand) operators  *              $Revision: 113 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -272,16 +272,13 @@ value|Operand[1]
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 monadic operator with numeric operand on  *              object stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic1  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 monadic operator with numeric operand on  *              object stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExMonadic1
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -313,13 +310,15 @@ expr_stmt|;
 comment|/* Examine the opcode */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/*  DefRelease  :=  ReleaseOp   MutexObject */
 case|case
 name|AML_RELEASE_OP
 case|:
+comment|/*  Release (MutexObject) */
 name|Status
 operator|=
 name|AcpiExReleaseMutex
@@ -330,10 +329,10 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  DefReset    :=  ResetOp     AcpiEventObject */
 case|case
 name|AML_RESET_OP
 case|:
+comment|/*  Reset (EventObject) */
 name|Status
 operator|=
 name|AcpiExSystemResetEvent
@@ -342,10 +341,10 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  DefSignal   :=  SignalOp    AcpiEventObject */
 case|case
 name|AML_SIGNAL_OP
 case|:
+comment|/*  Signal (EventObject) */
 name|Status
 operator|=
 name|AcpiExSystemSignalEvent
@@ -354,10 +353,10 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  DefSleep    :=  SleepOp     MsecTime    */
 case|case
 name|AML_SLEEP_OP
 case|:
+comment|/*  Sleep (MsecTime) */
 name|AcpiExSystemDoSuspend
 argument_list|(
 operator|(
@@ -371,10 +370,10 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  DefStall    :=  StallOp     UsecTime    */
 case|case
 name|AML_STALL_OP
 case|:
+comment|/*  Stall (UsecTime) */
 name|AcpiExSystemDoStall
 argument_list|(
 operator|(
@@ -388,13 +387,15 @@ name|Value
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  Unknown opcode  */
 default|default:
+comment|/*  Unknown opcode  */
 name|REPORT_ERROR
 argument_list|(
 operator|(
 literal|"AcpiExMonadic1: Unknown monadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -405,7 +406,6 @@ name|AE_AML_BAD_OPCODE
 expr_stmt|;
 break|break;
 block|}
-comment|/* switch */
 comment|/* Always delete the operand */
 name|AcpiUtRemoveReference
 argument_list|(
@@ -421,26 +421,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand and  *              result operand on operand stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2R  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand and  *              result operand on operand stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExMonadic2R
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
 parameter_list|)
 block|{
+name|ACPI_STATUS
+name|Status
+init|=
+name|AE_OK
+decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
@@ -467,12 +464,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|UINT32
-name|ResVal
-decl_stmt|;
-name|ACPI_STATUS
-name|Status
-init|=
-name|AE_OK
+name|Temp32
 decl_stmt|;
 name|UINT32
 name|i
@@ -493,6 +485,8 @@ expr_stmt|;
 comment|/* Create a return object of type NUMBER for most opcodes */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
@@ -539,13 +533,15 @@ break|break;
 block|}
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/*  DefNot  :=  NotOp   Operand Result  */
 case|case
 name|AML_BIT_NOT_OP
 case|:
+comment|/* Not (Operand, Result)  */
 name|RetDesc
 operator|->
 name|Integer
@@ -560,10 +556,10 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/*  DefFindSetLeftBit   :=  FindSetLeftBitOp    Operand Result  */
 case|case
 name|AML_FIND_SET_LEFT_BIT_OP
 case|:
+comment|/* FindSetLeftBit (Operand, Result) */
 name|RetDesc
 operator|->
 name|Integer
@@ -579,7 +575,7 @@ expr_stmt|;
 comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
 for|for
 control|(
-name|ResVal
+name|Temp32
 operator|=
 literal|0
 init|;
@@ -589,12 +585,12 @@ name|Integer
 operator|.
 name|Value
 operator|&&
-name|ResVal
+name|Temp32
 operator|<
 name|ACPI_INTEGER_BIT_SIZE
 condition|;
 operator|++
-name|ResVal
+name|Temp32
 control|)
 block|{
 name|RetDesc
@@ -612,13 +608,13 @@ name|Integer
 operator|.
 name|Value
 operator|=
-name|ResVal
+name|Temp32
 expr_stmt|;
 break|break;
-comment|/*  DefFindSetRightBit  :=  FindSetRightBitOp   Operand Result  */
 case|case
 name|AML_FIND_SET_RIGHT_BIT_OP
 case|:
+comment|/* FindSetRightBit (Operand, Result)  */
 name|RetDesc
 operator|->
 name|Integer
@@ -631,10 +627,10 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-comment|/*          * Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
+comment|/*          * The Acpi specification describes Integer type as a little          * endian unsigned value, so this boundary condition is valid.          */
 for|for
 control|(
-name|ResVal
+name|Temp32
 operator|=
 literal|0
 init|;
@@ -644,12 +640,12 @@ name|Integer
 operator|.
 name|Value
 operator|&&
-name|ResVal
+name|Temp32
 operator|<
 name|ACPI_INTEGER_BIT_SIZE
 condition|;
 operator|++
-name|ResVal
+name|Temp32
 control|)
 block|{
 name|RetDesc
@@ -668,7 +664,7 @@ name|Integer
 operator|.
 name|Value
 operator|=
-name|ResVal
+name|Temp32
 operator|==
 literal|0
 condition|?
@@ -680,13 +676,13 @@ operator|+
 literal|1
 operator|)
 operator|-
-name|ResVal
+name|Temp32
 expr_stmt|;
 break|break;
-comment|/*  DefFromBDC  :=  FromBCDOp   BCDValue    Result  */
 case|case
 name|AML_FROM_BCD_OP
 case|:
+comment|/* FromBcd (BCDValue, Result)  */
 comment|/*          * The 64-bit ACPI integer can hold 16 4-bit BCD integers          */
 name|RetDesc
 operator|->
@@ -799,10 +795,10 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/*  DefToBDC    :=  ToBCDOp Operand Result  */
 case|case
 name|AML_TO_BCD_OP
 case|:
+comment|/* ToBcd (Operand, Result)  */
 if|if
 condition|(
 name|ObjDesc
@@ -860,6 +856,10 @@ operator|++
 control|)
 block|{
 comment|/* Divide by nth factor of 10 */
+name|Temp32
+operator|=
+literal|0
+expr_stmt|;
 name|Digit
 operator|=
 name|ObjDesc
@@ -882,17 +882,22 @@ name|j
 operator|++
 control|)
 block|{
-name|Digit
-operator|=
-name|ACPI_DIVIDE
+name|AcpiUtShortDivide
 argument_list|(
+operator|&
 name|Digit
 argument_list|,
 literal|10
+argument_list|,
+operator|&
+name|Digit
+argument_list|,
+operator|&
+name|Temp32
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Create the BCD digit */
+comment|/* Create the BCD digit from the remainder above */
 if|if
 condition|(
 name|Digit
@@ -907,12 +912,7 @@ operator|.
 name|Value
 operator|+=
 operator|(
-name|ACPI_MODULO
-argument_list|(
-name|Digit
-argument_list|,
-literal|10
-argument_list|)
+name|Temp32
 operator|<<
 operator|(
 name|i
@@ -924,10 +924,10 @@ expr_stmt|;
 block|}
 block|}
 break|break;
-comment|/*  DefCondRefOf        :=  CondRefOfOp     SourceObject    Result  */
 case|case
 name|AML_COND_REF_OF_OP
 case|:
+comment|/* CondRefOf (SourceObject, Result)  */
 comment|/*          * This op is a little strange because the internal return value is          * different than the return value stored in the result descriptor          * (There are really two return values)          */
 if|if
 condition|(
@@ -1011,8 +1011,16 @@ break|break;
 case|case
 name|AML_STORE_OP
 case|:
-comment|/*          * A store operand is typically a number, string, buffer or lvalue          * TBD: [Unhandled] What about a store to a package?          */
-comment|/*          * Do the store, and be careful about deleting the source object,          * since the object itself may have been stored.          */
+comment|/* Store (Source, Target) */
+comment|/*          * A store operand is typically a number, string, buffer or lvalue          * Be careful about deleting the source object,          * since the object itself may have been stored.          */
+name|Temp32
+operator|=
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|ReferenceCount
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiExStore
@@ -1044,9 +1052,16 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+block|if ((ObjDesc->Common.ReferenceCount> Temp32)&&             (!AcpiDsIsResultUsed (WalkState->Op, WalkState)))         {             ObjDesc->Common.ReferenceCount++;         }
+endif|#
+directive|endif
 comment|/*          * Normally, we would remove a reference on the ObjDesc parameter;          * But since it is being used as the internal return object          * (meaning we would normally increment it), the two cancel out,          * and we simply don't do anything.          */
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|ObjDesc
 expr_stmt|;
@@ -1056,29 +1071,11 @@ name|Status
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|AML_DEBUG_OP
-case|:
-comment|/* Reference, returning an Reference */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"DebugOp should never get here!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_OK
-argument_list|)
-expr_stmt|;
-break|break;
 comment|/*      * ACPI 2.0 Opcodes      */
 case|case
 name|AML_TO_DECSTRING_OP
 case|:
+comment|/* ToDecimalString (Data, Result) */
 name|Status
 operator|=
 name|AcpiExConvertToString
@@ -1099,6 +1096,7 @@ break|break;
 case|case
 name|AML_TO_HEXSTRING_OP
 case|:
+comment|/* ToHexString (Data, Result) */
 name|Status
 operator|=
 name|AcpiExConvertToString
@@ -1119,6 +1117,7 @@ break|break;
 case|case
 name|AML_TO_BUFFER_OP
 case|:
+comment|/* ToBuffer (Data, Result) */
 name|Status
 operator|=
 name|AcpiExConvertToBuffer
@@ -1135,6 +1134,7 @@ break|break;
 case|case
 name|AML_TO_INTEGER_OP
 case|:
+comment|/* ToInteger (Data, Result) */
 name|Status
 operator|=
 name|AcpiExConvertToInteger
@@ -1148,15 +1148,15 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*      * These are obsolete opcodes      */
-comment|/*  DefShiftLeftBit     :=  ShiftLeftBitOp      Source          BitNum  */
-comment|/*  DefShiftRightBit    :=  ShiftRightBitOp     Source          BitNum  */
+comment|/*      * These are two obsolete opcodes      */
 case|case
 name|AML_SHIFT_LEFT_BIT_OP
 case|:
+comment|/*  ShiftLeftBit (Source, BitNum)  */
 case|case
 name|AML_SHIFT_RIGHT_BIT_OP
 case|:
+comment|/*  ShiftRightBit (Source, BitNum) */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1166,6 +1166,8 @@ literal|"%s is unimplemented\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
+name|WalkState
+operator|->
 name|Opcode
 argument_list|)
 operator|)
@@ -1180,11 +1182,14 @@ name|Cleanup
 goto|;
 break|break;
 default|default:
+comment|/* Unknown opcode */
 name|REPORT_ERROR
 argument_list|(
 operator|(
 literal|"AcpiExMonadic2R: Unknown monadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -1197,6 +1202,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/*      * Store the return value computed above into the result object       */
 name|Status
 operator|=
 name|AcpiExStore
@@ -1248,8 +1254,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Set the return object and exit */
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc
 expr_stmt|;
@@ -1262,24 +1269,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand:  *              DerefOfOp, RefOfOp, SizeOfOp, TypeOp, IncrementOp,  *              DecrementOp, LNotOp,  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMonadic2  *  * PARAMETERS:  WalkState           - Current state (contains AML opcode)  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 monadic operator with numeric operand:  *              DerefOfOp, RefOfOp, SizeOfOp, TypeOp, IncrementOp,  *              DecrementOp, LNotOp,  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiExMonadic2
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnDesc
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
@@ -1326,13 +1325,15 @@ expr_stmt|;
 comment|/* Get the operand and decode the opcode */
 switch|switch
 condition|(
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
-comment|/*  DefLNot :=  LNotOp  Operand */
 case|case
 name|AML_LNOT_OP
 case|:
+comment|/* LNot (Operand) */
 name|RetDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -1368,14 +1369,14 @@ operator|.
 name|Value
 expr_stmt|;
 break|break;
-comment|/*  DefDecrement    :=  DecrementOp Target  */
-comment|/*  DefIncrement    :=  IncrementOp Target  */
 case|case
 name|AML_DECREMENT_OP
 case|:
+comment|/* Decrement (Operand)  */
 case|case
 name|AML_INCREMENT_OP
 case|:
+comment|/* Increment (Operand)  */
 comment|/*          * Since we are expecting an Reference on the top of the stack, it          * can be either an Node or an internal object.          *          * TBD: [Future] This may be the prototype code for all cases where          * a Reference is expected!! 10/99          */
 if|if
 condition|(
@@ -1453,7 +1454,7 @@ operator|.
 name|Object
 expr_stmt|;
 block|}
-comment|/*          * Convert the RetDesc Reference to a Number          * (This deletes the original RetDesc)          */
+comment|/*          * Convert the RetDesc Reference to a Number          * (This deletes the original RetDesc object)          */
 name|Status
 operator|=
 name|AcpiExResolveOperands
@@ -1483,6 +1484,8 @@ literal|"%s: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
+name|WalkState
+operator|->
 name|Opcode
 argument_list|)
 operator|,
@@ -1502,6 +1505,8 @@ if|if
 condition|(
 name|AML_INCREMENT_OP
 operator|==
+name|WalkState
+operator|->
 name|Opcode
 condition|)
 block|{
@@ -1541,10 +1546,10 @@ operator|=
 name|NULL
 expr_stmt|;
 break|break;
-comment|/*  DefObjectType   :=  ObjectTypeOp    SourceObject    */
 case|case
 name|AML_TYPE_OP
 case|:
+comment|/* ObjectType (SourceObject) */
 if|if
 condition|(
 name|INTERNAL_TYPE_REFERENCE
@@ -1575,6 +1580,9 @@ case|:
 case|case
 name|AML_ONES_OP
 case|:
+case|case
+name|AML_REVISION_OP
+case|:
 comment|/* Constants are of type Number */
 name|Type
 operator|=
@@ -1584,7 +1592,7 @@ break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
-comment|/* Per 1.0b spec, Debug object is of type DebugObject */
+comment|/* Per 1.0b spec, Debug object is of type "DebugObject" */
 name|Type
 operator|=
 name|ACPI_TYPE_DEBUG_OBJECT
@@ -1744,10 +1752,10 @@ operator|=
 name|Type
 expr_stmt|;
 break|break;
-comment|/*  DefSizeOf   :=  SizeOfOp    SourceObject    */
 case|case
 name|AML_SIZE_OF_OP
 case|:
+comment|/* SizeOf (SourceObject)  */
 if|if
 condition|(
 name|VALID_DESCRIPTOR_TYPE
@@ -1892,10 +1900,10 @@ operator|=
 name|Value
 expr_stmt|;
 break|break;
-comment|/*  DefRefOf    :=  RefOfOp     SourceObject    */
 case|case
 name|AML_REF_OF_OP
 case|:
+comment|/* RefOf (SourceObject) */
 name|Status
 operator|=
 name|AcpiExGetObjectReference
@@ -1921,10 +1929,10 @@ name|Cleanup
 goto|;
 block|}
 break|break;
-comment|/*  DefDerefOf  :=  DerefOfOp   ObjReference    */
 case|case
 name|AML_DEREF_OF_OP
 case|:
+comment|/* DerefOf (ObjReference) */
 comment|/* Check for a method local or argument */
 if|if
 condition|(
@@ -2258,6 +2266,8 @@ argument_list|(
 operator|(
 literal|"AcpiExMonadic2: Unknown monadic opcode %X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|)
 argument_list|)
@@ -2306,8 +2316,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-operator|*
-name|ReturnDesc
+name|WalkState
+operator|->
+name|ResultObj
 operator|=
 name|RetDesc
 expr_stmt|;

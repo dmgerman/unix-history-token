@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser/Interpreter opcode information table  *              $Revision: 43 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -120,15 +120,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARGP_ZERO_OP
-value|ARG_NONE
+name|ARGP_ACCESSFIELD_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ONE_OP
-value|ARG_NONE
+name|ARGP_ACQUIRE_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_WORDDATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_ADD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
 end_define
 
 begin_define
@@ -141,50 +148,113 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_NAME_OP
-value|ARGP_LIST2 (ARGP_NAME,       ARGP_DATAOBJ)
+name|ARGP_ARG0
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_BYTE_OP
-value|ARGP_LIST1 (ARGP_BYTEDATA)
+name|ARGP_ARG1
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_WORD_OP
-value|ARGP_LIST1 (ARGP_WORDDATA)
+name|ARGP_ARG2
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_DWORD_OP
-value|ARGP_LIST1 (ARGP_DWORDDATA)
+name|ARGP_ARG3
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_STRING_OP
-value|ARGP_LIST1 (ARGP_CHARLIST)
+name|ARGP_ARG4
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_QWORD_OP
-value|ARGP_LIST1 (ARGP_QWORDDATA)
+name|ARGP_ARG5
+value|ARG_NONE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_SCOPE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_TERMLIST)
+name|ARGP_ARG6
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BANK_FIELD_OP
+value|ARGP_LIST6 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_NAMESTRING,ARGP_TERMARG,   ARGP_BYTEDATA,  ARGP_FIELDLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_AND_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_NAND_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_NOR_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_NOT_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_OR_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BIT_XOR_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BREAK_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_BREAK_POINT_OP
+value|ARG_NONE
 end_define
 
 begin_define
@@ -197,22 +267,288 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_PACKAGE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
+name|ARGP_BYTE_OP
+value|ARGP_LIST1 (ARGP_BYTEDATA)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_VAR_PACKAGE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
+name|ARGP_BYTELIST_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_METHOD_OP
-value|ARGP_LIST4 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,      ARGP_TERMLIST)
+name|ARGP_CONCAT_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CONCAT_RES_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_COND_REF_OF_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CONTINUE_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_COPY_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SIMPLENAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_BIT_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_BYTE_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_DWORD_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_FIELD_OP
+value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_QWORD_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_CREATE_WORD_FIELD_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DATA_REGION_OP
+value|ARGP_LIST4 (ARGP_NAME,       ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DEBUG_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DECREMENT_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DEREF_OF_OP
+value|ARGP_LIST1 (ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DEVICE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_OBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DIVIDE_OP
+value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_DWORD_OP
+value|ARGP_LIST1 (ARGP_DWORDDATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_ELSE_OP
+value|ARGP_LIST2 (ARGP_PKGLENGTH,  ARGP_TERMLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_EVENT_OP
+value|ARGP_LIST1 (ARGP_NAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_FATAL_OP
+value|ARGP_LIST3 (ARGP_BYTEDATA,   ARGP_DWORDDATA,     ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_FIELD_OP
+value|ARGP_LIST4 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_BYTEDATA,  ARGP_FIELDLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_FIND_SET_LEFT_BIT_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_FIND_SET_RIGHT_BIT_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_FROM_BCD_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_IF_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_TERMARG,       ARGP_TERMLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_INCREMENT_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_INDEX_FIELD_OP
+value|ARGP_LIST5 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_NAMESTRING,ARGP_BYTEDATA,  ARGP_FIELDLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_INDEX_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LAND_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LEQUAL_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LGREATER_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LGREATEREQUAL_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LLESS_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LLESSEQUAL_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LNOT_OP
+value|ARGP_LIST1 (ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LNOTEQUAL_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LOAD_OP
+value|ARGP_LIST2 (ARGP_NAMESTRING, ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_LOAD_TABLE_OP
+value|ARGP_LIST6 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG,  ARGP_TERMARG,   ARGP_TERMARG)
 end_define
 
 begin_define
@@ -274,99 +610,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_ARG0
-value|ARG_NONE
+name|ARGP_LOR_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ARG1
-value|ARG_NONE
+name|ARGP_MATCH_OP
+value|ARGP_LIST6 (ARGP_TERMARG,    ARGP_BYTEDATA,      ARGP_TERMARG,   ARGP_BYTEDATA,  ARGP_TERMARG,   ARGP_TERMARG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ARG2
-value|ARG_NONE
+name|ARGP_METHOD_OP
+value|ARGP_LIST4 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,  ARGP_TERMLIST)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ARG3
-value|ARG_NONE
+name|ARGP_METHODCALL_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ARG4
-value|ARG_NONE
+name|ARGP_MID_OP
+value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TARGET)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_ARG5
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ARG6
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_STORE_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_REF_OF_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ADD_OP
+name|ARGP_MOD_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CONCAT_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_SUBTRACT_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_INCREMENT_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_DECREMENT_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
 end_define
 
 begin_define
@@ -379,8 +659,141 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_DIVIDE_OP
-value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET,    ARGP_TARGET)
+name|ARGP_MUTEX_OP
+value|ARGP_LIST2 (ARGP_NAME,       ARGP_BYTEDATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_NAME_OP
+value|ARGP_LIST2 (ARGP_NAME,       ARGP_DATAOBJ)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_NAMEDFIELD_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_NAMEPATH_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_NOOP_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_NOTIFY_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_ONE_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_ONES_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_PACKAGE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_POWER_RES_OP
+value|ARGP_LIST5 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,  ARGP_WORDDATA,  ARGP_OBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_PROCESSOR_OP
+value|ARGP_LIST6 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,  ARGP_DWORDDATA, ARGP_BYTEDATA,  ARGP_OBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_QWORD_OP
+value|ARGP_LIST1 (ARGP_QWORDDATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_REF_OF_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_REGION_OP
+value|ARGP_LIST4 (ARGP_NAME,       ARGP_BYTEDATA,      ARGP_TERMARG,   ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_RELEASE_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_RESERVEDFIELD_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_RESET_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_RETURN_OP
+value|ARGP_LIST1 (ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_REVISION_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_SCOPE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_TERMLIST)
 end_define
 
 begin_define
@@ -400,85 +813,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_BIT_AND_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BIT_NAND_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BIT_OR_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BIT_NOR_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BIT_XOR_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BIT_NOT_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_FIND_SET_LEFT_BIT_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_FIND_SET_RIGHT_BIT_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_DEREF_OF_OP
-value|ARGP_LIST1 (ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CONCAT_RES_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_MOD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_NOTIFY_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_TERMARG)
+name|ARGP_SIGNAL_OP
+value|ARGP_LIST1 (ARGP_SUPERNAME)
 end_define
 
 begin_define
@@ -491,99 +827,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_INDEX_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_MATCH_OP
-value|ARGP_LIST6 (ARGP_TERMARG,    ARGP_BYTEDATA,      ARGP_TERMARG,   ARGP_BYTEDATA,  ARGP_TERMARG,   ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_DWORD_FIELD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_WORD_FIELD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_BYTE_FIELD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_BIT_FIELD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_TYPE_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_QWORD_FIELD_OP
-value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LAND_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LOR_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LNOT_OP
+name|ARGP_SLEEP_OP
 value|ARGP_LIST1 (ARGP_TERMARG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_LEQUAL_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+name|ARGP_STALL_OP
+value|ARGP_LIST1 (ARGP_TERMARG)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_LGREATER_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+name|ARGP_STATICSTRING_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGP_LLESS_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
+name|ARGP_STORE_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_SUPERNAME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_STRING_OP
+value|ARGP_LIST1 (ARGP_CHARLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_SUBTRACT_OP
+value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_THERMAL_ZONE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_OBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_TO_BCD_OP
+value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
 end_define
 
 begin_define
@@ -624,183 +918,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_COPY_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SIMPLENAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_MID_OP
-value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CONTINUE_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_IF_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_TERMARG, ARGP_TERMLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ELSE_OP
-value|ARGP_LIST2 (ARGP_PKGLENGTH,  ARGP_TERMLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_WHILE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_TERMARG, ARGP_TERMLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_NOOP_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_RETURN_OP
-value|ARGP_LIST1 (ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BREAK_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BREAK_POINT_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ONES_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_MUTEX_OP
-value|ARGP_LIST2 (ARGP_NAME,       ARGP_BYTEDATA)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_EVENT_OP
-value|ARGP_LIST1 (ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_COND_REF_OF_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_CREATE_FIELD_OP
-value|ARGP_LIST4 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_NAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LOAD_TABLE_OP
-value|ARGP_LIST6 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG,  ARGP_TERMARG,   ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LOAD_OP
-value|ARGP_LIST2 (ARGP_NAMESTRING, ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_STALL_OP
-value|ARGP_LIST1 (ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_SLEEP_OP
-value|ARGP_LIST1 (ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ACQUIRE_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_WORDDATA)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_SIGNAL_OP
+name|ARGP_TYPE_OP
 value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_WAIT_OP
-value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_RESET_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_RELEASE_OP
-value|ARGP_LIST1 (ARGP_SUPERNAME)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_FROM_BCD_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_TO_BCD_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TARGET)
 end_define
 
 begin_define
@@ -813,155 +932,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGP_REVISION_OP
+name|ARGP_VAR_PACKAGE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_BYTEDATA,      ARGP_DATAOBJLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_WAIT_OP
+value|ARGP_LIST2 (ARGP_SUPERNAME,  ARGP_TERMARG)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_WHILE_OP
+value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_TERMARG,       ARGP_TERMLIST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_WORD_OP
+value|ARGP_LIST1 (ARGP_WORDDATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGP_ZERO_OP
 value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_DEBUG_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_FATAL_OP
-value|ARGP_LIST3 (ARGP_BYTEDATA,   ARGP_DWORDDATA,     ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_REGION_OP
-value|ARGP_LIST4 (ARGP_NAME,       ARGP_BYTEDATA,      ARGP_TERMARG,   ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_FIELD_OP
-value|ARGP_LIST4 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_BYTEDATA,  ARGP_FIELDLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_DEVICE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_OBJLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_PROCESSOR_OP
-value|ARGP_LIST6 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,  ARGP_DWORDDATA, ARGP_BYTEDATA,  ARGP_OBJLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_POWER_RES_OP
-value|ARGP_LIST5 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_BYTEDATA,  ARGP_WORDDATA,  ARGP_OBJLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_THERMAL_ZONE_OP
-value|ARGP_LIST3 (ARGP_PKGLENGTH,  ARGP_NAME,          ARGP_OBJLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_INDEX_FIELD_OP
-value|ARGP_LIST5 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_NAMESTRING,ARGP_BYTEDATA,  ARGP_FIELDLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BANK_FIELD_OP
-value|ARGP_LIST6 (ARGP_PKGLENGTH,  ARGP_NAMESTRING,    ARGP_NAMESTRING,ARGP_TERMARG,   ARGP_BYTEDATA,  ARGP_FIELDLIST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_DATA_REGION_OP
-value|ARGP_LIST4 (ARGP_NAMESTRING, ARGP_TERMARG,       ARGP_TERMARG,   ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LNOTEQUAL_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LLESSEQUAL_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_LGREATEREQUAL_OP
-value|ARGP_LIST2 (ARGP_TERMARG,    ARGP_TERMARG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_NAMEPATH_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_METHODCALL_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_BYTELIST_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_RESERVEDFIELD_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_NAMEDFIELD_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_ACCESSFIELD_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGP_STATICSTRING_OP
-value|ARGP_LIST1 (ARGP_NAMESTRING)
 end_define
 
 begin_comment
@@ -971,15 +971,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ARGI_ZERO_OP
-value|ARG_NONE
+name|ARGI_ACCESSFIELD_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ONE_OP
-value|ARG_NONE
+name|ARGI_ACQUIRE_OP
+value|ARGI_LIST2 (ARGI_MUTEX,      ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ADD_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -992,7 +999,119 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_NAME_OP
+name|ARGI_ARG0
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG1
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG2
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG3
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG4
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG5
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ARG6
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BANK_FIELD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_AND_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_NAND_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_NOR_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_NOT_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_OR_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BIT_XOR_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BREAK_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BREAK_POINT_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_BUFFER_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
@@ -1006,8 +1125,127 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_WORD_OP
+name|ARGI_BYTELIST_OP
 value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CONCAT_OP
+value|ARGI_LIST3 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA,   ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CONCAT_RES_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_BUFFER,        ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_COND_REF_OF_OP
+value|ARGI_LIST2 (ARGI_OBJECT_REF, ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CONTINUE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_COPY_OP
+value|ARGI_LIST2 (ARGI_ANYTYPE,    ARGI_SIMPLE_TARGET)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_BIT_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_BYTE_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_DWORD_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_FIELD_OP
+value|ARGI_LIST4 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_INTEGER,      ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_QWORD_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CREATE_WORD_FIELD_OP
+value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DATA_REGION_OP
+value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,       ARGI_STRING)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DEBUG_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DECREMENT_OP
+value|ARGI_LIST1 (ARGI_INTEGER_REF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DEREF_OF_OP
+value|ARGI_LIST1 (ARGI_REFERENCE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DEVICE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_DIVIDE_OP
+value|ARGI_LIST4 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF,    ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1020,50 +1258,148 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_STRING_OP
+name|ARGI_ELSE_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_QWORD_OP
+name|ARGI_EVENT_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_SCOPE_OP
+name|ARGI_FATAL_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_FIELD_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_BUFFER_OP
+name|ARGI_FIND_SET_LEFT_BIT_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_FIND_SET_RIGHT_BIT_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_FROM_BCD_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_IF_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_PACKAGE_OP
+name|ARGI_INCREMENT_OP
+value|ARGI_LIST1 (ARGI_INTEGER_REF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_INDEX_FIELD_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_VAR_PACKAGE_OP
+name|ARGI_INDEX_OP
+value|ARGI_LIST3 (ARGI_COMPLEXOBJ, ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LAND_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LEQUAL_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LGREATER_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LGREATEREQUAL_OP
 value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_METHOD_OP
+name|ARGI_LLESS_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LLESSEQUAL_OP
 value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LNOT_OP
+value|ARGI_LIST1 (ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LNOTEQUAL_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LOAD_OP
+value|ARGI_LIST2 (ARGI_REGION,     ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_LOAD_TABLE_OP
+value|ARGI_LIST6 (ARGI_STRING,     ARGI_STRING,        ARGI_STRING,       ARGI_STRING,    ARGI_STRING, ARGI_TARGETREF)
 end_define
 
 begin_define
@@ -1125,99 +1461,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_ARG0
-value|ARG_NONE
+name|ARGI_LOR_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ARG1
-value|ARG_NONE
+name|ARGI_MATCH_OP
+value|ARGI_LIST6 (ARGI_PACKAGE,    ARGI_INTEGER,       ARGI_INTEGER,      ARGI_INTEGER,   ARGI_INTEGER,   ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ARG2
-value|ARG_NONE
+name|ARGI_METHOD_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ARG3
-value|ARG_NONE
+name|ARGI_METHODCALL_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ARG4
-value|ARG_NONE
+name|ARGI_MID_OP
+value|ARGI_LIST4 (ARGI_BUFFERSTRING,ARGI_INTEGER,      ARGI_INTEGER,      ARGI_TARGETREF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_ARG5
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ARG6
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_STORE_OP
-value|ARGI_LIST2 (ARGI_ANYTYPE,    ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_REF_OF_OP
-value|ARGI_LIST1 (ARGI_OBJECT_REF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ADD_OP
+name|ARGI_MOD_OP
 value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CONCAT_OP
-value|ARGI_LIST3 (ARGI_COMPUTEDATA,ARGI_COMPUTEDATA,   ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_SUBTRACT_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_INCREMENT_OP
-value|ARGI_LIST1 (ARGI_INTEGER_REF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_DECREMENT_OP
-value|ARGI_LIST1 (ARGI_INTEGER_REF)
 end_define
 
 begin_define
@@ -1230,8 +1510,141 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_DIVIDE_OP
-value|ARGI_LIST4 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF,    ARGI_TARGETREF)
+name|ARGI_MUTEX_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_NAME_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_NAMEDFIELD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_NAMEPATH_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_NOOP_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_NOTIFY_OP
+value|ARGI_LIST2 (ARGI_DEVICE_REF, ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ONE_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ONES_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_PACKAGE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_POWER_RES_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_PROCESSOR_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_QWORD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_REF_OF_OP
+value|ARGI_LIST1 (ARGI_OBJECT_REF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_REGION_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_RELEASE_OP
+value|ARGI_LIST1 (ARGI_MUTEX)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_RESERVEDFIELD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_RESET_OP
+value|ARGI_LIST1 (ARGI_EVENT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_RETURN_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_REVISION_OP
+value|ARG_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_SCOPE_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
@@ -1251,85 +1664,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_BIT_AND_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BIT_NAND_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BIT_OR_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BIT_NOR_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BIT_XOR_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BIT_NOT_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_FIND_SET_LEFT_BIT_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_FIND_SET_RIGHT_BIT_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_DEREF_OF_OP
-value|ARGI_LIST1 (ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CONCAT_RES_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_BUFFER,        ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_MOD_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_NOTIFY_OP
-value|ARGI_LIST2 (ARGI_DEVICE_REF, ARGI_INTEGER)
+name|ARGI_SIGNAL_OP
+value|ARGI_LIST1 (ARGI_EVENT)
 end_define
 
 begin_define
@@ -1342,99 +1678,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_INDEX_OP
-value|ARGI_LIST3 (ARGI_COMPLEXOBJ, ARGI_INTEGER,       ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_MATCH_OP
-value|ARGI_LIST6 (ARGI_PACKAGE,    ARGI_INTEGER,       ARGI_INTEGER,      ARGI_INTEGER,   ARGI_INTEGER,   ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_DWORD_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_WORD_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_BYTE_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_BIT_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_TYPE_OP
-value|ARGI_LIST1 (ARGI_ANYTYPE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_QWORD_FIELD_OP
-value|ARGI_LIST3 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LAND_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LOR_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LNOT_OP
+name|ARGI_SLEEP_OP
 value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_LEQUAL_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+name|ARGI_STALL_OP
+value|ARGI_LIST1 (ARGI_INTEGER)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_LGREATER_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+name|ARGI_STATICSTRING_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARGI_LLESS_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
+name|ARGI_STORE_OP
+value|ARGI_LIST2 (ARGI_ANYTYPE,    ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_STRING_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_SUBTRACT_OP
+value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_THERMAL_ZONE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_TO_BCD_OP
+value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
 end_define
 
 begin_define
@@ -1475,183 +1769,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_COPY_OP
-value|ARGI_LIST2 (ARGI_ANYTYPE,    ARGI_SIMPLE_TARGET)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_MID_OP
-value|ARGI_LIST4 (ARGI_BUFFERSTRING,ARGI_INTEGER,      ARGI_INTEGER,      ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CONTINUE_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_IF_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ELSE_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_WHILE_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_NOOP_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_RETURN_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BREAK_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BREAK_POINT_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ONES_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_MUTEX_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_EVENT_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_COND_REF_OF_OP
-value|ARGI_LIST2 (ARGI_OBJECT_REF, ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_CREATE_FIELD_OP
-value|ARGI_LIST4 (ARGI_BUFFER,     ARGI_INTEGER,       ARGI_INTEGER,      ARGI_REFERENCE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LOAD_TABLE_OP
-value|ARGI_LIST6 (ARGI_STRING,     ARGI_STRING,        ARGI_STRING,       ARGI_STRING,    ARGI_STRING, ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LOAD_OP
-value|ARGI_LIST2 (ARGI_REGION,     ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_STALL_OP
-value|ARGI_LIST1 (ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_SLEEP_OP
-value|ARGI_LIST1 (ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ACQUIRE_OP
-value|ARGI_LIST2 (ARGI_MUTEX,      ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_SIGNAL_OP
-value|ARGI_LIST1 (ARGI_EVENT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_WAIT_OP
-value|ARGI_LIST2 (ARGI_EVENT,      ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_RESET_OP
-value|ARGI_LIST1 (ARGI_EVENT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_RELEASE_OP
-value|ARGI_LIST1 (ARGI_MUTEX)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_FROM_BCD_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_TARGETREF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_TO_BCD_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_FIXED_TARGET)
+name|ARGI_TYPE_OP
+value|ARGI_LIST1 (ARGI_ANYTYPE)
 end_define
 
 begin_define
@@ -1664,155 +1783,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ARGI_REVISION_OP
+name|ARGI_VAR_PACKAGE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_WAIT_OP
+value|ARGI_LIST2 (ARGI_EVENT,      ARGI_INTEGER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_WHILE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_WORD_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_ZERO_OP
 value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_DEBUG_OP
-value|ARG_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_FATAL_OP
-value|ARGI_LIST3 (ARGI_INTEGER,    ARGI_INTEGER,       ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_REGION_OP
-value|ARGI_LIST2 (ARGI_INTEGER,    ARGI_INTEGER)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_FIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_DEVICE_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_PROCESSOR_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_POWER_RES_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_THERMAL_ZONE_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_INDEX_FIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BANK_FIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_DATA_REGION_OP
-value|ARGI_LIST3 (ARGI_STRING,     ARGI_STRING,       ARGI_STRING)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LNOTEQUAL_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LLESSEQUAL_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_LGREATEREQUAL_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_NAMEPATH_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_METHODCALL_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_BYTELIST_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_RESERVEDFIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_NAMEDFIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_ACCESSFIELD_OP
-value|ARGI_INVALID_OPCODE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ARGI_STATICSTRING_OP
-value|ARGI_INVALID_OPCODE
 end_define
 
 begin_comment
@@ -4015,6 +4015,14 @@ operator||
 name|OPTYPE_MONADIC2R
 operator||
 name|AML_HAS_ARGS
+operator||
+name|AML_NSOBJECT
+operator||
+name|AML_NSOPCODE
+operator||
+name|AML_NSNODE
+operator||
+name|AML_NAMED
 argument_list|)
 block|,  }
 decl_stmt|;
@@ -4993,23 +5001,6 @@ index|]
 index|]
 expr_stmt|;
 block|}
-break|break;
-case|case
-name|AML_LNOT_OP
-case|:
-comment|/* This case is for the bogus opcodes LNOTEQUAL, LLESSEQUAL, LGREATEREQUAL */
-comment|/* TBD: [Investigate] remove this case? */
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Bad multi-byte opcode=%X\n"
-operator|,
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|ACPI_DEBUG_PRINT

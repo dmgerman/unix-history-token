@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 122 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdump - Interpreter debug output routines  *              $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -82,7 +82,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiExShowHexValue  *  * PARAMETERS:  ByteCount           - Number of bytes to print (1, 2, or 4)  *              *AmlPtr             - Address in AML stream of bytes to print  *              InterpreterMode     - Current running mode (load1/Load2/Exec)  *              LeadSpace           - # of spaces to print ahead of value  *                                    0 => none ahead but one behind  *  * DESCRIPTION: Print ByteCount byte(s) starting at AmlPtr as a single  *              value, in hex.  If ByteCount> 1 or the value printed is> 9, also  *              print in decimal.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiExShowHexValue  *  * PARAMETERS:  ByteCount           - Number of bytes to print (1, 2, or 4)  *              *AmlStart             - Address in AML stream of bytes to print  *              InterpreterMode     - Current running mode (load1/Load2/Exec)  *              LeadSpace           - # of spaces to print ahead of value  *                                    0 => none ahead but one behind  *  * DESCRIPTION: Print ByteCount byte(s) starting at AmlStart as a single  *              value, in hex.  If ByteCount> 1 or the value printed is> 9, also  *              print in decimal.  *  ****************************************************************************/
 end_comment
 
 begin_function
@@ -94,7 +94,7 @@ name|ByteCount
 parameter_list|,
 name|UINT8
 modifier|*
-name|AmlPtr
+name|AmlStart
 parameter_list|,
 name|UINT32
 name|LeadSpace
@@ -126,7 +126,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|AmlPtr
+name|AmlStart
 condition|)
 block|{
 name|REPORT_ERROR
@@ -142,7 +142,7 @@ for|for
 control|(
 name|CurrentAmlPtr
 operator|=
-name|AmlPtr
+name|AmlStart
 operator|+
 name|ByteCount
 operator|,
@@ -152,7 +152,7 @@ literal|0
 init|;
 name|CurrentAmlPtr
 operator|>
-name|AmlPtr
+name|AmlStart
 condition|;
 control|)
 block|{
@@ -270,7 +270,7 @@ operator|,
 literal|"%02x"
 operator|,
 operator|*
-name|AmlPtr
+name|AmlStart
 operator|++
 operator|)
 argument_list|)
@@ -555,6 +555,19 @@ operator|(
 name|ACPI_DB_INFO
 operator|,
 literal|"Reference: Ones\n"
+operator|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_REVISION_OP
+case|:
+name|ACPI_DEBUG_PRINT_RAW
+argument_list|(
+operator|(
+name|ACPI_DB_INFO
+operator|,
+literal|"Reference: Revision\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1428,13 +1441,13 @@ name|EntryDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 operator|,
 name|EntryDesc
 operator|->
 name|Method
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2368,26 +2381,26 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%20s : %X\n"
 argument_list|,
-literal|"PcodeLength"
+literal|"AmlLength"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|PcodeLength
+name|AmlLength
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"%20s : %X\n"
 argument_list|,
-literal|"Pcode"
+literal|"AmlStart"
 argument_list|,
 name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 argument_list|)
 expr_stmt|;
 break|break;

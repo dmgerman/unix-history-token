@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -529,34 +529,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiTerminate"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Terminate the AML Debugger if present */
 name|DEBUGGER_EXEC
 argument_list|(
@@ -575,6 +552,15 @@ comment|/* Free the mutex objects */
 name|AcpiUtMutexTerminate
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ENABLE_DEBUGGER
+comment|/* Shut down the debugger */
+name|AcpiDbTerminate
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Now we can shutdown the OS-dependent layer */
 name|AcpiOsTerminate
 argument_list|()
@@ -642,34 +628,11 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiGetSystemInfo"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      *  Must have a valid buffer      */
 if|if
 condition|(

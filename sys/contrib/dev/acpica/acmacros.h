@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -832,34 +832,6 @@ value|_MOD(a,16)
 end_define
 
 begin_comment
-comment|/*  * Divide and Modulo  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_DIVIDE
-parameter_list|(
-name|n
-parameter_list|,
-name|d
-parameter_list|)
-value|((n) / (d))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MODULO
-parameter_list|(
-name|n
-parameter_list|,
-name|d
-parameter_list|)
-value|((n) % (d))
-end_define
-
-begin_comment
 comment|/*  * Rounding macros (Power of two boundaries only)  */
 end_comment
 
@@ -1190,20 +1162,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((x)& 0x01) == ACPI_TABLE_SINGLE ? 1 : 0)
-end_define
-
-begin_comment
-comment|/* Check if ACPI has been initialized properly */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_IS_INITIALIZATION_COMPLETE
-parameter_list|(
-name|s
-parameter_list|)
-value|{if (AcpiGbl_RootNode) s = AE_OK; else s=AE_NO_NAMESPACE;}
 end_define
 
 begin_comment

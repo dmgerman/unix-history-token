@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 89 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsxfobj - Public interfaces to the ACPI subsystem  *                         ACPI Object oriented interfaces  *              $Revision: 93 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              *Pathname           - Object pathname (optional)  *              **Params            - List of parameters to pass to  *                                    method, terminated by NULL.  *                                    Params itself may be NULL  *                                    if no parameters are being  *                                    passed.  *              *ReturnObject       - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvaluateObject  *  * PARAMETERS:  Handle              - Object handle (optional)  *              *Pathname           - Object pathname (optional)  *              **ExternalParams    - List of parameters to pass to method,   *                                    terminated by NULL.  May be NULL  *                                    if no parameters are being passed.  *              *ReturnBuffer       - Where to put method's return value (if  *                                    any).  If NULL, no value is returned.  *  * RETURN:      Status  *  * DESCRIPTION: Find and evaluate the given object, passing the given  *              parameters if necessary.  One of "Handle" or "Pathname" must  *              be valid (non-null)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -67,7 +67,7 @@ name|Pathname
 parameter_list|,
 name|ACPI_OBJECT_LIST
 modifier|*
-name|ParamObjects
+name|ExternalParams
 parameter_list|,
 name|ACPI_BUFFER
 modifier|*
@@ -80,19 +80,13 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 modifier|*
-name|ParamPtr
+name|InternalParams
 init|=
 name|NULL
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ReturnObj
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ObjectPtr
+name|InternalReturnObj
 init|=
 name|NULL
 decl_stmt|;
@@ -103,62 +97,31 @@ name|UINT32
 name|UserBufferLength
 decl_stmt|;
 name|UINT32
-name|Count
-decl_stmt|;
-name|UINT32
 name|i
-decl_stmt|;
-name|UINT32
-name|ParamLength
-decl_stmt|;
-name|UINT32
-name|ObjectLength
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEvaluateObject"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*      * If there are parameters to be passed to the object      * (which must be a control method), the external objects      * must be converted to internal objects      */
 if|if
 condition|(
-name|ParamObjects
+name|ExternalParams
 operator|&&
-name|ParamObjects
+name|ExternalParams
 operator|->
 name|Count
 condition|)
 block|{
 comment|/*          * Allocate a new parameter block for the internal objects          * Add 1 to count to allow for null terminated internal list          */
-name|Count
+name|InternalParams
 operator|=
-name|ParamObjects
-operator|->
-name|Count
-expr_stmt|;
-name|ParamLength
-operator|=
+name|ACPI_MEM_CALLOCATE
+argument_list|(
 operator|(
+name|ExternalParams
+operator|->
 name|Count
 operator|+
 literal|1
@@ -169,31 +132,12 @@ argument_list|(
 name|void
 operator|*
 argument_list|)
-expr_stmt|;
-name|ObjectLength
-operator|=
-name|Count
-operator|*
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
 argument_list|)
 expr_stmt|;
-name|ParamPtr
-operator|=
-name|ACPI_MEM_CALLOCATE
-argument_list|(
-name|ParamLength
-operator|+
-comment|/* Parameter List part */
-name|ObjectLength
-argument_list|)
-expr_stmt|;
-comment|/* Actual objects */
 if|if
 condition|(
 operator|!
-name|ParamPtr
+name|InternalParams
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -202,65 +146,6 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
-name|ObjectPtr
-operator|=
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
-operator|(
-operator|(
-name|UINT8
-operator|*
-operator|)
-name|ParamPtr
-operator|+
-name|ParamLength
-operator|)
-expr_stmt|;
-comment|/*          * Init the param array of pointers and NULL terminate          * the list          */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|Count
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|ParamPtr
-index|[
-name|i
-index|]
-operator|=
-operator|&
-name|ObjectPtr
-index|[
-name|i
-index|]
-expr_stmt|;
-name|AcpiUtInitStaticObject
-argument_list|(
-operator|&
-name|ObjectPtr
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|ParamPtr
-index|[
-name|Count
-index|]
-operator|=
-name|NULL
-expr_stmt|;
 comment|/*          * Convert each external object in the list to an          * internal object          */
 for|for
 control|(
@@ -270,6 +155,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|ExternalParams
+operator|->
 name|Count
 condition|;
 name|i
@@ -281,14 +168,15 @@ operator|=
 name|AcpiUtCopyEobjectToIobject
 argument_list|(
 operator|&
-name|ParamObjects
+name|ExternalParams
 operator|->
 name|Pointer
 index|[
 name|i
 index|]
 argument_list|,
-name|ParamPtr
+operator|&
+name|InternalParams
 index|[
 name|i
 index|]
@@ -304,7 +192,7 @@ condition|)
 block|{
 name|AcpiUtDeleteInternalObjectList
 argument_list|(
-name|ParamPtr
+name|InternalParams
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -314,6 +202,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|InternalParams
+index|[
+name|ExternalParams
+operator|->
+name|Count
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 comment|/*      * Three major cases:      * 1) Fully qualified pathname      * 2) No handle, not fully qualified pathname (error)      * 3) Valid handle      */
 if|if
@@ -340,10 +237,10 @@ name|AcpiNsEvaluateByName
 argument_list|(
 name|Pathname
 argument_list|,
-name|ParamPtr
+name|InternalParams
 argument_list|,
 operator|&
-name|ReturnObj
+name|InternalReturnObj
 argument_list|)
 expr_stmt|;
 block|}
@@ -404,10 +301,10 @@ name|AcpiNsEvaluateByHandle
 argument_list|(
 name|Handle
 argument_list|,
-name|ParamPtr
+name|InternalParams
 argument_list|,
 operator|&
-name|ReturnObj
+name|InternalReturnObj
 argument_list|)
 expr_stmt|;
 block|}
@@ -422,10 +319,10 @@ name|Handle
 argument_list|,
 name|Pathname
 argument_list|,
-name|ParamPtr
+name|InternalParams
 argument_list|,
 operator|&
-name|ReturnObj
+name|InternalReturnObj
 argument_list|)
 expr_stmt|;
 block|}
@@ -450,14 +347,14 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ReturnObj
+name|InternalReturnObj
 condition|)
 block|{
 if|if
 condition|(
 name|VALID_DESCRIPTOR_TYPE
 argument_list|(
-name|ReturnObj
+name|InternalReturnObj
 argument_list|,
 name|ACPI_DESC_TYPE_NAMED
 argument_list|)
@@ -468,7 +365,7 @@ name|Status
 operator|=
 name|AE_TYPE
 expr_stmt|;
-name|ReturnObj
+name|InternalReturnObj
 operator|=
 name|NULL
 expr_stmt|;
@@ -487,7 +384,7 @@ name|Status
 operator|=
 name|AcpiUtGetObjectSize
 argument_list|(
-name|ReturnObj
+name|InternalReturnObj
 argument_list|,
 operator|&
 name|BufferSpaceNeeded
@@ -541,7 +438,7 @@ name|Status
 operator|=
 name|AcpiUtCopyIobjectToEobject
 argument_list|(
-name|ReturnObj
+name|InternalReturnObj
 argument_list|,
 name|ReturnBuffer
 argument_list|)
@@ -560,26 +457,26 @@ block|}
 comment|/* Delete the return and parameter objects */
 if|if
 condition|(
-name|ReturnObj
+name|InternalReturnObj
 condition|)
 block|{
 comment|/*          * Delete the internal return object. (Or at least          * decrement the reference count by one)          */
 name|AcpiUtRemoveReference
 argument_list|(
-name|ReturnObj
+name|InternalReturnObj
 argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Free the input parameter list (if we created one),      */
 if|if
 condition|(
-name|ParamPtr
+name|InternalParams
 condition|)
 block|{
 comment|/* Free the allocated parameter block */
 name|AcpiUtDeleteInternalObjectList
 argument_list|(
-name|ParamPtr
+name|InternalParams
 argument_list|)
 expr_stmt|;
 block|}
@@ -634,26 +531,6 @@ name|ChildNode
 init|=
 name|NULL
 decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -807,29 +684,6 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
 decl_stmt|;
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 comment|/* Parameter Validation */
 if|if
 condition|(
@@ -937,26 +791,6 @@ name|Status
 init|=
 name|AE_OK
 decl_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1090,26 +924,6 @@ argument_list|(
 literal|"AcpiWalkNamespace"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(
@@ -1431,26 +1245,6 @@ argument_list|(
 literal|"AcpiGetDevices"
 argument_list|)
 expr_stmt|;
-comment|/* Ensure that ACPI has been initialized */
-name|ACPI_IS_INITIALIZATION_COMPLETE
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Parameter validation */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -236,7 +236,6 @@ argument_list|(
 name|ObjHandle
 argument_list|)
 expr_stmt|;
-comment|/* TBD: [Errors] what do we do with an error? */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -250,7 +249,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Method %p [%4.4s] parse failed! %s\n"
+literal|"Method %p [%4.4s] - parse failure, %s\n"
 operator|,
 name|ObjHandle
 operator|,
@@ -272,6 +271,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* This parse failed, but we will continue parsing more methods */
 break|break;
 block|}
 comment|/*          * Delete the parse tree.  We simple re-parse the method          * for every execution since there isn't much overhead          */
@@ -876,6 +876,15 @@ operator|.
 name|String
 argument_list|)
 expr_stmt|;
+comment|/*           * The string is contained in the ACPI table, don't ever try          * to delete it          */
+name|ObjDesc
+operator|->
+name|Common
+operator|.
+name|Flags
+operator||=
+name|AOPOBJ_STATIC_POINTER
+expr_stmt|;
 break|break;
 case|case
 name|ACPI_TYPE_METHOD
@@ -938,133 +947,6 @@ operator|-
 name|AML_ARG_OP
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|INTEGER_CONST__
-case|case
-name|OPTYPE_CONSTANT
-case|:
-comment|/* TBD: Why is the DEBUG object a CONSTANT? */
-if|if
-condition|(
-name|Op
-operator|->
-name|Opcode
-operator|==
-name|AML_DEBUG_OP
-condition|)
-block|{
-break|break;
-block|}
-comment|/* Reference object no longer needed */
-name|AcpiUtRemoveReference
-argument_list|(
-name|ObjDesc
-argument_list|)
-expr_stmt|;
-comment|/* Create/Init a new Integer object */
-name|ObjDesc
-operator|=
-name|AcpiUtCreateInternalObject
-argument_list|(
-name|ACPI_TYPE_INTEGER
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ObjDesc
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_NO_MEMORY
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*              * Decode constants here.  Turn them into real integer objects              * that are initialized to the value of the constant.              */
-switch|switch
-condition|(
-name|Op
-operator|->
-name|Opcode
-condition|)
-block|{
-case|case
-name|AML_ONE_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-name|AML_ONES_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_INTEGER_MAX
-expr_stmt|;
-break|break;
-case|case
-name|AML_REVISION_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-name|ACPI_CA_VERSION
-expr_stmt|;
-break|break;
-case|case
-name|AML_ZERO_OP
-case|:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Flags
-operator||=
-name|AOPOBJ_ZERO_CONST
-expr_stmt|;
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-default|default:
-name|ObjDesc
-operator|->
-name|Integer
-operator|.
-name|Value
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-block|}
-operator|*
-name|RetObjDesc
-operator|=
-name|ObjDesc
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 comment|/* Constants, Literals, etc.. */
 if|if

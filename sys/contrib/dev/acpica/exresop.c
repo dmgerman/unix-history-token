@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -459,6 +459,9 @@ name|AML_ARG_OP
 case|:
 case|case
 name|AML_LOCAL_OP
+case|:
+case|case
+name|AML_REVISION_OP
 case|:
 name|DEBUG_ONLY_MEMBERS
 argument_list|(

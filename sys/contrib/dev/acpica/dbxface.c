@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbxface - AML Debugger external interfaces  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -601,7 +601,7 @@ block|{
 comment|/* Init globals */
 name|AcpiGbl_DbBuffer
 operator|=
-name|AcpiOsAllocate
+name|AcpiOsCallocate
 argument_list|(
 name|ACPI_DEBUG_BUFFER_SIZE
 argument_list|)
@@ -675,6 +675,42 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbTerminate  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Stop debugger  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDbTerminate
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_DbTablePtr
+condition|)
+block|{
+name|AcpiOsFree
+argument_list|(
+name|AcpiGbl_DbTablePtr
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|AcpiGbl_DbBuffer
+condition|)
+block|{
+name|AcpiOsFree
+argument_list|(
+name|AcpiGbl_DbBuffer
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

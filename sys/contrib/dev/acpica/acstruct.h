@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 5 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 8 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -81,6 +81,10 @@ name|LastPredicate
 decl_stmt|;
 comment|/* Result of last predicate */
 name|UINT8
+name|CurrentResult
+decl_stmt|;
+comment|/* */
+name|UINT8
 name|NextOpInfo
 decl_stmt|;
 comment|/* Info about NextOp */
@@ -89,73 +93,81 @@ name|NumOperands
 decl_stmt|;
 comment|/* Stack pointer for Operands[] array */
 name|UINT8
-name|CurrentResult
+name|ReturnUsed
 decl_stmt|;
-comment|/* */
+name|UINT8
+name|WalkType
+decl_stmt|;
+name|UINT16
+name|CurrentSyncLevel
+decl_stmt|;
+comment|/* Mutex Sync (nested acquire) level */
+name|UINT16
+name|Opcode
+decl_stmt|;
+comment|/* Current AML opcode */
+name|UINT32
+name|ArgCount
+decl_stmt|;
+comment|/* push for fixed or var args */
+name|UINT32
+name|AmlOffset
+decl_stmt|;
+name|UINT32
+name|ArgTypes
+decl_stmt|;
+name|UINT32
+name|MethodBreakpoint
+decl_stmt|;
+comment|/* For single stepping */
+name|UINT32
+name|ParseFlags
+decl_stmt|;
+name|UINT32
+name|PrevArgTypes
+decl_stmt|;
+name|UINT8
+modifier|*
+name|AmlLastWhile
+decl_stmt|;
 name|struct
-name|acpi_walk_state
-modifier|*
-name|Next
+name|acpi_node
+name|Arguments
+index|[
+name|MTH_NUM_ARGS
+index|]
 decl_stmt|;
-comment|/* Next WalkState in list */
-name|ACPI_PARSE_OBJECT
+comment|/* Control method arguments */
+name|union
+name|acpi_operand_obj
 modifier|*
-name|Origin
-decl_stmt|;
-comment|/* Start of walk [Obsolete] */
-comment|/* TBD: Obsolete with removal of WALK procedure ? */
-name|ACPI_PARSE_OBJECT
 modifier|*
-name|PrevOp
+name|CallerReturnDesc
 decl_stmt|;
-comment|/* Last op that was processed */
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|NextOp
-decl_stmt|;
-comment|/* next op to be processed */
-name|ACPI_GENERIC_STATE
-modifier|*
-name|Results
-decl_stmt|;
-comment|/* Stack of accumulated results */
 name|ACPI_GENERIC_STATE
 modifier|*
 name|ControlState
 decl_stmt|;
 comment|/* List of control states (nested IFs) */
-name|ACPI_GENERIC_STATE
+name|struct
+name|acpi_node
+name|LocalVariables
+index|[
+name|MTH_NUM_LOCALS
+index|]
+decl_stmt|;
+comment|/* Control method locals */
+name|struct
+name|acpi_node
 modifier|*
-name|ScopeInfo
+name|MethodCallNode
 decl_stmt|;
-comment|/* Stack of nested scopes */
-name|ACPI_PARSE_STATE
+comment|/* Called method Node*/
+name|ACPI_PARSE_OBJECT
 modifier|*
-name|ParserState
+name|MethodCallOp
 decl_stmt|;
-comment|/* Current state of parser */
-name|UINT8
-modifier|*
-name|AmlLastWhile
-decl_stmt|;
-specifier|const
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
-decl_stmt|;
-comment|/* Info on current opcode */
-name|ACPI_PARSE_DOWNWARDS
-name|DescendingCallback
-decl_stmt|;
-name|ACPI_PARSE_UPWARDS
-name|AscendingCallback
-decl_stmt|;
-name|union
-name|acpi_operand_obj
-modifier|*
-name|ReturnDesc
-decl_stmt|;
-comment|/* Return object, if any */
+comment|/* MethodCall Op if running a method */
 name|union
 name|acpi_operand_obj
 modifier|*
@@ -170,69 +182,90 @@ decl_stmt|;
 comment|/* Method Node if running a method */
 name|ACPI_PARSE_OBJECT
 modifier|*
-name|MethodCallOp
+name|Op
 decl_stmt|;
-comment|/* MethodCall Op if running a method */
-name|struct
-name|acpi_node
-modifier|*
-name|MethodCallNode
-decl_stmt|;
-comment|/* Called method Node*/
+comment|/* Current parser op */
 name|union
 name|acpi_operand_obj
 modifier|*
 name|Operands
 index|[
 name|OBJ_NUM_OPERANDS
+operator|+
+literal|1
 index|]
 decl_stmt|;
-comment|/* Operands passed to the interpreter */
-name|struct
-name|acpi_node
-name|Arguments
-index|[
-name|MTH_NUM_ARGS
-index|]
+comment|/* Operands passed to the interpreter (+1 for NULL terminator) */
+specifier|const
+name|ACPI_OPCODE_INFO
+modifier|*
+name|OpInfo
 decl_stmt|;
-comment|/* Control method arguments */
-name|struct
-name|acpi_node
-name|LocalVariables
-index|[
-name|MTH_NUM_LOCALS
-index|]
+comment|/* Info on current opcode */
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Origin
 decl_stmt|;
-comment|/* Control method locals */
+comment|/* Start of walk [Obsolete] */
+name|union
+name|acpi_operand_obj
+modifier|*
+modifier|*
+name|Params
+decl_stmt|;
+name|ACPI_PARSE_STATE
+name|ParserState
+decl_stmt|;
+comment|/* Current state of parser */
+name|union
+name|acpi_operand_obj
+modifier|*
+name|ResultObj
+decl_stmt|;
+name|ACPI_GENERIC_STATE
+modifier|*
+name|Results
+decl_stmt|;
+comment|/* Stack of accumulated results */
+name|union
+name|acpi_operand_obj
+modifier|*
+name|ReturnDesc
+decl_stmt|;
+comment|/* Return object, if any */
+name|ACPI_GENERIC_STATE
+modifier|*
+name|ScopeInfo
+decl_stmt|;
+comment|/* Stack of nested scopes */
+comment|/* TBD: Obsolete with removal of WALK procedure ? */
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|PrevOp
+decl_stmt|;
+comment|/* Last op that was processed */
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|NextOp
+decl_stmt|;
+comment|/* next op to be processed */
+name|ACPI_PARSE_DOWNWARDS
+name|DescendingCallback
+decl_stmt|;
+name|ACPI_PARSE_UPWARDS
+name|AscendingCallback
+decl_stmt|;
 name|struct
 name|acpi_walk_list
 modifier|*
 name|WalkList
 decl_stmt|;
-name|UINT32
-name|ParseFlags
+name|struct
+name|acpi_walk_state
+modifier|*
+name|Next
 decl_stmt|;
-name|UINT8
-name|WalkType
-decl_stmt|;
-name|UINT8
-name|ReturnUsed
-decl_stmt|;
-name|UINT16
-name|Opcode
-decl_stmt|;
-comment|/* Current AML opcode */
-name|UINT32
-name|PrevArgTypes
-decl_stmt|;
-name|UINT16
-name|CurrentSyncLevel
-decl_stmt|;
-comment|/* Mutex Sync (nested acquire) level */
-comment|/* Debug support */
-name|UINT32
-name|MethodBreakpoint
-decl_stmt|;
+comment|/* Next WalkState in list */
 block|}
 name|ACPI_WALK_STATE
 typedef|;

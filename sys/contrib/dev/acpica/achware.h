@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 55 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: achware.h -- hardware specific interfaces  *       $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -206,7 +206,17 @@ name|void
 name|AcpiHwEnableGpe
 parameter_list|(
 name|UINT32
-name|GpeIndex
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiHwEnableGpeForWakeup
+parameter_list|(
+name|UINT32
+name|GpeNumber
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -216,7 +226,17 @@ name|void
 name|AcpiHwDisableGpe
 parameter_list|(
 name|UINT32
-name|GpeIndex
+name|GpeNumber
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiHwDisableGpeForWakeup
+parameter_list|(
+name|UINT32
+name|GpeNumber
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -226,7 +246,7 @@ name|void
 name|AcpiHwClearGpe
 parameter_list|(
 name|UINT32
-name|GpeIndex
+name|GpeNumber
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -241,6 +261,24 @@ parameter_list|,
 name|ACPI_EVENT_STATUS
 modifier|*
 name|EventStatus
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiHwDisableNonWakeupGpes
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiHwEnableNonWakeupGpes
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

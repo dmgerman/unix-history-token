@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 97 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 99 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -740,7 +740,7 @@ argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_ERROR
+name|AE_NULL_OBJECT
 argument_list|)
 expr_stmt|;
 block|}
@@ -755,7 +755,7 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 operator|+
 literal|1
 operator|,
@@ -763,7 +763,7 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|-
 literal|1
 operator|)
@@ -791,7 +791,7 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 operator|+
 literal|1
 operator|)

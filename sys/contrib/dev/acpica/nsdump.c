@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 100 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -638,7 +638,7 @@ operator|)
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 operator|,
 operator|(
 operator|(
@@ -652,7 +652,7 @@ operator|)
 operator|->
 name|Method
 operator|.
-name|PcodeLength
+name|AmlLength
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1083,7 +1083,7 @@ name|ObjDesc
 operator|->
 name|Method
 operator|.
-name|Pcode
+name|AmlStart
 expr_stmt|;
 break|break;
 case|case

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 187 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 192 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -134,7 +134,17 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* (No hardware alignment support in IA64) */
+comment|/* No hardware alignment support in IA64 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_comment
+comment|/* Native 64-bit integer support */
 end_comment
 
 begin_elif
@@ -264,6 +274,16 @@ define|#
 directive|define
 name|_HW_ALIGNMENT_SUPPORT
 end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_comment
+comment|/* No 64-bit integers, ok to use native divide */
+end_comment
 
 begin_comment
 comment|/*  * (16-bit only) internal integers must be 32-bits, so  * 64-bit integers cannot be supported  */
@@ -637,6 +657,21 @@ name|UINT64_STRUCT
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|UINT64
+name|Full
+decl_stmt|;
+name|UINT64_STRUCT
+name|Part
+decl_stmt|;
+block|}
+name|UINT64_OVERLAY
+typedef|;
+end_typedef
+
 begin_comment
 comment|/*  * Acpi integer width. In ACPI version 1, integers are  * 32 bits.  In ACPI version 2, integers are 64 bits.  * Note that this pertains to the ACPI integer type only, not  * other integers used in the implementation of the ACPI CA  * subsystem.  */
 end_comment
@@ -693,6 +728,16 @@ name|ACPI_MAX_DECIMAL_DIGITS
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_comment
+comment|/* Use compiler native 32-bit divide */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -743,6 +788,27 @@ directive|define
 name|ACPI_MAX_DECIMAL_DIGITS
 value|19
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_IA64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
+begin_comment
+comment|/* Use compiler native 64-bit divide */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1835,7 +1901,39 @@ value|(ACPI_EVENT_TYPE) 2
 end_define
 
 begin_comment
-comment|/*  * AcpiEvent Status:  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +---------------+-+-+  * |   Bits 31:2   |1|0|  * +---------------+-+-+  *          |       | |  *          |       | +- Enabled?  *          |       +--- Set?  *          +-----------<Reserved>  */
+comment|/*  * GPEs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_ENABLE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_WAKE_ENABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_DISABLE
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_WAKE_DISABLE
+value|0x2
+end_define
+
+begin_comment
+comment|/*  * AcpiEvent Status:  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+  * |   Bits 31:3 |2|1|0|  * +-------------+-+-+-+  *          |     | | |  *          |     | | +- Enabled?  *          |     | +--- Enabled for wake?  *          |     +----- Set?  *          +-----------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -1862,8 +1960,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_EVENT_FLAG_SET
+name|ACPI_EVENT_FLAG_WAKE_ENABLED
 value|(ACPI_EVENT_STATUS) 0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_SET
+value|(ACPI_EVENT_STATUS) 0x04
 end_define
 
 begin_comment

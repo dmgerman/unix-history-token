@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 130 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 134 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -81,7 +81,63 @@ begin_define
 define|#
 directive|define
 name|ACPI_DESC_TYPE_STATE
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_UPDATE
+value|0x21
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_PACKAGE
 value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_CONTROL
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_RPSCOPE
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_PSCOPE
+value|0x25
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_WSCOPE
+value|0x26
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_RESULT
+value|0x27
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DESC_TYPE_STATE_NOTIFY
+value|0x28
 end_define
 
 begin_define
@@ -611,7 +667,7 @@ name|BasePointer
 decl_stmt|;
 name|UINT8
 modifier|*
-name|AmlPointer
+name|AmlStart
 decl_stmt|;
 name|UINT64
 name|PhysicalAddress
@@ -873,14 +929,6 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT8
-name|Status
-decl_stmt|;
-comment|/* Current value of status reg */
-name|UINT8
-name|Enable
-decl_stmt|;
-comment|/* Current value of enable reg */
 name|UINT16
 name|StatusAddr
 decl_stmt|;
@@ -889,6 +937,18 @@ name|UINT16
 name|EnableAddr
 decl_stmt|;
 comment|/* Address of enable reg */
+name|UINT8
+name|Status
+decl_stmt|;
+comment|/* Current value of status reg */
+name|UINT8
+name|Enable
+decl_stmt|;
+comment|/* Current value of enable reg */
+name|UINT8
+name|WakeEnable
+decl_stmt|;
+comment|/* Mask of bits to keep enabled when sleeping */
 name|UINT8
 name|GpeBase
 decl_stmt|;
@@ -1243,6 +1303,44 @@ name|ACPI_RESULT_VALUES
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_PARSE_DOWNWARDS
+function_decl|)
+parameter_list|(
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkState
+parameter_list|,
+name|struct
+name|acpi_parse_obj
+modifier|*
+modifier|*
+name|OutOp
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_PARSE_UPWARDS
+function_decl|)
+parameter_list|(
+name|struct
+name|acpi_walk_state
+modifier|*
+name|WalkState
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
 comment|/*  * Notify info - used to pass info to the deferred notify  * handler/dispatcher.  */
 end_comment
@@ -1303,57 +1401,6 @@ decl_stmt|;
 block|}
 name|ACPI_GENERIC_STATE
 typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_PARSE_DOWNWARDS
-function_decl|)
-parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|struct
-name|acpi_parse_obj
-modifier|*
-name|Op
-parameter_list|,
-name|struct
-name|acpi_walk_state
-modifier|*
-name|WalkState
-parameter_list|,
-name|struct
-name|acpi_parse_obj
-modifier|*
-modifier|*
-name|OutOp
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_PARSE_UPWARDS
-function_decl|)
-parameter_list|(
-name|struct
-name|acpi_walk_state
-modifier|*
-name|WalkState
-parameter_list|,
-name|struct
-name|acpi_parse_obj
-modifier|*
-name|Op
-parameter_list|)
-function_decl|;
 end_typedef
 
 begin_comment
@@ -1680,6 +1727,9 @@ typedef|typedef
 struct|struct
 name|acpi_parse_state
 block|{
+name|UINT32
+name|AmlSize
+decl_stmt|;
 name|UINT8
 modifier|*
 name|AmlStart
@@ -1705,7 +1755,8 @@ modifier|*
 name|PkgEnd
 decl_stmt|;
 comment|/* current package end */
-name|ACPI_PARSE_OBJECT
+name|struct
+name|acpi_parse_obj
 modifier|*
 name|StartOp
 decl_stmt|;
@@ -1715,15 +1766,16 @@ name|acpi_node
 modifier|*
 name|StartNode
 decl_stmt|;
-name|ACPI_GENERIC_STATE
+name|union
+name|acpi_gen_state
 modifier|*
 name|Scope
 decl_stmt|;
 comment|/* current scope */
 name|struct
-name|acpi_parse_state
+name|acpi_parse_obj
 modifier|*
-name|Next
+name|StartScope
 decl_stmt|;
 block|}
 name|ACPI_PARSE_STATE

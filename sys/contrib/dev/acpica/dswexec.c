@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 70 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 71 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -80,10 +80,6 @@ parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
 parameter_list|,
 name|UINT32
 name|HasResultObj
@@ -167,6 +163,8 @@ name|AcpiDsCreateOperand
 argument_list|(
 name|WalkState
 argument_list|,
+name|WalkState
+operator|->
 name|Op
 argument_list|,
 literal|0
@@ -353,6 +351,8 @@ name|Common
 operator|.
 name|Value
 operator|,
+name|WalkState
+operator|->
 name|Op
 operator|)
 argument_list|)
@@ -393,20 +393,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              Op              - Op that has been just been reached in the  *                                walk;  Arguments have not been evaluated yet.  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods.  This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiDsExecBeginOp  *  * PARAMETERS:  WalkState       - Current state of the parse tree walk  *              OutOp           - Return op if a new one is created  *  * RETURN:      Status  *  * DESCRIPTION: Descending callback used during the execution of control  *              methods.  This is where most operators and operands are  *              dispatched to the interpreter.  *  ****************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiDsExecBeginOp
 parameter_list|(
-name|UINT16
-name|Opcode
-parameter_list|,
-name|ACPI_PARSE_OBJECT
-modifier|*
-name|Op
-parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -417,10 +410,9 @@ modifier|*
 name|OutOp
 parameter_list|)
 block|{
-specifier|const
-name|ACPI_OPCODE_INFO
+name|ACPI_PARSE_OBJECT
 modifier|*
-name|OpInfo
+name|Op
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -434,8 +426,14 @@ name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"DsExecBeginOp"
 argument_list|,
-name|Op
+name|WalkState
 argument_list|)
+expr_stmt|;
+name|Op
+operator|=
+name|WalkState
+operator|->
+name|Op
 expr_stmt|;
 if|if
 condition|(
@@ -447,10 +445,6 @@ name|Status
 operator|=
 name|AcpiDsLoad2BeginOp
 argument_list|(
-name|Opcode
-argument_list|,
-name|NULL
-argument_list|,
 name|WalkState
 argument_list|,
 name|OutOp
@@ -474,6 +468,31 @@ name|Op
 operator|=
 operator|*
 name|OutOp
+expr_stmt|;
+name|WalkState
+operator|->
+name|Op
+operator|=
+name|Op
+expr_stmt|;
+name|WalkState
+operator|->
+name|OpInfo
+operator|=
+name|AcpiPsGetOpcodeInfo
+argument_list|(
+name|Op
+operator|->
+name|Opcode
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|Opcode
+operator|=
+name|Op
+operator|->
+name|Opcode
 expr_stmt|;
 block|}
 if|if
@@ -559,15 +578,6 @@ operator|=
 name|Op
 expr_stmt|;
 block|}
-name|OpInfo
-operator|=
-name|AcpiPsGetOpcodeInfo
-argument_list|(
-name|Op
-operator|->
-name|Opcode
-argument_list|)
-expr_stmt|;
 name|OpcodeClass
 operator|=
 operator|(
@@ -575,6 +585,8 @@ name|UINT8
 operator|)
 name|ACPI_GET_OP_CLASS
 argument_list|(
+name|WalkState
+operator|->
 name|OpInfo
 argument_list|)
 expr_stmt|;
@@ -650,12 +662,6 @@ name|Status
 operator|=
 name|AcpiDsLoad2BeginOp
 argument_list|(
-name|Op
-operator|->
-name|Opcode
-argument_list|,
-name|Op
-argument_list|,
 name|WalkState
 argument_list|,
 name|NULL
@@ -749,19 +755,16 @@ parameter_list|(
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
-parameter_list|,
+parameter_list|)
+block|{
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Op
-parameter_list|)
-block|{
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 init|=
 name|AE_OK
-decl_stmt|;
-name|UINT16
-name|Opcode
 decl_stmt|;
 name|UINT8
 name|Optype
@@ -774,17 +777,6 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|FirstArg
 decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|ResultObj
-init|=
-name|NULL
-decl_stmt|;
-specifier|const
-name|ACPI_OPCODE_INFO
-modifier|*
-name|OpInfo
-decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -792,31 +784,21 @@ name|FUNCTION_TRACE_PTR
 argument_list|(
 literal|"DsExecEndOp"
 argument_list|,
-name|Op
+name|WalkState
 argument_list|)
 expr_stmt|;
-name|Opcode
-operator|=
-operator|(
-name|UINT16
-operator|)
 name|Op
-operator|->
-name|Opcode
-expr_stmt|;
-name|OpInfo
 operator|=
-name|AcpiPsGetOpcodeInfo
-argument_list|(
-name|Op
+name|WalkState
 operator|->
-name|Opcode
-argument_list|)
+name|Op
 expr_stmt|;
 if|if
 condition|(
 name|ACPI_GET_OP_TYPE
 argument_list|(
+name|WalkState
+operator|->
 name|OpInfo
 argument_list|)
 operator|!=
@@ -849,6 +831,8 @@ name|UINT8
 operator|)
 name|ACPI_GET_OP_CLASS
 argument_list|(
+name|WalkState
+operator|->
 name|OpInfo
 argument_list|)
 expr_stmt|;
@@ -875,15 +859,9 @@ name|NULL
 expr_stmt|;
 name|WalkState
 operator|->
-name|OpInfo
+name|ResultObj
 operator|=
-name|OpInfo
-expr_stmt|;
-name|WalkState
-operator|->
-name|Opcode
-operator|=
-name|Opcode
+name|NULL
 expr_stmt|;
 comment|/* Call debugger for single step support (DEBUG build only) */
 name|DEBUGGER_EXEC
@@ -941,6 +919,8 @@ name|ACPI_DB_DISPATCH
 operator|,
 literal|"Internal opcode=%X type Op=%X\n"
 operator|,
+name|WalkState
+operator|->
 name|Opcode
 operator|,
 name|Op
@@ -1050,6 +1030,8 @@ name|Status
 operator|=
 name|AcpiExResolveOperands
 argument_list|(
+name|WalkState
+operator|->
 name|Opcode
 argument_list|,
 operator|&
@@ -1087,6 +1069,8 @@ literal|"[%s]: Could not resolve operands, %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
+name|WalkState
+operator|->
 name|Opcode
 argument_list|)
 operator|,
@@ -1152,6 +1136,8 @@ name|IMODE_EXECUTE
 argument_list|,
 name|AcpiPsGetOpcodeName
 argument_list|(
+name|WalkState
+operator|->
 name|Opcode
 argument_list|)
 argument_list|,
@@ -1175,8 +1161,6 @@ name|Status
 operator|=
 name|AcpiExMonadic1
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
@@ -1189,12 +1173,7 @@ name|Status
 operator|=
 name|AcpiExMonadic2
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1206,12 +1185,7 @@ name|Status
 operator|=
 name|AcpiExMonadic2R
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1223,8 +1197,6 @@ name|Status
 operator|=
 name|AcpiExDyadic1
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
@@ -1237,12 +1209,7 @@ name|Status
 operator|=
 name|AcpiExDyadic2
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1254,12 +1221,7 @@ name|Status
 operator|=
 name|AcpiExDyadic2R
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1272,30 +1234,20 @@ name|Status
 operator|=
 name|AcpiExDyadic2S
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|OPTYPE_TRIADIC
 case|:
-comment|/* Opcode with 3 operands */
+comment|/* WalkState->Opcode with 3 operands */
 comment|/* 3 Operands, 1 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
 name|AcpiExTriadic
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1313,12 +1265,7 @@ name|Status
 operator|=
 name|AcpiExHexadic
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
-argument_list|,
-operator|&
-name|ResultObj
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1330,8 +1277,6 @@ name|Status
 operator|=
 name|AcpiExReconfiguration
 argument_list|(
-name|Opcode
-argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
@@ -1378,6 +1323,8 @@ argument_list|(
 name|Status
 argument_list|)
 operator|&&
+name|WalkState
+operator|->
 name|ResultObj
 condition|)
 block|{
@@ -1385,6 +1332,8 @@ name|Status
 operator|=
 name|AcpiDsResultPush
 argument_list|(
+name|WalkState
+operator|->
 name|ResultObj
 argument_list|,
 name|WalkState
@@ -1508,8 +1457,6 @@ operator|=
 name|AcpiDsLoad2EndOp
 argument_list|(
 name|WalkState
-argument_list|,
-name|Op
 argument_list|)
 expr_stmt|;
 if|if
@@ -1540,8 +1487,6 @@ operator|=
 name|AcpiDsLoad2EndOp
 argument_list|(
 name|WalkState
-argument_list|,
-name|Op
 argument_list|)
 expr_stmt|;
 if|if
@@ -1647,6 +1592,8 @@ block|}
 comment|/*      * ACPI 2.0 support for 64-bit integers:      * Truncate numeric result value if we are executing from a 32-bit ACPI table      */
 name|AcpiExTruncateFor32bitTable
 argument_list|(
+name|WalkState
+operator|->
 name|ResultObj
 argument_list|,
 name|WalkState
@@ -1692,14 +1639,16 @@ name|AcpiDsGetPredicateValue
 argument_list|(
 name|WalkState
 argument_list|,
-name|Op
-argument_list|,
 operator|(
 name|UINT32
 operator|)
+name|WalkState
+operator|->
 name|ResultObj
 argument_list|)
 expr_stmt|;
+name|WalkState
+operator|->
 name|ResultObj
 operator|=
 name|NULL
@@ -1709,6 +1658,8 @@ name|Cleanup
 label|:
 if|if
 condition|(
+name|WalkState
+operator|->
 name|ResultObj
 condition|)
 block|{
@@ -1717,6 +1668,8 @@ name|DEBUGGER_EXEC
 argument_list|(
 name|AcpiDbDisplayResultObject
 argument_list|(
+name|WalkState
+operator|->
 name|ResultObj
 argument_list|,
 name|WalkState
@@ -1728,6 +1681,8 @@ name|AcpiDsDeleteResultIfNotUsed
 argument_list|(
 name|Op
 argument_list|,
+name|WalkState
+operator|->
 name|ResultObj
 argument_list|,
 name|WalkState
