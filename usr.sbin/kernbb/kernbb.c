@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: kernbb.c,v 1.1 1995/03/10 08:53:55 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.org> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: kernbb.c,v 1.2 1995/04/28 04:58:19 phk Exp $  *  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_define
@@ -175,6 +181,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|()
 block|{
@@ -220,18 +227,13 @@ condition|(
 operator|!
 name|kv
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_open"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|i
 operator|=
 name|kvm_nlist
@@ -245,18 +247,13 @@ if|if
 condition|(
 name|i
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"kvm_nlist"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|l1
 operator|=
 name|namelist
@@ -337,7 +334,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"found %u counts above limit of %u\n"
+literal|"found %lu counts above limit of %u\n"
 argument_list|,
 name|bb
 operator|.
@@ -457,34 +454,15 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|bb
-operator|.
-name|ncounts
-condition|;
-name|i
-operator|++
-control|)
 if|if
 condition|(
+operator|!
 name|counts
 index|[
 name|i
 index|]
 condition|)
-goto|goto
-name|doit
-goto|;
 continue|continue;
-name|doit
-label|:
 for|for
 control|(
 name|i
@@ -545,23 +523,8 @@ index|[
 name|i
 index|]
 operator|=
-name|malloc
+name|strdup
 argument_list|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|pn
-index|[
-name|i
-index|]
-argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -673,23 +636,8 @@ index|[
 name|i
 index|]
 operator|=
-name|malloc
+name|strdup
 argument_list|(
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|fn
-index|[
-name|i
-index|]
-argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -759,7 +707,7 @@ literal|"-"
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %5u %s %u %u\n"
+literal|"%s %5lu %s %lu %lu\n"
 argument_list|,
 name|fn
 index|[
@@ -806,8 +754,12 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|func
+index|[
+name|i
+index|]
+operator|&&
+name|pn
 index|[
 name|i
 index|]
@@ -822,8 +774,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|file
+index|[
+name|i
+index|]
+operator|&&
+name|fn
 index|[
 name|i
 index|]
