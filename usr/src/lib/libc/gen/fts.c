@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.7 (Berkeley) %G%"
+literal|"@(#)fts.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1236,7 +1236,7 @@ operator|==
 name|FTS_D
 condition|)
 block|{
-comment|/* may have been skipped or crossed mount point */
+comment|/* if skipped or crossed mount point, do post-order visit */
 if|if
 condition|(
 name|instr
@@ -1281,9 +1281,17 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-goto|goto
-name|next
-goto|;
+name|p
+operator|->
+name|fts_info
+operator|=
+name|FTS_DP
+expr_stmt|;
+return|return
+operator|(
+name|p
+operator|)
+return|;
 block|}
 comment|/* read the directory if necessary, and return first entry */
 if|if
