@@ -1120,7 +1120,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  */
+comment|/*  * Statistics clock.  Grab profile sample, and if divider reaches 0,  * do process and kernel statistics.  Most of the statistics are only  * used by user-level statistics programs.  The main exceptions are  * p->p_uticks, p->p_sticks, p->p_iticks, and p->p_estcpu.  */
 end_comment
 
 begin_function
@@ -1186,6 +1186,7 @@ name|frame
 argument_list|)
 condition|)
 block|{
+comment|/* 		 * Came from user mode; CPU was in user state. 		 * If this process is being profiled, record the tick. 		 */
 name|p
 operator|=
 name|curproc
@@ -1242,7 +1243,7 @@ operator|>
 literal|0
 condition|)
 return|return;
-comment|/* 		 * Came from user mode; CPU was in user state. 		 * If this process is being profiled record the tick. 		 */
+comment|/* 		 * Charge the time as appropriate. 		 */
 name|p
 operator|->
 name|p_uticks
@@ -1429,7 +1430,6 @@ name|pscnt
 operator|=
 name|psdiv
 expr_stmt|;
-comment|/* 	 * We maintain statistics shown by user-level statistics 	 * programs:  the amount of time in each cpu state. 	 */
 if|if
 condition|(
 name|p
