@@ -78,7 +78,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mk48txx/mk48txxreg.h>
+file|<dev/mk48txx/mk48txxreg.h>
 end_include
 
 begin_include
