@@ -596,6 +596,17 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* perform accounting */
+comment|/* pass the bio to the controller - it can work out who we are */
+name|AAC_LOCK_ACQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ad_controller
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 name|devstat_start_transaction
 argument_list|(
 operator|&
@@ -604,10 +615,19 @@ operator|->
 name|ad_stats
 argument_list|)
 expr_stmt|;
-comment|/* pass the bio to the controller - it can work out who we are */
 name|aac_submit_bio
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|ad_controller
+operator|->
+name|aac_io_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1610,7 +1630,7 @@ name|sc
 operator|->
 name|ad_disk
 argument_list|,
-literal|0
+name|DISKFLAG_NOGIANT
 argument_list|,
 name|NULL
 argument_list|,

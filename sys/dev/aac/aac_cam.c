@@ -1327,6 +1327,14 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Async ops that require communcation with the controller */
+name|AAC_LOCK_ACQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|aac_alloc_command
@@ -1338,6 +1346,14 @@ name|cm
 argument_list|)
 condition|)
 block|{
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 name|xpt_freeze_simq
 argument_list|(
 name|sim
@@ -1891,6 +1907,14 @@ argument_list|(
 name|cm
 operator|->
 name|cm_sc
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
 argument_list|)
 expr_stmt|;
 return|return;

@@ -1163,6 +1163,9 @@ value|(1<< 0)
 name|aac_lock_t
 name|aac_sync_lock
 decl_stmt|;
+name|aac_lock_t
+name|aac_io_lock
+decl_stmt|;
 comment|/* delayed activity infrastructure */
 if|#
 directive|if
@@ -1234,8 +1237,12 @@ name|AAC_AIFFLAGS_PRINTF
 value|(1<< 4)
 define|#
 directive|define
+name|AAC_AIFFLAGS_ALLOCFIBS
+value|(1<< 5)
+define|#
+directive|define
 name|AAC_AIFFLAGS_PENDING
-value|(AAC_AIFFLAGS_AIF | AAC_AIFFLAGS_PRINTF)
+value|(AAC_AIFFLAGS_AIF | AAC_AIFFLAGS_PRINTF | \ 				 AAC_AIFFLAGS_ALLOCFIBS)
 name|u_int32_t
 name|quirks
 decl_stmt|;

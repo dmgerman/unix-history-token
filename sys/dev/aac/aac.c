@@ -1404,7 +1404,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Register to probe our containers later. 	 */
+comment|/* 	 * Initialize locks 	 */
+name|AAC_LOCK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_aifq_lock
+argument_list|,
+literal|"AAC AIF lock"
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&
@@ -1423,17 +1433,17 @@ argument_list|,
 literal|"AAC container lock"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Lock for the AIF queue 	 */
 name|AAC_LOCK_INIT
 argument_list|(
 operator|&
 name|sc
 operator|->
-name|aac_aifq_lock
+name|aac_io_lock
 argument_list|,
-literal|"AAC AIF lock"
+literal|"AAC I/O lock"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Register to probe our containers later. 	 */
 name|sc
 operator|->
 name|aac_ich
@@ -3041,7 +3051,7 @@ condition|)
 comment|/* handle completion processing */
 name|taskqueue_enqueue
 argument_list|(
-name|taskqueue_swi_giant
+name|taskqueue_swi
 argument_list|,
 operator|&
 name|sc
@@ -3399,7 +3409,6 @@ operator|*
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* While we're here, check to see if any commands are stuck */
 if|if
 condition|(
 operator|(
@@ -3444,6 +3453,62 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* See if any FIBs need to be allocated */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|aifflags
+operator|&
+name|AAC_AIFFLAGS_ALLOCFIBS
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_ACQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
+name|aac_alloc_commands
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aifflags
+operator|&=
+operator|~
+name|AAC_AIFFLAGS_ALLOCFIBS
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* While we're here, check to see if any commands are stuck */
 while|while
 condition|(
 name|sc
@@ -3707,6 +3772,14 @@ operator|*
 operator|)
 name|context
 expr_stmt|;
+name|AAC_LOCK_ACQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 comment|/* pull completed commands off the queue */
 for|for
 control|(
@@ -3810,6 +3883,14 @@ comment|/* see if we can start some more I/O */
 name|aac_startio
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -4469,9 +4550,12 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|aac_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -4480,6 +4564,12 @@ name|debug_called
 argument_list|(
 literal|2
 argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|cm
+operator|->
+name|cm_sc
 expr_stmt|;
 comment|/* Put the command on the ready queue and get things going */
 name|cm
@@ -4495,15 +4585,8 @@ argument_list|)
 expr_stmt|;
 name|aac_startio
 argument_list|(
-name|cm
-operator|->
-name|cm_sc
+name|sc
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|splbio
-argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -4525,9 +4608,14 @@ condition|)
 block|{
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 name|cm
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
 argument_list|,
 name|PRIBIO
 argument_list|,
@@ -4537,11 +4625,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4598,31 +4681,22 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-operator|(
-name|aac_alloc_commands
+name|sc
+operator|->
+name|aifflags
+operator||=
+name|AAC_AIFFLAGS_ALLOCFIBS
+expr_stmt|;
+name|wakeup
 argument_list|(
 name|sc
+operator|->
+name|aifthread
 argument_list|)
-operator|!=
-literal|0
-operator|)
-operator|||
-operator|(
-name|cm
-operator|=
-name|aac_dequeue_free
-argument_list|(
-name|sc
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
+expr_stmt|;
 return|return
 operator|(
-name|ENOMEM
+name|EBUSY
 operator|)
 return|;
 block|}
@@ -10149,6 +10223,14 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Get a command 	 */
+name|AAC_LOCK_ACQUIRE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|aac_alloc_command
@@ -10395,6 +10477,14 @@ name|cm
 argument_list|)
 expr_stmt|;
 block|}
+name|AAC_LOCK_RELEASE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|aac_io_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
