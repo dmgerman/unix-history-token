@@ -170,6 +170,7 @@ name|char
 modifier|*
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -568,6 +569,7 @@ modifier|*
 modifier|*
 name|argPtr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|func
@@ -1573,6 +1575,7 @@ name|char
 modifier|*
 name|rhs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|op
