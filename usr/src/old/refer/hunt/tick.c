@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tick.c	4.2 (Berkeley) %G%"
+literal|"@(#)tick.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,19 +27,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/timeb.h"
+file|<sys/timeb.h>
 end_include
 
 begin_struct

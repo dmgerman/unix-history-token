@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	5.17 (Berkeley) %G%"
+literal|"@(#)man.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,47 +70,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEF_PAGER
-value|"/usr/ucb/more -s"
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEF_PATH
-value|"/usr/man:/usr/new/man:/usr/local/man"
-end_define
-
-begin_define
-define|#
-directive|define
-name|LOCAL_PATH
-value|"/usr/local/man"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEW_PATH
-value|"/usr/new/man"
-end_define
-
-begin_define
-define|#
-directive|define
-name|NO
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|YES
-value|1
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -514,7 +478,7 @@ block|}
 else|else
 name|pager
 operator|=
-name|DEF_PAGER
+name|_PATH_PAGER
 expr_stmt|;
 if|if
 condition|(
@@ -549,15 +513,15 @@ operator|)
 condition|)
 name|defpath
 operator|=
-name|DEF_PATH
+name|_PATH_DEFAULT
 expr_stmt|;
 name|locpath
 operator|=
-name|LOCAL_PATH
+name|_PATH_LOCAL
 expr_stmt|;
 name|newpath
 operator|=
-name|NEW_PATH
+name|_PATH_NEW
 expr_stmt|;
 name|man
 argument_list|(

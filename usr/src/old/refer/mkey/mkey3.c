@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkey3.c	4.1 (Berkeley) %G%"
+literal|"@(#)mkey3.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -45,7 +51,7 @@ name|char
 modifier|*
 name|comname
 init|=
-literal|"/usr/lib/eign"
+name|_PATH_EIGN
 decl_stmt|;
 end_decl_stmt
 

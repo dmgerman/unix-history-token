@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)inv1.c	4.2 (Berkeley) %G%"
+literal|"@(#)inv1.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -180,20 +186,7 @@ name|sortdir
 decl_stmt|;
 name|sortdir
 operator|=
-operator|(
-name|access
-argument_list|(
-literal|"/crp/tmp"
-argument_list|,
-literal|06
-argument_list|)
-operator|==
-literal|0
-operator|)
-condition|?
-literal|"/crp/tmp"
-else|:
-literal|"/usr/tmp"
+name|_PATH_USRTMP
 expr_stmt|;
 while|while
 condition|(
@@ -487,24 +480,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sort"
-argument_list|,
-literal|"sort"
-argument_list|,
-literal|"-T"
-argument_list|,
-name|sortdir
-argument_list|,
-literal|"-o"
-argument_list|,
-name|tmpa
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-literal|"/usr/bin/sort"
+name|_PATH_SORT
 argument_list|,
 literal|"sort"
 argument_list|,
@@ -542,7 +518,7 @@ name|fta
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"w"
 argument_list|)
@@ -675,10 +651,6 @@ else|:
 literal|"w"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|keepkey
-condition|)
 name|fd
 operator|=
 name|keepkey

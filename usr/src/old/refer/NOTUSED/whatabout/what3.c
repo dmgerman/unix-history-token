@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)what3.c	4.1 (Berkeley) %G%"
+literal|"@(#)what3.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"what..c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -191,7 +197,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/usr/lib/refer/mkey"
+name|_PATH_MKEY
 argument_list|,
 literal|"mkey"
 argument_list|,
@@ -287,7 +293,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/usr/lib/refer/hunt"
+name|_PATH_HUNT
 argument_list|,
 literal|"hunt"
 argument_list|,
@@ -298,7 +304,7 @@ literal|"-Ty"
 argument_list|,
 literal|"-Fn"
 argument_list|,
-literal|"/usr/dict/lookall/All"
+name|_PATH_ALL
 argument_list|,
 literal|0
 argument_list|)
@@ -361,7 +367,7 @@ name|ansf
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 literal|"r"
 argument_list|)

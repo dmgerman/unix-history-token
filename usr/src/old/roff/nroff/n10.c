@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	4.4 %G%"
+literal|"@(#)n10.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,6 +46,9 @@ specifier|extern
 include|#
 directive|include
 file|"tw.h"
+include|#
+directive|include
+file|"pathnames.h"
 comment|/* nroff10.c  Device interfaces */
 specifier|extern
 name|int
@@ -288,7 +291,7 @@ name|i
 operator|=
 name|open
 argument_list|(
-literal|"/usr/lib/term/tablpr"
+name|_PATH_TERM
 argument_list|,
 literal|0
 argument_list|)

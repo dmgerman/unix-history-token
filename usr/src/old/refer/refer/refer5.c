@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.9 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"refer..c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -872,7 +878,9 @@ name|sprintf
 argument_list|(
 name|hidenam
 argument_list|,
-literal|"/tmp/rj%dc"
+literal|"%s/rj%dc"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|getpid
 argument_list|()

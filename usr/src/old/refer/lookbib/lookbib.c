@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookbib.c	4.5 (Berkeley) %G%"
+literal|"@(#)lookbib.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -160,7 +166,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|"r"
 argument_list|)
@@ -171,7 +177,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"lookbib: /dev/tty"
+name|_PATH_TTY
 argument_list|)
 expr_stmt|;
 name|exit
@@ -273,7 +279,9 @@ name|sprintf
 argument_list|(
 name|hunt
 argument_list|,
-literal|"/usr/lib/refer/hunt %s"
+literal|"%s %s"
+argument_list|,
+name|_PATH_HUNT
 argument_list|,
 name|argv
 index|[
@@ -370,7 +378,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"lookbib: /usr/lib/refer/hunt"
+literal|"lookbib: hunt"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)svt6.c	4.1 %G%"
+literal|"@(#)svt6.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,9 @@ specifier|extern
 include|#
 directive|include
 file|"v.h"
+include|#
+directive|include
+file|"pathnames.h"
 comment|/* troff6.c  width functions, sizes and fonts */
 specifier|extern
 name|int
@@ -318,7 +321,7 @@ name|char
 name|fontfile
 index|[]
 init|=
-literal|"/usr/lib/font/ftXX"
+name|_PATH_FONTS
 decl_stmt|;
 end_decl_stmt
 

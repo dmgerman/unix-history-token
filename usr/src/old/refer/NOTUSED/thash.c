@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)thash.c	4.1 (Berkeley) %G%"
+literal|"@(#)thash.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -49,13 +55,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|comname
-literal|"/usr/lib/eign"
-expr_stmt|;
-end_expr_stmt
+init|=
+name|_PATH_EIGN
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main

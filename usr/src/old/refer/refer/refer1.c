@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer1.c	4.3 (Berkeley) %G%"
+literal|"@(#)refer1.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|"refer..c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -403,7 +409,7 @@ operator|*
 name|search
 operator|++
 operator|=
-literal|"/usr/dict/papers/Ind"
+name|_PATH_IND
 expr_stmt|;
 if|if
 condition|(
@@ -415,7 +421,9 @@ name|sprintf
 argument_list|(
 name|ofile
 argument_list|,
-literal|"/tmp/rj%db"
+literal|"%s/rj%db"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|getpid
 argument_list|()
@@ -460,7 +468,9 @@ name|sprintf
 argument_list|(
 name|tfile
 argument_list|,
-literal|"/tmp/rj%da"
+literal|"%s/rj%da"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|getpid
 argument_list|()

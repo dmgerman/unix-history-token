@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)apropos.c	5.7 (Berkeley) %G%"
+literal|"@(#)apropos.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,12 +76,11 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEF_PATH
-value|"/usr/man:/usr/new/man:/usr/local/man"
-end_define
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_define
 define|#
@@ -262,7 +261,7 @@ operator|)
 condition|)
 name|manpath
 operator|=
-name|DEF_PATH
+name|_PATH_DEFAULT
 expr_stmt|;
 comment|/*NOSTRICT*/
 if|if

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	5.3 (Berkeley) %G%"
+literal|"@(#)msgs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,12 +77,6 @@ end_comment
 begin_comment
 comment|/* #define UNBUFFERED	/* use unbuffered output */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -135,7 +129,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"msgs.h"
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -217,13 +217,6 @@ end_define
 begin_comment
 comment|/* seconds/day */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TEMP
-value|"/tmp/msgXXXXXX"
-end_define
 
 begin_define
 define|#
@@ -969,7 +962,7 @@ name|fname
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|,
 name|BOUNDS
 argument_list|)
@@ -1063,7 +1056,7 @@ name|dirp
 operator|=
 name|opendir
 argument_list|(
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1075,7 +1068,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1156,7 +1149,7 @@ name|inbuf
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|,
 name|cp
 argument_list|)
@@ -1357,7 +1350,7 @@ condition|(
 name|send
 condition|)
 block|{
-comment|/* 		 * Send mode - place msgs in USRMSGS 		 */
+comment|/* 		 * Send mode - place msgs in _PATH_MSGS 		 */
 name|bounds
 operator|=
 name|fopen
@@ -1397,7 +1390,7 @@ name|fname
 argument_list|,
 literal|"%s/%d"
 argument_list|,
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|,
 name|nextmsg
 argument_list|)
@@ -2025,7 +2018,7 @@ name|fname
 argument_list|,
 literal|"%s/%d"
 argument_list|,
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|,
 name|msg
 argument_list|)
@@ -2668,7 +2661,7 @@ name|sprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|PAGE
+name|_PATH_PAGER
 argument_list|,
 name|Lpp
 argument_list|)
@@ -3190,7 +3183,7 @@ name|fname
 argument_list|,
 literal|"%s/%d"
 argument_list|,
-name|USRMSGS
+name|_PATH_MSGS
 argument_list|,
 name|cmsg
 argument_list|)
@@ -3303,7 +3296,7 @@ name|strcpy
 argument_list|(
 name|fname
 argument_list|,
-name|TEMP
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 name|mktemp
@@ -3315,7 +3308,7 @@ name|sprintf
 argument_list|(
 name|cmdbuf
 argument_list|,
-name|MAIL
+name|_PATH_MAIL
 argument_list|,
 name|fname
 argument_list|)

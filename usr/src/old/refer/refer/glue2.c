@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue2.c	4.1 (Berkeley) %G%"
+literal|"@(#)glue2.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
 
 begin_decl_stmt
 name|char
@@ -51,7 +57,7 @@ literal|""
 argument_list|,
 name|refdir
 argument_list|,
-literal|"/bin/pwd"
+name|_PATH_PWD
 argument_list|,
 literal|""
 argument_list|,

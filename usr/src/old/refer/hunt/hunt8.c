@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt8.c	4.3 (Berkeley) %G%"
+literal|"@(#)hunt8.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -88,7 +94,9 @@ name|sprintf
 argument_list|(
 name|tmp
 argument_list|,
-literal|"/usr/lib/refer/mkey '%s'> '%s.ig'"
+literal|"%s '%s'> '%s.ig'"
+argument_list|,
+name|_PATH_MKEY
 argument_list|,
 name|s
 argument_list|,

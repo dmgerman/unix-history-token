@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue3.c	4.2 (Berkeley) %G%"
+literal|"@(#)glue3.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,12 @@ begin_include
 include|#
 directive|include
 file|"refer..c"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -215,7 +221,7 @@ literal|'/'
 condition|)
 name|chdir
 argument_list|(
-literal|"/usr/lib/refer"
+name|_PATH_LIB
 argument_list|)
 expr_stmt|;
 name|execl

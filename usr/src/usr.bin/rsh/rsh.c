@@ -112,6 +112,12 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -757,14 +763,14 @@ literal|"rlogin"
 expr_stmt|;
 name|execv
 argument_list|(
-literal|"/usr/ucb/rlogin"
+name|_PATH_RLOGIN
 argument_list|,
 name|argv0
 argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"/usr/ucb/rlogin"
+name|_PATH_RLOGIN
 argument_list|)
 expr_stmt|;
 name|exit

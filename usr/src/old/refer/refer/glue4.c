@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)glue4.c	4.2 (Berkeley) %G%"
+literal|"@(#)glue4.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -158,7 +164,9 @@ name|sprintf
 argument_list|(
 name|gfile
 argument_list|,
-literal|"/tmp/rj%dg"
+literal|"%s/rj%dg"
+argument_list|,
+name|_PATH_TMP
 argument_list|,
 name|getpid
 argument_list|()
