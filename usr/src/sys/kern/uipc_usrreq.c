@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.7	83/01/13	*/
+comment|/*	uipc_usrreq.c	1.8	83/03/23	*/
 end_comment
 
 begin_include
@@ -675,7 +675,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
