@@ -507,6 +507,11 @@ operator|=
 operator|*
 name|list
 expr_stmt|;
+name|cnremove
+argument_list|(
+name|cn
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cn
