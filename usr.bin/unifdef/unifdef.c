@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002, 2003 Tony Finch<dot@dotat.at>  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost. It was rewritten to support ANSI C by Tony Finch.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002 - 2005 Tony Finch<dot@dotat.at>.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by Dave Yost.  * It was rewritten to support ANSI C by Tony Finch. The original version of  * unifdef carried the following copyright notice. None of its code remains  * in this version (though some of the names remain).  *  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.160 2003/07/01 15:21:25 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.171 2005/03/08 12:38:48 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -97,7 +97,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *      generate #line directives in place of deleted code  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
+comment|/*  * unifdef - remove ifdef'ed lines  *  *  Wishlist:  *      provide an option which will append the name of the  *        appropriate symbol after #else's and #endif's  *      provide an option which will check symbols after  *        #else's and #endif's to see that they match their  *        corresponding #ifdef or #ifndef  *  *   The first two items above require better buffer handling, which would  *     also make it possible to handle all "dodgy" directives correctly.  */
 end_comment
 
 begin_include
@@ -363,7 +363,13 @@ name|STARTING_COMMENT
 block|,
 comment|/* just after slash-backslash-newline */
 name|FINISHING_COMMENT
+block|,
 comment|/* star-backslash-newline in a C comment */
+name|CHAR_LITERAL
+block|,
+comment|/* inside '' */
+name|STRING_LITERAL
+comment|/* inside "" */
 block|}
 name|Comment_state
 typedef|;
@@ -388,6 +394,10 @@ block|,
 literal|"STARTING"
 block|,
 literal|"FINISHING"
+block|,
+literal|"CHAR"
+block|,
+literal|"STRING"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -537,6 +547,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* -l: blank deleted lines */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|lnnum
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -n: add #line directives */
 end_comment
 
 begin_decl_stmt
@@ -755,6 +776,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* current #if nesting */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|delcount
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* count of deleted lines */
 end_comment
 
 begin_decl_stmt
@@ -986,6 +1018,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|unnest
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|usage
 parameter_list|(
 name|void
@@ -1034,7 +1076,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"i:D:U:I:cdeklst"
+literal|"i:D:U:I:cdeklnst"
 argument_list|)
 operator|)
 operator|!=
@@ -1171,6 +1213,15 @@ name|true
 expr_stmt|;
 break|break;
 case|case
+literal|'n'
+case|:
+comment|/* add #line directive after deleted lines */
+name|lnnum
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'s'
 case|:
 comment|/* only output list of symbols that control #ifs */
@@ -1201,25 +1252,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-if|if
-condition|(
-name|nsyms
-operator|==
-literal|0
-operator|&&
-operator|!
-name|symlist
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"must -D or -U at least one symbol"
-argument_list|)
-expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -1316,7 +1348,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unifdef [-cdeklst]"
+literal|"usage: unifdef [-cdeklnst]"
 literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;
@@ -1585,8 +1617,8 @@ block|{
 name|print
 argument_list|()
 expr_stmt|;
-operator|--
-name|depth
+name|unnest
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1669,8 +1701,8 @@ block|{
 name|drop
 argument_list|()
 expr_stmt|;
-operator|--
-name|depth
+name|unnest
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1761,13 +1793,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|iocccok
 condition|)
-name|Fpass
+name|Eioccc
 argument_list|()
 expr_stmt|;
-else|else
-name|Eioccc
+name|Fpass
 argument_list|()
 expr_stmt|;
 name|ignoreon
@@ -1786,13 +1818,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|iocccok
 condition|)
-name|Fpass
+name|Eioccc
 argument_list|()
 expr_stmt|;
-else|else
-name|Eioccc
+name|Fpass
 argument_list|()
 expr_stmt|;
 block|}
@@ -1808,13 +1840,13 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|iocccok
 condition|)
-name|Pelif
+name|Eioccc
 argument_list|()
 expr_stmt|;
-else|else
-name|Eioccc
+name|Pelif
 argument_list|()
 expr_stmt|;
 block|}
@@ -2490,6 +2522,16 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|depth
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* bug */
 name|ignoring
 index|[
 name|depth
@@ -2592,6 +2634,31 @@ end_function
 begin_function
 specifier|static
 name|void
+name|unnest
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|depth
+operator|==
+literal|0
+condition|)
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* bug */
+name|depth
+operator|-=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|state
 parameter_list|(
 name|Ifstate
@@ -2632,6 +2699,22 @@ name|keep
 operator|^
 name|complement
 condition|)
+block|{
+if|if
+condition|(
+name|lnnum
+operator|&&
+name|delcount
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"#line %d\n"
+argument_list|,
+name|linenum
+argument_list|)
+expr_stmt|;
 name|fputs
 argument_list|(
 name|tline
@@ -2639,6 +2722,11 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
+name|delcount
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -2654,6 +2742,10 @@ argument_list|)
 expr_stmt|;
 name|exitstat
 operator|=
+literal|1
+expr_stmt|;
+name|delcount
+operator|+=
 literal|1
 expr_stmt|;
 block|}
@@ -3841,9 +3933,6 @@ condition|(
 name|sym
 operator|<
 literal|0
-operator|&&
-operator|!
-name|symlist
 condition|)
 return|return
 operator|(
@@ -3926,9 +4015,6 @@ condition|(
 name|sym
 operator|<
 literal|0
-operator|&&
-operator|!
-name|symlist
 condition|)
 return|return
 operator|(
@@ -4343,7 +4429,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip over comments and stop at the next character position that is  * not whitespace. Between calls we keep the comment state in the  * global variable incomment, and we also adjust the global variable  * linestate when we see a newline.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
+comment|/*  * Skip over comments, strings, and character literals and stop at the  * next character position that is not whitespace. Between calls we keep  * the comment state in the global variable incomment, and we also adjust  * the global variable linestate when we see a newline.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
 end_comment
 
 begin_function
@@ -4514,6 +4600,62 @@ name|strncmp
 argument_list|(
 name|cp
 argument_list|,
+literal|"\'"
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|CHAR_LITERAL
+expr_stmt|;
+name|linestate
+operator|=
+name|LS_DIRTY
+expr_stmt|;
+name|cp
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"\""
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|incomment
+operator|=
+name|STRING_LITERAL
+expr_stmt|;
+name|linestate
+operator|=
+name|LS_DIRTY
+expr_stmt|;
+name|cp
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
 literal|"\n"
 argument_list|,
 literal|1
@@ -4583,6 +4725,119 @@ operator|=
 name|LS_START
 expr_stmt|;
 block|}
+name|cp
+operator|+=
+literal|1
+expr_stmt|;
+continue|continue;
+case|case
+name|CHAR_LITERAL
+case|:
+case|case
+name|STRING_LITERAL
+case|:
+if|if
+condition|(
+operator|(
+name|incomment
+operator|==
+name|CHAR_LITERAL
+operator|&&
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'\''
+operator|)
+operator|||
+operator|(
+name|incomment
+operator|==
+name|STRING_LITERAL
+operator|&&
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'\"'
+operator|)
+condition|)
+block|{
+name|incomment
+operator|=
+name|NO_COMMENT
+expr_stmt|;
+name|cp
+operator|+=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cp
+index|[
+literal|0
+index|]
+operator|==
+literal|'\\'
+condition|)
+block|{
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|cp
+operator|+=
+literal|1
+expr_stmt|;
+else|else
+name|cp
+operator|+=
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"\n"
+argument_list|,
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|incomment
+operator|==
+name|CHAR_LITERAL
+condition|)
+name|error
+argument_list|(
+literal|"unterminated char literal"
+argument_list|)
+expr_stmt|;
+else|else
+name|error
+argument_list|(
+literal|"unterminated string literal"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|cp
 operator|+=
 literal|1
@@ -4817,6 +5072,7 @@ if|if
 condition|(
 name|symlist
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%.*s\n"
@@ -4833,6 +5089,13 @@ argument_list|,
 name|str
 argument_list|)
 expr_stmt|;
+comment|/* we don't care about the value of the symbol */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|symind
