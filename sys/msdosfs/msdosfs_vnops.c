@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.81 1999/01/27 22:42:09 dillon Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.82 1999/04/27 11:16:51 phk Exp $ */
 end_comment
 
 begin_comment
@@ -2072,12 +2072,11 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
-operator|->
-name|p_acflag
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
@@ -2285,12 +2284,11 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
-operator|->
-name|p_acflag
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
@@ -2444,12 +2442,11 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
-operator|->
-name|p_acflag
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 operator|)
 operator|&&
@@ -2624,12 +2621,11 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
-operator|->
-name|p_acflag
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: print.c,v 1.33 1998/11/25 09:34:00 dfr Exp $"
+literal|"$Id: print.c,v 1.34 1999/04/06 03:17:57 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1058,6 +1058,18 @@ name|cp
 operator|++
 operator|=
 literal|'+'
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|&
+name|P_JAILED
+condition|)
+operator|*
+name|cp
+operator|++
+operator|=
+literal|'J'
 expr_stmt|;
 operator|*
 name|cp

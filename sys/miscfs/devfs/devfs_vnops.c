@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.70 1999/02/25 16:06:51 bde Exp $  */
+comment|/*  * Copyright 1997,1998 Julian Elischer.  All rights reserved.  * julian@freebsd.org  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  1. Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  2. Redistributions in binary form must reproduce the above copyright notice,  *     this list of conditions and the following disclaimer in the documentation  *     and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER ``AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE HOLDER OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   *	$Id: devfs_vnops.c,v 1.71 1999/04/27 11:16:31 phk Exp $  */
 end_comment
 
 begin_include
@@ -1076,12 +1076,11 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|ap
 operator|->
 name|a_p
-operator|->
-name|p_acflag
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -1727,10 +1726,9 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|p
-operator|->
-name|p_acflag
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1815,10 +1813,9 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|p
-operator|->
-name|p_acflag
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1864,10 +1861,9 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|p
-operator|->
-name|p_acflag
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1954,10 +1950,9 @@ name|suser_xxx
 argument_list|(
 name|cred
 argument_list|,
-operator|&
 name|p
-operator|->
-name|p_acflag
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1980,7 +1975,7 @@ if|#
 directive|if
 literal|0
 comment|/*  	 * Copied from somewhere else 	 * but only kept as a marker and reminder of the fact that 	 * flags should be handled some day 	 */
-block|if (vap->va_flags != VNOVAL) { 		if (error = suser_xxx(cred,&p->p_acflag)) 			return error; 		if (cred->cr_uid == 0) 		; 		else { 		} 	}
+block|if (vap->va_flags != VNOVAL) { 		if (error = suser_xxx(cred, p, 0)) 			return error; 		if (cred->cr_uid == 0) 		; 		else { 		} 	}
 endif|#
 directive|endif
 return|return

@@ -5244,7 +5244,9 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|NULL
+literal|0
+argument_list|,
+name|PRISON_ROOT
 argument_list|)
 condition|)
 name|ip
