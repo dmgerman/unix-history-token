@@ -51,6 +51,12 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libmap.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
