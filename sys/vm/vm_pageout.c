@@ -3866,12 +3866,6 @@ name|void
 name|vm_pageout
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
 name|cnt
 operator|.
@@ -4256,12 +4250,6 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
 while|while
 condition|(
 name|TRUE

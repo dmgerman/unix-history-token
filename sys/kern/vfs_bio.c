@@ -7543,13 +7543,6 @@ name|void
 name|vfs_update
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
-comment|/* XXX redundant?  wrong place? */
 while|while
 condition|(
 literal|1

@@ -1002,9 +1002,6 @@ decl_stmt|;
 name|int
 name|ppri
 decl_stmt|;
-name|spl0
-argument_list|()
-expr_stmt|;
 name|loop
 label|:
 while|while
