@@ -2179,6 +2179,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
+operator|-
 literal|1
 expr_stmt|;
 goto|goto
