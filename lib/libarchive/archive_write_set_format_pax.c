@@ -3028,7 +3028,7 @@ name|char
 modifier|*
 name|msg
 init|=
-literal|"archive_write_header_pax: "
+literal|"archive_write_pax_header: "
 literal|"'x' header failed?!  This can't happen.\n"
 decl_stmt|;
 name|write
