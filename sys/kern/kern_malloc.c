@@ -117,6 +117,12 @@ directive|include
 file|<vm/uma_int.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/uma_dbg.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1599,6 +1605,19 @@ name|name
 argument_list|,
 name|size
 argument_list|,
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|trash_ctor
+argument_list|,
+name|trash_dtor
+argument_list|,
+name|trash_init
+argument_list|,
+name|trash_fini
+argument_list|,
+else|#
+directive|else
 name|NULL
 argument_list|,
 name|NULL
@@ -1607,6 +1626,8 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
+endif|#
+directive|endif
 name|UMA_ALIGN_PTR
 argument_list|,
 name|UMA_ZONE_MALLOC
