@@ -66,7 +66,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|protflags
+name|convert_prot
 parameter_list|(
 name|int
 parameter_list|)
@@ -75,6 +75,20 @@ end_function_decl
 
 begin_comment
 comment|/* Elf flags -> mmap protection */
+end_comment
+
+begin_function_decl
+specifier|static
+name|int
+name|convert_flags
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Elf flags -> mmap flags */
 end_comment
 
 begin_comment
@@ -184,6 +198,9 @@ name|data_addr
 decl_stmt|;
 name|int
 name|data_prot
+decl_stmt|;
+name|int
+name|data_flags
 decl_stmt|;
 name|Elf_Addr
 name|clear_vaddr
@@ -741,7 +758,7 @@ name|base_addr
 argument_list|,
 name|mapsize
 argument_list|,
-name|protflags
+name|convert_prot
 argument_list|(
 name|segs
 index|[
@@ -751,7 +768,15 @@ operator|->
 name|p_flags
 argument_list|)
 argument_list|,
-name|MAP_PRIVATE
+name|convert_flags
+argument_list|(
+name|segs
+index|[
+literal|0
+index|]
+operator|->
+name|p_flags
+argument_list|)
 argument_list|,
 name|fd
 argument_list|,
@@ -888,7 +913,7 @@ operator|)
 expr_stmt|;
 name|data_prot
 operator|=
-name|protflags
+name|convert_prot
 argument_list|(
 name|segs
 index|[
@@ -897,6 +922,20 @@ index|]
 operator|->
 name|p_flags
 argument_list|)
+expr_stmt|;
+name|data_flags
+operator|=
+name|convert_flags
+argument_list|(
+name|segs
+index|[
+name|i
+index|]
+operator|->
+name|p_flags
+argument_list|)
+operator||
+name|MAP_FIXED
 expr_stmt|;
 comment|/* Do not call mmap on the first segment - this is redundant */
 if|if
@@ -913,9 +952,7 @@ name|data_vaddr
 argument_list|,
 name|data_prot
 argument_list|,
-name|MAP_PRIVATE
-operator||
-name|MAP_FIXED
+name|data_flags
 argument_list|,
 name|fd
 argument_list|,
@@ -1536,7 +1573,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|protflags
+name|convert_prot
 parameter_list|(
 name|int
 name|elfflags
@@ -1579,6 +1616,41 @@ name|PROT_EXEC
 expr_stmt|;
 return|return
 name|prot
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|convert_flags
+parameter_list|(
+name|int
+name|elfflags
+parameter_list|)
+block|{
+name|int
+name|flags
+init|=
+name|MAP_PRIVATE
+decl_stmt|;
+comment|/* All mappings are private */
+comment|/*      * Readonly mappings are marked "MAP_NOCORE", because they can be      * reconstructed by a debugger.      */
+if|if
+condition|(
+operator|!
+operator|(
+name|elfflags
+operator|&
+name|PF_W
+operator|)
+condition|)
+name|flags
+operator||=
+name|MAP_NOCORE
+expr_stmt|;
+return|return
+name|flags
 return|;
 block|}
 end_function
