@@ -689,6 +689,8 @@ name|fatal
 argument_list|(
 name|pp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pcaperr
 argument_list|(
 name|cmdstatus
@@ -755,6 +757,8 @@ default|default:
 name|fatal
 argument_list|(
 name|pp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pcaperr
 argument_list|(
@@ -3035,6 +3039,8 @@ name|fatal
 argument_list|(
 name|pp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pcaperr
 argument_list|(
 name|cmdstatus
@@ -3079,6 +3085,8 @@ default|default:
 name|fatal
 argument_list|(
 name|pp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pcaperr
 argument_list|(
@@ -4390,6 +4398,8 @@ default|default:
 name|fatal
 argument_list|(
 name|pp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pcaperr
 argument_list|(

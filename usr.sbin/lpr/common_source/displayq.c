@@ -1360,6 +1360,8 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|head0
 argument_list|)
 expr_stmt|;
@@ -1379,6 +1381,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|head1
 argument_list|)
 expr_stmt|;
@@ -2267,6 +2271,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|etc
 argument_list|)
 expr_stmt|;

@@ -586,6 +586,8 @@ name|fatal
 argument_list|(
 name|pp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|pcaperr
 argument_list|(
 name|status
@@ -631,6 +633,8 @@ condition|)
 name|fatal
 argument_list|(
 name|pp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pcaperr
 argument_list|(

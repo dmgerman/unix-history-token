@@ -363,8 +363,17 @@ name|_usermsg
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printf0like
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -2346,6 +2355,8 @@ condition|)
 name|fatal
 argument_list|(
 name|pp
+argument_list|,
+literal|"%s"
 argument_list|,
 name|pcaperr
 argument_list|(

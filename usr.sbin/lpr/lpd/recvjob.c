@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -242,8 +248,17 @@ name|_msg
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__printf0like
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 specifier|static
@@ -454,7 +469,7 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"%s: %s: %m"
+literal|"%s: chdir(%s): %s"
 argument_list|,
 name|pp
 operator|->
@@ -463,6 +478,11 @@ argument_list|,
 name|pp
 operator|->
 name|spool_dir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -520,7 +540,7 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"%s: %s: %m"
+literal|"%s: stat(%s): %s"
 argument_list|,
 name|pp
 operator|->
@@ -529,6 +549,11 @@ argument_list|,
 name|pp
 operator|->
 name|spool_dir
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|minfree
@@ -936,9 +961,18 @@ literal|0
 condition|)
 name|frecverr
 argument_list|(
-literal|"%s: %m"
+literal|"%s: link(%s): %s"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|tfname
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1207,13 +1241,18 @@ condition|)
 block|{
 name|frecverr
 argument_list|(
-literal|"%s: readfile: error on open(%s): %m"
+literal|"%s: readfile: error on open(%s): %s"
 argument_list|,
 name|pp
 operator|->
 name|printer
 argument_list|,
 name|file
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
