@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.6  */
+comment|/*  * Terminal initialization routines.  *  * %G% (Berkeley) @(#)setterm.c	1.7  */
 end_comment
 
 begin_undef
@@ -661,7 +661,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	This routine gets all the terminal falgs from the termcap database  */
+comment|/*  *	This routine gets all the terminal flags from the termcap database  */
 end_comment
 
 begin_macro
@@ -686,6 +686,12 @@ modifier|*
 modifier|*
 modifier|*
 name|sp
+decl_stmt|;
+name|reg
+name|int
+name|SG
+decl_stmt|,
+name|UG
 decl_stmt|;
 specifier|extern
 name|char
@@ -840,12 +846,35 @@ operator|*
 name|namp
 condition|)
 do|;
+name|SG
+operator|=
+name|tgetnum
+argument_list|(
+literal|"sg"
+argument_list|)
+expr_stmt|;
+name|UG
+operator|=
+name|tgetnum
+argument_list|(
+literal|"ug"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+operator|(
+name|SG
+operator|||
 operator|!
 name|SO
+operator|)
+operator|&&
+operator|(
+operator|!
+name|UG
 operator|&&
 name|US
+operator|)
 condition|)
 block|{
 name|SO
@@ -878,11 +907,11 @@ decl_stmt|;
 block|{
 name|char
 modifier|*
-name|tgetent
+name|tgetstr
 parameter_list|()
 function_decl|;
 return|return
-name|tgetent
+name|tgetstr
 argument_list|(
 name|name
 argument_list|,
