@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.10 1996/02/09 04:36:36 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.11 1996/02/11 22:09:50 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -460,6 +460,23 @@ specifier|static
 name|__inline
 name|void
 name|pipeunlock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|pipe
+operator|*
+name|cpipe
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|__inline
+name|void
+name|pipeselwakeup
 name|__P
 argument_list|(
 operator|(
