@@ -31,12 +31,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"hostctlr.h"
 end_include
 
@@ -85,7 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bsubs.ext"
+file|"../system/bsubs.ext"
 end_include
 
 begin_define
@@ -1393,14 +1387,19 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|c
+comment|/* 		 * Compiler error - msc version 4.0: 		 *			"expression too complicated". 		 */
+name|i
 operator|=
-name|FieldAttributes
-argument_list|(
 name|WhereAttrByte
 argument_list|(
 name|BufferAddress
 argument_list|)
+expr_stmt|;
+name|c
+operator|=
+name|FieldAttributes
+argument_list|(
+name|i
 argument_list|)
 expr_stmt|;
 for|for
