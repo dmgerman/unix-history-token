@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.7 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -901,13 +901,9 @@ name|fcp
 operator|->
 name|rfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -960,13 +956,9 @@ name|fcp
 operator|->
 name|rfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1041,13 +1033,9 @@ name|fcp
 operator|->
 name|rfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 operator|+
 name|i
 operator|+
@@ -1149,13 +1137,9 @@ name|fcp
 operator|->
 name|wfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1212,13 +1196,9 @@ name|fcp
 operator|->
 name|wfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1281,13 +1261,9 @@ name|fcp
 operator|->
 name|rfdes
 argument_list|,
-operator|(
-name|long
-operator|)
-name|dbtob
-argument_list|(
 name|blk
-argument_list|)
+operator|*
+name|dev_bsize
 operator|+
 name|i
 operator|+
