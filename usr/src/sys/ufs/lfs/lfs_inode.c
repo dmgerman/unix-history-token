@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_inode.c	6.7	84/07/04	*/
+comment|/*	lfs_inode.c	6.8	84/07/15	*/
 end_comment
 
 begin_include
@@ -780,6 +780,17 @@ return|;
 block|}
 if|if
 condition|(
+name|ip
+operator|->
+name|i_count
+condition|)
+name|panic
+argument_list|(
+literal|"free inode isn't"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|iq
 operator|=
 name|ip
@@ -822,18 +833,6 @@ argument_list|,
 name|ih
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|QUOTA
-name|dqrele
-argument_list|(
-name|ip
-operator|->
-name|i_dquot
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_dev
@@ -907,6 +906,18 @@ name|i_lastr
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QUOTA
+name|dqrele
+argument_list|(
+name|ip
+operator|->
+name|i_dquot
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|bp
 operator|=
 name|bread
