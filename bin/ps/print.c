@@ -4432,7 +4432,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"mac_prepare_process_label"
 argument_list|)
@@ -4569,7 +4569,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"mac_prepare_process_label"
 argument_list|)

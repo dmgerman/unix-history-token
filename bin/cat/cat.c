@@ -1365,9 +1365,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"cat"
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1386,9 +1386,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|perror
+name|warn
 argument_list|(
-literal|"cat"
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
