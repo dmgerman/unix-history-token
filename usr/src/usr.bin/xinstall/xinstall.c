@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xinstall.c	5.8 (Berkeley) %G%"
+literal|"@(#)xinstall.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -391,10 +391,14 @@ condition|(
 operator|!
 name|no_target
 operator|&&
+operator|(
 name|to_sb
 operator|.
 name|st_mode
 operator|&
+name|S_IFMT
+operator|)
+operator|==
 name|S_IFDIR
 condition|)
 block|{
@@ -471,14 +475,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|to_sb
 operator|.
 name|st_mode
 operator|&
-name|S_IFREG
+name|S_IFMT
 operator|)
+operator|!=
+name|S_IFREG
 condition|)
 block|{
 name|fprintf
@@ -691,14 +696,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 operator|(
 name|from_sb
 operator|.
 name|st_mode
 operator|&
-name|S_IFREG
+name|S_IFMT
 operator|)
+operator|!=
+name|S_IFREG
 condition|)
 block|{
 name|fprintf
