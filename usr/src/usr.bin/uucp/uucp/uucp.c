@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucp.c	5.7	(Berkeley) %G%"
+literal|"@(#)uucp.c	5.8	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +157,6 @@ name|MAXBASENAME
 operator|+
 literal|1
 index|]
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

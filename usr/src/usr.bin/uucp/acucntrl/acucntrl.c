@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.13	(Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.14	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|off_t
 name|utmploc
 decl_stmt|;
@@ -446,6 +462,13 @@ name|off_t
 name|ttyslnbeg
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|off_t
+name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -512,10 +535,6 @@ name|uid
 decl_stmt|,
 name|gid
 decl_stmt|;
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
 name|struct
 name|passwd
 modifier|*
@@ -527,16 +546,6 @@ modifier|*
 name|rindex
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
 comment|/* check input arguments */
 if|if
 condition|(

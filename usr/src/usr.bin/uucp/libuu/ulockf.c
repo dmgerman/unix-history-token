@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ulockf.c	5.6	(Berkeley) %G%"
+literal|"@(#)ulockf.c	5.7	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,13 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*LINTLIBRARY*/
 end_comment
@@ -147,10 +154,6 @@ name|pid
 init|=
 operator|-
 literal|1
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 if|if
 condition|(

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.13	(Berkeley) %G%"
+literal|"@(#)conn.c	5.14	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1082,6 +1082,13 @@ begin_comment
 comment|/*  *	connect to remote machine  *  *	return codes:  *>0  -  file number - ok  *		FAIL  -  failed  */
 end_comment
 
+begin_function_decl
+name|int
+name|nulldev
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 name|getto
 argument_list|(
@@ -1104,12 +1111,9 @@ modifier|*
 name|cd
 decl_stmt|;
 name|int
-name|nulldev
-argument_list|()
-decl_stmt|,
 name|diropn
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|line
