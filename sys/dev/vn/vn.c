@@ -220,7 +220,7 @@ value|8192
 end_define
 
 begin_comment
-comment|/*  * cdevsw  *	D_DISK		we want to look like a disk  *	( D_NOCLUSTERRW	 removed - clustering should be ok )  *	D_CANFREE	We support B_FREEBUF  */
+comment|/*  * cdevsw  *	D_DISK		we want to look like a disk  *	D_CANFREE	We support B_FREEBUF  */
 end_comment
 
 begin_decl_stmt

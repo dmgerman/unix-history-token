@@ -667,35 +667,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_NOCLUSTERR
-value|0x10000
-end_define
-
-begin_comment
-comment|/* disables cluter read */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_NOCLUSTERW
-value|0x20000
-end_define
-
-begin_comment
-comment|/* disables cluster write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_NOCLUSTERRW
-value|(D_NOCLUSTERR | D_NOCLUSTERW)
-end_define
-
-begin_define
-define|#
-directive|define
 name|D_CANFREE
 value|0x40000
 end_define
