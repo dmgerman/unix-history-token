@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.3 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +715,14 @@ argument_list|(
 name|SIGQUIT
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 name|fd
