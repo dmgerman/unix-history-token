@@ -652,6 +652,15 @@ parameter_list|)
 value|if (ipsecstat.f || sflag<= 1) \     printf(m, (unsigned long long)ipsecstat.f, plural(ipsecstat.f))
 define|#
 directive|define
+name|pes
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (ipsecstat.f || sflag<= 1) \     printf(m, (unsigned long long)ipsecstat.f, plurales(ipsecstat.f))
+define|#
+directive|define
 name|hist
 parameter_list|(
 name|f
@@ -842,9 +851,26 @@ argument_list|,
 literal|"IPComp output"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|spdcachelookup
+argument_list|,
+literal|"\t%llu SPD cache lookup%s\n"
+argument_list|)
+expr_stmt|;
+name|pes
+argument_list|(
+name|spdcachemiss
+argument_list|,
+literal|"\t%llu SPD cache miss%s\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
+undef|#
+directive|undef
+name|pes
 undef|#
 directive|undef
 name|hist
