@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.3 1993/08/27 02:10:18 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys/kern/init_main.c,v 1.4 1993/09/10 05:53:10 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -310,7 +310,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n%s  [1.%s]\n"
+literal|"\n%s  [1.0.%s]\n"
 argument_list|,
 name|bsd_version
 argument_list|,
