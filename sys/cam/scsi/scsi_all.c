@@ -11901,6 +11901,12 @@ name|opcode
 operator|=
 name|REQUEST_SENSE
 expr_stmt|;
+name|scsi_cmd
+operator|->
+name|length
+operator|=
+name|dxfer_len
+expr_stmt|;
 block|}
 end_function
 
