@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkbad.c	4.2	81/05/09	*/
+comment|/*	dkbad.c	4.3	81/05/10	*/
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 end_ifndef
 
 begin_include
@@ -28,7 +28,7 @@ file|"../h/dkbad.h"
 end_include
 
 begin_comment
-comment|/*  * Search the bad block table looking for  * the specified block.  Return index if found.  * Return -1 if not found.  */
+comment|/*  * Search the bad sector table looking for  * the specified sector.  Return index if found.  * Return -1 if not found.  */
 end_comment
 
 begin_expr_stmt
@@ -62,25 +62,6 @@ name|blk
 decl_stmt|,
 name|bblk
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|BADMAGIC
-if|if
-condition|(
-name|bt
-operator|->
-name|bt_magic
-operator|!=
-name|BADMAGIC
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-endif|#
-directive|endif
 name|blk
 operator|=
 operator|(

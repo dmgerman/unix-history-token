@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.34	81/05/09	*/
+comment|/*	rk.c	4.35	81/05/10	*/
 end_comment
 
 begin_include
@@ -433,7 +433,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 end_ifndef
 
 begin_decl_stmt
@@ -1415,7 +1415,7 @@ block|{
 comment|/* SHOULD WARN SYSTEM THAT THIS HAPPENED */
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 name|struct
 name|rkst
 modifier|*
@@ -1467,7 +1467,7 @@ literal|1
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 name|bbp
 operator|->
 name|b_flags
@@ -2439,7 +2439,7 @@ operator|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|bp
@@ -2619,7 +2619,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|rkecc
@@ -3447,7 +3447,7 @@ name|sn
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|flag
@@ -3777,7 +3777,7 @@ break|break;
 block|}
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 case|case
 name|BSE
 case|:

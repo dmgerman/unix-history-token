@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.37	81/05/09	*/
+comment|/*	hp.c	4.38	81/05/10	*/
 end_comment
 
 begin_ifdef
@@ -201,7 +201,7 @@ literal|0
 block|,
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 literal|291302
 block|,
 literal|118
@@ -255,7 +255,7 @@ literal|0
 block|,
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 literal|82016
 block|,
 literal|310
@@ -307,7 +307,7 @@ block|,
 comment|/* E=cyl 589 thru 680 */
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 literal|86572
 block|,
 literal|681
@@ -709,7 +709,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 end_ifndef
 
 begin_decl_stmt
@@ -1181,7 +1181,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 name|struct
 name|buf
 modifier|*
@@ -1261,7 +1261,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 name|bbp
 operator|->
 name|b_flags
@@ -1713,7 +1713,7 @@ literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|bp
@@ -2025,7 +2025,7 @@ condition|)
 block|{
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|hpecc
@@ -2668,7 +2668,7 @@ expr_stmt|;
 comment|/* sxt */
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 if|if
 condition|(
 name|flag
@@ -2991,7 +2991,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NOBADBLOCK
+name|NOBADSECT
 case|case
 name|BSE
 case|:
