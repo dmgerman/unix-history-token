@@ -467,16 +467,6 @@ end_expr_stmt
 begin_expr_stmt
 name|ASSYM
 argument_list|(
-name|TDF_ASTPENDING
-argument_list|,
-name|TDF_ASTPENDING
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
 name|P_MD
 argument_list|,
 name|offsetof

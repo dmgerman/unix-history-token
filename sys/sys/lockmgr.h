@@ -65,12 +65,10 @@ name|int
 name|lk_timo
 decl_stmt|;
 comment|/* maximum sleep time (for tsleep) */
-name|struct
-name|thread
-modifier|*
+name|pid_t
 name|lk_lockholder
 decl_stmt|;
-comment|/* thread of exclusive lock holder */
+comment|/* pid of exclusive lock holder */
 name|struct
 name|lock
 modifier|*
@@ -93,9 +91,7 @@ decl_stmt|;
 name|int
 name|lk_lineno
 decl_stmt|;
-name|struct
-name|thread
-modifier|*
+name|pid_t
 name|lk_slockholder
 decl_stmt|;
 specifier|const
@@ -427,14 +423,14 @@ begin_define
 define|#
 directive|define
 name|LK_KERNPROC
-value|((struct thread *)-2)
+value|((pid_t) -2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|LK_NOPROC
-value|((struct thread *)-1)
+value|((pid_t) -1)
 end_define
 
 begin_ifdef

@@ -223,6 +223,8 @@ expr_stmt|;
 name|statclock_process
 argument_list|(
 name|curthread
+operator|->
+name|td_kse
 argument_list|,
 name|CLKF_PC
 argument_list|(

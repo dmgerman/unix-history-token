@@ -755,9 +755,9 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|kse_upcall
+name|kse
 modifier|*
-name|ku
+name|ke
 parameter_list|)
 block|{
 return|return;

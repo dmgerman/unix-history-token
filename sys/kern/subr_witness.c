@@ -1203,7 +1203,7 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"kse zombie lock"
+literal|"zombie_thread_lock"
 block|,
 operator|&
 name|lock_class_mtx_spin

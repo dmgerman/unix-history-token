@@ -1607,9 +1607,9 @@ name|void
 name|statclock_process
 parameter_list|(
 name|struct
-name|thread
+name|kse
 modifier|*
-name|td
+name|ke
 parameter_list|,
 name|register_t
 name|pc

@@ -1373,6 +1373,10 @@ operator|.
 name|lk_lockholder
 operator|==
 name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 condition|)
 name|td
 operator|->
