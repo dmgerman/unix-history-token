@@ -1285,21 +1285,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|object
-operator|->
-name|ref_count
-operator|!=
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"vm_object_terminate: object with references, ref_count=%d"
-argument_list|,
 name|object
 operator|->
 name|ref_count
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_object_terminate: object with references, ref_count=%d"
+operator|,
+name|object
+operator|->
+name|ref_count
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now free any remaining pages. For internal objects, this also 	 * removes them from paging queues. Don't free wired pages, just 	 * remove them from the object.  	 */
@@ -1325,12 +1325,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|!
 name|p
 operator|->
 name|busy
-operator|||
+operator|&&
 operator|(
 name|p
 operator|->
@@ -1338,12 +1339,23 @@ name|flags
 operator|&
 name|PG_BUSY
 operator|)
-condition|)
-name|panic
-argument_list|(
-literal|"vm_object_terminate: freeing busy page %p\n"
+operator|==
+literal|0
 argument_list|,
+operator|(
+literal|"vm_object_terminate: freeing busy page %p "
+literal|"p->busy = %d, p->flags %x\n"
+operator|,
 name|p
+operator|,
+name|p
+operator|->
+name|busy
+operator|,
+name|p
+operator|->
+name|flags
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3022,9 +3034,6 @@ operator|)
 condition|)
 return|return;
 comment|/* 	 * Allocate a new object with the given length 	 */
-if|if
-condition|(
-operator|(
 name|result
 operator|=
 name|vm_object_allocate
@@ -3033,13 +3042,16 @@ name|OBJT_DEFAULT
 argument_list|,
 name|length
 argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|panic
+expr_stmt|;
+name|KASSERT
 argument_list|(
+name|result
+operator|!=
+name|NULL
+argument_list|,
+operator|(
 literal|"vm_object_shadow: no object for shadowing"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The new object shadows the source object, adding a reference to it. 	 * Our caller changes his reference to point to the new object, 	 * removing a reference to the source object.  Net result: no change 	 * of reference count. 	 * 	 * Try to optimize the result object's page color when shadowing 	 * in order to maintain page coloring consistency in the combined  	 * shadowed object. 	 */
