@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.32 (Berkeley) %G%"
+literal|"@(#)main.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3833,6 +3833,12 @@ name|bool
 name|invalidaddr
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|crackaddr
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|Verbose
@@ -3879,16 +3885,50 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|buf
 index|[
 literal|0
 index|]
-operator|==
-literal|'#'
 condition|)
+block|{
+case|case
+literal|'#'
+case|:
 continue|continue;
+ifdef|#
+directive|ifdef
+name|MAYBENEXTRELEASE
+case|case
+literal|'C'
+case|:
+comment|/* try crackaddr */
+name|q
+operator|=
+name|crackaddr
+argument_list|(
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
+name|q
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+continue|continue;
+endif|#
+directive|endif
+block|}
 for|for
 control|(
 name|p
@@ -3967,6 +4007,8 @@ argument_list|(
 name|p
 operator|+
 literal|1
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;
