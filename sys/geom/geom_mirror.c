@@ -769,10 +769,7 @@ block|}
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+do|do
 block|{
 name|sectorsize
 operator|=
@@ -979,8 +976,12 @@ expr_stmt|;
 name|g_topology_unlock
 argument_list|()
 expr_stmt|;
-break|break;
 block|}
+do|while
+condition|(
+literal|0
+condition|)
+do|;
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
