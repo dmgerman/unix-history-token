@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	8.1 (Berkeley) %G%"
+literal|"@(#)set.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1222,6 +1222,10 @@ condition|(
 name|isreset
 condition|)
 block|{
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 if|if
 condition|(
 name|tgetstr
@@ -1259,6 +1263,10 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 if|if
 condition|(
 name|tgetstr
