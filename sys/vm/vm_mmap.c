@@ -4300,15 +4300,6 @@ goto|;
 block|}
 comment|/* 		 * Force device mappings to be shared. 		 */
 name|flags
-operator|&=
-operator|~
-operator|(
-name|MAP_PRIVATE
-operator||
-name|MAP_COPY
-operator|)
-expr_stmt|;
-name|flags
 operator||=
 name|MAP_SHARED
 expr_stmt|;
