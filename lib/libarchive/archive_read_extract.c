@@ -228,7 +228,7 @@ name|default_dir_mode
 decl_stmt|;
 name|struct
 name|archive_string
-name|mkdirpath
+name|create_parent_dir
 decl_stmt|;
 name|struct
 name|fixup_entry
@@ -477,7 +477,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|mkdirpath
+name|create_parent_dir
 parameter_list|(
 name|struct
 name|archive
@@ -496,7 +496,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|mkdirpath_internal
+name|create_parent_dir_internal
 parameter_list|(
 name|struct
 name|archive
@@ -514,7 +514,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|mkdirpath_recursive
+name|create_parent_dir_recursive
 parameter_list|(
 name|struct
 name|archive
@@ -1316,7 +1316,7 @@ argument_list|(
 operator|&
 name|extract
 operator|->
-name|mkdirpath
+name|create_parent_dir
 argument_list|)
 expr_stmt|;
 name|free
@@ -1918,7 +1918,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|mkdirpath
+name|create_parent_dir
 argument_list|(
 name|a
 argument_list|,
@@ -2068,7 +2068,7 @@ operator|&
 operator|(
 name|extract
 operator|->
-name|mkdirpath
+name|create_parent_dir
 operator|)
 argument_list|,
 name|archive_entry_pathname
@@ -2081,7 +2081,7 @@ name|path
 operator|=
 name|extract
 operator|->
-name|mkdirpath
+name|create_parent_dir
 operator|.
 name|s
 expr_stmt|;
@@ -2300,7 +2300,7 @@ block|{
 comment|/* Doesn't already exist; try building the parent path. */
 if|if
 condition|(
-name|mkdirpath_internal
+name|create_parent_dir_internal
 argument_list|(
 name|a
 argument_list|,
@@ -2471,7 +2471,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mkdirpath
+name|create_parent_dir
 parameter_list|(
 name|struct
 name|archive
@@ -2492,6 +2492,9 @@ name|extract
 modifier|*
 name|extract
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
 name|extract
 operator|=
 name|a
@@ -2505,39 +2508,43 @@ operator|&
 operator|(
 name|extract
 operator|->
-name|mkdirpath
+name|create_parent_dir
 operator|)
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|mkdirpath_internal
+name|r
+operator|=
+name|create_parent_dir_internal
 argument_list|(
 name|a
 argument_list|,
 name|extract
 operator|->
-name|mkdirpath
+name|create_parent_dir
 operator|.
 name|s
 argument_list|,
 name|flags
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|r
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Handle remaining setup for mkdirpath_recursive(), assuming  * path is already in mutable storage.  */
+comment|/*  * Handle remaining setup for create_parent_dir_recursive(), assuming  * path is already in mutable storage.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|mkdirpath_internal
+name|create_parent_dir_internal
 parameter_list|(
 name|struct
 name|archive
@@ -2598,7 +2605,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|mkdirpath_recursive
+name|create_parent_dir_recursive
 argument_list|(
 name|a
 argument_list|,
@@ -2632,7 +2639,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mkdirpath_recursive
+name|create_parent_dir_recursive
 parameter_list|(
 name|struct
 name|archive
@@ -2781,7 +2788,7 @@ literal|'\0'
 expr_stmt|;
 name|r
 operator|=
-name|mkdirpath_recursive
+name|create_parent_dir_recursive
 argument_list|(
 name|a
 argument_list|,
@@ -2933,7 +2940,7 @@ literal|'\0'
 expr_stmt|;
 name|r
 operator|=
-name|mkdirpath_recursive
+name|create_parent_dir_recursive
 argument_list|(
 name|a
 argument_list|,
@@ -3140,7 +3147,7 @@ literal|0
 condition|)
 block|{
 comment|/* Might be a non-existent parent dir; try fixing that. */
-name|mkdirpath
+name|create_parent_dir
 argument_list|(
 name|a
 argument_list|,
@@ -3300,7 +3307,7 @@ literal|0
 condition|)
 block|{
 comment|/* Might be a non-existent parent dir; try fixing that. */
-name|mkdirpath
+name|create_parent_dir
 argument_list|(
 name|a
 argument_list|,
@@ -3453,7 +3460,7 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|mkdirpath
+name|create_parent_dir
 argument_list|(
 name|a
 argument_list|,
@@ -3715,7 +3722,7 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|mkdirpath
+name|create_parent_dir
 argument_list|(
 name|a
 argument_list|,
