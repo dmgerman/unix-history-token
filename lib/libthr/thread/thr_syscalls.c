@@ -246,7 +246,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|pid_t
-name|_wait4
+name|__sys_wait4
 parameter_list|(
 name|pid_t
 parameter_list|,
@@ -338,7 +338,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__close
+name|_close
 argument_list|,
 name|close
 argument_list|)
@@ -347,7 +347,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__close
+name|_close
 parameter_list|(
 name|int
 name|fd
@@ -378,7 +378,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|___creat
+name|_creat
 argument_list|,
 name|creat
 argument_list|)
@@ -387,7 +387,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|___creat
+name|_creat
 parameter_list|(
 specifier|const
 name|char
@@ -425,7 +425,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__fcntl
+name|_fcntl
 argument_list|,
 name|fcntl
 argument_list|)
@@ -434,7 +434,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__fcntl
+name|_fcntl
 parameter_list|(
 name|int
 name|fd
@@ -544,7 +544,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__fsync
+name|_fsync
 argument_list|,
 name|fsync
 argument_list|)
@@ -553,7 +553,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__fsync
+name|_fsync
 parameter_list|(
 name|int
 name|fd
@@ -584,7 +584,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__msync
+name|_msync
 argument_list|,
 name|msync
 argument_list|)
@@ -593,7 +593,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__msync
+name|_msync
 parameter_list|(
 name|void
 modifier|*
@@ -685,7 +685,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__open
+name|_open
 argument_list|,
 name|open
 argument_list|)
@@ -694,7 +694,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__open
+name|_open
 parameter_list|(
 specifier|const
 name|char
@@ -775,7 +775,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__poll
+name|_poll
 argument_list|,
 name|poll
 argument_list|)
@@ -784,7 +784,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__poll
+name|_poll
 parameter_list|(
 name|struct
 name|pollfd
@@ -927,7 +927,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__read
+name|_read
 argument_list|,
 name|read
 argument_list|)
@@ -936,7 +936,7 @@ end_expr_stmt
 
 begin_function
 name|ssize_t
-name|__read
+name|_read
 parameter_list|(
 name|int
 name|fd
@@ -978,7 +978,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__readv
+name|_readv
 argument_list|,
 name|readv
 argument_list|)
@@ -987,7 +987,7 @@ end_expr_stmt
 
 begin_function
 name|ssize_t
-name|__readv
+name|_readv
 parameter_list|(
 name|int
 name|fd
@@ -1031,7 +1031,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__select
+name|_select
 argument_list|,
 name|select
 argument_list|)
@@ -1040,7 +1040,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|__select
+name|_select
 parameter_list|(
 name|int
 name|numfds
@@ -1262,7 +1262,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__wait4
+name|_wait4
 argument_list|,
 name|wait4
 argument_list|)
@@ -1271,7 +1271,7 @@ end_expr_stmt
 
 begin_function
 name|pid_t
-name|__wait4
+name|_wait4
 parameter_list|(
 name|pid_t
 name|pid
@@ -1297,7 +1297,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|_wait4
+name|__sys_wait4
 argument_list|(
 name|pid
 argument_list|,
@@ -1371,7 +1371,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__write
+name|_write
 argument_list|,
 name|write
 argument_list|)
@@ -1380,7 +1380,7 @@ end_expr_stmt
 
 begin_function
 name|ssize_t
-name|__write
+name|_write
 parameter_list|(
 name|int
 name|fd
@@ -1423,7 +1423,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|__writev
+name|_writev
 argument_list|,
 name|writev
 argument_list|)
@@ -1432,7 +1432,7 @@ end_expr_stmt
 
 begin_function
 name|ssize_t
-name|__writev
+name|_writev
 parameter_list|(
 name|int
 name|fd
