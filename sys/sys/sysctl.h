@@ -1867,6 +1867,17 @@ begin_comment
 comment|/* get/set arguments/proctitle */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_PROC
+value|8
+end_define
+
+begin_comment
+comment|/* only return procs */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
