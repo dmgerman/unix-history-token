@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.25 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.26 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.25 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.26 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3658,6 +3658,8 @@ operator|=
 name|id
 expr_stmt|;
 name|GrabTo
+operator|=
+name|UseErrorsTo
 operator|=
 name|FALSE
 expr_stmt|;
