@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.61 1998/02/24 14:13:16 ache Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.62 1998/02/26 06:45:46 msmith Exp $ */
 end_comment
 
 begin_comment
@@ -8234,14 +8234,9 @@ name|pcbmap
 argument_list|(
 name|dep
 argument_list|,
-name|de_bn2cn
-argument_list|(
-name|pmp
-argument_list|,
 name|ap
 operator|->
 name|a_bn
-argument_list|)
 argument_list|,
 name|ap
 operator|->
@@ -8342,16 +8337,9 @@ name|pcbmap
 argument_list|(
 name|dep
 argument_list|,
-name|de_bn2cn
-argument_list|(
-name|dep
-operator|->
-name|de_pmp
-argument_list|,
 name|bp
 operator|->
 name|b_lblkno
-argument_list|)
 argument_list|,
 operator|&
 name|bp
