@@ -638,9 +638,6 @@ argument_list|(
 name|child
 argument_list|)
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pci_child_location_str_method
 argument_list|(
 name|cbdev

@@ -3370,10 +3370,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Location hint for devctl(8)  */
+comment|/* Location hint for devctl(8) */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|acpi_child_location_str_method
 parameter_list|(
@@ -3442,10 +3443,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PnP information for devctl(8)  */
+comment|/* PnP information for devctl(8) */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|acpi_child_pnpinfo_str_method
 parameter_list|(
@@ -3463,6 +3465,19 @@ name|size_t
 name|buflen
 parameter_list|)
 block|{
+name|ACPI_BUFFER
+name|adbuf
+init|=
+block|{
+name|ACPI_ALLOCATE_BUFFER
+block|,
+name|NULL
+block|}
+decl_stmt|;
+name|ACPI_DEVICE_INFO
+modifier|*
+name|adinfo
+decl_stmt|;
 name|struct
 name|acpi_device
 modifier|*
@@ -3472,19 +3487,6 @@ name|device_get_ivars
 argument_list|(
 name|child
 argument_list|)
-decl_stmt|;
-name|ACPI_DEVICE_INFO
-modifier|*
-name|adinfo
-decl_stmt|;
-name|ACPI_BUFFER
-name|adbuf
-init|=
-block|{
-name|ACPI_ALLOCATE_BUFFER
-block|,
-name|NULL
-block|}
 decl_stmt|;
 name|char
 modifier|*
@@ -3554,7 +3556,6 @@ else|:
 literal|"UNKNOWN"
 argument_list|,
 operator|(
-operator|(
 name|adinfo
 operator|->
 name|Valid
@@ -3577,7 +3578,6 @@ literal|10
 argument_list|)
 else|:
 literal|0
-operator|)
 argument_list|)
 expr_stmt|;
 if|if
