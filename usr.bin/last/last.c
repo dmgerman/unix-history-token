@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,6 +37,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
@@ -295,6 +297,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|file
@@ -367,6 +370,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|time_t
+name|dateconv
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|hostconv
 name|__P
@@ -406,19 +422,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|time_t
-name|dateconv
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|want
 name|__P
@@ -427,6 +430,18 @@ operator|(
 expr|struct
 name|utmp
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -839,6 +854,7 @@ name|bytes
 decl_stmt|,
 name|wfd
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|crmsg
@@ -1691,8 +1707,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"  (%8lu)\n"
+literal|"  (%8ld)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|delta
 argument_list|)
 expr_stmt|;
@@ -1748,6 +1767,9 @@ name|printf
 argument_list|(
 literal|" (%ld+%s)\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|delta
 operator|/
 literal|86400
@@ -1805,7 +1827,7 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-literal|"\nwtmp begins %c\n"
+literal|"\nwtmp begins %+\n"
 argument_list|,
 name|tm
 argument_list|)
