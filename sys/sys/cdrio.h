@@ -300,6 +300,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CDR_MAX_SPEED
+value|0xffff
+end_define
+
+begin_define
+define|#
+directive|define
 name|CDRIOCGETBLOCKSIZE
 value|_IOR('c', 109, int)
 end_define
