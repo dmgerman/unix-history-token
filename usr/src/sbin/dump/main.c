@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.17 (Berkeley) %G%"
+literal|"@(#)main.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,10 @@ modifier|*
 name|arg
 decl_stmt|;
 name|int
+name|bflag
+init|=
+literal|0
+decl_stmt|,
 name|i
 decl_stmt|;
 name|float
@@ -328,6 +332,19 @@ argument_list|)
 operator|/
 literal|10
 expr_stmt|;
+if|if
+condition|(
+name|density
+operator|>=
+literal|625
+operator|&&
+operator|!
+name|bflag
+condition|)
+name|ntrec
+operator|=
+name|HIGHDENSITYTREC
+expr_stmt|;
 block|}
 break|break;
 case|case
@@ -379,6 +396,9 @@ operator|++
 expr_stmt|;
 name|argc
 operator|--
+expr_stmt|;
+name|bflag
+operator|++
 expr_stmt|;
 name|ntrec
 operator|=
