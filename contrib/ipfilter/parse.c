@@ -463,36 +463,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|void
-name|initparse
-parameter_list|()
-block|{
-name|gethostname
-argument_list|(
-name|thishost
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|thishost
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|thishost
-index|[
-sizeof|sizeof
-argument_list|(
-name|thishost
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/* parse()  *  * parse a line read from the input filter rule file  */
 end_comment

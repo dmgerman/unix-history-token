@@ -364,20 +364,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_short
-name|ipf_ftp_atoi
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|frentry_t
 name|natfr
