@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 name|char
+specifier|const
 name|copyright
 index|[]
 init|=
@@ -33,13 +34,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.4 (Berkeley) 3/1/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.4 (Berkeley) 3/1/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +100,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -146,12 +166,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<err.h>
 end_include
 
 begin_include
@@ -1016,15 +1030,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 specifier|register
 name|struct
 name|protoent
@@ -1038,11 +1043,6 @@ modifier|*
 name|tp
 decl_stmt|;
 comment|/* for printing cblocks& stats */
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -1063,36 +1063,6 @@ index|[
 name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|(
-name|cp
-operator|=
-name|rindex
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-condition|)
-name|prog
-operator|=
-name|cp
-operator|+
-literal|1
-expr_stmt|;
-else|else
-name|prog
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|af
 operator|=
 name|AF_UNSPEC
@@ -2543,45 +2513,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-Aan] [-f address_family] [-M core] [-N system]\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: netstat [-Aan] [-f address_family] [-M core] [-N system]"
 argument_list|,
-literal|"       %s [-bdghimnrs] [-f address_family] [-M core] [-N system]\n"
+literal|"       netstat [-bdghimnrs] [-f address_family] [-M core] [-N system]"
 argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
+literal|"       netstat [-bdn] [-I interface] [-M core] [-N system] [-w wait]"
 argument_list|,
-literal|"       %s [-bdn] [-I interface] [-M core] [-N system] [-w wait]\n"
-argument_list|,
-name|prog
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       %s [-M core] [-N system] [-p protocol]\n"
-argument_list|,
-name|prog
+literal|"       netstat [-M core] [-N system] [-p protocol]"
 argument_list|)
 expr_stmt|;
 name|exit

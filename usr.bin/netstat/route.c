@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.26 1997/05/10 10:03:43 jhay Exp $"
+literal|"$Id: route.c,v 1.27 1997/05/25 08:36:20 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3191,9 +3191,6 @@ specifier|register
 name|u_long
 name|i
 decl_stmt|;
-name|int
-name|subnetshift
-decl_stmt|;
 name|i
 operator|=
 name|ntohl
@@ -3594,20 +3591,6 @@ decl_stmt|;
 block|{
 name|u_short
 name|port
-decl_stmt|;
-name|struct
-name|netent
-modifier|*
-name|np
-init|=
-literal|0
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|servent
@@ -4053,11 +4036,6 @@ decl_stmt|;
 name|struct
 name|ipx_addr
 name|in
-decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
 decl_stmt|;
 name|work
 operator|=
