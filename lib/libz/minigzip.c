@@ -8,7 +8,7 @@ comment|/*  * minigzip is a minimal implementation of the gzip utility. This is 
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* @(#) $Id: minigzip.c,v 1.1.1.3 1999/01/10 09:46:57 peter Exp $ */
 end_comment
 
 begin_include
@@ -207,6 +207,38 @@ name|file
 parameter_list|)
 value|file->__file
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MWERKS__
+argument_list|)
+operator|&&
+name|__dest_os
+operator|!=
+name|__be_os
+operator|&&
+name|__dest_os
+operator|!=
+name|__win32_os
+end_if
+
+begin_include
+include|#
+directive|include
+file|<unix.h>
+end_include
+
+begin_comment
+comment|/* for fileno */
+end_comment
 
 begin_endif
 endif|#
