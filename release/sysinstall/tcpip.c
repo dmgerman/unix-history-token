@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tcpip.c,v 1.48.2.11 1997/02/13 00:32:02 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * $Id: tcpip.c,v 1.48.2.12 1997/02/14 21:24:26 jkh Exp $  *  * Copyright (c) 1995  *      Gary J Palmer. All rights reserved.  * Copyright (c) 1996  *      Jordan K. Hubbard. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS  * OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR  * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -1585,6 +1585,14 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|Device
+modifier|*
+name|NetDev
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1635,7 +1643,7 @@ argument_list|)
 operator|!=
 name|DITEM_FAILURE
 condition|)
-name|mediaDevice
+name|NetDev
 operator|=
 name|devs
 index|[
@@ -1643,7 +1651,7 @@ literal|0
 index|]
 expr_stmt|;
 else|else
-name|devs
+name|NetDev
 operator|=
 name|NULL
 expr_stmt|;
@@ -1663,7 +1671,8 @@ comment|/* Get a network device */
 end_comment
 
 begin_function
-name|Boolean
+name|Device
+modifier|*
 name|tcpDeviceSelect
 parameter_list|(
 name|void
@@ -1677,12 +1686,12 @@ name|Device
 modifier|*
 modifier|*
 name|devs
+decl_stmt|,
+modifier|*
+name|rval
 decl_stmt|;
 name|int
 name|cnt
-decl_stmt|;
-name|int
-name|status
 decl_stmt|;
 name|devs
 operator|=
@@ -1711,9 +1720,9 @@ argument_list|(
 literal|"No network devices available!"
 argument_list|)
 expr_stmt|;
-name|status
+name|rval
 operator|=
-name|FALSE
+name|NULL
 expr_stmt|;
 block|}
 elseif|else
@@ -1740,18 +1749,14 @@ name|DITEM_FAILURE
 argument_list|)
 condition|)
 return|return
-name|FALSE
+name|NULL
 return|;
-name|mediaDevice
+name|rval
 operator|=
 name|devs
 index|[
 literal|0
 index|]
-expr_stmt|;
-name|status
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 else|else
@@ -1794,9 +1799,13 @@ argument_list|(
 name|menu
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+name|NetDev
+expr_stmt|;
 block|}
 return|return
-name|status
+name|rval
 return|;
 block|}
 end_function
@@ -1814,11 +1823,47 @@ modifier|*
 name|self
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
+name|Device
+modifier|*
+name|tmp
+decl_stmt|;
+name|tmp
+operator|=
 name|tcpDeviceSelect
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Would you like to bring the %s interface up right now?"
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
+condition|)
+if|if
+condition|(
+operator|!
+name|tmp
+operator|->
+name|init
+argument_list|(
+name|tmp
+argument_list|)
+condition|)
+name|msgConfirm
+argument_list|(
+literal|"Initialization of %s device failed."
+argument_list|,
+name|tmp
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 return|return
 name|DITEM_SUCCESS
