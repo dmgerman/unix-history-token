@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	6.8	84/11/14	*/
+comment|/*	tcp_input.c	6.9	85/02/12	*/
 end_comment
 
 begin_include
@@ -2789,6 +2789,18 @@ comment|/* XXX */
 comment|/* 	 * Process the segment text, merging it into the TCP sequencing queue, 	 * and arranging for acknowledgment of receipt if necessary. 	 * This process logically involves adjusting tp->rcv_wnd as data 	 * is presented to the user (this happens in tcp_usrreq.c, 	 * case PRU_RCVD).  If a FIN has already been received on this 	 * connection then we just ignore the text. 	 */
 if|if
 condition|(
+operator|(
+name|ti
+operator|->
+name|ti_len
+operator|||
+operator|(
+name|tiflags
+operator|&
+name|TH_FIN
+operator|)
+operator|)
+operator|&&
 name|TCPS_HAVERCVDFIN
 argument_list|(
 name|tp
@@ -2799,18 +2811,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|ti
-operator|->
-name|ti_len
-operator|||
-operator|(
-name|tiflags
-operator|&
-name|TH_FIN
-operator|)
-condition|)
 name|tiflags
 operator|=
 name|tcp_reass
@@ -2818,12 +2818,6 @@ argument_list|(
 name|tp
 argument_list|,
 name|ti
-argument_list|)
-expr_stmt|;
-else|else
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 if|if
