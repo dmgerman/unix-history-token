@@ -934,7 +934,7 @@ name|tte_data
 operator|=
 name|data
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|m
@@ -947,12 +947,6 @@ name|tp
 argument_list|,
 name|tte_link
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|tte_pmap
-operator|=
-name|pm
 expr_stmt|;
 return|return
 operator|(

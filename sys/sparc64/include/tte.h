@@ -434,7 +434,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|((tp)->tte_pmap)
+value|(((tp)->tte_data& TD_P) != 0 ? \ 	 (kernel_pmap) : \ 	 (PHYS_TO_VM_PAGE(pmap_kextract((vm_offset_t)(tp)))->md.pmap))
 end_define
 
 begin_define
@@ -445,7 +445,7 @@ parameter_list|(
 name|tp
 parameter_list|)
 define|\
-value|bzero(tp, sizeof(*tp))
+value|__builtin_memset(tp, 0, sizeof(*tp))
 end_define
 
 begin_struct_decl
@@ -464,17 +464,12 @@ decl_stmt|;
 name|u_long
 name|tte_data
 decl_stmt|;
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|tte
 argument_list|)
 name|tte_link
 expr_stmt|;
-name|struct
-name|pmap
-modifier|*
-name|tte_pmap
-decl_stmt|;
 block|}
 struct|;
 end_struct
