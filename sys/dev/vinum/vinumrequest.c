@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.26 1999/12/30 07:38:33 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright) 1997, 1998, 1999  *  Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumrequest.c,v 1.26 1999/12/30 07:38:33 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -506,7 +506,7 @@ parameter_list|(
 name|struct
 name|bio
 modifier|*
-name|bip
+name|biop
 parameter_list|)
 block|{
 name|struct
@@ -519,7 +519,7 @@ expr|struct
 name|buf
 operator|*
 operator|)
-name|bip
+name|biop
 decl_stmt|;
 name|int
 name|volno
@@ -567,7 +567,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -617,7 +619,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -646,7 +650,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* have nothing to do with this */
 return|return;
 block|}
 comment|/* FALLTHROUGH */
@@ -764,7 +767,9 @@ expr_stmt|;
 comment|/* invalid size */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -812,7 +817,9 @@ expr_stmt|;
 comment|/* can't get memory */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -950,11 +957,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|vol
-operator|->
-name|reads
-operator|++
-expr_stmt|;
 name|plexno
 operator|=
 name|vol
@@ -1085,7 +1087,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1124,12 +1128,6 @@ name|vol
 operator|!=
 name|NULL
 condition|)
-block|{
-name|vol
-operator|->
-name|writes
-operator|++
-expr_stmt|;
 name|status
 operator|=
 name|build_write_request
@@ -1138,7 +1136,6 @@ name|rq
 argument_list|)
 expr_stmt|;
 comment|/* Not all the subdisks are up */
-block|}
 else|else
 block|{
 comment|/* plex I/O */
@@ -1219,7 +1216,9 @@ expr_stmt|;
 comment|/* I/O error */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -1281,9 +1280,6 @@ name|int
 name|reviveok
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|rqgroup
 modifier|*
@@ -1572,12 +1568,8 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * With the division of labour below (first count the requests, then      * issue them), it's possible that we don't need this splbio()      * protection.  But I'll try that some other time.      */
-name|s
-operator|=
-name|splbio
-argument_list|()
-expr_stmt|;
+comment|/*      * We used to have an splbio() here anyway, out      * of superstition.  With the division of labour      * below (first count the requests, then issue      * them), it looks as if we don't need this      * splbio() protection.  In fact, as dillon      * points out, there's a race condition      * incrementing and decrementing rq->active and      * rqg->active.  This splbio() didn't help      * there, because the device strategy routine      * can sleep.  Solve this by putting shorter      * duration locks on the code.      */
+comment|/*      * This loop happens without any participation      * of the bottom half, so it requires no      * protection.      */
 for|for
 control|(
 name|rqg
@@ -1663,7 +1655,7 @@ operator|++
 expr_stmt|;
 comment|/* one more active request group */
 block|}
-comment|/* Now fire off the requests */
+comment|/*      * Now fire off the requests.  In this loop the      * bottom half could be completing requests      * before we finish, so we need splbio() protection.      */
 for|for
 control|(
 name|rqg
@@ -1826,8 +1818,8 @@ name|vinum_conf
 operator|.
 name|active
 expr_stmt|;
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|VINUMDEBUG
 if|if
 condition|(
@@ -1945,11 +1937,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2161,7 +2148,9 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2391,7 +2380,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2545,7 +2536,9 @@ block|{
 comment|/* malloc failed */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -2846,7 +2839,9 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -3534,11 +3529,15 @@ operator|)
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator|=
 name|ubp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator|&
 name|BIO_ORDERED
 expr_stmt|;
@@ -3584,7 +3583,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* subdisk is accessible, */
 name|bp
 operator|->
@@ -3600,7 +3598,6 @@ operator|.
 name|dev
 expr_stmt|;
 comment|/* drive device */
-block|}
 name|bp
 operator|->
 name|b_blkno
@@ -3822,7 +3819,9 @@ decl_stmt|;
 comment|/* user buffer */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -3978,27 +3977,6 @@ name|bp
 operator|->
 name|b_iocmd
 operator|==
-name|BIO_READ
-condition|)
-comment|/* reading, */
-name|set_sd_state
-argument_list|(
-name|sd
-operator|->
-name|sdno
-argument_list|,
-name|sd_crashed
-argument_list|,
-name|setstate_force
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|bp
-operator|->
-name|b_iocmd
-operator|==
 name|BIO_WRITE
 condition|)
 comment|/* writing, */
@@ -4013,10 +3991,24 @@ argument_list|,
 name|setstate_force
 argument_list|)
 expr_stmt|;
+else|else
+name|set_sd_state
+argument_list|(
+name|sd
+operator|->
+name|sdno
+argument_list|,
+name|sd_crashed
+argument_list|,
+name|setstate_force
+argument_list|)
+expr_stmt|;
 block|}
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -4046,7 +4038,9 @@ block|{
 comment|/* nothing to talk to, */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -4089,7 +4083,9 @@ condition|)
 block|{
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -4595,7 +4591,9 @@ expr_stmt|;
 comment|/* read-only */
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -4682,7 +4680,9 @@ name|EINVAL
 expr_stmt|;
 name|bp
 operator|->
-name|b_ioflags
+name|b_io
+operator|.
+name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
@@ -4974,6 +4974,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
