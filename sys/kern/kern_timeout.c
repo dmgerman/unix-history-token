@@ -719,7 +719,7 @@ block|}
 end_block
 
 begin_function
-name|void
+name|int
 name|callout_stop
 parameter_list|(
 name|c
@@ -763,7 +763,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|c
 operator|->
@@ -847,6 +851,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
