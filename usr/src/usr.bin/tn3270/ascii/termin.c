@@ -656,7 +656,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Flush current input */
-continue|continue;
+break|break;
 block|}
 if|if
 condition|(
