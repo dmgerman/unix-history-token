@@ -103,8 +103,7 @@ name|p_stops
 operator||=
 operator|*
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|*
 operator|)
 name|data
@@ -120,8 +119,7 @@ operator|&=
 operator|~
 operator|*
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|*
 operator|)
 name|data
@@ -134,8 +132,7 @@ name|flags
 operator|=
 operator|*
 operator|(
-name|unsigned
-name|int
+name|uintptr_t
 operator|*
 operator|)
 name|data
@@ -310,7 +307,7 @@ name|sig
 operator|=
 operator|*
 operator|(
-name|int
+name|uintptr_t
 operator|*
 operator|)
 name|data
