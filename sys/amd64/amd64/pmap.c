@@ -2515,6 +2515,14 @@ decl_stmt|;
 name|u_int
 name|other_cpus
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SWTCH_OPTIM_STATS
+name|tlb_flush_count
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -12615,17 +12623,6 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SWTCH_OPTIM_STATS
-argument_list|)
-name|tlb_flush_count
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|cr3
 operator|=
 name|vtophys
@@ -12680,6 +12677,14 @@ argument_list|(
 name|cr3
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SWTCH_OPTIM_STATS
+name|tlb_flush_count
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

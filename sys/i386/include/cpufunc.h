@@ -37,7 +37,7 @@ name|thread
 struct_decl|;
 end_struct_decl
 
-begin_decl_stmt
+begin_function
 name|__BEGIN_DECLS
 define|#
 directive|define
@@ -90,25 +90,6 @@ value|(*(volatile u_int32_t *) (va) = (d))
 ifdef|#
 directive|ifdef
 name|__GNUC__
-ifdef|#
-directive|ifdef
-name|SWTCH_OPTIM_STATS
-specifier|extern
-name|int
-name|tlb_flush_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
 specifier|static
 name|__inline
 name|void
@@ -1024,17 +1005,6 @@ name|data
 parameter_list|)
 block|{
 asm|__asm __volatile("movl %0,%%cr3" : : "r" (data) : "memory");
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SWTCH_OPTIM_STATS
-argument_list|)
-operator|++
-name|tlb_flush_count
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
