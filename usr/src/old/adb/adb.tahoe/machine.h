@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machine.h	1.1	86/02/25	*/
+comment|/*	machine.h	1.2	87/06/25	*/
 end_comment
 
 begin_include
@@ -97,13 +97,6 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(((int)(x)&0xf0000000) == 0xc0000000)
-end_define
-
-begin_define
-define|#
-directive|define
-name|KERNBASE
-value|0xc0000000
 end_define
 
 begin_define
