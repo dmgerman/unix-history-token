@@ -7629,12 +7629,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|vm_object_reference
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|vm_object_lock
+name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
@@ -7660,12 +7655,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|vm_object_unlock
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-name|vm_object_deallocate
+name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
 argument_list|)
