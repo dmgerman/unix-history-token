@@ -1020,7 +1020,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level conole is initialized, this routine  * may be called more than once!!  */
+comment|/*   * The back door to the keyboard driver!  * This function is called by the console driver, via the kbdio module,  * to tickle keyboard drivers when the low-level console is being initialized.  * Almost nothing in the kernel has been initialied yet.  Try to probe  * keyboards if possible.  * NOTE: because of the way the low-level console is initialized, this routine  * may be called more than once!!  */
 end_comment
 
 begin_function
