@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Gre
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.4 1994/11/15 14:54:13 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.5 1994/11/16 02:45:36 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
@@ -19,12 +19,23 @@ begin_comment
 comment|/* The SCSI ID of the host adapter/computer */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AIC_SCSI_HOSTID
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|AIC_SCSI_HOSTID
 value|7
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Use doubleword transfers to/from SCSI chip.  Note: This requires   * motherboard support.  Basicly, some motherboard chipsets are able to  * split a 32 bit I/O operation into two 16 bit I/O operations,  * transparently to the processor.  This speeds up some things, notably long  * data transfers.  */
