@@ -2779,7 +2779,7 @@ name|cpi
 operator|->
 name|max_lun
 operator|=
-name|AHD_NUM_LUNS
+name|AHD_NUM_LUNS_NONPKT
 operator|-
 literal|1
 expr_stmt|;
