@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.36 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1585,17 +1585,17 @@ literal|'0'
 argument_list|)
 expr_stmt|;
 comment|/* the string or number proper */
+name|n
+operator|=
+name|size
+expr_stmt|;
 if|if
 condition|(
 name|fp
 operator|->
 name|_cnt
 operator|-
-operator|(
 name|n
-operator|=
-name|size
-operator|)
 operator|>=
 literal|0
 operator|&&
