@@ -403,6 +403,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
+end_ifdef
+
 begin_decl_stmt
 name|Static
 name|void
@@ -419,6 +425,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|Static
@@ -3541,6 +3552,9 @@ name|AUE_ENDPT_RX
 index|]
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
 if|if
 condition|(
 name|sc
@@ -3562,6 +3576,8 @@ name|AUE_ENDPT_INTR
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s
@@ -4029,6 +4045,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
+end_ifdef
+
 begin_function
 name|Static
 name|void
@@ -4222,6 +4244,11 @@ expr_stmt|;
 return|return;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|Static
@@ -4812,6 +4839,15 @@ operator|&
 name|err
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|->
+name|aue_mbuf
+operator|!=
+name|NULL
+condition|)
+block|{
 name|c
 operator|->
 name|aue_mbuf
@@ -4835,6 +4871,7 @@ name|aue_mbuf
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|err
@@ -5536,6 +5573,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
 name|sc
 operator|->
 name|aue_cdata
@@ -5551,6 +5591,8 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Load the multicast filter. */
 name|aue_setmulti
 argument_list|(
@@ -5697,6 +5739,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
 name|err
 operator|=
 name|usbd_open_pipe_intr
@@ -5763,6 +5808,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 comment|/* Start up the receive pipe. */
 for|for
 control|(
@@ -6352,6 +6399,14 @@ name|aue_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|struct
+name|aue_chain
+modifier|*
+name|c
+decl_stmt|;
+name|usbd_status
+name|stat
+decl_stmt|;
 name|sc
 operator|=
 name|ifp
@@ -6372,9 +6427,43 @@ operator|->
 name|aue_unit
 argument_list|)
 expr_stmt|;
-name|aue_init
-argument_list|(
+name|c
+operator|=
+operator|&
 name|sc
+operator|->
+name|aue_cdata
+operator|.
+name|aue_tx_chain
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|usbd_get_xfer_status
+argument_list|(
+name|c
+operator|->
+name|aue_xfer
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|stat
+argument_list|)
+expr_stmt|;
+name|aue_txeof
+argument_list|(
+name|c
+operator|->
+name|aue_xfer
+argument_list|,
+name|c
+argument_list|,
+name|stat
 argument_list|)
 expr_stmt|;
 if|if
@@ -6646,6 +6735,9 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
 if|if
 condition|(
 name|sc
@@ -6732,6 +6824,8 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* Free RX resources. */
 for|for
 control|(
@@ -7032,6 +7126,9 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|AUE_INTR_PIPE
 name|free
 argument_list|(
 name|sc
@@ -7051,6 +7148,8 @@ name|aue_ibuf
 operator|=
 name|NULL
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|aue_link
