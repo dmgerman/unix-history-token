@@ -1020,15 +1020,6 @@ goto|goto
 name|out
 goto|;
 block|}
-ifndef|#
-directive|ifndef
-name|INTR_ENTROPY
-define|#
-directive|define
-name|INTR_ENTROPY
-value|0
-endif|#
-directive|endif
 if|if
 condition|(
 name|bus_setup_intr
@@ -1079,6 +1070,8 @@ name|aac_irq
 argument_list|,
 name|INTR_MPSAFE
 operator||
+name|INTR_ENTROPY
+argument_list|,
 name|INTR_TYPE_BIO
 argument_list|,
 name|aac_intr
