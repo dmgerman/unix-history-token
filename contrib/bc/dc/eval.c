@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * evaluate the dc language, from a FILE* or a string  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * evaluate the dc language, from a FILE* or a string  *  * Copyright (C) 1994, 1997, 1998, 2000 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to:  *   The Free Software Foundation, Inc.  *   59 Temple Place, Suite 330  *   Boston, MA 02111 USA  */
 end_comment
 
 begin_comment
@@ -585,7 +585,7 @@ break|break;
 case|case
 literal|'|'
 case|:
-comment|/* Consider the top three elements of the stack as (base, exp, mod), 		 * where mod is top-of-stack, exp is next-to-top, and base is 		 * second-from-top.  Mod must be non-zero and exp must be a 		 * non-negative integer.   Push the result of raising base to the exp 		 * power, reduced modulo mod.  If we had base in register b, exp in 		 * register e, and mod in register m then this is conceptually 		 * equivalent to "lble^lm%", but it is implemented in a more efficient 		 * manner, and can handle arbritrarily large values for exp. 		 */
+comment|/* Consider the top three elements of the stack as (base, exp, mod), 		 * where mod is top-of-stack, exp is next-to-top, and base is 		 * second-from-top. Mod must be non-zero, exp must be non-negative, 		 * and all three must be integers. Push the result of raising 		 * base to the exp power, reduced modulo mod. If we had base in 		 * register b, exp in register e, and mod in register m then this 		 * is conceptually equivalent to "lble^lm%", but it is implemented 		 * in a more efficient manner, and can handle arbritrarily large 		 * values for exp. 		 */
 name|dc_triop
 argument_list|(
 name|dc_modexp
@@ -2578,7 +2578,7 @@ operator|!=
 name|DC_TRUE
 condition|)
 return|return
-name|DC_FAIL
+name|DC_SUCCESS
 return|;
 name|fprintf
 argument_list|(
