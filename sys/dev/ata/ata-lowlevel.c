@@ -1575,8 +1575,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-else|else
-block|{
 comment|/* output data and return waiting for new interrupt */
 name|ata_pio_write
 argument_list|(
@@ -1588,7 +1586,6 @@ name|transfersize
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
 block|}
 comment|/* if data read command, return& wait for interrupt */
 elseif|else
