@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)init_main.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -568,34 +568,6 @@ name|u_ngroups
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|QUOTA
-argument_list|)
-name|qtinit
-argument_list|()
-expr_stmt|;
-name|p
-operator|->
-name|p_quota
-operator|=
-name|u
-operator|.
-name|u_quota
-operator|=
-name|getquota
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|Q_NDQ
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|startrtclock
 argument_list|()
 expr_stmt|;
