@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: vasprintf.c,v 1.1 1996/05/27 10:49:43 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,6 +107,27 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|static
+name|int
+name|writehook
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|cookie
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -122,6 +143,7 @@ name|void
 modifier|*
 name|cookie
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -195,6 +217,9 @@ name|h
 operator|->
 name|base
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|h
 operator|->
 name|size
@@ -235,6 +260,9 @@ name|left
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -435,6 +463,10 @@ name|h
 operator|.
 name|base
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|h
 operator|.
 name|size
@@ -444,6 +476,7 @@ operator|.
 name|left
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

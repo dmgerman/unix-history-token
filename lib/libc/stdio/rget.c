@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)rget.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rget.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,23 +56,37 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
+begin_function_decl
+name|int
+name|__srefill
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Handle getc() when the buffer ran out:  * Refill, then return the first character  * in the newly-filled buffer.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|__srget
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
 name|FILE
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -92,7 +119,7 @@ name|EOF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)findfp.c	8.2 (Berkeley) 1/4/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)findfp.c	8.2 (Berkeley) 1/4/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +214,21 @@ literal|3
 block|,
 name|__sF
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|glue
+modifier|*
+name|moreglue
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

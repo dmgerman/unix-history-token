@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)stdio.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)stdio.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,6 +121,9 @@ name|_file
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -214,6 +230,9 @@ name|_file
 argument_list|,
 name|buf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 operator|)
@@ -274,7 +293,7 @@ condition|(
 name|ret
 operator|==
 operator|-
-literal|1L
+literal|1
 condition|)
 name|fp
 operator|->

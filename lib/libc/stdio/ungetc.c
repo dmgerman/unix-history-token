@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)ungetc.c	8.2 (Berkeley) 11/3/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)ungetc.c	8.2 (Berkeley) 11/3/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,6 +96,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|int
+name|__submore
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Expand the ungetc buffer `in place'.  That is, adjust fp->_p when  * the buffer moves, so that it points the same distance from the end,  * and move the bytes in the buffer around as necessary so that they  * are all at the end (stack-style).  */
@@ -232,9 +259,14 @@ name|_ub
 operator|.
 name|_base
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|i
 operator|<<
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

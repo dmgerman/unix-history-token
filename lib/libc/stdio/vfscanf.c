@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)vfscanf.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)vfscanf.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -330,7 +343,13 @@ specifier|static
 name|u_char
 modifier|*
 name|__sccl
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1309,6 +1328,9 @@ literal|0
 condition|)
 name|width
 operator|=
+operator|(
+name|size_t
+operator|)
 operator|~
 literal|0
 expr_stmt|;
@@ -1508,6 +1530,9 @@ literal|0
 condition|)
 name|width
 operator|=
+operator|(
+name|size_t
+operator|)
 operator|~
 literal|0
 expr_stmt|;

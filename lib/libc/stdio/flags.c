@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)flags.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)flags.c	8.1 (Berkeley) 6/4/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +74,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"local.h"
+end_include
+
 begin_comment
 comment|/*  * Return the (stdio) flags for a given mode.  Store the flags  * to be passed to an open() syscall through *optr.  * Return 0 on error.  */
 end_comment
@@ -74,6 +93,7 @@ parameter_list|,
 name|optr
 parameter_list|)
 specifier|register
+specifier|const
 name|char
 modifier|*
 name|mode
