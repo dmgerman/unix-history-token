@@ -81,6 +81,10 @@ decl_stmt|;
 name|short
 name|cur_len
 decl_stmt|;
+name|caddr_t
+name|bpf
+decl_stmt|;
+comment|/* BPF  "magic cookie"		 */
 name|u_short
 name|vx_connectors
 decl_stmt|;
