@@ -2155,23 +2155,17 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|pfs_null
-parameter_list|(
-name|void
-modifier|*
-name|va
-parameter_list|)
-block|{
-return|return
-operator|(
+begin_if
+if|#
+directive|if
 literal|0
-operator|)
-return|;
-block|}
-end_function
+end_if
+
+begin_endif
+unit|static int pfs_null(void *va)		{ return (0); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Vnode operations  */
