@@ -374,6 +374,23 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_locks
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"userret: Returning with %d locks held."
+operator|,
+name|td
+operator|->
+name|td_locks
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
