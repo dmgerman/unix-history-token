@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.13 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,6 +145,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<nlist.h>
 end_include
 
@@ -195,6 +201,13 @@ block|}
 block|,
 literal|""
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|kvm_t
+modifier|*
+name|kd
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +264,12 @@ name|memf
 decl_stmt|,
 modifier|*
 name|nlistf
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+literal|80
+index|]
 decl_stmt|;
 name|interval
 operator|=
@@ -393,6 +412,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|kd
+operator|=
 name|kvm_openfiles
 argument_list|(
 name|nlistf
@@ -400,20 +422,23 @@ argument_list|,
 name|memf
 argument_list|,
 name|NULL
+argument_list|,
+name|O_RDONLY
+argument_list|,
+name|errbuf
 argument_list|)
+operator|)
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsstate: kvm_openfiles: %s\n"
+literal|"nfsstat: kvm_openfiles: %s\n"
 argument_list|,
-name|kvm_geterr
-argument_list|()
+name|errbuf
 argument_list|)
 expr_stmt|;
 name|exit
@@ -426,6 +451,8 @@ if|if
 condition|(
 name|kvm_nlist
 argument_list|(
+name|kd
+argument_list|,
 name|nl
 argument_list|)
 operator|!=
@@ -436,7 +463,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"nfsstate: kvm_nlist: can't get names\n"
+literal|"nfsstat: kvm_nlist: can't get names\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -490,7 +517,7 @@ name|intpr
 parameter_list|(
 name|nfsstataddr
 parameter_list|)
-name|off_t
+name|u_long
 name|nfsstataddr
 decl_stmt|;
 block|{
@@ -498,11 +525,14 @@ name|struct
 name|nfsstats
 name|nfsstats
 decl_stmt|;
+if|if
+condition|(
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 operator|(
-name|void
-operator|*
+name|u_long
 operator|)
 name|nfsstataddr
 argument_list|,
@@ -519,7 +549,23 @@ expr|struct
 name|nfsstats
 argument_list|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"nfsstat: kvm_read failed\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"Client Info:\n"
@@ -1255,7 +1301,7 @@ parameter_list|)
 name|u_int
 name|interval
 decl_stmt|;
-name|off_t
+name|u_long
 name|off
 decl_stmt|;
 block|{
@@ -1334,12 +1380,12 @@ operator|=
 literal|20
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|off
 argument_list|,
 operator|(
@@ -1352,7 +1398,23 @@ argument_list|,
 sizeof|sizeof
 name|nfsstats
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"nfsstat: kvm_read failed\n"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"Client: %8d %8d %8d %8d %8d %8d %8d %8d\n"
