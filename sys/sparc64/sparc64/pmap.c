@@ -8230,6 +8230,16 @@ operator|)
 operator|)
 operator|!=
 literal|0
+operator|||
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_WRITEABLE
+operator|)
+operator|==
+literal|0
 condition|)
 return|return;
 name|STAILQ_FOREACH
@@ -8327,6 +8337,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|vm_page_flag_clear
+argument_list|(
+name|m
+argument_list|,
+name|PG_WRITEABLE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
