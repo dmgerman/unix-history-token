@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mtree.c	5.9 (Berkeley) %G%"
+literal|"@(#)mtree.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,8 @@ operator||=
 name|parsekey
 argument_list|(
 name|p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -351,6 +353,8 @@ operator||=
 name|parsekey
 argument_list|(
 name|p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

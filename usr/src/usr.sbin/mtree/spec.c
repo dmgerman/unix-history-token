@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.16 (Berkeley) %G%"
+literal|"@(#)spec.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -726,6 +726,9 @@ name|mode_t
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|value
+decl_stmt|;
 name|char
 modifier|*
 name|ep
@@ -756,10 +759,15 @@ operator|=
 name|parsekey
 argument_list|(
 name|kw
+argument_list|,
+operator|&
+name|value
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|value
+operator|&&
 operator|(
 name|val
 operator|=
@@ -1299,6 +1307,8 @@ operator|~
 name|parsekey
 argument_list|(
 name|p
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
