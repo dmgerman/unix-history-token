@@ -1531,7 +1531,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|((sc->sc_debug& m) || \ 	    (sc->sc_if.if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
+value|((sc->sc_debug& (m)) || \ 	    (sc->sc_if.if_flags& (IFF_DEBUG|IFF_LINK2)) == (IFF_DEBUG|IFF_LINK2))
 end_define
 
 begin_define
@@ -1547,7 +1547,7 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do {				\ 	if (sc->sc_debug& m)					\ 		printf(fmt, __VA_ARGS__);			\ } while (0)
+value|do {				\ 	if (sc->sc_debug& (m))					\ 		printf(fmt, __VA_ARGS__);			\ } while (0)
 end_define
 
 begin_define
