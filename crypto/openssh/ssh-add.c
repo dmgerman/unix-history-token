@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-add.c,v 1.61 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: ssh-add.c,v 1.63 2002/09/19 15:51:23 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1175,8 +1175,9 @@ name|p1
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+operator|(
+name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1308,7 +1309,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  -x          Unlock agent.\n"
+literal|"  -X          Unlock agent.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

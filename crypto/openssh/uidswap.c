@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: uidswap.c,v 1.22 2002/05/28 21:24:00 stevesk Exp $"
+literal|"$OpenBSD: uidswap.c,v 1.23 2002/07/15 17:15:31 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -167,7 +167,7 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"temporarily_use_uid: %u/%u (e=%u)"
+literal|"temporarily_use_uid: %u/%u (e=%u/%u)"
 argument_list|,
 operator|(
 name|u_int
@@ -187,6 +187,11 @@ operator|(
 name|u_int
 operator|)
 name|saved_euid
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|saved_egid
 argument_list|)
 expr_stmt|;
 if|if
@@ -471,18 +476,20 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|debug
-argument_list|(
-literal|"restore_uid"
-argument_list|)
-expr_stmt|;
 comment|/* it's a no-op unless privileged */
 if|if
 condition|(
 operator|!
 name|privileged
 condition|)
+block|{
+name|debug
+argument_list|(
+literal|"restore_uid: (unprivileged)"
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -496,6 +503,21 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SAVED_IDS_WORK_WITH_SETEUID
+name|debug
+argument_list|(
+literal|"restore_uid: %u/%u"
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|saved_euid
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|saved_egid
+argument_list|)
+expr_stmt|;
 comment|/* Set the effective uid back to the saved privileged uid. */
 if|if
 condition|(
@@ -613,6 +635,25 @@ condition|)
 name|fatal
 argument_list|(
 literal|"permanently_set_uid: temporarily_use_uid effective"
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"permanently_set_uid: %u/%u"
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|pw
+operator|->
+name|pw_uid
+argument_list|,
+operator|(
+name|u_int
+operator|)
+name|pw
+operator|->
+name|pw_gid
 argument_list|)
 expr_stmt|;
 if|if

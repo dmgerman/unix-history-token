@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$OpenBSD: mktemp.c,v 1.14 2002/01/02 20:18:32 deraadt Exp $"
+literal|"$OpenBSD: mktemp.c,v 1.16 2002/05/27 18:20:45 millert Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -336,6 +336,10 @@ argument_list|()
 expr_stmt|;
 while|while
 condition|(
+name|trv
+operator|>=
+name|path
+operator|&&
 operator|*
 name|trv
 operator|==
@@ -365,6 +369,10 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+name|trv
+operator|>=
+name|path
+operator|&&
 operator|*
 name|trv
 operator|==

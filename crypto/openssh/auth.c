@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth.c,v 1.43 2002/05/17 14:27:55 millert Exp $"
+literal|"$OpenBSD: auth.c,v 1.45 2002/09/20 18:41:29 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1088,6 +1088,43 @@ argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_AIXAUTHENTICATE
+if|if
+condition|(
+name|authenticated
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"password"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|loginfailed
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|,
+name|get_canonical_hostname
+argument_list|(
+name|options
+operator|.
+name|verify_reverse_mapping
+argument_list|)
+argument_list|,
+literal|"ssh"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* WITH_AIXAUTHENTICATE */
 block|}
 end_function
 
@@ -1674,7 +1711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a given file for security. This is defined as all components  * of the path to the file must either be owned by either the owner of  * of the file or root and no directories must be group or world writable.  *  * XXX Should any specific check be done for sym links ?  *  * Takes an open file descriptor, the file name, a uid and and  * error buffer plus max size as arguments.  *  * Returns 0 on success and -1 on failure  */
+comment|/*  * Check a given file for security. This is defined as all components  * of the path to the file must be owned by either the owner of  * of the file or root and no directories must be group or world writable.  *  * XXX Should any specific check be done for sym links ?  *  * Takes an open file descriptor, the file name, a uid and and  * error buffer plus max size as arguments.  *  * Returns 0 on success and -1 on failure  */
 end_comment
 
 begin_function
@@ -2066,7 +2103,26 @@ condition|(
 name|pw
 operator|==
 name|NULL
-operator|||
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"Illegal user %.100s from %.100s"
+argument_list|,
+name|user
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|allowed_user
 argument_list|(

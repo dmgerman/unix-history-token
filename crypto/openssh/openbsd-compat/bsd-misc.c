@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: bsd-misc.c,v 1.8 2002/06/13 21:34:58 mouring Exp $"
+literal|"$Id: bsd-misc.c,v 1.10 2002/07/08 21:09:41 mouring Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -366,7 +366,10 @@ operator|.
 name|actime
 operator|=
 name|tvp
-operator|->
+index|[
+literal|0
+index|]
+operator|.
 name|tv_sec
 expr_stmt|;
 name|ub
@@ -374,8 +377,11 @@ operator|.
 name|modtime
 operator|=
 name|tvp
-operator|->
-name|tv_usec
+index|[
+literal|1
+index|]
+operator|.
+name|tv_sec
 expr_stmt|;
 return|return
 operator|(

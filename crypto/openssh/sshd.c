@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshd.c,v 1.251 2002/06/25 18:51:04 markus Exp $"
+literal|"$OpenBSD: sshd.c,v 1.260 2002/09/27 10:42:09 mickey Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1038,14 +1038,10 @@ name|sig
 parameter_list|)
 block|{
 comment|/* XXX no idea how fix this signal handler */
-comment|/* Close the connection. */
-name|packet_close
-argument_list|()
-expr_stmt|;
 comment|/* Log error and exit. */
 name|fatal
 argument_list|(
-literal|"Timeout before authentication for %s."
+literal|"Timeout before authentication for %s"
 argument_list|,
 name|get_remote_ipaddr
 argument_list|()
@@ -1067,7 +1063,7 @@ name|void
 parameter_list|)
 block|{
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -1146,7 +1142,7 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -1158,11 +1154,11 @@ index|[
 name|i
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;
@@ -1601,6 +1597,27 @@ if|if
 condition|(
 name|datafellows
 operator|&
+name|SSH_BUG_PROBE
+condition|)
+block|{
+name|log
+argument_list|(
+literal|"probed from %s with %s.  Don't panic."
+argument_list|,
+name|get_remote_ipaddr
+argument_list|()
+argument_list|,
+name|client_version_string
+argument_list|)
+expr_stmt|;
+name|fatal_cleanup
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|datafellows
+operator|&
 name|SSH_BUG_SCANNER
 condition|)
 block|{
@@ -2029,7 +2046,7 @@ name|void
 parameter_list|)
 block|{
 name|u_int32_t
-name|rand
+name|rnd
 index|[
 literal|256
 index|]
@@ -2037,7 +2054,7 @@ decl_stmt|;
 name|gid_t
 name|gidset
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -2065,7 +2082,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|rand
+name|rnd
 index|[
 name|i
 index|]
@@ -2075,11 +2092,11 @@ argument_list|()
 expr_stmt|;
 name|RAND_seed
 argument_list|(
-name|rand
+name|rnd
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|rand
+name|rnd
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2126,7 +2143,7 @@ expr_stmt|;
 name|endpwent
 argument_list|()
 expr_stmt|;
-comment|/* Change our root directory*/
+comment|/* Change our root directory */
 if|if
 condition|(
 name|chroot
@@ -2318,6 +2335,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|fatal_remove_cleanup
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|packet_close
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|debug2
 argument_list|(
 literal|"Network child is on pid %ld"
@@ -2377,6 +2411,24 @@ operator|!=
 name|EINTR
 condition|)
 break|break;
+comment|/* Reinstall, since the child has finished */
+name|fatal_add_cleanup
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|packet_close
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|authctxt
@@ -2447,7 +2499,7 @@ name|authctxt
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BROKEN_FD_PASSING
+name|DISABLE_FD_PASSING
 if|if
 condition|(
 literal|1
@@ -2546,6 +2598,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|fatal_remove_cleanup
+argument_list|(
+operator|(
+name|void
+argument_list|(
+operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|)
+name|packet_close
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|debug2
 argument_list|(
 literal|"User child is on pid %ld"
@@ -3238,10 +3307,6 @@ modifier|*
 name|f
 decl_stmt|;
 name|struct
-name|linger
-name|linger
-decl_stmt|;
-name|struct
 name|addrinfo
 modifier|*
 name|ai
@@ -3699,6 +3764,26 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|utmp_len
+operator|>
+name|MAXHOSTNAMELEN
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid utmp length.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'o'
@@ -3778,7 +3863,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_CRAY
+name|_UNICOS
 comment|/* Cray can define user privs drop all prives now! 	 * Not needed on PRIV_SU systems! 	 */
 name|drop_cray_privs
 argument_list|()
@@ -4284,6 +4369,41 @@ argument_list|,
 name|_PATH_PRIVSEP_CHROOT_DIR
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_CYGWIN
+if|if
+condition|(
+name|check_ntsec
+argument_list|(
+name|_PATH_PRIVSEP_CHROOT_DIR
+argument_list|)
+operator|&&
+operator|(
+name|st
+operator|.
+name|st_uid
+operator|!=
+name|getuid
+argument_list|()
+operator|||
+operator|(
+name|st
+operator|.
+name|st_mode
+operator|&
+operator|(
+name|S_IWGRP
+operator||
+name|S_IWOTH
+operator|)
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|st
@@ -4306,6 +4426,8 @@ operator|)
 operator|!=
 literal|0
 condition|)
+endif|#
+directive|endif
 name|fatal
 argument_list|(
 literal|"Bad owner or mode for %s"
@@ -4709,7 +4831,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * Set socket options.  We try to make the port 			 * reusable and have it close as fast as possible 			 * without waiting in unnecessary wait states on 			 * close. 			 */
+comment|/* 			 * Set socket options. 			 * Allow local port reuse in TIME_WAIT. 			 */
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|listen_sock
@@ -4726,33 +4850,17 @@ argument_list|(
 name|on
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|linger
-operator|.
-name|l_onoff
-operator|=
+operator|==
+operator|-
 literal|1
-expr_stmt|;
-name|linger
-operator|.
-name|l_linger
-operator|=
-literal|5
-expr_stmt|;
-name|setsockopt
+condition|)
+name|error
 argument_list|(
-name|listen_sock
+literal|"setsockopt SO_REUSEADDR: %s"
 argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_LINGER
-argument_list|,
-operator|&
-name|linger
-argument_list|,
-sizeof|sizeof
+name|strerror
 argument_list|(
-name|linger
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5757,37 +5865,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set socket options for the connection.  We want the socket to 	 * close as fast as possible without waiting for anything.  If the 	 * connection is not a socket, these will do nothing. 	 */
-comment|/* setsockopt(sock_in, SOL_SOCKET, SO_REUSEADDR, (void *)&on, sizeof(on)); */
-name|linger
-operator|.
-name|l_onoff
-operator|=
-literal|1
-expr_stmt|;
-name|linger
-operator|.
-name|l_linger
-operator|=
-literal|5
-expr_stmt|;
-name|setsockopt
-argument_list|(
-name|sock_in
-argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_LINGER
-argument_list|,
-operator|&
-name|linger
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|linger
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Set keepalives if requested. */
 if|if
 condition|(
@@ -6454,7 +6531,7 @@ decl_stmt|,
 name|protocol_flags
 decl_stmt|;
 name|u_int32_t
-name|rand
+name|rnd
 init|=
 literal|0
 decl_stmt|;
@@ -6481,7 +6558,7 @@ literal|4
 operator|==
 literal|0
 condition|)
-name|rand
+name|rnd
 operator|=
 name|arc4random
 argument_list|()
@@ -6491,11 +6568,11 @@ index|[
 name|i
 index|]
 operator|=
-name|rand
+name|rnd
 operator|&
 literal|0xff
 expr_stmt|;
-name|rand
+name|rnd
 operator|>>=
 literal|8
 expr_stmt|;

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshlogin.c,v 1.4 2002/06/23 03:30:17 deraadt Exp $"
+literal|"$OpenBSD: sshlogin.c,v 1.5 2002/08/29 15:57:25 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -111,6 +111,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|addr
+parameter_list|,
+name|socklen_t
+name|addrlen
 parameter_list|)
 block|{
 name|struct

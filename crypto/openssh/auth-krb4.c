@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-krb4.c,v 1.27 2002/06/11 05:46:20 mpech Exp $"
+literal|"$OpenBSD: auth-krb4.c,v 1.28 2002/09/26 11:38:43 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -869,6 +869,9 @@ name|char
 modifier|*
 modifier|*
 name|client
+parameter_list|,
+name|KTEXT
+name|reply
 parameter_list|)
 block|{
 name|AUTH_DAT
@@ -877,9 +880,6 @@ init|=
 block|{
 literal|0
 block|}
-decl_stmt|;
-name|KTEXT_ST
-name|reply
 decl_stmt|;
 name|Key_schedule
 name|schedule
@@ -1204,7 +1204,7 @@ operator|&
 name|cksum
 argument_list|,
 name|reply
-operator|.
+operator|->
 name|dat
 argument_list|,
 sizeof|sizeof
@@ -1245,7 +1245,7 @@ index|]
 argument_list|)
 expr_stmt|;
 name|reply
-operator|.
+operator|->
 name|dat
 index|[
 literal|0
@@ -1254,7 +1254,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|reply
-operator|.
+operator|->
 name|length
 operator|=
 literal|0
@@ -1262,7 +1262,7 @@ expr_stmt|;
 block|}
 else|else
 name|reply
-operator|.
+operator|->
 name|length
 operator|=
 name|r
@@ -1285,32 +1285,6 @@ operator|.
 name|session
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|packet_start
-argument_list|(
-name|SSH_SMSG_AUTH_KERBEROS_RESPONSE
-argument_list|)
-expr_stmt|;
-name|packet_put_string
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|reply
-operator|.
-name|dat
-argument_list|,
-name|reply
-operator|.
-name|length
-argument_list|)
-expr_stmt|;
-name|packet_send
-argument_list|()
-expr_stmt|;
-name|packet_write_wait
-argument_list|()
 expr_stmt|;
 return|return
 operator|(

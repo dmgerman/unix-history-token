@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.141 2002/06/25 22:35:16 tim Exp $ */
+comment|/* $Id: acconfig.h,v 1.145 2002/09/26 00:38:48 tim Exp $ */
 end_comment
 
 begin_ifndef
@@ -241,6 +241,10 @@ comment|/* Define if you don't want to use lastlog */
 undef|#
 directive|undef
 name|DISABLE_LASTLOG
+comment|/* Define if you don't want to use lastlog in session.c */
+undef|#
+directive|undef
+name|NO_SSH_LASTLOG
 comment|/* Define if you don't want to use utmp */
 undef|#
 directive|undef
@@ -482,6 +486,10 @@ comment|/* Define if X11 doesn't support AF_UNIX sockets on that system */
 undef|#
 directive|undef
 name|NO_X11_UNIX_SOCKETS
+comment|/* Define if the concept of ports only accessible to superusers isn't known */
+undef|#
+directive|undef
+name|NO_IPPORT_RESERVED_CONCEPT
 comment|/* Needed for SCO and NeXT */
 undef|#
 directive|undef
@@ -542,14 +550,10 @@ comment|/* Path that unprivileged child will chroot() to in privep mode */
 undef|#
 directive|undef
 name|PRIVSEP_PATH
-comment|/* Define if you have the `mmap' function that supports MAP_ANON|SHARED */
+comment|/* Define if your platform needs to skip post auth file descriptor passing */
 undef|#
 directive|undef
-name|HAVE_MMAP_ANON_SHARED
-comment|/* Define if sendmsg()/recvmsg() has problems passing file descriptors */
-undef|#
-directive|undef
-name|BROKEN_FD_PASSING
+name|DISABLE_FD_PASSING
 expr|@
 name|BOTTOM
 expr|@

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh.c,v 1.179 2002/06/12 01:09:52 markus Exp $"
+literal|"$OpenBSD: ssh.c,v 1.186 2002/09/19 01:58:18 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -434,6 +434,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* pid of proxycommand child process */
+end_comment
+
+begin_decl_stmt
+name|pid_t
+name|proxy_command_pid
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Prints a help message to the user.  This function never returns. */
 end_comment
 
@@ -580,13 +592,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"  -V          Display version number only.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -P          Don't allocate a privileged port.\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -875,6 +880,9 @@ operator|=
 name|geteuid
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Use uid-swapping to give up root privileges for the duration of 	 * option processing.  We will re-instantiate the rights when we are 	 * ready to create the privileged port, and will permanently drop 	 * them when the port has been created (actually, when the connection 	 * has been made, as we may need to create the port several times). 	 */
+name|PRIV_END
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_SETRLIMIT
@@ -957,9 +965,6 @@ name|pwcopy
 argument_list|(
 name|pw
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Use uid-swapping to give up root privileges for the duration of 	 * option processing.  We will re-instantiate the rights when we are 	 * ready to create the privileged port, and will permanently drop 	 * them when the port has been created (actually, when the connection 	 * has been made, as we may need to create the port several times). 	 */
-name|PRIV_END
 expr_stmt|;
 comment|/* 	 * Set our umask to something reasonable, as some files are created 	 * with the default umask.  This will make them world-readable but 	 * writable only by the owner, which is ok for all files for which we 	 * don't set the modes explicitly. 	 */
 name|umask
@@ -1094,6 +1099,7 @@ break|break;
 case|case
 literal|'P'
 case|:
+comment|/* deprecated */
 name|options
 operator|.
 name|use_privileged_port
@@ -2172,7 +2178,7 @@ name|tty_flag
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Force no tty*/
+comment|/* Force no tty */
 if|if
 condition|(
 name|no_tty_flag
@@ -2583,6 +2589,12 @@ name|PRIV_END
 expr_stmt|;
 if|if
 condition|(
+name|options
+operator|.
+name|hostbased_authentication
+operator|==
+literal|1
+operator|&&
 name|sensitive_data
 operator|.
 name|keys
@@ -2968,6 +2980,20 @@ expr_stmt|;
 name|packet_close
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Send SIGHUP to proxy command if used. We don't wait() in  	 * case it hangs and instead rely on init to reap the child 	 */
+if|if
+condition|(
+name|proxy_command_pid
+operator|>
+literal|1
+condition|)
+name|kill
+argument_list|(
+name|proxy_command_pid
+argument_list|,
+name|SIGHUP
+argument_list|)
+expr_stmt|;
 return|return
 name|exit_status
 return|;
@@ -3020,6 +3046,10 @@ name|char
 modifier|*
 name|display
 decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
 operator|*
 name|_proto
 operator|=
@@ -3044,10 +3074,37 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|options
 operator|.
 name|xauth_location
-operator|&&
+operator|||
+operator|(
+name|stat
+argument_list|(
+name|options
+operator|.
+name|xauth_location
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|==
+operator|-
+literal|1
+operator|)
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"No xauth program."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 operator|(
 name|display
 operator|=
@@ -3056,8 +3113,17 @@ argument_list|(
 literal|"DISPLAY"
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
+name|debug
+argument_list|(
+literal|"x11_get_proto: DISPLAY not set"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* Try to get Xauthority information for the display. */
 if|if
 condition|(
@@ -3112,7 +3178,7 @@ argument_list|)
 expr_stmt|;
 name|debug2
 argument_list|(
-literal|"x11_get_proto %s"
+literal|"x11_get_proto: %s"
 argument_list|,
 name|line
 argument_list|)
@@ -3181,6 +3247,11 @@ name|rand
 init|=
 literal|0
 decl_stmt|;
+name|log
+argument_list|(
+literal|"Warning: No xauth data; using fake authentication data for X11 forwarding."
+argument_list|)
+expr_stmt|;
 name|strlcpy
 argument_list|(
 name|proto
@@ -3459,29 +3530,17 @@ name|forward_agent
 condition|)
 block|{
 comment|/* Clear agent forwarding if we don\'t have an agent. */
-name|int
-name|authfd
-init|=
-name|ssh_get_authentication_socket
-argument_list|()
-decl_stmt|;
 if|if
 condition|(
-name|authfd
-operator|<
-literal|0
+operator|!
+name|ssh_agent_present
+argument_list|()
 condition|)
 name|options
 operator|.
 name|forward_agent
 operator|=
 literal|0
-expr_stmt|;
-else|else
-name|ssh_close_authentication_socket
-argument_list|(
-name|authfd
-argument_list|)
 expr_stmt|;
 block|}
 block|}

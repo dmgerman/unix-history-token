@@ -9,6 +9,14 @@ directive|include
 file|"includes.h"
 end_include
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$OpenBSD: uuencode.c,v 1.16 2002/09/09 14:54:15 markus Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -20,14 +28,6 @@ include|#
 directive|include
 file|"uuencode.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$OpenBSD: uuencode.c,v 1.15 2002/03/04 17:27:39 stevesk Exp $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|int
@@ -185,7 +185,7 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|u_char
+name|char
 modifier|*
 name|buf
 init|=

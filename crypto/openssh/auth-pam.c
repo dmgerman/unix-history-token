@@ -18,12 +18,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"ssh.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"xmalloc.h"
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"auth-options.h"
 end_include
 
 begin_include
@@ -71,10 +71,17 @@ name|__progname
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|use_privsep
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth-pam.c,v 1.46 2002/05/08 02:27:56 djm Exp $"
+literal|"$Id: auth-pam.c,v 1.54 2002/07/28 20:24:08 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -84,7 +91,15 @@ define|#
 directive|define
 name|NEW_AUTHTOK_MSG
 define|\
-value|"Warning: Your password has expired, please change it now"
+value|"Warning: Your password has expired, please change it now."
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEW_AUTHTOK_MSG_PRIVSEP
+define|\
+value|"Your password has expired, the session cannot proceed."
 end_define
 
 begin_function_decl
@@ -126,6 +141,13 @@ name|pam_conv
 name|conv
 init|=
 block|{
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|do_pam_conversation
 block|,
 name|NULL
@@ -182,7 +204,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* remember whether pam_acct_mgmt() returned PAM_NEWAUTHTOK_REQD */
+comment|/* remember whether pam_acct_mgmt() returned PAM_NEW_AUTHTOK_REQD */
 end_comment
 
 begin_decl_stmt
@@ -338,7 +360,7 @@ decl_stmt|;
 comment|/* PAM will free this later */
 name|reply
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|num_msg
 operator|*
@@ -349,15 +371,6 @@ name|reply
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|reply
-operator|==
-name|NULL
-condition|)
-return|return
-name|PAM_CONV_ERR
-return|;
 for|for
 control|(
 name|count
@@ -395,7 +408,7 @@ block|{
 case|case
 name|PAM_PROMPT_ECHO_ON
 case|:
-name|free
+name|xfree
 argument_list|(
 name|reply
 argument_list|)
@@ -413,7 +426,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|free
+name|xfree
 argument_list|(
 name|reply
 argument_list|)
@@ -452,15 +465,14 @@ name|PAM_TEXT_INFO
 case|:
 if|if
 condition|(
-operator|(
-operator|*
+name|PAM_MSG_MEMBER
+argument_list|(
 name|msg
-operator|)
-index|[
+argument_list|,
 name|count
-index|]
-operator|.
+argument_list|,
 name|msg
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -504,7 +516,7 @@ name|PAM_SUCCESS
 expr_stmt|;
 break|break;
 default|default:
-name|free
+name|xfree
 argument_list|(
 name|reply
 argument_list|)
@@ -622,15 +634,14 @@ name|PAM_TEXT_INFO
 case|:
 if|if
 condition|(
-operator|(
-operator|*
+name|PAM_MSG_MEMBER
+argument_list|(
 name|msg
-operator|)
-index|[
+argument_list|,
 name|count
-index|]
-operator|.
+argument_list|,
 name|msg
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -673,7 +684,7 @@ name|PAM_SUCCESS
 expr_stmt|;
 break|break;
 default|default:
-name|free
+name|xfree
 argument_list|(
 name|reply
 argument_list|)
@@ -1079,9 +1090,11 @@ break|break;
 if|#
 directive|if
 literal|0
-block|case PAM_NEW_AUTHTOK_REQD: 			message_cat(&__pam_msg, NEW_AUTHTOK_MSG);
+block|case PAM_NEW_AUTHTOK_REQD: 			message_cat(&__pam_msg, use_privsep ? 			    NEW_AUTHTOK_MSG_PRIVSEP : NEW_AUTHTOK_MSG);
 comment|/* flag that password change is necessary */
-block|password_change_required = 1; 			break;
+block|password_change_required = 1;
+comment|/* disallow other functionality for now */
+block|no_port_forwarding_flag |= 2; 			no_agent_forwarding_flag |= 2; 			no_x11_forwarding_flag |= 2; 			break;
 endif|#
 directive|endif
 default|default:
@@ -1336,7 +1349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Have user change authentication token if pam_acct_mgmt() indicated  * it was expired.  This needs to be called after an interactive  * session is established and the user's pty is connected to  * stdin/stout/stderr.  */
+comment|/*  * Have user change authentication token if pam_acct_mgmt() indicated  * it was expired.  This needs to be called after an interactive  * session is established and the user's pty is connected to  * stdin/stdout/stderr.  */
 end_comment
 
 begin_function
@@ -1360,6 +1373,16 @@ condition|(
 name|password_change_required
 condition|)
 block|{
+if|if
+condition|(
+name|use_privsep
+condition|)
+name|fatal
+argument_list|(
+literal|"Password changing is currently unsupported"
+literal|" with privilege separation"
+argument_list|)
+expr_stmt|;
 name|pamstate
 operator|=
 name|OTHER
@@ -1393,6 +1416,13 @@ name|pam_retval
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX: This would need to be done in the parent process, 		 * but there's currently no way to pass such request. */
+block|no_port_forwarding_flag&= ~2; 		no_agent_forwarding_flag&= ~2; 		no_x11_forwarding_flag&= ~2; 		if (!no_port_forwarding_flag&& options.allow_tcp_forwarding) 			channel_permit_all_opens();
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -1595,7 +1625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return list of PAM enviornment strings */
+comment|/* Return list of PAM environment strings */
 end_comment
 
 begin_function
@@ -1629,6 +1659,54 @@ return|;
 endif|#
 directive|endif
 comment|/* HAVE_PAM_GETENVLIST */
+block|}
+end_function
+
+begin_function
+name|void
+name|free_pam_environment
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|env
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|env
+operator|!=
+name|NULL
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|env
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+name|xfree
+argument_list|(
+name|env
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

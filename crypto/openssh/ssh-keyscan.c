@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keyscan.c,v 1.36 2002/06/16 21:30:58 itojun Exp $"
+literal|"$OpenBSD: ssh-keyscan.c,v 1.40 2002/07/06 17:47:58 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"openbsd-compat/fake-queue.h"
+file|"openbsd-compat/sys-queue.h"
 end_include
 
 begin_include
@@ -537,9 +537,11 @@ call|)
 argument_list|(
 literal|"linebuf (%s): malloc failed\n"
 argument_list|,
-name|lb
-operator|->
 name|filename
+condition|?
+name|filename
+else|:
+literal|"(stdin)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -748,6 +750,10 @@ name|n
 init|=
 literal|0
 decl_stmt|;
+name|void
+modifier|*
+name|p
+decl_stmt|;
 name|lb
 operator|->
 name|lineno
@@ -908,13 +914,16 @@ operator|)
 return|;
 block|}
 comment|/* Double the buffer if we need more space */
-if|if
-condition|(
-operator|!
-operator|(
 name|lb
 operator|->
-name|buf
+name|size
+operator|*=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
 operator|=
 name|realloc
 argument_list|(
@@ -922,17 +931,21 @@ name|lb
 operator|->
 name|buf
 argument_list|,
-operator|(
 name|lb
 operator|->
 name|size
-operator|*=
-literal|2
-operator|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 block|{
+name|lb
+operator|->
+name|size
+operator|/=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|lb
@@ -959,6 +972,12 @@ name|NULL
 operator|)
 return|;
 block|}
+name|lb
+operator|->
+name|buf
+operator|=
+name|p
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -2013,9 +2032,6 @@ name|int
 name|keytype
 parameter_list|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|char
 modifier|*
 name|namebase
@@ -2025,6 +2041,9 @@ name|name
 decl_stmt|,
 modifier|*
 name|namelist
+decl_stmt|;
+name|int
+name|s
 decl_stmt|;
 name|namebase
 operator|=
@@ -2463,9 +2482,6 @@ name|int
 name|s
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 name|con
 modifier|*
 name|c
@@ -2475,6 +2491,9 @@ name|fdcon
 index|[
 name|s
 index|]
+decl_stmt|;
+name|int
+name|ret
 decl_stmt|;
 name|ret
 operator|=
@@ -2515,6 +2534,15 @@ name|int
 name|s
 parameter_list|)
 block|{
+name|int
+name|remote_major
+decl_stmt|,
+name|remote_minor
+decl_stmt|,
+name|n
+init|=
+literal|0
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -2533,15 +2561,6 @@ index|]
 decl_stmt|;
 name|size_t
 name|bufsiz
-decl_stmt|;
-name|int
-name|remote_major
-decl_stmt|,
-name|remote_minor
-decl_stmt|,
-name|n
-init|=
-literal|0
 decl_stmt|;
 name|con
 modifier|*
@@ -2921,9 +2940,6 @@ name|int
 name|s
 parameter_list|)
 block|{
-name|int
-name|n
-decl_stmt|;
 name|con
 modifier|*
 name|c
@@ -2933,6 +2949,9 @@ name|fdcon
 index|[
 name|s
 index|]
+decl_stmt|;
+name|int
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -3128,6 +3147,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|struct
+name|timeval
+name|seltime
+decl_stmt|,
+name|now
+decl_stmt|;
 name|fd_set
 modifier|*
 name|r
@@ -3135,18 +3160,12 @@ decl_stmt|,
 modifier|*
 name|e
 decl_stmt|;
-name|struct
-name|timeval
-name|seltime
-decl_stmt|,
-name|now
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|con
 modifier|*
 name|c
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 name|gettimeofday
 argument_list|(
@@ -3609,65 +3628,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [options] host ...\n"
+literal|"usage: %s [-v46] [-p port] [-T timeout] [-f file]\n"
+literal|"\t\t   [host | addrlist namelist] [...]\n"
 argument_list|,
 name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Options:\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -f file     Read hosts or addresses from file.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -p port     Connect to the specified port.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -t keytype  Specify the host key type.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -T timeout  Set connection timeout.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -v          Verbose; display verbose debugging messages.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -4          Use IPv4 only.\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"  -6          Use IPv6 only.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3813,7 +3777,7 @@ literal|'T'
 case|:
 name|timeout
 operator|=
-name|atoi
+name|convtime
 argument_list|(
 name|optarg
 argument_list|)
@@ -3821,12 +3785,28 @@ expr_stmt|;
 if|if
 condition|(
 name|timeout
-operator|<=
+operator|==
+operator|-
+literal|1
+operator|||
+name|timeout
+operator|==
 literal|0
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Bad timeout '%s'\n"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
 name|usage
 argument_list|()
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'v'

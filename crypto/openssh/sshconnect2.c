@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sshconnect2.c,v 1.105 2002/06/23 03:30:17 deraadt Exp $"
+literal|"$OpenBSD: sshconnect2.c,v 1.107 2002/07/01 19:48:46 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -375,7 +375,7 @@ index|[
 name|PROPOSAL_COMP_ALGS_STOC
 index|]
 operator|=
-literal|"zlib"
+literal|"zlib,none"
 expr_stmt|;
 block|}
 else|else
@@ -390,7 +390,7 @@ index|[
 name|PROPOSAL_COMP_ALGS_STOC
 index|]
 operator|=
-literal|"none"
+literal|"none,zlib"
 expr_stmt|;
 block|}
 if|if
@@ -2009,7 +2009,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* try another method if we did not send a packet*/
+comment|/* try another method if we did not send a packet */
 if|if
 condition|(
 name|sent
@@ -4792,7 +4792,7 @@ argument_list|,
 name|datalen
 argument_list|)
 expr_stmt|;
-name|msg_send
+name|ssh_msg_send
 argument_list|(
 name|to
 index|[
@@ -4807,7 +4807,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|msg_recv
+name|ssh_msg_recv
 argument_list|(
 name|from
 index|[

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: clientloop.c,v 1.102 2002/06/24 14:33:27 markus Exp $"
+literal|"$OpenBSD: clientloop.c,v 1.104 2002/08/22 19:38:42 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2375,7 +2375,25 @@ argument_list|,
 sizeof|sizeof
 name|string
 argument_list|,
-literal|"%c?\r\n\ Supported escape sequences:\r\n\ ~.  - terminate connection\r\n\ ~C  - open a command line\r\n\ ~R  - Request rekey (SSH protocol 2 only)\r\n\ ~^Z - suspend ssh\r\n\ ~#  - list forwarded connections\r\n\ ~&  - background ssh (when waiting for connections to terminate)\r\n\ ~?  - this message\r\n\ ~~  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
+literal|"%c?\r\n\ Supported escape sequences:\r\n\ %c.  - terminate connection\r\n\ %cC  - open a command line\r\n\ %cR  - Request rekey (SSH protocol 2 only)\r\n\ %c^Z - suspend ssh\r\n\ %c#  - list forwarded connections\r\n\ %c&  - background ssh (when waiting for connections to terminate)\r\n\ %c?  - this message\r\n\ %c%c  - send the escape character by typing it twice\r\n\ (Note that escapes are only recognized immediately after newline.)\r\n"
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
+argument_list|,
+name|escape_char
 argument_list|,
 name|escape_char
 argument_list|)

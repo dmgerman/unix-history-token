@@ -16,7 +16,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: log.c,v 1.22 2002/02/22 12:20:34 markus Exp $"
+literal|"$OpenBSD: log.c,v 1.24 2002/07/19 15:43:33 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -854,6 +854,53 @@ operator|)
 name|context
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* Remove all cleanups, to be called after fork() */
+end_comment
+
+begin_function
+name|void
+name|fatal_remove_all_cleanups
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|fatal_cleanup
+modifier|*
+name|cu
+decl_stmt|,
+modifier|*
+name|next_cu
+decl_stmt|;
+for|for
+control|(
+name|cu
+operator|=
+name|fatal_cleanups
+init|;
+name|cu
+condition|;
+name|cu
+operator|=
+name|next_cu
+control|)
+block|{
+name|next_cu
+operator|=
+name|cu
+operator|->
+name|next
+expr_stmt|;
+name|xfree
+argument_list|(
+name|cu
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

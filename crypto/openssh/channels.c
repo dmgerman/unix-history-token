@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: channels.c,v 1.179 2002/06/26 08:55:02 markus Exp $"
+literal|"$OpenBSD: channels.c,v 1.183 2002/09/17 07:47:02 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -561,6 +561,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|c
+operator|->
+name|wfd_isatty
+operator|=
+name|isatty
+argument_list|(
+name|c
+operator|->
+name|wfd
+argument_list|)
+expr_stmt|;
 comment|/* enable nonblocking mode */
 if|if
 condition|(
@@ -3788,7 +3799,7 @@ modifier|*
 name|writeset
 parameter_list|)
 block|{
-name|u_char
+name|char
 modifier|*
 name|p
 decl_stmt|,
@@ -6003,6 +6014,32 @@ operator|->
 name|output
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_AIX
+comment|/* XXX: Later AIX versions can't push as much data to tty */
+if|if
+condition|(
+name|compat20
+operator|&&
+name|c
+operator|->
+name|wfd_isatty
+operator|&&
+name|dlen
+operator|>
+literal|8
+operator|*
+literal|1024
+condition|)
+name|dlen
+operator|=
+literal|8
+operator|*
+literal|1024
+expr_stmt|;
+endif|#
+directive|endif
 name|len
 operator|=
 name|write
@@ -9553,10 +9590,6 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
-name|struct
-name|linger
-name|linger
-decl_stmt|;
 name|success
 operator|=
 literal|0
@@ -9785,7 +9818,9 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Set socket options.  We would like the socket to disappear 		 * as soon as it has been closed for whatever reason. 		 */
+comment|/* 		 * Set socket options. 		 * Allow local port reuse in TIME_WAIT. 		 */
+if|if
+condition|(
 name|setsockopt
 argument_list|(
 name|sock
@@ -9802,33 +9837,17 @@ argument_list|(
 name|on
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|linger
-operator|.
-name|l_onoff
-operator|=
+operator|==
+operator|-
 literal|1
-expr_stmt|;
-name|linger
-operator|.
-name|l_linger
-operator|=
-literal|5
-expr_stmt|;
-name|setsockopt
+condition|)
+name|error
 argument_list|(
-name|sock
+literal|"setsockopt SO_REUSEADDR: %s"
 argument_list|,
-name|SOL_SOCKET
-argument_list|,
-name|SO_LINGER
-argument_list|,
-operator|&
-name|linger
-argument_list|,
-sizeof|sizeof
+name|strerror
 argument_list|(
-name|linger
+name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -675,7 +675,7 @@ name|fwd
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|HAVE_CYGWIN
+name|NO_IPPORT_RESERVED_CONCEPT
 specifier|extern
 name|uid_t
 name|original_real_uid

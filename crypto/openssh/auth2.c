@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth2.c,v 1.93 2002/05/31 11:35:15 markus Exp $"
+literal|"$OpenBSD: auth2.c,v 1.95 2002/08/22 21:33:58 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -394,7 +394,7 @@ name|u_int
 name|len
 decl_stmt|;
 name|int
-name|accept
+name|acceptit
 init|=
 literal|0
 decl_stmt|;
@@ -442,7 +442,7 @@ operator|->
 name|success
 condition|)
 block|{
-name|accept
+name|acceptit
 operator|=
 literal|1
 expr_stmt|;
@@ -460,7 +460,7 @@ block|}
 comment|/* XXX all other service requests are denied */
 if|if
 condition|(
-name|accept
+name|acceptit
 condition|)
 block|{
 name|packet_start
@@ -942,6 +942,9 @@ expr_stmt|;
 comment|/* Special handling for root */
 if|if
 condition|(
+operator|!
+name|use_privsep
+operator|&&
 name|authenticated
 operator|&&
 name|authctxt
@@ -993,6 +996,38 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_PAM */
+ifdef|#
+directive|ifdef
+name|_UNICOS
+if|if
+condition|(
+name|authenticated
+operator|&&
+name|cray_access_denied
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|)
+condition|)
+block|{
+name|authenticated
+operator|=
+literal|0
+expr_stmt|;
+name|fatal
+argument_list|(
+literal|"Access denied for user %s."
+argument_list|,
+name|authctxt
+operator|->
+name|user
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _UNICOS */
 comment|/* Log before sending the reply */
 name|auth_log
 argument_list|(
@@ -1060,29 +1095,6 @@ operator|>
 name|AUTH_FAIL_MAX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|WITH_AIXAUTHENTICATE
-comment|/* XXX: privsep */
-name|loginfailed
-argument_list|(
-name|authctxt
-operator|->
-name|user
-argument_list|,
-name|get_canonical_hostname
-argument_list|(
-name|options
-operator|.
-name|verify_reverse_mapping
-argument_list|)
-argument_list|,
-literal|"ssh"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* WITH_AIXAUTHENTICATE */
 name|packet_disconnect
 argument_list|(
 name|AUTH_FAIL_MSG
@@ -1093,6 +1105,32 @@ name|user
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|_UNICOS
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|method
+argument_list|,
+literal|"password"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|cray_login_failure
+argument_list|(
+name|authctxt
+operator|->
+name|user
+argument_list|,
+name|IA_UDBERR
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _UNICOS */
 name|methods
 operator|=
 name|authmethods_get

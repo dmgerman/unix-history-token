@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: auth-bsdauth.c,v 1.4 2002/06/19 00:27:55 deraadt Exp $"
+literal|"$OpenBSD: auth-bsdauth.c,v 1.5 2002/06/30 21:59:45 deraadt Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: canohost.c,v 1.32 2002/06/11 08:11:45 itojun Exp $"
+literal|"$OpenBSD: canohost.c,v 1.34 2002/09/23 20:46:27 stevesk Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -386,13 +386,12 @@ literal|0
 condition|)
 block|{
 comment|/* Host name not found.  Use ip address. */
-name|log
-argument_list|(
-literal|"Could not reverse map address %.100s."
-argument_list|,
-name|ntop
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|log("Could not reverse map address %.100s.", ntop);
+endif|#
+directive|endif
 return|return
 name|xstrdup
 argument_list|(
@@ -957,21 +956,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|debug
-argument_list|(
-literal|"get_socket_ipaddr: getpeername failed: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 block|}
 else|else
 block|{
@@ -995,21 +982,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|debug
-argument_list|(
-literal|"get_socket_ipaddr: getsockname failed: %.100s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 name|NULL
 return|;
-block|}
 block|}
 comment|/* Get the address in ascii. */
 if|if
@@ -1072,7 +1047,15 @@ name|int
 name|socket
 parameter_list|)
 block|{
-return|return
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
 name|get_socket_address
 argument_list|(
 name|socket
@@ -1080,6 +1063,18 @@ argument_list|,
 literal|1
 argument_list|,
 name|NI_NUMERICHOST
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|p
+return|;
+return|return
+name|xstrdup
+argument_list|(
+literal|"UNKNOWN"
 argument_list|)
 return|;
 block|}
@@ -1094,7 +1089,15 @@ name|int
 name|socket
 parameter_list|)
 block|{
-return|return
+name|char
+modifier|*
+name|p
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|=
 name|get_socket_address
 argument_list|(
 name|socket
@@ -1102,6 +1105,18 @@ argument_list|,
 literal|0
 argument_list|,
 name|NI_NUMERICHOST
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+return|return
+name|p
+return|;
+return|return
+name|xstrdup
+argument_list|(
+literal|"UNKNOWN"
 argument_list|)
 return|;
 block|}

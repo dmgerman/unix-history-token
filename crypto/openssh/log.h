@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: log.h,v 1.7 2002/05/19 20:54:52 deraadt Exp $	*/
+comment|/*	$OpenBSD: log.h,v 1.8 2002/07/19 15:43:33 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -365,6 +365,15 @@ parameter_list|)
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fatal_remove_all_cleanups
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
