@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)v_text.c	8.40 (Berkeley) 8/14/94"
+literal|"@(#)v_text.c	8.42 (Berkeley) 8/17/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -2814,12 +2815,19 @@ expr_stmt|;
 comment|/* Correct logging for implied cursor motion. */
 name|LOG_CORRECT
 expr_stmt|;
-comment|/* 	 * Turn off the VM_RCM flags, inserting text has its own rules for 	 * cursor positioning. 	 */
+comment|/* 	 * 'c' can be combined with motion commands that set the resulting 	 * cursor position, i.e. "cG".  Clear the VM_RCM flags and make the 	 * resulting cursor position stick, inserting text has its own rules 	 * for cursor positioning. 	 */
 name|F_CLR
 argument_list|(
 name|vp
 argument_list|,
 name|VM_RCM_MASK
+argument_list|)
+expr_stmt|;
+name|F_SET
+argument_list|(
+name|vp
+argument_list|,
+name|VM_RCM_SET
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If not in line mode and changing within a single line, the line 	 * either currently has text or it doesn't.  If it doesn't, insert 	 * some.  Otherwise, copy it and overwrite it. 	 */
