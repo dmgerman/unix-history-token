@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gcos.c	4.2 (Berkeley) 85/04/16"
+literal|"@(#)gcos.c	4.3 (Berkeley) 85/08/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,13 +1123,13 @@ name|p
 decl_stmt|,
 name|temp
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|char
 name|fullname
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|,
 modifier|*

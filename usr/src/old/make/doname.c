@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.6 (Berkeley) 85/04/16"
+literal|"@(#)doname.c	4.7 (Berkeley) 85/08/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,17 +138,17 @@ decl_stmt|;
 name|char
 name|sourcename
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|,
 name|prefix
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|,
 name|temp
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|,
 name|concsuff

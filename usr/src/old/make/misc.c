@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)misc.c	4.2 (Berkeley) 82/10/19"
+literal|"@(#)misc.c	4.3 (Berkeley) 85/08/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -700,7 +700,7 @@ decl_stmt|;
 name|char
 name|vname
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|struct

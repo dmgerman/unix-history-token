@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	4.6 (Berkeley) 84/11/26"
+literal|"@(#)main.c	4.7 (Berkeley) 85/08/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -1365,7 +1365,7 @@ name|nlog
 decl_stmt|,
 name|s
 index|[
-literal|100
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|nlog
