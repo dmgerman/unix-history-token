@@ -36,6 +36,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|disk
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|vnode
 struct_decl|;
 end_struct_decl
@@ -113,6 +119,11 @@ struct|;
 struct|struct
 block|{
 name|struct
+name|disk
+modifier|*
+name|__sid_disk
+decl_stmt|;
+name|struct
 name|mount
 modifier|*
 name|__sid_mountpoint
@@ -144,6 +155,13 @@ define|#
 directive|define
 name|si_tty_tty
 value|__si_u.__si_tty.__sit_tty
+end_define
+
+begin_define
+define|#
+directive|define
+name|si_disk
+value|__si_u.__si_disk.__sid_disk
 end_define
 
 begin_define
