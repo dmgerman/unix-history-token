@@ -1017,7 +1017,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"/sys/kern/syscalls.c"
+file|<sys/kern/syscalls.c>
 end_include
 
 begin_undef
