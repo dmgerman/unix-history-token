@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ip.h 1.10 82/03/30 */
+comment|/* ip.h 1.11 82/12/28 */
 end_comment
 
 begin_comment
@@ -22,6 +22,9 @@ begin_struct
 struct|struct
 name|ip
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|u_char
 name|ip_hl
 range|:
@@ -33,6 +36,24 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* version */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+name|u_char
+name|ip_v
+range|:
+literal|4
+decl_stmt|,
+comment|/* version */
+name|ip_hl
+range|:
+literal|4
+decl_stmt|;
+comment|/* header length */
+endif|#
+directive|endif
 name|u_char
 name|ip_tos
 decl_stmt|;

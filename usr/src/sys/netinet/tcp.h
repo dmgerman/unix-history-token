@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp.h 1.22 82/12/20 */
+comment|/* tcp.h 1.23 82/12/28 */
 end_comment
 
 begin_typedef
@@ -34,6 +34,9 @@ name|tcp_seq
 name|th_ack
 decl_stmt|;
 comment|/* acknowledgement number */
+ifdef|#
+directive|ifdef
+name|vax
 name|u_char
 name|th_x2
 range|:
@@ -45,6 +48,24 @@ range|:
 literal|4
 decl_stmt|;
 comment|/* data offset */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+name|u_char
+name|th_off
+range|:
+literal|4
+decl_stmt|,
+comment|/* data offset */
+name|th_x2
+range|:
+literal|4
+decl_stmt|;
+comment|/* (unused) */
+endif|#
+directive|endif
 name|u_char
 name|th_flags
 decl_stmt|;

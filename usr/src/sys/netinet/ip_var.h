@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_var.h	4.6	82/11/13	*/
+comment|/*	ip_var.h	4.7	82/12/28	*/
 end_comment
 
 begin_comment
@@ -99,6 +99,9 @@ begin_struct
 struct|struct
 name|ipasfrag
 block|{
+ifdef|#
+directive|ifdef
+name|vax
 name|u_char
 name|ip_hl
 range|:
@@ -108,6 +111,22 @@ name|ip_v
 range|:
 literal|4
 decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|sun
+name|u_char
+name|ip_v
+range|:
+literal|4
+decl_stmt|,
+name|ip_hl
+range|:
+literal|4
+decl_stmt|;
+endif|#
+directive|endif
 name|u_char
 name|ipf_mff
 decl_stmt|;
