@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1984, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.2 1994/09/10 15:13:28 csgr Exp $  */
+comment|/*  * from arp.c	8.2 (Berkeley) 1/2/94  * $Id: rtmsg.c,v 1.1.1.1 1994/09/30 05:45:06 pst Exp $  */
 end_comment
 
 begin_include
@@ -355,6 +355,11 @@ name|struct
 name|timeval
 name|time
 decl_stmt|;
+name|int
+name|op
+init|=
+name|RTM_ADD
+decl_stmt|;
 name|getsocket
 argument_list|()
 expr_stmt|;
@@ -553,6 +558,10 @@ case|:
 case|case
 name|IFT_ISO88025
 case|:
+name|op
+operator|=
+name|RTM_CHANGE
+expr_stmt|;
 goto|goto
 name|overwrite
 goto|;
@@ -671,7 +680,7 @@ return|return
 operator|(
 name|rtmsg
 argument_list|(
-name|RTM_ADD
+name|op
 argument_list|)
 operator|)
 return|;
@@ -771,6 +780,9 @@ argument_list|)
 expr_stmt|;
 case|case
 name|RTM_ADD
+case|:
+case|case
+name|RTM_CHANGE
 case|:
 name|rtm
 operator|->
