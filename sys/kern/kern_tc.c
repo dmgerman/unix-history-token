@@ -2864,6 +2864,7 @@ argument_list|(
 operator|&
 name|bt
 argument_list|,
+operator|&
 name|boottimebin
 argument_list|)
 expr_stmt|;
