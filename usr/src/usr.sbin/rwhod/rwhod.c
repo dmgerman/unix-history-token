@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.17 (Berkeley) 83/06/24"
+literal|"@(#)rwhod.c	4.18 (Berkeley) 83/06/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -1335,7 +1335,9 @@ argument_list|(
 literal|"/etc/utmp"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|done
+goto|;
 block|}
 name|wlast
 operator|=
@@ -1688,6 +1690,8 @@ operator|->
 name|n_addrlen
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 operator|(
 name|void
 operator|)
