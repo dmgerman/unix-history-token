@@ -2457,12 +2457,13 @@ operator|*
 name|rule
 operator|!=
 name|NULL
+operator|&&
+name|fw_one_pass
 condition|)
-comment|/* dummynet packet, already partially processed */
 return|return
 literal|1
 return|;
-comment|/* HACK! I should obey the fw_one_pass */
+comment|/* dummynet packet, already partially processed */
 comment|/* 	 * I need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
 name|i
 operator|=

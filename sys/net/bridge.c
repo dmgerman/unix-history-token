@@ -3312,12 +3312,13 @@ operator|.
 name|rule
 operator|!=
 name|NULL
+operator|&&
+name|fw_one_pass
 condition|)
-comment|/* packet already partially processed */
 goto|goto
 name|forward
 goto|;
-comment|/* HACK! I should obey the fw_one_pass */
+comment|/* packet already partially processed */
 comment|/* 	 * i need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
 name|i
 operator|=
