@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_bmap.c	8.7 (Berkeley) 3/21/95  * $Id: ufs_bmap.c,v 1.15 1997/03/09 06:10:31 mpp Exp $  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_bmap.c	8.7 (Berkeley) 3/21/95  * $Id: ufs_bmap.c,v 1.16 1997/09/02 20:06:56 bde Exp $  */
 end_comment
 
 begin_include
@@ -977,6 +977,8 @@ name|nump
 decl_stmt|;
 block|{
 name|long
+name|blockcnt
+decl_stmt|,
 name|metalbn
 decl_stmt|,
 name|realbn
@@ -987,13 +989,14 @@ modifier|*
 name|ump
 decl_stmt|;
 name|int
-name|blockcnt
-decl_stmt|,
 name|i
 decl_stmt|,
 name|numlevels
 decl_stmt|,
 name|off
+decl_stmt|;
+name|int64_t
+name|qblockcnt
 decl_stmt|;
 name|ump
 operator|=
@@ -1050,7 +1053,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the given level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
+comment|/* 	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the previous level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
 for|for
 control|(
 name|blockcnt
@@ -1085,8 +1088,14 @@ operator|(
 name|EFBIG
 operator|)
 return|;
+comment|/* 		 * Use int64_t's here to avoid overflow for triple indirect 		 * blocks when longs have 32 bits and the block size is more 		 * than 4K. 		 */
+name|qblockcnt
+operator|=
+operator|(
+name|int64_t
+operator|)
 name|blockcnt
-operator|*=
+operator|*
 name|MNINDIR
 argument_list|(
 name|ump
@@ -1096,9 +1105,13 @@ if|if
 condition|(
 name|bn
 operator|<
-name|blockcnt
+name|qblockcnt
 condition|)
 break|break;
+name|blockcnt
+operator|=
+name|qblockcnt
+expr_stmt|;
 block|}
 comment|/* Calculate the address of the first meta-block. */
 if|if
@@ -1182,13 +1195,6 @@ operator|==
 name|realbn
 condition|)
 break|break;
-name|blockcnt
-operator|/=
-name|MNINDIR
-argument_list|(
-name|ump
-argument_list|)
-expr_stmt|;
 name|off
 operator|=
 operator|(
@@ -1234,6 +1240,13 @@ operator|+
 name|off
 operator|*
 name|blockcnt
+expr_stmt|;
+name|blockcnt
+operator|/=
+name|MNINDIR
+argument_list|(
+name|ump
+argument_list|)
 expr_stmt|;
 block|}
 if|if
