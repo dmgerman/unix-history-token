@@ -308,7 +308,7 @@ parameter_list|(
 name|adp
 parameter_list|)
 define|\
-value|printf("  ad%d: %luMB<%.40s> [%d/%d/%d] at ata%d-%s %s%s\n", \                adp->lun, adp->total_secs / ((1024L * 1024L) / DEV_BSIZE), \ 	       adp->controller->dev_param[ATA_DEV(adp->unit)]->model, \ 	       adp->total_secs / (adp->heads * adp->sectors), \                adp->heads, adp->sectors, device_get_unit(adp->controller->dev),\                (adp->unit == ATA_MASTER) ? "master" : "slave", \                (adp->flags& AD_F_TAG_ENABLED) ? "tagged " : "", \                ata_mode2str(adp->controller->mode[ATA_DEV(adp->unit)]))
+value|printf("  ad%d: %lluMB<%.40s> [%lld/%d/%d] at ata%d-%s %s%s\n", \                adp->lun, \ 	       (unsigned long long)adp->total_secs / ((1024L*1024L)/DEV_BSIZE),\ 	       adp->controller->dev_param[ATA_DEV(adp->unit)]->model, \ 	       (unsigned long long)adp->total_secs / (adp->heads*adp->sectors),\                adp->heads, adp->sectors, device_get_unit(adp->controller->dev),\                (adp->unit == ATA_MASTER) ? "master" : "slave", \                (adp->flags& AD_F_TAG_ENABLED) ? "tagged " : "", \                ata_mode2str(adp->controller->mode[ATA_DEV(adp->unit)]))
 end_define
 
 begin_function
@@ -3080,25 +3080,7 @@ name|ATA_C_READ_MUL
 else|:
 name|ATA_C_READ
 argument_list|,
-operator|(
 name|lba
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xffff
-argument_list|,
-operator|(
-name|lba
-operator|>>
-literal|24
-operator|)
-operator|&
-literal|0xff
-argument_list|,
-name|lba
-operator|&
-literal|0xff
 argument_list|,
 name|count
 operator|/

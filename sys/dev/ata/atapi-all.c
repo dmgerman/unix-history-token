@@ -352,7 +352,7 @@ argument_list|)
 argument_list|,
 name|ATP_PARAM
 operator|->
-name|dmaflag
+name|support_dma
 argument_list|)
 expr_stmt|;
 if|if
@@ -363,7 +363,7 @@ operator|!
 operator|(
 name|ATP_PARAM
 operator|->
-name|drqtype
+name|drq_type
 operator|==
 name|ATAPI_DRQT_INTR
 operator|)
@@ -391,7 +391,7 @@ condition|?
 operator|(
 name|ATP_PARAM
 operator|->
-name|dmaflag
+name|support_dma
 condition|?
 literal|4
 else|:
@@ -415,7 +415,7 @@ condition|?
 operator|(
 name|ATP_PARAM
 operator|->
-name|dmaflag
+name|support_dma
 condition|?
 literal|2
 else|:
@@ -471,7 +471,7 @@ switch|switch
 condition|(
 name|ATP_PARAM
 operator|->
-name|device_type
+name|type
 condition|)
 block|{
 if|#
@@ -560,7 +560,7 @@ name|atapi_type
 argument_list|(
 name|ATP_PARAM
 operator|->
-name|device_type
+name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -606,7 +606,7 @@ switch|switch
 condition|(
 name|ATP_PARAM
 operator|->
-name|device_type
+name|type
 condition|)
 block|{
 if|#
@@ -777,7 +777,7 @@ operator|=
 operator|(
 name|ATP_PARAM
 operator|->
-name|cmdsize
+name|packet_size
 operator|)
 condition|?
 literal|16
@@ -1087,7 +1087,7 @@ switch|switch
 condition|(
 name|ATP_PARAM
 operator|->
-name|device_type
+name|type
 condition|)
 block|{
 if|#
@@ -1516,13 +1516,13 @@ name|unit
 argument_list|,
 name|ATA_C_PACKET_CMD
 argument_list|,
+operator|(
 name|request
 operator|->
 name|bytecount
-argument_list|,
-literal|0
-argument_list|,
-literal|0
+operator|<<
+literal|8
+operator|)
 argument_list|,
 literal|0
 argument_list|,
@@ -1584,7 +1584,7 @@ if|if
 condition|(
 name|ATP_PARAM
 operator|->
-name|drqtype
+name|drq_type
 operator|==
 name|ATAPI_DRQT_INTR
 condition|)
@@ -2673,7 +2673,7 @@ condition|?
 operator|(
 name|ATP_PARAM
 operator|->
-name|dmaflag
+name|support_dma
 condition|?
 literal|4
 else|:
@@ -2697,7 +2697,7 @@ condition|?
 operator|(
 name|ATP_PARAM
 operator|->
-name|dmaflag
+name|support_dma
 condition|?
 literal|2
 else|:

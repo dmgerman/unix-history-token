@@ -126,7 +126,7 @@ name|int
 name|lun
 decl_stmt|;
 comment|/* logical unit number */
-name|u_int32_t
+name|u_int64_t
 name|total_secs
 decl_stmt|;
 comment|/* total # of sectors (LBA) */
@@ -154,7 +154,7 @@ name|AD_F_LABELLING
 value|0x0001
 define|#
 directive|define
-name|AD_F_LBA_ENABLED
+name|AD_F_CHS_USED
 value|0x0002
 define|#
 directive|define
