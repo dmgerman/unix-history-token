@@ -4,7 +4,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c	2.19	(Berkeley)	%G%"
+literal|"@(#)main.c	2.20	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,7 +481,7 @@ begin_define
 define|#
 directive|define
 name|MAXLNCNT
-value|50
+value|500
 end_define
 
 begin_comment
@@ -7807,7 +7807,7 @@ operator|==
 name|DONTKNOW
 condition|)
 block|{
-name|pwarn
+name|pfatal
 argument_list|(
 literal|"DIRECTORY %D CORRUPTED"
 argument_list|,
@@ -7822,24 +7822,6 @@ name|fix
 operator|=
 name|NOFIX
 expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" (SALVAGED)\n"
-argument_list|)
-expr_stmt|;
-name|dirp
-operator|->
-name|fix
-operator|=
-name|FIX
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|reply
@@ -8055,7 +8037,7 @@ operator|==
 name|DONTKNOW
 condition|)
 block|{
-name|pwarn
+name|pfatal
 argument_list|(
 literal|"DIRECTORY %D CORRUPTED"
 argument_list|,
@@ -8070,24 +8052,6 @@ name|fix
 operator|=
 name|NOFIX
 expr_stmt|;
-if|if
-condition|(
-name|preen
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" (SALVAGED)\n"
-argument_list|)
-expr_stmt|;
-name|dirp
-operator|->
-name|fix
-operator|=
-name|FIX
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
 name|reply
