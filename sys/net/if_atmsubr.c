@@ -238,8 +238,6 @@ literal|0
 decl_stmt|;
 comment|/* if using LLC/SNAP */
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
