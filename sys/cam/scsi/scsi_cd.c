@@ -2013,6 +2013,32 @@ argument_list|(
 literal|"removing device entry\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sysctl_ctx_free
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|sysctl_ctx
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|xpt_print_path
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"can't remove sysctl context\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|s
 operator|=
 name|splsoftcam
@@ -2908,6 +2934,14 @@ argument_list|,
 name|periph
 operator|->
 name|unit_number
+argument_list|)
+expr_stmt|;
+name|sysctl_ctx_init
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|sysctl_ctx
 argument_list|)
 expr_stmt|;
 name|softc
