@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.16 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGFS
+end_ifdef
 
 begin_include
 include|#
@@ -487,19 +493,16 @@ name|devvp
 operator|->
 name|v_rdev
 expr_stmt|;
-operator|(
-operator|*
-operator|(
+call|(
 name|devvp
 operator|->
 name|v_op
 operator|->
 name|vop_strategy
-operator|)
-operator|)
-operator|(
+call|)
+argument_list|(
 name|bp
-operator|)
+argument_list|)
 expr_stmt|;
 name|curproc
 operator|->
@@ -594,6 +597,15 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOGFS */
+end_comment
 
 end_unit
 

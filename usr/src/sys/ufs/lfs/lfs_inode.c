@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.42 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.43 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGFS
+end_ifdef
 
 begin_include
 include|#
@@ -73,6 +79,18 @@ begin_include
 include|#
 directive|include
 file|"../ufs/ufsmount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vm/vm_param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vm/lock.h"
 end_include
 
 begin_include
@@ -190,6 +208,12 @@ begin_comment
 comment|/* 1 => print out reclaim of active vnodes */
 end_comment
 
+begin_decl_stmt
+name|lock_data_t
+name|lfs_sync_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Initialize hash links for inodes.  */
 end_comment
@@ -238,7 +262,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* not lint */
+name|lock_init
+argument_list|(
+operator|&
+name|lfs_sync_lock
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -313,15 +344,6 @@ name|lfsihead
 modifier|*
 name|ih
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_hqueue ino %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
 name|ih
 operator|=
 operator|&
@@ -2796,6 +2818,15 @@ endif|#
 directive|endif
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOGFS */
+end_comment
 
 end_unit
 

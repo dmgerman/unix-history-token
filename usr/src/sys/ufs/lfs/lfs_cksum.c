@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_cksum.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_cksum.c	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGFS
+end_ifdef
 
 begin_include
 include|#
@@ -10,7 +16,7 @@ file|<sys/types.h>
 end_include
 
 begin_comment
-comment|/*  * cksum --  *	Simple, general purpose, fast checksum.  */
+comment|/*  * Simple, general purpose, fast checksum.  Data must be short-aligned.  * Returns a u_long in case we ever want to do something more rigorous.  */
 end_comment
 
 begin_function
@@ -81,6 +87,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOGFS */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_extern.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -18,6 +18,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|mount
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|nameidata
 struct_decl|;
 end_struct_decl
 
@@ -112,6 +118,18 @@ operator|(
 expr|struct
 name|buf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lfs_cleaner
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -263,6 +281,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|lfs_iset
+name|__P
+argument_list|(
+operator|(
+name|INODE
+operator|*
+operator|,
+name|daddr_t
+operator|,
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|lfs_lookup
 name|__P
@@ -325,6 +360,21 @@ expr|struct
 name|vnode
 operator|*
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lfs_segwrite
+name|__P
+argument_list|(
+operator|(
+name|MOUNT
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -451,6 +501,18 @@ operator|(
 expr|struct
 name|vnode
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|lfs_spin
+name|__P
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -152,7 +152,7 @@ name|u_long
 name|fi_version
 decl_stmt|;
 comment|/* version number */
-name|ino_t
+name|u_long
 name|fi_ino
 decl_stmt|;
 comment|/* inode number */
@@ -200,6 +200,16 @@ modifier|*
 name|cbpp
 decl_stmt|;
 comment|/* Pointer to next available bp */
+name|BUF
+modifier|*
+name|ibp
+decl_stmt|;
+comment|/* Buffer pointer to inode page */
+name|BUF
+modifier|*
+name|sbp
+decl_stmt|;
+comment|/* Segment summary buffer pointer */
 name|void
 modifier|*
 name|segsum

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_bio.c	5.2 (Berkeley) %G%  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGFS
+end_ifdef
 
 begin_include
 include|#
@@ -58,7 +64,7 @@ file|"lfs.h"
 end_include
 
 begin_comment
-comment|/*  * lfs_bwrite --  *	LFS version of bawrite, bdwrite, bwrite.  Set the delayed write flag  *	and use reassignbuf to move the buffer from the clean list to the  *	dirty one.  Then unlock the buffer.  */
+comment|/*  * LFS version of bawrite, bdwrite, bwrite.  Set the delayed write flag and  * use reassignbuf to move the buffer from the clean list to the dirty one,  * then unlock the buffer.  */
 end_comment
 
 begin_expr_stmt
@@ -75,16 +81,34 @@ end_expr_stmt
 
 begin_block
 block|{
-name|curproc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
+ifdef|#
+directive|ifdef
+name|DO_ACCOUNTING
+name|Not
+name|included
+name|as
+name|this
+name|gets
+name|called
+name|from
+name|lots
+name|of
+name|places
+name|where
+name|the
+name|current
+name|proc
+name|structure
+name|is
+name|probably
+name|wrong
 operator|.
-name|ru_oublock
-operator|++
-expr_stmt|;
+name|Ignore
+for|for now. 	curproc->p_stats->p_ru.ru_oublock++
+empty_stmt|;
 comment|/* XXX: no one paid yet */
+endif|#
+directive|endif
 name|bp
 operator|->
 name|b_flags
@@ -96,14 +120,14 @@ operator||
 name|B_DONE
 operator||
 name|B_ERROR
-operator||
-name|B_DELWRI
 operator|)
 expr_stmt|;
 name|bp
 operator|->
 name|b_flags
 operator||=
+name|B_WRITE
+operator||
 name|B_DELWRI
 expr_stmt|;
 name|reassignbuf
@@ -115,7 +139,7 @@ operator|->
 name|b_vp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: do this inline */
+comment|/* XXX: do this inline? */
 name|brelse
 argument_list|(
 name|bp
@@ -123,6 +147,15 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOGFS */
+end_comment
 
 end_unit
 
