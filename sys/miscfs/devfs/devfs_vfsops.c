@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.10 1996/04/06 13:34:36 joerg Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.11 1996/04/07 01:15:02 joerg Exp $  *  *  */
 end_comment
 
 begin_include
@@ -423,19 +423,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|ronly
-init|=
-operator|(
-name|mp
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|!=
-literal|0
-decl_stmt|;
 name|struct
 name|devfsmount
 modifier|*
@@ -620,16 +607,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|flags
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|devfsmount
 modifier|*
@@ -683,7 +660,7 @@ operator|~
 name|MNT_LOCAL
 expr_stmt|;
 return|return
-name|error
+literal|0
 return|;
 block|}
 end_function

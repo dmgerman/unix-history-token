@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.19 1996/04/06 13:34:37 joerg Exp $  *  * symlinks can wait 'til later.  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vnops.c,v 1.20 1996/04/07 01:15:02 joerg Exp $  *  * symlinks can wait 'til later.  */
 end_comment
 
 begin_include
@@ -101,14 +101,6 @@ end_include
 
 begin_comment
 comment|/* defines dirent structure		*/
-end_comment
-
-begin_comment
-comment|/*#include "vnode_if.h"*/
-end_comment
-
-begin_comment
-comment|/* must be included elsewhere (vnode.h?)*/
 end_comment
 
 begin_include
@@ -313,9 +305,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|)
 condition|)
 block|{
@@ -726,9 +716,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|)
 condition|)
 block|{
@@ -812,9 +800,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|)
 condition|)
 return|return
@@ -967,9 +953,7 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
-name|cnp
-operator|->
-name|cn_proc
+name|p
 argument_list|)
 condition|)
 return|return
@@ -1158,6 +1142,12 @@ begin_comment
 comment|/*  *  Create a regular file.  *  We must also free the pathname buffer pointed at  *  by ndp->ni_pnbuf, always on error, or only if the  *  SAVESTART bit in ni_nameiop is clear on success.  *<still true in 4.4?>  *  *  Always  error... no such thing in this FS  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -1305,6 +1295,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1330,6 +1329,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -1354,6 +1359,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_function
 specifier|static
@@ -1392,15 +1406,6 @@ init|=
 name|ap
 operator|->
 name|a_cred
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|ap
-operator|->
-name|a_p
 decl_stmt|;
 name|dn_p
 name|file_node
@@ -1578,24 +1583,6 @@ init|=
 name|ap
 operator|->
 name|a_vap
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|ap
-operator|->
-name|a_cred
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-init|=
-name|ap
-operator|->
-name|a_p
 decl_stmt|;
 name|dn_p
 name|file_node
@@ -2315,9 +2302,6 @@ parameter_list|)
 comment|/*struct vop_read_args {                 struct vnode *a_vp;                 struct uio *a_uio;                 int  a_ioflag;                 struct ucred *a_cred;         } */
 block|{
 name|int
-name|eof
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
@@ -2554,6 +2538,12 @@ begin_comment
 comment|/* presently not called from devices anyhow */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -2673,11 +2663,6 @@ name|ap
 parameter_list|)
 comment|/*struct vop_seek_args  {                 struct vnode *a_vp;                 off_t  a_oldoff;                 off_t  a_newoff;                 struct ucred *a_cred;         } */
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 name|DBPRINT
 argument_list|(
 operator|(
@@ -2690,6 +2675,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_function
 specifier|static
@@ -2740,14 +2734,6 @@ name|tnp
 decl_stmt|;
 name|int
 name|doingdirectory
-init|=
-literal|0
-decl_stmt|,
-name|oldparent
-init|=
-literal|0
-decl_stmt|,
-name|newparent
 init|=
 literal|0
 decl_stmt|;
@@ -3100,23 +3086,9 @@ name|devnm_p
 name|tnp
 decl_stmt|;
 name|int
-name|doingdirectory
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|uid_t
-name|outuid
-init|=
-name|cnp
-operator|->
-name|cn_cred
-operator|->
-name|cr_uid
 decl_stmt|;
 name|DBPRINT
 argument_list|(
@@ -3386,28 +3358,11 @@ name|int
 name|doingdirectory
 init|=
 literal|0
-decl_stmt|,
-name|oldparent
-init|=
-literal|0
-decl_stmt|,
-name|newparent
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|uid_t
-name|outuid
-init|=
-name|tcnp
-operator|->
-name|cn_cred
-operator|->
-name|cr_uid
 decl_stmt|;
 comment|/* 	 * First catch an arbitrary restriction for this FS 	 */
 if|if
@@ -4178,6 +4133,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -4253,6 +4214,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Vnode op for readdir  */
 end_comment
@@ -4286,15 +4252,6 @@ init|=
 name|ap
 operator|->
 name|a_uio
-decl_stmt|;
-name|struct
-name|ucred
-modifier|*
-name|cred
-init|=
-name|ap
-operator|->
-name|a_cred
 decl_stmt|;
 name|struct
 name|dirent
@@ -4710,6 +4667,12 @@ begin_comment
 comment|/*  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_function
 specifier|static
 name|int
@@ -4789,6 +4752,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -4813,6 +4785,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
 
 begin_function
 specifier|static
@@ -4924,14 +4902,6 @@ name|ap
 parameter_list|)
 comment|/*struct vop_strategy_args {                 struct buf *a_bp;         } */
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
 name|DBPRINT
 argument_list|(
 operator|(
@@ -4997,6 +4967,15 @@ return|;
 comment|/* we don't do locking yet		*/
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* notyet */
+end_comment
 
 begin_function
 specifier|static
@@ -5288,28 +5267,6 @@ literal|"devfs: bad op"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_comment
-comment|/*  * devfs vnode null operation  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|devfs_nullop
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 

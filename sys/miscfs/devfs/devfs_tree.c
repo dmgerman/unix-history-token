@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.23 1996/04/06 13:34:35 joerg Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.24 1996/04/07 01:15:01 joerg Exp $  */
 end_comment
 
 begin_include
@@ -152,9 +152,6 @@ name|int
 name|retval
 decl_stmt|;
 comment|/* we will discard this */
-name|devnm_p
-name|new
-decl_stmt|;
 comment|/* 	 * call the right routine at the right time with the right args.... 	 */
 name|retval
 operator|=
@@ -809,10 +806,6 @@ block|{
 name|devnm_p
 name|devnmp
 decl_stmt|;
-name|devnm_p
-name|realthing
-decl_stmt|;
-comment|/* needed to create an alias */
 name|int
 name|retval
 decl_stmt|;
@@ -1299,9 +1292,6 @@ parameter_list|)
 block|{
 name|dn_p
 name|dnp
-decl_stmt|;
-name|int
-name|retval
 decl_stmt|;
 name|DBPRINT
 argument_list|(
@@ -2126,11 +2116,6 @@ parameter_list|)
 block|{
 name|devnm_p
 name|newnmp
-decl_stmt|;
-name|struct
-name|devfsmount
-modifier|*
-name|dmt
 decl_stmt|;
 name|devnm_p
 name|newback
@@ -3665,13 +3650,6 @@ decl_stmt|;
 comment|/* devnode for parent directory */
 name|int
 name|retval
-decl_stmt|;
-name|int
-name|major
-decl_stmt|;
-name|union
-name|typeinfo
-name|by
 decl_stmt|;
 name|va_list
 name|ap
