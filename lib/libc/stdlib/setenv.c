@@ -18,13 +18,26 @@ name|lint
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)setenv.c	8.1 (Berkeley) 6/4/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)setenv.c	8.1 (Berkeley) 6/4/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,14 +251,14 @@ name|alloced
 condition|)
 block|{
 comment|/* just increase size */
-name|environ
+name|p
 operator|=
 operator|(
 name|char
 operator|*
 operator|*
 operator|)
-name|reallocf
+name|realloc
 argument_list|(
 operator|(
 name|char
@@ -274,7 +287,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|environ
+name|p
 condition|)
 return|return
 operator|(
@@ -282,14 +295,14 @@ operator|-
 literal|1
 operator|)
 return|;
+name|environ
+operator|=
+name|p
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* get new space */
-name|alloced
-operator|=
-literal|1
-expr_stmt|;
 comment|/* copy old entries into it */
 name|p
 operator|=
@@ -324,6 +337,10 @@ operator|-
 literal|1
 operator|)
 return|;
+name|alloced
+operator|=
+literal|1
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|environ
