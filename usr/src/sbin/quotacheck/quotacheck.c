@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	4.5 (Berkeley, Melbourne) %G%"
+literal|"@(#)quotacheck.c	4.6 (Berkeley, Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -715,6 +721,16 @@ name|struct
 name|dqblk
 name|dqbuf
 decl_stmt|;
+specifier|static
+name|int
+name|warned
+init|=
+literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|rawdisk
 operator|=
 name|makerawname
@@ -878,6 +894,8 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|quota
 argument_list|(
 name|Q_SYNC
@@ -888,7 +906,30 @@ name|quotadev
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINVAL
+operator|&&
+operator|!
+name|warned
+operator|&&
+name|vflag
+condition|)
+block|{
+name|warned
+operator|++
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"*** Warning: Quotas are not compiled into this kernel\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|sync
 argument_list|()
 expr_stmt|;

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)repquota.c	4.3 (Berkeley, from Melbourne) %G%"
+literal|"@(#)repquota.c	4.4 (Berkeley, from Melbourne) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -586,6 +592,16 @@ name|struct
 name|stat
 name|statb
 decl_stmt|;
+specifier|static
+name|int
+name|warned
+init|=
+literal|0
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 if|if
 condition|(
 name|vflag
@@ -653,6 +669,8 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
 name|quota
 argument_list|(
 name|Q_SYNC
@@ -665,7 +683,30 @@ name|st_dev
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINVAL
+operator|&&
+operator|!
+name|warned
+operator|&&
+name|vflag
+condition|)
+block|{
+name|warned
+operator|++
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"*** Warning: Quotas are not compiled into this kernel\n"
+argument_list|)
+expr_stmt|;
+block|}
 for|for
 control|(
 name|uid
