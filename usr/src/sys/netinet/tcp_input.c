@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.58	82/03/10	*/
+comment|/*	tcp_input.c	1.59	82/03/11	*/
 end_comment
 
 begin_include
@@ -3379,12 +3379,6 @@ decl_stmt|;
 name|int
 name|cnt
 init|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|tcpiphdr
-argument_list|)
-operator|+
 name|ti
 operator|->
 name|ti_urp

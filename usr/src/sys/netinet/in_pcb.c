@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.18	82/03/03	*/
+comment|/*	in_pcb.c	4.19	82/03/11	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../net/in_pcb.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/protosw.h"
 end_include
 
 begin_comment
@@ -223,6 +229,11 @@ name|aport
 init|=
 name|lport
 decl_stmt|;
+name|int
+name|wild
+init|=
+literal|0
+decl_stmt|;
 if|#
 directive|if
 name|vax
@@ -255,6 +266,34 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|so
+operator|->
+name|so_proto
+operator|->
+name|pr_flags
+operator|&
+name|PR_CONNREQUIRED
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_ACCEPTCONN
+operator|)
+operator|==
+literal|0
+condition|)
+name|wild
+operator|=
+name|INPLOOKUP_WILDCARD
+expr_stmt|;
+if|if
+condition|(
 name|in_pcblookup
 argument_list|(
 name|head
@@ -269,7 +308,7 @@ name|sin_addr
 argument_list|,
 name|lport
 argument_list|,
-literal|0
+name|wild
 argument_list|)
 condition|)
 return|return
@@ -479,6 +518,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Connect from a socket to a specified address.  * Both address and port must be specified in argument sin.  * If don't have a local address for this socket yet,  * then pick one.  */
+end_comment
+
 begin_macro
 name|in_pcbconnect
 argument_list|(
@@ -602,6 +645,16 @@ argument_list|,
 name|inp
 operator|->
 name|inp_laddr
+operator|.
+name|s_addr
+condition|?
+name|inp
+operator|->
+name|inp_laddr
+else|:
+name|ifp
+operator|->
+name|if_addr
 argument_list|,
 name|inp
 operator|->
@@ -828,7 +881,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Look for a control block to accept a segment.  * First choice is an exact address match.  * Second choice is a match with either the foreign or the local  * address specified.  *  * SHOULD ALLOW MATCH ON MULTI-HOMING ONLY  */
+comment|/*  * Look for a control block to accept a segment, or to make  * sure   * First choice is an exact address match.  * Second choice is a match with either the foreign or the local  * address specified.  *  * SHOULD ALLOW MATCH ON MULTI-HOMING ONLY  */
 end_comment
 
 begin_function
@@ -932,6 +985,18 @@ condition|)
 block|{
 if|if
 condition|(
+name|laddr
+operator|.
+name|s_addr
+operator|==
+literal|0
+condition|)
+name|wildcard
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|inp
 operator|->
 name|inp_laddr
@@ -969,6 +1034,18 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|faddr
+operator|.
+name|s_addr
+operator|==
+literal|0
+condition|)
+name|wildcard
+operator|++
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|inp
