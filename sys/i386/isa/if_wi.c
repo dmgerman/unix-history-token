@@ -1449,7 +1449,7 @@ name|sc
 operator|->
 name|wi_ptype
 operator|=
-name|WI_PORTTYPE_ADHOC
+name|WI_PORTTYPE_BSS
 expr_stmt|;
 name|sc
 operator|->
