@@ -492,6 +492,12 @@ index|[]
 init|=
 block|{
 block|{
+literal|0x0100e7b1
+block|,
+literal|"Logitec LHA-301"
+block|}
+block|,
+block|{
 literal|0x110154dc
 block|,
 literal|"I-O DATA SC-98III"
