@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n4.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n4.c	2.2 (CWI) 90/11/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,6 +140,10 @@ name|nform
 operator|=
 literal|0
 expr_stmt|;
+name|lgf
+operator|++
+expr_stmt|;
+comment|/* don;t catch ligatures */
 if|if
 condition|(
 operator|(
@@ -177,6 +181,10 @@ name|ch
 operator|=
 name|ii
 expr_stmt|;
+name|lgf
+operator|--
+expr_stmt|;
+comment|/* ok, catch `em again */
 if|if
 condition|(
 name|falsef
