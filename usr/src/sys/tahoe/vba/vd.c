@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.7	86/01/21	*/
+comment|/*	vd.c	1.8	86/01/23	*/
 end_comment
 
 begin_include
@@ -451,13 +451,10 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* dcbs for overlapped seeks */
-comment|/* buffer for raw/swap i/o */
-name|char
+name|caddr_t
 name|rawbuf
-index|[
-name|VDMAXIO
-index|]
 decl_stmt|;
+comment|/* buffer for raw+swap i/o */
 block|}
 name|ctlr_tab
 typedef|;
@@ -679,7 +676,7 @@ operator||
 name|CCF_ERR
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate page tables. 	 */
+comment|/* 	 * Allocate page tables and i/o buffer. 	 */
 name|vbmapalloc
 argument_list|(
 name|btoc
@@ -698,6 +695,15 @@ operator|&
 name|ci
 operator|->
 name|utl
+argument_list|)
+expr_stmt|;
+name|ci
+operator|->
+name|rawbuf
+operator|=
+name|calloc
+argument_list|(
+name|VDMAXIO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize all the drives to be of an unknown type. 	 */
