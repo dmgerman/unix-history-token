@@ -5999,7 +5999,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"enhanced floppy controller (i82077, NE72065 or clone)"
+literal|"Enhanced floppy controller (i82077, NE72065 or clone)"
 argument_list|)
 expr_stmt|;
 name|fdc
@@ -6014,7 +6014,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"generic floppy controller"
+literal|"Generic floppy controller"
 argument_list|)
 expr_stmt|;
 name|fdc
