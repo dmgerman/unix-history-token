@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -190,7 +196,7 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umapfs_init\n"
@@ -447,13 +453,21 @@ name|vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umap_node_find(mp = %x, target = %x)\n"
+literal|"umap_node_find(mp = %p, target = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|targetvp
 argument_list|)
 expr_stmt|;
@@ -529,7 +543,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umap_node_find: vget failed.\n"
@@ -550,13 +564,21 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umap_node_find(%x, %x): NOT found\n"
+literal|"umap_node_find(%p, %p): NOT found\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|targetvp
 argument_list|)
 expr_stmt|;
@@ -836,7 +858,7 @@ block|{
 comment|/* 		 * Take another reference to the alias vnode 		 */
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"umap_node_create: exists"
@@ -856,7 +878,7 @@ decl_stmt|;
 comment|/* 		 * Get new vnode. 		 */
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umap_node_create: create new alias vnode\n"
@@ -895,7 +917,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"umap_node_create: alias"
@@ -928,7 +950,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DDB
 end_ifdef
 
 begin_decl_stmt
@@ -1002,8 +1024,12 @@ name|p
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"vp = %x, ZERO ptr\n"
+literal|"vp = %p, ZERO ptr\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 argument_list|)
 expr_stmt|;
@@ -1030,8 +1056,12 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 index|[
 name|i
@@ -1076,8 +1106,12 @@ name|p
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"vp = %x, unref'ed lowervp\n"
+literal|"vp = %p, unref'ed lowervp\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|vp
 argument_list|)
 expr_stmt|;
@@ -1104,8 +1138,12 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|" %x"
+literal|" %p"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|p
 index|[
 name|i
@@ -1150,6 +1188,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DDB */
+end_comment
 
 begin_comment
 comment|/* umap_mapids maps all of the ids in a credential, both user and group. */

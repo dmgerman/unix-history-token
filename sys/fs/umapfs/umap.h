@@ -277,7 +277,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DDB
 end_ifdef
 
 begin_decl_stmt

@@ -422,7 +422,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAP_DIAGNOSTIC
+name|DEBUG
 name|int
 name|i
 decl_stmt|;
@@ -449,11 +449,15 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umapfs_mount(mp = %x)\n"
+literal|"umapfs_mount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -552,11 +556,15 @@ name|ni_vp
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"vp = %x, check for VDIR...\n"
+literal|"vp = %p, check for VDIR...\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|lowerrootvp
 argument_list|)
 expr_stmt|;
@@ -597,11 +605,15 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"mp = %x\n"
+literal|"mp = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -692,7 +704,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|UMAP_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umap_mount:nentries %d\n"
@@ -719,7 +731,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"   %d maps to %d\n"
+literal|"   %lu maps to %lu\n"
 argument_list|,
 name|amp
 operator|->
@@ -782,7 +794,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|UMAP_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umap_mount:gnentries %d\n"
@@ -809,7 +821,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"	group %d maps to %d\n"
+literal|"	group %lu maps to %lu\n"
 argument_list|,
 name|amp
 operator|->
@@ -1023,7 +1035,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
 literal|"umapfs_mount: lower %s, alias at %s\n"
@@ -1140,11 +1152,15 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umapfs_unmount(mp = %x)\n"
+literal|"umapfs_unmount(mp = %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|)
 expr_stmt|;
@@ -1222,7 +1238,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|vprint
 argument_list|(
 literal|"alias root of lower"
@@ -1305,13 +1321,21 @@ name|vp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umapfs_root(mp = %x, vp = %x->%x)\n"
+literal|"umapfs_root(mp = %p, vp = %p->%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|MOUNTTOUMAPMOUNT
 argument_list|(
 name|mp
@@ -1319,6 +1343,10 @@ argument_list|)
 operator|->
 name|umapm_rootvp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|UMAPVPTOLOWERVP
 argument_list|(
 name|MOUNTTOUMAPMOUNT
@@ -1466,13 +1494,21 @@ name|mstat
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|UMAPFS_DIAGNOSTIC
+name|DEBUG
 name|printf
 argument_list|(
-literal|"umapfs_statfs(mp = %x, vp = %x->%x)\n"
+literal|"umapfs_statfs(mp = %p, vp = %p->%p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|MOUNTTOUMAPMOUNT
 argument_list|(
 name|mp
@@ -1480,6 +1516,10 @@ argument_list|)
 operator|->
 name|umapm_rootvp
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|UMAPVPTOLOWERVP
 argument_list|(
 name|MOUNTTOUMAPMOUNT
