@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	2.2 (Berkeley) %G%"
+literal|"@(#)cmds.c	2.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -951,7 +951,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: unknown host %s\n"
+literal|"%s: unknown host\n"
 argument_list|,
 operator|*
 name|argv
