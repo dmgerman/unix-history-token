@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -475,15 +475,8 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The root inode is the root of the file system.  Inode 0 is the out-of-band  * inode, and inode 1 is the inode number for the ifile.  Thus the root inode  * is 2.  */
+comment|/*  * Inode 0 is the out-of-band inode, and inode 1 is the inode number for the  * ifile.  Thus the root inode is 2, and the lost+found inode is 3.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ROOTINO
-value|((ino_t)2)
-end_define
 
 begin_define
 define|#
