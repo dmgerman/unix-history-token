@@ -569,11 +569,25 @@ name|fprintf
 argument_list|(
 name|outf
 argument_list|,
+literal|"#ifndef BURN_BRIDGES\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outf
+argument_list|,
 literal|"#define %s %d\n"
 argument_list|,
 name|name
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outf
+argument_list|,
+literal|"#endif\n"
 argument_list|)
 expr_stmt|;
 operator|(
