@@ -76,12 +76,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kse.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/pioctl.h>
 end_include
 
@@ -3454,21 +3448,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"syscall: kse/thread UNLINKED"
-operator|)
-argument_list|)
-expr_stmt|;
 name|sticks
 operator|=
 name|td
