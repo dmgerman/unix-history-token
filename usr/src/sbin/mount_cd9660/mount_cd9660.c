@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *      The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley  * by Pace Willisson (pace@blitz.com).  The Rock Ridge Extension  * Support code is derived from software contributed to Berkeley  * by Atsushi Murai (amurai@spec.co.jp).  *  * %sccs.include.redist.c%  *  *      @(#)mount_cd9660.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_cd9660.c	8.1 (Berkeley) %G%"
+literal|"@(#)mount_cd9660.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ end_include
 begin_define
 define|#
 directive|define
-name|ISOFS
+name|CD9660
 end_define
 
 begin_include
@@ -365,7 +365,7 @@ if|if
 condition|(
 name|mount
 argument_list|(
-name|MOUNT_ISOFS
+name|MOUNT_CD9660
 argument_list|,
 name|dir
 argument_list|,
