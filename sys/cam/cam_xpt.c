@@ -1641,29 +1641,6 @@ literal|0
 block|}
 block|,
 block|{
-comment|/* COMPAQ/HP Smart Array RAID controllers */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"COMPAQ"
-block|,
-literal|"RAID*"
-block|,
-literal|"*"
-block|}
-block|,
-name|CAM_QUIRK_NOSERIAL
-block|,
-comment|/*mintags*/
-literal|0
-block|,
-comment|/*maxtags*/
-literal|0
-block|}
-block|,
-block|{
 comment|/* Default tagged queuing parameters for all devices */
 block|{
 name|T_ANY
