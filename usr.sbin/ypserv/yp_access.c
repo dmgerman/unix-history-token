@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -105,7 +111,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: yp_access.c,v 1.3 1996/02/24 22:01:41 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,20 +267,6 @@ operator|=
 name|securenets
 operator|->
 name|next
-expr_stmt|;
-name|free
-argument_list|(
-name|securenets
-operator|->
-name|net
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|securenets
-operator|->
-name|mask
-argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
