@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interactive.c	5.9 (Berkeley) %G%"
+literal|"@(#)interactive.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2027,7 +2027,7 @@ name|rescan
 init|=
 literal|0
 decl_stmt|;
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
@@ -3016,7 +3016,7 @@ name|struct
 name|afile
 name|single
 decl_stmt|;
-name|DIR
+name|RST_DIR
 modifier|*
 name|dirp
 decl_stmt|;
