@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getpwent.c,v 1.6 1994/02/27 22:29:41 ache Exp $"
+literal|"$Id: getpwent.c,v 1.7 1994/03/02 19:46:20 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2494,6 +2494,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|warned
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
