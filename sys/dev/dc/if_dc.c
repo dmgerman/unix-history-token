@@ -9272,21 +9272,15 @@ name|DC_TX_STORENFWD
 expr_stmt|;
 name|sc
 operator|->
-name|dc_pmode
-operator|=
-name|DC_PMODE_MII
-expr_stmt|;
-if|if
-condition|(
-name|revision
-operator|>=
-name|DC_REVISION_DM9102A
-condition|)
-name|sc
-operator|->
 name|dc_flags
 operator||=
 name|DC_TX_ALIGN
+expr_stmt|;
+name|sc
+operator|->
+name|dc_pmode
+operator|=
+name|DC_PMODE_MII
 expr_stmt|;
 comment|/* Increase the latency timer value. */
 name|command
