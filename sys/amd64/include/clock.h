@@ -110,19 +110,6 @@ struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
-name|void
-name|DELAY
-name|__P
-argument_list|(
-operator|(
-name|int
-name|usec
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|acquire_timer0
 name|__P

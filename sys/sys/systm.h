@@ -2860,6 +2860,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* XXX: Should be void nanodelay(u_int nsec); */
+end_comment
+
+begin_decl_stmt
+name|void
+name|DELAY
+name|__P
+argument_list|(
+operator|(
+name|int
+name|usec
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
