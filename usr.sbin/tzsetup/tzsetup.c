@@ -2564,6 +2564,9 @@ name|copymode
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
 if|if
 condition|(
 name|copymode
@@ -2602,6 +2605,8 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|reallydoit
@@ -2931,6 +2936,9 @@ return|;
 block|}
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|VERBOSE
 if|if
 condition|(
 name|copymode
@@ -2975,6 +2983,8 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|DITEM_LEAVE_MENU
 return|;
