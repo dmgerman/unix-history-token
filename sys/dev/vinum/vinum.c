@@ -2028,7 +2028,39 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* FALLTHROUGH */
+name|index
+operator|=
+name|Plexno
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|index
+operator|>=
+name|vinum_conf
+operator|.
+name|plexes_allocated
+condition|)
+comment|/* no such plex */
+return|return
+name|ENXIO
+return|;
+name|PLEX
+index|[
+name|index
+index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
+expr_stmt|;
+comment|/* no longer open */
+return|return
+literal|0
+return|;
 case|case
 name|VINUM_SD_TYPE
 case|:
@@ -2062,7 +2094,39 @@ return|return
 name|ENXIO
 return|;
 comment|/* no such device */
-comment|/* FALLTHROUGH */
+name|index
+operator|=
+name|Sdno
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|index
+operator|>=
+name|vinum_conf
+operator|.
+name|subdisks_allocated
+condition|)
+comment|/* no such sd */
+return|return
+name|ENXIO
+return|;
+name|SD
+index|[
+name|index
+index|]
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
+expr_stmt|;
+comment|/* no longer open */
+return|return
+literal|0
+return|;
 default|default:
 return|return
 name|ENODEV
