@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.28 1996/03/27 18:23:16 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tcp_subr.c	8.2 (Berkeley) 5/24/95  *	$Id: tcp_subr.c,v 1.29 1996/06/05 16:57:37 wollman Exp $  */
 end_comment
 
 begin_include
@@ -1330,7 +1330,7 @@ name|t_inpcb
 operator|=
 name|inp
 expr_stmt|;
-comment|/* 	 * Init srtt to TCPTV_SRTTBASE (0), so we can tell that we have no 	 * rtt estimate.  Set rttvar so that srtt + 2 * rttvar gives 	 * reasonable initial retransmit time. 	 */
+comment|/* 	 * Init srtt to TCPTV_SRTTBASE (0), so we can tell that we have no 	 * rtt estimate.  Set rttvar so that srtt + 4 * rttvar gives 	 * reasonable initial retransmit time. 	 */
 name|tp
 operator|->
 name|t_srtt
@@ -1341,11 +1341,17 @@ name|tp
 operator|->
 name|t_rttvar
 operator|=
-name|tcp_rttdflt
-operator|*
-name|PR_SLOWHZ
+operator|(
+operator|(
+name|TCPTV_RTOBASE
+operator|-
+name|TCPTV_SRTTBASE
+operator|)
 operator|<<
 name|TCP_RTTVAR_SHIFT
+operator|)
+operator|/
+literal|4
 expr_stmt|;
 name|tp
 operator|->
@@ -1353,32 +1359,11 @@ name|t_rttmin
 operator|=
 name|TCPTV_MIN
 expr_stmt|;
-name|TCPT_RANGESET
-argument_list|(
 name|tp
 operator|->
 name|t_rxtcur
-argument_list|,
-operator|(
-operator|(
-name|TCPTV_SRTTBASE
-operator|>>
-literal|2
-operator|)
-operator|+
-operator|(
-name|TCPTV_SRTTDFLT
-operator|<<
-literal|2
-operator|)
-operator|)
-operator|>>
-literal|1
-argument_list|,
-name|TCPTV_MIN
-argument_list|,
-name|TCPTV_REXMTMAX
-argument_list|)
+operator|=
+name|TCPTV_RTOBASE
 expr_stmt|;
 name|tp
 operator|->
