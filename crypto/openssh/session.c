@@ -3218,10 +3218,6 @@ directive|ifdef
 name|USE_PAM
 if|if
 condition|(
-name|options
-operator|.
-name|print_lastlog
-operator|&&
 operator|!
 name|is_pam_password_change_required
 argument_list|()
