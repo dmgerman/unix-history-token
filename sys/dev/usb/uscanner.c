@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uscanner.c,v 1.26 2001/12/31 12:15:22 augustss Exp $	*/
+comment|/*	$NetBSD: uscanner.c,v 1.30 2002/07/11 21:14:36 augustss Exp$	*/
 end_comment
 
 begin_comment
@@ -463,6 +463,16 @@ literal|0
 block|}
 block|,
 comment|/* HP */
+block|{
+block|{
+name|USB_VENDOR_HP
+block|,
+name|USB_PRODUCT_HP_2200C
+block|}
+block|,
+literal|0
+block|}
+block|,
 block|{
 block|{
 name|USB_VENDOR_HP
@@ -1030,6 +1040,16 @@ literal|0
 block|}
 block|,
 comment|/* Visioneer */
+block|{
+block|{
+name|USB_VENDOR_VISIONEER
+block|,
+name|USB_PRODUCT_VISIONEER_3000
+block|}
+block|,
+literal|0
+block|}
+block|,
 block|{
 block|{
 name|USB_VENDOR_VISIONEER
@@ -3391,7 +3411,7 @@ operator|(
 name|EIO
 operator|)
 return|;
-comment|/*  	 * We have no easy way of determining if a read will 	 * yield any data or a write will happen. 	 * Pretend they will. 	 */
+comment|/* 	 * We have no easy way of determining if a read will 	 * yield any data or a write will happen. 	 * Pretend they will. 	 */
 name|revents
 operator||=
 name|events
