@@ -11905,7 +11905,8 @@ argument_list|,
 literal|"%lld.%02ldu "
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|utime
 operator|.
@@ -11926,7 +11927,8 @@ argument_list|,
 literal|"%lld.%02lds "
 argument_list|,
 operator|(
-name|quad_t
+name|long
+name|long
 operator|)
 name|stime
 operator|.
