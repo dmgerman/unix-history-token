@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	1.3 %G%"
+literal|"@(#)optim.c	2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

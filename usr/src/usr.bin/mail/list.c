@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)list.c	1.5 %G%"
+literal|"@(#)list.c	2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

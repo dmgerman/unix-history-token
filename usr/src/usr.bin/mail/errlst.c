@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)errlst.c	1.1 %G%"
+literal|"@(#)errlst.c	2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

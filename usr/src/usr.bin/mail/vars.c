@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)vars.c	1.1 %G%"
+literal|"@(#)vars.c	2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 

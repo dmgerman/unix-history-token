@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.12 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.1 %G%";  */
 end_comment
 
 begin_comment

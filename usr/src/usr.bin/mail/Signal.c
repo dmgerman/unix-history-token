@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)Signal.c	1.1 %G%"
+literal|"@(#)Signal.c	2.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
