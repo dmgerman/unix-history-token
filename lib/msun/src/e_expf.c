@@ -80,6 +80,34 @@ operator|-
 literal|1.0397208405e+02
 decl_stmt|,
 comment|/* 0xc2cff1b5 */
+name|ln2HI
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|6.9313812256e-01
+block|,
+comment|/* 0x3f317180 */
+operator|-
+literal|6.9313812256e-01
+block|,}
+decl_stmt|,
+comment|/* 0xbf317180 */
+name|ln2LO
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|9.0580006145e-06
+block|,
+comment|/* 0x3717f7d1 */
+operator|-
+literal|9.0580006145e-06
+block|,}
+decl_stmt|,
+comment|/* 0xb717f7d1 */
 name|invln2
 init|=
 literal|1.4426950216e+00
@@ -117,22 +145,6 @@ begin_comment
 comment|/* 0x3331bb4c */
 end_comment
 
-begin_decl_stmt
-name|double
-name|ln2
-index|[
-literal|2
-index|]
-init|=
-block|{
-literal|6.93147180369123816490e-01
-block|,
-operator|-
-literal|6.93147180369123816490e-01
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|float
 name|__ieee754_expf
@@ -140,10 +152,18 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-comment|/* IEEE float exp */
+comment|/* default IEEE double exp */
 block|{
 name|float
 name|y
+decl_stmt|,
+name|hi
+init|=
+literal|0.0
+decl_stmt|,
+name|lo
+init|=
+literal|0.0
 decl_stmt|,
 name|c
 decl_stmt|,
@@ -181,7 +201,7 @@ name|hx
 operator|&=
 literal|0x7fffffff
 expr_stmt|;
-comment|/* |x| */
+comment|/* high word of |x| */
 comment|/* filter out non-finite argument */
 if|if
 condition|(
@@ -263,11 +283,18 @@ literal|0x3F851592
 condition|)
 block|{
 comment|/* and |x|< 1.5 ln2 */
-name|x
+name|hi
 operator|=
 name|x
 operator|-
-name|ln2
+name|ln2HI
+index|[
+name|xsb
+index|]
+expr_stmt|;
+name|lo
+operator|=
+name|ln2LO
 index|[
 name|xsb
 index|]
@@ -298,18 +325,34 @@ name|t
 operator|=
 name|k
 expr_stmt|;
-name|x
+name|hi
 operator|=
 name|x
 operator|-
 name|t
 operator|*
-name|ln2
+name|ln2HI
+index|[
+literal|0
+index|]
+expr_stmt|;
+comment|/* t*ln2HI is exact here */
+name|lo
+operator|=
+name|t
+operator|*
+name|ln2LO
 index|[
 literal|0
 index|]
 expr_stmt|;
 block|}
+name|x
+operator|=
+name|hi
+operator|-
+name|lo
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -379,15 +422,17 @@ operator|)
 operator|)
 operator|)
 expr_stmt|;
-name|y
-operator|=
+if|if
+condition|(
+name|k
+operator|==
+literal|0
+condition|)
+return|return
 name|one
 operator|-
 operator|(
 operator|(
-operator|(
-name|double
-operator|)
 name|x
 operator|*
 name|c
@@ -396,21 +441,43 @@ operator|/
 operator|(
 name|c
 operator|-
+operator|(
+name|float
+operator|)
 literal|2.0
 operator|)
 operator|-
 name|x
 operator|)
-expr_stmt|;
-if|if
-condition|(
-name|k
-operator|==
-literal|0
-condition|)
-return|return
-name|y
 return|;
+else|else
+name|y
+operator|=
+name|one
+operator|-
+operator|(
+operator|(
+name|lo
+operator|-
+operator|(
+name|x
+operator|*
+name|c
+operator|)
+operator|/
+operator|(
+operator|(
+name|float
+operator|)
+literal|2.0
+operator|-
+name|c
+operator|)
+operator|)
+operator|-
+name|hi
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|k
