@@ -119,7 +119,7 @@ parameter_list|(
 name|foo
 parameter_list|)
 define|\
-value|do { \ 		printf("pseudofs: %s(): line %d: ", __FUNCTION__, __LINE__); \ 		printf foo ; \ 		printf("\n"); \ 	} while (0)
+value|do { \ 		printf("pseudofs: %s(): line %d: ", __func__, __LINE__); \ 		printf foo ; \ 		printf("\n"); \ 	} while (0)
 end_define
 
 begin_define
@@ -130,7 +130,7 @@ parameter_list|(
 name|err
 parameter_list|)
 define|\
-value|do { \ 		printf("pseudofs: %s(): line %d: returning %d\n", \ 		    __FUNCTION__, __LINE__, err); \ 		return (err); \ 	} while (0)
+value|do { \ 		printf("pseudofs: %s(): line %d: returning %d\n", \ 		    __func__, __LINE__, err); \ 		return (err); \ 	} while (0)
 end_define
 
 begin_else
@@ -948,7 +948,7 @@ decl_stmt|;
 name|PFS_TRACE
 argument_list|(
 operator|(
-literal|"%s: %d"
+literal|"%s: %lx"
 operator|,
 name|pn
 operator|->
@@ -956,7 +956,7 @@ name|pn_name
 operator|,
 name|va
 operator|->
-name|a_com
+name|a_command
 operator|)
 argument_list|)
 expr_stmt|;
