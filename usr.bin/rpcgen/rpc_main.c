@@ -968,6 +968,37 @@ begin_comment
 comment|/* generate all files */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|int
+name|tirpcflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generating code for tirpc, by default */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|tirpcflag
@@ -979,6 +1010,11 @@ end_decl_stmt
 begin_comment
 comment|/* generating code for tirpc, by default */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|xdrfunc
@@ -5690,10 +5726,29 @@ case|case
 literal|'b'
 case|:
 comment|/* 					 *  Turn TIRPC flag off for 					 *  generating backward compatible 					 *  code 					 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|tirpcflag
+operator|=
+literal|1
+expr_stmt|;
+else|#
+directive|else
 name|tirpcflag
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'I'
@@ -6129,11 +6184,26 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* set pmflag only in tirpcmode */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|inetdflag
 operator|=
 literal|1
 expr_stmt|;
 comment|/* inetdflag is TRUE by default */
+endif|#
+directive|endif
 if|if
 condition|(
 name|cmd
