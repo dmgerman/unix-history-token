@@ -1226,97 +1226,102 @@ name|transfer_state
 decl_stmt|;
 define|#
 directive|define
-name|TSTATE_IDLE
+name|TSTATE_ATTACH
 value|0
+comment|/* in attach */
+define|#
+directive|define
+name|TSTATE_IDLE
+value|1
 define|#
 directive|define
 name|TSTATE_BBB_COMMAND
-value|1
+value|2
 comment|/* CBW transfer */
 define|#
 directive|define
 name|TSTATE_BBB_DATA
-value|2
+value|3
 comment|/* Data transfer */
 define|#
 directive|define
 name|TSTATE_BBB_DCLEAR
-value|3
-comment|/* clear endpt stall */
-define|#
-directive|define
-name|TSTATE_BBB_STATUS1
 value|4
 comment|/* clear endpt stall */
 define|#
 directive|define
-name|TSTATE_BBB_SCLEAR
+name|TSTATE_BBB_STATUS1
 value|5
 comment|/* clear endpt stall */
 define|#
 directive|define
-name|TSTATE_BBB_STATUS2
+name|TSTATE_BBB_SCLEAR
 value|6
+comment|/* clear endpt stall */
+define|#
+directive|define
+name|TSTATE_BBB_STATUS2
+value|7
 comment|/* CSW transfer */
 define|#
 directive|define
 name|TSTATE_BBB_RESET1
-value|7
+value|8
 comment|/* reset command */
 define|#
 directive|define
 name|TSTATE_BBB_RESET2
-value|8
+value|9
 comment|/* in clear stall */
 define|#
 directive|define
 name|TSTATE_BBB_RESET3
-value|9
+value|10
 comment|/* out clear stall */
 define|#
 directive|define
 name|TSTATE_CBI_COMMAND
-value|10
+value|11
 comment|/* command transfer */
 define|#
 directive|define
 name|TSTATE_CBI_DATA
-value|11
+value|12
 comment|/* data transfer */
 define|#
 directive|define
 name|TSTATE_CBI_STATUS
-value|12
+value|13
 comment|/* status transfer */
 define|#
 directive|define
 name|TSTATE_CBI_DCLEAR
-value|13
-comment|/* clear ep stall */
-define|#
-directive|define
-name|TSTATE_CBI_SCLEAR
 value|14
 comment|/* clear ep stall */
 define|#
 directive|define
-name|TSTATE_CBI_RESET1
+name|TSTATE_CBI_SCLEAR
 value|15
+comment|/* clear ep stall */
+define|#
+directive|define
+name|TSTATE_CBI_RESET1
+value|16
 comment|/* reset command */
 define|#
 directive|define
 name|TSTATE_CBI_RESET2
-value|16
+value|17
 comment|/* in clear stall */
 define|#
 directive|define
 name|TSTATE_CBI_RESET3
-value|17
+value|18
 comment|/* out clear stall */
 define|#
 directive|define
 name|TSTATE_STATES
-value|18
+value|19
 comment|/* # of states above */
 comment|/* SCSI/CAM specific variables */
 name|unsigned
@@ -1371,6 +1376,8 @@ index|]
 init|=
 block|{
 comment|/* should be kept in sync with the list at transfer_state */
+literal|"Attach"
+block|,
 literal|"Idle"
 block|,
 literal|"BBB CBW"
@@ -3832,7 +3839,7 @@ name|sc
 operator|->
 name|transfer_state
 operator|=
-name|TSTATE_IDLE
+name|TSTATE_ATTACH
 expr_stmt|;
 comment|/* request a sufficient number of xfer handles */
 for|for
@@ -4224,6 +4231,12 @@ name|proto
 argument_list|)
 expr_stmt|;
 block|}
+name|sc
+operator|->
+name|transfer_state
+operator|=
+name|TSTATE_IDLE
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|UDMASS_GEN
