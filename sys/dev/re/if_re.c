@@ -2944,19 +2944,7 @@ name|ETHER_MIN_LEN
 operator|-
 name|ETHER_CRC_LEN
 expr_stmt|;
-comment|/* Queue the packet, start transmission */
-name|IF_HANDOFF
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m0
-argument_list|,
-name|ifp
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Queue the packet, start transmission. 	 * Note: IF_HANDOFF() ultimately calls re_start() for us. 	 */
 name|CSR_WRITE_2
 argument_list|(
 name|sc
@@ -2966,8 +2954,15 @@ argument_list|,
 literal|0xFFFF
 argument_list|)
 expr_stmt|;
-name|re_start
+name|IF_HANDOFF
 argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|,
+name|m0
+argument_list|,
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -7889,7 +7884,7 @@ operator|->
 name|rl_ldata
 operator|.
 name|rl_tx_free
-operator|<
+operator|<=
 literal|4
 condition|)
 return|return
@@ -7974,6 +7969,20 @@ operator|->
 name|rl_ldata
 operator|.
 name|rl_tx_free
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|.
+name|rl_maxsegs
+operator|>
+literal|4
+condition|)
+name|arg
+operator|.
+name|rl_maxsegs
+operator|-=
+literal|4
 expr_stmt|;
 name|arg
 operator|.
