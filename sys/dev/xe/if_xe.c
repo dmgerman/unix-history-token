@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  
 end_comment
 
 begin_comment
-comment|/*  * XXX TODO XXX  *  * I've pushed this fairly far, but there are some things that need to be  * done here.  I'm documenting them here in case I get destracted. -- imp  *  * xe_memwrite -- maybe better handled pccard layer?  * xe_cem56fix -- need to figure out how to map the extra stuff.  * xe_activate -- need to write it, and add some stuff to it.  Look at if_sn  *                for guidance.  resources/interrupts.  * xe_deactivate -- turn off resources/interrupts.  */
+comment|/*  * XXX TODO XXX  *  * I've pushed this fairly far, but there are some things that need to be  * done here.  I'm documenting them here in case I get destracted. -- imp  *  * xe_memwrite -- maybe better handled pccard layer?  * xe_cem56fix -- need to figure out how to map the extra stuff.  */
 end_comment
 
 begin_comment
@@ -14,28 +14,6 @@ end_comment
 begin_comment
 comment|/*		  * FreeBSD device driver for Xircom CreditCard PCMCIA Ethernet adapters.  The  * following cards are currently known to work with the driver:  *   Xircom CreditCard 10/100 (CE3)  *   Xircom CreditCard Ethernet + Modem 28 (CEM28)  *   Xircom CreditCard Ethernet 10/100 + Modem 56 (CEM56)  *   Xircom RealPort Ethernet 10  *   Xircom RealPort Ethernet 10/100  *   Xircom RealPort Ethernet 10/100 + Modem 56 (REM56, REM56G)  *   Intel EtherExpress Pro/100 PC Card Mobile Adapter 16 (Pro/100 M16A)  *   Compaq Netelligent 10/100 PC Card (CPQ-10/100)  *  * Some other cards *should* work, but support for them is either broken or in   * an unknown state at the moment.  I'm always interested in hearing from  * people who own any of these cards:  *   Xircom CreditCard 10Base-T (PS-CE2-10)  *   Xircom CreditCard Ethernet + ModemII (CEM2)  *   Xircom CEM28 and CEM33 Ethernet/Modem cards (may be variants of CEM2?)  *  * Thanks to all who assisted with the development and testing of the driver,  * especially: Werner Koch, Duke Kamstra, Duncan Barclay, Jason George, Dru  * Nelson, Mike Kephart, Bill Rainey and Douglas Rand.  Apologies if I've left  * out anyone who deserves a mention here.  *  * Special thanks to Ade Lovett for both hosting the mailing list and doing  * the CEM56/REM56 support code; and the FreeBSD UK Users' Group for hosting  * the web pages.  *  * Contact points:  *  * Driver web page: http://ukug.uk.freebsd.org/~scott/xe_drv/  *  * Mailing list: http://www.lovett.com/lists/freebsd-xircom/  * or send "subscribe freebsd-xircom" to<majordomo@lovett.com>  *  * Author email:<scott@uk.freebsd.org>  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XE_DEBUG
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|XE_DEBUG
-value|1
-end_define
-
-begin_comment
-comment|/* Increase for more voluminous output! */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -59,12 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -101,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -179,6 +145,18 @@ begin_include
 include|#
 directive|include
 file|<net/bpf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pccard/pccardvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"card_if.h"
 end_include
 
 begin_include
@@ -1158,8 +1136,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_char
-modifier|*
+name|bus_space_tag_t
+name|bst
+decl_stmt|;
+name|bus_space_handle_t
+name|bsh
+decl_stmt|;
+name|int
 name|buf
 decl_stmt|;
 name|u_char
@@ -1205,7 +1188,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* Map in the CIS */
-comment|/* XXX This CANNOT work as it needs RF_PCCARD_ATTR support */
+name|rid
+operator|=
+literal|0
+expr_stmt|;
 name|r
 operator|=
 name|bus_alloc_resource
@@ -1251,15 +1237,38 @@ return|return
 name|ENOMEM
 return|;
 block|}
-name|buf
+name|bsh
 operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|rman_get_start
+name|rman_get_bushandle
 argument_list|(
 name|r
+argument_list|)
+expr_stmt|;
+name|bst
+operator|=
+name|rman_get_bustag
+argument_list|(
+name|r
+argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+literal|0
+expr_stmt|;
+name|CARD_SET_RES_FLAGS
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|rid
+argument_list|,
+name|PCCARD_A_MEM_ATTR
 argument_list|)
 expr_stmt|;
 comment|/* Grep through CIS looking for relevant tuples */
@@ -2112,6 +2121,9 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|XE_DEBUG
@@ -2124,11 +2136,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|err
+operator|=
 name|xe_activate
 argument_list|(
 name|dev
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
 comment|/* Fill in some private data */
 name|scp
 operator|->
@@ -2621,7 +2646,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Done */
 return|return
-literal|1
+literal|0
 return|;
 block|}
 end_function
@@ -5375,7 +5400,7 @@ operator|>
 literal|1
 name|device_printf
 argument_list|(
-name|csp
+name|scp
 operator|->
 name|dev
 argument_list|,
