@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1981 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)curses.h	5.33 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -966,6 +966,22 @@ parameter_list|,
 name|x
 parameter_list|)
 value|wmove(stdscr, y, x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mvcur
+parameter_list|(
+name|fx
+parameter_list|,
+name|fy
+parameter_list|,
+name|tx
+parameter_list|,
+name|ty
+parameter_list|)
+value|__mvcur(fx, fy, tx, ty, 0)
 end_define
 
 begin_define
@@ -2351,6 +2367,26 @@ argument_list|(
 operator|(
 name|WINDOW
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|__mvcur
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
