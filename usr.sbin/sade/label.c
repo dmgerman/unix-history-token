@@ -1850,7 +1850,7 @@ begin_define
 define|#
 directive|define
 name|MAX_MOUNT_NAME
-value|12
+value|10
 end_define
 
 begin_define
@@ -1864,7 +1864,7 @@ begin_define
 define|#
 directive|define
 name|PART_MOUNT_COL
-value|8
+value|10
 end_define
 
 begin_define
@@ -1885,7 +1885,7 @@ begin_define
 define|#
 directive|define
 name|PART_OFF
-value|38
+value|40
 end_define
 
 begin_define
