@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: types.h,v 1.2 1998/03/09 05:53:13 jb Exp $ */
+comment|/* $Id: types.h,v 1.3 1998/03/23 08:17:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -198,6 +198,28 @@ name|int32_t
 name|ufs_daddr_t
 typedef|;
 end_typedef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|uoff_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* unsigned file offset */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Interrupt mask (spl, xxx_imask, etc) */
