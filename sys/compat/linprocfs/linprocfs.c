@@ -475,7 +475,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"        total:    used:    free:  shared: buffers:  cached:\n"
+literal|"	     total:    used:	free:  shared: buffers:	 cached:\n"
 literal|"Mem:  %lu %lu %lu %lu %lu %lu\n"
 literal|"Swap: %llu %llu %llu\n"
 literal|"MemTotal: %9lu kB\n"
@@ -565,7 +565,7 @@ name|fqmhz
 decl_stmt|,
 name|fqkhz
 decl_stmt|;
-comment|/*          * We default the flags to include all non-conflicting flags,          * and the Intel versions of conflicting flags. 	 */
+comment|/* 	 * We default the flags to include all non-conflicting flags, 	 * and the Intel versions of conflicting flags. 	 */
 specifier|static
 name|char
 modifier|*
@@ -2325,10 +2325,10 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Inter-|   Receive                                       "
-literal|"         |  Transmit\n"
+literal|"Inter-|   Receive					     "
+literal|"	      |	 Transmit\n"
 literal|" face |bytes    packets errs drop fifo frame compressed "
-literal|"multicast|bytes    packets errs drop fifo colls carrier "
+literal|"multicast|bytes	packets errs drop fifo colls carrier "
 literal|"compressed\n"
 argument_list|)
 expr_stmt|;
@@ -2552,8 +2552,8 @@ name|PFS_THIS
 block|,
 name|PFS_PARENT
 block|,
-comment|/*	    name	flags	uid  gid  mode	data */
-comment|/* PFS_FILE(   "cmdline",  0,	0,   0,   0444, procfs_doproccmdline), */
+comment|/*	    name	flags uid  gid	mode  data */
+comment|/* PFS_FILE(   "cmdline",	0,    0,   0,	0444, procfs_doproccmdline), */
 name|PFS_SYMLINK
 argument_list|(
 literal|"exe"
@@ -2569,7 +2569,7 @@ argument_list|,
 name|linprocfs_doexelink
 argument_list|)
 block|,
-comment|/* PFS_FILE(   "mem",      0,	0,   0,   0444, procfs_domem), */
+comment|/* PFS_FILE(   "mem",	0,    0,   0,	0444, procfs_domem), */
 name|PFS_FILE
 argument_list|(
 literal|"stat"
@@ -2617,7 +2617,7 @@ name|PFS_THIS
 block|,
 name|PFS_PARENT
 block|,
-comment|/*	    name	flags	uid  gid  mode	data */
+comment|/*	    name	flags uid  gid	mode  data */
 name|PFS_FILE
 argument_list|(
 literal|"dev"
@@ -2650,7 +2650,7 @@ name|PFS_THIS
 block|,
 name|PFS_PARENT
 block|,
-comment|/*	    name	flags	uid  gid  mode	data */
+comment|/*	    name	flags uid  gid	mode  data */
 name|PFS_FILE
 argument_list|(
 literal|"cmdline"
