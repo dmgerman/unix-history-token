@@ -12510,6 +12510,9 @@ goto|;
 case|case
 name|O_FORWARD_IP
 case|:
+ifdef|#
+directive|ifdef
+name|IPFIREWALL_FORWARD
 if|if
 condition|(
 name|cmdlen
@@ -12525,6 +12528,13 @@ goto|;
 goto|goto
 name|check_action
 goto|;
+else|#
+directive|else
+return|return
+name|EINVAL
+return|;
+endif|#
+directive|endif
 case|case
 name|O_DIVERT
 case|:
