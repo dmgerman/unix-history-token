@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.49 1997/09/18 13:55:45 phk Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: rtld.c,v 1.50 1997/11/29 03:32:47 jdp Exp $  */
 end_comment
 
 begin_include
@@ -1170,9 +1170,7 @@ name|init_internal_malloc
 name|__P
 argument_list|(
 operator|(
-expr|struct
-name|_dynamic
-operator|*
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1881,11 +1879,7 @@ expr_stmt|;
 comment|/* _DYNAMIC */
 comment|/* Initialize our internal malloc package. */
 name|init_internal_malloc
-argument_list|(
-name|crtp
-operator|->
-name|crt_dp
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Setup out (private) environ variable */
 name|environ
@@ -9347,82 +9341,48 @@ begin_comment
 comment|/*  * Set up the internal malloc so that it will take its memory from the  * main program's sbrk arena.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|void
 name|init_internal_malloc
-parameter_list|(
-name|dp
-parameter_list|)
-name|struct
-name|_dynamic
-modifier|*
-name|dp
-decl_stmt|;
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 block|{
+specifier|const
 name|struct
-name|so_map
-name|tmp_map
-decl_stmt|;
-name|struct
-name|somap_private
-name|map_private
-decl_stmt|;
-name|struct
-name|nzlist
+name|exec
 modifier|*
-name|np
+name|hdr
 decl_stmt|;
-comment|/*          * Before anything calls sbrk or brk, we have to initialize          * its idea of the current break level to the main program's          * "_end" symbol, rather than that of the dynamic linker.  In          * order to do that, we need to look up the value of the main          * program's "_end" symbol.  We set up a temporary link map          * entry for the main program so that we can do the lookup. 	 */
-name|init_link_map
-argument_list|(
-operator|&
-name|tmp_map
-argument_list|,
-operator|&
-name|map_private
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|dp
-argument_list|)
-expr_stmt|;
-name|np
+comment|/*          * Before anything calls sbrk or brk, we have to initialize          * its idea of the current break level to just beyond the main          * program's address space.  Strictly speaking, the right          * way to do that is to look up the value of "_end" in the          * application's run time symbol table.          *          * That is what we used to do, and it works correctly for          * every valid program.  Unfortunately, it doesn't work right          * for "unexec"ed versions of emacs.  They are incorrectly          * generated with a wrong value for "_end".  (xemacs gets it          * right.)          *          * To work around this, we peek at the exec header to get the          * sizes of the text, data, and bss segments.  Luckily, the          * header is in memory at the start of the first mapped page.          * From the segment sizes, we can calculate a proper initial          * value for the break level. 	 */
+name|hdr
 operator|=
-name|lookup_in_obj
-argument_list|(
-name|END_SYM
-argument_list|,
-name|sym_hash
-argument_list|(
-name|END_SYM
-argument_list|)
-argument_list|,
-operator|&
-name|tmp_map
-argument_list|,
-literal|1
-argument_list|)
+operator|(
+specifier|const
+expr|struct
+name|exec
+operator|*
+operator|)
+name|PAGSIZ
 expr_stmt|;
 if|if
 condition|(
-name|np
-operator|==
-name|NULL
+name|N_BADMAG
+argument_list|(
+operator|*
+name|hdr
+argument_list|)
 condition|)
+comment|/* Sanity check */
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Main program has no symbol \"%s\""
-argument_list|,
-name|END_SYM
+literal|"Cannot find program's a.out header"
 argument_list|)
 expr_stmt|;
 name|rtld_alloc_lev
@@ -9435,12 +9395,22 @@ operator|(
 name|char
 operator|*
 operator|)
-name|np
+name|hdr
+operator|+
+name|hdr
 operator|->
-name|nz_value
+name|a_text
+operator|+
+name|hdr
+operator|->
+name|a_data
+operator|+
+name|hdr
+operator|->
+name|a_bss
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/*  * Set things up so that the dynamic linker can use the program's  * malloc functions.  */
@@ -9468,6 +9438,22 @@ operator|(
 name|sym_addr
 argument_list|(
 name|CURBRK_SYM
+argument_list|)
+operator|)
+operator|=
+name|curbrk
+expr_stmt|;
+comment|/*          * Set the minimum break level too.  Otherwise, "unexec"ed          * emacs sets the break too low and wipes out our tables of          * shared objects. 	 */
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|sym_addr
+argument_list|(
+name|MINBRK_SYM
 argument_list|)
 operator|)
 operator|=
