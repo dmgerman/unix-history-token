@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.51 2001/09/17 21:57:54 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.51.4.2 2002/07/10 07:09:53 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|arphdr
+name|arp_pkthdr
 block|{
 name|u_short
 name|ar_hrd
@@ -226,28 +226,28 @@ name|ar_sha
 parameter_list|(
 name|ap
 parameter_list|)
-value|(((const caddr_t)((ap)+1))+0)
+value|(((const u_char *)((ap)+1))+0)
 define|#
 directive|define
 name|ar_spa
 parameter_list|(
 name|ap
 parameter_list|)
-value|(((const caddr_t)((ap)+1))+  (ap)->ar_hln)
+value|(((const u_char *)((ap)+1))+  (ap)->ar_hln)
 define|#
 directive|define
 name|ar_tha
 parameter_list|(
 name|ap
 parameter_list|)
-value|(((const caddr_t)((ap)+1))+  (ap)->ar_hln+(ap)->ar_pln)
+value|(((const u_char *)((ap)+1))+  (ap)->ar_hln+(ap)->ar_pln)
 define|#
 directive|define
 name|ar_tpa
 parameter_list|(
 name|ap
 parameter_list|)
-value|(((const caddr_t)((ap)+1))+2*(ap)->ar_hln+(ap)->ar_pln)
+value|(((const u_char *)((ap)+1))+2*(ap)->ar_hln+(ap)->ar_pln)
 block|}
 struct|;
 end_struct
@@ -377,7 +377,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|arphdr
+name|arp_pkthdr
 modifier|*
 name|ap
 decl_stmt|;
@@ -393,7 +393,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|arphdr
+name|arp_pkthdr
 operator|*
 operator|)
 name|bp

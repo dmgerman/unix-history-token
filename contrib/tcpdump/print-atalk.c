@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atalk.c,v 1.70 2001/11/15 08:23:12 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-atalk.c,v 1.70.2.1 2002/02/05 10:04:18 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,6 +530,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
+comment|/* 	 * Our packet is on a 4-byte boundary, as we're either called 	 * directly from a top-level link-layer printer (ltalk_if_print) 	 * or from the UDP printer.  The LLAP+DDP header is a multiple 	 * of 4 bytes in length, so the DDP payload is also on a 4-byte 	 * boundary, and we don't need to align it before calling 	 * "ddp_print()". 	 */
 block|lp = (const struct LAP *)bp; 	bp += sizeof(*lp); 	length -= sizeof(*lp);
 else|#
 directive|else
@@ -2025,6 +2026,25 @@ name|u_char
 modifier|*
 name|ep
 decl_stmt|;
+if|if
+condition|(
+name|length
+operator|<
+name|nbpHeaderSize
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|" truncated-nbp %d"
+argument_list|,
+name|length
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|length
 operator|-=
 name|nbpHeaderSize

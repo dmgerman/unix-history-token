@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/gmt2local.c,v 1.4 2000/07/11 00:49:02 assar Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/gmt2local.c,v 1.4.6.1 2002/06/01 23:43:53 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,31 +51,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIME_WITH_SYS_TIME
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

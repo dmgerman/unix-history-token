@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isakmp.c,v 1.29 2001/10/26 03:41:29 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isakmp.c,v 1.29.2.2 2003/02/26 05:58:39 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,18 +71,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|rtentry
-struct_decl|;
-end_struct_decl
 
 begin_include
 include|#
@@ -6311,6 +6299,9 @@ name|struct
 name|isakmp_gen
 name|e
 decl_stmt|;
+name|u_int
+name|item_len
+decl_stmt|;
 name|cp
 operator|=
 operator|(
@@ -6372,14 +6363,32 @@ name|np
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|cp
-operator|+=
+name|item_len
+operator|=
 name|ntohs
 argument_list|(
 name|e
 operator|.
 name|len
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|item_len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 			 * We don't want to loop forever processing this 			 * bogus (zero-length) item; return NULL so that 			 * we stop dissecting. 			 */
+name|cp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+name|cp
+operator|+=
+name|item_len
 expr_stmt|;
 block|}
 return|return
@@ -6551,6 +6560,18 @@ expr_stmt|;
 name|depth
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Zero-length subitem */
+return|return
+name|NULL
+return|;
+block|}
 name|np
 operator|=
 name|e

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.72 2001/10/08 16:12:13 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/util.c,v 1.72.2.2 2002/07/16 04:03:54 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1643,22 +1643,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|c
+name|ch
 operator|<
 literal|0x80
 operator|&&
 name|isprint
 argument_list|(
-name|c
+name|ch
 argument_list|)
 condition|)
 name|printf
 argument_list|(
 literal|"%c"
 argument_list|,
-name|c
-operator|&
-literal|0xff
+name|ch
 argument_list|)
 expr_stmt|;
 else|else
@@ -1666,9 +1664,7 @@ name|printf
 argument_list|(
 literal|"\\%03o"
 argument_list|,
-name|c
-operator|&
-literal|0xff
+name|ch
 argument_list|)
 expr_stmt|;
 block|}

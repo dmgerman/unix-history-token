@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.20 2002/01/21 11:39:59 mcr Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.20.4.2 2002/02/22 09:26:27 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -522,9 +528,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|esp_print_decodesecret
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1602,9 +1611,11 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
 name|secret
 operator|+
 literal|8
+operator|)
 argument_list|)
 expr_stmt|;
 name|des_set_odd_parity
@@ -1613,9 +1624,11 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
 name|secret
 operator|+
 literal|16
+operator|)
 argument_list|)
 expr_stmt|;
 if|if

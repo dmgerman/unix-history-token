@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.6 2000/09/29 04:58:50 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-stp.c,v 1.6.6.1 2002/05/29 10:00:00 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -449,7 +449,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown type %i\n"
+literal|"unknown type %i"
 argument_list|,
 name|p
 index|[

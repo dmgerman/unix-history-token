@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.36 2002/01/10 09:33:23 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isoclns.c,v 1.36.2.2 2002/06/29 04:28:44 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2762,7 +2762,7 @@ name|int
 name|length
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|bitmasks
 index|[
 literal|33
@@ -2836,9 +2836,10 @@ block|,
 literal|0xffffffff
 block|}
 decl_stmt|;
-name|int
+name|u_int
 name|mask
-decl_stmt|,
+decl_stmt|;
+name|int
 name|prefix_len
 decl_stmt|;
 specifier|const
@@ -3333,6 +3334,9 @@ name|pptr
 decl_stmt|,
 modifier|*
 name|tptr
+decl_stmt|;
+name|u_char
+name|subtlv_len
 decl_stmt|;
 name|u_short
 name|packet_len
@@ -6103,25 +6107,28 @@ operator|(
 literal|1
 operator|)
 return|;
+name|subtlv_len
+operator|=
+operator|*
+name|tptr
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" (%u)"
 argument_list|,
-operator|*
-name|tptr
+name|subtlv_len
 argument_list|)
 expr_stmt|;
 comment|/* no subTLV decoder supported - just print out subTLV length */
 name|i
 operator|-=
-operator|*
-name|tptr
+name|subtlv_len
 expr_stmt|;
 name|tptr
 operator|+=
-operator|*
-name|tptr
-operator|++
+name|subtlv_len
+operator|+
+literal|1
 expr_stmt|;
 block|}
 name|i
@@ -7477,7 +7484,6 @@ name|ISIS_MASK_RESTART_RA
 argument_list|(
 operator|*
 name|tptr
-operator|++
 argument_list|)
 condition|?
 literal|"set"
@@ -7487,8 +7493,14 @@ argument_list|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
+operator|+
+literal|1
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|tptr
+operator|+=
+literal|3
 expr_stmt|;
 break|break;
 default|default:

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.28 2001/09/17 21:58:01 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-egp.c,v 1.28.4.1 2002/06/01 23:51:12 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
 end_include
 
 begin_include

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.50 2001/09/17 22:16:53 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-snmp.c,v 1.50.4.2 2002/07/20 23:33:08 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2479,7 +2479,7 @@ operator|&
 name|ASN_LONGLEN
 condition|)
 continue|continue;
-comment|/* 			 * first subitem encodes two items with 1st*OIDMUX+2nd 			 */
+comment|/* 			 * first subitem encodes two items with 1st*OIDMUX+2nd 			 * (see X.690:1997 clause 8.19 for the details) 			 */
 if|if
 condition|(
 name|first
@@ -2487,6 +2487,9 @@ operator|<
 literal|0
 condition|)
 block|{
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2500,17 +2503,33 @@ name|first
 operator|=
 literal|0
 expr_stmt|;
-name|OBJ_PRINT
-argument_list|(
+name|s
+operator|=
 name|o
 operator|/
 name|OIDMUX
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>
+literal|2
+condition|)
+name|s
+operator|=
+literal|2
+expr_stmt|;
+name|OBJ_PRINT
+argument_list|(
+name|s
 argument_list|,
 name|first
 argument_list|)
 expr_stmt|;
 name|o
-operator|%=
+operator|-=
+name|s
+operator|*
 name|OIDMUX
 expr_stmt|;
 block|}
@@ -3445,7 +3464,7 @@ operator|&
 name|ASN_LONGLEN
 condition|)
 continue|continue;
-comment|/* 		 * first subitem encodes two items with 1st*OIDMUX+2nd 		 */
+comment|/* 		 * first subitem encodes two items with 1st*OIDMUX+2nd 		 * (see X.690:1997 clause 8.19 for the details) 		 */
 if|if
 condition|(
 name|first
@@ -3467,21 +3486,55 @@ condition|)
 block|{
 name|oid
 index|[
-operator|(
 operator|*
 name|oidlen
-operator|)
-operator|++
 index|]
 operator|=
 name|o
 operator|/
 name|OIDMUX
 expr_stmt|;
+if|if
+condition|(
+name|oid
+index|[
+operator|*
+name|oidlen
+index|]
+operator|>
+literal|2
+condition|)
+name|oid
+index|[
+operator|*
+name|oidlen
+index|]
+operator|=
+literal|2
+expr_stmt|;
 block|}
 name|o
-operator|%=
+operator|-=
+name|oid
+index|[
+operator|*
+name|oidlen
+index|]
+operator|*
 name|OIDMUX
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|oidlen
+operator|<
+name|oidsize
+condition|)
+operator|(
+operator|*
+name|oidlen
+operator|)
+operator|++
 expr_stmt|;
 block|}
 if|if
@@ -6437,6 +6490,19 @@ block|}
 comment|/* default community */
 if|if
 condition|(
+operator|!
+operator|(
+name|elem
+operator|.
+name|asnlen
+operator|==
+sizeof|sizeof
+argument_list|(
+name|DEF_COMMUNITY
+argument_list|)
+operator|-
+literal|1
+operator|&&
 name|strncmp
 argument_list|(
 operator|(
@@ -6458,6 +6524,9 @@ argument_list|)
 operator|-
 literal|1
 argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 comment|/* ! "public" */
 name|printf

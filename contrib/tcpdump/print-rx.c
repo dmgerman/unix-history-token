@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.27 2001/10/20 07:41:55 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.27.2.2 2002/07/10 07:17:57 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,11 +64,22 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIME_WITH_SYS_TIME
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<time.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3387,7 +3398,7 @@ name|VECOUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ char *sp; \ 			char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
+value|{ u_char *sp; \ 			u_char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (u_char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
 end_define
 
 begin_function
@@ -4662,6 +4673,10 @@ argument_list|)
 expr_stmt|;
 name|fn_print
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|user
 argument_list|,
 name|NULL
@@ -4743,6 +4758,10 @@ argument_list|)
 expr_stmt|;
 name|fn_print
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|user
 argument_list|,
 name|NULL
