@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.42	%G%"
+literal|"@(#)deliver.c	3.43	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2700,7 +2700,7 @@ name|stb
 operator|.
 name|st_mode
 operator|=
-literal|0
+literal|0666
 expr_stmt|;
 if|if
 condition|(
