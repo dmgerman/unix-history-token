@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.940.2.15 2003/02/07 17:57:43 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.940.2.18 2003/03/28 17:34:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4472,7 +4472,7 @@ condition|(
 operator|*
 name|a
 operator|==
-literal|'['
+literal|']'
 operator|&&
 name|braclev
 operator|>
@@ -6143,7 +6143,7 @@ block|}
 if|#
 directive|if
 name|_FFR_STRIPBACKSL
-comment|/* 		**  Strip one leading backslash if requesting and the 		**  next character is alphanumerical (the latter can 		**  probably relaxed a bit, see RFC2821). 		*/
+comment|/* 		**  Strip one leading backslash if requested and the 		**  next character is alphanumerical (the latter can 		**  probably relaxed a bit, see RFC2821). 		*/
 if|if
 condition|(
 name|bitnset
@@ -19191,12 +19191,26 @@ name|c
 operator|!=
 literal|'\r'
 condition|)
+block|{
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
 operator|=
 name|c
 expr_stmt|;
+block|}
 block|}
 name|bp
 operator|=
@@ -19300,6 +19314,18 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* had a naked carriage return */
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
@@ -19415,12 +19441,26 @@ operator|)
 operator|!=
 name|SM_IO_EOF
 condition|)
+block|{
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
 operator|*
 name|pbp
 operator|++
 operator|=
 name|d
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|d
@@ -19569,6 +19609,18 @@ block|}
 name|ostate
 operator|=
 name|OS_HEAD
+expr_stmt|;
+name|SM_ASSERT
+argument_list|(
+name|pbp
+operator|<
+name|peekbuf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|peekbuf
+argument_list|)
+argument_list|)
 expr_stmt|;
 operator|*
 name|pbp

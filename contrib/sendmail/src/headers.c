@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.266.4.4 2003/01/18 00:41:48 gshapiro Exp $"
+literal|"@(#)$Id: headers.c,v 8.266.4.5 2003/03/12 22:42:52 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -3241,6 +3241,36 @@ operator|=
 name|TOC_NONURGENT
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|_FFR_QUEUERETURN_DSN
+comment|/* If no timeoutclass picked and it's a DSN, use that timeoutclass */
+if|if
+condition|(
+name|e
+operator|->
+name|e_timeoutclass
+operator|==
+name|TOC_NORMAL
+operator|&&
+name|bitset
+argument_list|(
+name|EF_RESPONSE
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|e
+operator|->
+name|e_timeoutclass
+operator|=
+name|TOC_DSN
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_QUEUERETURN_DSN */
 comment|/* date message originated */
 name|p
 operator|=

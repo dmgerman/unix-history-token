@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: conf.c,v 8.972.2.27 2003/01/15 19:17:14 ca Exp $"
+literal|"@(#)$Id: conf.c,v 8.972.2.35 2003/03/28 05:46:09 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1422,6 +1422,16 @@ expr_stmt|;
 name|MaxHeadersLength
 operator|=
 name|MAXHDRSLEN
+expr_stmt|;
+name|MaxMimeHeaderLength
+operator|=
+name|MAXLINE
+expr_stmt|;
+name|MaxMimeFieldLength
+operator|=
+name|MaxMimeHeaderLength
+operator|/
+literal|2
 expr_stmt|;
 name|MaxForwardEntries
 operator|=
@@ -12278,6 +12288,7 @@ comment|/* key shell (extended Korn shell) */
 literal|"/bin/posix/sh"
 block|,
 literal|"/sbin/sh"
+block|,
 endif|#
 directive|endif
 comment|/* V4FS */
@@ -21996,6 +22007,8 @@ block|{
 if|#
 directive|if
 name|_FFR_ADAPTIVE_EOL
+comment|/* tries to be smart about \r\n versus \n from broken clients */
+comment|/* known to be broken, do not use */
 literal|"_FFR_ADAPTIVE_EOL"
 block|,
 endif|#
@@ -22004,6 +22017,8 @@ comment|/* _FFR_ADAPTIVE_EOL */
 if|#
 directive|if
 name|_FFR_ALLOW_SASLINFO
+comment|/* DefaultAuthInfo can be specified by user. */
+comment|/* DefaultAuthInfo doesn't really work in 8.12 anymore. */
 literal|"_FFR_ALLOW_SASLINFO"
 block|,
 endif|#
@@ -22012,6 +22027,7 @@ comment|/* _FFR_ALLOW_SASLINFO */
 if|#
 directive|if
 name|_FFR_ALLOW_S0_ERROR_4XX
+comment|/* Allow for tempfail from S0 (ruleset 0). */
 literal|"_FFR_ALLOW_S0_ERROR_4XX"
 block|,
 endif|#
@@ -22020,6 +22036,7 @@ comment|/* _FFR_ALLOW_S0_ERROR_4XX */
 if|#
 directive|if
 name|_FFR_BESTMX_BETTER_TRUNCATION
+comment|/* Better truncation of list of MX records for dns map. */
 literal|"_FFR_BESTMX_BETTER_TRUNCATION"
 block|,
 endif|#
@@ -22027,7 +22044,17 @@ directive|endif
 comment|/* _FFR_BESTMX_BETTER_TRUNCATION */
 if|#
 directive|if
+name|_FFR_BLOCK_PROXIES
+comment|/* 	**  Try to deal with open HTTP proxies that are used to send spam 	**  by recognizing some commands from them. 	*/
+literal|"_FFR_BLOCK_PROXIES"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_BLOCK_PROXIES */
+if|#
+directive|if
 name|_FFR_CACHE_LPC
+comment|/* Cache connections to LCP based mailers */
 comment|/* Christophe Wolfhugel of France Telecom Oleane */
 literal|"_FFR_CACHE_LPC"
 block|,
@@ -22037,6 +22064,7 @@ comment|/* _FFR_CACHE_LPC */
 if|#
 directive|if
 name|_FFR_CATCH_BROKEN_MTAS
+comment|/* Deal with MTAs that send a reply during the DATA phase. */
 literal|"_FFR_CATCH_BROKEN_MTAS"
 block|,
 endif|#
@@ -22045,6 +22073,7 @@ comment|/* _FFR_CATCH_BROKEN_MTAS */
 if|#
 directive|if
 name|_FFR_CATCH_LONG_STRINGS
+comment|/* Report long address strings instead of silently ignoring them. */
 literal|"_FFR_CATCH_LONG_STRINGS"
 block|,
 endif|#
@@ -22053,6 +22082,7 @@ comment|/* _FFR_CATCH_LONG_STRINGS */
 if|#
 directive|if
 name|_FFR_CHECK_EOM
+comment|/* Enable check_eom ruleset */
 literal|"_FFR_CHECK_EOM"
 block|,
 endif|#
@@ -22061,6 +22091,7 @@ comment|/* _FFR_CHECK_EOM */
 if|#
 directive|if
 name|_FFR_CHK_QUEUE
+comment|/* Stricter checks about queue directory permissions. */
 literal|"_FFR_CHK_QUEUE"
 block|,
 endif|#
@@ -22069,6 +22100,7 @@ comment|/* _FFR_CHK_QUEUE */
 if|#
 directive|if
 name|_FFR_CONTROL_MSTAT
+comment|/* Extended daemon status. */
 literal|"_FFR_CONTROL_MSTAT"
 block|,
 endif|#
@@ -22077,6 +22109,7 @@ comment|/* _FFR_CONTROL_MSTAT */
 if|#
 directive|if
 name|_FFR_DAEMON_NETUNIX
+comment|/* Allow local (not just TCP) socket connection to server. */
 literal|"_FFR_DAEMON_NETUNIX"
 block|,
 endif|#
@@ -22085,6 +22118,7 @@ comment|/* _FFR_DAEMON_NETUNIX */
 if|#
 directive|if
 name|_FFR_DEAL_WITH_ERROR_SSL
+comment|/* Deal with SSL errors by recognizing them as EOF. */
 literal|"_FFR_DEAL_WITH_ERROR_SSL"
 block|,
 endif|#
@@ -22093,6 +22127,7 @@ comment|/* _FFR_DEAL_WITH_ERROR_SSL */
 if|#
 directive|if
 name|_FFR_DEPRECATE_MAILER_FLAG_I
+comment|/* What it says :-) */
 literal|"_FFR_DEPRECATE_MAILER_FLAG_I"
 block|,
 endif|#
@@ -22101,6 +22136,7 @@ comment|/* _FFR_DEPRECATE_MAILER_FLAG_I */
 if|#
 directive|if
 name|_FFR_DIGUNIX_SAFECHOWN
+comment|/* Properly set SAFECHOWN (include/sm/conf.h) for Digital UNIX */
 comment|/* Problem noted by Anne Bennett of Concordia University */
 literal|"_FFR_DIGUNIX_SAFECHOWN"
 block|,
@@ -22110,6 +22146,7 @@ comment|/* _FFR_DIGUNIX_SAFECHOWN */
 if|#
 directive|if
 name|_FFR_DNSMAP_ALIASABLE
+comment|/* Allow dns map type to be used for aliases. */
 comment|/* Don Lewis of TDK */
 literal|"_FFR_DNSMAP_ALIASABLE"
 block|,
@@ -22119,6 +22156,7 @@ comment|/* _FFR_DNSMAP_ALIASABLE */
 if|#
 directive|if
 name|_FFR_DNSMAP_BASE
+comment|/* Specify a "base" domain for DNS lookups. */
 literal|"_FFR_DNSMAP_BASE"
 block|,
 endif|#
@@ -22127,11 +22165,13 @@ comment|/* _FFR_DNSMAP_BASE */
 if|#
 directive|if
 name|_FFR_DNSMAP_MULTI
+comment|/* Allow multiple return values for DNS map. */
 literal|"_FFR_DNSMAP_MULTI"
 block|,
 if|#
 directive|if
 name|_FFR_DNSMAP_MULTILIMIT
+comment|/* Limit number of return values for DNS map. */
 literal|"_FFR_DNSMAP_MULTILIMIT"
 block|,
 endif|#
@@ -22143,6 +22183,7 @@ comment|/* _FFR_DNSMAP_MULTI */
 if|#
 directive|if
 name|_FFR_DONTLOCKFILESFORREAD_OPTION
+comment|/* Enable DontLockFilesForRead option. */
 literal|"_FFR_DONTLOCKFILESFORREAD_OPTION"
 block|,
 endif|#
@@ -22151,6 +22192,7 @@ comment|/* _FFR_DONTLOCKFILESFORREAD_OPTION */
 if|#
 directive|if
 name|_FFR_DONT_STOP_LOOKING
+comment|/* Continue with DNS lookups on ECONNREFUSED and TRY_AGAIN. */
 comment|/* Noted by Neil Rickert of Northern Illinois University */
 literal|"_FFR_DONT_STOP_LOOKING"
 block|,
@@ -22160,6 +22202,7 @@ comment|/* _FFR_DONT_STOP_LOOKING */
 if|#
 directive|if
 name|_FFR_DOTTED_USERNAMES
+comment|/* Allow usernames with '.' */
 literal|"_FFR_DOTTED_USERNAMES"
 block|,
 endif|#
@@ -22168,6 +22211,7 @@ comment|/* _FFR_DOTTED_USERNAMES */
 if|#
 directive|if
 name|_FFR_DROP_TRUSTUSER_WARNING
+comment|/* 	**  Don't issue this warning: 	**  "readcf: option TrustedUser may cause problems on systems 	**  which do not support fchown() if UseMSP is not set. 	*/
 literal|"_FFR_DROP_TRUSTUSER_WARNING"
 block|,
 endif|#
@@ -22176,6 +22220,7 @@ comment|/* _FFR_DROP_TRUSTUSER_WARNING */
 if|#
 directive|if
 name|_FFR_FIX_DASHT
+comment|/* 	**  If using -t, force not sending to argv recipients, even 	**  if they are mentioned in the headers. 	*/
 literal|"_FFR_FIX_DASHT"
 block|,
 endif|#
@@ -22184,6 +22229,7 @@ comment|/* _FFR_FIX_DASHT */
 if|#
 directive|if
 name|_FFR_FORWARD_SYSERR
+comment|/* Cause a "syserr" if forward file isn't "safe". */
 literal|"_FFR_FORWARD_SYSERR"
 block|,
 endif|#
@@ -22192,6 +22238,7 @@ comment|/* _FFR_FORWARD_SYSERR */
 if|#
 directive|if
 name|_FFR_GEN_ORCPT
+comment|/* Generate a ORCPT DSN arg if not already provided */
 literal|"_FFR_GEN_ORCPT"
 block|,
 endif|#
@@ -22200,6 +22247,7 @@ comment|/* _FFR_GEN_ORCPT */
 if|#
 directive|if
 name|_FFR_GROUPREADABLEAUTHINFOFILE
+comment|/* Allow group readable DefaultAuthInfo file. */
 literal|"_FFR_GROUPREADABLEAUTHINFOFILE"
 block|,
 endif|#
@@ -22208,6 +22256,7 @@ comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 if|#
 directive|if
 name|_FFR_HANDLE_ISO8859_GECOS
+comment|/* 	**  Allow ISO 8859 characters in GECOS field: replace them 	**  ith ASCII "equivalent". 	*/
 comment|/* Peter Eriksson of Linkopings universitet */
 literal|"_FFR_HANDLE_ISO8859_GECOS"
 block|,
@@ -22217,6 +22266,7 @@ comment|/* _FFR_HANDLE_ISO8859_GECOS */
 if|#
 directive|if
 name|_FFR_HDR_TYPE
+comment|/* Set 'h' in {addr_type} for headers. */
 literal|"_FFR_HDR_TYPE"
 block|,
 endif|#
@@ -22225,6 +22275,7 @@ comment|/* _FFR_HDR_TYPE */
 if|#
 directive|if
 name|_FFR_HPUX_NSSWITCH
+comment|/* Use nsswitch on HP-UX */
 literal|"_FFR_HPUX_NSSWITCH"
 block|,
 endif|#
@@ -22233,6 +22284,7 @@ comment|/* _FFR_HPUX_NSSWITCH */
 if|#
 directive|if
 name|_FFR_IGNORE_EXT_ON_HELO
+comment|/* Ignore extensions offered in response to HELO */
 literal|"_FFR_IGNORE_EXT_ON_HELO"
 block|,
 endif|#
@@ -22241,6 +22293,7 @@ comment|/* _FFR_IGNORE_EXT_ON_HELO */
 if|#
 directive|if
 name|_FFR_LDAP_RECURSION
+comment|/* Support LDAP recursion in LDAP responses */
 comment|/* Andrew Baucom */
 literal|"_FFR_LDAP_RECURSION"
 block|,
@@ -22250,6 +22303,7 @@ comment|/* _FFR_LDAP_RECURSION */
 if|#
 directive|if
 name|_FFR_LDAP_SETVERSION
+comment|/* New LDAP map option for setting LDAP protocol version */
 literal|"_FFR_LDAP_SETVERSION"
 block|,
 endif|#
@@ -22258,6 +22312,7 @@ comment|/* _FFR_LDAP_SETVERSION */
 if|#
 directive|if
 name|_FFR_LDAP_URI
+comment|/* Support LDAP URI form of specifying host/port (and allows ldaps) */
 literal|"_FFR_LDAP_URI"
 block|,
 endif|#
@@ -22266,6 +22321,8 @@ comment|/* _FFR_LDAP_URI */
 if|#
 directive|if
 name|_FFR_MAX_FORWARD_ENTRIES
+comment|/* Try to limit number of .forward entries */
+comment|/* (doesn't work) */
 comment|/* Randall S. Winchester of the University of Maryland */
 literal|"_FFR_MAX_FORWARD_ENTRIES"
 block|,
@@ -22278,6 +22335,7 @@ name|MILTER
 if|#
 directive|if
 name|_FFR_MILTER_421
+comment|/* If a filter returns 421, close the SMTP connection */
 literal|"_FFR_MILTER_421"
 block|,
 endif|#
@@ -22286,6 +22344,7 @@ comment|/* _FFR_MILTER_421 */
 if|#
 directive|if
 name|_FFR_MILTER_PERDAEMON
+comment|/* Per DaemonPortOptions InputMailFilter lists */
 literal|"_FFR_MILTER_PERDAEMON"
 block|,
 endif|#
@@ -22297,6 +22356,7 @@ comment|/* MILTER */
 if|#
 directive|if
 name|_FFR_NODELAYDSN_ON_HOLD
+comment|/* Do not issue a DELAY DSN for mailers that use the hold flag. */
 comment|/* Steven Pitzl */
 literal|"_FFR_NODELAYDSN_ON_HOLD"
 block|,
@@ -22306,6 +22366,7 @@ comment|/* _FFR_NODELAYDSN_ON_HOLD */
 if|#
 directive|if
 name|_FFR_NO_PIPE
+comment|/* Disable PIPELINING, delay client if used. */
 literal|"_FFR_NO_PIPE"
 block|,
 endif|#
@@ -22314,6 +22375,7 @@ comment|/* _FFR_NO_PIPE */
 if|#
 directive|if
 name|_FFR_QUARANTINE
+comment|/* Quarantine items in the queue */
 literal|"_FFR_QUARANTINE"
 block|,
 endif|#
@@ -22322,6 +22384,7 @@ comment|/* _FFR_QUARANTINE */
 if|#
 directive|if
 name|_FFR_QUEUEDELAY
+comment|/* Exponential queue delay; disabled in 8.13 since it isn't used. */
 literal|"_FFR_QUEUEDELAY"
 block|,
 endif|#
@@ -22330,6 +22393,7 @@ comment|/* _FFR_QUEUEDELAY */
 if|#
 directive|if
 name|_FFR_QUEUE_GROUP_SORTORDER
+comment|/* Allow QueueSortOrder per queue group. */
 comment|/* XXX: Still need to actually use qgrp->qg_sortorder */
 literal|"_FFR_QUEUE_GROUP_SORTORDER"
 block|,
@@ -22339,6 +22403,7 @@ comment|/* _FFR_QUEUE_GROUP_SORTORDER */
 if|#
 directive|if
 name|_FFR_QUEUE_MACRO
+comment|/* Define {queue} macro. */
 literal|"_FFR_QUEUE_MACRO"
 block|,
 endif|#
@@ -22346,7 +22411,17 @@ directive|endif
 comment|/* _FFR_QUEUE_MACRO */
 if|#
 directive|if
+name|_FFR_QUEUERETURN_DSN
+comment|/* 	**  Provide an option for different Timeout.queue{warn,return} for 	**  DSN messages.  These days, queues are filled with bounces for 	**  spam that will never make it to the sender and therefore slow 	**  down queue runs until they timeout. 	*/
+literal|"_FFR_QUEUERETURN_DSN"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUERETURN_DSN */
+if|#
+directive|if
 name|_FFR_QUEUE_RUN_PARANOIA
+comment|/* Additional checks when doing queue runs. */
 literal|"_FFR_QUEUE_RUN_PARANOIA"
 block|,
 endif|#
@@ -22355,6 +22430,7 @@ comment|/* _FFR_QUEUE_RUN_PARANOIA */
 if|#
 directive|if
 name|_FFR_QUEUE_SCHED_DBG
+comment|/* Debug output for the queue scheduler. */
 literal|"_FFR_QUEUE_SCHED_DBG"
 block|,
 endif|#
@@ -22363,6 +22439,7 @@ comment|/* _FFR_QUEUE_SCHED_DBG */
 if|#
 directive|if
 name|_FFR_REDIRECTEMPTY
+comment|/* 	**  envelope<> can't be sent to mailing lists, only owner- 	**  send spam of this type to owner- of the list 	**  ----  to stop spam from going to mailing lists. 	*/
 literal|"_FFR_REDIRECTEMPTY"
 block|,
 endif|#
@@ -22371,6 +22448,7 @@ comment|/* _FFR_REDIRECTEMPTY */
 if|#
 directive|if
 name|_FFR_REJECT_LOG
+comment|/* Log when we start/stop rejecting connections due to load, etc */
 literal|"_FFR_REJECT_LOG"
 block|,
 endif|#
@@ -22379,6 +22457,7 @@ comment|/* _FFR_REJECT_LOG */
 if|#
 directive|if
 name|_FFR_REQ_DIR_FSYNC_OPT
+comment|/* Add cf option to fsync() directories */
 literal|"_FFR_REQ_DIR_FSYNC_OPT"
 block|,
 endif|#
@@ -22387,6 +22466,7 @@ comment|/* _FFR_REQ_DIR_FSYNC_OPT */
 if|#
 directive|if
 name|_FFR_RESET_MACRO_GLOBALS
+comment|/* Allow macro 'j' to be set dynamically via rulesets. */
 literal|"_FFR_RESET_MACRO_GLOBALS"
 block|,
 endif|#
@@ -22395,7 +22475,7 @@ comment|/* _FFR_RESET_MACRO_GLOBALS */
 if|#
 directive|if
 name|_FFR_RESPOND_ALL
-comment|/* in vacation */
+comment|/* in vacation: respond to every message, not just once per interval */
 literal|"_FFR_RESPOND_ALL"
 block|,
 endif|#
@@ -22404,6 +22484,7 @@ comment|/* _FFR_RESPOND_ALL */
 if|#
 directive|if
 name|_FFR_RHS
+comment|/* Random shuffle for queue sorting. */
 literal|"_FFR_RHS"
 block|,
 endif|#
@@ -22412,6 +22493,7 @@ comment|/* _FFR_RHS */
 if|#
 directive|if
 name|_FFR_SASL_OPT_M
+comment|/* Support SASL's SASL_SEC_MUTUAL_AUTH option */
 literal|"_FFR_SASL_OPT_M"
 block|,
 endif|#
@@ -22420,6 +22502,7 @@ comment|/* _FFR_SASL_OPT_M */
 if|#
 directive|if
 name|_FFR_SELECT_SHM
+comment|/* Auto-select of shared memory key */
 literal|"_FFR_SELECT_SHM"
 block|,
 endif|#
@@ -22428,6 +22511,7 @@ comment|/* _FFR_SELECT_SHM */
 if|#
 directive|if
 name|_FFR_SHM_STATUS
+comment|/* Donated code (unused). */
 literal|"_FFR_SHM_STATUS"
 block|,
 endif|#
@@ -22436,6 +22520,7 @@ comment|/* _FFR_SHM_STATUS */
 if|#
 directive|if
 name|_FFR_SMFI_OPENSOCKET
+comment|/* libmilter: smfi_opensocket() to force the socket open early */
 literal|"_FFR_SMFI_OPENSOCKET"
 block|,
 endif|#
@@ -22444,6 +22529,7 @@ comment|/* _FFR_SMFI_OPENSOCKET */
 if|#
 directive|if
 name|_FFR_SMTP_SSL
+comment|/* Support for smtps (SMTP over SSL) */
 literal|"_FFR_SMTP_SSL"
 block|,
 endif|#
@@ -22452,6 +22538,7 @@ comment|/* _FFR_SMTP_SSL */
 if|#
 directive|if
 name|_FFR_SOFT_BOUNCE
+comment|/* Turn all errors into temporary errors. */
 literal|"_FFR_SOFT_BOUNCE"
 block|,
 endif|#
@@ -22460,6 +22547,7 @@ comment|/* _FFR_SOFT_BOUNCE */
 if|#
 directive|if
 name|_FFR_SPT_ALIGN
+comment|/* 	**  It looks like the Compaq Tru64 5.1A now aligns argv and envp to 64 	**  bit alignment, so unless each piece of argv and envp is a multiple 	**  of 8 bytes (including terminating NULL), initsetproctitle() won't 	**  use any of the space beyond argv[0]. Be sure to set SPT_ALIGN_SIZE 	**  if you use this FFR. 	*/
 comment|/* Chris Adams of HiWAAY Informations Services */
 literal|"_FFR_SPT_ALIGN"
 block|,
@@ -22469,6 +22557,7 @@ comment|/* _FFR_SPT_ALIGN */
 if|#
 directive|if
 name|_FFR_STRIPBACKSL
+comment|/* 	**  Strip backslash from addresses (so sender doesn't 	**  decide to ignore forward) 	*/
 literal|"_FFR_STRIPBACKSL"
 block|,
 endif|#
@@ -22477,6 +22566,7 @@ comment|/* _FFR_STRIPBACKSL */
 if|#
 directive|if
 name|_FFR_TIMERS
+comment|/* Donated code (unused). */
 literal|"_FFR_TIMERS"
 block|,
 endif|#
@@ -22485,6 +22575,7 @@ comment|/* _FFR_TIMERS */
 if|#
 directive|if
 name|_FFR_TLS_1
+comment|/* More STARTTLS options, e.g., secondary certs. */
 literal|"_FFR_TLS_1"
 block|,
 endif|#
@@ -22493,6 +22584,7 @@ comment|/* _FFR_TLS_1 */
 if|#
 directive|if
 name|_FFR_TRUSTED_QF
+comment|/* 	**  If we don't own the file mark it as unsafe. 	**  However, allow TrustedUser to own it as well 	**  in case TrustedUser manipulates the queue. 	*/
 literal|"_FFR_TRUSTED_QF"
 block|,
 endif|#
@@ -22501,6 +22593,7 @@ comment|/* _FFR_TRUSTED_QF */
 if|#
 directive|if
 name|_FFR_USE_SETLOGIN
+comment|/* Use setlogin() */
 comment|/* Peter Philipp */
 literal|"_FFR_USE_SETLOGIN"
 block|,

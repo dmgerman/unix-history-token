@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.13 2002/12/10 03:08:56 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.14 2003/03/06 18:38:06 ca Exp $  */
 end_comment
 
 begin_comment
@@ -8937,6 +8937,17 @@ end_endif
 
 begin_comment
 comment|/* USESETEUID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_CONF_GETOPT
+value|0
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
 end_comment
 
 begin_define

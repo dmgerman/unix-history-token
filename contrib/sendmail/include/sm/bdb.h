@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: bdb.h,v 1.1.2.3 2002/12/05 05:07:44 ca Exp $  */
+comment|/*  * Copyright (c) 2002, 2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: bdb.h,v 1.1.2.4 2003/03/06 16:27:38 ca Exp $  */
 end_comment
 
 begin_ifndef
@@ -102,6 +102,11 @@ if|#
 directive|if
 operator|!
 name|HASFLOCK
+operator|&&
+name|defined
+argument_list|(
+name|DB_FCNTL_LOCKING
+argument_list|)
 end_if
 
 begin_define
@@ -120,7 +125,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !HASFLOCK */
+comment|/* !HASFLOCK&& defined(DB_FCNTL_LOCKING) */
 end_comment
 
 begin_define
@@ -139,7 +144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !HASFLOCK */
+comment|/* !HASFLOCK&& defined(DB_FCNTL_LOCKING) */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 2000-2003 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: config.c,v 1.27 2002/01/23 17:30:48 gshapiro Exp $"
+literal|"@(#)$Id: config.c,v 1.27.2.1 2003/03/06 02:16:24 ca Exp $"
 argument_list|)
 end_macro
 
@@ -656,6 +656,14 @@ block|,
 endif|#
 directive|endif
 comment|/* SM_CONF_SETITIMER */
+if|#
+directive|if
+name|SM_CONF_SIGSETJMP
+literal|"SM_CONF_SIGSETJMP"
+block|,
+endif|#
+directive|endif
+comment|/* SM_CONF_SIGSETJMP */
 if|#
 directive|if
 name|SM_CONF_SHM
