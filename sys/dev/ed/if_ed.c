@@ -441,7 +441,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-name|int
+name|long
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4534,11 +4534,12 @@ name|x
 decl_stmt|,
 name|i
 decl_stmt|,
-name|mstart
+name|msize
 init|=
 literal|0
-decl_stmt|,
-name|msize
+decl_stmt|;
+name|long
+name|mstart
 init|=
 literal|0
 decl_stmt|;
@@ -4877,7 +4878,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Cannot find any RAM, start : %d, x = %d.\n"
+literal|"Cannot find any RAM, start : %ld, x = %d.\n"
 argument_list|,
 name|mstart
 argument_list|,
@@ -4894,7 +4895,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"RAM start at %d, size : %d.\n"
+literal|"RAM start at %ld, size : %d.\n"
 argument_list|,
 name|mstart
 argument_list|,
@@ -8377,7 +8378,7 @@ argument_list|,
 name|m
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|buffer
 argument_list|)
@@ -8603,7 +8604,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|packet_ptr
 argument_list|,
@@ -10063,7 +10064,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|src
 argument_list|,
@@ -10108,7 +10109,7 @@ argument_list|(
 name|sc
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|src
 argument_list|,
@@ -10432,7 +10433,7 @@ name|ed_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|int
+name|long
 name|src
 decl_stmt|;
 name|unsigned
@@ -10789,7 +10790,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-name|int
+name|long
 name|dst
 decl_stmt|;
 block|{

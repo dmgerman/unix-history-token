@@ -728,7 +728,7 @@ name|struct
 name|ed_softc
 modifier|*
 parameter_list|,
-name|int
+name|long
 parameter_list|,
 name|unsigned
 name|char
