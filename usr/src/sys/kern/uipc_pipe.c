@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.1	81/11/15	*/
+comment|/*	uipc_pipe.c	4.2	81/11/16	*/
 end_comment
 
 begin_include
@@ -329,6 +329,10 @@ begin_comment
 comment|/*  * User requests on pipes and other internally implemented  * structures.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|pi_usrreq
 argument_list|(
@@ -426,28 +430,20 @@ name|so_pcb
 operator|=
 literal|0
 expr_stmt|;
-name|sodetwakeup
+name|soisdisconnected
 argument_list|(
-name|so2
-argument_list|)
-expr_stmt|;
 name|so
-operator|->
-name|so_state
-operator|&=
-operator|~
-name|SS_ISCONNECTED
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|PRU_FLUSH
 case|:
-name|soflush
-argument_list|(
-name|so
-argument_list|)
-expr_stmt|;
-break|break;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 case|case
 name|PRU_SHUTDOWN
 case|:
@@ -456,6 +452,11 @@ operator|->
 name|so_state
 operator||=
 name|SS_CANTSENDMORE
+expr_stmt|;
+name|sowwakeup
+argument_list|(
+name|so
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

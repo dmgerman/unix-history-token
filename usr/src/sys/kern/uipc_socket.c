@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.4	81/11/15	*/
+comment|/*	uipc_socket.c	4.5	81/11/16	*/
 end_comment
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"../h/inaddr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/stat.h"
 end_include
 
 begin_include
@@ -343,6 +349,34 @@ return|;
 block|}
 end_block
 
+begin_macro
+name|sofree
+argument_list|(
+argument|so
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|m_free
+argument_list|(
+name|dtom
+argument_list|(
+name|so
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Close a socket on last file table reference removal.  * Initiate disconnect if connected.  * Free socket when disconnect complete.  */
 end_comment
@@ -410,6 +444,11 @@ name|disconnect
 argument_list|(
 name|so
 argument_list|,
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -528,6 +567,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|sostat
@@ -667,6 +710,10 @@ begin_comment
 comment|/*  * Disconnect from a socket.  * Address parameter is from system call for later multicast  * protocols.  Check to make sure that connected and no disconnect  * in progress (for protocol's sake), and then invoke protocol.  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|disconnect
 argument_list|(
@@ -797,7 +844,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|in_addr
+name|inaddr
 modifier|*
 name|iap
 decl_stmt|;
@@ -826,19 +873,16 @@ operator|&
 name|top
 decl_stmt|;
 specifier|register
-name|int
-name|bufs
-decl_stmt|;
-specifier|register
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|int
+decl_stmt|,
+name|space
+decl_stmt|,
 name|s
 decl_stmt|;
 if|if
@@ -1093,9 +1137,10 @@ condition|(
 name|u
 operator|.
 name|u_count
-operator|>
-literal|0
 operator|&&
+operator|(
+name|space
+operator|=
 name|sbspace
 argument_list|(
 operator|&
@@ -1103,6 +1148,7 @@ name|so
 operator|->
 name|so_snd
 argument_list|)
+operator|)
 operator|>
 literal|0
 condition|)
@@ -1142,7 +1188,7 @@ name|u_count
 operator|>=
 name|PGSIZE
 operator|&&
-name|bufs
+name|space
 operator|>=
 name|NMBPG
 condition|)
@@ -1286,7 +1332,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|struct
-name|in_addr
+name|inaddr
 modifier|*
 name|iap
 decl_stmt|;
@@ -1303,8 +1349,7 @@ decl_stmt|,
 modifier|*
 name|n
 decl_stmt|;
-specifier|register
-name|int
+name|u_int
 name|len
 decl_stmt|;
 name|int
@@ -1811,7 +1856,7 @@ argument_list|)
 expr_stmt|;
 name|release
 label|:
-name|sounlock
+name|sbunlock
 argument_list|(
 operator|&
 name|so
@@ -1824,11 +1869,20 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
-name|skioctl
+name|soioctl
 argument_list|(
 name|so
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.12	81/08/29	*/
+comment|/*	Locore.c	4.13	81/11/16	*/
 end_comment
 
 begin_include
@@ -244,6 +244,9 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|Xustray
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Routines called from interrupt vectors. 	 */
 name|panic
 argument_list|(
@@ -365,6 +368,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|netintr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vmemall
@@ -385,18 +391,6 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return;
-comment|/* use value */
-if|if
-condition|(
-name|forceclose
-argument_list|(
-operator|(
-name|dev_t
-operator|)
 literal|0
 argument_list|)
 condition|)
@@ -762,6 +756,28 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|pte
+name|Mbmap
+index|[
+name|NMBPAGES
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+name|mbutl
+index|[
+name|NMBPAGES
+operator|*
+name|NMBPG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pte
 name|msgbufmap
 index|[
 name|CLSIZE
@@ -1074,6 +1090,10 @@ condition|(
 name|whichqs
 condition|)
 name|whichqs
+operator|=
+literal|0
+expr_stmt|;
+name|masterpaddr
 operator|=
 literal|0
 expr_stmt|;
@@ -1514,13 +1534,7 @@ argument_list|()
 end_macro
 
 begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
+block|{ }
 end_block
 
 begin_macro

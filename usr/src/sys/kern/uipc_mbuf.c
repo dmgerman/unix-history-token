@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uipc_mbuf.c 1.9 81/11/14 */
+comment|/*	uipc_mbuf.c	1.10	81/11/16	*/
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ file|"../net/inet_systm.h"
 end_include
 
 begin_comment
-comment|/* ### */
+comment|/* XXX */
 end_comment
 
 begin_include
@@ -117,6 +117,11 @@ name|mbstat
 operator|.
 name|m_lowat
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_block
 
@@ -219,8 +224,6 @@ name|m
 operator|=
 name|m_get
 argument_list|(
-name|m
-argument_list|,
 name|canwait
 argument_list|)
 expr_stmt|;
@@ -301,6 +304,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_function
 name|struct
 name|mbuf
@@ -313,9 +320,6 @@ name|int
 name|type
 decl_stmt|;
 block|{
-name|int
-name|s
-decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
@@ -351,12 +355,12 @@ name|m_more
 parameter_list|(
 name|x
 parameter_list|)
-value|((struct mbuf *)panic("m_more"))
+value|(panic("m_more"), (struct mbuf *)0)
 name|MGET
 argument_list|(
 name|m
 argument_list|,
-literal|0
+name|type
 argument_list|)
 expr_stmt|;
 return|return
@@ -392,7 +396,7 @@ specifier|register
 name|int
 name|s
 decl_stmt|,
-name|cnt
+name|i
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -405,12 +409,8 @@ name|m
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|cnt
+return|return;
+name|i
 operator|=
 literal|0
 expr_stmt|;
@@ -429,11 +429,11 @@ name|m_off
 operator|>
 name|MMAXOFF
 condition|)
-name|cnt
+name|i
 operator|+=
 name|NMBPG
 expr_stmt|;
-name|cnt
+name|i
 operator|++
 expr_stmt|;
 name|MFREE
@@ -456,11 +456,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|cnt
-operator|)
-return|;
+return|return;
 block|}
 end_block
 
@@ -499,6 +495,9 @@ literal|0
 index|]
 expr_stmt|;
 comment|/* ->start of buffer virt mem */
+operator|(
+name|void
+operator|)
 name|vmemall
 argument_list|(
 operator|&
@@ -522,6 +521,9 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|m
 argument_list|,
 literal|2
@@ -556,6 +558,9 @@ name|m
 operator|++
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|pg_alloc
 argument_list|(
 literal|3
@@ -587,8 +592,6 @@ literal|32
 expr_stmt|;
 block|{
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|k
@@ -620,11 +623,11 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"mbinit"
+argument_list|)
+expr_stmt|;
 name|j
 operator|=
 name|i
@@ -909,15 +912,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|,
-modifier|*
-name|n
-decl_stmt|;
 name|int
 name|need
 decl_stmt|,
@@ -1000,6 +994,11 @@ name|steal
 label|:
 comment|/* while (not enough) ask protocols to free code */
 empty_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -1102,6 +1101,9 @@ name|m
 operator|->
 name|m_len
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|n
 operator|->
 name|m_len
@@ -1162,11 +1164,12 @@ name|mp
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|register
+name|int
 name|len
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

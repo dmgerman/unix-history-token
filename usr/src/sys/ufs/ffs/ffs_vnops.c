@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_vnops.c	4.13	81/11/14	*/
+comment|/*	ffs_vnops.c	4.14	81/11/16	*/
 end_comment
 
 begin_include
@@ -85,6 +85,18 @@ begin_include
 include|#
 directive|include
 file|"../h/inline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/socket.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/socketvar.h"
 end_include
 
 begin_comment
