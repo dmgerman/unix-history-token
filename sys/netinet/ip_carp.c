@@ -344,10 +344,6 @@ define|#
 directive|define
 name|sc_carpdev
 value|sc_ac.ac_if.if_carpdev
-name|int
-name|if_flags
-decl_stmt|;
-comment|/* UP/DOWN */
 name|struct
 name|in_ifaddr
 modifier|*
@@ -9235,13 +9231,6 @@ break|break;
 case|case
 name|SIOCDIFADDR
 case|:
-name|sc
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
 switch|switch
 condition|(
 name|ifa
@@ -9330,13 +9319,6 @@ name|IFF_UP
 operator|)
 condition|)
 block|{
-name|sc
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_UP
-expr_stmt|;
 name|callout_stop
 argument_list|(
 operator|&
