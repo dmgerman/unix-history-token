@@ -141,7 +141,7 @@ define|#
 directive|define
 name|ADDR2HDR
 parameter_list|(
-name|res
+name|addr
 parameter_list|)
 value|((struct smapi_bios_header *)BIOS_PADDRTOVADDR(addr))
 end_define
@@ -489,7 +489,7 @@ argument|; i< header->length; i++) { 		cksum += ptr[i];	 	}  	return (cksum); } 
 literal|0
 argument|) { 		rid =
 literal|0
-argument|; 		length = ADDR2HDR(res)->length;  		child = BUS_ADD_CHILD(parent,
+argument|; 		length = ADDR2HDR(addr)->length;  		child = BUS_ADD_CHILD(parent,
 literal|0
 argument|,
 literal|"smapi"
