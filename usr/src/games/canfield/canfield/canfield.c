@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)canfield.c	5.4 (Berkeley) %G%"
+literal|"@(#)canfield.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -715,6 +715,12 @@ name|INSTRUCTIONBOX
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|uid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Basic betting costs  */
 end_comment
@@ -1164,7 +1170,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"                            "
+literal|"*--------------------------*"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1178,7 +1184,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"*--------------------------*"
+literal|"|Costs        Hand   Total |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1192,7 +1198,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Costs        Hand   Total |"
+literal|"| Hands                    |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1206,7 +1212,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Hands                    |"
+literal|"| Inspections              |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1220,7 +1226,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Inspections              |"
+literal|"| Games                    |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1234,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Games                    |"
+literal|"| Runs                     |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1248,7 +1254,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Runs                     |"
+literal|"| Information              |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1262,7 +1268,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Information              |"
+literal|"| Think time               |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1276,7 +1282,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"| Think time               |"
+literal|"|Total Costs               |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1290,7 +1296,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Total Costs               |"
+literal|"|Winnings                  |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1304,7 +1310,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Winnings                  |"
+literal|"|Net Worth                 |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -1318,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"|Net Worth                 |"
+literal|"|Return                    |"
 argument_list|)
 expr_stmt|;
 name|move
@@ -5054,6 +5060,11 @@ name|thiscosts
 decl_stmt|,
 name|totalcosts
 decl_stmt|;
+name|double
+name|thisreturn
+decl_stmt|,
+name|totalreturn
+decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
@@ -5185,6 +5196,46 @@ name|wins
 operator|-
 name|totalcosts
 expr_stmt|;
+name|thisreturn
+operator|=
+operator|(
+operator|(
+name|double
+operator|)
+name|this
+operator|.
+name|wins
+operator|/
+operator|(
+name|double
+operator|)
+name|thiscosts
+operator|-
+literal|1.0
+operator|)
+operator|*
+literal|100.0
+expr_stmt|;
+name|totalreturn
+operator|=
+operator|(
+operator|(
+name|double
+operator|)
+name|total
+operator|.
+name|wins
+operator|/
+operator|(
+name|double
+operator|)
+name|totalcosts
+operator|-
+literal|1.0
+operator|)
+operator|*
+literal|100.0
+expr_stmt|;
 if|if
 condition|(
 name|status
@@ -5196,7 +5247,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|3
+literal|2
 argument_list|,
 name|boxcol
 operator|+
@@ -5214,6 +5265,30 @@ argument_list|,
 name|total
 operator|.
 name|hand
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|tboxrow
+operator|+
+literal|3
+argument_list|,
+name|boxcol
+operator|+
+literal|13
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"%4d%9d"
+argument_list|,
+name|this
+operator|.
+name|inspection
+argument_list|,
+name|total
+operator|.
+name|inspection
 argument_list|)
 expr_stmt|;
 name|move
@@ -5233,11 +5308,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|inspection
+name|game
 argument_list|,
 name|total
 operator|.
-name|inspection
+name|game
 argument_list|)
 expr_stmt|;
 name|move
@@ -5257,11 +5332,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|game
+name|runs
 argument_list|,
 name|total
 operator|.
-name|game
+name|runs
 argument_list|)
 expr_stmt|;
 name|move
@@ -5281,11 +5356,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|runs
+name|information
 argument_list|,
 name|total
 operator|.
-name|runs
+name|information
 argument_list|)
 expr_stmt|;
 name|move
@@ -5305,11 +5380,11 @@ literal|"%4d%9d"
 argument_list|,
 name|this
 operator|.
-name|information
+name|thinktime
 argument_list|,
 name|total
 operator|.
-name|information
+name|thinktime
 argument_list|)
 expr_stmt|;
 name|move
@@ -5317,30 +5392,6 @@ argument_list|(
 name|tboxrow
 operator|+
 literal|8
-argument_list|,
-name|boxcol
-operator|+
-literal|13
-argument_list|)
-expr_stmt|;
-name|printw
-argument_list|(
-literal|"%4d%9d"
-argument_list|,
-name|this
-operator|.
-name|thinktime
-argument_list|,
-name|total
-operator|.
-name|thinktime
-argument_list|)
-expr_stmt|;
-name|move
-argument_list|(
-name|tboxrow
-operator|+
-literal|9
 argument_list|,
 name|boxcol
 operator|+
@@ -5360,7 +5411,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|10
+literal|9
 argument_list|,
 name|boxcol
 operator|+
@@ -5384,7 +5435,7 @@ name|move
 argument_list|(
 name|tboxrow
 operator|+
-literal|11
+literal|10
 argument_list|,
 name|boxcol
 operator|+
@@ -5402,6 +5453,26 @@ argument_list|,
 name|total
 operator|.
 name|worth
+argument_list|)
+expr_stmt|;
+name|move
+argument_list|(
+name|tboxrow
+operator|+
+literal|11
+argument_list|,
+name|boxcol
+operator|+
+literal|13
+argument_list|)
+expr_stmt|;
+name|printw
+argument_list|(
+literal|"%4.0f%%%8.1f%%"
+argument_list|,
+name|thisreturn
+argument_list|,
+name|totalreturn
 argument_list|)
 expr_stmt|;
 block|}
@@ -6588,6 +6659,9 @@ name|sh
 decl_stmt|;
 endif|#
 directive|endif
+name|updatebettinginfo
+argument_list|()
+expr_stmt|;
 name|move
 argument_list|(
 literal|21
@@ -6598,6 +6672,47 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|dbfd
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+name|lseek
+argument_list|(
+name|dbfd
+argument_list|,
+name|uid
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|betinfo
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+name|dbfd
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|total
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|total
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SIGTSTP
@@ -6701,6 +6816,77 @@ expr_stmt|;
 name|srcpile
 operator|=
 literal|'q'
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|startedgame
+condition|)
+block|{
+name|move
+argument_list|(
+name|msgrow
+argument_list|,
+name|msgcol
+argument_list|)
+expr_stmt|;
+name|errmsg
+operator|=
+name|TRUE
+expr_stmt|;
+switch|switch
+condition|(
+literal|34
+operator|-
+name|taloncnt
+operator|-
+name|cinhand
+condition|)
+block|{
+default|default:
+name|errmsg
+operator|=
+name|FALSE
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|printw
+argument_list|(
+literal|"One card used from talon  "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|printw
+argument_list|(
+literal|"Two cards used from talon "
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|printw
+argument_list|(
+literal|">3< cards used from talon "
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|getcmd
+argument_list|(
+name|moverow
+argument_list|,
+name|movecol
+argument_list|,
+literal|"Move:"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -7536,8 +7722,6 @@ end_macro
 begin_block
 block|{
 name|int
-name|uid
-decl_stmt|,
 name|i
 decl_stmt|;
 name|srandom
@@ -7568,7 +7752,10 @@ name|uid
 operator|<
 literal|0
 condition|)
-return|return;
+name|uid
+operator|=
+literal|0
+expr_stmt|;
 name|dbfd
 operator|=
 name|open
@@ -7659,21 +7846,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|lseek
-argument_list|(
-name|dbfd
-argument_list|,
-name|uid
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|betinfo
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -7939,6 +8111,21 @@ operator|-
 literal|1
 condition|)
 block|{
+name|lseek
+argument_list|(
+name|dbfd
+argument_list|,
+name|uid
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|betinfo
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|write
 argument_list|(
 name|dbfd
