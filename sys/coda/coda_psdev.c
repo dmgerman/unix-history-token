@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*              Coda: an Experimental Distributed File System                              Release 3.1            Copyright (c) 1987-1998 Carnegie Mellon University                          All Rights Reserved  Permission  to  use, copy, modify and distribute this software and its documentation is hereby granted,  provided  that  both  the  copyright notice  and  this  permission  notice  appear  in  all  copies  of the software, derivative works or  modified  versions,  and  any  portions thereof, and that both notices appear in supporting documentation, and that credit is given to Carnegie Mellon University  in  all  documents and publicity pertaining to direct or indirect use of this code or its derivatives.  CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS, SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF ANY DERIVATIVE WORK.  Carnegie  Mellon  encourages  users  of  this  software  to return any improvements or extensions that  they  make,  and  to  grant  Carnegie Mellon the rights to redistribute these changes without encumbrance. */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_psdev.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
 end_comment
-
-begin_comment
-comment|/* $Header: /afs/cs/project/coda-src/cvs/coda/kernel-src/vfs/freebsd/cfs/cfs_psdev.c,v 1.9 1998/08/28 18:12:17 rvb Exp $ */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CTL_C
-end_define
 
 begin_comment
 comment|/*   * Mach Operating System  * Copyright (c) 1989 Carnegie-Mellon University  * All rights reserved.  The CMU software License Agreement specifies  * the terms and conditions for use and redistribution.  */
@@ -22,19 +12,11 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/* ************************************************** */
+comment|/*   * These routines define the psuedo device for communication between  * Coda's Venus and Minicache in Mach 2.6. They used to be in cfs_subr.c,   * but I moved them to make it easier to port the Minicache without   * porting coda. -- DCS 10/12/94  */
 end_comment
 
 begin_comment
-comment|/* These routines define the psuedo device for communication between  * Coda's Venus and Minicache in Mach 2.6. They used to be in cfs_subr.c,   * but I moved them to make it easier to port the Minicache without   * porting coda. -- DCS 10/12/94  */
-end_comment
-
-begin_comment
-comment|/*   * Renamed to cfs_psdev: pseudo-device driver.  */
-end_comment
-
-begin_comment
-comment|/*  * HISTORY  * $Log: cfs_psdev.c,v $  * Revision 1.9  1998/08/28 18:12:17  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.8  1998/08/18 17:05:15  rvb  * Don't use __RCSID now  *  * Revision 1.7  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  1998/06/09 23:30:42  rvb  * Try to allow ^C -- take 1  *  * Revision 1.5.2.8  98/01/23  11:21:04  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  98/01/22  22:22:21  rvb  * sync 1.2 and 1.3  *   * Revision 1.5.2.6  98/01/22  13:11:24  rvb  * Move makecfsnode ctlfid later so vfsp is known; work on ^c and ^z  *   * Revision 1.5.2.5  97/12/16  22:01:27  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.4  97/12/16  12:40:05  rvb  * Sync with 1.3  *   * Revision 1.5.2.3  97/12/10  14:08:24  rvb  * Fix O_ flags; check result in cfscall  *   * Revision 1.5.2.2  97/12/10  11:40:24  rvb  * No more ody  *   * Revision 1.5.2.1  97/12/06  17:41:20  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:16  rvb  * Read CHANGES  *   * Revision 1.4.18.9  97/12/05  08:58:07  rvb  * peter found this one  *   * Revision 1.4.18.8  97/11/26  15:28:57  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.4.18.7  97/11/25  09:40:49  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.18.6  97/11/20  11:46:41  rvb  * Capture current cfs_venus  *   * Revision 1.4.18.5  97/11/18  10:27:15  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.18.4  97/11/13  22:02:59  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.18.3  97/11/12  12:09:38  rvb  * reorg pass1  *   * Revision 1.4.18.2  97/10/29  16:06:09  rvb  * Kill DYING  *   * Revision 1.4.18.1  1997/10/28 23:10:15  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1996/12/12 22:10:58  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.3  1996/11/13 04:14:20  bnoble  * Merging BNOBLE_WORK_6_20_96 into main line  *  * Revision 1.2.8.1  1996/08/22 14:25:04  bnoble  * Added a return code from vc_nb_close  *  * Revision 1.2  1996/01/02 16:56:58  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:24  bnoble  * Added CFS-specific files  *  * Revision 1.1  1995/03/14  20:52:15  bnoble  * Initial revision  *  */
+comment|/*  * HISTORY  * $Log: cfs_psdev.c,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.9  1998/08/28 18:12:17  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.8  1998/08/18 17:05:15  rvb  * Don't use __RCSID now  *  * Revision 1.7  1998/08/18 16:31:41  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  1998/06/09 23:30:42  rvb  * Try to allow ^C -- take 1  *  * Revision 1.5.2.8  98/01/23  11:21:04  rvb  * Sync with 2.2.5  *   * Revision 1.5.2.7  98/01/22  22:22:21  rvb  * sync 1.2 and 1.3  *   * Revision 1.5.2.6  98/01/22  13:11:24  rvb  * Move makecfsnode ctlfid later so vfsp is known; work on ^c and ^z  *   * Revision 1.5.2.5  97/12/16  22:01:27  rvb  * Oops add cfs_subr.h cfs_venus.h; sync with peter  *   * Revision 1.5.2.4  97/12/16  12:40:05  rvb  * Sync with 1.3  *   * Revision 1.5.2.3  97/12/10  14:08:24  rvb  * Fix O_ flags; check result in cfscall  *   * Revision 1.5.2.2  97/12/10  11:40:24  rvb  * No more ody  *   * Revision 1.5.2.1  97/12/06  17:41:20  rvb  * Sync with peters coda.h  *   * Revision 1.5  97/12/05  10:39:16  rvb  * Read CHANGES  *   * Revision 1.4.18.9  97/12/05  08:58:07  rvb  * peter found this one  *   * Revision 1.4.18.8  97/11/26  15:28:57  rvb  * Cant make downcall pbuf == union cfs_downcalls yet  *   * Revision 1.4.18.7  97/11/25  09:40:49  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.4.18.6  97/11/20  11:46:41  rvb  * Capture current cfs_venus  *   * Revision 1.4.18.5  97/11/18  10:27:15  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.4.18.4  97/11/13  22:02:59  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.4.18.3  97/11/12  12:09:38  rvb  * reorg pass1  *   * Revision 1.4.18.2  97/10/29  16:06:09  rvb  * Kill DYING  *   * Revision 1.4.18.1  1997/10/28 23:10:15  rvb  *>64Meg; venus can be killed!  *  * Revision 1.4  1996/12/12 22:10:58  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *  * Revision 1.3  1996/11/13 04:14:20  bnoble  * Merging BNOBLE_WORK_6_20_96 into main line  *  * Revision 1.2.8.1  1996/08/22 14:25:04  bnoble  * Added a return code from vc_nb_close  *  * Revision 1.2  1996/01/02 16:56:58  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:24  bnoble  * Added CFS-specific files  *  * Revision 1.1  1995/03/14  20:52:15  bnoble  * Initial revision  *  */
 end_comment
 
 begin_comment
@@ -79,13 +61,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -100,78 +82,23 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NetBSD1_3
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/poll.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<sys/poll.h>
+file|<sys/conf.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/select.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -197,6 +124,12 @@ directive|include
 file|<cfs/cfsio.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|CTL_C
+end_define
+
 begin_decl_stmt
 name|int
 name|cfs_psdev_print_entry
@@ -205,35 +138,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|ENTRY
-define|\
 value|if(cfs_psdev_print_entry) myprintf(("Entered %s\n",__FUNCTION__))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ENTRY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
@@ -347,20 +257,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NetBSD1_3
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-end_if
-
 begin_function_decl
 name|int
 name|vc_nb_poll
@@ -378,34 +274,6 @@ name|p
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-name|int
-name|vc_nb_select
-parameter_list|(
-name|dev_t
-name|dev
-parameter_list|,
-name|int
-name|flag
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -479,10 +347,6 @@ name|n
 decl_stmt|;
 block|{ }
 end_function
-
-begin_comment
-comment|/*   * These functions are written for NetBSD.  */
-end_comment
 
 begin_function
 name|int
@@ -764,37 +628,6 @@ name|c_flags
 operator||=
 name|C_UNMOUNTING
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEW_LOCKMGR
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-comment|/* dounmount is different ... probably wrong ... */
-else|#
-directive|else
-if|if
-condition|(
-name|vfs_busy
-argument_list|(
-name|mi
-operator|->
-name|mi_vfsp
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
-endif|#
-directive|endif
-endif|#
-directive|endif
 name|cfs_unmounting
 argument_list|(
 name|mi
@@ -1914,20 +1747,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NetBSD1_3
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-end_if
-
 begin_function
 name|int
 name|vc_nb_poll
@@ -2058,126 +1877,6 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function
-name|int
-name|vc_nb_select
-parameter_list|(
-name|dev
-parameter_list|,
-name|flag
-parameter_list|,
-name|p
-parameter_list|)
-name|dev_t
-name|dev
-decl_stmt|;
-name|int
-name|flag
-decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-block|{
-specifier|register
-name|struct
-name|vcomm
-modifier|*
-name|vcp
-decl_stmt|;
-name|ENTRY
-expr_stmt|;
-if|if
-condition|(
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|NVCFS
-operator|||
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-name|vcp
-operator|=
-operator|&
-name|cfs_mnttbl
-index|[
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-index|]
-operator|.
-name|mi_vcomm
-expr_stmt|;
-if|if
-condition|(
-name|flag
-operator|!=
-name|FREAD
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-operator|!
-name|EMPTY
-argument_list|(
-name|vcp
-operator|->
-name|vc_requests
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-name|selrecord
-argument_list|(
-name|p
-argument_list|,
-operator|&
-operator|(
-name|vcp
-operator|->
-name|vc_selproc
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Statistics  */
 end_comment
@@ -2191,10 +1890,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*   * Key question: whether to sleep interuptably or uninteruptably when  * waiting for Venus.  The former seems better (cause you can ^C a  * job), but then GNU-EMACS completion breaks. Use tsleep with no  * timeout, and no longjmp happens. But, when sleeping  * "uninterruptibly", we don't get told if it returns abnormally  * (e.g. kill -9).    */
-end_comment
-
-begin_comment
-comment|/* If you want this to be interruptible, set this to> PZERO */
 end_comment
 
 begin_decl_stmt

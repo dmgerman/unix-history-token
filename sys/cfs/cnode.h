@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*              Coda: an Experimental Distributed File System                              Release 3.1            Copyright (c) 1987-1998 Carnegie Mellon University                          All Rights Reserved  Permission  to  use, copy, modify and distribute this software and its documentation is hereby granted,  provided  that  both  the  copyright notice  and  this  permission  notice  appear  in  all  copies  of the software, derivative works or  modified  versions,  and  any  portions thereof, and that both notices appear in supporting documentation, and that credit is given to Carnegie Mellon University  in  all  documents and publicity pertaining to direct or indirect use of this code or its derivatives.  CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS, SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF ANY DERIVATIVE WORK.  Carnegie  Mellon  encourages  users  of  this  software  to return any improvements or extensions that  they  make,  and  to  grant  Carnegie Mellon the rights to redistribute these changes without encumbrance. */
-end_comment
-
-begin_comment
-comment|/* $Header: /afs/cs/project/coda-src/cvs/coda/kernel-src/vfs/freebsd/cfs/cnode.h,v 1.10 1998/08/28 18:12:25 rvb Exp $ */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cnode.h,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $   *  $Id: $  *   */
 end_comment
 
 begin_comment
@@ -16,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*   * HISTORY  * $Log: cnode.h,v $  * Revision 1.10  1998/08/28 18:12:25  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.9  1998/08/18 17:05:24  rvb  * Don't use __RCSID now  *  * Revision 1.8  1998/08/18 16:31:49  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.7  98/02/24  22:22:53  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.6  98/01/31  20:53:19  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.5  98/01/23  11:53:51  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.4.2.5  98/01/23  11:21:14  rvb  * Sync with 2.2.5  *   * Revision 1.4.2.4  98/01/22  13:03:38  rvb  * Had Breaken ls .  *   * Revision 1.4.2.3  97/12/19  14:26:09  rvb  * session id  *   * Revision 1.4.2.2  97/12/16  12:40:24  rvb  * Sync with 1.3  *   * Revision 1.4.2.1  97/12/06  17:41:28  rvb  * Sync with peters coda.h  *   * Revision 1.4  97/12/05  10:39:30  rvb  * Read CHANGES  *   * Revision 1.3.18.2  97/11/12  12:09:45  rvb  * reorg pass1  *   * Revision 1.3.18.1  97/10/29  16:06:31  rvb  * Kill DYING  *   * Revision 1.3  1996/12/12 22:11:03  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   *  There may be more.  *  * Revision 1.2  1996/01/02 16:57:26  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:53  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:23  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:23  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.2  1994/12/06  13:39:18  dcs  * Add a flag value to indicate a cnode was orphaned, e.g. the venus  * that created it has exited. This will allow one to restart venus  * even though some process may be cd'd into /coda.  *  * Revision 2.1  94/07/21  16:25:33  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.2.7.1  94/06/16  11:26:02  raiff  * Branch for release beta-16Jun1994_39118  *   * Revision 1.2  92/10/27  17:58:41  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:53  mja  * 	Picked up fixed #ifdef _KERNEL. Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:27:24  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.4  90/05/31  17:02:16  dcs  * Prepare for merge with facilities kernel.  *   *   *   */
+comment|/*   * HISTORY  * $Log: cnode.h,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.10  1998/08/28 18:12:25  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.9  1998/08/18 17:05:24  rvb  * Don't use __RCSID now  *  * Revision 1.8  1998/08/18 16:31:49  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.7  98/02/24  22:22:53  rvb  * Fixes up mainly to flush iopen and friends  *   * Revision 1.6  98/01/31  20:53:19  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.5  98/01/23  11:53:51  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.4.2.5  98/01/23  11:21:14  rvb  * Sync with 2.2.5  *   * Revision 1.4.2.4  98/01/22  13:03:38  rvb  * Had Breaken ls .  *   * Revision 1.4.2.3  97/12/19  14:26:09  rvb  * session id  *   * Revision 1.4.2.2  97/12/16  12:40:24  rvb  * Sync with 1.3  *   * Revision 1.4.2.1  97/12/06  17:41:28  rvb  * Sync with peters coda.h  *   * Revision 1.4  97/12/05  10:39:30  rvb  * Read CHANGES  *   * Revision 1.3.18.2  97/11/12  12:09:45  rvb  * reorg pass1  *   * Revision 1.3.18.1  97/10/29  16:06:31  rvb  * Kill DYING  *   * Revision 1.3  1996/12/12 22:11:03  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.   *  There may be more.  *  * Revision 1.2  1996/01/02 16:57:26  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:53  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:08:23  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:08:23  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.2  1994/12/06  13:39:18  dcs  * Add a flag value to indicate a cnode was orphaned, e.g. the venus  * that created it has exited. This will allow one to restart venus  * even though some process may be cd'd into /coda.  *  * Revision 2.1  94/07/21  16:25:33  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *   * Revision 1.2.7.1  94/06/16  11:26:02  raiff  * Branch for release beta-16Jun1994_39118  *   * Revision 1.2  92/10/27  17:58:41  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:53  mja  * 	Picked up fixed #ifdef _KERNEL. Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:27:24  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.4  90/05/31  17:02:16  dcs  * Prepare for merge with facilities kernel.  *   *   *   */
 end_comment
 
 begin_ifndef
@@ -37,36 +33,16 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_comment
-comment|/* for the prototype of DELAY() */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<machine/clock.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-end_ifdef
-
-begin_comment
-comment|/* You would think that<sys/param.h> or something would include this */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/lock.h>
 end_include
 
 begin_expr_stmt
@@ -76,201 +52,6 @@ name|M_CFS
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* yuck yuck yuck */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vref
-parameter_list|(
-name|x
-parameter_list|)
-value|cvref(x)
-end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|cvref
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* yuck yuck yuck */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|NetBSD1_3
-argument_list|)
-operator|&&
-operator|(
-name|NetBSD1_3
-operator|>=
-literal|7
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NEW_LOCKMGR
-parameter_list|(
-name|l
-parameter_list|,
-name|f
-parameter_list|,
-name|i
-parameter_list|)
-value|lockmgr(l, f, i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP_X_LOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|vn_lock(vn, fl)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP_X_UNLOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|VOP_UNLOCK(vn, fl)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|NEW_LOCKMGR
-parameter_list|(
-name|l
-parameter_list|,
-name|f
-parameter_list|,
-name|i
-parameter_list|)
-value|lockmgr(l, f, i, curproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP_X_LOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|vn_lock(vn, fl, curproc)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP_X_UNLOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|VOP_UNLOCK(vn, fl, curproc)
-end_define
-
-begin_comment
-comment|/* NetBSD 1.3& FreeBSD 2.2.x */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_undef
-undef|#
-directive|undef
-name|NEW_LOCKMGR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|VOP_X_LOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|VOP_LOCK(vn)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VOP_X_UNLOCK
-parameter_list|(
-name|vn
-parameter_list|,
-name|fl
-parameter_list|)
-value|VOP_UNLOCK(vn)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * tmp below since we need struct queue  */
@@ -427,16 +208,11 @@ name|ViceFid
 name|c_fid
 decl_stmt|;
 comment|/* file handle */
-ifdef|#
-directive|ifdef
-name|NEW_LOCKMGR
 name|struct
 name|lock
 name|c_lock
 decl_stmt|;
 comment|/* new lock protocol */
-endif|#
-directive|endif
 name|struct
 name|vnode
 modifier|*
@@ -941,37 +717,6 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-name|NetBSD1_3
-operator|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__RCSID
-parameter_list|(
-name|x
-parameter_list|)
-value|static char *rcsid = x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* sigh */

@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*              Coda: an Experimental Distributed File System                              Release 3.1            Copyright (c) 1987-1998 Carnegie Mellon University                          All Rights Reserved  Permission  to  use, copy, modify and distribute this software and its documentation is hereby granted,  provided  that  both  the  copyright notice  and  this  permission  notice  appear  in  all  copies  of the software, derivative works or  modified  versions,  and  any  portions thereof, and that both notices appear in supporting documentation, and that credit is given to Carnegie Mellon University  in  all  documents and publicity pertaining to direct or indirect use of this code or its derivatives.  CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS, SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF ANY DERIVATIVE WORK.  Carnegie  Mellon  encourages  users  of  this  software  to return any improvements or extensions that  they  make,  and  to  grant  Carnegie Mellon the rights to redistribute these changes without encumbrance. */
-end_comment
-
-begin_comment
-comment|/* $Header: /afs/cs/project/coda-src/cvs/coda/kernel-src/vfs/freebsd/cfs/cfs_namecache.c,v 1.11 1998/08/28 18:12:16 rvb Exp $ */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_namecache.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
 end_comment
 
 begin_comment
@@ -16,7 +12,7 @@ comment|/*  * This code was written for the Coda file system at Carnegie Mellon 
 end_comment
 
 begin_comment
-comment|/*  * HISTORY  * $Log: cfs_namecache.c,v $  * Revision 1.11  1998/08/28 18:12:16  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:14  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:39  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:10  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:39  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.4  98/01/23  11:21:02  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.3  97/12/16  12:40:03  rvb  * Sync with 1.3  *   * Revision 1.6.2.2  97/12/09  16:07:10  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.6.2.1  97/12/06  17:41:18  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:13  rvb  * Read CHANGES  *   * Revision 1.5.4.7  97/11/25  08:08:43  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.5.4.6  97/11/24  15:44:43  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.5.4.5  97/11/20  11:46:38  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.4  97/11/18  10:27:13  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.3  97/11/13  22:02:57  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.2  97/11/12  12:09:35  rvb  * reorg pass1  *   * Revision 1.5.4.1  97/10/28  23:10:12  rvb  *>64Meg; venus can be killed!  *   * Revision 1.5  97/08/05  11:08:01  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:57  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *   * Revision 1.3  1996/11/08 18:06:09  bnoble  * Minor changes in vnode operation signature, VOP_UPDATE signature, and  * some newly defined bits in the include files.  *  * Revision 1.2  1996/01/02 16:56:50  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:15  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:57  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:56  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.3  1994/10/14  09:57:54  dcs  * Made changes 'cause sun4s have braindead compilers  *  * Revision 2.2  94/08/28  19:37:35  luqi  * Add a new CFS_REPLACE call to allow venus to replace a ViceFid in the  * mini-cache.   *   * In "cfs.h":  * Add CFS_REPLACE decl.  *   * In "cfs_namecache.c":  * Add routine cfsnc_replace.  *   * In "cfs_subr.c":  * Add case-statement to process CFS_REPLACE.  *   * In "cfsnc.h":  * Add decl for CFSNC_REPLACE.  *   *   * Revision 2.1  94/07/21  16:25:15  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *  * Revision 1.2  92/10/27  17:58:21  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:20  mja  * 	call cfs_flush instead of calling inode_uncache_try directly   * 	(from dcs). Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:26:30  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.3  90/05/31  17:01:24  dcs  * Prepare for merge with facilities kernel.  *   *   */
+comment|/*  * HISTORY  * $Log: cfs_namecache.c,v $  * Revision 1.1.1.1  1998/08/29 21:14:52  rvb  * Very Preliminary Coda  *  * Revision 1.11  1998/08/28 18:12:16  rvb  * Now it also works on FreeBSD -current.  This code will be  * committed to the FreeBSD -current and NetBSD -current  * trees.  It will then be tailored to the particular platform  * by flushing conditional code.  *  * Revision 1.10  1998/08/18 17:05:14  rvb  * Don't use __RCSID now  *  * Revision 1.9  1998/08/18 16:31:39  rvb  * Sync the code for NetBSD -current; test on 1.3 later  *  * Revision 1.8  98/01/31  20:53:10  rvb  * First version that works on FreeBSD 2.2.5  *   * Revision 1.7  98/01/23  11:53:39  rvb  * Bring RVB_CFS1_1 to HEAD  *   * Revision 1.6.2.4  98/01/23  11:21:02  rvb  * Sync with 2.2.5  *   * Revision 1.6.2.3  97/12/16  12:40:03  rvb  * Sync with 1.3  *   * Revision 1.6.2.2  97/12/09  16:07:10  rvb  * Sync with vfs/include/coda.h  *   * Revision 1.6.2.1  97/12/06  17:41:18  rvb  * Sync with peters coda.h  *   * Revision 1.6  97/12/05  10:39:13  rvb  * Read CHANGES  *   * Revision 1.5.4.7  97/11/25  08:08:43  rvb  * cfs_venus ... done; until cred/vattr change  *   * Revision 1.5.4.6  97/11/24  15:44:43  rvb  * Final cfs_venus.c w/o macros, but one locking bug  *   * Revision 1.5.4.5  97/11/20  11:46:38  rvb  * Capture current cfs_venus  *   * Revision 1.5.4.4  97/11/18  10:27:13  rvb  * cfs_nbsd.c is DEAD!!!; integrated into cfs_vf/vnops.c  * cfs_nb_foo and cfs_foo are joined  *   * Revision 1.5.4.3  97/11/13  22:02:57  rvb  * pass2 cfs_NetBSD.h mt  *   * Revision 1.5.4.2  97/11/12  12:09:35  rvb  * reorg pass1  *   * Revision 1.5.4.1  97/10/28  23:10:12  rvb  *>64Meg; venus can be killed!  *   * Revision 1.5  97/08/05  11:08:01  lily  * Removed cfsnc_replace, replaced it with a cfs_find, unhash, and  * rehash.  This fixes a cnode leak and a bug in which the fid is  * not actually replaced.  (cfs_namecache.c, cfsnc.h, cfs_subr.c)  *   * Revision 1.4  96/12/12  22:10:57  bnoble  * Fixed the "downcall invokes venus operation" deadlock in all known cases.  * There may be more  *   * Revision 1.3  1996/11/08 18:06:09  bnoble  * Minor changes in vnode operation signature, VOP_UPDATE signature, and  * some newly defined bits in the include files.  *  * Revision 1.2  1996/01/02 16:56:50  bnoble  * Added support for Coda MiniCache and raw inode calls (final commit)  *  * Revision 1.1.2.1  1995/12/20 01:57:15  bnoble  * Added CFS-specific files  *  * Revision 3.1.1.1  1995/03/04  19:07:57  bnoble  * Branch for NetBSD port revisions  *  * Revision 3.1  1995/03/04  19:07:56  bnoble  * Bump to major revision 3 to prepare for NetBSD port  *  * Revision 2.3  1994/10/14  09:57:54  dcs  * Made changes 'cause sun4s have braindead compilers  *  * Revision 2.2  94/08/28  19:37:35  luqi  * Add a new CFS_REPLACE call to allow venus to replace a ViceFid in the  * mini-cache.   *   * In "cfs.h":  * Add CFS_REPLACE decl.  *   * In "cfs_namecache.c":  * Add routine cfsnc_replace.  *   * In "cfs_subr.c":  * Add case-statement to process CFS_REPLACE.  *   * In "cfsnc.h":  * Add decl for CFSNC_REPLACE.  *   *   * Revision 2.1  94/07/21  16:25:15  satya  * Conversion to C++ 3.0; start of Coda Release 2.0  *  * Revision 1.2  92/10/27  17:58:21  lily  * merge kernel/latest and alpha/src/cfs  *   * Revision 2.3  92/09/30  14:16:20  mja  * 	call cfs_flush instead of calling inode_uncache_try directly   * 	(from dcs). Also...  *   * 	Substituted rvb's history blurb so that we agree with Mach 2.5 sources.  * 	[91/02/09            jjk]  *   * 	Added contributors blurb.  * 	[90/12/13            jjk]  *   * Revision 2.2  90/07/05  11:26:30  mrt  * 	Created for the Coda File System.  * 	[90/05/23            dcs]  *   * Revision 1.3  90/05/31  17:01:24  dcs  * Prepare for merge with facilities kernel.  *   *   */
 end_comment
 
 begin_comment
@@ -48,40 +44,14 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ucred.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/select.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<cfs/coda.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cfs/cnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<cfs/cfsnc.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
 
 begin_ifndef
 ifndef|#
@@ -104,21 +74,6 @@ begin_comment
 comment|/* insque */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __NetBSD__ || defined(__FreeBSD__) */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -131,27 +86,23 @@ directive|include
 file|<vm/vm_object.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-end_ifdef
+begin_include
+include|#
+directive|include
+file|<cfs/coda.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ucred.h>
+file|<cfs/cnode.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<cfs/cfsnc.h>
+end_include
 
 begin_comment
 comment|/*   * Declaration of the name cache data structure.  */
@@ -1927,7 +1878,6 @@ name|length
 operator|--
 expr_stmt|;
 comment|/* Used for tuning */
-comment|/* 1.3 */
 name|cfsnc_remove
 argument_list|(
 name|cncp

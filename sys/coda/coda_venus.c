@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*              Coda: an Experimental Distributed File System                              Release 3.1            Copyright (c) 1987-1998 Carnegie Mellon University                          All Rights Reserved  Permission  to  use, copy, modify and distribute this software and its documentation is hereby granted,  provided  that  both  the  copyright notice  and  this  permission  notice  appear  in  all  copies  of the software, derivative works or  modified  versions,  and  any  portions thereof, and that both notices appear in supporting documentation, and that credit is given to Carnegie Mellon University  in  all  documents and publicity pertaining to direct or indirect use of this code or its derivatives.  CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS, SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF ANY DERIVATIVE WORK.  Carnegie  Mellon  encourages  users  of  this  software  to return any improvements or extensions that  they  make,  and  to  grant  Carnegie Mellon the rights to redistribute these changes without encumbrance. */
-end_comment
-
-begin_comment
-comment|/* $Header: /afs/cs/project/coda-src/cvs/coda/kernel-src/vfs/freebsd/cfs/cfs_venus.c,v 1.11 1998/08/28 18:12:20 rvb Exp $ */
+comment|/*  *   *             Coda: an Experimental Distributed File System  *                              Release 3.1  *   *           Copyright (c) 1987-1998 Carnegie Mellon University  *                          All Rights Reserved  *   * Permission  to  use, copy, modify and distribute this software and its  * documentation is hereby granted,  provided  that  both  the  copyright  * notice  and  this  permission  notice  appear  in  all  copies  of the  * software, derivative works or  modified  versions,  and  any  portions  * thereof, and that both notices appear in supporting documentation, and  * that credit is given to Carnegie Mellon University  in  all  documents  * and publicity pertaining to direct or indirect use of this code or its  * derivatives.  *   * CODA IS AN EXPERIMENTAL SOFTWARE SYSTEM AND IS  KNOWN  TO  HAVE  BUGS,  * SOME  OF  WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON ALLOWS  * FREE USE OF THIS SOFTWARE IN ITS "AS IS" CONDITION.   CARNEGIE  MELLON  * DISCLAIMS  ANY  LIABILITY  OF  ANY  KIND  FOR  ANY  DAMAGES WHATSOEVER  * RESULTING DIRECTLY OR INDIRECTLY FROM THE USE OF THIS SOFTWARE  OR  OF  * ANY DERIVATIVE WORK.  *   * Carnegie  Mellon  encourages  users  of  this  software  to return any  * improvements or extensions that  they  make,  and  to  grant  Carnegie  * Mellon the rights to redistribute these changes without encumbrance.  *   * 	@(#) src/sys/cfs/cfs_venus.c,v 1.1.1.1 1998/08/29 21:14:52 rvb Exp $  *  $Id: $  *   */
 end_comment
 
 begin_include
@@ -37,37 +33,11 @@ directive|include
 file|<sys/select.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD_version
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/ioccom.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* for CNV_OFLAGS below */
-end_comment
 
 begin_include
 include|#
@@ -1172,17 +1142,7 @@ operator|=
 operator|*
 name|fid
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NetBSD1_3
-name|inp
-operator|->
-name|flags
-operator|=
-name|mode
-expr_stmt|;
-else|#
-directive|else
+comment|/* NOTE:      * NetBSD and Venus internals use the "data" in the low 3 bits.      * Hence, the conversion.      */
 name|inp
 operator|->
 name|flags
@@ -1191,8 +1151,6 @@ name|mode
 operator|>>
 literal|6
 expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|cfscall
@@ -1717,27 +1675,12 @@ name|C_O_EXCL
 else|:
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NetBSD1_3
-name|inp
-operator|->
-name|mode
-operator|=
-name|mode
-operator|<<
-literal|6
-expr_stmt|;
-else|#
-directive|else
 name|inp
 operator|->
 name|mode
 operator|=
 name|mode
 expr_stmt|;
-endif|#
-directive|endif
 name|CNV_V2VV_ATTR
 argument_list|(
 operator|&
