@@ -2830,6 +2830,9 @@ condition|(
 name|fwd_tag
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|IPFIREWALL_FORWARD_EXTENDED
 if|if
 condition|(
 operator|!
@@ -2849,6 +2852,8 @@ name|ip_dst
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
 name|dst
 operator|=
 operator|(
@@ -2894,6 +2899,9 @@ expr_stmt|;
 goto|goto
 name|again
 goto|;
+ifndef|#
+directive|ifndef
+name|IPFIREWALL_FORWARD_EXTENDED
 block|}
 else|else
 block|{
@@ -2906,9 +2914,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Continue. */
 block|}
+endif|#
+directive|endif
 block|}
 endif|#
 directive|endif
+comment|/* IPFIREWALL_FORWARD */
 name|passout
 label|:
 comment|/* 127/8 must not appear on wire - RFC1122. */
