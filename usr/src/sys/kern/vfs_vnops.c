@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -669,7 +669,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Check for write permissions on the specified vnode.  * The read-only status of the file system is checked.  * Also, prototype text segments cannot be written.  */
+comment|/*  * Check for write permissions on the specified vnode.  * Prototype text segments cannot be written.  */
 end_comment
 
 begin_expr_stmt
@@ -687,41 +687,6 @@ end_expr_stmt
 
 begin_block
 block|{
-comment|/* 	 * Disallow write attempts on read-only file systems; 	 * unless the file is a socket or a block or character 	 * device resident on the file system. 	 */
-if|if
-condition|(
-name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-condition|)
-block|{
-switch|switch
-condition|(
-name|vp
-operator|->
-name|v_type
-condition|)
-block|{
-case|case
-name|VREG
-case|:
-case|case
-name|VDIR
-case|:
-case|case
-name|VLNK
-case|:
-return|return
-operator|(
-name|EROFS
-operator|)
-return|;
-block|}
-block|}
 comment|/* 	 * If there's shared text associated with 	 * the vnode, try to free it up once.  If 	 * we fail, we can't allow writing. 	 */
 if|if
 condition|(

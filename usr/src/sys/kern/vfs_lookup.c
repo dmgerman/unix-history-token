@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1464,6 +1464,12 @@ name|ni_dvp
 operator|=
 name|dp
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1586,18 +1592,6 @@ comment|/* 		 * If creating and at end of pathname, then can consider 		 * allow
 if|if
 condition|(
 name|rdonly
-operator|||
-operator|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
 condition|)
 block|{
 name|error
@@ -1879,9 +1873,12 @@ goto|goto
 name|dirloop
 goto|;
 block|}
-comment|/* 	 * Check for read-only file systems. 	 */
+comment|/* 	 * Disallow directory write attempts on read-only file systems. 	 */
 if|if
 condition|(
+name|rdonly
+operator|&&
+operator|(
 name|cnp
 operator|->
 name|cn_nameiop
@@ -1893,37 +1890,6 @@ operator|->
 name|cn_nameiop
 operator|==
 name|RENAME
-condition|)
-block|{
-comment|/* 		 * Disallow directory write attempts on read-only 		 * file systems. 		 */
-if|if
-condition|(
-name|rdonly
-operator|||
-operator|(
-name|dp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|||
-operator|(
-name|wantparent
-operator|&&
-operator|(
-name|ndp
-operator|->
-name|ni_dvp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
 operator|)
 condition|)
 block|{
@@ -1934,7 +1900,6 @@ expr_stmt|;
 goto|goto
 name|bad2
 goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -2468,16 +2433,6 @@ comment|/* 		 * If creating and at end of pathname, then can consider 		 * allow
 if|if
 condition|(
 name|rdonly
-operator|||
-operator|(
-name|dvp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
 condition|)
 block|{
 name|error
@@ -2541,9 +2496,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Check for read-only file systems. 	 */
+comment|/* 	 * Disallow directory write attempts on read-only file systems. 	 */
 if|if
 condition|(
+name|rdonly
+operator|&&
+operator|(
 name|cnp
 operator|->
 name|cn_nameiop
@@ -2555,35 +2513,6 @@ operator|->
 name|cn_nameiop
 operator|==
 name|RENAME
-condition|)
-block|{
-comment|/* 		 * Disallow directory write attempts on read-only 		 * file systems. 		 */
-if|if
-condition|(
-name|rdonly
-operator|||
-operator|(
-name|dp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
-operator|||
-operator|(
-name|wantparent
-operator|&&
-operator|(
-name|dvp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNT_RDONLY
-operator|)
 operator|)
 condition|)
 block|{
@@ -2594,7 +2523,6 @@ expr_stmt|;
 goto|goto
 name|bad2
 goto|;
-block|}
 block|}
 comment|/* ASSERT(dvp == ndp->ni_startdir) */
 if|if
