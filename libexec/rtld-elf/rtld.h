@@ -72,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|STANDARD_LIBRARY_PATH
-value|"/usr/lib/elf:/usr/lib"
+value|"/usr/lib"
 end_define
 
 begin_endif
