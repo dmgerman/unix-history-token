@@ -4806,6 +4806,11 @@ modifier|*
 name|chan
 parameter_list|)
 block|{
+name|pcicintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|pcictimeout_ch
 operator|=
 name|timeout
@@ -4817,11 +4822,6 @@ argument_list|,
 name|hz
 operator|/
 literal|2
-argument_list|)
-expr_stmt|;
-name|pcicintr
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 block|}
