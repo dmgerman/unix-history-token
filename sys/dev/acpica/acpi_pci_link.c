@@ -2859,6 +2859,10 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|AE_OK
+expr_stmt|;
 block|}
 if|if
 condition|(
