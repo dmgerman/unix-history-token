@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttyname.c	5.3 (Berkeley) %G%"
+literal|"@(#)ttyname.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,12 +61,11 @@ directive|include
 file|<sgtty.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEVDIR
-value|"/dev/"
-end_define
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
 
 begin_function
 name|char
@@ -106,13 +105,13 @@ name|buf
 index|[
 sizeof|sizeof
 argument_list|(
-name|DEVDIR
+name|_PATH_DEV
 argument_list|)
 operator|+
 name|MAXNAMLEN
 index|]
 init|=
-name|DEVDIR
+name|_PATH_DEV
 decl_stmt|;
 name|char
 modifier|*
@@ -175,7 +174,7 @@ name|dp
 operator|=
 name|opendir
 argument_list|(
-name|DEVDIR
+name|_PATH_DEV
 argument_list|)
 operator|)
 operator|==
@@ -221,7 +220,7 @@ name|buf
 operator|+
 sizeof|sizeof
 argument_list|(
-name|DEVDIR
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1
