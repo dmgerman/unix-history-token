@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: syslogd.c,v 1.7 1995/10/12 17:18:39 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -793,6 +793,21 @@ comment|/* Flag if local socket created */
 end_comment
 
 begin_decl_stmt
+name|char
+name|bootfile
+index|[
+name|MAXLINE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* booted kernel file */
+end_comment
+
+begin_decl_stmt
 name|void
 name|cfline
 name|__P
@@ -1268,6 +1283,17 @@ else|else
 name|LocalDomain
 operator|=
 literal|""
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|bootfile
+argument_list|,
+name|getbootfile
+argument_list|()
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -2348,8 +2374,7 @@ name|strcpy
 argument_list|(
 name|line
 argument_list|,
-name|getbootfile
-argument_list|()
+name|bootfile
 argument_list|)
 expr_stmt|;
 operator|(
