@@ -533,20 +533,14 @@ expr_stmt|;
 comment|/* get user name and home directory */
 name|pam_err
 operator|=
-name|pam_get_item
+name|pam_get_user
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_USER
-argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1581,20 +1575,14 @@ return|;
 comment|/* switch to user credentials */
 name|pam_err
 operator|=
-name|pam_get_item
+name|pam_get_user
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_USER
-argument_list|,
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
 operator|&
 name|user
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
