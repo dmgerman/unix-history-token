@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	6.10 (Berkeley) %G%"
+literal|"@(#)envelope.c	6.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1241,27 +1241,26 @@ name|now
 argument_list|)
 argument_list|)
 expr_stmt|;
-operator|*
+name|p
+operator|=
 name|strchr
 argument_list|(
 name|dbuf
 argument_list|,
 literal|'\n'
 argument_list|)
-operator|=
-literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|macvalue
-argument_list|(
-literal|'d'
-argument_list|,
-name|e
-argument_list|)
-operator|==
+name|p
+operator|!=
 name|NULL
 condition|)
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
 name|define
 argument_list|(
 literal|'d'
