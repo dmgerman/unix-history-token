@@ -3006,7 +3006,7 @@ name|rnh
 operator|->
 name|rnh_treetop
 operator|->
-name|rn_off
+name|rn_offset
 init|;
 name|i
 operator|<
