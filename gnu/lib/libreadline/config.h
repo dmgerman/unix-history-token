@@ -8,6 +8,14 @@ comment|/* config.h.in.  Generated automatically from configure.in by autoheader
 end_comment
 
 begin_comment
+comment|/* Define if on MINIX.  */
+end_comment
+
+begin_comment
+comment|/* #undef _MINIX */
+end_comment
+
+begin_comment
 comment|/* Define as the return type of signal handlers (int or void).  */
 end_comment
 
@@ -315,6 +323,17 @@ directive|define
 name|GWINSZ_IN_SYS_IOCTL
 value|1
 end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_WINSIZE_IN_SYS_IOCTL
+value|1
+end_define
+
+begin_comment
+comment|/* #undef STRUCT_WINSIZE_IN_TERMIOS */
+end_comment
 
 begin_define
 define|#
