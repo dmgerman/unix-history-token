@@ -478,8 +478,7 @@ argument_list|,
 name|PCCARD_CIS_SIZE
 argument_list|,
 name|RF_ACTIVE
-operator||
-name|RF_PCCARD_ATTR
+comment|/* | RF_PCCARD_ATTR */
 argument_list|)
 expr_stmt|;
 if|if

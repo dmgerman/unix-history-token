@@ -1403,10 +1403,9 @@ argument_list|,
 name|PCCARD_CCR_SIZE
 argument_list|,
 name|RF_ACTIVE
-operator||
-name|RF_PCCARD_ATTR
 argument_list|)
 expr_stmt|;
+comment|/* XXX SET MEM_ATTR */
 if|if
 condition|(
 operator|!
