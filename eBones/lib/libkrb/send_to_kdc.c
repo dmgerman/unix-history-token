@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: send_to_kdc.c,v 4.20 90/01/02 13:40:37 jtkohl Exp $  *	$Id$  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: send_to_kdc.c,v 4.20 90/01/02 13:40:37 jtkohl Exp $  *	$Id: send_to_kdc.c,v 1.12 1997/02/22 14:37:36 peter Exp $  */
 end_comment
 
 begin_if
@@ -202,23 +202,6 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|krb_debug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|calloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|realloc
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
