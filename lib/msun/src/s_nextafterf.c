@@ -51,6 +51,10 @@ name|float
 name|y
 parameter_list|)
 block|{
+specifier|volatile
+name|float
+name|t
+decl_stmt|;
 name|int32_t
 name|hx
 decl_stmt|,
@@ -141,7 +145,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* return +-minsubnormal */
-name|y
+name|t
 operator|=
 name|x
 operator|*
@@ -149,12 +153,12 @@ name|x
 expr_stmt|;
 if|if
 condition|(
-name|y
+name|t
 operator|==
 name|x
 condition|)
 return|return
-name|y
+name|t
 return|;
 else|else
 return|return
@@ -247,7 +251,7 @@ literal|0x00800000
 condition|)
 block|{
 comment|/* underflow */
-name|y
+name|t
 operator|=
 name|x
 operator|*
@@ -255,7 +259,7 @@ name|x
 expr_stmt|;
 if|if
 condition|(
-name|y
+name|t
 operator|!=
 name|x
 condition|)
