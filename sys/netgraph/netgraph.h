@@ -5677,7 +5677,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * prototypes the user should DEFINITLY not use directly  */
+comment|/*  * prototypes the user should DEFINITELY not use directly  */
 end_comment
 
 begin_function_decl
@@ -5710,6 +5710,49 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * Tag definitions and constants  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_TAG_PRIO
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|ng_tag_prio
+block|{
+name|struct
+name|m_tag
+name|tag
+decl_stmt|;
+name|char
+name|priority
+decl_stmt|;
+name|char
+name|discardability
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NG_PRIO_CUTOFF
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_PRIO_LINKSTATE
+value|64
+end_define
 
 begin_endif
 endif|#

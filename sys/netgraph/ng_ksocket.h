@@ -152,13 +152,33 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Meta information ID's */
+comment|/* Structure for sockaddr tag */
+end_comment
+
+begin_struct
+struct|struct
+name|sa_tag
+block|{
+name|struct
+name|m_tag
+name|tag
+decl_stmt|;
+name|struct
+name|sockaddr
+name|sa
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Tag information ID's */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|NG_KSOCKET_META_SOCKADDR
+name|NG_KSOCKET_TAG_SOCKADDR
 value|1
 end_define
 
