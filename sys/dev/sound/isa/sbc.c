@@ -1249,6 +1249,13 @@ block|}
 block|,
 comment|/* ESS0107 */
 block|{
+literal|0x06017316
+block|,
+literal|"ESS ES1888 (Dell OEM)"
+block|}
+block|,
+comment|/* ESS0106 */
+block|{
 literal|0
 block|}
 block|}
