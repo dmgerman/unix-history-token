@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pwd.h	5.11 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pwd.h	5.12 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -69,6 +69,10 @@ name|_PW_KEYBYNAME
 value|'1'
 end_define
 
+begin_comment
+comment|/* stored by name */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -76,12 +80,31 @@ name|_PW_KEYBYNUM
 value|'2'
 end_define
 
+begin_comment
+comment|/* stored by entry in the "file" */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_PW_KEYBYUID
 value|'3'
 end_define
+
+begin_comment
+comment|/* stored by uid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PASSWORD_EFMT1
+value|'_'
+end_define
+
+begin_comment
+comment|/* extended encryption format */
+end_comment
 
 begin_define
 define|#
