@@ -2132,6 +2132,8 @@ argument_list|,
 name|ni
 argument_list|,
 name|IEEE80211_F_DONEGO
+operator||
+name|IEEE80211_F_DOFRATE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3356,47 +3358,16 @@ operator|==
 name|IEEE80211_M_IBSS
 condition|)
 block|{
-comment|/* 		 * Check rate set before committing to this node. 		 */
+comment|/* 		 * Delete unusable rates; we've already checked 		 * that the negotiated rate set is acceptable. 		 */
 name|ieee80211_fix_rate
 argument_list|(
 name|ic
 argument_list|,
 name|selbs
 argument_list|,
-name|IEEE80211_F_DOFRATE
-operator||
-name|IEEE80211_F_DONEGO
-operator||
 name|IEEE80211_F_DODEL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|selbs
-operator|->
-name|ni_rates
-operator|.
-name|rs_nrates
-operator|==
-literal|0
-condition|)
-block|{
-name|selbs
-operator|->
-name|ni_fails
-operator|++
-expr_stmt|;
-name|ic
-operator|->
-name|ic_stats
-operator|.
-name|is_ibss_norate
-operator|++
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
 comment|/* 		 * Create the neighbor table; it will already 		 * exist if we are simply switching mastership. 		 */
 if|if
 condition|(
