@@ -64,6 +64,19 @@ directive|include
 file|<paths.h>
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|getenv
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strerror
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -87,14 +100,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|shell
-decl_stmt|,
-modifier|*
-name|getenv
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strerror
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
