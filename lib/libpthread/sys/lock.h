@@ -132,6 +132,11 @@ name|long
 name|lr_waiting
 decl_stmt|;
 comment|/* non-zero when wakeup needed */
+specifier|volatile
+name|long
+name|lr_handshake
+decl_stmt|;
+comment|/* non-zero when wakeup in progress */
 block|}
 struct|;
 end_struct
