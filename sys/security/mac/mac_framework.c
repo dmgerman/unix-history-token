@@ -1170,18 +1170,6 @@ end_function_decl
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
-name|M_MACOPVEC
-argument_list|,
-literal|"macopvec"
-argument_list|,
-literal|"MAC policy operation vector"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
 name|M_MACPIPELABEL
 argument_list|,
 literal|"macpipelabel"
