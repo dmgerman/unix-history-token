@@ -34,6 +34,32 @@ file|"radlib.h"
 end_include
 
 begin_comment
+comment|/* Handle types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIUS_AUTH
+value|0
+end_define
+
+begin_comment
+comment|/* RADIUS authentication, default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADIUS_ACCT
+value|1
+end_define
+
+begin_comment
+comment|/* RADIUS accounting */
+end_comment
+
+begin_comment
 comment|/* Defaults */
 end_comment
 
@@ -56,6 +82,13 @@ define|#
 directive|define
 name|RADIUS_PORT
 value|1812
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADACCT_PORT
+value|1813
 end_define
 
 begin_define
@@ -318,6 +351,10 @@ name|int
 name|srv
 decl_stmt|;
 comment|/* Server number we did last */
+name|int
+name|type
+decl_stmt|;
+comment|/* Handle type */
 block|}
 struct|;
 end_struct
