@@ -1571,11 +1571,15 @@ name|intstat
 operator|&
 name|BRKADRINT
 condition|)
+block|{
 name|ahc_handle_brkadrint
 argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
+comment|/* Fatal error, no more interrupts to handle. */
+return|return;
+block|}
 if|if
 condition|(
 operator|(

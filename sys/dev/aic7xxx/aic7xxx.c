@@ -1972,6 +1972,12 @@ argument_list|,
 name|CAM_NO_HBA
 argument_list|)
 expr_stmt|;
+comment|/* Disable all interrupt sources by resetting the controller */
+name|ahc_shutdown
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
