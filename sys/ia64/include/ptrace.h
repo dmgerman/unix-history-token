@@ -15,10 +15,38 @@ directive|define
 name|_MACHINE_PTRACE_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|__HAVE_PTRACE_MACHDEP
+end_define
+
+begin_comment
+comment|/* Fetch/store dirty registers on the kernel stack. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PT_GETKSTACK
+value|(PT_FIRSTMACH + 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PT_SETKSTACK
+value|(PT_FIRSTMACH + 1)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _MACHINE_PTRACE_H_ */
+end_comment
 
 end_unit
 
