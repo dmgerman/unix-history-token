@@ -231,6 +231,13 @@ name|pcic_devclass
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|pcic_override_irq
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|pcic_activate_resource
