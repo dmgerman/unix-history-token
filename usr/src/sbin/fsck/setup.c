@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.34 (Berkeley) %G%"
+literal|"@(#)setup.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -940,20 +940,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Planning now for future expansion. 			 */
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-operator|)
+ifdef|#
+directive|ifdef
+name|_NOQUAD
 name|sblock
 operator|.
 name|fs_qbmask
 operator|.
 name|val
 index|[
-literal|0
+name|_QUAD_HIGHWORD
 index|]
 operator|=
 literal|0
@@ -964,7 +960,7 @@ name|fs_qbmask
 operator|.
 name|val
 index|[
-literal|1
+name|_QUAD_LOWWORD
 index|]
 operator|=
 operator|~
@@ -978,7 +974,7 @@ name|fs_qfmask
 operator|.
 name|val
 index|[
-literal|0
+name|_QUAD_HIGHWORD
 index|]
 operator|=
 literal|0
@@ -989,7 +985,7 @@ name|fs_qfmask
 operator|.
 name|val
 index|[
-literal|1
+name|_QUAD_LOWWORD
 index|]
 operator|=
 operator|~
@@ -997,24 +993,12 @@ name|sblock
 operator|.
 name|fs_fmask
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* BIG_ENDIAN */
-if|#
-directive|if
-operator|(
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|)
+else|#
+directive|else
+comment|/* QUAD */
 name|sblock
 operator|.
 name|fs_qbmask
-operator|.
-name|val
-index|[
-literal|0
-index|]
 operator|=
 operator|~
 name|sblock
@@ -1023,43 +1007,16 @@ name|fs_bmask
 expr_stmt|;
 name|sblock
 operator|.
-name|fs_qbmask
-operator|.
-name|val
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
-name|sblock
-operator|.
 name|fs_qfmask
-operator|.
-name|val
-index|[
-literal|0
-index|]
 operator|=
 operator|~
 name|sblock
 operator|.
 name|fs_fmask
 expr_stmt|;
-name|sblock
-operator|.
-name|fs_qfmask
-operator|.
-name|val
-index|[
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
-comment|/* LITTLE_ENDIAN */
+comment|/* QUAD */
 name|sbdirty
 argument_list|()
 expr_stmt|;
