@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.129.2.2 1999/01/24 10:12:40 dillon Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_pageout.c	7.4 (Berkeley) 5/7/91  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_pageout.c,v 1.129.2.3 1999/03/12 00:51:47 julian Exp $  */
 end_comment
 
 begin_comment
@@ -903,7 +903,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * vm_pageout_clean:  *  * Clean the page and remove it from the laundry.  *   * We set the busy bit to cause potential page faults on this page to  * block.  *   * And we set pageout-in-progress to keep the object from disappearing  * during pageout.  This guarantees that the page won't move from the  * inactive queue.  (However, any other page on the inactive queue may  * move!)  */
+comment|/*  * vm_pageout_clean:  *  * Clean the page and remove it from the laundry.  *   * We set the busy bit to cause potential page faults on this page to  * block.  Note the careful timing, however, the busy bit isn't set till  * late and we cannot do anything that will mess with the page.  */
 end_comment
 
 begin_function
@@ -954,36 +954,14 @@ name|m
 operator|->
 name|object
 expr_stmt|;
-comment|/* 	 * If not OBJT_SWAP, additional memory may be needed to do the pageout. 	 * Try to avoid the deadlock. 	 */
-if|if
-condition|(
-operator|(
-name|object
-operator|->
-name|type
-operator|==
-name|OBJT_DEFAULT
-operator|)
-operator|&&
-operator|(
-operator|(
-name|cnt
-operator|.
-name|v_free_count
-operator|+
-name|cnt
-operator|.
-name|v_cache_count
-operator|)
-operator|<
-name|cnt
-operator|.
-name|v_pageout_free_min
-operator|)
-condition|)
-return|return
+comment|/* 	 * It doesn't cost us anything to pageout OBJT_DEFAULT or OBJT_SWAP 	 * with the new swapper, but we could have serious problems paging 	 * out other object types if there is insufficient memory.   	 * 	 * Unfortunately, checking free memory here is far too late, so the 	 * check has been moved up a procedural level. 	 */
+if|#
+directive|if
 literal|0
-return|;
+comment|/* 	 * If not OBJT_SWAP, additional memory may be needed to do the pageout. 	 * Try to avoid the deadlock. 	 */
+block|if ((object->type == OBJT_DEFAULT)&& 	    ((cnt.v_free_count + cnt.v_cache_count)< cnt.v_pageout_free_min)) 		return 0;
+endif|#
+directive|endif
 comment|/* 	 * Don't mess with the page if it's busy. 	 */
 if|if
 condition|(
@@ -1020,6 +998,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * XXX REMOVED XXX.  vm_object_collapse() can block, which can 	 * change the page state.  Calling vm_object_collapse() might also 	 * destroy or rename the page because we have not busied it yet!!! 	 * So this code segment is removed. 	 */
+comment|/* 	 * Try collapsing before it's too late.   XXX huh?  Why are we doing 	 * this here? 	 */
 block|if (object->backing_object) { 		vm_object_collapse(object); 	}
 endif|#
 directive|endif
@@ -1422,6 +1401,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * vm_pageout_flush() - launder the given pages  *  *	The given pages are laundered.  Note that we setup for the start of  *	I/O ( i.e. busy the page ), mark it read-only, and bump the object  *	reference count all in here rather then in the parent.  If we want  *	the parent to do more sophisticated things we may have to change  *	the ordering.  */
+end_comment
+
 begin_function
 name|int
 name|vm_pageout_flush
@@ -1461,6 +1444,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Initiate I/O.  Bump the vm_page_t->busy counter and 	 * mark the pages read-only. 	 * 	 * We do not have to fixup the clean/dirty bits here... we can 	 * allow the pager to do it after the I/O completes. 	 */
 for|for
 control|(
 name|i
@@ -2416,6 +2400,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Don't try to be fancy - being fancy can lead to VOP_LOCK's and therefore  * to vnode deadlocks.  We only do it for OBJT_DEFAULT and OBJT_SWAP objects  * which we know can be trivially freed.  */
+end_comment
+
 begin_function
 name|void
 name|vm_pageout_page_free
@@ -2424,58 +2412,35 @@ name|vm_page_t
 name|m
 parameter_list|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|vm_object_t
 name|object
-decl_stmt|;
-name|object
-operator|=
+init|=
 name|m
 operator|->
 name|object
-expr_stmt|;
-name|object
-operator|->
-name|ref_count
-operator|++
-expr_stmt|;
-if|if
-condition|(
+decl_stmt|;
+name|int
+name|type
+init|=
 name|object
 operator|->
 name|type
-operator|==
-name|OBJT_VNODE
-condition|)
-block|{
-name|vp
-operator|=
-name|object
-operator|->
-name|handle
-expr_stmt|;
-name|vp
-operator|->
-name|v_usecount
-operator|++
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
-name|VSHOULDBUSY
-argument_list|(
-name|vp
-argument_list|)
+name|type
+operator|==
+name|OBJT_SWAP
+operator|||
+name|type
+operator|==
+name|OBJT_DEFAULT
 condition|)
-name|vbusy
+name|vm_object_reference
 argument_list|(
-name|vp
+name|object
 argument_list|)
 expr_stmt|;
-block|}
 name|vm_page_busy
 argument_list|(
 name|m
@@ -2493,6 +2458,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|OBJT_SWAP
+operator|||
+name|type
+operator|==
+name|OBJT_DEFAULT
+condition|)
 name|vm_object_deallocate
 argument_list|(
 name|object
@@ -2519,17 +2494,22 @@ decl_stmt|;
 name|int
 name|page_shortage
 decl_stmt|,
-name|addl_page_shortage
-decl_stmt|,
 name|maxscan
 decl_stmt|,
 name|pcount
 decl_stmt|;
 name|int
+name|addl_page_shortage
+decl_stmt|,
+name|addl_page_shortage_init
+decl_stmt|;
+name|int
 name|maxlaunder
 decl_stmt|;
 name|int
-name|pages_freed
+name|launder_loop
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|proc
@@ -2567,12 +2547,7 @@ comment|/* 	 * Do whatever cleanup that the pmap code can. 	 */
 name|pmap_collect
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Start scanning the inactive queue for pages we can free. We keep 	 * scanning until we have enough free pages or we have scanned through 	 * the entire queue.  If we encounter dirty pages, we start cleaning 	 * them. 	 */
-name|pages_freed
-operator|=
-literal|0
-expr_stmt|;
-name|addl_page_shortage
+name|addl_page_shortage_init
 operator|=
 name|vm_pageout_deficit
 expr_stmt|;
@@ -2590,6 +2565,56 @@ name|max_page_launder
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * Calculate the number of pages we want to either free or move 	 * to the cache. 	 */
+name|page_shortage
+operator|=
+operator|(
+name|cnt
+operator|.
+name|v_free_target
+operator|+
+name|cnt
+operator|.
+name|v_cache_min
+operator|)
+operator|-
+operator|(
+name|cnt
+operator|.
+name|v_free_count
+operator|+
+name|cnt
+operator|.
+name|v_cache_count
+operator|)
+expr_stmt|;
+name|page_shortage
+operator|+=
+name|addl_page_shortage_init
+expr_stmt|;
+comment|/* 	 * Figure out what to do with dirty pages when they are encountered. 	 * Assume that 1/3 of the pages on the inactive list are clean.  If 	 * we think we can reach our target, disable laundering (do not 	 * clean any dirty pages).  If we miss the target we will loop back 	 * up and do a laundering run. 	 */
+if|if
+condition|(
+name|cnt
+operator|.
+name|v_inactive_count
+operator|/
+literal|3
+operator|>
+name|page_shortage
+condition|)
+block|{
+name|maxlaunder
+operator|=
+literal|0
+expr_stmt|;
+name|launder_loop
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|maxlaunder
 operator|=
 operator|(
@@ -2606,8 +2631,18 @@ name|cnt
 operator|.
 name|v_inactive_target
 expr_stmt|;
+name|launder_loop
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Start scanning the inactive queue for pages we can move to the 	 * cache or free.  The scan will stop when the target is reached or 	 * we have scanned the entire inactive queue. 	 */
 name|rescan0
 label|:
+name|addl_page_shortage
+operator|=
+name|addl_page_shortage_init
+expr_stmt|;
 name|maxscan
 operator|=
 name|cnt
@@ -2624,40 +2659,18 @@ operator|&
 name|vm_page_queue_inactive
 argument_list|)
 init|;
-operator|(
 name|m
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|maxscan
 operator|--
 operator|>
 literal|0
-operator|)
 operator|&&
-operator|(
-operator|(
-name|cnt
-operator|.
-name|v_cache_count
-operator|+
-name|cnt
-operator|.
-name|v_free_count
-operator|)
-operator|<
-operator|(
-name|cnt
-operator|.
-name|v_cache_min
-operator|+
-name|cnt
-operator|.
-name|v_free_target
-operator|)
-operator|)
+name|page_shortage
+operator|>
+literal|0
 condition|;
 name|m
 operator|=
@@ -2754,7 +2767,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If the object is not being used, we ignore previous references. 		 */
+comment|/* 		 * If the object is not being used, we ignore previous  		 * references. 		 */
 if|if
 condition|(
 name|m
@@ -2781,7 +2794,7 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Otherwise, if the page has been referenced while in the inactive 		 * queue, we bump the "activation count" upwards, making it less 		 * likely that the page will be added back to the inactive queue 		 * prematurely again.  Here we check the page tables (or emulated 		 * bits, if any), given the upper level VM system not knowing anything 		 * about existing references. 		 */
+comment|/* 		 * Otherwise, if the page has been referenced while in the  		 * inactive queue, we bump the "activation count" upwards,  		 * making it less likely that the page will be added back to  		 * the inactive queue prematurely again.  Here we check the  		 * page tables (or emulated bits, if any), given the upper  		 * level VM system not knowing anything about existing  		 * references. 		 */
 block|}
 elseif|else
 if|if
@@ -2828,7 +2841,7 @@ operator|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If the upper level VM system knows about any page references, 		 * we activate the page.  We also set the "activation count" higher 		 * than normal so that we will less likely place pages back onto the 		 * inactive queue again. 		 */
+comment|/* 		 * If the upper level VM system knows about any page  		 * references, we activate the page.  We also set the  		 * "activation count" higher than normal so that we will less  		 * likely place pages back onto the inactive queue again. 		 */
 if|if
 condition|(
 operator|(
@@ -2878,7 +2891,7 @@ operator|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If the upper level VM system doesn't know anything about the 		 * page being dirty, we have to check for it again.  As far as the 		 * VM code knows, any partially dirty pages are fully dirty. 		 */
+comment|/* 		 * If the upper level VM system doesn't know anything about  		 * the page being dirty, we have to check for it again.  As  		 * far as the VM code knows, any partially dirty pages are  		 * fully dirty. 		 */
 if|if
 condition|(
 name|m
@@ -2923,8 +2936,8 @@ operator|.
 name|v_dfree
 operator|++
 expr_stmt|;
-name|pages_freed
-operator|++
+operator|--
+name|page_shortage
 expr_stmt|;
 comment|/* 		 * Clean pages can be placed onto the cache queue. 		 */
 block|}
@@ -2943,8 +2956,8 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pages_freed
-operator|++
+operator|--
+name|page_shortage
 expr_stmt|;
 comment|/* 		 * Dirty pages need to be paged out.  Note that we clean 		 * only a limited number of pages per pagedaemon pass. 		 */
 block|}
@@ -3034,7 +3047,7 @@ name|v_free_min
 operator|)
 expr_stmt|;
 block|}
-comment|/* 			 * We don't bother paging objects that are "dead".  Those 			 * objects are in a "rundown" state. 			 */
+comment|/* 			 * We don't bother paging objects that are "dead".   			 * Those objects are in a "rundown" state. 			 */
 if|if
 condition|(
 operator|!
@@ -3081,25 +3094,70 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 			 * For now we protect against potential memory 			 * deadlocks by requiring significant memory to be  			 * free if the object is not OBJT_DEFAULT or OBJT_SWAP. 			 * We do not 'trust' any other object type to operate 			 * with low memory, not even OBJT_DEVICE.  The VM 			 * allocator will special case allocations done by 			 * the pageout daemon so the check below actually  			 * does have some hysteresis in it.  It isn't the best 			 * solution, though. 			 */
 if|if
 condition|(
-operator|(
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_DEFAULT
+operator|&&
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_SWAP
+operator|&&
+name|cnt
+operator|.
+name|v_free_count
+operator|<
+name|cnt
+operator|.
+name|v_free_reserved
+condition|)
+block|{
+name|s
+operator|=
+name|splvm
+argument_list|()
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|vm_page_queue_inactive
+argument_list|,
+name|m
+argument_list|,
+name|pageq
+argument_list|)
+expr_stmt|;
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|vm_page_queue_inactive
+argument_list|,
+name|m
+argument_list|,
+name|pageq
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 			 * Presumably we have sufficient free memory to do 			 * the more sophisticated checks and locking required 			 * for vnodes. 			 * 			 * The object is already known NOT to be dead.  The 			 * vget() may still block, though, because  			 * VOP_ISLOCKED() doesn't check to see if an inode 			 * (v_data) is associated with the vnode.  If it isn't, 			 * vget() will load in it from disk.  Worse, vget() 			 * may actually get stuck waiting on "inode" if another 			 * process is in the process of bringing the inode in. 			 * This is bad news for us either way. 			 * 			 * So for the moment we check v_data == NULL as a 			 * workaround.  This means that vnodes which do not 			 * use v_data in the way we expect probably will not 			 * wind up being paged out by the pager and it will be 			 * up to the syncer to get them.  That's better then 			 * us blocking here. 			 * 			 * This whole code section is bogus - we need to fix 			 * the vnode pager to handle vm_page_t's without us 			 * having to do any sophisticated VOP tests. 			 */
+if|if
+condition|(
 name|object
 operator|->
 name|type
 operator|==
 name|OBJT_VNODE
-operator|)
-operator|&&
-operator|(
-name|object
-operator|->
-name|flags
-operator|&
-name|OBJ_DEAD
-operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|vp
@@ -3114,6 +3172,12 @@ name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|)
+operator|||
+name|vp
+operator|->
+name|v_data
+operator|==
+name|NULL
 operator|||
 name|vget
 argument_list|(
@@ -3339,7 +3403,43 @@ name|written
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Compute the page shortage.  If we are still very low on memory be 	 * sure that we will move a minimal amount of pages from active to 	 * inactive. 	 */
+comment|/* 	 * If we still have a page shortage and we didn't launder anything, 	 * run the inactive scan again and launder something this time. 	 */
+if|if
+condition|(
+name|launder_loop
+operator|==
+literal|0
+operator|&&
+name|page_shortage
+operator|>
+literal|0
+condition|)
+block|{
+name|launder_loop
+operator|=
+literal|1
+expr_stmt|;
+name|maxlaunder
+operator|=
+operator|(
+name|cnt
+operator|.
+name|v_inactive_target
+operator|>
+name|max_page_launder
+operator|)
+condition|?
+name|max_page_launder
+else|:
+name|cnt
+operator|.
+name|v_inactive_target
+expr_stmt|;
+goto|goto
+name|rescan0
+goto|;
+block|}
+comment|/* 	 * Compute the page shortage from the point of view of having to 	 * move pages from the active queue to the inactive queue. 	 */
 name|page_shortage
 operator|=
 operator|(
@@ -3370,18 +3470,7 @@ name|page_shortage
 operator|+=
 name|addl_page_shortage
 expr_stmt|;
-if|if
-condition|(
-name|page_shortage
-operator|<=
-literal|0
-condition|)
-block|{
-name|page_shortage
-operator|=
-literal|0
-expr_stmt|;
-block|}
+comment|/* 	 * Scan the active queue for things we can deactivate 	 */
 name|pcount
 operator|=
 name|cnt
@@ -3765,7 +3854,7 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
-comment|/* 	 * We try to maintain some *really* free pages, this allows interrupt 	 * code to be guaranteed space. 	 */
+comment|/* 	 * We try to maintain some *really* free pages, this allows interrupt 	 * code to be guaranteed space.  Since both cache and free queues  	 * are considered basically 'free', moving pages from cache to free 	 * does not effect other calculations. 	 */
 while|while
 condition|(
 name|cnt
@@ -5229,10 +5318,9 @@ operator|.
 name|le_next
 control|)
 block|{
-name|quad_t
+name|vm_pindex_t
 name|limit
-decl_stmt|;
-name|vm_offset_t
+decl_stmt|,
 name|size
 decl_stmt|;
 comment|/* 			 * if this is a system process or if we have already 			 * looked at this process, skip it. 			 */
@@ -5272,6 +5360,8 @@ block|}
 comment|/* 			 * get a limit 			 */
 name|limit
 operator|=
+name|OFF_TO_IDX
+argument_list|(
 name|qmin
 argument_list|(
 name|p
@@ -5291,6 +5381,7 @@ name|RLIMIT_RSS
 index|]
 operator|.
 name|rlim_max
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 			 * let processes that are swapped out really be 			 * swapped out set the limit to nothing (will force a 			 * swap-out.) 			 */
@@ -5345,14 +5436,7 @@ name|p_vmspace
 operator|->
 name|vm_map
 argument_list|,
-call|(
-name|vm_pindex_t
-call|)
-argument_list|(
 name|limit
-operator|>>
-name|PAGE_SHIFT
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
