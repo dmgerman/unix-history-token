@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)malloc.c	5.7 (Berkeley) %G%"
+literal|"@(#)malloc.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,12 +358,12 @@ decl_stmt|;
 specifier|register
 name|int
 name|bucket
+decl_stmt|,
+name|n
 decl_stmt|;
 specifier|register
 name|unsigned
 name|amt
-decl_stmt|,
-name|n
 decl_stmt|;
 comment|/* 	 * First time malloc is called, setup page size and 	 * align break pointer so all data will be page aligned. 	 */
 if|if
@@ -1095,7 +1095,9 @@ block|{
 specifier|register
 name|u_int
 name|onb
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|i
 decl_stmt|;
 name|union
