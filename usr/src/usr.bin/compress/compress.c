@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compress.c	5.13 (Berkeley) %G%"
+literal|"@(#)compress.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4981,56 +4981,6 @@ return|return
 name|code
 return|;
 block|}
-name|char
-modifier|*
-name|rindex
-parameter_list|(
-name|s
-parameter_list|,
-name|c
-parameter_list|)
-comment|/* For those who don't have it in libc.a */
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|,
-name|c
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|NULL
-init|;
-operator|*
-name|s
-condition|;
-name|s
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-name|c
-condition|)
-name|p
-operator|=
-name|s
-expr_stmt|;
-return|return
-operator|(
-name|p
-operator|)
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -6710,7 +6660,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s, Berkeley 5.13 %G%\n"
+literal|"%s, Berkeley 5.14 %G%\n"
 argument_list|,
 name|rcs_ident
 argument_list|)
