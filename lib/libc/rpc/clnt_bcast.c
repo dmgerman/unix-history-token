@@ -2138,6 +2138,8 @@ name|PORTMAP
 comment|/* 				 * Send the version 2 packet also 				 * for UDP/IP 				 */
 if|if
 condition|(
+name|pmap_flag
+operator|&&
 name|fdlist
 index|[
 name|i
