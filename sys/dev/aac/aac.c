@@ -893,6 +893,7 @@ name|struct
 name|aac_code_lookup
 modifier|*
 name|table
+parameter_list|,
 name|u_int32_t
 name|code
 parameter_list|)
