@@ -621,17 +621,6 @@ block|}
 struct|;
 end_struct
 
-begin_function_decl
-name|void
-name|pccardbus_if_setup
-parameter_list|(
-name|struct
-name|pccard_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_struct
 struct|struct
 name|pccard_cis_quirk
@@ -958,7 +947,8 @@ name|pccard_mfc
 parameter_list|(
 name|sc
 parameter_list|)
-value|(STAILQ_FIRST(&(sc)->card.pf_head)&&		\ 		 STAILQ_NEXT(STAILQ_FIRST(&(sc)->card.pf_head),pf_list))
+define|\
+value|(STAILQ_FIRST(&(sc)->card.pf_head)&&			\ 		 STAILQ_NEXT(STAILQ_FIRST(&(sc)->card.pf_head),pf_list))
 end_define
 
 begin_define
