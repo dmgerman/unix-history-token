@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swapgeneric.c	5.5 (Berkeley) 5/9/91  *	$Id: swapgeneric.c,v 1.8 1995/04/02 23:02:17 wpaul Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swapgeneric.c	5.5 (Berkeley) 5/9/91  *	$Id: swapgeneric.c,v 1.9 1995/04/03 00:25:06 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"vn.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cd.h"
 end_include
 
@@ -133,13 +139,38 @@ index|[]
 init|=
 block|{
 block|{
-literal|1
+name|makedev
+argument_list|(
+literal|0xFF
+argument_list|,
+literal|0x00000001
+argument_list|)
 block|,
 literal|0
 block|,
 literal|0
 block|}
 block|,
+if|#
+directive|if
+name|NVN
+operator|>
+literal|0
+block|{
+name|makedev
+argument_list|(
+literal|15
+argument_list|,
+literal|0x00000001
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 name|NODEV
 block|,
@@ -161,12 +192,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dmmin
 decl_stmt|,
@@ -175,6 +200,45 @@ decl_stmt|,
 name|dmtext
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS
+end_ifdef
+
+begin_extern
+extern|extern int (*mountroot
+end_extern
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfs_mountroot
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -531,6 +595,26 @@ goto|goto
 name|retry
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|NFS
+if|if
+condition|(
+name|mountroot
+operator|==
+name|nfs_mountroot
+condition|)
+block|{
+comment|/* 		 * The NFS code in nfs_vfsops.c handles root and swap 		 * for us if we're booting diskless. This is just to 		 * make swapconf() happy. 		 */
+name|dumplo
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|unit
 operator|=
 literal|0
