@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pty.c	1.2 (Berkeley) %G%"
+literal|"@(#)pty.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,6 +36,18 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -52,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
 end_include
 
@@ -59,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<grp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_macro
@@ -131,20 +143,18 @@ modifier|*
 name|cp2
 decl_stmt|;
 specifier|register
+name|int
 name|master
-operator|,
+decl_stmt|,
 name|slave
-operator|,
-name|ruid
-operator|,
+decl_stmt|,
 name|ttygid
-expr_stmt|;
+decl_stmt|;
 name|struct
 name|group
 modifier|*
 name|gr
 decl_stmt|;
-extern|extern errno;
 if|if
 condition|(
 operator|(
@@ -169,11 +179,6 @@ name|ttygid
 operator|=
 operator|-
 literal|1
-expr_stmt|;
-name|ruid
-operator|=
-name|getuid
-argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -262,11 +267,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|chown
+name|fchown
 argument_list|(
-name|line
+name|master
 argument_list|,
-name|ruid
+name|getuid
+argument_list|()
 argument_list|,
 name|ttygid
 argument_list|)
@@ -274,11 +280,15 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|chmod
+name|fchmod
 argument_list|(
-name|line
+name|master
 argument_list|,
-literal|0620
+name|S_IRUSR
+operator||
+name|S_IWUSR
+operator||
+name|S_IWGRP
 argument_list|)
 expr_stmt|;
 operator|(
