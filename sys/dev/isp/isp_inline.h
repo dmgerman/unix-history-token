@@ -80,12 +80,17 @@ block|{
 name|char
 name|buf
 index|[
-literal|128
+literal|172
 index|]
+decl_stmt|,
+modifier|*
+name|p
+init|=
+name|buf
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"states->"
 argument_list|)
@@ -98,9 +103,17 @@ name|req_state_flags
 operator|&
 name|RQSF_GOT_BUS
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -109,6 +122,7 @@ argument_list|,
 literal|"GOT_BUS "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -117,9 +131,17 @@ name|req_state_flags
 operator|&
 name|RQSF_GOT_TARGET
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -128,6 +150,7 @@ argument_list|,
 literal|"GOT_TGT "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -136,9 +159,17 @@ name|req_state_flags
 operator|&
 name|RQSF_SENT_CDB
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -147,6 +178,7 @@ argument_list|,
 literal|"SENT_CDB "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -155,9 +187,17 @@ name|req_state_flags
 operator|&
 name|RQSF_XFRD_DATA
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -166,6 +206,7 @@ argument_list|,
 literal|"XFRD_DATA "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -174,9 +215,17 @@ name|req_state_flags
 operator|&
 name|RQSF_GOT_STATUS
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -185,6 +234,7 @@ argument_list|,
 literal|"GOT_STS "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -193,9 +243,17 @@ name|req_state_flags
 operator|&
 name|RQSF_GOT_SENSE
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -204,6 +262,7 @@ argument_list|,
 literal|"GOT_SNS "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -212,9 +271,17 @@ name|req_state_flags
 operator|&
 name|RQSF_XFER_COMPLETE
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -223,9 +290,17 @@ argument_list|,
 literal|"XFR_CMPLT "
 argument_list|)
 expr_stmt|;
+block|}
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -234,9 +309,16 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -253,9 +335,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_DISCONNECT
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -264,6 +354,7 @@ argument_list|,
 literal|"Disconnect "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -272,9 +363,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_SYNCHRONOUS
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -283,6 +382,7 @@ argument_list|,
 literal|"Sync_xfr "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -291,9 +391,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_PARITY_ERROR
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -302,6 +410,7 @@ argument_list|,
 literal|"Parity "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -310,9 +419,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_BUS_RESET
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -321,6 +438,7 @@ argument_list|,
 literal|"Bus_Reset "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -329,9 +447,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_DEVICE_RESET
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -340,6 +466,7 @@ argument_list|,
 literal|"Device_Reset "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -348,9 +475,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_ABORTED
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -359,6 +494,7 @@ argument_list|,
 literal|"Aborted "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -367,9 +503,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_TIMEOUT
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -378,6 +522,7 @@ argument_list|,
 literal|"Timeout "
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sp
@@ -386,9 +531,17 @@ name|req_status_flags
 operator|&
 name|RQSTF_NEGOTIATION
 condition|)
+block|{
+name|p
+operator|+=
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|buf
+name|p
 argument_list|,
 literal|"%s%s"
 argument_list|,
@@ -397,6 +550,7 @@ argument_list|,
 literal|"Negotiation "
 argument_list|)
 expr_stmt|;
+block|}
 name|PRINTF
 argument_list|(
 name|buf
