@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sed0.c	4.7 (Berkeley) %G%"
+literal|"@(#)sed0.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,6 +247,13 @@ literal|0
 index|]
 operator|=
 name|stdout
+expr_stmt|;
+name|fname
+index|[
+literal|0
+index|]
+operator|=
+literal|""
 expr_stmt|;
 name|nfiles
 operator|=
