@@ -1634,7 +1634,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * If we find a directory entry for a file that is not on 	 * the tape, then we must have found a file that was created 	 * while the dump was in progress. Since we have no contents 	 * for it, we discard the name knowing that it will be on the 	 * next incremental tape. 	 */
 case|case
-name|NULL
+literal|0
 case|:
 name|fprintf
 argument_list|(
