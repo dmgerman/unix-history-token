@@ -979,8 +979,16 @@ name|sb16midi_detected
 operator|=
 name|ok
 expr_stmt|;
-return|return
+if|if
+condition|(
 name|ok
+condition|)
+return|return
+literal|2
+return|;
+else|else
+return|return
+literal|0
 return|;
 block|}
 end_function
