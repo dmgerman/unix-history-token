@@ -4117,14 +4117,7 @@ argument_list|,
 literal|"Switched to nonstandard PPPoE mode due to "
 literal|"packet from %*D\n"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|wh
-operator|->
-name|eh
-operator|.
-name|ether_shost
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|,
 name|wh
 operator|->
@@ -4150,14 +4143,7 @@ argument_list|,
 literal|"Ignored nonstandard PPPoE packet "
 literal|"from %*D\n"
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|wh
-operator|->
-name|eh
-operator|.
-name|ether_shost
-argument_list|)
+name|ETHER_ADDR_LEN
 argument_list|,
 name|wh
 operator|->
