@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.44 1994/04/21 14:22:26 sos Exp $  *  */
+comment|/*-  * Copyright (c) 1992-1994 Søren Schmidt  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:@(#)syscons.c	1.3 940129  *	$Id: syscons.c,v 1.45 1994/04/26 09:09:57 sos Exp $  *  */
 end_comment
 
 begin_if
@@ -263,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|MAX_ESC_PAR
-value|3
+value|5
 end_define
 
 begin_define
@@ -2467,7 +2467,7 @@ name|scp
 operator|->
 name|status
 operator|=
-literal|0
+name|NLKED
 expr_stmt|;
 name|scp
 operator|->
@@ -2561,6 +2561,16 @@ directive|endif
 name|cursor_pos
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+name|update_leds
+argument_list|(
+name|console
+index|[
+literal|0
+index|]
+operator|.
+name|status
 argument_list|)
 expr_stmt|;
 return|return
@@ -10664,11 +10674,41 @@ name|num_param
 operator|==
 literal|0
 condition|)
-name|n
+block|{
+name|scp
+operator|->
+name|term
+operator|.
+name|cur_attr
+operator|=
+name|scp
+operator|->
+name|term
+operator|.
+name|std_attr
+expr_stmt|;
+break|break;
+block|}
+for|for
+control|(
+name|i
 operator|=
 literal|0
-expr_stmt|;
-else|else
+init|;
+name|i
+operator|<
+name|scp
+operator|->
+name|term
+operator|.
+name|num_param
+condition|;
+name|i
+operator|++
+control|)
+block|{
+switch|switch
+condition|(
 name|n
 operator|=
 name|scp
@@ -10677,12 +10717,8 @@ name|term
 operator|.
 name|param
 index|[
-literal|0
+name|i
 index|]
-expr_stmt|;
-switch|switch
-condition|(
-name|n
 condition|)
 block|{
 case|case
@@ -10733,7 +10769,7 @@ name|term
 operator|.
 name|cur_attr
 operator|&=
-literal|0x0F00
+literal|0xFF00
 expr_stmt|;
 name|scp
 operator|->
@@ -10788,13 +10824,13 @@ case|:
 case|case
 literal|31
 case|:
+comment|/* set fg color */
 case|case
 literal|32
 case|:
 case|case
 literal|33
 case|:
-comment|/* set fg color */
 case|case
 literal|34
 case|:
@@ -10820,7 +10856,7 @@ name|term
 operator|.
 name|cur_attr
 operator|&
-literal|0xF0FF
+literal|0xF8FF
 operator|)
 operator||
 operator|(
@@ -10845,13 +10881,13 @@ case|:
 case|case
 literal|41
 case|:
+comment|/* set bg color */
 case|case
 literal|42
 case|:
 case|case
 literal|43
 case|:
-comment|/* set bg color */
 case|case
 literal|44
 case|:
@@ -10877,7 +10913,7 @@ name|term
 operator|.
 name|cur_attr
 operator|&
-literal|0x0FFF
+literal|0x8FFF
 operator|)
 operator||
 operator|(
@@ -10896,6 +10932,7 @@ literal|12
 operator|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 break|break;
 case|case
@@ -12435,7 +12472,7 @@ index|]
 operator|.
 name|status
 operator|=
-literal|0
+name|NLKED
 expr_stmt|;
 name|console
 index|[
