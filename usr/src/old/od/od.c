@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.14 (Berkeley) %G%"
+literal|"@(#)od.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4380,7 +4380,7 @@ name|value
 parameter_list|,
 name|radix
 parameter_list|,
-name|signed
+name|hassign
 parameter_list|,
 name|ndigits
 parameter_list|)
@@ -4391,7 +4391,7 @@ name|int
 name|radix
 decl_stmt|;
 name|int
-name|signed
+name|hassign
 decl_stmt|;
 name|int
 name|ndigits
@@ -4468,7 +4468,7 @@ comment|/*return(b);*/
 block|}
 if|if
 condition|(
-name|signed
+name|hassign
 operator|&&
 operator|(
 name|sign
@@ -4668,7 +4668,7 @@ operator|)
 expr_stmt|;
 name|tmp2
 operator|=
-name|signed
+name|hassign
 condition|?
 literal|' '
 else|:

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.4 (Berkeley) %G%"
+literal|"@(#)inode.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,9 +443,12 @@ index|]
 decl_stmt|;
 specifier|extern
 name|int
+name|dirscan
+argument_list|()
+decl_stmt|,
 name|pass1check
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|;
 if|if
 condition|(
 name|idesc

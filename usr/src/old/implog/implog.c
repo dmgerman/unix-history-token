@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)implog.c	5.5 (Berkeley) %G%"
+literal|"@(#)implog.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1221,6 +1221,9 @@ name|mp
 operator|->
 name|m_type
 operator|!=
+operator|(
+name|u_char
+operator|)
 operator|-
 literal|1
 condition|;

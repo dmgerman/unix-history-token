@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.14 (Berkeley) %G%"
+literal|"@(#)setup.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1763,6 +1763,12 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|disklabel
+modifier|*
+name|getdisklabel
+parameter_list|()
+function_decl|;
 name|cp
 operator|=
 name|index

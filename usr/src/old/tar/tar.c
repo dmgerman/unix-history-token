@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tar.c	5.10 (Berkeley) %G%"
+literal|"@(#)tar.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * Tape Archival Program  */
@@ -2106,10 +2112,6 @@ operator|+
 literal|64
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 name|int
 name|maxread
 decl_stmt|;
@@ -3278,6 +3280,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|long
 name|blocks
 decl_stmt|,

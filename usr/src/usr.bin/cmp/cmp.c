@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmp.c	4.7 (Berkeley) %G%"
+literal|"@(#)cmp.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,19 +149,13 @@ name|int
 name|fd1
 decl_stmt|,
 name|fd2
+decl_stmt|,
+comment|/* file descriptors */
+name|silent
+init|=
+name|NO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* file descriptors */
-end_comment
-
-begin_expr_stmt
-name|silent
-operator|=
-name|NO
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* if silent run */
