@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.13	(Berkeley) %G%"
+literal|"@(#)uux.c	5.14	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -434,6 +434,7 @@ directive|endif
 while|while
 condition|(
 operator|(
+operator|(
 name|c
 operator|=
 name|getopt
@@ -447,6 +448,28 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
+operator|)
+operator|||
+operator|(
+name|optind
+operator|<
+name|argc
+operator|&&
+operator|(
+name|c
+operator|=
+operator|*
+name|argv
+index|[
+name|optind
+index|]
+operator|)
+operator|==
+literal|'-'
+operator|&&
+operator|++
+name|optind
+operator|)
 condition|)
 switch|switch
 condition|(
