@@ -2168,6 +2168,7 @@ name|container
 operator|==
 name|file
 condition|)
+block|{
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2178,6 +2179,14 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|ml
+argument_list|,
+name|M_LINKER
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 comment|/*  	 * Don't try to run SYSUNINITs if we are unloaded due to a  	 * link error. 	 */
 if|if
