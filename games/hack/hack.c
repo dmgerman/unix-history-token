@@ -104,7 +104,7 @@ block|}
 else|else
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 for|for
 control|(
 name|x
@@ -293,7 +293,7 @@ block|}
 elseif|else
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 if|if
 condition|(
 operator|!
@@ -1960,7 +1960,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 block|}
 else|else
 block|{
@@ -2872,7 +2872,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-endif|lint
+comment|/* lint */
 if|if
 condition|(
 name|Blind
@@ -2943,7 +2943,7 @@ name|stop
 goto|;
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 for|for
 control|(
 name|x
@@ -3368,7 +3368,7 @@ name|stop
 goto|;
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 if|if
 condition|(
 name|corrct
@@ -4322,8 +4322,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|QUEST
 end_endif
+
+begin_comment
+comment|/* QUEST */
+end_comment
 
 begin_macro
 name|sgn
@@ -4866,8 +4869,11 @@ end_block
 begin_endif
 endif|#
 directive|endif
-endif|QUEST
 end_endif
+
+begin_comment
+comment|/* QUEST */
+end_comment
 
 begin_macro
 name|nomul

@@ -7,6 +7,10 @@ begin_comment
 comment|/* config.h - version 1.0.3 */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -262,14 +266,20 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
-endif|UNIX
 end_endif
+
+begin_comment
+comment|/* UNIX */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -297,8 +307,11 @@ end_define
 begin_else
 else|#
 directive|else
-else|QUEST
 end_else
+
+begin_comment
+comment|/* QUEST */
+end_comment
 
 begin_define
 define|#
@@ -310,8 +323,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|QUEST
 end_endif
+
+begin_comment
+comment|/* QUEST */
+end_comment
 
 begin_comment
 comment|/*  * Some system administrators are stupid enough to make Hack suid root  * or suid daemon, where daemon has other powers besides that of reading or  * writing Hack files. In such cases one should be careful with chdir's  * since the user might create files in a directory of his choice.  * Of course SECURE is meaningful only if HACKDIR is defined.  */
@@ -334,8 +350,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|CHDIR
 end_endif
+
+begin_comment
+comment|/* CHDIR */
+end_comment
 
 begin_comment
 comment|/* size of terminal screen is (at least) (ROWNO+2) by COLNO */
@@ -443,8 +462,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|CONFIG
 end_endif
+
+begin_comment
+comment|/* CONFIG */
+end_comment
 
 end_unit
 

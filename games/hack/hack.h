@@ -7,6 +7,10 @@ begin_comment
 comment|/* hack.h - version 1.0.3 */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -42,8 +46,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|BSD
 end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
 
 begin_define
 define|#
@@ -377,7 +384,7 @@ decl_stmt|;
 comment|/* initial position FF */
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 name|xchar
 name|udisx
 decl_stmt|,
@@ -429,7 +436,7 @@ literal|7
 decl_stmt|;
 endif|#
 directive|endif
-endif|QUEST
+comment|/* QUEST */
 name|unsigned
 name|utrap
 range|:

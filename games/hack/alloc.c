@@ -174,8 +174,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|LINT
 end_endif
+
+begin_comment
+comment|/* LINT */
+end_comment
 
 end_unit
 
