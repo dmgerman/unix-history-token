@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon   * the rights to redistribute these changes.  *  *	$OpenBSD: db_machdep.h,v 1.2 1997/03/21 00:48:48 niklas Exp $  *	$NetBSD: db_machdep.h,v 1.4.22.1 2000/08/05 11:10:43 wiz Exp $  * $FreeBSD$  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	$OpenBSD: db_machdep.h,v 1.2 1997/03/21 00:48:48 niklas Exp $  *	$NetBSD: db_machdep.h,v 1.4.22.1 2000/08/05 11:10:43 wiz Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -17,12 +17,6 @@ begin_define
 define|#
 directive|define
 name|_POWERPC_DB_MACHDEP_H_
-end_define
-
-begin_define
-define|#
-directive|define
-name|PPC_MPC6XX
 end_define
 
 begin_include
@@ -66,74 +60,6 @@ begin_comment
 comment|/* expression - signed */
 end_comment
 
-begin_struct
-struct|struct
-name|powerpc_saved_state
-block|{
-name|u_int32_t
-name|r
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* data registers */
-name|u_int32_t
-name|iar
-decl_stmt|;
-name|u_int32_t
-name|msr
-decl_stmt|;
-name|u_int32_t
-name|lr
-decl_stmt|;
-name|u_int32_t
-name|ctr
-decl_stmt|;
-name|u_int32_t
-name|cr
-decl_stmt|;
-name|u_int32_t
-name|xer
-decl_stmt|;
-name|u_int32_t
-name|dear
-decl_stmt|;
-name|u_int32_t
-name|esr
-decl_stmt|;
-name|u_int32_t
-name|pid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|powerpc_saved_state
-name|db_regs_t
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|db_regs_t
-name|ddb_regs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* register state */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DDB_REGS
-value|(&ddb_regs)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -141,7 +67,7 @@ name|PC_REGS
 parameter_list|(
 name|regs
 parameter_list|)
-value|((db_addr_t)(regs)->iar)
+value|((db_addr_t)kdb_thrctx->pcb_lr)
 end_define
 
 begin_define
@@ -179,9 +105,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|FIXUP_PC_AFTER_BREAK
-value|(DDB_REGS)->iar -= 4;
+name|db_clear_single_step
+value|kdb_cpu_clear_singlestep
 end_define
+
+begin_define
+define|#
+directive|define
+name|db_set_single_step
+value|kdb_cpu_set_singlestep
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -209,6 +148,11 @@ name|regs
 parameter_list|)
 value|((regs)->msr |=  SR_SINGLESTEP)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -395,43 +339,6 @@ directive|define
 name|DB_SMALL_VALUE_MIN
 value|(-0x40001)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_function_decl
-name|void
-name|kdb_kintr
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|kdb_trap
-parameter_list|(
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 begin_endif
 endif|#
