@@ -384,9 +384,9 @@ literal|'e'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_ESTERROR
+name|MOD_ESTERROR
 expr_stmt|;
 name|ntx
 operator|.
@@ -403,13 +403,13 @@ literal|'f'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_FREQUENCY
+name|MOD_FREQUENCY
 expr_stmt|;
 name|ntx
 operator|.
-name|frequency
+name|freq
 operator|=
 call|(
 name|int
@@ -431,7 +431,7 @@ if|if
 condition|(
 name|ntx
 operator|.
-name|frequency
+name|freq
 operator|<
 operator|(
 operator|-
@@ -442,7 +442,7 @@ operator|)
 operator|||
 name|ntx
 operator|.
-name|frequency
+name|freq
 operator|>
 operator|(
 literal|100
@@ -459,9 +459,9 @@ literal|'m'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_MAXERROR
+name|MOD_MAXERROR
 expr_stmt|;
 name|ntx
 operator|.
@@ -478,9 +478,9 @@ literal|'o'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_OFFSET
+name|MOD_OFFSET
 expr_stmt|;
 name|ntx
 operator|.
@@ -504,9 +504,9 @@ literal|'s'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_STATUS
+name|MOD_STATUS
 expr_stmt|;
 name|ntx
 operator|.
@@ -540,13 +540,13 @@ literal|'t'
 case|:
 name|ntx
 operator|.
-name|mode
+name|modes
 operator||=
-name|ADJ_TIMECONST
+name|MOD_TIMECONST
 expr_stmt|;
 name|ntx
 operator|.
-name|time_constant
+name|constant
 operator|=
 name|atoi
 argument_list|(
@@ -557,13 +557,13 @@ if|if
 condition|(
 name|ntx
 operator|.
-name|time_constant
+name|constant
 operator|<
 literal|0
 operator|||
 name|ntx
 operator|.
-name|time_constant
+name|constant
 operator|>
 name|MAXTC
 condition|)
@@ -594,7 +594,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-%s]\n\n\ 	-c		display the time taken to call ntp_gettime (us)\n\ 	-e esterror	estimate of the error (us)\n\ 	-f frequency	Frequency error (-100 .. 100) (ppm)\n\ 	-h		display this help info\n\ 	-m maxerror	max possible error (us)\n\ 	-o offset	current offset (ms)\n\ 	-r		print the unix and NTP time raw\n\ 	-s status	Set the status (0 .. 4)\n\ 	-t timeconstant	log2 of PLL time constant (0 .. %d)\n"
+literal|"usage: %s [-%s]\n\n\ 	-c		display the time taken to call ntp_gettime (us)\n\ 	-e esterror	estimate of the error (us)\n\ 	-f frequency	Frequency error (-100 .. 100) (ppm)\n\ 	-h		display this help info\n\ 	-m maxerror	max possible error (us)\n\ 	-o offset	current offset (ms)\n\ 	-r		print the unix and NTP time raw\n\ 	-l leap		Set the leap bits\n\ 	-t timeconstant	log2 of PLL time constant (0 .. %d)\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -747,7 +747,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"[ usec %06d:"
+literal|"[ us %06d:"
 argument_list|,
 name|times
 index|[
@@ -810,7 +810,7 @@ argument_list|)
 expr_stmt|;
 name|_ntx
 operator|.
-name|mode
+name|modes
 operator|=
 literal|0
 expr_stmt|;
@@ -901,7 +901,7 @@ name|TS_MASK
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  time: %s, (.%06d)\n"
+literal|"  time %s, (.%06d),\n"
 argument_list|,
 name|prettydate
 argument_list|(
@@ -918,7 +918,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  confidence interval: %ld usec, estimated error: %ld usec\n"
+literal|"  maximum error %ld us, estimated error %ld us.\n"
 argument_list|,
 name|ntv
 operator|.
@@ -1009,7 +1009,7 @@ name|ftemp
 operator|=
 name|ntx
 operator|.
-name|frequency
+name|freq
 expr_stmt|;
 name|ftemp
 operator|/=
@@ -1021,22 +1021,28 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  mode: %02x, offset: %ld usec, frequency:%8.3f ppm,\n"
+literal|"  modes %04x, offset %ld us, frequency %.3f ppm, interval %d s,\n"
 argument_list|,
 name|ntx
 operator|.
-name|mode
+name|modes
 argument_list|,
 name|ntx
 operator|.
 name|offset
 argument_list|,
 name|ftemp
+argument_list|,
+literal|1
+operator|<<
+name|ntx
+operator|.
+name|shift
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  confidence interval: %ld usec, estimated error: %ld usec,\n"
+literal|"  maximum error %ld us, estimated error %ld us,\n"
 argument_list|,
 name|ntx
 operator|.
@@ -1063,7 +1069,7 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  status: %d, time constant: %ld, precision: %ld usec, tolerance:%4.0f ppm\n"
+literal|"  status %04x, time constant %ld, precision %ld us, tolerance %.0f ppm,\n"
 argument_list|,
 name|ntx
 operator|.
@@ -1071,7 +1077,7 @@ name|status
 argument_list|,
 name|ntx
 operator|.
-name|time_constant
+name|constant
 argument_list|,
 name|ntx
 operator|.
@@ -1093,7 +1099,7 @@ name|ftemp
 operator|=
 name|ntx
 operator|.
-name|ybar
+name|ppsfreq
 expr_stmt|;
 name|ftemp
 operator|/=
@@ -1107,7 +1113,7 @@ name|gtemp
 operator|=
 name|ntx
 operator|.
-name|disp
+name|stabil
 expr_stmt|;
 name|gtemp
 operator|/=
@@ -1119,17 +1125,20 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  pps frequency%8.3f ppm, pps dispersion:%8.3f ppm, interval:%4d sec,\n  intervals:%5ld, jitter exceeded:%4ld, dispersion exceeded:%4ld\n"
+literal|"  pps frequency %.3f ppm, stability %.3f ppm, jitter %ld us,\n"
 argument_list|,
 name|ftemp
 argument_list|,
 name|gtemp
 argument_list|,
-literal|1
-operator|<<
 name|ntx
 operator|.
-name|shift
+name|jitter
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  intervals %ld, jitter exceeded %ld, stability exceeded %ld, errors %ld.\n"
 argument_list|,
 name|ntx
 operator|.
@@ -1141,7 +1150,11 @@ name|jitcnt
 argument_list|,
 name|ntx
 operator|.
-name|discnt
+name|stbcnt
+argument_list|,
+name|ntx
+operator|.
+name|errcnt
 argument_list|)
 expr_stmt|;
 block|}

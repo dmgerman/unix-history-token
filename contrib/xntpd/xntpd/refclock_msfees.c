@@ -355,7 +355,7 @@ begin_define
 define|#
 directive|define
 name|STREAM_PP1
-value|"ppsclockd\0<-- patch space for module name1 -->"
+value|"ppsclocd\0<-- patch space for module name1 -->"
 end_define
 
 begin_endif

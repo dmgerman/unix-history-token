@@ -1183,9 +1183,11 @@ name|minpoll
 parameter_list|,
 name|maxpoll
 parameter_list|,
-name|key
-parameter_list|,
 name|flags
+parameter_list|,
+name|ttl
+parameter_list|,
+name|key
 parameter_list|)
 name|struct
 name|sockaddr_in
@@ -1209,11 +1211,14 @@ decl_stmt|;
 name|int
 name|maxpoll
 decl_stmt|;
-name|U_LONG
-name|key
-decl_stmt|;
 name|int
 name|flags
+decl_stmt|;
+name|int
+name|ttl
+decl_stmt|;
+name|U_LONG
+name|key
 decl_stmt|;
 block|{
 specifier|register
@@ -1231,7 +1236,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"peer_config: addr %s mode %d version %d minpoll %d maxpoll %d key %u\n"
+literal|"peer_config: addr %s mode %d version %d minpoll %d maxpoll %d flags %d ttl %d key %u\n"
 argument_list|,
 name|ntoa
 argument_list|(
@@ -1245,6 +1250,10 @@ argument_list|,
 name|minpoll
 argument_list|,
 name|maxpoll
+argument_list|,
+name|flags
+argument_list|,
+name|ttl
 argument_list|,
 name|key
 argument_list|)
@@ -1398,6 +1407,15 @@ operator|)
 expr_stmt|;
 name|peer
 operator|->
+name|ttl
+operator|=
+operator|(
+name|u_char
+operator|)
+name|ttl
+expr_stmt|;
+name|peer
+operator|->
 name|keyid
 operator|=
 name|key
@@ -1422,6 +1440,8 @@ argument_list|,
 name|minpoll
 argument_list|,
 name|maxpoll
+argument_list|,
+name|ttl
 argument_list|,
 name|key
 argument_list|)
@@ -1473,6 +1493,8 @@ name|minpoll
 parameter_list|,
 name|maxpoll
 parameter_list|,
+name|ttl
+parameter_list|,
 name|key
 parameter_list|)
 name|struct
@@ -1496,6 +1518,9 @@ name|minpoll
 decl_stmt|;
 name|int
 name|maxpoll
+decl_stmt|;
+name|int
+name|ttl
 decl_stmt|;
 name|U_LONG
 name|key
@@ -1656,17 +1681,16 @@ name|minpoll
 expr_stmt|;
 name|peer
 operator|->
+name|ttl
+operator|=
+name|ttl
+expr_stmt|;
+name|peer
+operator|->
 name|keyid
 operator|=
 name|key
 expr_stmt|;
-if|if
-condition|(
-name|hmode
-operator|==
-name|MODE_BCLIENT
-condition|)
-block|{
 name|peer
 operator|->
 name|estbdelay
@@ -1679,7 +1703,6 @@ name|flags
 operator||=
 name|FLAG_DEFBDELAY
 expr_stmt|;
-block|}
 name|peer
 operator|->
 name|leap

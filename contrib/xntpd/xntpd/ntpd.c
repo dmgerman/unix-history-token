@@ -84,6 +84,11 @@ name|defined
 argument_list|(
 name|SYS_SVR4
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_UNIXWARE1
+argument_list|)
 end_if
 
 begin_include

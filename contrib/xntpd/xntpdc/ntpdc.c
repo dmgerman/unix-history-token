@@ -395,6 +395,11 @@ name|defined
 argument_list|(
 name|SYS_BSDI
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -5637,6 +5642,11 @@ name|defined
 argument_list|(
 name|SYS_BSDI
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__STDC__
+argument_list|)
 name|qsort
 argument_list|(
 operator|(
@@ -5939,6 +5949,11 @@ operator|||
 name|defined
 argument_list|(
 name|SYS_BSDI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__STDC__
 argument_list|)
 name|helpsort
 parameter_list|(
