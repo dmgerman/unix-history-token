@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/jail.h>
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
@@ -90,7 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -102,7 +126,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
 end_include
 
 begin_include
@@ -145,24 +187,6 @@ begin_include
 include|#
 directive|include
 file|<vm/swap_pager.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -237,18 +261,6 @@ end_endif
 begin_comment
 comment|/* __i386__ */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
 
 begin_include
 include|#
@@ -2809,11 +2821,17 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"Inter-|   Receive					     "
-literal|"	      |	 Transmit\n"
-literal|" face |bytes    packets errs drop fifo frame compressed "
-literal|"multicast|bytes	packets errs drop fifo colls carrier "
-literal|"compressed\n"
+literal|"%6s|%58s|%s\n%6s|%58s|%5$s\n"
+argument_list|,
+literal|"Inter-"
+argument_list|,
+literal|"   Receive"
+argument_list|,
+literal|"  Transmit"
+argument_list|,
+literal|" face"
+argument_list|,
+literal|"bytes    packets errs drop fifo frame compressed"
 argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
@@ -2873,39 +2891,45 @@ argument_list|(
 name|sb
 argument_list|,
 literal|"%8lu %7lu %4lu %4lu %4lu %5lu %10lu %9lu "
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|,
+literal|0UL
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
 literal|"%8lu %7lu %4lu %4lu %4lu %5lu %7lu %10lu\n"
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
+literal|0UL
 argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
-argument_list|,
-literal|0L
+literal|0UL
 argument_list|)
 expr_stmt|;
 block|}
@@ -3027,6 +3051,22 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*  * Filler function for proc/modules  */
+end_comment
+
+begin_endif
+unit|static int linprocfs_domodules(PFS_FILL_ARGS) { 	struct linker_file *lf; 	 	TAILQ_FOREACH(lf,&linker_files, link) { 		sbuf_printf(sb, "%-20s%8lu%4d\n", lf->filename, 		    (unsigned long)lf->size, lf->refs); 	} 	return (0); }
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Directory structure  */
@@ -3232,6 +3272,12 @@ argument_list|,
 name|linprocfs_domeminfo
 argument_list|)
 block|,
+if|#
+directive|if
+literal|0
+block|PFS_FILE(   "mdodules",	0,    0,   0,	0444, linprocfs_domodules),
+endif|#
+directive|endif
 name|PFS_FILE
 argument_list|(
 literal|"stat"
@@ -3344,6 +3390,8 @@ argument_list|(
 name|linprocfs
 argument_list|,
 name|linprocfs_root
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
