@@ -396,6 +396,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|cdevsw_add
+argument_list|(
+operator|&
+name|smb_cdevsw
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1086,7 +1092,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|smb
 argument_list|,
@@ -1095,8 +1101,6 @@ argument_list|,
 name|smb_driver
 argument_list|,
 name|smb_devclass
-argument_list|,
-name|smb_cdevsw
 argument_list|,
 literal|0
 argument_list|,
