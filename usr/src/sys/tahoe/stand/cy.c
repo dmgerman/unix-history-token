@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cy.c	7.4	87/02/17	*/
+comment|/*	cy.c	7.5	87/04/02	*/
 end_comment
 
 begin_comment
@@ -433,6 +433,10 @@ name|cy_print_error
 argument_list|(
 name|tpb
 operator|.
+name|tpcmd
+argument_list|,
+name|tpb
+operator|.
 name|tpstatus
 argument_list|)
 expr_stmt|;
@@ -643,6 +647,9 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|count
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NOBLOCK
@@ -701,9 +708,6 @@ init|=
 operator|&
 name|liob
 decl_stmt|;
-specifier|register
-name|count
-expr_stmt|;
 name|liob
 operator|=
 operator|*
@@ -733,12 +737,27 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"cy%d: I/O error bn %d\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|io
+operator|->
+name|i_bn
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
+block|}
 name|lio
 operator|->
 name|i_cc
@@ -762,14 +781,38 @@ return|;
 block|}
 endif|#
 directive|endif
-return|return
-operator|(
+name|count
+operator|=
 name|cycmd
 argument_list|(
 name|io
 argument_list|,
 name|func
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|count
+operator|==
+operator|-
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"cy%d: I/O error bn %d\n"
+argument_list|,
+name|io
+operator|->
+name|i_unit
+argument_list|,
+name|io
+operator|->
+name|i_bn
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|count
 operator|)
 return|;
 block|}
@@ -1126,6 +1169,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 operator|(
@@ -1134,6 +1178,7 @@ operator|.
 name|tpstatus
 operator|&
 name|CYS_ERR
+operator|)
 operator|)
 operator|&&
 name|err
@@ -1155,6 +1200,10 @@ condition|)
 block|{
 name|cy_print_error
 argument_list|(
+name|tpb
+operator|.
+name|tpcmd
+argument_list|,
 name|tpb
 operator|.
 name|tpstatus
@@ -1200,12 +1249,16 @@ end_block
 begin_macro
 name|cy_print_error
 argument_list|(
+argument|op
+argument_list|,
 argument|status
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
+name|op
+decl_stmt|,
 name|status
 decl_stmt|;
 end_decl_stmt
@@ -1243,7 +1296,9 @@ literal|"unknown error"
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cy0: %s, status=%b.\n"
+literal|"cy0: cmd %x %s, status=%b.\n"
+argument_list|,
+name|op
 argument_list|,
 name|message
 argument_list|,
