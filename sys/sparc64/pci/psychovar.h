@@ -99,18 +99,6 @@ decl_stmt|;
 name|int
 name|sc_nrange
 decl_stmt|;
-name|struct
-name|ofw_pci_imap
-modifier|*
-name|sc_intrmap
-decl_stmt|;
-name|int
-name|sc_nintrmap
-decl_stmt|;
-name|struct
-name|ofw_pci_imap_msk
-name|sc_intrmapmsk
-decl_stmt|;
 comment|/* our tags */
 name|bus_space_tag_t
 name|sc_cfgt

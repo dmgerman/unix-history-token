@@ -40,7 +40,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_pci.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/resource.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sparc64/pci/ofw_pci.h>
 end_include
 
 begin_include
@@ -1445,7 +1463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Route an interrupt across a PCI bridge - the APB does not route interrupts,  * and routing of interrupts that are not preinitialized is not supported yet.  */
+comment|/*  * Route an interrupt across a PCI bridge - we need to rely on the firmware  * here.  */
 end_comment
 
 begin_function
@@ -1463,11 +1481,12 @@ name|int
 name|pin
 parameter_list|)
 block|{
-name|panic
-argument_list|(
-literal|"apb_route_interrupt"
-argument_list|)
-expr_stmt|;
+comment|/* 	 * XXX: ugly loathsome hack: 	 * We can't use ofw_pci_route_intr() here; the device passed may be 	 * the one of a bridge, so the original device can't be recovered. 	 * 	 * We need to use the firmware to route interrupts, however it has 	 * no interface which could be used to interpret intpins; instead, 	 * all assignments are done by device. 	 * 	 * The MI pci code will try to reroute interrupts of 0, although they 	 * are correct; all other interrupts are preinitialized, so if we 	 * get here, the intline is either 0 (so return 0), or we hit a 	 * device which was not preinitialized (e.g. hotplugged stuff), in 	 * which case we are lost. 	 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
