@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_deflate.c,v 1.5 1997/09/21 22:31:20 dyson Exp $	*/
+comment|/*	$Id: ppp_deflate.c,v 1.6 1997/10/28 15:58:32 bde Exp $	*/
 end_comment
 
 begin_comment
@@ -151,9 +151,6 @@ operator|,
 name|void
 operator|*
 name|ptr
-operator|,
-name|u_int
-name|nb
 operator|)
 argument_list|)
 decl_stmt|;
@@ -534,8 +531,6 @@ parameter_list|(
 name|notused
 parameter_list|,
 name|ptr
-parameter_list|,
-name|nbytes
 parameter_list|)
 name|void
 modifier|*
@@ -544,9 +539,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|ptr
-decl_stmt|;
-name|u_int
-name|nbytes
 decl_stmt|;
 block|{
 name|FREE
@@ -700,14 +692,6 @@ name|state
 operator|->
 name|strm
 operator|.
-name|zalloc_init
-operator|=
-name|z_alloc
-expr_stmt|;
-name|state
-operator|->
-name|strm
-operator|.
 name|zfree
 operator|=
 name|z_free
@@ -731,10 +715,6 @@ argument_list|,
 literal|8
 argument_list|,
 name|Z_DEFAULT_STRATEGY
-argument_list|,
-name|DEFLATE_OVHD
-operator|+
-literal|2
 argument_list|)
 operator|!=
 name|Z_OK
@@ -2003,14 +1983,6 @@ operator|->
 name|strm
 operator|.
 name|zalloc
-operator|=
-name|z_alloc
-expr_stmt|;
-name|state
-operator|->
-name|strm
-operator|.
-name|zalloc_init
 operator|=
 name|z_alloc
 expr_stmt|;
