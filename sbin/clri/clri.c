@@ -159,7 +159,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: clri file system inode ...\n"
+literal|"usage: clri special_device inode_number ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -424,7 +424,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Cannot find file system\n"
+literal|"Cannot find special_device\n"
 argument_list|)
 expr_stmt|;
 name|exit
