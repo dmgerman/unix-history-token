@@ -2189,7 +2189,7 @@ name|ASSERT_VOP_LOCKED
 argument_list|(
 name|CTOV
 argument_list|(
-name|cnp
+name|cncp
 operator|->
 name|cp
 argument_list|)
