@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kgmon.c	4.4 83/01/15"
+literal|"@(#)kgmon.c	4.5 83/01/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,7 +273,13 @@ index|[]
 decl_stmt|;
 block|{
 name|int
+name|mode
+decl_stmt|,
 name|disp
+decl_stmt|,
+name|ronly
+init|=
+literal|0
 decl_stmt|;
 name|argc
 operator|--
@@ -471,6 +477,9 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
+name|ronly
+operator|++
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -478,18 +487,6 @@ argument_list|,
 literal|"%s opened read-only\n"
 argument_list|,
 name|kmemf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|sflag
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"data may be inconsistent\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -625,6 +622,13 @@ name|n_value
 argument_list|)
 expr_stmt|;
 block|}
+name|mode
+operator|=
+name|kfetch
+argument_list|(
+name|N_PROFILING
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|hflag
@@ -645,19 +649,33 @@ expr_stmt|;
 else|else
 name|disp
 operator|=
-name|kfetch
-argument_list|(
-name|N_PROFILING
-argument_list|)
+name|mode
 expr_stmt|;
 if|if
 condition|(
 operator|!
 name|sflag
 condition|)
+block|{
+if|if
+condition|(
+name|ronly
+operator|&&
+name|mode
+operator|==
+name|PROFILING_ON
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"data may be inconsistent\n"
+argument_list|)
+expr_stmt|;
 name|dumpstate
 argument_list|()
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|rflag
@@ -668,6 +686,19 @@ expr_stmt|;
 name|turnonoff
 argument_list|(
 name|disp
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"kernel profiling is %s.\n"
+argument_list|,
+name|disp
+condition|?
+literal|"off"
+else|:
+literal|"running"
 argument_list|)
 expr_stmt|;
 block|}
