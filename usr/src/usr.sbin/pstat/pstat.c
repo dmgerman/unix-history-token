@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.1 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1252,7 +1252,7 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"   LOC   FLAGS  PTDADDR DADDR  CADDR  RSS   SIZE   IPTR    CNT CCNT\n"
+literal|"   LOC   FLAGS DADDR      CADDR  RSS SIZE      IPTR  CNT CCNT\n"
 argument_list|)
 expr_stmt|;
 name|loc
@@ -1381,15 +1381,6 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8x"
-argument_list|,
-name|xp
-operator|->
-name|x_ptdaddr
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
 literal|"%5x"
 argument_list|,
 name|xp
@@ -1449,7 +1440,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d"
+literal|"%5d"
 argument_list|,
 name|xp
 operator|->
@@ -1580,7 +1571,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   LOC    S    F POIP PRI SIG  UID  SLP TIM  CPU  NI    PGRP   PID   PPID    ADDR   RSS  SRSS SIZE   WCHAN    LINK   TEXTP CLKT\n"
+literal|"   LOC    S    F POIP PRI      SIG  UID SLP TIM  CPU  NI   PGRP    PID   PPID    ADDR   RSS SRSS SIZE    WCHAN    LINK   TEXTP CLKT\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1680,7 +1671,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %4x"
+literal|" %8x"
 argument_list|,
 name|pp
 operator|->
