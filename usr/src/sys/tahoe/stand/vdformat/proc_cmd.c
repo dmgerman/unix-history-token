@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc_cmd.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)proc_cmd.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1225,7 +1225,7 @@ index|]
 operator|.
 name|type
 operator|==
-name|SMDCTLR
+name|VDTYPE_VDDC
 operator|)
 condition|?
 literal|4
@@ -1418,7 +1418,7 @@ index|]
 operator|.
 name|type
 operator|==
-name|SMDCTLR
+name|VDTYPE_VDDC
 condition|)
 name|count
 operator|=

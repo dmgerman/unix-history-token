@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdfmt.h	1.3	86/12/19	*/
+comment|/*	vdfmt.h	1.4	87/06/01	*/
 end_comment
 
 begin_comment
@@ -203,7 +203,7 @@ define|#
 directive|define
 name|HARD_ERROR
 define|\
-value|(DRVNRDY|INVDADR|DNEMEM|PARERR|OPABRT|WPTERR|DSEEKERR|NOTCYLERR)
+value|(DCBS_NRDY|DCBS_IVA|DCBS_NEM|DCBS_DPE|DCBS_OAB|DCBS_WPT|DCBS_SKI|DCBS_OCYL)
 end_define
 
 begin_define
@@ -211,14 +211,14 @@ define|#
 directive|define
 name|DATA_ERROR
 define|\
-value|(CTLRERR|UCDATERR|DCOMPERR|DSERLY|DSLATE|TOPLUS|TOMNUS|CPDCRT|HRDERR|SFTERR)
+value|(DCBS_HCE|DCBS_UDE|DCBS_DCE|DCBS_DSE|DCBS_DSL|DCBS_TOP|DCBS_TOM|DCBS_CCD|\      DCBS_HARD|DCBS_SOFT)
 end_define
 
 begin_define
 define|#
 directive|define
 name|HEADER_ERROR
-value|(HCRCERR | HCMPERR)
+value|(DCBS_HCRC|DCBS_HCE)
 end_define
 
 begin_define
@@ -824,7 +824,8 @@ block|{
 name|uncertain
 name|alive
 decl_stmt|;
-name|cdr
+name|struct
+name|vddevice
 modifier|*
 name|addr
 decl_stmt|;
@@ -1037,7 +1038,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|fmt_mdcb
+name|struct
+name|mdcb
 name|mdcb
 decl_stmt|;
 end_decl_stmt
@@ -1047,7 +1049,8 @@ comment|/* Master device control block */
 end_comment
 
 begin_decl_stmt
-name|fmt_dcb
+name|struct
+name|dcb
 name|dcb
 decl_stmt|;
 end_decl_stmt

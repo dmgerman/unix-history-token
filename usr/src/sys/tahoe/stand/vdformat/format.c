@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)format.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -510,7 +510,7 @@ name|C_INFO
 operator|.
 name|type
 operator|==
-name|SMD_ECTLR
+name|VDTYPE_SMDE
 condition|)
 block|{
 name|access_dsk
@@ -524,7 +524,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD_RAW
+name|VDOP_RDRAW
 argument_list|,
 literal|1
 argument_list|,
@@ -568,7 +568,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD
+name|VDOP_RD
 argument_list|,
 literal|1
 argument_list|,
@@ -653,21 +653,22 @@ name|dcb
 operator|.
 name|opcode
 operator|=
-name|FSECT
+name|VDOP_FSECT
 expr_stmt|;
 comment|/* format sector command */
 name|dcb
 operator|.
 name|intflg
 operator|=
-name|NOINT
+name|DCBINT_NONE
 expr_stmt|;
 name|dcb
 operator|.
 name|nxtdcb
 operator|=
 operator|(
-name|fmt_dcb
+expr|struct
+name|dcb
 operator|*
 operator|)
 literal|0
@@ -700,6 +701,7 @@ call|)
 argument_list|(
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|trfmt
 argument_list|)
 operator|/
@@ -823,23 +825,26 @@ name|sector
 expr_stmt|;
 name|mdcb
 operator|.
-name|firstdcb
+name|mdcb_head
 operator|=
 operator|&
 name|dcb
 expr_stmt|;
 name|mdcb
 operator|.
-name|vddcstat
+name|mdcb_status
 operator|=
 literal|0
 expr_stmt|;
-name|VDDC_ATTENTION
+name|VDGO
 argument_list|(
 name|C_INFO
 operator|.
 name|addr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|&
 name|mdcb
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)relocate.c	1.2 (Berkeley/CCI) %G%"
+literal|"@(#)relocate.c	1.3 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1825,7 +1825,7 @@ name|C_INFO
 operator|.
 name|type
 operator|==
-name|SMDCTLR
+name|VDTYPE_VDDC
 condition|)
 block|{
 name|print
@@ -1958,7 +1958,7 @@ name|temp
 operator|.
 name|err_adr
 argument_list|,
-name|WD
+name|VDOP_WD
 argument_list|,
 literal|1
 argument_list|,
@@ -1972,7 +1972,7 @@ operator|(
 operator|(
 name|status
 operator|&
-name|ALTACC
+name|DCBS_ATA
 operator|)
 operator|&&
 operator|!
@@ -1980,9 +1980,9 @@ operator|(
 name|status
 operator|&
 operator|(
-name|HRDERR
+name|DCBS_HARD
 operator||
-name|SFTERR
+name|DCBS_SOFT
 operator|)
 operator|)
 operator|)
@@ -2142,7 +2142,7 @@ name|temp
 operator|.
 name|err_adr
 argument_list|,
-name|WD
+name|VDOP_WD
 argument_list|,
 name|CURRENT
 operator|->
@@ -2158,7 +2158,7 @@ operator|(
 operator|(
 name|status
 operator|&
-name|ALTACC
+name|DCBS_ATA
 operator|)
 operator|&&
 operator|!
@@ -2166,9 +2166,9 @@ operator|(
 name|status
 operator|&
 operator|(
-name|HRDERR
+name|DCBS_HARD
 operator||
-name|SFTERR
+name|DCBS_SOFT
 operator|)
 operator|)
 operator|)

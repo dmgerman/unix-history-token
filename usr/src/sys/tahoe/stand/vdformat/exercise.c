@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exercise.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)exercise.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ argument_list|,
 operator|&
 name|sad
 argument_list|,
-name|SEEK
+name|VDOP_SEEK
 argument_list|,
 literal|1
 argument_list|,

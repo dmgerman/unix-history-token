@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vdfmt.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)vdfmt.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,6 +227,28 @@ begin_comment
 comment|/* ** */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VDBASE
+value|0xffff2000
+end_define
+
+begin_comment
+comment|/* address of first controller */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VDOFF
+value|0x100
+end_define
+
+begin_comment
+comment|/* offset between controllers */
+end_comment
+
 begin_macro
 name|determine_controller_types
 argument_list|()
@@ -299,14 +321,18 @@ operator|.
 name|addr
 operator|=
 operator|(
-name|cdr
+expr|struct
+name|vddevice
 operator|*
 operator|)
 operator|(
-name|vddcaddr
-index|[
+name|VDBASE
+operator|+
+operator|(
 name|ctlr
-index|]
+operator|*
+name|VDOFF
+operator|)
 operator|)
 expr_stmt|;
 if|if
@@ -342,7 +368,7 @@ index|]
 operator|.
 name|addr
 operator|->
-name|cdr_reset
+name|vdreset
 operator|=
 operator|(
 name|unsigned
@@ -363,7 +389,7 @@ index|]
 operator|.
 name|addr
 operator|->
-name|cdr_reset
+name|vdreset
 operator|!=
 operator|(
 name|unsigned
@@ -387,7 +413,7 @@ index|]
 operator|.
 name|type
 operator|=
-name|SMDCTLR
+name|VDTYPE_VDDC
 expr_stmt|;
 name|c_info
 index|[
@@ -436,7 +462,7 @@ name|smd_trk_skew
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"smd\n"
+literal|"vddc\n"
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -463,7 +489,7 @@ index|]
 operator|.
 name|type
 operator|=
-name|SMD_ECTLR
+name|VDTYPE_SMDE
 expr_stmt|;
 name|c_info
 index|[
@@ -481,9 +507,9 @@ index|]
 operator|.
 name|addr
 operator|->
-name|cdr_reserved
+name|vdrstclr
 operator|=
-literal|0x0
+literal|0
 expr_stmt|;
 name|c_info
 index|[
@@ -551,7 +577,8 @@ index|]
 operator|.
 name|type
 operator|=
-name|UNKNOWN
+operator|-
+literal|1
 expr_stmt|;
 block|}
 for|for

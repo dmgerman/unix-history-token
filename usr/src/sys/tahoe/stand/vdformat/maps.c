@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)maps.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)maps.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -253,7 +253,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD
+name|VDOP_RD
 argument_list|,
 name|CURRENT
 operator|->
@@ -262,7 +262,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|&
-name|HRDERR
+name|VDERR_HARD
 condition|)
 continue|continue;
 if|if
@@ -499,7 +499,7 @@ name|C_INFO
 operator|.
 name|type
 operator|==
-name|SMD_ECTLR
+name|VDTYPE_SMDE
 condition|)
 block|{
 name|access_dsk
@@ -513,7 +513,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD_RAW
+name|VDOP_RDRAW
 argument_list|,
 literal|1
 argument_list|,
@@ -694,7 +694,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD
+name|VDOP_RD
 argument_list|,
 name|CURRENT
 operator|->
@@ -707,7 +707,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|ALTACC
+name|DCBS_ATA
 condition|)
 name|get_track_relocations
 argument_list|(
@@ -786,7 +786,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD
+name|VDOP_RD
 argument_list|,
 literal|1
 argument_list|,
@@ -797,7 +797,7 @@ if|if
 condition|(
 name|status
 operator|&
-name|ALTACC
+name|DCBS_ATA
 condition|)
 block|{
 name|error
@@ -1495,7 +1495,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD_RAW
+name|VDOP_RDRAW
 argument_list|,
 literal|1
 argument_list|,
@@ -1648,7 +1648,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD_RAW
+name|VDOP_RDRAW
 argument_list|,
 literal|1
 argument_list|,
@@ -1784,7 +1784,7 @@ argument_list|,
 operator|&
 name|dskaddr
 argument_list|,
-name|RD_RAW
+name|VDOP_RDRAW
 argument_list|,
 literal|1
 argument_list|,
@@ -3649,7 +3649,7 @@ name|C_INFO
 operator|.
 name|type
 operator|==
-name|SMDCTLR
+name|VDTYPE_VDDC
 condition|)
 block|{
 for|for

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)profile.c	1.1 (Berkeley/CCI) %G%"
+literal|"@(#)profile.c	1.2 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ argument_list|,
 operator|&
 name|zero
 argument_list|,
-name|SEEK
+name|VDOP_SEEK
 argument_list|,
 literal|1
 argument_list|,
@@ -239,7 +239,7 @@ argument_list|,
 operator|&
 name|ead
 argument_list|,
-name|SEEK
+name|VDOP_SEEK
 argument_list|,
 literal|1
 argument_list|,
