@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	2.1 83/10/31  */
+comment|/*  * @(#)extern.h	2.2 83/11/03  */
 end_comment
 
 begin_include
@@ -176,7 +176,7 @@ name|sterncolour
 parameter_list|(
 name|sp
 parameter_list|)
-value|((sp)->file->stern+'0'-((sp)->file->captured?16:0))
+value|((sp)->file->stern+'0'-((sp)->file->captured?10:0))
 end_define
 
 begin_define
