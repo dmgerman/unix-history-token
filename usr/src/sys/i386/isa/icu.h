@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)icu.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ comment|/*  * Macro's for interrupt level priority masks (used in interrupt vect
 end_comment
 
 begin_comment
-comment|/* Just mask this interrupt only */
+comment|/* Mask a group of interrupts atomically */
 end_comment
 
 begin_define
@@ -151,31 +151,14 @@ define|#
 directive|define
 name|INTR
 parameter_list|(
-name|a
-parameter_list|)
-define|\
-value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	push	%ds ; \ 	push	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ a ; \ 	orw	$ IRQ
-comment|/**/
-value|a ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	NOP ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	NOP ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	NOP	; \ 	sti
-end_define
-
-begin_comment
-comment|/* Mask a group of interrupts atomically */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INTRN
-parameter_list|(
-name|a
+name|unit
 parameter_list|,
-name|b
+name|mask
+parameter_list|,
+name|offst
 parameter_list|)
 define|\
-value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	push	%ds ; \ 	push	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ a ; \ 	orw	$ IRQ
-comment|/**/
-value|a ,%ax ; \ 	orw	b ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	NOP ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	NOP ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	NOP	; \ 	sti
+value|pushl	$0 ; \ 	pushl	$ T_ASTFLT ; \ 	pushal ; \ 	push	%ds ; \ 	push	%es ; \ 	movw	$0x10, %ax ; \ 	movw	%ax, %ds ; \ 	movw	%ax,%es ; \ 	incl	_cnt+V_INTR ; \ 	incl	_isa_intr + offst * 4 ; \ 	movzwl	_cpl,%eax ; \ 	pushl	%eax ; \ 	pushl	$ unit ; \ 	orw	mask ,%ax ; \ 	movw	%ax,_cpl ; \ 	orw	_imen,%ax ; \ 	NOP ; \ 	outb	%al,$ IO_ICU1+1 ; \ 	NOP ; \ 	movb	%ah,%al ; \ 	outb	%al,$ IO_ICU2+1	; \ 	NOP	; \ 	inb	$0x84,%al ; \ 	sti
 end_define
 
 begin_comment
@@ -189,7 +172,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTREXT1
+name|INTREXIT1
 define|\
 value|movb	$0x20,%al ; \ 	outb	%al,$ IO_ICU1 ; \ 	jmp	doreti
 end_define
@@ -201,7 +184,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INTREXT2
+name|INTREXIT2
 define|\
 value|movb	$0x20,%al ; \ 	outb	%al,$ IO_ICU1 ; \ 	outb	%al,$ IO_ICU2 ; \ 	jmp	doreti
 end_define
