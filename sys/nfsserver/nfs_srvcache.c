@@ -962,6 +962,7 @@ break|break;
 comment|/*	case AF_INET6:	*/
 comment|/*	case AF_ISO:	*/
 default|default:
+comment|/* 		 * XXXRW: Seems like we should only set RC_NAM if we 		 * actually manage to set rc_nam to something non-NULL. 		 */
 name|rp
 operator|->
 name|rc_flag
@@ -978,7 +979,7 @@ name|nd
 operator|->
 name|nd_nam
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 break|break;
