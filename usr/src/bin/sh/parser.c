@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	8.6 (Berkeley) %G%"
+literal|"@(#)parser.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5574,14 +5574,25 @@ operator|==
 literal|'#'
 condition|)
 block|{
-name|subtype
-operator|=
-name|VSLENGTH
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|c
 operator|=
 name|pgetc
 argument_list|()
+operator|)
+operator|==
+literal|'}'
+condition|)
+name|c
+operator|=
+literal|'#'
+expr_stmt|;
+else|else
+name|subtype
+operator|=
+name|VSLENGTH
 expr_stmt|;
 block|}
 else|else
