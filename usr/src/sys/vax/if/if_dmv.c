@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)if_dmv.c	7.2 (Berkeley) %G%  * DMV-11 Driver  *  * Qbus Sync DDCMP interface - DMV operated in full duplex, point to point mode  *  * Derived from 4.3 release if_dmv.c rev. 6.12 dated 4/23/86  * (which wasn't the 4.3 release!)  *   * Bob Kridle  * mt Xinu  */
+comment|/*  * @(#)if_dmv.c	7.3 (Berkeley) %G%  * DMV-11 Driver  *  * Qbus Sync DDCMP interface - DMV operated in full duplex, point to point mode  *  * Derived from 4.3 release if_dmv.c rev. 6.12 dated 4/23/86  * (which wasn't the 4.3 release!)  *   * Bob Kridle  * mt Xinu  */
 end_comment
 
 begin_include
@@ -16,12 +16,6 @@ name|NDMV
 operator|>
 literal|0
 end_if
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -96,6 +90,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../net/if.h"
 end_include
 
@@ -161,13 +167,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"if_uba.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"if_dmv.h"
+file|"../vax/pte.h"
 end_include
 
 begin_include
@@ -185,24 +185,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/time.h"
+file|"if_uba.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"if_dmv.h"
 end_include
-
-begin_decl_stmt
-name|int
-name|dmvtimer
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* timer started? */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -215,13 +205,6 @@ end_decl_stmt
 begin_comment
 comment|/* timeout value */
 end_comment
-
-begin_function_decl
-name|int
-name|dmvwatch
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Driver information for auto-configuration stuff.  */
@@ -249,6 +232,9 @@ name|dmvoutput
 argument_list|()
 decl_stmt|,
 name|dmvreset
+argument_list|()
+decl_stmt|,
+name|dmvtimeout
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -299,7 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Don't really know how many buffers/commands can be queued to a DMV-11.  * Manual doesn't say... Perhaps we can look at a DEC driver some day.  * These numbers ame from DMV/DMR driver.  */
+comment|/*  * Don't really know how many buffers/commands can be queued to a DMV-11.  * Manual doesn't say... Perhaps we can look at a DEC driver some day.  * These numbers ame from DMC/DMR driver.  */
 end_comment
 
 begin_define
@@ -327,12 +313,44 @@ begin_comment
 comment|/* size of command queue */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|printd
-value|if (sc->sc_if.if_flags& IFF_DEBUG) \ 	printf("DMVDEBUG: dmv%d: ", unit), printf
+parameter_list|(
+name|f
+parameter_list|)
+value|if (sc->sc_if.if_flags& IFF_DEBUG) \ 	printf("DMVDEBUG: dmv%d: ", unit), printf(f)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|printd
+parameter_list|(
+name|f
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nil */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* error reporting intervals */
@@ -531,43 +549,6 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* network-visible interface */
-name|struct
-name|dmvbufs
-name|sc_rbufs
-index|[
-name|NRCV
-index|]
-decl_stmt|;
-comment|/* receive buffer info */
-name|struct
-name|dmvbufs
-name|sc_xbufs
-index|[
-name|NXMT
-index|]
-decl_stmt|;
-comment|/* transmit buffer info */
-name|struct
-name|ifubinfo
-name|sc_ifuba
-decl_stmt|;
-comment|/* UNIBUS resources */
-name|struct
-name|ifrw
-name|sc_ifr
-index|[
-name|NRCV
-index|]
-decl_stmt|;
-comment|/* UNIBUS receive buffer maps */
-name|struct
-name|ifxmt
-name|sc_ifw
-index|[
-name|NXMT
-index|]
-decl_stmt|;
-comment|/* UNIBUS receive buffer maps */
 name|short
 name|sc_oused
 decl_stmt|;
@@ -580,10 +561,6 @@ name|short
 name|sc_flag
 decl_stmt|;
 comment|/* flags */
-name|int
-name|sc_nticks
-decl_stmt|;
-comment|/* seconds since last interrupt */
 name|int
 name|sc_ubinfo
 decl_stmt|;
@@ -635,6 +612,43 @@ directive|define
 name|sc_unknown
 value|sc_errors[7]
 comment|/* other errors - look in DMV manual */
+name|struct
+name|dmvbufs
+name|sc_rbufs
+index|[
+name|NRCV
+index|]
+decl_stmt|;
+comment|/* receive buffer info */
+name|struct
+name|dmvbufs
+name|sc_xbufs
+index|[
+name|NXMT
+index|]
+decl_stmt|;
+comment|/* transmit buffer info */
+name|struct
+name|ifubinfo
+name|sc_ifuba
+decl_stmt|;
+comment|/* UNIBUS resources */
+name|struct
+name|ifrw
+name|sc_ifr
+index|[
+name|NRCV
+index|]
+decl_stmt|;
+comment|/* UNIBUS receive buffer maps */
+name|struct
+name|ifxmt
+name|sc_ifw
+index|[
+name|NXMT
+index|]
+decl_stmt|;
+comment|/* UNIBUS receive buffer maps */
 comment|/* command queue stuff */
 name|struct
 name|dmv_command
@@ -689,19 +703,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMV_ALLOC
-value|0x01
-end_define
-
-begin_comment
-comment|/* unibus resources allocated */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DMV_RESTART
-value|0x04
+value|0x01
 end_define
 
 begin_comment
@@ -711,19 +714,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DMV_ACTIVE
-value|0x08
+name|DMV_ONLINE
+value|0x02
 end_define
 
 begin_comment
-comment|/* device active */
+comment|/* device managed to transmit */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DMV_RUNNING
-value|0x20
+value|0x04
 end_define
 
 begin_comment
@@ -975,6 +978,11 @@ name|i
 operator|--
 control|)
 empty_stmt|;
+name|br
+operator|=
+literal|0x15
+expr_stmt|;
+comment|/* screwy interrupt structure */
 return|return
 operator|(
 literal|1
@@ -1078,6 +1086,14 @@ name|sc
 operator|->
 name|sc_if
 operator|.
+name|if_watchdog
+operator|=
+name|dmvtimeout
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
 name|if_flags
 operator|=
 name|IFF_POINTOPOINT
@@ -1090,30 +1106,6 @@ name|iff_flags
 operator|=
 name|UBA_CANTWAIT
 expr_stmt|;
-if|if
-condition|(
-name|dmvtimer
-operator|==
-literal|0
-condition|)
-block|{
-name|dmvtimer
-operator|=
-literal|1
-expr_stmt|;
-name|timeout
-argument_list|(
-name|dmvwatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
-block|}
 name|if_attach
 argument_list|(
 operator|&
@@ -1408,7 +1400,9 @@ return|return;
 block|}
 name|printd
 argument_list|(
+operator|(
 literal|"dmvinit\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* initialize UNIBUS resources */
@@ -1503,6 +1497,15 @@ operator||=
 name|IFF_RUNNING
 expr_stmt|;
 block|}
+comment|/* 	 * Limit packets enqueued until we see if we're on the air. 	 */
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+literal|3
+expr_stmt|;
 comment|/* initialize buffer pool */
 comment|/* receives */
 name|ifrw
@@ -1796,7 +1799,7 @@ operator|->
 name|sc_flag
 operator|&=
 operator|~
-name|DMV_ACTIVE
+name|DMV_ONLINE
 expr_stmt|;
 name|addr
 operator|->
@@ -1864,7 +1867,9 @@ decl_stmt|;
 comment|/* 	 * Dequeue up to NXMT requests and map them to the UNIBUS. 	 * If no more requests, or no dmv buffers available, just return. 	 */
 name|printd
 argument_list|(
+operator|(
 literal|"dmvstart\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|n
@@ -1962,10 +1967,22 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|++
 name|sc
 operator|->
 name|sc_oused
-operator|++
+operator|==
+literal|1
+condition|)
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_timer
+operator|=
+name|dmv_timeout
 expr_stmt|;
 name|dmvload
 argument_list|(
@@ -2087,37 +2104,39 @@ name|dmv_softc
 expr_stmt|;
 name|printd
 argument_list|(
+operator|(
 literal|"dmvload: cmd=%x mask=%x trib=%x sel4=%x sel6=%x sel10=%x\n"
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|cmd
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|mask
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|tributary
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel4
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel6
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel10
+operator|)
 argument_list|)
 expr_stmt|;
 name|addr
@@ -2352,7 +2371,9 @@ index|]
 expr_stmt|;
 name|printd
 argument_list|(
+operator|(
 literal|"dmvrint\n"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2704,8 +2725,6 @@ name|int
 name|off
 decl_stmt|,
 name|resid
-decl_stmt|,
-name|fatal
 decl_stmt|;
 name|addr
 operator|=
@@ -2802,32 +2821,34 @@ operator|)
 expr_stmt|;
 name|printd
 argument_list|(
+operator|(
 literal|"dmvxint: sel2=%x sel4=%x sel6=%x sel10=%x pkaddr=%x\n"
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel2
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel4
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel6
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|sel10
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 operator|)
 name|pkaddr
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3498,32 +3519,70 @@ operator|&=
 operator|~
 name|DBUF_DMVS
 expr_stmt|;
+if|if
+condition|(
+operator|--
 name|sc
 operator|->
 name|sc_oused
-operator|--
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|sc
 operator|->
-name|sc_nticks
+name|sc_if
+operator|.
+name|if_timer
 operator|=
 literal|0
 expr_stmt|;
+else|else
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_timer
+operator|=
+name|dmv_timeout
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flag
+operator|&
+name|DMV_ONLINE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+specifier|extern
+name|int
+name|ifqmaxlen
+decl_stmt|;
+comment|/* 				 * We're on the air. 				 * Open the queue to the usual value. 				 */
 name|sc
 operator|->
 name|sc_flag
 operator||=
-name|DMV_ACTIVE
+name|DMV_ONLINE
 expr_stmt|;
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|ifqmaxlen
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|DMV_CNTRLO
 case|:
 comment|/* ACCUMULATE STATISTICS */
-name|fatal
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|sel6
@@ -3559,7 +3618,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"dmvxint: dmv%d far end on-line\n"
+literal|"dmv%d: far end on-line\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3571,13 +3630,13 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d far end restart\n"
+literal|"dmv%d: far end restart\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 goto|goto
-name|fatal
+name|restart
 goto|;
 block|}
 break|break;
@@ -3606,7 +3665,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d receive threshold error\n"
+literal|"dmv%d: receive threshold error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3637,7 +3696,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d transmit threshold error\n"
+literal|"dmv%d: transmit threshold error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3663,7 +3722,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d select threshold error\n"
+literal|"dmv%d: select threshold error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3689,7 +3748,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d nonexistent memory error\n"
+literal|"dmv%d: nonexistent memory error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3711,15 +3770,20 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d modem disconnected error\n"
+literal|"dmv%d: modem disconnected error\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 break|break;
 case|case
 name|DMV_CXRL
@@ -3741,7 +3805,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d carrier loss error\n"
+literal|"dmv%d: carrier loss error\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3754,7 +3818,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d response queue overflow\n"
+literal|"dmv%d: response queue overflow\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -3765,14 +3829,14 @@ name|sc_qovf
 operator|++
 expr_stmt|;
 goto|goto
-name|fatal
+name|restart
 goto|;
 default|default:
 name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d unknown error %o\n"
+literal|"dmv%d: unknown error %o\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3795,7 +3859,7 @@ operator|==
 literal|0
 condition|)
 goto|goto
-name|fatal
+name|restart
 goto|;
 break|break;
 block|}
@@ -3813,7 +3877,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"dmvxint: dmv%d buffer disp for halted trib %o\n"
+literal|"dmv%d: buffer disp for halted trib %o\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3841,7 +3905,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"dmvxint: dmv%d buffer return complete sel3=%x\n"
+literal|"dmv%d: buffer return complete sel3=%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3855,7 +3919,7 @@ name|log
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"dmvxint: dmv%d info resp sel3=%x sel4=%x sel6=%x\n"
+literal|"dmv%d: info resp sel3=%x sel4=%x sel6=%x\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3873,7 +3937,7 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"dmvxint: dmv%d bad control %o\n"
+literal|"dmv%d: bad control %o\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3891,21 +3955,8 @@ name|unit
 argument_list|)
 expr_stmt|;
 return|return;
-name|fatal
+name|restart
 label|:
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"dmv%d: fatal error, output code ==%o\n"
-argument_list|,
-name|unit
-argument_list|,
-name|sel6
-operator|&
-name|DMV_EEC
-argument_list|)
-expr_stmt|;
 name|dmvrestart
 argument_list|(
 name|unit
@@ -4077,6 +4128,27 @@ specifier|register
 name|int
 name|off
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENETDOWN
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 switch|switch
 condition|(
 name|dst
@@ -4672,69 +4744,13 @@ name|sc_flag
 operator|&
 name|DMV_RUNNING
 condition|)
-block|{
-operator|(
-operator|(
-expr|struct
-name|dmvdevice
-operator|*
-operator|)
-operator|(
-name|dmvinfo
-index|[
+name|dmvdown
+argument_list|(
 name|ifp
 operator|->
 name|if_unit
-index|]
-operator|->
-name|ui_addr
-operator|)
-operator|)
-operator|->
-name|bsel1
-operator|=
-name|DMV_MCLR
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_snd
-argument_list|,
-name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-else|else
-break|break;
-block|}
-name|sc
-operator|->
-name|sc_flag
-operator|&=
-operator|~
-name|DMV_RUNNING
-expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4802,46 +4818,19 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|dmv_softc
-modifier|*
-name|sc
-init|=
-operator|&
-name|dmv_softc
-index|[
-name|unit
-index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|uba_device
-modifier|*
-name|ui
-init|=
-name|dmvinfo
-index|[
-name|unit
-index|]
-decl_stmt|;
-specifier|register
-name|struct
 name|dmvdevice
 modifier|*
 name|addr
 decl_stmt|;
 specifier|register
-name|struct
-name|ifxmt
-modifier|*
-name|ifxp
-decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
+name|dmvdown
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -4849,17 +4838,16 @@ expr|struct
 name|dmvdevice
 operator|*
 operator|)
-name|ui
+operator|(
+name|dmvinfo
+index|[
+name|unit
+index|]
 operator|->
 name|ui_addr
+operator|)
 expr_stmt|;
-comment|/* 	 * Let the DMR finish the MCLR.	 At 1 Mbit, it should do so 	 * in about a max of 6.4 milliseconds with diagnostics enabled. 	 */
-name|addr
-operator|->
-name|bsel1
-operator|=
-name|DMV_MCLR
-expr_stmt|;
+comment|/* 	 * Let the DMV finish the MCLR. 	 */
 for|for
 control|(
 name|i
@@ -4931,7 +4919,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"dmvrestart: device init failed, bsel4=%o, bsel6=%o\n"
+literal|"dmv%d: device init failed, bsel4=%o, bsel6=%o\n"
+argument_list|,
+name|unit
 argument_list|,
 name|addr
 operator|->
@@ -4948,8 +4938,93 @@ literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
+comment|/* restart DMV */
+name|dmvinit
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
+name|dmv_softc
+index|[
+name|unit
+index|]
+operator|.
+name|sc_if
+operator|.
+name|if_collisions
+operator|++
+expr_stmt|;
+comment|/* why not? */
+block|}
+end_block
+
+begin_comment
+comment|/*  * Reset a device and mark down.  * Flush output queue and drop queue limit.  */
+end_comment
+
+begin_macro
+name|dmvdown
+argument_list|(
+argument|unit
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|struct
+name|dmv_softc
+modifier|*
+name|sc
+init|=
+operator|&
+name|dmv_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
+specifier|register
+name|struct
+name|ifxmt
+modifier|*
+name|ifxp
+decl_stmt|;
+operator|(
+operator|(
+expr|struct
+name|dmvdevice
+operator|*
+operator|)
+operator|(
+name|dmvinfo
+index|[
+name|unit
+index|]
+operator|->
+name|ui_addr
+operator|)
+operator|)
+operator|->
+name|bsel1
+operator|=
+name|DMV_MCLR
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flag
+operator|&=
+operator|~
+operator|(
+name|DMV_RUNNING
+operator||
+name|DMV_ONLINE
+operator|)
+expr_stmt|;
 for|for
 control|(
 name|ifxp
@@ -4997,40 +5072,55 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-comment|/* restart DMV */
-name|dmvinit
-argument_list|(
-name|unit
-argument_list|)
+name|sc
+operator|->
+name|sc_oused
+operator|=
+literal|0
 expr_stmt|;
+name|if_qflush
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|sc_if
 operator|.
-name|if_collisions
-operator|++
+name|if_snd
+argument_list|)
 expr_stmt|;
-comment|/* why not? */
+comment|/* 	 * Limit packets enqueued until we're back on the air. 	 */
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+literal|3
+expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Check to see that transmitted packets don't  * lose interrupts.  The device has to be active.  */
+comment|/*  * Watchdog timeout to see that transmitted packets don't  * lose interrupts.  The device has to be online.  */
 end_comment
 
 begin_macro
-name|dmvwatch
-argument_list|()
+name|dmvtimeout
+argument_list|(
+argument|unit
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|struct
-name|uba_device
-modifier|*
-name|ui
-decl_stmt|;
 specifier|register
 name|struct
 name|dmv_softc
@@ -5042,92 +5132,23 @@ name|dmvdevice
 modifier|*
 name|addr
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NDMV
-condition|;
-name|i
-operator|++
-control|)
-block|{
 name|sc
 operator|=
 operator|&
 name|dmv_softc
 index|[
-name|i
+name|unit
 index|]
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|sc
 operator|->
 name|sc_flag
 operator|&
-name|DMV_ACTIVE
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|(
-name|ui
-operator|=
-name|dmvinfo
-index|[
-name|i
-index|]
-operator|)
-operator|==
-literal|0
-operator|||
-name|ui
-operator|->
-name|ui_alive
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_oused
+name|DMV_ONLINE
 condition|)
 block|{
-name|sc
-operator|->
-name|sc_nticks
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_nticks
-operator|>
-name|dmv_timeout
-condition|)
-block|{
-name|sc
-operator|->
-name|sc_nticks
-operator|=
-literal|0
-expr_stmt|;
 name|addr
 operator|=
 operator|(
@@ -5135,17 +5156,22 @@ expr|struct
 name|dmvdevice
 operator|*
 operator|)
-name|ui
+operator|(
+name|dmvinfo
+index|[
+name|unit
+index|]
 operator|->
 name|ui_addr
+operator|)
 expr_stmt|;
 name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"dmv%d hung: bsel0=%b bsel2=%b\n"
+literal|"dmv%d: output timeout, bsel0=%b bsel2=%b\n"
 argument_list|,
-name|i
+name|unit
 argument_list|,
 name|addr
 operator|->
@@ -5166,24 +5192,10 @@ argument_list|)
 expr_stmt|;
 name|dmvrestart
 argument_list|(
-name|i
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
-name|timeout
-argument_list|(
-name|dmvwatch
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-literal|0
-argument_list|,
-name|hz
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
