@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.50 1998/07/11 05:59:34 bde Exp $  */
+comment|/*  * Copyright (c) 1992 Terrence R. Lambert.  * Copyright (c) 1982, 1987, 1990 The Regents of the University of California.  * Copyright (c) 1997 KATO Takenori.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Id: machdep.c,v 1.193 1996/06/18 01:22:04 bde Exp  *	$Id: identcpu.c,v 1.51 1998/07/11 07:45:28 bde Exp $  */
 end_comment
 
 begin_include
@@ -147,6 +147,43 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|I586_CPU
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CPU_WT_ALLOC
+argument_list|)
+end_if
+
+begin_function_decl
+name|void
+name|enable_K5_wt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|enable_K6_wt_alloc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -1072,6 +1109,28 @@ literal|"K6"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|0x570
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"K6 266 (model 1)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x580
+case|:
+name|strcat
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"K6-2"
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|strcat
 argument_list|(
@@ -1082,6 +1141,74 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|CPU_WT_ALLOC
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0xf00
+operator|)
+operator|==
+literal|0x500
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|>
+literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|<
+literal|0x60
+operator|)
+operator|&&
+operator|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x00f
+operator|)
+operator|>
+literal|3
+operator|)
+condition|)
+block|{
+name|enable_K5_wt_alloc
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|cpu_id
+operator|&
+literal|0x0f0
+operator|)
+operator|>
+literal|0x50
+condition|)
+name|enable_K6_wt_alloc
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|do_cpuid
 argument_list|(
 literal|0x80000000
@@ -2315,7 +2442,7 @@ name|trap_by_rdmsr
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * Cyrix 486-class CPU does not support rdmsr instruction. 	 * The rdmsr instruction generates invalid opcode fault, and exception 	 * will be trapped by bluetrap6() on Cyrix 486-class CPU.  The 	 * bluetrap6() set the magic number to trap_by_rdmsr. 	 */
+comment|/* 	 * Cyrix 486-class CPU does not support rdmsr instruction. 	 * The rdmsr instruction generates invalid opcode fault, and exception 	 * will be trapped by bluetrap6() on Cyrix 486-class CPU.  The 	 * bluetrap6() set the magic number to trap_by_rdmsr. 	 */
 name|setidt
 argument_list|(
 literal|6
@@ -2798,7 +2925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine is called specifically to set up cpu_class before   * startrtclock() uses it.  Probably this should be rearranged so that  * startrtclock() doesn't need to run until after identifycpu() has been  * called.  Another alternative formulation would be for this routine  * to do all the identification work, and make identifycpu() into a  * printing-only routine.  */
+comment|/*  * This routine is called specifically to set up cpu_class before  * startrtclock() uses it.  Probably this should be rearranged so that  * startrtclock() doesn't need to run until after identifycpu() has been  * called.  Another alternative formulation would be for this routine  * to do all the identification work, and make identifycpu() into a  * printing-only routine.  */
 end_comment
 
 begin_function
