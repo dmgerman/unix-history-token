@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/tty.h>
 end_include
 
@@ -3321,6 +3327,22 @@ name|mouse_info_t
 operator|*
 operator|)
 name|data
+expr_stmt|;
+name|random_harvest
+argument_list|(
+name|mouse
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mouse_info_t
+argument_list|)
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+name|RANDOM_MOUSE
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
