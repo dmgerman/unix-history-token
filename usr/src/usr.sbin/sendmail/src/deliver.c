@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.2 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1080,17 +1080,7 @@ if|if
 condition|(
 name|m
 operator|==
-name|LocalMailer
-condition|)
-block|{
-if|if
-condition|(
-name|user
-index|[
-literal|0
-index|]
-operator|==
-literal|'/'
+name|FileMailer
 condition|)
 block|{
 name|rcode
@@ -1129,7 +1119,6 @@ operator||=
 name|QSENT
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 comment|/* 		**  Address is verified -- add this user to mailer 		**  argv, and add it to the print list of recipients. 		*/
 comment|/* link together the chain of recipients */

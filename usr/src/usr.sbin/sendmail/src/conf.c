@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.3 (Berkeley) %G%"
+literal|"@(#)conf.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,9 @@ name|setdefuser
 argument_list|()
 expr_stmt|;
 name|setupmaps
+argument_list|()
+expr_stmt|;
+name|setupmailers
 argument_list|()
 expr_stmt|;
 block|}
@@ -898,6 +901,53 @@ name|TRUE
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SETUPMAILERS -- initialize default mailers */
+end_comment
+
+begin_macro
+name|setupmailers
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"*file*, P=/dev/null, F=lsDEu, A=FILE"
+argument_list|)
+expr_stmt|;
+name|makemailer
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"*include*, P=/dev/null, F=su, A=INCLUDE"
+argument_list|)
+expr_stmt|;
+name|makemailer
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_escape
 end_escape

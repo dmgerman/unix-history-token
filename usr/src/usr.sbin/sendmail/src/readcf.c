@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.1 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1949,12 +1949,6 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|->
-name|m_mno
-operator|=
-name|NextMailer
-expr_stmt|;
-name|m
-operator|->
 name|m_eol
 operator|=
 literal|"\n"
@@ -2321,7 +2315,6 @@ name|m_flags
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* now store the mailer away */
 if|if
 condition|(
 name|NextMailer
@@ -2338,14 +2331,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Mailer
-index|[
-name|NextMailer
-operator|++
-index|]
-operator|=
-name|m
-expr_stmt|;
 name|s
 operator|=
 name|stab
@@ -2359,6 +2344,44 @@ argument_list|,
 name|ST_ENTER
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|s_mailer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|i
+operator|=
+name|s
+operator|->
+name|s_mailer
+operator|->
+name|m_mno
+expr_stmt|;
+name|free
+argument_list|(
+name|s
+operator|->
+name|s_mailer
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|i
+operator|=
+name|NextMailer
+operator|++
+expr_stmt|;
+block|}
+name|Mailer
+index|[
+name|i
+index|]
+operator|=
 name|s
 operator|->
 name|s_mailer

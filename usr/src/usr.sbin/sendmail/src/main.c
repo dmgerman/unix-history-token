@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.3 (Berkeley) %G%"
+literal|"@(#)main.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2345,7 +2345,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* the indices of local and program mailers */
+comment|/* the indices of built-in mailers */
 end_comment
 
 begin_expr_stmt
@@ -2411,6 +2411,76 @@ argument_list|)
 expr_stmt|;
 else|else
 name|ProgMailer
+operator|=
+name|st
+operator|->
+name|s_mailer
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|st
+operator|=
+name|stab
+argument_list|(
+literal|"*file*"
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"No *file* mailer defined"
+argument_list|)
+expr_stmt|;
+else|else
+name|FileMailer
+operator|=
+name|st
+operator|->
+name|s_mailer
+expr_stmt|;
+end_if
+
+begin_expr_stmt
+name|st
+operator|=
+name|stab
+argument_list|(
+literal|"*include*"
+argument_list|,
+name|ST_MAILER
+argument_list|,
+name|ST_FIND
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|st
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"No *include* mailer defined"
+argument_list|)
+expr_stmt|;
+else|else
+name|InclMailer
 operator|=
 name|st
 operator|->
