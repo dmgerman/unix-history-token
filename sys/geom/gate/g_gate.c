@@ -167,7 +167,7 @@ specifier|static
 name|u_int
 name|g_gate_debug
 init|=
-literal|3
+literal|0
 decl_stmt|;
 end_decl_stmt
 
