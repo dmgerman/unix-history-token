@@ -786,6 +786,9 @@ argument_list|,
 literal|"can't get number of devices"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|cur
 operator|.
 name|dinfo
@@ -803,7 +806,20 @@ expr|struct
 name|devinfo
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"devinfo malloc failed"
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|last
 operator|.
 name|dinfo
@@ -820,6 +836,16 @@ argument_list|(
 expr|struct
 name|devinfo
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"devinfo malloc failed"
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -886,6 +912,9 @@ operator|->
 name|generation
 expr_stmt|;
 comment|/* 	 * If the user specified any devices on the command line, see if 	 * they are in the list of devices we have now. 	 */
+if|if
+condition|(
+operator|(
 name|specified_devices
 operator|=
 operator|(
@@ -900,6 +929,16 @@ argument_list|(
 name|char
 operator|*
 argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"specified_devices malloc failed"
 argument_list|)
 expr_stmt|;
 for|for
