@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	telnet.h	4.6	85/03/24	*/
+comment|/*	telnet.h	4.7	85/03/24	*/
 end_comment
 
 begin_comment
@@ -558,7 +558,7 @@ begin_define
 define|#
 directive|define
 name|NTELOPTS
-value|25
+value|(1+TELOPT_EOR)
 end_define
 
 begin_decl_stmt
