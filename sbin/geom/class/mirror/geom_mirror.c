@@ -524,17 +524,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s label [-hnv] [-b balance] [-s slice] name prov [prov [...]]\n"
-literal|"       %s clear [-v] prov [prov [...]]\n"
-literal|"       %s dump prov [prov [...]]\n"
+literal|"usage: %s label [-hnv] [-b balance] [-s slice] name prov ...\n"
+literal|"       %s clear [-v] prov ...\n"
+literal|"       %s dump prov ...\n"
 literal|"       %s configure [-adhnv] [-b balance] [-s slice] name\n"
-literal|"       %s rebuild [-v] name prov [prov [...]]\n"
-literal|"       %s insert [-hiv] [-p priority] name prov [prov [...]]\n"
-literal|"       %s remove [-v] name prov [prov [...]]\n"
-literal|"       %s activate [-v] name prov [prov [...]]\n"
-literal|"       %s deactivate [-v] name prov [prov [...]]\n"
-literal|"       %s forget name [name [...]]\n"
-literal|"       %s stop [-fv] name [...]\n"
+literal|"       %s rebuild [-v] name prov ...\n"
+literal|"       %s insert [-hiv] [-p priority] name prov ...\n"
+literal|"       %s remove [-v] name prov ...\n"
+literal|"       %s activate [-v] name prov ...\n"
+literal|"       %s deactivate [-v] name prov ...\n"
+literal|"       %s forget name ...\n"
+literal|"       %s stop [-fv] name ...\n"
 argument_list|,
 name|comm
 argument_list|,

@@ -289,7 +289,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s create [-v]<name><dev>\n"
+literal|"usage: %s create [-v] name dev\n"
 argument_list|,
 name|name
 argument_list|)
@@ -298,7 +298,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s destroy [-fv]<name> [name2 [...]]\n"
+literal|"       %s destroy [-fv] name ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -307,7 +307,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s label [-v]<name><dev>\n"
+literal|"       %s label [-v] name dev\n"
 argument_list|,
 name|name
 argument_list|)
@@ -316,7 +316,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s stop [-fv]<name> [name2 [...]]\n"
+literal|"       %s stop [-fv] name ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -325,7 +325,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s clear [-v]<dev1> [dev2 [...]]\n"
+literal|"       %s clear [-v] dev ...\n"
 argument_list|,
 name|name
 argument_list|)
@@ -334,7 +334,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s dump<dev1> [dev2 [...]]\n"
+literal|"       %s dump dev ...\n"
 argument_list|,
 name|name
 argument_list|)
