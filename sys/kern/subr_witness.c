@@ -1609,7 +1609,7 @@ name|LO_INITIALIZED
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lock (%s) %s is already initialized!\n"
+literal|"%s: lock (%s) %s is already initialized"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1646,7 +1646,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lock (%s) %s can not be recursable!\n"
+literal|"%s: lock (%s) %s can not be recursable"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1683,7 +1683,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lock (%s) %s can not be sleepable!\n"
+literal|"%s: lock (%s) %s can not be sleepable"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1720,7 +1720,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lock (%s) %s can not be upgradable!\n"
+literal|"%s: lock (%s) %s can not be upgradable"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1867,7 +1867,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"%s: lock (%s) %s is not initialized!\n"
+literal|"%s: lock (%s) %s is not initialized"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2122,7 +2122,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -3481,7 +3481,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -3739,7 +3739,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -4527,7 +4527,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -6979,7 +6979,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
@@ -7111,7 +7111,7 @@ operator|!
 name|witness_cold
 argument_list|,
 operator|(
-literal|"%s: witness_cold\n"
+literal|"%s: witness_cold"
 operator|,
 name|__func__
 operator|)
