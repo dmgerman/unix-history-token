@@ -1399,8 +1399,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AN_AUTHTYPE_EXCLUDE_UNENCRYPTED
-value|0x0004
+name|AN_AUTHTYPE_PRIVACY_IN_USE
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AN_AUTHTYPE_ALLOW_UNENCRYPTED
+value|0x0200
 end_define
 
 begin_define
