@@ -998,7 +998,7 @@ block|}
 if|if
 condition|(
 name|off
-operator|==
+operator|>=
 name|dsize
 condition|)
 block|{
