@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.44 1995/12/07 10:34:05 peter Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.45 1996/02/02 06:44:02 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -577,12 +577,12 @@ block|,
 block|{
 literal|"Australia"
 block|,
-literal|"ftp.physics.usyd.edu.au"
+literal|"ftp.au.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.physics.usyd.edu.au/FreeBSD/"
+literal|"=ftp://ftp.au.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -592,12 +592,117 @@ block|,
 block|{
 literal|"Australia #2"
 block|,
-literal|"minnie.cs.adfa.oz.au"
+literal|"ftp2.au.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://minnie.cs.adfa.oz.au/FreeBSD/"
+literal|"=ftp://ftp2.au.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Australia #3"
+block|,
+literal|"ftp3.au.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.au.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Australia #4"
+block|,
+literal|"ftp4.au.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp4.au.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Brazil"
+block|,
+literal|"ftp.br.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.br.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Brazil #2"
+block|,
+literal|"ftp2.br.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.br.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Brazil #3"
+block|,
+literal|"ftp3.br.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp3.br.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Brazil #4"
+block|,
+literal|"ftp4.br.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp4.br.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Brazil #5"
+block|,
+literal|"ftp5.br.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp5.br.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -607,12 +712,27 @@ block|,
 block|{
 literal|"Canada"
 block|,
-literal|"ftp.synapse.net"
+literal|"ftp.ca.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.synapse.net/contrib/FreeBSD/"
+literal|"=ftp://ftp.ca.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Czech Republic"
+block|,
+literal|"sunsite.mff.cuni.cz"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://sunsite.mff.cuni.cz/OS/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -652,12 +772,12 @@ block|,
 block|{
 literal|"Germany"
 block|,
-literal|"ftp.fb9dv.uni-duisburg.de"
+literal|"ftp.de.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.fb9dv.uni-duisburg.de/pub/unix/FreeBSD/"
+literal|"=ftp://ftp.de.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -667,12 +787,12 @@ block|,
 block|{
 literal|"Germany #2"
 block|,
-literal|"gil.physik.rwth-aachen.de"
+literal|"ftp2.de.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://gil.physik.rwth-aachen.de/pub/FreeBSD/"
+literal|"=ftp://ftp2.de.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -682,12 +802,12 @@ block|,
 block|{
 literal|"Germany #3"
 block|,
-literal|"ftp.uni-paderborn.de"
+literal|"ftp3.de.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.uni-paderborn.de/freebsd/"
+literal|"=ftp://ftp3.de.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -697,12 +817,12 @@ block|,
 block|{
 literal|"Germany #4"
 block|,
-literal|"ftp.leo.org"
+literal|"ftp4.de.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.leo.org/pub/comp/os/bsd/FreeBSD/"
+literal|"=ftp://ftp4.de.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -712,12 +832,42 @@ block|,
 block|{
 literal|"Germany #5"
 block|,
-literal|"ftp.tu-dresden.de"
+literal|"ftp5.de.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tu-dresden.de/pub/soft/unix/bsd/FreeBSD/"
+literal|"=ftp://ftp5.de.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Germany #6"
+block|,
+literal|"ftp6.de.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp6.de.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Germany #7"
+block|,
+literal|"ftp7.de.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp7.de.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -742,12 +892,12 @@ block|,
 block|{
 literal|"Ireland"
 block|,
-literal|"ftp.internet-eireann.ie"
+literal|"ftp.ie.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.internet-eireann.ie/pub/FreeBSD/"
+literal|"=ftp://ftp.ie.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -770,14 +920,29 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Japan"
+literal|"Israel #2"
 block|,
-literal|"ftp.tokyonet.ad.jp"
+literal|"xray4.weizmann.ac.il"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tokyonet.ad.jp/pub/FreeBSD/"
+literal|"=ftp://xray4.weizmann.ac.il/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Japan"
+block|,
+literal|"ftp.jp.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -787,12 +952,12 @@ block|,
 block|{
 literal|"Japan #2"
 block|,
-literal|"ftp.nisiq.net"
+literal|"ftp2.jp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.nisiq.net/pub/os/FreeBSD/"
+literal|"=ftp://ftp2.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -802,12 +967,12 @@ block|,
 block|{
 literal|"Japan #3"
 block|,
-literal|"ftp.iij.ad.jp"
+literal|"ftp3.jp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.iij.ad.jp/pub/FreeBSD/"
+literal|"=ftp://ftp3.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -817,12 +982,12 @@ block|,
 block|{
 literal|"Japan #4"
 block|,
-literal|"ftp.kuis.kyoto-u.ac.jp"
+literal|"ftp4.jp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.kuis.kyoto-u.ac.jp/BSD/FreeBSD/"
+literal|"=ftp://ftp4.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -832,12 +997,12 @@ block|,
 block|{
 literal|"Japan #5"
 block|,
-literal|"ftp.ee.uec.ac.jp"
+literal|"ftp5.jp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ee.uec.ac.jp/pub/os/mirror/ftp.freebsd.org/"
+literal|"=ftp://ftp5.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -847,12 +1012,12 @@ block|,
 block|{
 literal|"Japan #6"
 block|,
-literal|"ftp.u-aizu.ac.jp"
+literal|"ftp6.jp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.u-aizu.ac.jp/pub/os/FreeBSD/"
+literal|"=ftp://ftp6.jp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -862,12 +1027,27 @@ block|,
 block|{
 literal|"Korea"
 block|,
-literal|"ftp.cau.ac.kr"
+literal|"ftp.kr.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.cau.ac.kr/pub/FreeBSD/"
+literal|"=ftp://ftp.kr.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Korea #2"
+block|,
+literal|"ftp2.kr.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.kr.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -905,6 +1085,21 @@ literal|0
 block|}
 block|,
 block|{
+literal|"Portugal"
+block|,
+literal|"ftp.ua.pt"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.ua.pt/pub/misc/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"Russia"
 block|,
 literal|"ftp.kiae.su"
@@ -913,6 +1108,36 @@ name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
 literal|"=ftp://ftp.kiae.su/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"South Africa"
+block|,
+literal|"ftp.za.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.za.freebsd.org/pub/FreeBSD/"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"South Africa #2"
+block|,
+literal|"ftp2.za.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp2.za.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -937,6 +1162,21 @@ block|,
 block|{
 literal|"Taiwan"
 block|,
+literal|"ftp.tw.freebsd.org"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+name|VAR_FTP_PATH
+literal|"=ftp://ftp.tw.freebsd.org/pub/FreeBSD"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|"Taiwan #2"
+block|,
 literal|"NCTUCCCA.edu.tw"
 block|,
 name|DMENU_SET_VARIABLE
@@ -950,7 +1190,7 @@ literal|0
 block|}
 block|,
 block|{
-literal|"Taiwan #2"
+literal|"Taiwan #3"
 block|,
 literal|"netbsd.csie.nctu.edu.tw"
 block|,
@@ -982,12 +1222,12 @@ block|,
 block|{
 literal|"UK"
 block|,
-literal|"ftp.demon.co.uk"
+literal|"ftp.uk.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.demon.co.uk/pub/BSD/FreeBSD/"
+literal|"=ftp://ftp.uk.freebsd.org/pub/BSD/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -997,12 +1237,12 @@ block|,
 block|{
 literal|"UK #2"
 block|,
-literal|"src.doc.ic.ac.uk"
+literal|"ftp2.uk.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://src.doc.ic.ac.uk/packages/unix/FreeBSD/"
+literal|"=ftp://ftp2.uk.freebsd.org/pub/BSD/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1012,12 +1252,12 @@ block|,
 block|{
 literal|"UK #3"
 block|,
-literal|"unix.hensa.ac.uk"
+literal|"ftp3.uk.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://unix.hensa.ac.uk/mirrors/walnut.creek/FreeBSD/"
+literal|"=ftp://ftp3.uk.freebsd.org/pub/BSD/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1027,12 +1267,12 @@ block|,
 block|{
 literal|"USA"
 block|,
-literal|"ref.tfs.com"
+literal|"ftp.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ref.tfs.com/pub/FreeBSD/"
+literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1042,12 +1282,12 @@ block|,
 block|{
 literal|"USA #2"
 block|,
-literal|"ftp.dataplex.net"
+literal|"ftp2.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.dataplex.net/pub/FreeBSD/"
+literal|"=ftp://ftp2.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1057,12 +1297,12 @@ block|,
 block|{
 literal|"USA #3"
 block|,
-literal|"kryten.atinc.com"
+literal|"ftp3.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://kryten.atinc.com/pub/FreeBSD/"
+literal|"=ftp://ftp3.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1072,12 +1312,12 @@ block|,
 block|{
 literal|"USA #4"
 block|,
-literal|"ftp.neosoft.com"
+literal|"ftp4.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.neosoft.com/systems/FreeBSD/"
+literal|"=ftp://ftp4.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1087,12 +1327,12 @@ block|,
 block|{
 literal|"USA #5"
 block|,
-literal|"ftp.cybernetics.net"
+literal|"ftp5.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.cybernetics.net/pub/FreeBSD/"
+literal|"=ftp://ftp5.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1102,12 +1342,12 @@ block|,
 block|{
 literal|"USA #6"
 block|,
-literal|"ftp.cps.cmich.edu"
+literal|"ftp6.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.cps.cmich.edu/pub/ftp.freebsd.org/"
+literal|"=ftp://ftp6.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
@@ -1117,12 +1357,12 @@ block|,
 block|{
 literal|"USA #7"
 block|,
-literal|"ftp.cslab.vt.edu"
+literal|"ftp7.freebsd.org"
 block|,
 name|DMENU_SET_VARIABLE
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.cslab.vt.edu/pub/FreeBSD/"
+literal|"=ftp://ftp7.freebsd.org/pub/FreeBSD/"
 block|,
 literal|0
 block|,
