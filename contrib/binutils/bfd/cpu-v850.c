@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD support for the NEC V850 processor    Copyright 1996, 1997, 1998, 2000 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD support for the NEC V850 processor    Copyright 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,8 +24,28 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|"safe-ctype.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|boolean
+name|scan
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|bfd_arch_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -66,7 +86,7 @@ name|enum
 name|bfd_architecture
 name|arch
 decl_stmt|;
-comment|/* First test for an exact match */
+comment|/* First test for an exact match.  */
 if|if
 condition|(
 name|strcasecmp
@@ -83,7 +103,7 @@ condition|)
 return|return
 name|true
 return|;
-comment|/* See how much of the supplied string matches with the      architecture, eg the string m68k:68020 would match the m68k entry      up to the :, then we get left with the machine number */
+comment|/* See how much of the supplied string matches with the      architecture, eg the string m68k:68020 would match the m68k entry      up to the :, then we get left with the machine number.  */
 for|for
 control|(
 name|ptr_src
@@ -108,7 +128,6 @@ operator|,
 name|ptr_tst
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|*
@@ -118,8 +137,7 @@ operator|*
 name|ptr_tst
 condition|)
 break|break;
-block|}
-comment|/* Chewed up as much of the architecture as will match, skip any      colons */
+comment|/* Chewed up as much of the architecture as will match;      if there is a colon present skip it.  */
 if|if
 condition|(
 operator|*
@@ -137,26 +155,20 @@ name|ptr_src
 operator|==
 literal|0
 condition|)
-block|{
-comment|/* nothing more, then only keep this one if it is the default 	 machine for this architecture */
+comment|/* Nothing more, then only keep this one if it is        the default machine for this architecture.  */
 return|return
 name|info
 operator|->
 name|the_default
 return|;
-block|}
 name|number
 operator|=
 literal|0
 expr_stmt|;
 while|while
 condition|(
-name|isdigit
+name|ISDIGIT
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|ptr_src
 argument_list|)
@@ -297,7 +309,7 @@ begin_define
 define|#
 directive|define
 name|NEXT
-value|&arch_info_struct[0]
+value|& arch_info_struct[0]
 end_define
 
 begin_decl_stmt

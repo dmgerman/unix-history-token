@@ -4092,6 +4092,17 @@ name|sinfo
 operator|->
 name|htab
 operator|->
+name|first
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+name|sinfo
+operator|->
+name|htab
+operator|->
 name|strings
 condition|)
 name|merge_strings

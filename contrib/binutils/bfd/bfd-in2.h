@@ -5426,11 +5426,11 @@ block|,
 comment|/* IBM s390 */
 define|#
 directive|define
-name|bfd_mach_s390_esa
+name|bfd_mach_s390_31
 value|0
 define|#
 directive|define
-name|bfd_mach_s390_esame
+name|bfd_mach_s390_64
 value|1
 name|bfd_arch_openrisc
 block|,

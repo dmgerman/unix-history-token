@@ -555,24 +555,18 @@ index|[]
 init|=
 block|{
 block|{
-literal|"*DEBUG*"
-block|,
-literal|'N'
-block|}
-block|,
-block|{
 literal|".bss"
 block|,
 literal|'b'
 block|}
 block|,
 block|{
-literal|"zerovars"
+literal|"code"
 block|,
-literal|'b'
+literal|'t'
 block|}
 block|,
-comment|/* MRI .bss */
+comment|/* MRI .text */
 block|{
 literal|".data"
 block|,
@@ -580,12 +574,60 @@ literal|'d'
 block|}
 block|,
 block|{
-literal|"vars"
+literal|"*DEBUG*"
 block|,
-literal|'d'
+literal|'N'
 block|}
 block|,
-comment|/* MRI .data */
+block|{
+literal|".debug"
+block|,
+literal|'N'
+block|}
+block|,
+comment|/* MSVC's .debug (non-standard debug syms) */
+block|{
+literal|".drectve"
+block|,
+literal|'i'
+block|}
+block|,
+comment|/* MSVC's .drective section */
+block|{
+literal|".edata"
+block|,
+literal|'e'
+block|}
+block|,
+comment|/* MSVC's .edata (export) section */
+block|{
+literal|".fini"
+block|,
+literal|'t'
+block|}
+block|,
+comment|/* ELF fini section */
+block|{
+literal|".idata"
+block|,
+literal|'i'
+block|}
+block|,
+comment|/* MSVC's .idata (import) section */
+block|{
+literal|".init"
+block|,
+literal|'t'
+block|}
+block|,
+comment|/* ELF init section */
+block|{
+literal|".pdata"
+block|,
+literal|'p'
+block|}
+block|,
+comment|/* MSVC's .pdata (stack unwind) section */
 block|{
 literal|".rdata"
 block|,
@@ -628,47 +670,19 @@ literal|'t'
 block|}
 block|,
 block|{
-literal|"code"
+literal|"vars"
 block|,
-literal|'t'
+literal|'d'
 block|}
 block|,
-comment|/* MRI .text */
+comment|/* MRI .data */
 block|{
-literal|".drectve"
+literal|"zerovars"
 block|,
-literal|'i'
+literal|'b'
 block|}
 block|,
-comment|/* MSVC's .drective section */
-block|{
-literal|".idata"
-block|,
-literal|'i'
-block|}
-block|,
-comment|/* MSVC's .idata (import) section */
-block|{
-literal|".edata"
-block|,
-literal|'e'
-block|}
-block|,
-comment|/* MSVC's .edata (export) section */
-block|{
-literal|".pdata"
-block|,
-literal|'p'
-block|}
-block|,
-comment|/* MSVC's .pdata (stack unwind) section */
-block|{
-literal|".debug"
-block|,
-literal|'N'
-block|}
-block|,
-comment|/* MSVC's .debug (non-standard debug syms) */
+comment|/* MRI .bss */
 block|{
 literal|0
 block|,
@@ -3246,10 +3260,22 @@ control|)
 block|{
 name|boolean
 name|done
+decl_stmt|,
+name|saw_line
+decl_stmt|,
+name|saw_func
 decl_stmt|;
 name|bfd_vma
 name|val
 decl_stmt|;
+name|saw_line
+operator|=
+name|false
+expr_stmt|;
+name|saw_func
+operator|=
+name|false
+expr_stmt|;
 name|done
 operator|=
 name|false
@@ -3333,8 +3359,12 @@ operator|+
 name|VALOFF
 argument_list|)
 expr_stmt|;
+comment|/* If this line starts before our desired offset, or if it's 	     the first line we've been able to find, use it.  The 	     !saw_line check works around a bug in GCC 2.95.3, which emits 	     the first N_SLINE late.  */
 if|if
 condition|(
+operator|!
+name|saw_line
+operator|||
 name|val
 operator|<=
 name|offset
@@ -3392,6 +3422,10 @@ name|done
 operator|=
 name|true
 expr_stmt|;
+name|saw_line
+operator|=
+name|true
+expr_stmt|;
 break|break;
 case|case
 name|N_FUN
@@ -3399,7 +3433,17 @@ case|:
 case|case
 name|N_SO
 case|:
+if|if
+condition|(
+name|saw_func
+operator|||
+name|saw_line
+condition|)
 name|done
+operator|=
+name|true
+expr_stmt|;
+name|saw_func
 operator|=
 name|true
 expr_stmt|;

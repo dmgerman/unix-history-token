@@ -14430,7 +14430,7 @@ operator|->
 name|symbol
 operator|.
 name|flags
-operator|=
+operator||=
 name|BSF_WEAK
 expr_stmt|;
 if|if
@@ -14455,7 +14455,6 @@ name|n_scnum
 operator|>
 literal|0
 condition|)
-block|{
 name|dst
 operator|->
 name|symbol
@@ -14464,7 +14463,6 @@ name|flags
 operator|=
 name|BSF_LOCAL
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 if|if
@@ -14484,7 +14482,7 @@ operator|->
 name|symbol
 operator|.
 name|flags
-operator|=
+operator||=
 name|BSF_WEAK
 expr_stmt|;
 break|break;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for TMS320C30 coff binaries.    Copyright 1998, 1999, 2000 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* BFD back-end for TMS320C30 coff binaries.    Copyright 1998, 1999, 2000, 2001 Free Software Foundation, Inc.    Contributed by Steven Haworth (steve@pm.cse.rmit.edu.au)     This file is part of BFD, the Binary File Descriptor library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -44,6 +44,82 @@ include|#
 directive|include
 file|"libcoff.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|int
+name|coff_tic30_select_reloc
+name|PARAMS
+argument_list|(
+operator|(
+name|reloc_howto_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|rtype2howto
+name|PARAMS
+argument_list|(
+operator|(
+name|arelent
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|reloc_processing
+name|PARAMS
+argument_list|(
+operator|(
+name|arelent
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|,
+name|asymbol
+operator|*
+operator|*
+operator|,
+name|bfd
+operator|*
+operator|,
+name|asection
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|reloc_howto_type
+modifier|*
+name|tic30_coff_reloc_type_lookup
+name|PARAMS
+argument_list|(
+operator|(
+name|bfd
+operator|*
+operator|,
+name|bfd_reloc_code_real_type
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -323,7 +399,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Turn a howto into a reloc number */
+comment|/* Turn a howto into a reloc number.  */
 end_comment
 
 begin_function
@@ -393,14 +469,14 @@ begin_define
 define|#
 directive|define
 name|SWAP_IN_RELOC_OFFSET
-value|bfd_h_get_32
+value|H_GET_32
 end_define
 
 begin_define
 define|#
 directive|define
 name|SWAP_OUT_RELOC_OFFSET
-value|bfd_h_put_32
+value|H_PUT_32
 end_define
 
 begin_define
@@ -535,7 +611,7 @@ name|internal
 parameter_list|,
 name|relocentry
 parameter_list|)
-value|rtype2howto(internal,relocentry)
+value|rtype2howto (internal, relocentry)
 end_define
 
 begin_comment
@@ -639,7 +715,6 @@ name|r_symndx
 operator|>
 literal|0
 condition|)
-block|{
 name|relent
 operator|->
 name|sym_ptr_ptr
@@ -656,9 +731,7 @@ operator|->
 name|r_symndx
 index|]
 expr_stmt|;
-block|}
 else|else
-block|{
 name|relent
 operator|->
 name|sym_ptr_ptr
@@ -667,7 +740,6 @@ name|bfd_abs_section_ptr
 operator|->
 name|symbol_ptr_ptr
 expr_stmt|;
-block|}
 name|relent
 operator|->
 name|addend

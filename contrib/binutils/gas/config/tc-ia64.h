@@ -922,7 +922,7 @@ define|#
 directive|define
 name|ELF_TC_SPECIAL_SECTIONS
 define|\
-value|{ ".init_array",SHT_INIT_ARRAY,	SHF_ALLOC + SHF_WRITE                   }, \ { ".fini_array",SHT_FINI_ARRAY,	SHF_ALLOC + SHF_WRITE                   }, \ { ".sbss",	SHT_NOBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT }, \ { ".sdata",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT },
+value|{ ".sbss",	SHT_NOBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT }, \ { ".sdata",	SHT_PROGBITS,	SHF_ALLOC + SHF_WRITE + SHF_IA_64_SHORT },
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD back-end for linux flavored i386 a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2001    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD back-end for linux flavored i386 a.out binaries.    Copyright 1992, 1993, 1994, 1995, 1996, 1997, 2001, 2002    Free Software Foundation, Inc.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -1684,6 +1684,37 @@ decl_stmt|;
 name|boolean
 name|exists
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|linux_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 if|if
 condition|(
 name|h

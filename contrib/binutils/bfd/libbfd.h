@@ -3066,7 +3066,7 @@ comment|/* And more follows */
 end_comment
 
 begin_decl_stmt
-name|void
+name|boolean
 name|bfd_write_bigendian_4byte_int
 name|PARAMS
 argument_list|(

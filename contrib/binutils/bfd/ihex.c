@@ -3392,6 +3392,21 @@ operator|+
 name|segbase
 operator|)
 expr_stmt|;
+comment|/* Output records shouldn't cross 64K boundaries.  */
+if|if
+condition|(
+name|rec_addr
+operator|+
+name|now
+operator|>
+literal|0xfffff
+condition|)
+name|now
+operator|=
+literal|0xffff
+operator|-
+name|rec_addr
+expr_stmt|;
 if|if
 condition|(
 operator|!

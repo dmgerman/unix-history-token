@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Generic ECOFF (Extended-COFF) routines.    Copyright 1990, 1991, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.    Original version by Per Bothner.    Full support added by Ian Lance Taylor, ian@cygnus.com.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -20289,6 +20289,48 @@ decl_stmt|;
 name|boolean
 name|strip
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+block|{
+name|h
+operator|=
+operator|(
+expr|struct
+name|ecoff_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_new
+condition|)
+return|return
+name|true
+return|;
+block|}
 comment|/* We need to check if this symbol is being stripped.  */
 if|if
 condition|(
@@ -20870,6 +20912,9 @@ condition|)
 block|{
 default|default:
 case|case
+name|bfd_link_hash_warning
+case|:
+case|case
 name|bfd_link_hash_new
 case|:
 name|abort
@@ -21102,10 +21147,7 @@ break|break;
 case|case
 name|bfd_link_hash_indirect
 case|:
-case|case
-name|bfd_link_hash_warning
-case|:
-comment|/* FIXME: Ignore these for now.  The circumstances under which 	 they should be written out are not clear to me.  */
+comment|/* We ignore these symbols, since the indirected symbol is 	 already in the hash table.  */
 return|return
 name|true
 return|;

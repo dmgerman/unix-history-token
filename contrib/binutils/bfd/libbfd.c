@@ -2242,11 +2242,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* INTERNAL_FUNCTION 	bfd_write_bigendian_4byte_int  SYNOPSIS 	void bfd_write_bigendian_4byte_int (bfd *, unsigned int);  DESCRIPTION 	Write a 4 byte integer @var{i} to the output BFD @var{abfd}, in big 	endian order regardless of what else is going on.  This is useful in 	archives.  */
+comment|/* INTERNAL_FUNCTION 	bfd_write_bigendian_4byte_int  SYNOPSIS 	boolean bfd_write_bigendian_4byte_int (bfd *, unsigned int);  DESCRIPTION 	Write a 4 byte integer @var{i} to the output BFD @var{abfd}, in big 	endian order regardless of what else is going on.  This is useful in 	archives.  */
 end_comment
 
 begin_function
-name|void
+name|boolean
 name|bfd_write_bigendian_4byte_int
 parameter_list|(
 name|abfd
@@ -2278,8 +2278,7 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+return|return
 name|bfd_bwrite
 argument_list|(
 operator|(
@@ -2294,12 +2293,9 @@ literal|4
 argument_list|,
 name|abfd
 argument_list|)
-operator|!=
+operator|==
 literal|4
-condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+return|;
 block|}
 end_function
 

@@ -6416,6 +6416,17 @@ condition|)
 return|return
 name|bfd_reloc_notsupported
 return|;
+comment|/* If we are addressing a Thumb function, we need to adjust the  	 address by one, so that attempts to call the function pointer will 	 correctly interpret it as Thumb code.  */
+if|if
+condition|(
+name|sym_flags
+operator|==
+name|STT_ARM_TFUNC
+condition|)
+name|value
+operator|+=
+literal|1
+expr_stmt|;
 comment|/* Note that sgot->output_offset is not involved in this          calculation.  We always want the start of .got.  If we          define _GLOBAL_OFFSET_TABLE in a different way, as is          permitted by the ABI, we might have to change this          calculation.  */
 name|value
 operator|-=
@@ -6597,6 +6608,17 @@ literal|1
 expr_stmt|;
 else|else
 block|{
+comment|/* If we are addressing a Thumb function, we need to 		     adjust the address by one, so that attempts to 		     call the function pointer will correctly 		     interpret it as Thumb code.  */
+if|if
+condition|(
+name|sym_flags
+operator|==
+name|STT_ARM_TFUNC
+condition|)
+name|value
+operator||=
+literal|1
+expr_stmt|;
 name|bfd_put_32
 argument_list|(
 name|output_bfd
@@ -12987,6 +13009,37 @@ name|elf32_arm_pcrel_relocs_copied
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|type
+operator|==
+name|bfd_link_hash_warning
+condition|)
+name|h
+operator|=
+operator|(
+expr|struct
+name|elf32_arm_link_hash_entry
+operator|*
+operator|)
+name|h
+operator|->
+name|root
+operator|.
+name|root
+operator|.
+name|u
+operator|.
+name|i
+operator|.
+name|link
+expr_stmt|;
 comment|/* We only discard relocs for symbols defined in a regular object.  */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library support routines for the Z800n architecture.    Copyright 1992, 1993, 1994, 2000 Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD library support routines for the Z800n architecture.    Copyright 1992, 1993, 1994, 2000, 2001 Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support.  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -21,6 +21,47 @@ directive|include
 file|"libbfd.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|boolean
+name|scan_mach
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|bfd_arch_info
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|bfd_arch_info_type
+modifier|*
+name|compatible
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|bfd_arch_info_type
+operator|*
+operator|,
+specifier|const
+name|bfd_arch_info_type
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if
@@ -40,13 +81,6 @@ unit|static bfd_reloc_status_type howto16_callback (abfd, reloc_entry, symbol_in
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-name|int
-name|bfd_default_scan_num_mach
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function
 specifier|static
