@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.h,v 1.2 1997/08/04 03:31:23 msmith Exp $  */
+comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.h,v 1.3 1999/07/29 01:49:19 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -224,6 +224,79 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*   * PnP BIOS presence structure  */
+end_comment
+
+begin_struct
+struct|struct
+name|PnPBIOS_table
+block|{
+name|u_int8_t
+name|sig
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* "$PnP */
+name|u_int8_t
+name|version
+decl_stmt|;
+comment|/* should be 0x10 */
+name|u_int8_t
+name|len
+decl_stmt|;
+comment|/* total structure length */
+name|u_int16_t
+name|control
+decl_stmt|;
+comment|/* BIOS feature flags */
+name|u_int8_t
+name|cksum
+decl_stmt|;
+comment|/* checksum */
+name|u_int32_t
+name|evflagaddr
+decl_stmt|;
+comment|/* address of event notificaton flag */
+name|u_int16_t
+name|rmentryoffset
+decl_stmt|;
+comment|/* real-mode entry offset */
+name|u_int16_t
+name|rmentryseg
+decl_stmt|;
+comment|/*                 segment */
+name|u_int16_t
+name|pmentryoffset
+decl_stmt|;
+comment|/* protected-mode entry offset */
+name|u_int32_t
+name|pmentrybase
+decl_stmt|;
+comment|/*                segment base */
+name|u_int32_t
+name|oemdevid
+decl_stmt|;
+comment|/* motherboard EISA ID */
+name|u_int16_t
+name|rmbiosseg
+decl_stmt|;
+comment|/* real-mode BIOS segment */
+name|u_int32_t
+name|pmdataseg
+decl_stmt|;
+comment|/* protected-mode data segment */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_comment
 comment|/*   * Exported lookup results   */
 end_comment
 
@@ -240,16 +313,16 @@ specifier|extern
 name|struct
 name|SMBIOS_table
 modifier|*
-name|SMBIOS_table
+name|SMBIOStable
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|struct
-name|DMI_table
+name|PnPBIOS_table
 modifier|*
-name|DMI_table
+name|PnPBIOStable
 decl_stmt|;
 end_decl_stmt
 
@@ -378,6 +451,217 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * PnP BIOS return codes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PNP_SUCCESS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_NOT_SET_STATICALLY
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_UNKNOWN_FUNCTION
+value|0x81
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_FUNTION_NOT_SUPPORTED
+value|0x82
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_INVALID_HANDLE
+value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_BAD_PARAMETER
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_SET_FAILED
+value|0x85
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_EVENTS_NOT_PENDING
+value|0x86
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_SYSTEM_NOT_DOCKED
+value|0x87
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_NO_ISA_PNP_CARDS
+value|0x88
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_UNABLE_TO_DETERMINE_DOCK_CAPABILITIES
+value|0x89
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_CONFIG_CHANGE_FAILED_NO_BATTERY
+value|0x8a
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_CONFIG_CHANGE_FAILED_RESOURCE_CONFLICT
+value|0x8b
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_BUFFER_TOO_SMALL
+value|0x8c
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_USE_ESCD_SUPPORT
+value|0x8d
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_MESSAGE_NOT_SUPPORTED
+value|0x8e
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_HARDWARE_ERROR
+value|0x8f
+end_define
+
+begin_comment
+comment|/*  * DMI return codes  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMI_SUCCESS
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_UNKNOWN_FUNCTION
+value|0x81
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_FUNCTION_NOT_SUPPORTED
+value|0x82
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_INVALID_HANDLE
+value|0x83
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_BAD_PARAMETER
+value|0x84
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_INVALID_SUBFUNCTION
+value|0x85
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_NO_CHANGE
+value|0x86
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_ADD_STRUCTURE_FAILED
+value|0x87
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_READ_ONLY
+value|0x8d
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_LOCK_NOT_SUPPORTED
+value|0x90
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_CURRENTLY_LOCKED
+value|0x91
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMI_INVALID_LOCK
+value|0x92
+end_define
+
+begin_comment
 comment|/*  * format specifiers and defines for bios16()  *     s	= short (16 bits)  *     i	= int (32 bits)  *     p	= pointer (converted to seg:offset)  *     C,D,U 	= selector (corresponding to code/data/utility segment)  */
 end_comment
 
@@ -496,8 +780,50 @@ end_define
 begin_define
 define|#
 directive|define
-name|PNP_GET_DMI
+name|PNP_GET_DMI_STRUCTURE
 value|"sppUD",	0x51
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_SET_DMI_STRUCTURE
+value|"sppsUD"	0x52
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_GET_DMI_CHANGE
+value|"spUD"		0x53
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_DMI_CONTROL
+value|"sspsUD"	0x54
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_GET_GPNV_INFO
+value|"sppppD"	0x55
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_READ_GPNV_DATA
+value|"ssppUD"	0x56
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNP_WRITE_GPNV_DATA
+value|"sspsUD"	0x57
 end_define
 
 begin_define
