@@ -49,6 +49,13 @@ directive|include
 file|<isa/isavar.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|devclass_t
+name|pmtimer_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* reject any PnP devices for now */
 end_comment
@@ -67,6 +74,67 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|pmtimer_identify
+parameter_list|(
+name|driver_t
+modifier|*
+name|driver
+parameter_list|,
+name|device_t
+name|parent
+parameter_list|)
+block|{
+name|device_t
+name|child
+decl_stmt|;
+comment|/* 	 * Only add a child if one doesn't exist already. 	 */
+name|child
+operator|=
+name|devclass_get_device
+argument_list|(
+name|pmtimer_devclass
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+block|{
+name|child
+operator|=
+name|BUS_ADD_CHILD
+argument_list|(
+name|parent
+argument_list|,
+literal|0
+argument_list|,
+literal|"pmtimer"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|child
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"pmtimer_identify"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -361,6 +429,13 @@ block|{
 comment|/* Device interface */
 name|DEVMETHOD
 argument_list|(
+name|device_identify
+argument_list|,
+name|pmtimer_identify
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|device_probe
 argument_list|,
 name|pmtimer_probe
@@ -410,13 +485,6 @@ literal|1
 block|,
 comment|/* no softc */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pmtimer_devclass
 decl_stmt|;
 end_decl_stmt
 
