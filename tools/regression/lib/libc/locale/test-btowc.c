@@ -73,6 +73,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..2\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
 name|assert
 argument_list|(
@@ -193,12 +198,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS btowc()\n"
+literal|"ok 1 - btowc()\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS wctob()\n"
+literal|"ok 2 - wctob()\n"
 argument_list|)
 expr_stmt|;
 return|return

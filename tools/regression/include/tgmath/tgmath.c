@@ -63,6 +63,14 @@ name|n_long_double_complex
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|currtest
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -1267,7 +1275,7 @@ name|STR
 parameter_list|,
 name|X
 parameter_list|)
-value|do {						\ 	int result = (X);						\ 	if (!result)							\ 		failed = 1;						\ 	printf("%s %s\n", result ? "PASS" : "FAIL", (STR));		\ } while (0)
+value|do {						\ 	currtest++;							\ 	int result = (X);						\ 	if (!result)							\ 		failed = 1;						\ 	printf("%s %d - %s\n", result ? "ok" : "not ok", currtest, (STR));		\ 	fflush(stdout);							\ } while (0)
 end_define
 
 begin_function
@@ -1277,6 +1285,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..60\n"
+argument_list|)
+expr_stmt|;
 comment|/* 7.22#4 */
 name|PRINT
 argument_list|(
@@ -2081,17 +2094,6 @@ name|PASS_COMPLEX_ARG_REAL_RET
 argument_list|(
 name|creal
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s<tgmath.h>\n"
-argument_list|,
-name|failed
-condition|?
-literal|"FAIL"
-else|:
-literal|"PASS"
 argument_list|)
 expr_stmt|;
 block|}

@@ -70,6 +70,11 @@ name|e
 decl_stmt|,
 name|i
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..3\n"
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|ilogb
@@ -165,7 +170,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"PASS ilogb\n"
+literal|"ok 1 - ilogb\n"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -263,7 +268,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"PASS ilogbf\n"
+literal|"ok 2 - ilogbf\n"
 argument_list|)
 expr_stmt|;
 name|assert
@@ -361,7 +366,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"PASS ilogbl\n"
+literal|"ok 3 - ilogbl\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -59,6 +59,11 @@ decl_stmt|;
 name|int
 name|iret
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..2\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * strerror() failure tests. 	 */
 name|errno
 operator|=
@@ -215,7 +220,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS strerror()\n"
+literal|"ok 1 - strerror()\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * strerror_r() failure tests. 	 */
@@ -594,7 +599,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS strerror_r()\n"
+literal|"ok 2 - strerror_r()\n"
 argument_list|)
 expr_stmt|;
 name|exit

@@ -147,6 +147,11 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|setlocale
@@ -1235,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS printfloat\n"
+literal|"ok 1 - printfloat\n"
 argument_list|)
 expr_stmt|;
 return|return

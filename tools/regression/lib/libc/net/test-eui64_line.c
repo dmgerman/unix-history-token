@@ -65,6 +65,15 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|test
+init|=
+literal|0
+decl_stmt|;
+name|test
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|eui64_line
@@ -112,14 +121,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"FAIL: eui64_line(\"%s\")\n"
+literal|"not ok %d - eui64_line(\"%s\")\n"
+argument_list|,
+name|test
 argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"host = %s\n"
+literal|"# host = %s\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -139,7 +150,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"e = %s\n"
+literal|"# e = %s\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -154,7 +165,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"PASS: eui64_line(\"%s\")\n"
+literal|"ok %d - eui64_line(\"%s\")\n"
+argument_list|,
+name|test
 argument_list|,
 name|line
 argument_list|)
@@ -181,6 +194,11 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..6\n"
+argument_list|)
+expr_stmt|;
 name|test_line
 argument_list|(
 name|test_eui64_line_id

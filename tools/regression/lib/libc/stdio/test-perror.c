@@ -115,6 +115,11 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|tmpfil
@@ -374,7 +379,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS perror()\n"
+literal|"ok 1 - perror()\n"
 argument_list|)
 expr_stmt|;
 return|return

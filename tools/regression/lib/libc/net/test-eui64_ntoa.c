@@ -52,6 +52,11 @@ index|[
 name|EUI64_SIZ
 index|]
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|eui64_ntoa
@@ -81,7 +86,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"PASS: eui64_ntoa\n"
+literal|"ok 1 - eui64_ntoa\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -92,14 +97,14 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"a = '%s'\n"
+literal|"# a = '%s'\n"
 argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"FAIL: eui64_ntoa\n"
+literal|"not ok 1 - eui64_ntoa\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -63,9 +63,28 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|curtest
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*-  * This test uses UNIX domain socket pairs to perform some basic exercising  * of kqueue functionality on sockets.  In particular, testing that for read  * and write filters, we see the correct detection of whether reads and  * writes should actually be able to occur.  *  * TODO:  * - Test read/write filters for listen/accept sockets.  * - Handle the XXXRW below regarding datagram sockets.  * - Test that watermark/buffer size "data" fields returned by kqueue are  *   correct.  * - Check that kqueue does something sensible when the remote endpoing is  *   closed.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|OK
+parameter_list|(
+name|testname
+parameter_list|)
+value|printf("ok %d - %s\n", curtest, testname); \ 			curtest++;
+end_define
 
 begin_function
 specifier|static
@@ -91,11 +110,11 @@ modifier|*
 name|rest
 parameter_list|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
+literal|"not ok %d\n"
 argument_list|,
-literal|"FAIL\n"
+name|curtest
 argument_list|)
 expr_stmt|;
 if|if
@@ -104,11 +123,9 @@ name|socktype
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(): %s\n"
+literal|"# %s(): %s\n"
 argument_list|,
 name|func
 argument_list|,
@@ -125,11 +142,9 @@ name|rest
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(%s): %s\n"
+literal|"# %s(%s): %s\n"
 argument_list|,
 name|func
 argument_list|,
@@ -142,11 +157,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(%s, %s): %s\n"
+literal|"# %s(%s, %s): %s\n"
 argument_list|,
 name|func
 argument_list|,
@@ -195,11 +208,13 @@ modifier|*
 name|assertion
 parameter_list|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
+literal|"not ok %d - %s\n"
 argument_list|,
-literal|"FAIL\n"
+name|curtest
+argument_list|,
+name|assertion
 argument_list|)
 expr_stmt|;
 if|if
@@ -208,11 +223,9 @@ name|socktype
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(): assertion %s failed\n"
+literal|"# %s(): assertion %s failed\n"
 argument_list|,
 name|func
 argument_list|,
@@ -226,11 +239,9 @@ name|rest
 operator|==
 name|NULL
 condition|)
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(%s): assertion %s failed\n"
+literal|"# %s(%s): assertion %s failed\n"
 argument_list|,
 name|func
 argument_list|,
@@ -240,11 +251,9 @@ name|assertion
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s(%s, %s): assertion %s failed\n"
+literal|"# %s(%s, %s): assertion %s failed\n"
 argument_list|,
 name|func
 argument_list|,
@@ -358,6 +367,11 @@ argument_list|,
 literal|"EVFILT_READ, EV_ADD"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_READ, EV_ADD"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Confirm not readable to begin with, no I/O yet. 	 */
 name|ts
 operator|.
@@ -408,6 +422,11 @@ argument_list|,
 literal|"EVFILT_READ"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_READ"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -422,6 +441,11 @@ name|socktype
 argument_list|,
 literal|"EVFILT_READ"
 argument_list|,
+literal|"empty socket unreadable"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"empty socket unreadable"
 argument_list|)
 expr_stmt|;
@@ -466,6 +490,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"write one byte"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -484,6 +513,11 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|"write length"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"write one byte length"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Other end should now be readable. 	 */
@@ -536,6 +570,11 @@ argument_list|,
 literal|"EVFILT_READ"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_READ"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -550,6 +589,11 @@ name|socktype
 argument_list|,
 literal|"EVFILT_READ"
 argument_list|,
+literal|"non-empty socket unreadable"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"non-empty socket unreadable"
 argument_list|)
 expr_stmt|;
@@ -590,6 +634,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"read one byte"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -608,6 +657,11 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|"read length"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"read one byte length"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now re-check for readability. 	 */
@@ -660,6 +714,11 @@ argument_list|,
 literal|"EVFILT_READ"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_READ"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -674,6 +733,11 @@ name|socktype
 argument_list|,
 literal|"EVFILT_READ"
 argument_list|,
+literal|"empty socket unreadable"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"empty socket unreadable"
 argument_list|)
 expr_stmt|;
@@ -727,6 +791,11 @@ literal|"kevent"
 argument_list|,
 name|socktype
 argument_list|,
+literal|"EVFILT_READ, EV_DELETE"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"EVFILT_READ, EV_DELETE"
 argument_list|)
 expr_stmt|;
@@ -823,6 +892,11 @@ argument_list|,
 literal|"EVFILT_WRITE, EV_ADD"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILE_WRITE, EV_ADD"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Confirm writable to begin with, no I/O yet. 	 */
 name|ts
 operator|.
@@ -873,6 +947,11 @@ argument_list|,
 literal|"EVFILT_WRITE"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILE_WRITE"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -887,6 +966,11 @@ name|socktype
 argument_list|,
 literal|"EVFILT_WRITE"
 argument_list|,
+literal|"empty socket unwritable"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"empty socket unwritable"
 argument_list|)
 expr_stmt|;
@@ -950,6 +1034,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|len
@@ -972,6 +1061,11 @@ name|socktype
 argument_list|,
 name|NULL
 argument_list|,
+literal|"write length"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"write length"
 argument_list|)
 expr_stmt|;
@@ -1025,6 +1119,11 @@ argument_list|,
 literal|"EVFILT_WRITE"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_WRITE"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|i
@@ -1039,6 +1138,11 @@ name|socktype
 argument_list|,
 literal|"EVFILT_WRITE"
 argument_list|,
+literal|"full socket writable"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
 literal|"full socket writable"
 argument_list|)
 expr_stmt|;
@@ -1095,6 +1199,11 @@ argument_list|,
 literal|"EVFILT_WRITE, EV_DELETE"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"EVFILT_WRITE, EV_DELETE"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1125,6 +1234,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..49\n"
+argument_list|)
+expr_stmt|;
 name|kq
 operator|=
 name|kqueue
@@ -1146,6 +1260,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"kqueue()"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a UNIX domain datagram socket, and attach/test/detach a 	 * read filter on it. 	 */
@@ -1176,6 +1295,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"socketpair() 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1203,6 +1327,11 @@ argument_list|,
 literal|"O_NONBLOCK"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"fcntl() 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1228,6 +1357,11 @@ argument_list|,
 literal|"PF_UNIX, SOCK_DGRAM"
 argument_list|,
 literal|"O_NONBLOCK"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"fnctl() 2"
 argument_list|)
 expr_stmt|;
 name|test_evfilt_read
@@ -1263,6 +1397,11 @@ argument_list|,
 literal|"sv[0]"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|close
@@ -1285,6 +1424,11 @@ argument_list|,
 literal|"PF_UNIX/SOCK_DGRAM"
 argument_list|,
 literal|"sv[1]"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 2"
 argument_list|)
 expr_stmt|;
 if|#
@@ -1323,6 +1467,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"socketpair() 2"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1350,6 +1499,11 @@ argument_list|,
 literal|"O_NONBLOCK"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"fcntl() 3"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1375,6 +1529,11 @@ argument_list|,
 literal|"PF_UNIX, SOCK_STREAM"
 argument_list|,
 literal|"O_NONBLOCK"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"fcntl() 4"
 argument_list|)
 expr_stmt|;
 name|test_evfilt_read
@@ -1410,6 +1569,11 @@ argument_list|,
 literal|"sv[0]"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 3"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|close
@@ -1432,6 +1596,11 @@ argument_list|,
 literal|"PF_UNIX/SOCK_STREAM"
 argument_list|,
 literal|"sv[1]"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 4"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Create a UNIX domain stream socket, and attach/test/detach a 	 * write filter on it. 	 */
@@ -1462,6 +1631,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"socketpair() 3"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1489,6 +1663,11 @@ argument_list|,
 literal|"O_NONBLOCK"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"fcntl() 5"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fcntl
@@ -1514,6 +1693,11 @@ argument_list|,
 literal|"PF_UNIX, SOCK_STREAM"
 argument_list|,
 literal|"O_NONBLOCK"
+argument_list|)
+expr_stmt|;
+name|OK
+argument_list|(
+literal|"fcntl() 6"
 argument_list|)
 expr_stmt|;
 name|test_evfilt_write
@@ -1549,6 +1733,11 @@ argument_list|,
 literal|"sv[0]"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 5"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|close
@@ -1573,6 +1762,11 @@ argument_list|,
 literal|"sv[1]"
 argument_list|)
 expr_stmt|;
+name|OK
+argument_list|(
+literal|"close() 6"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|close
@@ -1594,9 +1788,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|OK
 argument_list|(
-literal|"PASS\n"
+literal|"close() 7"
 argument_list|)
 expr_stmt|;
 return|return

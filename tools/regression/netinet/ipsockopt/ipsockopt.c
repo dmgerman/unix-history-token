@@ -3347,6 +3347,11 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|geteuid
@@ -3460,11 +3465,9 @@ name|PRIV_GETROOT
 argument_list|)
 expr_stmt|;
 block|}
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS\n"
+literal|"ok 1 - ipsockopt\n"
 argument_list|)
 expr_stmt|;
 name|exit

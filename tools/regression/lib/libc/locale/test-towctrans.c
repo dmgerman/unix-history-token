@@ -106,6 +106,11 @@ name|towupper
 block|}
 block|, 	}
 struct|;
+name|printf
+argument_list|(
+literal|"1..2\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
 for|for
 control|(
@@ -357,12 +362,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS towctrans()\n"
+literal|"ok 1 - towctrans()\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS wctrans()\n"
+literal|"ok 2 - wctrans()\n"
 argument_list|)
 expr_stmt|;
 return|return

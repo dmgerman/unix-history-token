@@ -285,6 +285,11 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 name|init_exceptsets
 argument_list|()
 expr_stmt|;
@@ -314,7 +319,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS fenv\n"
+literal|"ok 1 - fenv\n"
 argument_list|)
 expr_stmt|;
 return|return

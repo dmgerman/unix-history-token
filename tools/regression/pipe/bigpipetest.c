@@ -224,6 +224,11 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pipe
@@ -421,6 +426,11 @@ name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ok 1\n"
 argument_list|)
 expr_stmt|;
 name|exit

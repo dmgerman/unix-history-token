@@ -97,6 +97,11 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 name|MB_CUR_MAX
@@ -634,7 +639,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS wcrtomb()\n"
+literal|"ok 1 - wcrtomb()\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -75,6 +75,11 @@ index|[
 name|IVEC_LEN
 index|]
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -174,7 +179,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"PASS heapsort\n"
+literal|"ok 1 - heapsort\n"
 argument_list|)
 expr_stmt|;
 return|return

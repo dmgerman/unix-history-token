@@ -166,6 +166,11 @@ name|iswxdigit
 block|}
 block|}
 struct|;
+name|printf
+argument_list|(
+literal|"1..2\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * C/POSIX locale. 	 */
 for|for
 control|(
@@ -417,12 +422,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS iswctype()\n"
+literal|"ok 1 - iswctype()\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS wctype()\n"
+literal|"ok 2 - wctype()\n"
 argument_list|)
 expr_stmt|;
 return|return

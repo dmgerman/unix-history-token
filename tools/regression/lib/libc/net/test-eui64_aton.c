@@ -60,6 +60,15 @@ index|[
 name|EUI64_SIZ
 index|]
 decl_stmt|;
+specifier|static
+name|int
+name|test
+init|=
+literal|0
+decl_stmt|;
+name|test
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|eui64_aton
@@ -92,7 +101,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"FAIL: eui64_aton(%s)\n"
+literal|"not ok %d - : eui64_aton(%s)\n"
+argument_list|,
+name|test
 argument_list|,
 name|str
 argument_list|)
@@ -112,7 +123,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"got: %s\n"
+literal|"# got: %s\n"
 argument_list|,
 name|buf
 argument_list|)
@@ -127,7 +138,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"PASS: eui64_aton(%s)\n"
+literal|"ok %d - eui64_aton(%s)\n"
+argument_list|,
+name|test
 argument_list|,
 name|str
 argument_list|)
@@ -154,6 +167,11 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
+name|printf
+argument_list|(
+literal|"1..5\n"
+argument_list|)
+expr_stmt|;
 name|test_str
 argument_list|(
 name|test_eui64_id_ascii

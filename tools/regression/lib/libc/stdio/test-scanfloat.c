@@ -139,6 +139,11 @@ name|f
 init|=
 literal|0.0
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 name|buf
 index|[
 literal|0
@@ -1026,7 +1031,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PASS scanfloat\n"
+literal|"ok 1 - scanfloat\n"
 argument_list|)
 expr_stmt|;
 return|return

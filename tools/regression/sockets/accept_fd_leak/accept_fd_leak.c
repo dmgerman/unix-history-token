@@ -105,6 +105,11 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"1..1\n"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Check for sequential fd allocation, and give up early if not. 	 */
 name|fd1
 operator|=
@@ -467,12 +472,9 @@ name|fd2
 operator|+
 literal|2
 condition|)
-name|errx
+name|printf
 argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"FAIL (%d, %d, %d)\n"
+literal|"not ok 1 - (%d, %d, %d)\n"
 argument_list|,
 name|fd1
 argument_list|,
@@ -482,11 +484,9 @@ name|fd3
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS\n"
+literal|"ok 1\n"
 argument_list|)
 expr_stmt|;
 return|return
