@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.2 %G%"
+literal|"@(#)fio.c	1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,21 +128,6 @@ literal|1
 expr_stmt|;
 name|flag
 operator|=
-name|MUSED
-expr_stmt|;
-if|if
-condition|(
-name|value
-argument_list|(
-literal|"hold"
-argument_list|)
-operator|!=
-name|NOSTR
-condition|)
-name|flag
-operator|=
-name|MPRESERVE
-operator||
 name|MUSED
 expr_stmt|;
 for|for
