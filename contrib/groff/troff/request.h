@@ -286,17 +286,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|no_break_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// indicates whether request was invoked with . or '
-end_comment
-
-begin_decl_stmt
 name|class
 name|charinfo
 decl_stmt|;

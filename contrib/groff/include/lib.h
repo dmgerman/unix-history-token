@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989-2000 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_extern
@@ -23,13 +23,10 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|__BORLANDC__
 specifier|const
 name|char
 modifier|*
-name|itoa
+name|i_to_a
 parameter_list|(
 name|int
 parameter_list|)
@@ -37,126 +34,21 @@ function_decl|;
 specifier|const
 name|char
 modifier|*
-name|iftoa
+name|if_to_a
 parameter_list|(
 name|int
 parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
-comment|/* __BORLANDC__ */
 block|}
 end_extern
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDLIB_H_DECLARES_GETOPT
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<groff-getopt.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not STDLIB_H_DECLARES_GETOPT */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNISTD_H_DECLARES_GETOPT
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* not UNISTD_H_DECLARES_GETOPT */
-end_comment
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-name|int
-name|getopt
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-specifier|const
-modifier|*
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-block|}
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not UNISTD_H_DECLARES_GETOPT */
-end_comment
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|extern
-name|int
-name|opterr
-decl_stmt|;
-block|}
-end_extern
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not STDLIB_H_DECLARES_GETOPT */
-end_comment
 
 begin_function_decl
 name|char
@@ -190,15 +82,47 @@ begin_function_decl
 name|FILE
 modifier|*
 name|xtmpfile
-parameter_list|()
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+name|namep
+init|=
+literal|0
+parameter_list|,
+name|char
+modifier|*
+name|postfix
+init|=
+literal|0
+parameter_list|,
+name|int
+name|do_unlink
+init|=
+literal|1
+parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STDIO_H_DECLARES_POPEN
-end_ifndef
+begin_function_decl
+name|char
+modifier|*
+name|xtmptemplate
+parameter_list|(
+name|char
+modifier|*
+name|extension
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_POPEN
+end_ifdef
 
 begin_extern
 extern|extern
@@ -226,14 +150,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not STDIO_H_DECLARES_POPEN */
+comment|/* NEED_DECLARATION_POPEN */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|STDIO_H_DECLARES_PCLOSE
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEED_DECLARATION_PCLOSE
+end_ifdef
 
 begin_extern
 extern|extern
@@ -255,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not STDIO_H_DECLARES_PCLOSE */
+comment|/* NEED_DECLARATION_PCLOSE */
 end_comment
 
 begin_function_decl
@@ -299,6 +223,54 @@ index|]
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRCASECMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|strcasecmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|strcmp((a),(b))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_STRNCASECMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|strncasecmp
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|strncmp((a),(b),(c))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
