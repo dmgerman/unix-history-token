@@ -59,6 +59,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -191,7 +197,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6lu %4qd "
+literal|"%6lu %4"
+name|PRId64
+literal|" "
 argument_list|,
 operator|(
 name|u_long
@@ -297,7 +305,9 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8qd "
+literal|"%8"
+name|PRId64
+literal|" "
 argument_list|,
 name|sb
 operator|->
