@@ -2372,14 +2372,6 @@ name|cdp
 operator|->
 name|refcnt
 expr_stmt|;
-name|dev
-operator|->
-name|si_bsize_phys
-operator|=
-name|cdp
-operator|->
-name|block_size
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2702,7 +2694,7 @@ name|bio
 modifier|*
 name|bp
 init|=
-name|bioq_first
+name|bioq_takefirst
 argument_list|(
 operator|&
 name|cdp
@@ -2727,16 +2719,6 @@ operator|!
 name|bp
 condition|)
 return|return;
-name|bioq_remove
-argument_list|(
-operator|&
-name|cdp
-operator|->
-name|bio_queue
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 comment|/* Should reject all queued entries if media have changed. */
 if|if
 condition|(
