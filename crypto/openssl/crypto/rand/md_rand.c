@@ -956,6 +956,9 @@ decl_stmt|,
 name|st_idx
 decl_stmt|;
 name|int
+name|num_ceil
+decl_stmt|;
+name|int
 name|ok
 decl_stmt|;
 name|long
@@ -1034,6 +1037,40 @@ return|;
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|num
+operator|<=
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+comment|/* round upwards to multiple of MD_DIGEST_LENGTH/2 */
+name|num_ceil
+operator|=
+operator|(
+literal|1
+operator|+
+operator|(
+name|num
+operator|-
+literal|1
+operator|)
+operator|/
+operator|(
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
+operator|)
+operator|)
+operator|*
+operator|(
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
+operator|)
+expr_stmt|;
 comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the top 10 bytes from the 	 * local 'md' (which is initialized from the global 'md' 	 * before any bytes are generated), the bytes that are 	 * to be overwritten by the random bytes, and bytes from the 	 * 'state' (incrementing looping index).  From this digest output 	 * (which is kept in 'md'), the top (up to) 10 bytes are 	 * returned to the caller and the bottom (up to) 10 bytes are xored 	 * into the 'state'. 	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
 if|if
 condition|(
@@ -1194,7 +1231,7 @@ argument_list|)
 expr_stmt|;
 name|state_index
 operator|+=
-name|num
+name|num_ceil
 expr_stmt|;
 if|if
 condition|(
@@ -1206,7 +1243,7 @@ name|state_index
 operator|%=
 name|state_num
 expr_stmt|;
-comment|/* state[st_idx], ..., state[(st_idx + num - 1) % st_num] 	 * are now ours (but other threads may use them too) */
+comment|/* state[st_idx], ..., state[(st_idx + num_ceil - 1) % st_num] 	 * are now ours (but other threads may use them too) */
 name|md_count
 index|[
 literal|0
@@ -1231,6 +1268,7 @@ operator|>
 literal|0
 condition|)
 block|{
+comment|/* num_ceil -= MD_DIGEST_LENGTH/2 */
 name|j
 operator|=
 operator|(
@@ -1295,19 +1333,9 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-operator|&
-operator|(
 name|local_md
-index|[
-name|MD_DIGEST_LENGTH
-operator|/
-literal|2
-index|]
-operator|)
 argument_list|,
 name|MD_DIGEST_LENGTH
-operator|/
-literal|2
 argument_list|)
 expr_stmt|;
 name|MD_Update
@@ -1355,7 +1383,9 @@ operator|=
 operator|(
 name|st_idx
 operator|+
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 operator|)
 operator|-
 name|st_num
@@ -1380,7 +1410,9 @@ name|st_idx
 index|]
 operator|)
 argument_list|,
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 operator|-
 name|k
 argument_list|)
@@ -1416,7 +1448,9 @@ name|st_idx
 index|]
 operator|)
 argument_list|,
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 argument_list|)
 expr_stmt|;
 name|MD_Final
@@ -1435,7 +1469,9 @@ literal|0
 init|;
 name|i
 operator|<
-name|j
+name|MD_DIGEST_LENGTH
+operator|/
+literal|2
 condition|;
 name|i
 operator|++
@@ -1453,6 +1489,22 @@ name|i
 index|]
 expr_stmt|;
 comment|/* may compete with other threads */
+if|if
+condition|(
+name|st_idx
+operator|>=
+name|st_num
+condition|)
+name|st_idx
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+name|j
+condition|)
 operator|*
 operator|(
 name|buf
@@ -1467,16 +1519,6 @@ name|MD_DIGEST_LENGTH
 operator|/
 literal|2
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|st_idx
-operator|>=
-name|st_num
-condition|)
-name|st_idx
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}
