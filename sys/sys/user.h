@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|17
+value|16
 end_define
 
 begin_ifdef
@@ -235,7 +235,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|16
+value|15
 end_define
 
 begin_define
@@ -288,7 +288,7 @@ begin_define
 define|#
 directive|define
 name|KI_NSPARE
-value|16
+value|15
 end_define
 
 begin_define
@@ -786,6 +786,11 @@ name|int
 name|ki_numthreads
 decl_stmt|;
 comment|/* XXXKSE number of threads in total */
+name|void
+modifier|*
+name|ki_udata
+decl_stmt|;
+comment|/* User convenience pointer */
 name|long
 name|ki_spare
 index|[
