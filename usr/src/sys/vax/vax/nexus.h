@@ -121,31 +121,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|VAX630
-end_if
-
-begin_define
-define|#
-directive|define
-name|NNEX630
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NEX630
-value|((struct nexus *)0x20088000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
