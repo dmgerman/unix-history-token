@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: chio.c,v 1.1.1.1 1997/03/06 15:30:06 joerg Exp $	*/
+comment|/*	$Id: chio.c,v 1.2 1997/06/02 06:25:19 charnier Exp $	*/
 end_comment
 
 begin_comment
@@ -84,18 +84,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* from crt0.o */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -966,10 +954,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s "
+literal|"usage: chio %s "
 literal|"<from ET><from EU><to ET><to EU> [inv]\n"
-argument_list|,
-name|__progname
 argument_list|,
 name|cname
 argument_list|)
@@ -1300,10 +1286,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<src ET><src EU><dst1 ET><dst1 EU>\n"
+literal|"usage: chio %s<src ET><src EU><dst1 ET><dst1 EU>\n"
 literal|"       [<dst2 ET><dst2 EU>] [inv1] [inv2]\n"
-argument_list|,
-name|__progname
 argument_list|,
 name|cname
 argument_list|)
@@ -1512,9 +1496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<to ET><to EU> [inv]\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s<to ET><to EU> [inv]\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1713,9 +1695,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1818,9 +1798,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -1942,9 +1920,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s<picker>\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s<picker>\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -2344,9 +2320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s %s [<element type>]\n"
-argument_list|,
-name|__progname
+literal|"usage: chio %s [<element type>]\n"
 argument_list|,
 name|cname
 argument_list|)
@@ -2801,9 +2775,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-f changer] command [args ...]\n"
-argument_list|,
-name|__progname
+literal|"usage: chio [-f changer] command [args ...]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
