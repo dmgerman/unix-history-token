@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	6.1	83/07/29	*/
+comment|/*	file.h	6.2	83/09/23	*/
 end_comment
 
 begin_ifdef
@@ -114,8 +114,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* flags */
+comment|/*  * flags- also for fcntl call.  */
 end_comment
 
 begin_define
@@ -147,6 +152,12 @@ begin_comment
 comment|/* descriptor write/send'able */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|F_DUPFD
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -168,6 +179,11 @@ end_define
 begin_comment
 comment|/* append on each write */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -191,6 +207,12 @@ begin_comment
 comment|/* defer for next gc pass */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|F_DUPFD
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -201,6 +223,11 @@ end_define
 begin_comment
 comment|/* signal pgrp when data ready */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -232,20 +259,15 @@ begin_define
 define|#
 directive|define
 name|FMASK
-value|00117
+value|00113
 end_define
 
 begin_define
 define|#
 directive|define
 name|FCNTLCANT
-value|(FREAD|FWRITE|FMARK|FDEFER)
+value|(FREAD|FWRITE|FMARK|FDEFER|FSHLOCK|FEXLOCK)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* open only modes */
@@ -283,6 +305,98 @@ end_define
 begin_comment
 comment|/* error if already created */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|F_DUPFD
+end_ifndef
+
+begin_comment
+comment|/* fcntl(2) requests--from<fcntl.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_DUPFD
+value|0
+end_define
+
+begin_comment
+comment|/* Duplicate fildes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_GETFD
+value|1
+end_define
+
+begin_comment
+comment|/* Get fildes flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETFD
+value|2
+end_define
+
+begin_comment
+comment|/* Set fildes flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_GETFL
+value|3
+end_define
+
+begin_comment
+comment|/* Get file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETFL
+value|4
+end_define
+
+begin_comment
+comment|/* Set file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_GETOWN
+value|5
+end_define
+
+begin_comment
+comment|/* Get owner */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|F_SETOWN
+value|6
+end_define
+
+begin_comment
+comment|/* Set owner */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * User definitions.  */
@@ -329,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|O_NDELAY
-value|004
+value|FNDELAY
 end_define
 
 begin_comment
@@ -340,7 +454,7 @@ begin_define
 define|#
 directive|define
 name|O_APPEND
-value|010
+value|FAPPEND
 end_define
 
 begin_comment
