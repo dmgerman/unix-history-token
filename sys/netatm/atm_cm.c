@@ -8655,7 +8655,7 @@ case|:
 case|case
 name|CPCS_PABORT_SIG
 case|:
-comment|/* 		 * We don't support these (yet), so just fall thru... 		 */
+comment|/* 		 * We don't support these (yet), so just FALLTHROUGH 		 */
 default|default:
 name|log
 argument_list|(

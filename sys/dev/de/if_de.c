@@ -6213,7 +6213,7 @@ name|tulip_probe_state
 operator|=
 name|TULIP_PROBE_PHYRESET
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 block|}
 case|case
 name|TULIP_PROBE_PHYRESET
@@ -6496,7 +6496,7 @@ name|tulip_probe_timeout
 operator|=
 literal|3000
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 block|}
 case|case
 name|TULIP_PROBE_PHYAUTONEG

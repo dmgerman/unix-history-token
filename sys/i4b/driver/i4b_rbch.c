@@ -2150,7 +2150,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through to SDTR */
+comment|/* FALLTHROUGH to SDTR */
 block|}
 case|case
 name|TIOCSDTR

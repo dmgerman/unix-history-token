@@ -23653,7 +23653,7 @@ argument_list|(
 name|yyin
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|EOB_ACT_END_OF_FILE
 case|:

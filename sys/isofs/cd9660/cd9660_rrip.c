@@ -770,7 +770,7 @@ name|cont
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall thru */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
@@ -1009,7 +1009,7 @@ name|cont
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fall thru */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
@@ -1218,7 +1218,7 @@ name|outlen
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:

@@ -8482,7 +8482,7 @@ name|old
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|panic
 argument_list|(
@@ -14842,7 +14842,7 @@ argument_list|(
 literal|"D"
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|HS_BUSY
 case|:
@@ -14861,7 +14861,7 @@ name|host_status
 operator|=
 name|code
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|ncr_complete
 argument_list|(
@@ -16920,7 +16920,7 @@ case|:
 case|case
 name|HS_NEGOTIATE
 case|:
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|HS_DISCONNECT
 case|:
@@ -20252,7 +20252,7 @@ argument_list|,
 name|HS_BUSY
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|SIR_NEGO_PROTO
 case|:
@@ -21343,7 +21343,7 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|SIR_STALL_RESTART
 case|:

@@ -1156,7 +1156,7 @@ name|user
 goto|;
 break|break;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|T_SEGNPFLT
 case|:
@@ -1985,7 +1985,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 			 * Fall through (TRCTRAP kernel mode, kernel address) 			 */
+comment|/* 			 * FALLTHROUGH (TRCTRAP kernel mode, kernel address) 			 */
 case|case
 name|T_BPTFLT
 case|:
@@ -2123,7 +2123,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 comment|/* POWERFAIL_NMI */

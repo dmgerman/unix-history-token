@@ -2663,7 +2663,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* fall though */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
@@ -4234,7 +4234,7 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* fall though */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:
@@ -10305,7 +10305,7 @@ case|case
 literal|0
 case|:
 comment|/* device type packet - shouldn't happen */
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|x
 operator|=

@@ -2319,7 +2319,7 @@ name|rt_genmask
 operator|=
 name|genmask
 expr_stmt|;
-comment|/* 			 * Fall into 			 */
+comment|/* FALLTHROUGH */
 case|case
 name|RTM_LOCK
 case|:

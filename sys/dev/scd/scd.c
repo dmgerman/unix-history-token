@@ -7185,7 +7185,7 @@ argument_list|(
 name|reg
 argument_list|)
 expr_stmt|;
-comment|/* FALL TROUGH */
+comment|/* FALLTHROUGH */
 case|case
 literal|0x50
 case|:

@@ -1908,7 +1908,7 @@ goto|goto
 name|out
 goto|;
 comment|/*            } */
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 default|default:
 name|dump_regs
 argument_list|(

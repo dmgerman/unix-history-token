@@ -1636,7 +1636,7 @@ expr_stmt|;
 comment|/* exception summary */
 break|break;
 block|}
-comment|/* FALLTHROUTH */
+comment|/* FALLTHROUGH */
 case|case
 name|ALPHA_IF_CODE_BPT
 case|:

@@ -2002,7 +2002,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-comment|/* Fall into . . . */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

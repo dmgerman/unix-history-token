@@ -13094,7 +13094,7 @@ name|clk
 operator|=
 name|EIO_CLK8M
 expr_stmt|;
-comment|/* fall thru */
+comment|/* FALLTHROUGH */
 case|case
 name|EIO_8PORTRS
 case|:

@@ -4874,7 +4874,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|'\n'
 case|:

@@ -1605,7 +1605,7 @@ parameter_list|,
 name|delta
 parameter_list|)
 value|{ \ 	    register int xxs; \ 		\ 	    delta = (a).tv_usec - (b).tv_usec; \ 	    if ((xxs = (a).tv_sec - (b).tv_sec)) { \ 	       switch (xxs) { \ 		      case 2: \ 			  delta += 1000000; \
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 value|\ 		      case 1: \ 			  delta += 1000000; \ 			  break; \ 		      default: \ 			  delta += (1000000 * xxs); \ 	       } \ 	    } \ }
 end_define
 

@@ -1843,7 +1843,7 @@ name|write
 operator|=
 literal|1
 expr_stmt|;
-comment|/* fallthrough */
+comment|/* FALLTHROUGH */
 case|case
 name|PT_READ_I
 case|:

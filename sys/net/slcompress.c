@@ -1167,7 +1167,7 @@ operator|==
 name|hlen
 condition|)
 break|break;
-comment|/* (fall through) */
+comment|/* FALLTHROUGH */
 case|case
 name|SPECIAL_I
 case|:

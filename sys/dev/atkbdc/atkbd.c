@@ -3689,7 +3689,7 @@ name|kbd
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|K_RAW
 case|:
@@ -4143,7 +4143,7 @@ name|ks_accents
 operator|=
 literal|0
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 default|default:
 name|splx
 argument_list|(

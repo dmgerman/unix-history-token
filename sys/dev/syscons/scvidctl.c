@@ -2944,7 +2944,7 @@ case|:
 case|case
 name|SW_TEXT_80x60
 case|:
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 comment|/* VGA TEXT MODES */
 case|case
 name|SW_VGA_C40x25
@@ -3246,7 +3246,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|KD_TEXT1
 case|:

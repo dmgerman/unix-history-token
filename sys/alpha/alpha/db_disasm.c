@@ -5033,7 +5033,7 @@ name|fstore
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|op_ldl
 case|:

@@ -6455,7 +6455,7 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-comment|/* fall through... */
+comment|/* FALLTHROUGH */
 case|case
 name|SIOCSIFFLAGS
 case|:
@@ -8302,7 +8302,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* fall through... */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_ACK_SENT
 case|:
@@ -8632,7 +8632,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_ACK_RCVD
 case|:
@@ -8944,7 +8944,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_ACK_RCVD
 case|:
@@ -9046,7 +9046,7 @@ argument_list|,
 name|STATE_REQ_SENT
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_CLOSED
 case|:
@@ -10834,7 +10834,7 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_REQ_SENT
 case|:
@@ -21090,7 +21090,7 @@ name|lcp
 operator|.
 name|max_configure
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|STATE_REQ_SENT
 case|:

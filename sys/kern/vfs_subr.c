@@ -7634,7 +7634,7 @@ name|metadelay
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|delay
 operator|=

@@ -27970,7 +27970,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* Fall Through to 16-bit */
+comment|/* FALLTHROUGH to 16-bit */
 case|case
 name|MSG_EXT_WDTR_BUS_16_BIT
 case|:
@@ -28017,7 +28017,7 @@ name|MSG_EXT_WDTR_BUS_16_BIT
 expr_stmt|;
 break|break;
 block|}
-comment|/* Fall Through to 8-bit */
+comment|/* FALLTHROUGH to 8-bit */
 default|default:
 comment|/* New bus width?? */
 case|case

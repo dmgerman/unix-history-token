@@ -6517,7 +6517,7 @@ name|standby
 operator|=
 literal|1
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|V_DISPLAY_BLANK
 case|:

@@ -5954,9 +5954,9 @@ if|#
 directive|if
 literal|0
 block|switch (state) { 	case PDQS_RING_MEMBER: 	case PDQS_LINK_UNAVAILABLE: 	case PDQS_LINK_AVAILABLE: { 	    PDQ_CSR_WRITE(csrs, csr_port_data_a, PDQ_SUB_CMD_LINK_UNINIT); 	    PDQ_CSR_WRITE(csrs, csr_port_data_b, 0); 	    pdq_do_port_control(csrs, PDQ_PCTL_SUB_CMD); 	    state = PDQ_PSTS_ADAPTER_STATE(PDQ_CSR_READ(csrs, csr_port_status)); 	    PDQ_ASSERT(state == PDQS_DMA_AVAILABLE);
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 block|} 	case PDQS_DMA_AVAILABLE: { 	    PDQ_CSR_WRITE(csrs, csr_port_data_a, 0); 	    PDQ_CSR_WRITE(csrs, csr_port_data_b, 0); 	    pdq_do_port_control(csrs, PDQ_PCTL_DMA_UNINIT); 	    state = PDQ_PSTS_ADAPTER_STATE(PDQ_CSR_READ(csrs, csr_port_status)); 	    PDQ_ASSERT(state == PDQS_DMA_UNAVAILABLE);
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 block|} 	case PDQS_DMA_UNAVAILABLE: { 	    break; 	}     }
 endif|#
 directive|endif

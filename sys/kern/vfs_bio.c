@@ -6396,7 +6396,7 @@ argument_list|)
 operator|)
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|QUEUE_EMPTYKVA
 case|:
@@ -6420,7 +6420,7 @@ argument_list|)
 operator|)
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 name|QUEUE_CLEAN
 case|:

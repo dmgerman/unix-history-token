@@ -945,7 +945,7 @@ name|yearset
 operator|=
 literal|1
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 literal|10
 case|:

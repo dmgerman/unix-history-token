@@ -2504,7 +2504,7 @@ name|start_lbn
 operator|-=
 name|len
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 case|case
 literal|1
 case|:
@@ -2521,9 +2521,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 break|break;
 block|}
 return|return

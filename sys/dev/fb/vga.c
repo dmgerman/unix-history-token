@@ -8800,7 +8800,7 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
@@ -8845,7 +8845,7 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
@@ -8946,7 +8946,7 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
@@ -8982,7 +8982,7 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case
@@ -9029,7 +9029,7 @@ operator|&
 name|params
 argument_list|)
 expr_stmt|;
-comment|/* FALL THROUGH */
+comment|/* FALLTHROUGH */
 endif|#
 directive|endif
 case|case

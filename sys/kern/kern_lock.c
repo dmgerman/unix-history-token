@@ -1010,7 +1010,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* fall into downgrade */
+comment|/* FALLTHROUGH downgrade */
 case|case
 name|LK_DOWNGRADE
 case|:
@@ -1114,7 +1114,7 @@ name|EBUSY
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall into normal upgrade */
+comment|/* FALLTHROUGH normal upgrade */
 case|case
 name|LK_UPGRADE
 case|:
@@ -1309,7 +1309,7 @@ operator|)
 name|lkp
 argument_list|)
 expr_stmt|;
-comment|/* fall into exclusive request */
+comment|/* FALLTHROUGH exclusive request */
 case|case
 name|LK_EXCLUSIVE
 case|:

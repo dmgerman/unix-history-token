@@ -2441,7 +2441,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

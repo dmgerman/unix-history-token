@@ -344,7 +344,7 @@ operator|->
 name|cr_ruid
 condition|)
 break|break;
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(

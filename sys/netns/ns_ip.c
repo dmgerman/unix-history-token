@@ -447,7 +447,7 @@ name|if_flags
 operator||=
 name|IFF_UP
 expr_stmt|;
-comment|/* fall into: */
+comment|/* FALLTHROUGH */
 case|case
 name|SIOCSIFDSTADDR
 case|:

@@ -1191,7 +1191,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* fall throught */
+comment|/* FALLTHROUGH */
 case|case
 name|PPB_FORWARD_IDLE
 case|:

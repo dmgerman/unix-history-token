@@ -3587,7 +3587,7 @@ literal|0
 operator|)
 return|;
 comment|/* XXX */
-comment|/* fall into ... */
+comment|/* FALLTHROUGH */
 default|default:
 if|#
 directive|if

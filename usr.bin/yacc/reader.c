@@ -1233,7 +1233,7 @@ name|cptr
 expr_stmt|;
 break|break;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|cptr
 operator|=
@@ -2261,7 +2261,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* fall through */
+comment|/* FALLTHROUGH */
 default|default:
 name|putc
 argument_list|(

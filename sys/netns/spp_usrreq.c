@@ -7086,7 +7086,7 @@ name|s_oobflags
 operator||=
 name|SF_SOOB
 expr_stmt|;
-comment|/* fall into */
+comment|/* FALLTHROUGH */
 case|case
 name|PRU_SEND
 case|:

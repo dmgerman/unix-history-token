@@ -579,7 +579,7 @@ argument_list|(
 literal|"trouble reading termcap"
 argument_list|)
 expr_stmt|;
-comment|/* fall through to ... */
+comment|/* FALLTHROUGH */
 case|case
 literal|0
 case|:

@@ -6300,7 +6300,7 @@ name|th_seq
 operator|-
 literal|1
 expr_stmt|;
-comment|/* fall into ... */
+comment|/* FALLTHROUGH */
 comment|/* 	 * In ESTABLISHED state: drop duplicate ACKs; ACK out of range 	 * ACKs.  If the ack is in the range 	 *	tp->snd_una< th->th_ack<= tp->snd_max 	 * then advance tp->snd_una to th->th_ack and drop 	 * data from the retransmission queue.  If this ACK reflects 	 * more up to date window information we update our window information. 	 */
 case|case
 name|TCPS_ESTABLISHED

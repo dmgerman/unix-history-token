@@ -1646,7 +1646,7 @@ name|flg
 operator||=
 name|F_WAIT
 expr_stmt|;
-comment|/* Fall into F_SETLK */
+comment|/* FALLTHROUGH F_SETLK */
 case|case
 name|F_SETLK
 case|:

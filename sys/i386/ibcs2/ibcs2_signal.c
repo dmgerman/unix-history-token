@@ -1185,7 +1185,7 @@ goto|goto
 name|ibcs2_sigset
 goto|;
 block|}
-comment|/* else fallthrough to sighold */
+comment|/* else FALLTHROUGH to sighold */
 case|case
 name|IBCS2_SIGHOLD_MASK
 case|:
