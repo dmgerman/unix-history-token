@@ -2686,7 +2686,7 @@ name|NG_NODE_ID
 parameter_list|(
 name|node
 parameter_list|)
-value|_ng_node_ID(node, _NN_)
+value|_ng_node_id(node, _NN_)
 end_define
 
 begin_define
