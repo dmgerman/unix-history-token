@@ -1942,11 +1942,26 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
 name|acctfile
 operator|=
 name|pp
 operator|->
 name|acct_file
+operator|)
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|3
+argument_list|,
+literal|"accounting not enabled for printer %s"
+argument_list|,
+name|s
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
