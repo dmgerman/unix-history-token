@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diffreg.c 4.1 %G%"
+literal|"@(#)diffreg.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -805,6 +805,8 @@ condition|)
 block|{
 name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"diff: "
 argument_list|)
 expr_stmt|;
