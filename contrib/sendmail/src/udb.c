@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.70 (Berkeley) 12/21/1998 (with USERDB)"
+literal|"@(#)udb.c	8.71 (Berkeley) 1/17/1999 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.70 (Berkeley) 12/21/1998 (without USERDB)"
+literal|"@(#)udb.c	8.71 (Berkeley) 1/17/1999 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4619,23 +4619,9 @@ argument|if (tTd(
 literal|28
 argument|,
 literal|1
-argument|)) 			{
-if|#
-directive|if
-name|DB_VERSION_MAJOR
-operator|<
-literal|2
-argument|printf(
+argument|)) 			{ 				printf(
 literal|"_udbx_init: db->close(%s)\n"
-argument|,
-else|#
-directive|else
-argument|printf(
-literal|"_udbx_init: db->close(%s)\n"
-argument|,
-endif|#
-directive|endif
-argument|up->udb_dbname); 			} 		} 	}
+argument|, 					up->udb_dbname); 			} 		} 	}
 endif|#
 directive|endif
 argument|return EX_TEMPFAIL; }  int _udb_parsespec(udbspec, opt, maxopts) 	char *udbspec; 	struct udb_option opt[]; 	int maxopts; { 	register char *spec; 	register char *spec_end; 	register int optnum;  	spec_end = strchr(udbspec,
@@ -4672,23 +4658,9 @@ argument|} 		if (tTd(
 literal|28
 argument|,
 literal|1
-argument|)) 		{
-if|#
-directive|if
-name|DB_VERSION_MAJOR
-operator|<
-literal|2
-argument|printf(
+argument|)) 		{ 			printf(
 literal|"_udbx_init: db->close(%s)\n"
-argument|,
-else|#
-directive|else
-argument|printf(
-literal|"_udbx_init: db->close(%s)\n"
-argument|,
-endif|#
-directive|endif
-argument|up->udb_dbname); 		}
+argument|, 				up->udb_dbname); 		}
 endif|#
 directive|endif
 argument|} }

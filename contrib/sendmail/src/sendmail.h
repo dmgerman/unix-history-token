@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)sendmail.h	8.292 (Berkeley) 11/21/1998  */
+comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)sendmail.h	8.295 (Berkeley) 1/26/1999  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.292		11/21/1998"
+literal|"@(#)sendmail.h	8.295		1/26/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -3053,6 +3053,8 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3531,6 +3533,8 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -8107,23 +8111,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|int
-name|MaxHeaderLines
+name|MaxHeadersLength
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* max lines of headers per message */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|MaxHeaderLineLength
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max length of a header line */
+comment|/* max length of headers */
 end_comment
 
 begin_if

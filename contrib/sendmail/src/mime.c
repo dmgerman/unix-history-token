@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.70 (Berkeley) 11/10/1998"
+literal|"@(#)mime.c	8.71 (Berkeley) 1/18/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -1329,6 +1329,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|e
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1603,6 +1605,8 @@ argument_list|,
 name|hdr
 argument_list|,
 name|e
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -1925,9 +1929,17 @@ name|mci
 operator|->
 name|mci_flags
 argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|M87F_NO8TO7
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
-comment|/* 			**  Skip _unless_ in MIME mode; see putheader() for the 			**  counterpart where this is skipped _if_ in MIME mode. 			*/
+comment|/* 			**  Skip _unless_ in MIME mode and potentially 			**  converting from 8 bit to 7 bit MIME.  See 			**  putheader() for the counterpart where the 			**  CTE header is skipped in the opposite 			**  situation. 			*/
 name|snprintf
 argument_list|(
 name|buf

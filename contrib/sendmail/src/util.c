@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.167 (Berkeley) 12/1/1998"
+literal|"@(#)util.c	8.168 (Berkeley) 1/21/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -3462,6 +3462,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|save_errno
+decl_stmt|;
 if|if
 condition|(
 name|fp
@@ -3523,10 +3526,6 @@ argument_list|,
 name|during
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 name|buf
 index|[
 literal|0
@@ -3563,6 +3562,10 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|NULL
@@ -3585,6 +3588,10 @@ comment|/* try to read */
 name|p
 operator|=
 name|NULL
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -3633,6 +3640,10 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 comment|/* clear the event if it has not sprung */
 name|clrevent
 argument_list|(
@@ -3675,6 +3686,10 @@ operator|)
 name|getpid
 argument_list|()
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
 expr_stmt|;
 return|return
 operator|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.366 (Berkeley) 12/18/1998"
+literal|"@(#)deliver.c	8.367 (Berkeley) 1/18/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -8593,6 +8593,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+name|M87F_OUTER
 argument_list|)
 expr_stmt|;
 call|(
@@ -15420,6 +15422,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+name|M87F_OUTER
 argument_list|)
 expr_stmt|;
 call|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.139 (Berkeley) 8/5/1998"
+literal|"@(#)savemail.c	8.140 (Berkeley) 1/18/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -1372,6 +1372,8 @@ operator|->
 name|e_header
 argument_list|,
 name|e
+argument_list|,
+name|M87F_OUTER
 argument_list|)
 expr_stmt|;
 call|(
@@ -5039,6 +5041,8 @@ argument_list|,
 name|e
 operator|->
 name|e_parent
+argument_list|,
+name|M87F_OUTER
 argument_list|)
 expr_stmt|;
 if|if

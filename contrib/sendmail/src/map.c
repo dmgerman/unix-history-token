@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.256 (Berkeley) 11/15/1998"
+literal|"@(#)map.c	8.261 (Berkeley) 2/2/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -8532,7 +8532,8 @@ literal|0
 condition|)
 else|#
 directive|else
-comment|/* 	**  Berkeley DB can use internal shared memory 	**  locking for its memory pool.  Closing a map 	**  opened by another process will interfere 	**  with the shared memory and locks of the parent 	**  process leaving things in a bad state. 	** 	**  If this map was not opened by the current 	**  process, do not close it here but recover 	**  the file descriptor. 	*/
+comment|/* 	**  Berkeley DB can use internal shared memory 	**  locking for its memory pool.  Closing a map 	**  opened by another process will interfere 	**  with the shared memory and locks of the parent 	**  process leaving things in a bad state. 	*/
+comment|/* 	**  If this map was not opened by the current 	**  process, do not close the map but recover 	**  the file descriptor. 	*/
 if|if
 condition|(
 name|map
@@ -11816,7 +11817,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|LDAP_VERSION3
+name|USE_LDAP_INIT
 name|ld
 operator|=
 name|ldap_init
@@ -11916,7 +11917,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|LDAP_VERSION3
+name|USE_LDAP_SET_OPTION
 name|ldap_set_option
 argument_list|(
 name|ld
@@ -11959,22 +11960,20 @@ name|ld
 argument_list|,
 name|LDAP_OPT_REFERRALS
 argument_list|,
-operator|&
+name|bitset
+argument_list|(
+name|LDAP_OPT_REFERRALS
+argument_list|,
 name|lmap
 operator|->
 name|ldap_options
 argument_list|)
+condition|?
+name|LDAP_OPT_ON
+else|:
+name|LDAP_OPT_OFF
+argument_list|)
 expr_stmt|;
-comment|/* ld needs to be cast into the map struct */
-name|lmap
-operator|->
-name|ld
-operator|=
-name|ld
-expr_stmt|;
-return|return
-name|TRUE
-return|;
 else|#
 directive|else
 comment|/* From here on in we can use ldap internal timelimits */
@@ -12010,6 +12009,23 @@ name|lmap
 operator|->
 name|ldap_options
 expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_LDAP_INIT
+comment|/* ld needs to be cast into the map struct */
+name|lmap
+operator|->
+name|ld
+operator|=
+name|ld
+expr_stmt|;
+return|return
+name|TRUE
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|ldap_bind_s
@@ -12082,12 +12098,12 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LDAP_MAP_CLOSE -- close ldap map */
+comment|/* **  LDAP_MAP_STOP -- close the ldap connection */
 end_comment
 
 begin_function
 name|void
-name|ldap_map_close
+name|ldap_map_stop
 parameter_list|(
 name|map
 parameter_list|)
@@ -12118,11 +12134,42 @@ name|ld
 operator|!=
 name|NULL
 condition|)
+block|{
 name|ldap_unbind
 argument_list|(
 name|lmap
 operator|->
 name|ld
+argument_list|)
+expr_stmt|;
+name|lmap
+operator|->
+name|ld
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/* **  LDAP_MAP_CLOSE -- close ldap map */
+end_comment
+
+begin_function
+name|void
+name|ldap_map_close
+parameter_list|(
+name|map
+parameter_list|)
+name|MAP
+modifier|*
+name|map
+decl_stmt|;
+block|{
+name|ldap_map_stop
+argument_list|(
+name|map
 argument_list|)
 expr_stmt|;
 block|}
@@ -12656,8 +12703,8 @@ operator|!=
 name|LDAP_SUCCESS
 condition|)
 block|{
-comment|/* try close/opening map */
-name|ldap_map_close
+comment|/* try stopping/starting map */
+name|ldap_map_stop
 argument_list|(
 name|map
 argument_list|)
@@ -12961,7 +13008,7 @@ operator|->
 name|res
 argument_list|)
 expr_stmt|;
-name|ldap_map_close
+name|ldap_map_stop
 argument_list|(
 name|map
 argument_list|)
