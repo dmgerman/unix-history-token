@@ -424,12 +424,6 @@ begin_comment
 comment|/* allocated and key is on card */
 end_comment
 
-begin_struct_decl
-struct_decl|struct
-name|rndstate_test
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * Holds data specific to a single HIFN board.  */
 end_comment
