@@ -5161,6 +5161,24 @@ operator|(
 name|EBADF
 operator|)
 return|;
+if|if
+condition|(
+name|fdescp
+operator|->
+name|fd_ofiles
+index|[
+name|fd
+index|]
+operator|->
+name|f_type
+operator|==
+name|DTYPE_KQUEUE
+condition|)
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 comment|/* 	 * Now replace the integer FDs with pointers to 	 * the associated global file table entry.. 	 * Allocate a bigger buffer as necessary. But if an cluster is not 	 * enough, return E2BIG. 	 */
 name|newlen
