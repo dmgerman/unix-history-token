@@ -247,7 +247,7 @@ end_define
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|hisctladdr
 decl_stmt|;
 end_decl_stmt
@@ -263,7 +263,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|sockaddr_in
+name|sockaddr_storage
 name|myctladdr
 decl_stmt|;
 end_decl_stmt
@@ -338,7 +338,7 @@ name|void
 name|doit
 parameter_list|(
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|sinp
 parameter_list|)
@@ -381,7 +381,7 @@ modifier|*
 name|pw
 parameter_list|,
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|sin
 parameter_list|)
@@ -477,6 +477,11 @@ expr_stmt|;
 block|}
 name|doit
 argument_list|(
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|hisctladdr
 argument_list|)
@@ -501,7 +506,7 @@ modifier|*
 name|name
 parameter_list|,
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|sin
 parameter_list|)
@@ -512,7 +517,7 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-name|realhostname
+name|realhostname_sa
 argument_list|(
 name|remotehost
 argument_list|,
@@ -523,10 +528,11 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-operator|&
+name|sin
+argument_list|,
 name|sin
 operator|->
-name|sin_addr
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|remotehost
@@ -583,7 +589,7 @@ name|void
 name|doit
 parameter_list|(
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|sinp
 parameter_list|)
@@ -1182,7 +1188,7 @@ modifier|*
 name|pw
 parameter_list|,
 name|struct
-name|sockaddr_in
+name|sockaddr
 modifier|*
 name|sin
 parameter_list|)
@@ -1207,19 +1213,22 @@ decl_stmt|;
 name|time_t
 name|cur_time
 decl_stmt|;
-name|realhostname
+name|realhostname_sa
 argument_list|(
 name|remotehost
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|remotehost
+argument_list|)
 operator|-
 literal|1
 argument_list|,
-operator|&
+name|sin
+argument_list|,
 name|sin
 operator|->
-name|sin_addr
+name|sa_len
 argument_list|)
 expr_stmt|;
 name|remotehost
