@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.10 (Berkeley) %G%"
+literal|"@(#)devname.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,9 @@ if|if
 condition|(
 operator|!
 name|db
+operator|&&
+operator|!
+name|failure
 operator|&&
 operator|!
 operator|(
