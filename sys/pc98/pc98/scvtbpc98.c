@@ -620,12 +620,6 @@ block|,  }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -635,26 +629,6 @@ name|attr
 parameter_list|)
 value|((attr) | ibmpc_to_pc98[(unsigned)(attr)>> 8])
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|at2pc98
-parameter_list|(
-name|attr
-parameter_list|)
-value|ibmpc_to_pc98[(unsigned)(attr)>> 8]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1082,7 +1056,7 @@ operator|+
 name|ATTR_OFFSET_FB
 argument_list|)
 operator|&
-literal|0x00ff
+literal|0xff00
 operator|)
 return|;
 else|else
@@ -1102,7 +1076,7 @@ name|vtb
 argument_list|)
 operator|)
 operator|&
-literal|0x00ff
+literal|0xff00
 operator|)
 return|;
 block|}

@@ -502,8 +502,10 @@ argument_list|,
 name|from
 argument_list|)
 operator|^
-literal|0x4
+literal|0x0800
 expr_stmt|;
+name|p
+operator|=
 name|sc_vtb_putchar
 argument_list|(
 operator|&
@@ -802,12 +804,12 @@ argument_list|(
 operator|&
 name|scp
 operator|->
-name|scr
+name|vtb
 argument_list|,
 name|at
 argument_list|)
 operator|^
-literal|0x4
+literal|0x0800
 argument_list|)
 expr_stmt|;
 block|}
