@@ -117,12 +117,14 @@ parameter_list|(
 specifier|const
 name|FTSENT
 modifier|*
+specifier|const
 modifier|*
 name|s1
 parameter_list|,
 specifier|const
 name|FTSENT
 modifier|*
+specifier|const
 modifier|*
 name|s2
 parameter_list|)
@@ -133,26 +135,28 @@ begin_comment
 comment|/*  * find_compare --  *	tell fts_open() how to order the traversal of the hierarchy.   *	This variant gives lexicographical order, i.e., alphabetical  *	order within each directory.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 name|int
 name|find_compare
-parameter_list|(
+argument_list|(
 name|s1
-parameter_list|,
+argument_list|,
 name|s2
-parameter_list|)
-specifier|const
+argument_list|)
+decl|const
 name|FTSENT
 modifier|*
+decl|const
 modifier|*
 name|s1
 decl_stmt|,
-decl|*
+modifier|*
+decl_stmt|const
 modifier|*
 name|s2
 decl_stmt|;
-end_function
+end_decl_stmt
 
 begin_block
 block|{
