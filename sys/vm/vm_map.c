@@ -6434,9 +6434,11 @@ operator|.
 name|vm_object
 expr_stmt|;
 block|}
-comment|/* 		 * Note that there is absolutely no sense in writing out 		 * anonymous objects, so we track down the vnode object 		 * to write out. 		 * We invalidate (remove) all pages from the address space 		 * anyway, for semantic correctness. 		 */
+comment|/* 		 * Note that there is absolutely no sense in writing out 		 * anonymous objects, so we track down the vnode object 		 * to write out. 		 * We invalidate (remove) all pages from the address space 		 * anyway, for semantic correctness. 		 * 		 * note: certain anonymous maps, such as MAP_NOSYNC maps, 		 * may start out with a NULL object. 		 */
 while|while
 condition|(
+name|object
+operator|&&
 name|object
 operator|->
 name|backing_object
