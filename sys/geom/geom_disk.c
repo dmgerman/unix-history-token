@@ -1037,6 +1037,17 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|dev
+operator|->
+name|si_name
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|gp
 operator|->
 name|start
