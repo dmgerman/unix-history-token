@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.16 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,7 +89,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fs.h>
+file|<ufs/fs.h>
 end_include
 
 begin_include
@@ -242,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|DEFEDITOR
-value|_PATH_EDITOR
+value|_PATH_VI
 end_define
 
 begin_define
