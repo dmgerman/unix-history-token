@@ -339,26 +339,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|sndmmap
-name|__P
-argument_list|(
-operator|(
-name|dev_t
-name|dev
-operator|,
-name|int
-name|offset
-operator|,
-name|int
-name|nprot
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_open_t
 name|sndopen
 decl_stmt|;
@@ -396,6 +376,13 @@ begin_decl_stmt
 specifier|static
 name|d_poll_t
 name|sndpoll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_mmap_t
+name|sndmmap
 decl_stmt|;
 end_decl_stmt
 
@@ -446,11 +433,6 @@ block|,
 name|nostrategy
 block|,
 name|driver_name
-block|,
-name|NULL
-block|,
-operator|-
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -804,7 +786,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|int
