@@ -90,6 +90,23 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COLORLS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<curses.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -143,6 +160,23 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COLORLS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<term.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -555,6 +589,12 @@ begin_comment
 comment|/* show whiteout entries */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COLORLS
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|f_color
@@ -564,6 +604,11 @@ end_decl_stmt
 begin_comment
 comment|/* add type in color for non-regular files */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -870,10 +915,41 @@ argument_list|(
 name|STDOUT_FILENO
 argument_list|)
 condition|)
+ifdef|#
+directive|ifdef
+name|COLORLS
+if|if
+condition|(
+name|tgetent
+argument_list|(
+name|NULL
+argument_list|,
+name|getenv
+argument_list|(
+literal|"TERM"
+argument_list|)
+argument_list|)
+operator|==
+literal|1
+condition|)
 name|f_color
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Color support not compiled in.\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'L'
@@ -1077,6 +1153,9 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COLORLS
 if|if
 condition|(
 name|f_color
@@ -1089,6 +1168,8 @@ literal|"LSCOLORS"
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If not -F, -i, -l, -s or -t options, don't require stat 	 * information, unless in color mode in which case we do 	 * need this to determine which colors to display. 	 */
 if|if
 condition|(
@@ -1106,9 +1187,14 @@ name|f_timesort
 operator|&&
 operator|!
 name|f_type
+ifdef|#
+directive|ifdef
+name|COLORLS
 operator|&&
 operator|!
 name|f_color
+endif|#
+directive|endif
 condition|)
 name|fts_options
 operator||=
