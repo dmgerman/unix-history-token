@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.15	82/11/13	*/
+comment|/*	vm_swap.c	4.16	83/02/13	*/
 end_comment
 
 begin_include
@@ -112,7 +112,7 @@ comment|/* 	 * A mini-root gets copied into the front of the swap 	 * and we run
 define|#
 directive|define
 name|MINIROOTSIZE
-value|2048
+value|4096
 if|if
 condition|(
 name|rootdev
