@@ -138,6 +138,17 @@ begin_comment
 comment|/* flow control (2 bytes) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_CSR_GENCONTROL
+value|0x1C
+end_define
+
+begin_comment
+comment|/* general control (1 byte) */
+end_comment
+
 begin_comment
 comment|/*  * FOR REFERENCE ONLY, the old definition of FXP_CSR_SCB_RUSCUS:  *  *	volatile u_int8_t	:2,  *				scb_rus:4,  *				scb_cus:2;  */
 end_comment
