@@ -3047,8 +3047,7 @@ name|p1
 init|=
 name|buf
 decl_stmt|;
-specifier|register
-name|int
+name|size_t
 name|len
 init|=
 literal|2
