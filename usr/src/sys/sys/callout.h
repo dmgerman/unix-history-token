@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	callout.h	4.5	81/03/09	*/
+comment|/*	callout.h	4.6	81/04/18	*/
 end_comment
 
 begin_comment
@@ -27,6 +27,11 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* routine */
+name|struct
+name|callout
+modifier|*
+name|c_next
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -41,7 +46,12 @@ begin_decl_stmt
 name|struct
 name|callout
 modifier|*
+name|callfree
+decl_stmt|,
+modifier|*
 name|callout
+decl_stmt|,
+name|calltodo
 decl_stmt|;
 end_decl_stmt
 
