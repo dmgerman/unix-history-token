@@ -174,6 +174,13 @@ name|_POSIX2_RE_DUP_MAX
 value|255
 end_define
 
+begin_define
+define|#
+directive|define
+name|_XOPEN_IOV_MAX
+value|16
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

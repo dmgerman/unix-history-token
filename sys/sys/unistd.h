@@ -830,6 +830,13 @@ begin_comment
 comment|/* _P1003_1B_VISIBLE */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|_SC_IOV_MAX
+value|56
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

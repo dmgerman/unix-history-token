@@ -150,6 +150,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IOV_MAX
+value|1024
+end_define
+
+begin_comment
+comment|/* max elements in i/o vector */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BC_BASE_MAX
 value|99
 end_define

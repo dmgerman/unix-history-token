@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -93,6 +99,26 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|KERN_IOV_MAX
+argument_list|,
+name|iov_max
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+name|UIO_MAXIOV
+argument_list|,
+literal|"Maximum number of elements in an I/O vector; sysconf(_SC_IOV_MAX)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
