@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Source: /usr/src/kerberosIV/des/RCS/new_rnd_key.c,v $  * $Author: bostic $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * New pseudo-random key generator, using DES encryption to make the  * pseudo-random cycle as hard to break as DES.  *  * Written by Mark Lillibridge, MIT Project Athena  *  * Under U.S. law, this software may not be exported outside the US  * without license from the U.S. Commerce department.  */
+comment|/*  * $Source: /home/ncvs/src/eBones/des/new_rnd_key.c,v $  * $Author: rgrimes $  *  * Copyright 1988 by the Massachusetts Institute of Technology.  *  * For copying and distribution information, please see the file  *<mit-copyright.h>.  *  * New pseudo-random key generator, using DES encryption to make the  * pseudo-random cycle as hard to break as DES.  *  * Written by Mark Lillibridge, MIT Project Athena  *  * Under U.S. law, this software may not be exported outside the US  * without license from the U.S. Commerce department.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|rcsid_new_rnd_key_c
 index|[]
 init|=
-literal|"$Header: /usr/src/kerberosIV/des/RCS/new_rnd_key.c,v 4.2 91/02/25 15:14:22 bostic Exp $"
+literal|"$Header: /home/ncvs/src/eBones/des/new_rnd_key.c,v 1.1.1.1 1994/05/27 05:12:12 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,24 +40,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"des_internal.h"
+file|"des_locl.h"
 end_include
-
-begin_function_decl
-specifier|extern
-name|void
-name|des_fixup_key_parity
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|des_is_weak_key
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|void
@@ -87,6 +71,7 @@ parameter_list|(
 name|key
 parameter_list|)
 name|des_cblock
+modifier|*
 name|key
 decl_stmt|;
 block|{
@@ -123,11 +108,11 @@ begin_comment
 comment|/*  * des_init_random_number_generator:  *  *    This routine takes a secret key possibly shared by a number  * of servers and uses it to generate a random number stream that is  * not shared by any of the other servers.  It does this by using the current  * process id, host id, and the current time to the nearest second.  The  * resulting stream seed is not useful information for cracking the secret  * key.   Moreover, this routine keeps no copy of the secret key.  * This routine is used for example, by the kerberos server(s) with the  * key in question being the kerberos master key.  *  * Note: this routine calls des_set_random_generator_seed.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSDUNIX
-end_ifndef
+begin_if
+if|#
+directive|if
+name|NOTBSDUNIX
+end_if
 
 begin_decl_stmt
 name|you
@@ -157,6 +142,7 @@ argument_list|(
 name|key
 argument_list|)
 name|des_cblock
+modifier|*
 name|key
 decl_stmt|;
 end_decl_stmt
@@ -221,12 +207,14 @@ argument_list|)
 expr_stmt|;
 name|des_new_random_key
 argument_list|(
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
 comment|/*      * use it to select a random stream:      */
 name|des_set_random_generator_seed
 argument_list|(
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -258,11 +246,13 @@ expr_stmt|;
 comment|/*      * use the time stamp finally to select the final seed using the      * current random number stream:      */
 name|des_new_random_key
 argument_list|(
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
 name|des_set_random_generator_seed
 argument_list|(
+operator|&
 name|new_key
 argument_list|)
 expr_stmt|;
@@ -319,6 +309,7 @@ parameter_list|(
 name|key
 parameter_list|)
 name|des_cblock
+modifier|*
 name|key
 decl_stmt|;
 block|{
@@ -406,6 +397,7 @@ parameter_list|(
 name|block
 parameter_list|)
 name|des_cblock
+modifier|*
 name|block
 decl_stmt|;
 block|{
@@ -415,6 +407,7 @@ decl_stmt|;
 comment|/*      * Encrypt the sequence number to get the new random block:      */
 name|des_ecb_encrypt
 argument_list|(
+operator|&
 name|sequence_number
 argument_list|,
 name|block
