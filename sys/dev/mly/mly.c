@@ -609,9 +609,6 @@ block|,
 name|nopsize
 block|,
 literal|0
-block|,
-operator|-
-literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
