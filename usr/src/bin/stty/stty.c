@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.28 (Berkeley) %G%"
+literal|"@(#)stty.c	5.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -524,6 +524,12 @@ name|t
 argument_list|,
 name|speed
 argument_list|)
+expr_stmt|;
+name|i
+operator|.
+name|set
+operator|=
+literal|1
 expr_stmt|;
 continue|continue;
 block|}
