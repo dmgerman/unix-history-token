@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	5.13 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -474,11 +474,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"magic\t%x\tformat\t%s\ttime\t%s"
+literal|"magic\t%x\ttime\t%s"
 argument_list|,
 name|afs
 operator|.
 name|fs_magic
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|afs
+operator|.
+name|fs_time
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cylgrp\t%s\tinodes\t%s\n"
 argument_list|,
 name|afs
 operator|.
@@ -490,13 +503,15 @@ literal|"static"
 else|:
 literal|"dynamic"
 argument_list|,
-name|ctime
-argument_list|(
-operator|&
 name|afs
 operator|.
-name|fs_time
-argument_list|)
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|?
+literal|"4.2/4.3BSD"
+else|:
+literal|"4.4BSD"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -696,7 +711,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"trackskew %d\tinterleave %d\n"
+literal|"symlinklen %d\ttrackskew %d\tinterleave %d\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_maxsymlinklen
 argument_list|,
 name|afs
 operator|.
