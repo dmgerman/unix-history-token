@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.1 (Berkeley) %G%"
+literal|"@(#)print.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1053,7 +1053,7 @@ name|NULL
 condition|)
 name|adbprintf
 argument_list|(
-literal|"5c"
+literal|"%R\%c"
 argument_list|,
 name|v
 argument_list|,
@@ -1173,7 +1173,7 @@ argument_list|)
 expr_stmt|;
 name|adbprintf
 argument_list|(
-literal|"%s%6t516t"
+literal|"%s%6t%R\%16t"
 argument_list|,
 name|p
 operator|->
