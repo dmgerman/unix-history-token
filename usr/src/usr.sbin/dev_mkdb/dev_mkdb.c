@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dev_mkdb.c	5.8 (Berkeley) %G%"
+literal|"@(#)dev_mkdb.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,7 +137,6 @@ file|<string.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|void
 name|error
 argument_list|()
