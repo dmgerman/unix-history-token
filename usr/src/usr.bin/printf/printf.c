@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printf.c	5.11 (Berkeley) %G%"
+literal|"@(#)printf.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,10 @@ directive|include
 file|<string.h>
 end_include
 
+begin_comment
+comment|/*  * XXX  * This *has* to go away.  TK.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -137,7 +141,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"/usr/src/devel/sh/bltin/bltin.h"
+file|"../../bin/sh/bltin/bltin.h"
 end_include
 
 begin_endif
