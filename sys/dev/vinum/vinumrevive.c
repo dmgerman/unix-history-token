@@ -664,12 +664,29 @@ name|b_ioflags
 operator|&
 name|BIO_ERROR
 condition|)
+block|{
 name|error
 operator|=
 name|bp
 operator|->
 name|b_error
 expr_stmt|;
+if|if
+condition|(
+name|lock
+condition|)
+comment|/* we took a lock, */
+name|unlockrange
+argument_list|(
+name|sd
+operator|->
+name|plexno
+argument_list|,
+name|lock
+argument_list|)
+expr_stmt|;
+comment|/* give it back */
+block|}
 else|else
 comment|/* Now write to the subdisk */
 block|{
