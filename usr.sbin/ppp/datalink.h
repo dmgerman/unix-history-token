@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.h,v 1.5 1998/08/07 18:42:48 brian Exp $  */
+comment|/*-  * Copyright (c) 1998 Brian Somers<brian@Awfulhak.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: datalink.h,v 1.6 1999/02/06 02:54:45 brian Exp $  */
 end_comment
 
 begin_define
@@ -180,11 +180,6 @@ comment|/* Go into packet mode after login ? */
 block|}
 name|script
 struct|;
-name|struct
-name|pppTimer
-name|dial_timer
-decl_stmt|;
-comment|/* For timing between close& open */
 struct|struct
 block|{
 struct|struct
@@ -235,6 +230,14 @@ name|int
 name|next_timeout
 decl_stmt|;
 comment|/* Redial next timeout value */
+name|int
+name|inc
+decl_stmt|;
+comment|/* Increment timeout by `inc' each time read */
+name|int
+name|maxinc
+decl_stmt|;
+comment|/* Maximum number of increments */
 name|int
 name|timeout
 decl_stmt|;
@@ -287,7 +290,7 @@ name|char
 modifier|*
 name|alt
 decl_stmt|;
-comment|/* Next phone from the list */
+comment|/* Alternate (after fail) phone from the list */
 specifier|const
 name|char
 modifier|*
@@ -301,10 +304,24 @@ name|struct
 name|cbcp
 name|cbcp
 decl_stmt|;
+struct|struct
+block|{
+name|struct
+name|pppTimer
+name|timer
+decl_stmt|;
+comment|/* For timing between close& open */
 name|int
-name|dial_tries
+name|tries
 decl_stmt|;
 comment|/* currently try again this number of times */
+name|int
+name|incs
+decl_stmt|;
+comment|/* # times our timeout has been incremented */
+block|}
+name|dial
+struct|;
 name|unsigned
 name|reconnect_tries
 decl_stmt|;
@@ -731,6 +748,18 @@ name|datalink
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|datalink_GetDialTimeout
+parameter_list|(
+name|struct
+name|datalink
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
