@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/**  * \file drm_sarea.h   * \brief SAREA definitions  *  * \author Michel Dänzer<michel@daenzer.net>  */
+comment|/**  * \file drm_sarea.h   * \brief SAREA definitions  *  * \author Michel Dï¿½zer<michel@daenzer.net>  */
 end_comment
 
 begin_comment
@@ -19,6 +19,73 @@ directive|define
 name|_DRM_SAREA_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm.h"
+end_include
+
+begin_comment
+comment|/* SAREA area needs to be at least a page */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__alpha__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SAREA_MAX
+value|0x2000
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SAREA_MAX
+value|0x10000
+end_define
+
+begin_comment
+comment|/* 64kB */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Intel 830M driver needs at least 8k SAREA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAREA_MAX
+value|0x2000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/** Maximum number of drawables in the SAREA */
 end_comment
@@ -28,6 +95,13 @@ define|#
 directive|define
 name|SAREA_MAX_DRAWABLES
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAREA_DRAWABLE_CLAIMED_ENTRY
+value|0x80000000
 end_define
 
 begin_comment

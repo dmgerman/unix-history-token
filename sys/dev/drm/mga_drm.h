@@ -435,6 +435,13 @@ name|MGA_LOG_MIN_TEX_REGION_SIZE
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|DRM_MGA_IDLE_RETRY
+value|2048
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -767,71 +774,141 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DRM_MGA_INIT
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_FLUSH
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_RESET
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_SWAP
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_CLEAR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_VERTEX
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_INDICES
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_ILOAD
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_BLIT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_MGA_GETPARAM
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_MGA_INIT
-value|DRM_IOW( 0x40, drm_mga_init_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_INIT, drm_mga_init_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_FLUSH
-value|DRM_IOW( 0x41, drm_lock_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_FLUSH, drm_lock_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_RESET
-value|DRM_IO(  0x42)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_MGA_RESET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_SWAP
-value|DRM_IO(  0x43)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_MGA_SWAP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_CLEAR
-value|DRM_IOW( 0x44, drm_mga_clear_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_CLEAR, drm_mga_clear_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_VERTEX
-value|DRM_IOW( 0x45, drm_mga_vertex_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_VERTEX, drm_mga_vertex_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_INDICES
-value|DRM_IOW( 0x46, drm_mga_indices_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_INDICES, drm_mga_indices_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_ILOAD
-value|DRM_IOW( 0x47, drm_mga_iload_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_ILOAD, drm_mga_iload_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_BLIT
-value|DRM_IOW( 0x48, drm_mga_blit_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_MGA_BLIT, drm_mga_blit_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MGA_GETPARAM
-value|DRM_IOWR(0x49, drm_mga_getparam_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_MGA_GETPARAM, drm_mga_getparam_t)
 end_define
 
 begin_typedef
@@ -1142,7 +1219,7 @@ block|{
 name|int
 name|param
 decl_stmt|;
-name|int
+name|void
 modifier|*
 name|value
 decl_stmt|;

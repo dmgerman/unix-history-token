@@ -3870,6 +3870,13 @@ name|R200_RE_CNTL
 value|0x1c50
 end_define
 
+begin_define
+define|#
+directive|define
+name|R200_RB3D_BLENDCOLOR
+value|0x3218
+end_define
+
 begin_comment
 comment|/* Constants */
 end_comment

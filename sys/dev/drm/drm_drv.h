@@ -179,7 +179,10 @@ begin_define
 define|#
 directive|define
 name|DRIVER_PREINIT
-parameter_list|()
+parameter_list|(
+name|dev
+parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif
@@ -197,7 +200,10 @@ begin_define
 define|#
 directive|define
 name|DRIVER_POSTINIT
-parameter_list|()
+parameter_list|(
+name|dev
+parameter_list|)
+value|do {} while (0)
 end_define
 
 begin_endif
@@ -233,7 +239,9 @@ begin_define
 define|#
 directive|define
 name|DRIVER_PRETAKEDOWN
-parameter_list|()
+parameter_list|(
+name|dev
+parameter_list|)
 end_define
 
 begin_endif
@@ -1397,11 +1405,18 @@ name|cdevsw
 parameter_list|)
 init|=
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502103
 operator|.
 name|d_version
 operator|=
 name|D_VERSION
 operator|,
+endif|#
+directive|endif
 function_decl|.d_open
 init|=
 name|DRM
@@ -1448,12 +1463,29 @@ function_decl|.d_name
 init|=
 name|DRIVER_NAME
 operator|,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|502103
 function_decl|.d_flags
 init|=
 name|D_TRACKCLOSE
 operator||
 name|D_NEEDGIANT
 operator|,
+else|#
+directive|else
+function_decl|.d_maj
+init|=
+literal|145
+operator|,
+function_decl|.d_flags
+init|=
+name|D_TRACKCLOSE
+operator|,
+endif|#
+directive|endif
 if|#
 directive|if
 name|__FreeBSD_version
@@ -1469,6 +1501,12 @@ init|}
 function_decl|;
 end_function_decl
 
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm_pciids.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|drm_pci_id_list_t
@@ -1479,7 +1517,10 @@ argument_list|)
 decl|[]
 init|=
 block|{
-name|DRIVER_PCI_IDS
+name|DRM
+argument_list|(
+argument|PCI_IDS
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2988,7 +3029,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 name|DRIVER_PRETAKEDOWN
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 if|#
 directive|if
@@ -3573,7 +3616,9 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 name|DRIVER_PREINIT
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3974,7 +4019,9 @@ name|unit
 argument_list|)
 expr_stmt|;
 name|DRIVER_POSTINIT
-argument_list|()
+argument_list|(
+name|dev
+argument_list|)
 expr_stmt|;
 return|return
 literal|0

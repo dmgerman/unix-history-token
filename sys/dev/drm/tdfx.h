@@ -96,14 +96,6 @@ name|DRIVER_PATCHLEVEL
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|DRIVER_PCI_IDS
-define|\
-value|{0x121a, 0x0003, 0, "3dfx Voodoo Banshee"},			\ 	{0x121a, 0x0004, 0, "3dfx Voodoo3 2000"},			\ 	{0x121a, 0x0005, 0, "3dfx Voodoo3 3000"},			\ 	{0x121a, 0x0007, 0, "3dfx Voodoo4"},				\ 	{0x121a, 0x0009, 0, "3dfx Voodoo5"},				\ 	{0, 0, 0, NULL}
-end_define
-
 begin_endif
 endif|#
 directive|endif

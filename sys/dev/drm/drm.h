@@ -612,6 +612,33 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/**  * Hardware lock.  *  * The lock structure is a simple cache-line aligned integer.  To avoid  * processor bus contention on a multiprocessor system, there should not be any  * other data stored in the same cache line.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|drm_hw_lock
+block|{
+specifier|__volatile__
+name|unsigned
+name|int
+name|lock
+decl_stmt|;
+comment|/**< lock variable */
+name|char
+name|padding
+index|[
+literal|60
+index|]
+decl_stmt|;
+comment|/**< Pad to cache line */
+block|}
+name|drm_hw_lock_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/**  * DRM_IOCTL_VERSION ioctl argument type.  *   * \sa drmGetVersion().  */
 end_comment
 

@@ -747,28 +747,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-struct|struct
-name|drm_hw_lock
-block|{
-specifier|__volatile__
-name|unsigned
-name|int
-name|lock
-decl_stmt|;
-name|char
-name|padding
-index|[
-literal|60
-index|]
-decl_stmt|;
-comment|/* Pad to cache line */
-block|}
-name|drm_hw_lock_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|TAILQ_HEAD
 argument_list|(
 argument|drm_file_list

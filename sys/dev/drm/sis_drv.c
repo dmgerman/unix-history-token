@@ -122,9 +122,9 @@ name|sisdrm
 argument_list|,
 name|pci
 argument_list|,
-name|sis_driver
+name|sisdrv_driver
 argument_list|,
-name|sis_devclass
+name|sisdrv_devclass
 argument_list|,
 literal|0
 argument_list|,

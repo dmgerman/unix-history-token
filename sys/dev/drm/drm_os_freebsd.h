@@ -286,6 +286,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"dev/drm/drm_linux_list.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1299,6 +1305,36 @@ undef|#
 directive|undef
 name|malloctype
 end_undef
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|502109
+end_if
+
+begin_define
+define|#
+directive|define
+name|bus_alloc_resource_any
+parameter_list|(
+name|dev
+parameter_list|,
+name|type
+parameter_list|,
+name|rid
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_alloc_resource(dev, type, rid, 0ul, ~0ul, 1, flags)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

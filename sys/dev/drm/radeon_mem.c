@@ -621,8 +621,10 @@ operator|!
 name|blocks
 condition|)
 return|return
-operator|-
+name|DRM_ERR
+argument_list|(
 name|ENOMEM
+argument_list|)
 return|;
 operator|*
 name|heap
@@ -656,8 +658,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
+name|DRM_ERR
+argument_list|(
 name|ENOMEM
+argument_list|)
 return|;
 block|}
 name|blocks

@@ -966,8 +966,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|RADEON_MAX_STATE_PACKETS
+name|R200_EMIT_RB3D_BLENDCOLOR
 value|76
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_MAX_STATE_PACKETS
+value|77
 end_define
 
 begin_comment
@@ -1339,6 +1346,31 @@ define|#
 directive|define
 name|RADEON_MAX_TEXTURE_UNITS
 value|3
+end_define
+
+begin_comment
+comment|/* Blits have strict offset rules.  All blit offset must be aligned on  * a 1K-byte boundary.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RADEON_OFFSET_SHIFT
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_OFFSET_ALIGN
+value|(1<< RADEON_OFFSET_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RADEON_OFFSET_MASK
+value|(RADEON_OFFSET_ALIGN - 1)
 end_define
 
 begin_endif
@@ -1756,180 +1788,357 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DRM_RADEON_CP_INIT
+value|0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CP_START
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CP_STOP
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CP_RESET
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CP_IDLE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_RESET
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_FULLSCREEN
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_SWAP
+value|0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CLEAR
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_VERTEX
+value|0x09
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_INDICES
+value|0x0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_NOT_USED
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_STIPPLE
+value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_INDIRECT
+value|0x0D
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_TEXTURE
+value|0x0E
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_VERTEX2
+value|0x0F
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CMDBUF
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_GETPARAM
+value|0x11
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_FLIP
+value|0x12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_ALLOC
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_FREE
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_INIT_HEAP
+value|0x15
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_IRQ_EMIT
+value|0x16
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_IRQ_WAIT
+value|0x17
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_CP_RESUME
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_RADEON_SETPARAM
+value|0x19
+end_define
+
+begin_define
+define|#
+directive|define
 name|DRM_IOCTL_RADEON_CP_INIT
-value|DRM_IOW( 0x40, drm_radeon_init_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CP_INIT, drm_radeon_init_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CP_START
-value|DRM_IO(  0x41)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_CP_START)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CP_STOP
-value|DRM_IOW( 0x42, drm_radeon_cp_stop_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CP_STOP, drm_radeon_cp_stop_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CP_RESET
-value|DRM_IO(  0x43)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_CP_RESET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CP_IDLE
-value|DRM_IO(  0x44)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_CP_IDLE)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_RESET
-value|DRM_IO(  0x45)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_RESET)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_FULLSCREEN
-value|DRM_IOW( 0x46, drm_radeon_fullscreen_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_FULLSCREEN, drm_radeon_fullscreen_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_SWAP
-value|DRM_IO(  0x47)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_SWAP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CLEAR
-value|DRM_IOW( 0x48, drm_radeon_clear_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CLEAR, drm_radeon_clear_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_VERTEX
-value|DRM_IOW( 0x49, drm_radeon_vertex_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_VERTEX, drm_radeon_vertex_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_INDICES
-value|DRM_IOW( 0x4a, drm_radeon_indices_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_INDICES, drm_radeon_indices_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_STIPPLE
-value|DRM_IOW( 0x4c, drm_radeon_stipple_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_STIPPLE, drm_radeon_stipple_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_INDIRECT
-value|DRM_IOWR(0x4d, drm_radeon_indirect_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_INDIRECT, drm_radeon_indirect_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_TEXTURE
-value|DRM_IOWR(0x4e, drm_radeon_texture_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_TEXTURE, drm_radeon_texture_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_VERTEX2
-value|DRM_IOW( 0x4f, drm_radeon_vertex2_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_VERTEX2, drm_radeon_vertex2_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CMDBUF
-value|DRM_IOW( 0x50, drm_radeon_cmd_buffer_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_CMDBUF, drm_radeon_cmd_buffer_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_GETPARAM
-value|DRM_IOWR(0x51, drm_radeon_getparam_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_GETPARAM, drm_radeon_getparam_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_FLIP
-value|DRM_IO(  0x52)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_FLIP)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_ALLOC
-value|DRM_IOWR( 0x53, drm_radeon_mem_alloc_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_ALLOC, drm_radeon_mem_alloc_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_FREE
-value|DRM_IOW( 0x54, drm_radeon_mem_free_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_FREE, drm_radeon_mem_free_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_INIT_HEAP
-value|DRM_IOW( 0x55, drm_radeon_mem_init_heap_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_INIT_HEAP, drm_radeon_mem_init_heap_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_IRQ_EMIT
-value|DRM_IOWR( 0x56, drm_radeon_irq_emit_t)
+value|DRM_IOWR(DRM_COMMAND_BASE + DRM_RADEON_IRQ_EMIT, drm_radeon_irq_emit_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_IRQ_WAIT
-value|DRM_IOW( 0x57, drm_radeon_irq_wait_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_IRQ_WAIT, drm_radeon_irq_wait_t)
 end_define
-
-begin_comment
-comment|/* added by Charl P. Botha - see radeon_cp.c for details */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_CP_RESUME
-value|DRM_IO(0x58)
+value|DRM_IO(  DRM_COMMAND_BASE + DRM_RADEON_CP_RESUME)
 end_define
 
 begin_define
 define|#
 directive|define
 name|DRM_IOCTL_RADEON_SETPARAM
-value|DRM_IOW(0x59, drm_radeon_setparam_t)
+value|DRM_IOW( DRM_COMMAND_BASE + DRM_RADEON_SETPARAM, drm_radeon_setparam_t)
 end_define
 
 begin_typedef
@@ -2478,7 +2687,7 @@ block|{
 name|int
 name|param
 decl_stmt|;
-name|int
+name|void
 modifier|*
 name|value
 decl_stmt|;

@@ -23,12 +23,6 @@ begin_comment
 comment|/* This remains constant for all DRM template files.  * Name it sisdrv_##x as there's a conflict with sis_free/malloc in the kernel  * that's used for fb devices   */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__linux__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -38,26 +32,6 @@ name|x
 parameter_list|)
 value|sisdrv_##x
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DRM
-parameter_list|(
-name|x
-parameter_list|)
-value|sis_##x
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* General customization:  */
@@ -146,14 +120,6 @@ directive|define
 name|DRIVER_IOCTLS
 define|\
 value|[DRM_IOCTL_NR(DRM_IOCTL_SIS_FB_ALLOC)]  = { sis_fb_alloc,	1, 0 }, \ 	[DRM_IOCTL_NR(DRM_IOCTL_SIS_FB_FREE)]   = { sis_fb_free,	1, 0 }, \ 	[DRM_IOCTL_NR(DRM_IOCTL_SIS_AGP_INIT)]  = { sis_ioctl_agp_init,	1, 1 }, \ 	[DRM_IOCTL_NR(DRM_IOCTL_SIS_AGP_ALLOC)] = { sis_ioctl_agp_alloc, 1, 0 }, \ 	[DRM_IOCTL_NR(DRM_IOCTL_SIS_AGP_FREE)]	= { sis_ioctl_agp_free,	1, 0 }, \ 	[DRM_IOCTL_NR(DRM_IOCTL_SIS_FB_INIT)]	= { sis_fb_init,	1, 1 }
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRIVER_PCI_IDS
-define|\
-value|{0x1039, 0x0300, 0, "SiS 300/305"},				\ 	{0x1039, 0x5300, 0, "SiS 540"},					\ 	{0x1039, 0x6300, 0, "SiS 630"},					\ 	{0x1039, 0x7300, 0, "SiS 730"},					\ 	{0, 0, 0, NULL}
 end_define
 
 begin_define
