@@ -3446,11 +3446,6 @@ name|offset
 operator|=
 literal|0
 expr_stmt|;
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 name|retry
 label|:
 comment|/* connect to server or proxy */
@@ -4143,6 +4138,11 @@ name|close
 argument_list|(
 name|fd
 argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
