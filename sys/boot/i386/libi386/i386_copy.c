@@ -152,7 +152,8 @@ decl_stmt|,
 name|chunk
 decl_stmt|,
 name|get
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|got
 decl_stmt|;
 if|if
