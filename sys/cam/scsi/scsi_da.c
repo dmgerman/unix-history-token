@@ -6669,7 +6669,7 @@ literal|0
 argument_list|,
 name|SSD_FULL_SIZE
 argument_list|,
-literal|5
+literal|60
 operator|*
 literal|60
 operator|*
