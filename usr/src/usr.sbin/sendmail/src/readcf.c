@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.28
+literal|3.29
 operator|%
 name|G
 operator|%
@@ -26,17 +26,6 @@ end_expr_stmt
 begin_comment
 comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f r a	Define mailer.  n - internal name, **				p - pathname, f - flags, r - rewriting **				rule for sender, a - argument vector. ** **	Parameters: **		cfname -- control file name. **		safe -- set if this is a system configuration file. **			Non-system configuration files can not do **			certain things (e.g., leave the SUID bit on **			when executing mailers). ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
-
-begin_decl_stmt
-name|struct
-name|rewrite
-modifier|*
-name|RewriteRules
-index|[
-literal|10
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_macro
 name|readcf
@@ -145,6 +134,10 @@ name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
+name|LineNumber
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 name|fgetfolded
@@ -214,7 +207,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"invalid rewrite line \"%s\""
+literal|"line %d: invalid rewrite line \"%s\""
+argument_list|,
+name|LineNumber
 argument_list|,
 name|buf
 argument_list|)
@@ -436,6 +431,33 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ruleset
+operator|>=
+name|MAXRWSETS
+operator|||
+name|ruleset
+operator|<
+literal|0
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"readcf: line %d: bad ruleset %d (%d max)"
+argument_list|,
+name|LineNumber
+argument_list|,
+name|ruleset
+argument_list|,
+name|MAXRWSETS
+argument_list|)
+expr_stmt|;
+name|ruleset
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|rwp
 operator|=
 name|NULL
@@ -742,7 +764,9 @@ name|badline
 label|:
 name|syserr
 argument_list|(
-literal|"unknown control line \"%s\""
+literal|"readcf: line %d: unknown control line \"%s\""
+argument_list|,
+name|LineNumber
 argument_list|,
 name|buf
 argument_list|)
@@ -1006,7 +1030,11 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"Too many mailers defined"
+literal|"readcf: line %d: too many mailers defined (%d max)"
+argument_list|,
+name|LineNumber
+argument_list|,
+name|MAXMAILERS
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1063,7 +1091,9 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"invalid M line in configuration file"
+literal|"readcf: line %d: invalid M line in configuration file"
+argument_list|,
+name|LineNumber
 argument_list|)
 expr_stmt|;
 return|return;
