@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3063,6 +3063,12 @@ name|qe_ring
 modifier|*
 name|rp
 decl_stmt|;
+specifier|register
+name|int
+name|nrcv
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|len
 decl_stmt|,
@@ -3074,6 +3080,64 @@ name|int
 name|bufaddr
 decl_stmt|;
 comment|/* 	 * Traverse the receive ring looking for packets to pass back. 	 * The search is complete when we find a descriptor not in use. 	 * 	 * As in the transmit case the deqna doesn't honor it's own protocols 	 * so there exists the possibility that the device can beat us around 	 * the ring. The proper way to guard against this is to insure that 	 * there is always at least one invalid descriptor. We chose instead 	 * to make the ring large enough to minimize the problem. With a ring 	 * size of 4 we haven't been able to see the problem. To be safe we 	 * doubled that to 8. 	 * 	 */
+while|while
+condition|(
+name|sc
+operator|->
+name|rring
+index|[
+name|sc
+operator|->
+name|rindex
+index|]
+operator|.
+name|qe_status1
+operator|==
+name|QE_NOTYET
+operator|&&
+name|nrcv
+operator|<
+name|NRCV
+condition|)
+block|{
+comment|/* 		 * We got an interrupt but did not find an input packet 		 * where we expected one to be, probably because the ring 		 * was overrun. 		 * We search forward to find a valid packet and start 		 * processing from there.  If no valid packet is found it 		 * means we processed all the packets during a previous 		 * interrupt and that the QE_RCV_INT bit was set while 		 * we were processing one of these earlier packets.  In 		 * this case we can safely ignore the interrupt (by dropping 		 * through the code below). 		 */
+name|sc
+operator|->
+name|rindex
+operator|=
+operator|(
+name|sc
+operator|->
+name|rindex
+operator|+
+literal|1
+operator|)
+operator|%
+name|NRCV
+expr_stmt|;
+name|nrcv
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|nrcv
+operator|&&
+name|nrcv
+operator|<
+name|NRCV
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"qe%d: ring overrun, resync'd by skipping %d\n"
+argument_list|,
+name|unit
+argument_list|,
+name|nrcv
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
