@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.44 1997/08/24 20:33:32 fsmp Exp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.45 1997/08/25 21:28:08 bde Exp $  */
 end_comment
 
 begin_include
@@ -24,12 +24,26 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
+file|<sys/kernel.h>
 end_include
 
-begin_comment
-comment|/* for KERNBASE */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
 
 begin_include
 include|#
@@ -37,19 +51,11 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
-begin_comment
-comment|/* for KERNBASE */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
 end_include
-
-begin_comment
-comment|/* for KERNBASE */
-end_comment
 
 begin_include
 include|#
@@ -882,11 +888,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Boot of AP uses this PTD */
+comment|/* AP uses this PTD during bootstrap */
 end_comment
 
 begin_decl_stmt
-name|u_int
+name|pd_entry_t
 modifier|*
 name|bootPTD
 decl_stmt|;
@@ -899,6 +905,7 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|pt_entry_t
+modifier|*
 name|KPTphys
 decl_stmt|;
 end_decl_stmt
@@ -912,6 +919,44 @@ specifier|extern
 name|struct
 name|i386tss
 name|common_tss
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* IdlePTD per cpu */
+end_comment
+
+begin_decl_stmt
+name|pd_entry_t
+modifier|*
+name|IdlePTDS
+index|[
+name|NCPU
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* "my" private page table page, for BSP init */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+name|SMP_prvpt
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Private page pointer to curcpu's PTD, used during BSP init */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|pd_entry_t
+modifier|*
+name|my_idlePTD
 decl_stmt|;
 end_decl_stmt
 
@@ -5718,14 +5763,19 @@ name|u_long
 name|mpbioswarmvec
 decl_stmt|;
 name|pd_entry_t
+modifier|*
 name|newptd
 decl_stmt|;
 name|pt_entry_t
+modifier|*
 name|newpt
 decl_stmt|;
 name|int
 modifier|*
 name|newpp
+decl_stmt|,
+modifier|*
+name|stack
 decl_stmt|;
 name|POSTCODE
 argument_list|(
@@ -5792,21 +5842,30 @@ operator|++
 name|x
 control|)
 block|{
-comment|/* HACK HACK HACK !!! */
+comment|/* This is a bit verbose, it will go away soon.  */
 comment|/* alloc new page table directory */
 name|newptd
 operator|=
-call|(
+operator|(
 name|pd_entry_t
-call|)
-argument_list|(
+operator|*
+operator|)
+operator|(
 name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
-argument_list|)
+operator|)
+expr_stmt|;
+comment|/* Store the virtual PTD address for this CPU */
+name|IdlePTDS
+index|[
+name|x
+index|]
+operator|=
+name|newptd
 expr_stmt|;
 comment|/* clone currently active one (ie: IdlePTD) */
 name|bcopy
@@ -5825,6 +5884,10 @@ index|[
 literal|0
 index|]
 operator|=
+call|(
+name|pd_entry_t
+call|)
+argument_list|(
 name|PG_V
 operator||
 name|PG_RW
@@ -5837,12 +5900,14 @@ name|KPTphys
 operator|&
 name|PG_FRAME
 operator|)
+argument_list|)
 expr_stmt|;
-comment|/* store PTD for this AP */
+comment|/* store PTD for this AP's boot sequence */
 name|bootPTD
 operator|=
 operator|(
 name|pd_entry_t
+operator|*
 operator|)
 name|vtophys
 argument_list|(
@@ -5852,17 +5917,18 @@ expr_stmt|;
 comment|/* alloc new page table page */
 name|newpt
 operator|=
-call|(
+operator|(
 name|pt_entry_t
-call|)
-argument_list|(
+operator|*
+operator|)
+operator|(
 name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
 name|PAGE_SIZE
 argument_list|)
-argument_list|)
+operator|)
 expr_stmt|;
 comment|/* set the new PTD's private page to point there */
 name|newptd
@@ -5870,6 +5936,10 @@ index|[
 name|MPPTDI
 index|]
 operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
 name|PG_V
 operator||
 name|PG_RW
@@ -5878,6 +5948,7 @@ name|vtophys
 argument_list|(
 name|newpt
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* install self referential entry */
 name|newptd
@@ -5885,6 +5956,10 @@ index|[
 name|PTDPTDI
 index|]
 operator|=
+call|(
+name|pd_entry_t
+call|)
+argument_list|(
 name|PG_V
 operator||
 name|PG_RW
@@ -5893,8 +5968,9 @@ name|vtophys
 argument_list|(
 name|newptd
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* get a new private data page */
+comment|/* allocate a new private data page */
 name|newpp
 operator|=
 operator|(
@@ -5914,6 +5990,10 @@ index|[
 literal|0
 index|]
 operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
 name|PG_V
 operator||
 name|PG_RW
@@ -5922,6 +6002,7 @@ name|vtophys
 argument_list|(
 name|newpp
 argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* wire the ptp into itself for access */
 name|newpt
@@ -5929,6 +6010,10 @@ index|[
 literal|1
 index|]
 operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
 name|PG_V
 operator||
 name|PG_RW
@@ -5937,8 +6022,9 @@ name|vtophys
 argument_list|(
 name|newpt
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* and the local apic */
+comment|/* copy in the pointer to the local apic */
 name|newpt
 index|[
 literal|2
@@ -5973,6 +6059,63 @@ index|[
 name|i
 index|]
 expr_stmt|;
+comment|/* allocate and set up an idle stack data page */
+name|stack
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|newpt
+index|[
+literal|3
+index|]
+operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|stack
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|newpt
+index|[
+literal|4
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* *prv_CMAP1 */
+name|newpt
+index|[
+literal|5
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* *prv_CMAP2 */
+name|newpt
+index|[
+literal|6
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* *prv_CMAP3 */
 comment|/* prime data page for it to use */
 name|newpp
 index|[
@@ -6032,8 +6175,78 @@ operator|<<
 literal|24
 expr_stmt|;
 comment|/* cpu_lockid */
-comment|/* XXX NOTE: ABANDON bootPTD for now!!!! */
-comment|/* END REVOLTING HACKERY */
+name|newpp
+index|[
+literal|7
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* other_cpus */
+name|newpp
+index|[
+literal|8
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+name|bootPTD
+expr_stmt|;
+comment|/* my_idlePTD */
+name|newpp
+index|[
+literal|9
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* ss_tpr */
+name|newpp
+index|[
+literal|10
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|newpt
+index|[
+literal|4
+index|]
+expr_stmt|;
+comment|/* prv_CMAP1 */
+name|newpp
+index|[
+literal|11
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|newpt
+index|[
+literal|5
+index|]
+expr_stmt|;
+comment|/* prv_CMAP2 */
+name|newpp
+index|[
+literal|12
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+operator|&
+name|newpt
+index|[
+literal|6
+index|]
+expr_stmt|;
+comment|/* prv_CMAP3 */
 comment|/* setup a vector to our boot code */
 operator|*
 operator|(
@@ -6204,6 +6417,103 @@ argument_list|(
 name|CMOS_DATA
 argument_list|,
 name|mpbiosreason
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Set up the idle context for the BSP.  Similar to above except 	 * that some was done by locore, some by pmap.c and some is implicit 	 * because the BSP is cpu#0 and the page is initially zero, and also 	 * because we can refer to variables by name on the BSP.. 	 */
+name|newptd
+operator|=
+operator|(
+name|pd_entry_t
+operator|*
+operator|)
+operator|(
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+operator|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|PTD
+argument_list|,
+name|newptd
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+comment|/* inc prv page pde */
+name|IdlePTDS
+index|[
+literal|0
+index|]
+operator|=
+name|newptd
+expr_stmt|;
+comment|/* Point PTD[] to this page instead of IdlePTD's physical page */
+name|newptd
+index|[
+name|PTDPTDI
+index|]
+operator|=
+call|(
+name|pd_entry_t
+call|)
+argument_list|(
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|newptd
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|my_idlePTD
+operator|=
+operator|(
+name|pd_entry_t
+operator|*
+operator|)
+name|vtophys
+argument_list|(
+name|newptd
+argument_list|)
+expr_stmt|;
+comment|/* Allocate and setup BSP idle stack */
+name|stack
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+name|kmem_alloc
+argument_list|(
+name|kernel_map
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+expr_stmt|;
+name|SMP_prvpt
+index|[
+literal|3
+index|]
+operator|=
+call|(
+name|pt_entry_t
+call|)
+argument_list|(
+name|PG_V
+operator||
+name|PG_RW
+operator||
+name|vtophys
+argument_list|(
+name|stack
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|pmap_set_opt_bsp
@@ -6896,6 +7206,235 @@ empty_stmt|;
 return|return
 literal|1
 return|;
+block|}
+name|int
+name|smp_active
+init|=
+literal|0
+decl_stmt|;
+comment|/* are the APs allowed to run? */
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|smp_active
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|smp_active
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* XXX maybe should be hw.ncpu */
+name|int
+name|smp_cpus
+init|=
+literal|1
+decl_stmt|;
+comment|/* how many cpu's running */
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|smp_cpus
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|smp_cpus
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|int
+name|invltlb_ok
+init|=
+literal|0
+decl_stmt|;
+comment|/* throttle smp_invltlb() till safe */
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|invltlb_ok
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|invltlb_ok
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+name|int
+name|do_page_zero_idle
+init|=
+literal|0
+decl_stmt|;
+comment|/* bzero pages for fun and profit in idleloop */
+name|SYSCTL_INT
+argument_list|(
+name|_machdep
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|do_page_zero_idle
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|do_page_zero_idle
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/*  * This is called once the rest of the system is up and running and we're  * ready to let the AP's out of the pen.  */
+name|void
+name|ap_init
+argument_list|(
+name|void
+argument_list|)
+decl_stmt|;
+name|void
+name|ap_init
+parameter_list|()
+block|{
+name|u_int
+name|temp
+decl_stmt|;
+name|u_int
+name|apic_id
+decl_stmt|;
+name|smp_cpus
+operator|++
+expr_stmt|;
+comment|/* Build our map of 'other' CPUs. */
+name|other_cpus
+operator|=
+name|all_cpus
+operator|&
+operator|~
+operator|(
+literal|1
+operator|<<
+name|cpuid
+operator|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SMP: AP CPU #%d Launched!\n"
+argument_list|,
+name|cpuid
+argument_list|)
+expr_stmt|;
+comment|/* XXX FIXME: i386 specific, and redundant: Setup the FPU. */
+name|load_cr0
+argument_list|(
+operator|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+operator|)
+operator||
+name|CR0_MP
+operator||
+name|CR0_NE
+operator||
+name|CR0_TS
+argument_list|)
+expr_stmt|;
+comment|/* A quick check from sanity claus */
+name|apic_id
+operator|=
+operator|(
+name|apic_id_to_logical
+index|[
+operator|(
+name|lapic
+operator|.
+name|id
+operator|&
+literal|0x0f000000
+operator|)
+operator|>>
+literal|24
+index|]
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|cpuid
+operator|!=
+name|apic_id
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SMP: cpuid = %d\n"
+argument_list|,
+name|cpuid
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"SMP: apic_id = %d\n"
+argument_list|,
+name|apic_id
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"PTD[MPPTDI] = %08x\n"
+argument_list|,
+name|PTD
+index|[
+name|MPPTDI
+index|]
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"cpuid mismatch! boom!!"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Init local apic for irq's */
+name|apic_initialize
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Activate smp_invltlb, although strictly speaking, this isn't 	 * quite correct yet.  We should have a bitfield for cpus willing 	 * to accept TLB flush IPI's or something and sync them. 	 */
+name|invltlb_ok
+operator|=
+literal|1
+expr_stmt|;
+name|smp_active
+operator|=
+literal|1
+expr_stmt|;
+comment|/* historic */
+name|curproc
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* make sure */
 block|}
 end_function
 
