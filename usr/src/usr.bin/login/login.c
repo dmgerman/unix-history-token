@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.41 (Berkeley) %G%"
+literal|"@(#)login.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1793,10 +1793,6 @@ name|tm_year
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|TWOWEEKS
-value|(14*24*60*60)
 if|if
 condition|(
 name|pwd
@@ -1857,15 +1853,19 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tp
-operator|.
-name|tv_sec
-operator|-
 name|pwd
 operator|->
 name|pw_change
+operator|-
+name|tp
+operator|.
+name|tv_sec
 operator|<
-name|TWOWEEKS
+literal|2
+operator|*
+name|DAYSPERWEEK
+operator|*
+name|SECSPERDAY
 operator|&&
 operator|!
 name|quietlog
@@ -1941,15 +1941,19 @@ block|}
 elseif|else
 if|if
 condition|(
-name|tp
-operator|.
-name|tv_sec
-operator|-
 name|pwd
 operator|->
 name|pw_expire
+operator|-
+name|tp
+operator|.
+name|tv_sec
 operator|<
-name|TWOWEEKS
+literal|2
+operator|*
+name|DAYSPERWEEK
+operator|*
+name|SECSPERDAY
 operator|&&
 operator|!
 name|quietlog
