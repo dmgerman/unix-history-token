@@ -7908,8 +7908,6 @@ operator|=
 name|udev2dev
 argument_list|(
 name|nvp_rdev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check to see if we have a bdevvp vnode with no associated 	 * filesystem. If so, we want to associate the filesystem of 	 * the new newly instigated vnode with the bdevvp vnode and 	 * discard the newly created vnode rather than leaving the 	 * bdevvp vnode lying around with no associated filesystem. 	 */

@@ -2674,19 +2674,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|dev_t
-name|makedev
-parameter_list|(
-name|int
-name|x
-parameter_list|,
-name|int
-name|y
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|udev_t
 name|dev2udev
 parameter_list|(
@@ -2702,9 +2689,6 @@ name|udev2dev
 parameter_list|(
 name|udev_t
 name|x
-parameter_list|,
-name|int
-name|b
 parameter_list|)
 function_decl|;
 end_function_decl

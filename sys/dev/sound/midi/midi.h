@@ -608,7 +608,7 @@ name|u
 parameter_list|,
 name|d
 parameter_list|)
-value|(makedev((m), MIDIMKMINOR((u), (d))))
+value|(udev2dev(makeudev((m), MIDIMKMINOR((u), (d)))))
 end_define
 
 begin_comment

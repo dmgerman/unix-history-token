@@ -17404,11 +17404,14 @@ name|cdsw
 decl_stmt|;
 name|dev
 operator|=
-name|makedev
+name|udev2dev
+argument_list|(
+name|makeudev
 argument_list|(
 name|CDEV_MAJOR
 argument_list|,
 literal|0
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch

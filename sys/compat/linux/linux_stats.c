@@ -293,8 +293,6 @@ argument_list|(
 name|buf
 operator|->
 name|st_rdev
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1909,7 +1907,9 @@ expr_stmt|;
 comment|/* 	 * XXX - Don't return an error if we can't find a vnode for the 	 * device. Our dev_t is 32-bits whereas Linux only has a 16-bits 	 * dev_t. The dev_t that is used now may as well be a truncated 	 * dev_t returned from previous syscalls. Just return a bzeroed 	 * ustat in that case. 	 */
 name|dev
 operator|=
-name|makedev
+name|udev2dev
+argument_list|(
+name|makeudev
 argument_list|(
 name|args
 operator|->
@@ -1923,9 +1923,14 @@ name|dev
 operator|&
 literal|0xFF
 argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dev
+operator|!=
+name|NODEV
+operator|&&
 name|vfinddev
 argument_list|(
 name|dev
@@ -2231,8 +2236,6 @@ argument_list|(
 name|buf
 operator|->
 name|st_rdev
-argument_list|,
-literal|0
 argument_list|)
 operator|)
 operator|!=

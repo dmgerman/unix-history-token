@@ -13010,8 +13010,6 @@ argument_list|(
 name|va
 operator|.
 name|va_rdev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|raidPtr
@@ -13031,8 +13029,6 @@ argument_list|(
 name|va
 operator|.
 name|va_rdev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/* we allow the user to specify that only a  		   fraction of the disks should be used this is  		   just for debug:  it speeds up 		 * the parity scan */

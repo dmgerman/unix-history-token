@@ -473,7 +473,6 @@ operator|!
 name|error
 condition|)
 block|{
-comment|/* 5/11	*dev =  udev2dev(outp->dev, 2); */
 operator|*
 name|dev
 operator|=
@@ -482,8 +481,6 @@ argument_list|(
 name|outp
 operator|->
 name|dev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 operator|*
