@@ -74,21 +74,6 @@ file|<miscfs/umapfs/umap.h>
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|umapfs_init
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vfsconf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|umapfs_fhtovp
