@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.20	81/11/18	*/
+comment|/*	ts.c	4.21	82/01/17	*/
 end_comment
 
 begin_include
@@ -1367,6 +1367,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|bp
 operator|=
 operator|&
@@ -1378,9 +1382,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1436,11 +1439,10 @@ name|B_BUSY
 operator||
 name|B_READ
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1566,6 +1568,10 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 comment|/* 	 * Put transfer at end of controller queue 	 */
 name|bp
 operator|->
@@ -1590,9 +1596,8 @@ index|[
 name|tsunit
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1655,11 +1660,10 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mt.c	4.1	81/11/04	*/
+comment|/*	mt.c	4.2	82/01/17	*/
 end_comment
 
 begin_include
@@ -947,6 +947,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|bp
 operator|=
 operator|&
@@ -958,9 +962,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1015,11 +1018,10 @@ name|B_BUSY
 operator||
 name|B_READ
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -1124,6 +1126,10 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|bp
 operator|->
 name|av_forw
@@ -1137,9 +1143,8 @@ name|mi
 operator|->
 name|mi_tab
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1185,11 +1190,10 @@ argument_list|(
 name|mi
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block

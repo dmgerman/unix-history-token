@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tu.c	81/11/20	4.3	*/
+comment|/*	tu.c	82/01/17	4.4	*/
 end_comment
 
 begin_if
@@ -684,6 +684,9 @@ name|int
 name|tuwatch
 parameter_list|()
 function_decl|;
+specifier|register
+name|s
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|lint
@@ -736,6 +739,8 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
+name|s
+operator|=
 name|splx
 argument_list|(
 name|TUIPL
@@ -826,8 +831,10 @@ argument_list|,
 name|IE
 argument_list|)
 expr_stmt|;
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1039,6 +1046,10 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|bp
@@ -1068,6 +1079,8 @@ name|av_forw
 operator|=
 name|NULL
 expr_stmt|;
+name|s
+operator|=
 name|splx
 argument_list|(
 name|TUIPL
@@ -1113,8 +1126,10 @@ condition|)
 name|tustart
 argument_list|()
 expr_stmt|;
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block

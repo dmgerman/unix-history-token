@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.44	81/11/18	*/
+comment|/*	tm.c	4.45	82/01/17	*/
 end_comment
 
 begin_include
@@ -713,6 +713,9 @@ name|olddens
 decl_stmt|,
 name|dens
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|teunit
 operator|=
 name|TEUNIT
@@ -991,9 +994,8 @@ name|sc_dens
 operator|=
 name|dens
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -1033,11 +1035,10 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1196,6 +1197,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|bp
 operator|=
 operator|&
@@ -1207,9 +1212,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1265,11 +1269,10 @@ name|B_BUSY
 operator||
 name|B_READ
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
@@ -1380,6 +1383,9 @@ name|buf
 modifier|*
 name|dp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* 	 * Put transfer at end of unit queue 	 */
 name|dp
 operator|=
@@ -1395,9 +1401,8 @@ name|av_forw
 operator|=
 name|NULL
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1501,11 +1506,10 @@ argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block

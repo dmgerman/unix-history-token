@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.9	81/11/18	*/
+comment|/*	ut.c	4.10	82/01/17	*/
 end_comment
 
 begin_include
@@ -649,6 +649,10 @@ name|olddens
 decl_stmt|,
 name|dens
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 name|tjunit
@@ -928,9 +932,8 @@ operator|)
 operator|==
 name|T_6250BPI
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -970,11 +973,10 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1126,6 +1128,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|;
 name|bp
 operator|=
 operator|&
@@ -1137,9 +1143,8 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
@@ -1194,11 +1199,10 @@ name|B_BUSY
 operator||
 name|B_READ
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|bp
 operator|->
