@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.22 1998/08/08 08:13:04 phk Exp $"
+literal|"$Id: main.c,v 1.23 1999/01/18 02:09:15 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -637,6 +637,8 @@ block|,
 name|ipx_stats
 block|,
 literal|"ipx"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -651,6 +653,8 @@ block|,
 name|spx_stats
 block|,
 literal|"spx"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -659,6 +663,8 @@ literal|1
 block|,
 operator|-
 literal|1
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -1793,6 +1799,16 @@ name|af
 operator|==
 name|AF_UNSPEC
 condition|)
+block|{
+name|kread
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|tp
@@ -1815,6 +1831,7 @@ operator|->
 name|pr_name
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|af
