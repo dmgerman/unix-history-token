@@ -3990,7 +3990,6 @@ name|opps
 operator|>
 name|icmplim
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"Limiting %s from %d to %d packets/sec\n"
@@ -4004,7 +4003,6 @@ argument_list|,
 name|icmplim
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 literal|0
