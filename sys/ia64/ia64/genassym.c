@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ia32.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -152,6 +158,27 @@ include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IA32
+end_ifdef
+
+begin_expr_stmt
+name|ASSYM
+argument_list|(
+name|IA32
+argument_list|,
+name|IA32
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|ASSYM
