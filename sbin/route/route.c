@@ -4997,8 +4997,13 @@ case|:
 name|forcenet
 operator|++
 expr_stmt|;
-comment|/* bzero(su, sizeof(*su)); */
+if|#
+directive|if
+literal|0
+block|bzero(su, sizeof(*su));
 comment|/* for readability */
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -5012,14 +5017,13 @@ literal|0
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|RTA_NETMASK
-case|:
-case|case
-name|RTA_GENMASK
-case|:
-comment|/* bzero(su, sizeof(*su)); */
+if|#
+directive|if
+literal|0
+block|case RTA_NETMASK: 		case RTA_GENMASK: 			bzero(su, sizeof(*su));
 comment|/* for readability */
+endif|#
+directive|endif
 block|}
 return|return
 operator|(
