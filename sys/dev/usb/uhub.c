@@ -3434,12 +3434,16 @@ expr_stmt|;
 if|if
 condition|(
 name|dev
-operator|&&
+operator|==
+name|NULL
+operator|||
 name|dev
 operator|->
 name|subdevs
+operator|==
+name|NULL
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|i
@@ -3483,7 +3487,6 @@ block|}
 block|}
 block|}
 block|}
-block|}
 end_function
 
 begin_function
@@ -3499,8 +3502,7 @@ modifier|*
 name|_driver
 parameter_list|)
 block|{
-comment|/* Don't do anything, as reprobing does not work currently. We should 	 * really call through to usbd_new_device or a function along those 	 * lines that reinitialises the device if it is not owned by any 	 * driver. But this is complicated. Manual replugging by the user is 	 * easier. 	 */
-empty_stmt|;
+comment|/* 	 * Don't do anything, as reprobing does not work currently. 	 * In the future we should properly allocate ivars so we can 	 * leave the devices attached to the newbus tree.  Once we do 	 * that, then we can reprobe on driver loading with the 	 * default driver added routines. 	 */
 block|}
 end_function
 
