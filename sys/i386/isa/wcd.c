@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.52 1998/04/15 17:45:53 bde Exp $  */
+comment|/*  * IDE CD-ROM driver for FreeBSD.  * Supports ATAPI-compatible drives.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Mon Oct  9 20:27:42 MSK 1995  * $Id: wcd.c,v 1.53 1998/06/07 17:11:04 dfr Exp $  */
 end_comment
 
 begin_include
@@ -638,127 +638,127 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_char
+name|u_int
 name|audio_play
 range|:
 literal|1
 decl_stmt|;
 comment|/* audio play supported */
-name|u_char
+name|u_int
 name|composite
 range|:
 literal|1
 decl_stmt|;
 comment|/* composite audio/video supported */
-name|u_char
+name|u_int
 name|dport1
 range|:
 literal|1
 decl_stmt|;
 comment|/* digital audio on port 1 */
-name|u_char
+name|u_int
 name|dport2
 range|:
 literal|1
 decl_stmt|;
 comment|/* digital audio on port 2 */
-name|u_char
+name|u_int
 name|mode2_form1
 range|:
 literal|1
 decl_stmt|;
 comment|/* mode 2 form 1 (XA) read */
-name|u_char
+name|u_int
 name|mode2_form2
 range|:
 literal|1
 decl_stmt|;
 comment|/* mode 2 form 2 format */
-name|u_char
+name|u_int
 name|multisession
 range|:
 literal|1
 decl_stmt|;
 comment|/* multi-session photo-CD */
-name|u_char
+name|u_int
 label|:
 literal|1
 expr_stmt|;
-name|u_char
+name|u_int
 name|cd_da
 range|:
 literal|1
 decl_stmt|;
 comment|/* audio-CD read supported */
-name|u_char
+name|u_int
 name|cd_da_stream
 range|:
 literal|1
 decl_stmt|;
 comment|/* CD-DA streaming */
-name|u_char
+name|u_int
 name|rw
 range|:
 literal|1
 decl_stmt|;
 comment|/* combined R-W subchannels */
-name|u_char
+name|u_int
 name|rw_corr
 range|:
 literal|1
 decl_stmt|;
 comment|/* R-W subchannel data corrected */
-name|u_char
+name|u_int
 name|c2
 range|:
 literal|1
 decl_stmt|;
 comment|/* C2 error pointers supported */
-name|u_char
+name|u_int
 name|isrc
 range|:
 literal|1
 decl_stmt|;
 comment|/* can return the ISRC info */
-name|u_char
+name|u_int
 name|upc
 range|:
 literal|1
 decl_stmt|;
 comment|/* can return the catalog number UPC */
-name|u_char
+name|u_int
 label|:
 literal|1
 expr_stmt|;
-name|u_char
+name|u_int
 name|lock
 range|:
 literal|1
 decl_stmt|;
 comment|/* could be locked */
-name|u_char
+name|u_int
 name|locked
 range|:
 literal|1
 decl_stmt|;
 comment|/* current lock state */
-name|u_char
+name|u_int
 name|prevent
 range|:
 literal|1
 decl_stmt|;
 comment|/* prevent jumper installed */
-name|u_char
+name|u_int
 name|eject
 range|:
 literal|1
 decl_stmt|;
 comment|/* can eject */
-name|u_char
+name|u_int
 label|:
 literal|1
 expr_stmt|;
-name|u_char
+name|u_int
 name|mech
 range|:
 literal|3
@@ -784,19 +784,19 @@ define|#
 directive|define
 name|MECH_CARTRIDGE
 value|5
-name|u_char
+name|u_int
 name|sep_vol
 range|:
 literal|1
 decl_stmt|;
 comment|/* independent volume of channels */
-name|u_char
+name|u_int
 name|sep_mute
 range|:
 literal|1
 decl_stmt|;
 comment|/* independent mute of channels */
-name|u_char
+name|u_int
 label|:
 literal|6
 expr_stmt|;
@@ -820,25 +820,25 @@ comment|/* Digital drive output format description (optional?) */
 name|u_char
 name|reserved3
 decl_stmt|;
-name|u_char
+name|u_int
 name|bckf
 range|:
 literal|1
 decl_stmt|;
 comment|/* data valid on failing edge of BCK */
-name|u_char
+name|u_int
 name|rch
 range|:
 literal|1
 decl_stmt|;
 comment|/* high LRCK indicates left channel */
-name|u_char
+name|u_int
 name|lsbf
 range|:
 literal|1
 decl_stmt|;
 comment|/* set if LSB first */
-name|u_char
+name|u_int
 name|dlen
 range|:
 literal|2
@@ -863,7 +863,7 @@ directive|define
 name|DLEN_24_I2S
 value|3
 comment|/* 24 BCKs (I2S) */
-name|u_char
+name|u_int
 label|:
 literal|3
 expr_stmt|;
@@ -885,13 +885,13 @@ begin_struct
 struct|struct
 name|changer
 block|{
-name|u_char
+name|u_int
 name|current_slot
 range|:
 literal|5
 decl_stmt|;
 comment|/* active changer slot */
-name|u_char
+name|u_int
 name|mech_state
 range|:
 literal|2
@@ -913,18 +913,18 @@ define|#
 directive|define
 name|CH_INITIALIZING
 value|3
-name|u_char
+name|u_int
 name|fault
 range|:
 literal|1
 decl_stmt|;
 comment|/* fault in last operation */
-name|u_char
+name|u_int
 name|reserved0
 range|:
 literal|5
 decl_stmt|;
-name|u_char
+name|u_int
 name|cd_state
 range|:
 literal|3
@@ -967,18 +967,18 @@ decl_stmt|;
 comment|/* slot table length */
 struct|struct
 block|{
-name|u_char
+name|u_int
 name|changed
 range|:
 literal|1
 decl_stmt|;
 comment|/* media has changed in this slot */
-name|u_char
+name|u_int
 name|unused
 range|:
 literal|6
 decl_stmt|;
-name|u_char
+name|u_int
 name|present
 range|:
 literal|1
