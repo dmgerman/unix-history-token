@@ -14919,6 +14919,11 @@ name|B_NEEDCOMMIT
 operator|)
 condition|)
 block|{
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|nbp
 operator|=
 name|TAILQ_NEXT
