@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|13
+value|15
 end_define
 
 begin_include
