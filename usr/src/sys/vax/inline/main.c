@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.5	(Berkeley)	%G%"
+literal|"@(#)main.c	1.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,6 +647,10 @@ decl_stmt|,
 name|mod
 init|=
 literal|0
+decl_stmt|,
+name|args
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|parsebuf
@@ -711,6 +715,9 @@ operator|-
 literal|1
 condition|)
 break|break;
+name|args
+operator|++
+expr_stmt|;
 for|for
 control|(
 name|foundarg
@@ -875,6 +882,11 @@ argument_list|(
 name|replace
 argument_list|,
 name|stdout
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+name|args
 argument_list|)
 expr_stmt|;
 block|}
