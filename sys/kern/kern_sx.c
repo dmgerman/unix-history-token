@@ -403,7 +403,7 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
-name|SX_ASSERT_SLOCKED
+name|_SX_ASSERT_SLOCKED
 argument_list|(
 name|sx
 argument_list|)
@@ -487,7 +487,7 @@ operator|->
 name|sx_lock
 argument_list|)
 expr_stmt|;
-name|SX_ASSERT_XLOCKED
+name|_SX_ASSERT_XLOCKED
 argument_list|(
 name|sx
 argument_list|)
