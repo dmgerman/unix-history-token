@@ -86,10 +86,22 @@ name|ISP_TARGET_MODE
 end_ifdef
 
 begin_decl_stmt
-name|int
-name|isp_tdebug
+specifier|static
+name|char
+modifier|*
+name|atiocope
 init|=
-literal|0
+literal|"ATIO returned for lun %d because it was in the middle of Bus Device Reset"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|atior
+init|=
+literal|"ATIO returned for lun %d from initiator %d because a Bus Reset occurred"
 decl_stmt|;
 end_decl_stmt
 
@@ -510,18 +522,17 @@ literal|0x80
 expr_stmt|;
 block|}
 block|}
-name|ITDEBUG
+name|isp_prt
 argument_list|(
-literal|2
+name|isp
 argument_list|,
-operator|(
-literal|"isp_target_notify: Immediate Notify, "
-literal|"status=0x%x seqid=0x%x\n"
-operator|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"Immediate Notify, status=0x%x seqid=0x%x"
+argument_list|,
 name|status
-operator|,
+argument_list|,
 name|seqid
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -586,26 +597,26 @@ break|break;
 case|case
 name|IN_RSRC_UNAVAIL
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware out of ATIOs\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Firmware out of ATIOs"
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|IN_ABORT_TASK
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Abort Task for Initiator %d RX_ID 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Abort Task for Initiator %d RX_ID 0x%x"
 argument_list|,
 name|inot_fcp
 operator|->
@@ -618,13 +629,13 @@ break|break;
 case|case
 name|IN_PORT_LOGOUT
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Port Logout for Initiator %d RX_ID 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Port Logout for Initiator %d RX_ID 0x%x"
 argument_list|,
 name|inot_fcp
 operator|->
@@ -637,13 +648,13 @@ break|break;
 case|case
 name|IN_PORT_CHANGED
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Port Changed for Initiator %d RX_ID 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Port Changed for Initiator %d RX_ID 0x%x"
 argument_list|,
 name|inot_fcp
 operator|->
@@ -656,24 +667,24 @@ break|break;
 case|case
 name|IN_GLOBAL_LOGO
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: All ports logged out\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"All ports logged out"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: bad status (0x%x) in isp_target_notify\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad status (0x%x) in isp_target_notify"
 argument_list|,
 name|status
 argument_list|)
@@ -700,66 +711,57 @@ name|isp
 argument_list|)
 condition|)
 block|{
-name|ITDEBUG
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: Notify Ack status=0x%x seqid 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"Notify Ack status=0x%x seqid 0x%x"
+argument_list|,
 name|nack_fcp
 operator|->
 name|na_status
-operator|,
+argument_list|,
 name|nack_fcp
 operator|->
 name|na_seqid
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|ITDEBUG
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: Notify Ack event 0x%x status=0x%x "
-literal|"seqid 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"Notify Ack event 0x%x status=0x%x seqid 0x%x"
+argument_list|,
 name|nackp
 operator|->
 name|na_event
-operator|,
+argument_list|,
 name|nackp
 operator|->
 name|na_status
-operator|,
+argument_list|,
 name|nackp
 operator|->
 name|na_seqid
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Unknown entry type 0x%x in isp_target_notify"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown entry type 0x%x in isp_target_notify"
 argument_list|,
 name|hdrp
 operator|->
@@ -772,19 +774,6 @@ operator|-
 literal|1
 expr_stmt|;
 break|break;
-block|}
-if|if
-condition|(
-name|isp_tdebug
-condition|)
-block|{
-name|MEMZERO
-argument_list|(
-name|vptr
-argument_list|,
-name|QENTRY_LEN
-argument_list|)
-expr_stmt|;
 block|}
 undef|#
 directive|undef
@@ -1094,13 +1083,13 @@ name|outp
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Request Queue Overflow in isp_lun_cmd\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Request Queue Overflow in isp_lun_cmd"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1207,16 +1196,13 @@ name|outp
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Request Queue Overflow in isp_target_put_entry "
-literal|"for type 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
 argument_list|,
-name|etype
+name|ISP_LOGWARN
+argument_list|,
+literal|"Request Queue Overflow in isp_target_put_entry"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1284,13 +1270,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Unknown type 0x%x in isp_put_entry\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown type 0x%x in isp_put_entry"
 argument_list|,
 name|etype
 argument_list|)
@@ -2178,13 +2164,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: isp_target_async: unknown event 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"isp_target_async: unknown event 0x%x"
 argument_list|,
 name|event
 argument_list|)
@@ -2347,13 +2333,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown immediate notify status 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unknown immediate notify status 0x%x"
 argument_list|,
 name|inp
 operator|->
@@ -2397,14 +2383,14 @@ name|char
 modifier|*
 name|f1
 init|=
-literal|"%s: %s from iid %d lun %d seq 0x%x\n"
+literal|"%s from iid %d lun %d seq 0x%x"
 decl_stmt|;
 specifier|static
 name|char
 modifier|*
 name|f2
 init|=
-literal|"%s: unknown %s 0x%x lun %d iid %d task flags 0x%x seq 0x%x\n"
+literal|"unknown %s 0x%x lun %d iid %d task flags 0x%x seq 0x%x\n"
 decl_stmt|;
 if|if
 condition|(
@@ -2415,13 +2401,13 @@ operator|!=
 name|IN_MSG_RECEIVED
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f2
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f2
 argument_list|,
 literal|"immediate notify status"
 argument_list|,
@@ -2523,13 +2509,13 @@ operator|&
 name|TASK_FLAGS_ABORT_TASK
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f1
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f1
 argument_list|,
 literal|"ABORT TASK"
 argument_list|,
@@ -2566,13 +2552,13 @@ operator|&
 name|TASK_FLAGS_CLEAR_TASK_SET
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f1
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f1
 argument_list|,
 literal|"CLEAR TASK SET"
 argument_list|,
@@ -2609,13 +2595,13 @@ operator|&
 name|TASK_FLAGS_TARGET_RESET
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f1
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f1
 argument_list|,
 literal|"TARGET RESET"
 argument_list|,
@@ -2652,13 +2638,13 @@ operator|&
 name|TASK_FLAGS_CLEAR_ACA
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f1
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f1
 argument_list|,
 literal|"CLEAR ACA"
 argument_list|,
@@ -2696,13 +2682,13 @@ operator|&
 name|TASK_FLAGS_TERMINATE_TASK
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f1
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|f1
 argument_list|,
 literal|"TERMINATE TASK"
 argument_list|,
@@ -2731,13 +2717,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-name|f2
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|f2
 argument_list|,
 literal|"task flag"
 argument_list|,
@@ -2842,13 +2828,13 @@ name|outp
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Request Queue Overflow For isp_notify_ack\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"Request Queue Overflow For isp_notify_ack"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3198,13 +3184,13 @@ case|case
 name|AT_PATH_INVALID
 case|:
 comment|/* 		 * ATIO rejected by the firmware due to disabled lun. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: rejected ATIO for disabled lun %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"rejected ATIO for disabled lun %d"
 argument_list|,
 name|lun
 argument_list|)
@@ -3214,14 +3200,14 @@ case|case
 name|AT_NOCAP
 case|:
 comment|/* 		 * Requested Capability not available 		 * We sent an ATIO that overflowed the firmware's 		 * command resource count. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: rejected ATIO for lun %d because of command count"
-literal|" overflow\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"rejected ATIO for lun %d because of command count"
+literal|" overflow"
 argument_list|,
 name|lun
 argument_list|)
@@ -3231,14 +3217,13 @@ case|case
 name|AT_BDR_MSG
 case|:
 comment|/* 		 * If we send an ATIO to the firmware to increment 		 * its command resource count, and the firmware is 		 * recovering from a Bus Device Reset, it returns 		 * the ATIO with this status. We set the command 		 * resource count in the Enable Lun entry and no 		 * not increment it. Therefore we should never get 		 * this status here. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: ATIO returned for lun %d because it was in the "
-literal|" middle of coping with a Bus Device Reset\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|atiocope
 argument_list|,
 name|lun
 argument_list|)
@@ -3270,14 +3255,13 @@ case|case
 name|AT_RESET
 case|:
 comment|/* 		 * A bus reset came along an blew away this command. Why 		 * they do this in addition the async event code stuff, 		 * I dunno. 		 * 		 * Ignore it because the async event will clear things 		 * up for us. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: ATIO returned for lun %d from initiator %d because"
-literal|" a Bus Reset occurred\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+name|atior
 argument_list|,
 name|lun
 argument_list|,
@@ -3288,14 +3272,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Unknown ATIO status 0x%x from initiator %d for lun"
-literal|" %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown ATIO status 0x%x from initiator %d for lun %d"
 argument_list|,
 name|aep
 operator|->
@@ -3401,13 +3384,13 @@ case|case
 name|AT_PATH_INVALID
 case|:
 comment|/* 		 * ATIO rejected by the firmware due to disabled lun. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: rejected ATIO2 for disabled lun %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"rejected ATIO2 for disabled lun %d"
 argument_list|,
 name|lun
 argument_list|)
@@ -3417,14 +3400,13 @@ case|case
 name|AT_NOCAP
 case|:
 comment|/* 		 * Requested Capability not available 		 * We sent an ATIO that overflowed the firmware's 		 * command resource count. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: rejected ATIO2 for lun %d because of command count"
-literal|" overflow\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"rejected ATIO2 for lun %d- command count overflow"
 argument_list|,
 name|lun
 argument_list|)
@@ -3434,14 +3416,13 @@ case|case
 name|AT_BDR_MSG
 case|:
 comment|/* 		 * If we send an ATIO to the firmware to increment 		 * its command resource count, and the firmware is 		 * recovering from a Bus Device Reset, it returns 		 * the ATIO with this status. We set the command 		 * resource count in the Enable Lun entry and no 		 * not increment it. Therefore we should never get 		 * this status here. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: ATIO2 returned for lun %d because it was in the "
-literal|" middle of coping with a Bus Device Reset\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|atiocope
 argument_list|,
 name|lun
 argument_list|)
@@ -3469,14 +3450,13 @@ case|case
 name|AT_RESET
 case|:
 comment|/* 		 * A bus reset came along an blew away this command. Why 		 * they do this in addition the async event code stuff, 		 * I dunno. 		 * 		 * Ignore it because the async event will clear things 		 * up for us. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: ATIO2 returned for lun %d from initiator %d because"
-literal|" a Bus Reset occurred\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+name|atior
 argument_list|,
 name|lun
 argument_list|,
@@ -3487,14 +3467,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Unknown ATIO2 status 0x%x from initiator %d for lun"
-literal|" %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown ATIO2 status 0x%x from initiator %d for lun %d"
 argument_list|,
 name|aep
 operator|->
@@ -3551,14 +3530,14 @@ modifier|*
 name|ct
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
 name|int
 name|pl
 init|=
-literal|0
+name|ISP_LOGTDEBUG2
 decl_stmt|;
 name|char
 modifier|*
@@ -3592,14 +3571,14 @@ name|NULL
 condition|)
 name|pl
 operator|=
-literal|0
+name|ISP_LOGALL
 expr_stmt|;
 block|}
 else|else
 block|{
 name|pl
 operator|=
-literal|2
+name|ISP_LOGTDEBUG1
 expr_stmt|;
 name|xs
 operator|=
@@ -3646,21 +3625,17 @@ name|CT_NO_DATA
 condition|)
 block|{
 comment|/* 			 * Nothing to do in this case. 			 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s:CTIO- iid %d disconnected OK\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
+literal|"CTIO- iid %d disconnected OK"
+argument_list|,
 name|ct
 operator|->
 name|ct_iid
-operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3703,13 +3678,13 @@ name|fmsg
 operator|=
 literal|"ABORT TASK sent by Initiator"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO destroyed by %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGWARN
+argument_list|,
+literal|"CTIO destroyed by %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -3719,13 +3694,13 @@ case|case
 name|CT_INVAL
 case|:
 comment|/* 		 * CTIO rejected by the firmware due to disabled lun. 		 * "Cannot Happen". 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware rejected CTIO for disabled lun %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Firmware rejected CTIO for disabled lun %d"
 argument_list|,
 name|ct
 operator|->
@@ -3737,13 +3712,13 @@ case|case
 name|CT_NOPATH
 case|:
 comment|/* 		 * CTIO rejected by the firmware due "no path for the 		 * nondisconnecting nexus specified". This means that 		 * we tried to access the bus while a non-disconnecting 		 * command is in process. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware rejected CTIO for bad nexus %d/%d/%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Firmware rejected CTIO for bad nexus %d/%d/%d"
 argument_list|,
 name|ct
 operator|->
@@ -3780,13 +3755,13 @@ name|fmsg
 operator|=
 literal|"Command"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware timed out on %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Firmware timed out on %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -3841,13 +3816,13 @@ name|fmsg
 operator|=
 literal|"unacknowledged Immediate Notify pending"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO returned by f/w- %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"CTIO returned by f/w- %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -3860,13 +3835,13 @@ endif|#
 directive|endif
 break|break;
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Unknown CTIO status 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown CTIO status 0x%x"
 argument_list|,
 name|ct
 operator|->
@@ -3908,61 +3883,49 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: intermediate CTIO completed ok\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"intermediate CTIO completed ok"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: unmonitored CTIO completed ok\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"unmonitored CTIO completed ok"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: NO xs for CTIO (handle 0x%x) status 0x%x\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
+literal|"NO xs for CTIO (handle 0x%x) status 0x%x"
+argument_list|,
 name|ct
 operator|->
 name|ct_reserved
-operator|,
+argument_list|,
 name|ct
 operator|->
 name|ct_status
 operator|&
 operator|~
 name|QLTM_SVALID
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3979,34 +3942,26 @@ name|CT_SENDSTATUS
 condition|)
 block|{
 comment|/* 			 * Sent status and command complete. 			 * 			 * We're now really done with this command, so we 			 * punt to the platform dependent layers because 			 * only there can we do the appropriate command 			 * complete thread synchronization. 			 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s:status CTIO complete\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"status CTIO complete"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 			 * Final CTIO completed. Release DMA resources and 			 * notify platform dependent layers. 			 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: data CTIO complete\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"data CTIO complete"
 argument_list|)
 expr_stmt|;
 name|ISP_DMAFREE
@@ -4057,14 +4012,14 @@ modifier|*
 name|ct
 decl_stmt|;
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 decl_stmt|;
 name|int
 name|pl
 init|=
-literal|3
+name|ISP_LOGTDEBUG2
 decl_stmt|;
 name|char
 modifier|*
@@ -4098,14 +4053,14 @@ name|NULL
 condition|)
 name|pl
 operator|=
-literal|0
+name|ISP_LOGALL
 expr_stmt|;
 block|}
 else|else
 block|{
 name|pl
 operator|=
-literal|2
+name|ISP_LOGTDEBUG1
 expr_stmt|;
 name|xs
 operator|=
@@ -4164,13 +4119,13 @@ name|fmsg
 operator|=
 literal|"ABORT TASK sent by Initiator"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO2 destroyed by %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"CTIO2 destroyed by %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -4180,13 +4135,13 @@ case|case
 name|CT_INVAL
 case|:
 comment|/* 		 * CTIO rejected by the firmware - invalid data direction. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO2 had wrong data directiond\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"CTIO2 had wrong data directiond"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4194,13 +4149,13 @@ case|case
 name|CT_NOPATH
 case|:
 comment|/* 		 * CTIO rejected by the firmware due "no path for the 		 * nondisconnecting nexus specified". This means that 		 * we tried to access the bus while a non-disconnecting 		 * command is in process. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware rejected CTIO2 for bad nexus %d->%d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Firmware rejected CTIO2 for bad nexus %d->%d"
 argument_list|,
 name|ct
 operator|->
@@ -4233,13 +4188,13 @@ name|fmsg
 operator|=
 literal|"Command"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: Firmware timed out on %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Firmware timed out on %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -4322,13 +4277,13 @@ name|fmsg
 operator|=
 literal|"unacknowledged Immediate Notify pending"
 expr_stmt|;
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO returned by f/w- %s\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"CTIO returned by f/w- %s"
 argument_list|,
 name|fmsg
 argument_list|)
@@ -4344,13 +4299,13 @@ case|case
 name|CT_INVRXID
 case|:
 comment|/* 		 * CTIO rejected by the firmware because an invalid RX_ID. 		 * Just print a message. 		 */
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: CTIO2 completed with Invalid RX_ID 0x%x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"CTIO2 completed with Invalid RX_ID 0x%x"
 argument_list|,
 name|ct
 operator|->
@@ -4359,24 +4314,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-name|pl
-argument_list|,
-operator|(
-literal|"%s: Unknown CTIO status 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"Unknown CTIO status 0x%x"
+argument_list|,
 name|ct
 operator|->
 name|ct_status
 operator|&
 operator|~
 name|QLTM_SVALID
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4411,61 +4362,49 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: intermediate CTIO completed ok\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"intermediate CTIO completed ok"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: unmonitored CTIO completed ok\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"unmonitored CTIO completed ok"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: NO xs for CTIO (handle 0x%x) status 0x%x\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|,
+literal|"NO xs for CTIO (handle 0x%x) status 0x%x"
+argument_list|,
 name|ct
 operator|->
 name|ct_reserved
-operator|,
+argument_list|,
 name|ct
 operator|->
 name|ct_status
 operator|&
 operator|~
 name|QLTM_SVALID
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4482,34 +4421,26 @@ name|CT_SENDSTATUS
 condition|)
 block|{
 comment|/* 			 * Sent status and command complete. 			 * 			 * We're now really done with this command, so we 			 * punt to the platform dependent layers because 			 * only there can we do the appropriate command 			 * complete thread synchronization. 			 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: status CTIO complete\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"status CTIO complete"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 			 * Final CTIO completed. Release DMA resources and 			 * notify platform dependent layers. 			 */
-name|IDPRINTF
+name|isp_prt
 argument_list|(
+name|isp
+argument_list|,
 name|pl
 argument_list|,
-operator|(
-literal|"%s: data CTIO complete\n"
-operator|,
-name|isp
-operator|->
-name|isp_name
-operator|)
+literal|"data CTIO complete"
 argument_list|)
 expr_stmt|;
 name|ISP_DMAFREE
