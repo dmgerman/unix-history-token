@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.17 (Berkeley) %G%"
+literal|"@(#)find.c	4.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4493,6 +4493,48 @@ operator|!=
 name|Statb
 operator|.
 name|st_dev
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+name|Statb
+operator|.
+name|st_nlink
+operator|==
+literal|2
+operator|&&
+name|exlist
+operator|->
+name|F
+operator|==
+name|and
+operator|&&
+name|exlist
+operator|->
+name|L
+operator|->
+name|F
+operator|==
+name|type
+operator|&&
+operator|(
+call|(
+name|int
+call|)
+argument_list|(
+name|exlist
+operator|->
+name|L
+operator|->
+name|L
+argument_list|)
+operator|)
+operator|==
+name|S_IFDIR
 condition|)
 return|return
 operator|(
