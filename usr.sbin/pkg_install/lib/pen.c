@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.5 1994/10/08 23:55:36 jkh Exp $"
+literal|"$Id: pen.c,v 1.6 1994/10/14 05:42:24 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,11 +196,30 @@ if|if
 condition|(
 name|Verbose
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|sz
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Projected package size: %d bytes, free space: %d bytes\n"
+literal|"Free temp space: %d bytes\n"
+argument_list|,
+name|min_free
+argument_list|(
+name|Pen
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Projected package size: %d bytes, free temp space: %d bytes\n"
 argument_list|,
 operator|(
 name|int
@@ -213,6 +232,7 @@ name|Pen
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|min_free
