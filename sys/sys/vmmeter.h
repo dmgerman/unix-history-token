@@ -190,6 +190,39 @@ name|u_int
 name|v_free_severe
 decl_stmt|;
 comment|/* severe depletion of pages below this pt */
+comment|/* 	 * Fork/vfork/rfork activity. 	 */
+name|u_int
+name|v_forks
+decl_stmt|;
+comment|/* number of fork() calls */
+name|u_int
+name|v_vforks
+decl_stmt|;
+comment|/* number of vfork() calls */
+name|u_int
+name|v_rforks
+decl_stmt|;
+comment|/* number of rfork() calls */
+name|u_int
+name|v_kthreads
+decl_stmt|;
+comment|/* number of fork() calls by kernel */
+name|u_int
+name|v_forkpages
+decl_stmt|;
+comment|/* number of VM pages affected by fork() */
+name|u_int
+name|v_vforkpages
+decl_stmt|;
+comment|/* number of VM pages affected by vfork() */
+name|u_int
+name|v_rforkpages
+decl_stmt|;
+comment|/* number of VM pages affected by rfork() */
+name|u_int
+name|v_kthreadpages
+decl_stmt|;
+comment|/* number of VM pages affected by fork() by kernel */
 block|}
 struct|;
 end_struct
