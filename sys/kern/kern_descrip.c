@@ -2910,6 +2910,8 @@ name|fdalloc
 argument_list|(
 name|td
 argument_list|,
+name|new
+argument_list|,
 operator|&
 name|new
 argument_list|)
@@ -5456,6 +5458,9 @@ modifier|*
 name|td
 parameter_list|,
 name|int
+name|minfd
+parameter_list|,
+name|int
 modifier|*
 name|result
 parameter_list|)
@@ -5525,9 +5530,7 @@ name|fd_first_free
 argument_list|(
 name|fdp
 argument_list|,
-name|fdp
-operator|->
-name|fd_freefile
+name|minfd
 argument_list|,
 name|fdp
 operator|->
@@ -6084,6 +6087,8 @@ operator|=
 name|fdalloc
 argument_list|(
 name|td
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|i
