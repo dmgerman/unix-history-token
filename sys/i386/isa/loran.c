@@ -3042,13 +3042,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|94
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3084,7 +3077,7 @@ comment|/* name */
 literal|"loran"
 block|,
 comment|/* maj */
-name|CDEV_MAJOR
+name|MAJOR_AUTO
 block|,
 comment|/* dump */
 name|nodump
