@@ -133,12 +133,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CRAY
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
 name|USE_TERMIO
 argument_list|)
 operator|&&
@@ -147,7 +141,6 @@ name|defined
 argument_list|(
 name|SYSV_TERMIO
 argument_list|)
-operator|)
 end_if
 
 begin_define

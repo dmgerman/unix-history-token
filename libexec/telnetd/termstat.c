@@ -112,37 +112,6 @@ begin_comment
 comment|/* LINEMODE */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|int
-name|newmap
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* nonzero if \n maps to ^M^J */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -163,26 +132,6 @@ name|need_will_echo
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-comment|/* 	 * Keep track of that ol' CR/NL mapping while we're in the 	 * neighborhood. 	 */
-name|newmap
-operator|=
-name|tty_isnewmap
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 comment|/* 	 * Check for changes to flow control if client supports it. 	 */
 name|flowstat
 argument_list|()
@@ -1252,24 +1201,6 @@ comment|/* What? */
 break|break;
 block|}
 comment|/* end of switch */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-comment|/* 	 * Just in case of the likely event that we changed the pty state. 	 */
-name|rcv_ioctl
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 name|netflush
 argument_list|()
 expr_stmt|;
@@ -1278,62 +1209,6 @@ end_function
 
 begin_comment
 comment|/* end of clientstat */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY2
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|UNICOS5
-argument_list|)
-end_if
-
-begin_function
-name|void
-name|termstat
-parameter_list|()
-block|{
-name|needtermstat
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|_termstat
-parameter_list|()
-block|{
-name|needtermstat
-operator|=
-literal|0
-expr_stmt|;
-name|init_termbuf
-argument_list|()
-expr_stmt|;
-name|localstat
-argument_list|()
-expr_stmt|;
-name|rcv_ioctl
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(CRAY2)&& defined(UNICOS5) */
 end_comment
 
 begin_ifdef

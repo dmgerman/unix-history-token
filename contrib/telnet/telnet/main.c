@@ -438,24 +438,6 @@ name|tninit
 argument_list|()
 expr_stmt|;
 comment|/* Clear out things */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CRAY
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-name|_setlist_init
-argument_list|()
-expr_stmt|;
-comment|/* Work around compiler bug */
-endif|#
-directive|endif
 name|TerminalSaveState
 argument_list|()
 expr_stmt|;
