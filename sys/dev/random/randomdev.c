@@ -388,6 +388,14 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|random_systat
+operator|.
+name|lock
+argument_list|)
+expr_stmt|;
 comment|/* Blocking logic */
 while|while
 condition|(
@@ -413,10 +421,15 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|random_systat
+argument_list|,
+operator|&
+name|random_systat
+operator|.
+name|lock
 argument_list|,
 name|PUSER
 operator||
@@ -435,14 +448,6 @@ operator|!
 name|error
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|random_systat
-operator|.
-name|lock
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|uio
@@ -492,6 +497,7 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -500,7 +506,6 @@ operator|.
 name|lock
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
