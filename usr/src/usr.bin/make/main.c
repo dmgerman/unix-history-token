@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1558,6 +1558,14 @@ argument_list|(
 literal|"Makefile"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ReadMakefile
+argument_list|(
+literal|".depend"
+argument_list|)
+expr_stmt|;
 name|Var_Append
 argument_list|(
 literal|"MFLAGS"
@@ -1926,6 +1934,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|stream
+operator|=
+name|fopen
+argument_list|(
+name|fname
+argument_list|,
+literal|"r"
+argument_list|)
+condition|)
+goto|goto
+name|found
+goto|;
 comment|/* if we've chdir'd, rebuild the path name */
 if|if
 condition|(
@@ -1951,31 +1973,28 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-name|fname
-operator|=
-name|path
-expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
-operator|(
 name|stream
 operator|=
 name|fopen
 argument_list|(
-name|fname
+name|path
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
 condition|)
 block|{
+name|fname
+operator|=
+name|path
+expr_stmt|;
+goto|goto
+name|found
+goto|;
+block|}
+block|}
 comment|/* look in -I and system include directories. */
-if|if
-condition|(
-operator|!
-operator|(
 name|name
 operator|=
 name|Dir_FindFile
@@ -1984,10 +2003,12 @@ name|fname
 argument_list|,
 name|parseIncPath
 argument_list|)
-operator|)
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 operator|!
-operator|(
+name|name
+condition|)
 name|name
 operator|=
 name|Dir_FindFile
@@ -1996,7 +2017,11 @@ name|fname
 argument_list|,
 name|sysIncPath
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|name
 operator|||
 operator|!
 operator|(
@@ -2019,8 +2044,9 @@ name|fname
 operator|=
 name|name
 expr_stmt|;
-block|}
 comment|/* 		 * set the MAKEFILE variable desired by System V fans -- the 		 * placement of the setting here means it gets set to the last 		 * makefile specified, as it is set by SysV make. 		 */
+name|found
+label|:
 name|Var_Set
 argument_list|(
 literal|"MAKEFILE"
