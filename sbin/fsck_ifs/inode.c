@@ -1652,6 +1652,8 @@ name|ino_t
 name|nextino
 decl_stmt|,
 name|lastinum
+decl_stmt|,
+name|lastvalidinum
 decl_stmt|;
 end_decl_stmt
 
@@ -1712,7 +1714,7 @@ operator|++
 operator|||
 name|inumber
 operator|>
-name|maxino
+name|lastvalidinum
 condition|)
 name|errx
 argument_list|(
@@ -1839,6 +1841,16 @@ literal|"bad inode number %d to setinodebuf"
 argument_list|,
 name|inum
 argument_list|)
+expr_stmt|;
+name|lastvalidinum
+operator|=
+name|inum
+operator|+
+name|sblock
+operator|.
+name|fs_ipg
+operator|-
+literal|1
 expr_stmt|;
 name|startinum
 operator|=
