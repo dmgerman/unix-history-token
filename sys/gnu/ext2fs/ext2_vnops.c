@@ -3604,7 +3604,6 @@ name|cn_cred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
 comment|/* 		 * if we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * The new directory also inherits the SUID bit.  		 * If user's UID and dir UID are the same, 		 * 'give it away' so that the SUID is still forced on. 		 */
 if|if
 condition|(
@@ -3699,7 +3698,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-endif|I
 block|}
 else|else
 block|{
@@ -4779,7 +4777,6 @@ name|cn_cred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
 comment|/* 		 * if we are 		 * not the owner of the directory, 		 * and we are hacking owners here, (only do this where told to) 		 * and we are not giving it TOO root, (would subvert quotas) 		 * then go ahead and give it to the other user. 		 * Note that this drops off the execute bits for security. 		 */
 if|if
 condition|(
@@ -4873,7 +4870,6 @@ name|ucred
 expr_stmt|;
 endif|#
 directive|endif
-endif|I
 block|}
 else|else
 block|{
