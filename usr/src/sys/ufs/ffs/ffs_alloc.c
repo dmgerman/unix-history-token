@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.13 %G%"
+literal|"@(#)ffs_alloc.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,10 @@ name|fragtbl
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Allocate a block in the file system.  *   * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following heirarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
+end_comment
 
 begin_function
 name|struct
@@ -412,6 +416,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Reallocate a fragment to a bigger size  *  * The number and size of the old block is given, and a preference  * and new size is also specified. The allocator attempts to extend  * the original block. Failing that, the regular block allocator is  * invoked to get an appropriate block.  */
+end_comment
+
 begin_function
 name|struct
 name|buf
@@ -554,15 +562,9 @@ goto|;
 if|if
 condition|(
 name|bprev
-operator|==
+operator|!=
 literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"realloccg: bad bprev"
-argument_list|)
-expr_stmt|;
-else|else
 name|cg
 operator|=
 name|dtog
@@ -570,6 +572,12 @@ argument_list|(
 name|bprev
 argument_list|,
 name|fs
+argument_list|)
+expr_stmt|;
+else|else
+name|panic
+argument_list|(
+literal|"realloccg: bad bprev"
 argument_list|)
 expr_stmt|;
 name|bno
@@ -848,6 +856,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allocate an inode in the file system.  *   * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate an inode:  *   1) allocate the requested inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
+end_comment
+
 begin_function
 name|struct
 name|inode
@@ -1045,7 +1057,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * find a cylinder to place a directory  */
+comment|/*  * Find a cylinder to place a directory.  *  * The policy implemented by this algorithm is to select from  * among those cylinder groups with above the average number of  * free inodes, the one with the smallest number of directories.  */
 end_comment
 
 begin_macro
@@ -1182,7 +1194,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * select a cylinder to place a large block of data  */
+comment|/*  * Select a cylinder to place a large block of data.  *  * The policy implemented by this algorithm is to maintain a  * rotor that sweeps the cylinder groups. When a block is   * needed, the rotor is advanced until a cylinder group with  * greater than the average number of free blocks is found.  */
 end_comment
 
 begin_function
@@ -1338,6 +1350,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Implement the cylinder overflow algorithm.  *  * The policy implemented by this algorithm is:  *   1) allocate the block in its requested cylinder group.  *   2) quadradically rehash on the cylinder group number.  *   3) brute force search for a free block.  */
+end_comment
 
 begin_comment
 comment|/*VARARGS5*/
@@ -1581,6 +1597,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Determine whether a fragment can be extended.  *  * Check to see if the necessary fragments are available, and   * if they are, allocate them.  */
+end_comment
+
 begin_function
 name|daddr_t
 name|fragextend
@@ -1727,11 +1747,12 @@ name|b_cg
 expr_stmt|;
 name|bno
 operator|=
+name|dtogd
+argument_list|(
 name|bprev
-operator|%
+argument_list|,
 name|fs
-operator|->
-name|fs_fpg
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1910,6 +1931,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Determine whether a block can be allocated.  *  * Check to see if a block of the apprpriate size is available,  * and if it is, allocate it.  */
+end_comment
 
 begin_function
 name|daddr_t
@@ -2150,11 +2175,12 @@ argument_list|)
 expr_stmt|;
 name|bpref
 operator|=
+name|dtogd
+argument_list|(
 name|bno
-operator|%
+argument_list|,
 name|fs
-operator|->
-name|fs_fpg
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2358,6 +2384,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Allocate a block in a cylinder group.  *  * This algorithm implements the following policy:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate the next available block on the block rotor for the  *      specified cylinder group.  * Note that this routine only allocates fs_bsize blocks; these  * blocks may be fragmented by the routine that allocates them.  */
+end_comment
+
 begin_function
 name|daddr_t
 name|alloccgblk
@@ -2428,10 +2458,13 @@ literal|1
 operator|)
 expr_stmt|;
 name|bpref
-operator|%=
+operator|=
+name|dtogd
+argument_list|(
+name|bpref
+argument_list|,
 name|fs
-operator|->
-name|fs_fpg
+argument_list|)
 expr_stmt|;
 comment|/* 	 * if the requested block is available, use it 	 */
 if|if
@@ -2460,18 +2493,7 @@ goto|goto
 name|gotit
 goto|;
 block|}
-if|if
-condition|(
-name|fs
-operator|->
-name|fs_cpc
-operator|==
-literal|0
-condition|)
-goto|goto
-name|norot
-goto|;
-comment|/* 	 * check for a block available on the same cylinder 	 * beginning with one which is rotationally optimal 	 */
+comment|/* 	 * check for a block available on the same cylinder 	 */
 name|cylno
 operator|=
 name|cbtocylno
@@ -2481,6 +2503,51 @@ argument_list|,
 name|bpref
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cgp
+operator|->
+name|cg_btot
+index|[
+name|cylno
+index|]
+operator|==
+literal|0
+condition|)
+goto|goto
+name|norot
+goto|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_cpc
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 		 * block layout info is not available, so just have 		 * to take any block in this cylinder. 		 */
+name|bpref
+operator|=
+name|howmany
+argument_list|(
+name|fs
+operator|->
+name|fs_spc
+operator|*
+name|cylno
+argument_list|,
+name|NSPF
+argument_list|(
+name|fs
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|norot
+goto|;
+block|}
+comment|/* 	 * find a block that is rotationally optimal 	 */
 name|cylbp
 operator|=
 name|cgp
@@ -2820,16 +2887,20 @@ operator|.
 name|cs_nbfree
 operator|--
 expr_stmt|;
-name|cgp
-operator|->
-name|cg_b
-index|[
+name|cylno
+operator|=
 name|cbtocylno
 argument_list|(
 name|fs
 argument_list|,
 name|bno
 argument_list|)
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_b
+index|[
+name|cylno
 index|]
 index|[
 name|cbtorpos
@@ -2838,6 +2909,14 @@ name|fs
 argument_list|,
 name|bno
 argument_list|)
+index|]
+operator|--
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_btot
+index|[
+name|cylno
 index|]
 operator|--
 expr_stmt|;
@@ -2861,6 +2940,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Determine whether an inode can be allocated.  *  * Check to see if an inode is available, and if it is,  * allocate it using the following policy:  *   1) allocate the requested inode.  *   2) allocate the next available inode after the requested  *      inode in the specified cylinder group.  */
+end_comment
 
 begin_function
 name|ino_t
@@ -3170,6 +3253,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Free a block or fragment.  *  * The specified block or fragment is placed back in the  * free map. If a fragment is deallocated, a possible   * block reassembly is checked.  */
+end_comment
+
 begin_macro
 name|fre
 argument_list|(
@@ -3323,10 +3410,13 @@ operator|.
 name|b_cg
 expr_stmt|;
 name|bno
-operator|%=
+operator|=
+name|dtogd
+argument_list|(
+name|bno
+argument_list|,
 name|fs
-operator|->
-name|fs_fpg
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3400,16 +3490,20 @@ operator|.
 name|cs_nbfree
 operator|++
 expr_stmt|;
-name|cgp
-operator|->
-name|cg_b
-index|[
+name|i
+operator|=
 name|cbtocylno
 argument_list|(
 name|fs
 argument_list|,
 name|bno
 argument_list|)
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_b
+index|[
+name|i
 index|]
 index|[
 name|cbtorpos
@@ -3418,6 +3512,14 @@ name|fs
 argument_list|,
 name|bno
 argument_list|)
+index|]
+operator|++
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_btot
+index|[
+name|i
 index|]
 operator|++
 expr_stmt|;
@@ -3690,16 +3792,20 @@ operator|.
 name|cs_nbfree
 operator|++
 expr_stmt|;
-name|cgp
-operator|->
-name|cg_b
-index|[
+name|i
+operator|=
 name|cbtocylno
 argument_list|(
 name|fs
 argument_list|,
 name|bbase
 argument_list|)
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_b
+index|[
+name|i
 index|]
 index|[
 name|cbtorpos
@@ -3708,6 +3814,14 @@ name|fs
 argument_list|,
 name|bbase
 argument_list|)
+index|]
+operator|++
+expr_stmt|;
+name|cgp
+operator|->
+name|cg_btot
+index|[
+name|i
 index|]
 operator|++
 expr_stmt|;
@@ -3725,6 +3839,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Free an inode.  *  * The specified inode is placed back in the free map.  */
+end_comment
 
 begin_macro
 name|ifree
@@ -3963,7 +4081,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * find a block of the specified size in the specified cylinder group  * It is a panic if a request is made to find a block if none are  * available.  */
+comment|/*  * Find a block of the specified size in the specified cylinder group.  *  * It is a panic if a request is made to find a block if none are  * available.  */
 end_comment
 
 begin_function
@@ -4025,11 +4143,12 @@ name|bpref
 condition|)
 name|start
 operator|=
+name|dtogd
+argument_list|(
 name|bpref
-operator|%
+argument_list|,
 name|fs
-operator|->
-name|fs_fpg
+argument_list|)
 operator|/
 name|NBBY
 expr_stmt|;
@@ -4104,25 +4223,9 @@ literal|1
 expr_stmt|;
 name|start
 operator|=
-operator|(
-name|cgdmin
-argument_list|(
-name|cgp
-operator|->
-name|cg_cgx
-argument_list|,
 name|fs
-argument_list|)
-operator|-
-name|cgbase
-argument_list|(
-name|cgp
 operator|->
-name|cg_cgx
-argument_list|,
-name|fs
-argument_list|)
-operator|)
+name|fs_dblkno
 operator|/
 name|NBBY
 expr_stmt|;
@@ -4317,7 +4420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * update the frsum fields to reflect addition or deletion   * of some frags  */
+comment|/*  * Update the frsum fields to reflect addition or deletion   * of some frags.  */
 end_comment
 
 begin_macro
@@ -4505,6 +4608,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * Check that a specified block number is in range.  */
+end_comment
+
 begin_expr_stmt
 name|badblock
 argument_list|(
@@ -4576,7 +4683,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * getfs maps a device number into  * a pointer to the incore super  * block.  The algorithm is a linear  * search through the mount table.  * A consistency check of the  * in core free-block and i-node  * counts is performed.  *  * panic: no fs -- the device is not mounted.  *	this "cannot happen"  */
+comment|/*  * Getfs maps a device number into a pointer to the incore super block.  *  * The algorithm is a linear search through the mount table. A  * consistency check of the super block magic number is performed.  *  * panic: no fs -- the device is not mounted.  *	this "cannot happen"  */
 end_comment
 
 begin_function
@@ -4682,7 +4789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fserr prints the name of a file system  * with an error diagnostic, in the form  *	fs: error message  */
+comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
 end_comment
 
 begin_macro
@@ -4811,7 +4918,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Update is the internal name of 'sync'.  It goes through the disk  * queues to initiate sandbagged IO; goes through the inodes to write  * modified nodes; and it goes through the mount table to initiate modified  * super blocks.  */
+comment|/*  * Update is the internal name of 'sync'.  It goes through the disk  * queues to initiate sandbagged IO; goes through the inodes to write  * modified nodes; and it goes through the mount table to initiate  * the writing of the modified super blocks.  */
 end_comment
 
 begin_macro
@@ -5111,7 +5218,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * block macros  */
+comment|/*  * block operations  *  * check if a block is available  */
 end_comment
 
 begin_macro
@@ -5279,6 +5386,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/*  * take a block out of the map  */
+end_comment
+
 begin_macro
 name|clrblock
 argument_list|(
@@ -5418,6 +5529,10 @@ return|return;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*  * put a block into the map  */
+end_comment
 
 begin_macro
 name|setblock
