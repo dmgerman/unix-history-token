@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.27 (Berkeley) %G%"
+literal|"@(#)err.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1072,9 +1072,15 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|msgcode
+operator|==
+literal|'4'
+operator|||
 name|msgcode
 operator|==
 literal|'5'
+operator|)
 operator|&&
 name|bitset
 argument_list|(
