@@ -1636,14 +1636,7 @@ name|lock_class_mtx_spin
 block|}
 block|,
 block|{
-literal|"entropy harvest"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"entropy harvest buffers"
+literal|"entropy harvest mutex"
 block|,
 operator|&
 name|lock_class_mtx_spin
