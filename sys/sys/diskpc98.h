@@ -1308,6 +1308,17 @@ begin_comment
 comment|/* DOS extended partition */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DOSPTYP_EXTLBA
+value|15
+end_define
+
+begin_comment
+comment|/* DOS extended partition */
+end_comment
+
 begin_struct
 struct|struct
 name|dos_partition

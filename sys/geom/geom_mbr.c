@@ -1812,9 +1812,15 @@ if|if
 condition|(
 name|error
 operator|||
+operator|(
 name|i
 operator|!=
 name|DOSPTYP_EXT
+operator|&&
+name|i
+operator|!=
+name|DOSPTYP_EXTLBA
+operator|)
 condition|)
 break|break;
 name|error
