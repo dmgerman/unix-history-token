@@ -615,6 +615,7 @@ name|f
 index|[
 name|NFS_FHSIZE
 index|]
+decl_stmt|;
 block|}
 name|nfsv2fh_t
 typedef|;
