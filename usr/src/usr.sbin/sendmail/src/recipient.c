@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.15 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2126,6 +2126,9 @@ argument_list|,
 literal|'\n'
 argument_list|)
 decl_stmt|;
+name|LineNumber
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|p
