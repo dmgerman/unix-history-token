@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<pw_util.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"yppasswdd_extern.h"
 end_include
 
