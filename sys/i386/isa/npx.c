@@ -3340,7 +3340,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * This sucks up the legacy ISA support assignments from PNPBIOS.  */
+comment|/*  * This sucks up the legacy ISA support assignments from PNPBIOS/ACPI.  */
 end_comment
 
 begin_decl_stmt
@@ -3518,6 +3518,24 @@ argument_list|(
 name|npxisa
 argument_list|,
 name|isa
+argument_list|,
+name|npxisa_driver
+argument_list|,
+name|npxisa_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|npxisa
+argument_list|,
+name|acpi
 argument_list|,
 name|npxisa_driver
 argument_list|,
