@@ -21,17 +21,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -44,6 +33,20 @@ end_comment
 begin_comment
 comment|/*  * Administrative tool to add a new user to the publickey database  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -117,6 +120,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -124,12 +133,6 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
 end_include
 
 begin_include
@@ -260,45 +263,31 @@ begin_function
 name|int
 name|mapupdate
 parameter_list|(
-name|requester
-parameter_list|,
-name|mapname
-parameter_list|,
-name|op
-parameter_list|,
-name|keylen
-parameter_list|,
-name|key
-parameter_list|,
-name|datalen
-parameter_list|,
-name|data
-parameter_list|)
 name|char
 modifier|*
 name|requester
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|mapname
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|op
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|keylen
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|key
-decl_stmt|;
+parameter_list|,
 name|u_int
 name|datalen
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|data
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|updater
@@ -578,26 +567,20 @@ specifier|static
 name|pid_t
 name|_openchild
 parameter_list|(
-name|command
-parameter_list|,
-name|fto
-parameter_list|,
-name|ffrom
-parameter_list|)
 name|char
 modifier|*
 name|command
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 modifier|*
 name|fto
-decl_stmt|;
+parameter_list|,
 name|FILE
 modifier|*
 modifier|*
 name|ffrom
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -932,12 +915,10 @@ name|char
 modifier|*
 name|basename
 parameter_list|(
-name|path
-parameter_list|)
 name|char
 modifier|*
 name|path
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -1017,48 +998,20 @@ decl_stmt|;
 comment|/*  * Determine if requester is allowed to update the given map,  * and update it if so. Returns the status, which is zero  * if there is no access violation. This function updates  * the local file and then shuts up.  */
 name|localupdate
 argument_list|(
-argument|name
+argument|char *name
 argument_list|,
-argument|filename
+argument|char *filename
 argument_list|,
-argument|op
+argument|u_int op
 argument_list|,
-argument|keylen
+argument|u_int keylen
 argument_list|,
-argument|key
+argument|char *key
 argument_list|,
-argument|datalen
+argument|u_int datalen
 argument_list|,
-argument|data
+argument|char *data
 argument_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-comment|/* Name of the requestor */
-name|char
-modifier|*
-name|filename
-decl_stmt|;
-name|u_int
-name|op
-decl_stmt|;
-name|u_int
-name|keylen
-decl_stmt|;
-comment|/* Not used */
-name|char
-modifier|*
-name|key
-decl_stmt|;
-name|u_int
-name|datalen
-decl_stmt|;
-comment|/* Not used */
-name|char
-modifier|*
-name|data
-decl_stmt|;
 block|{
 name|char
 name|line
@@ -1400,29 +1353,21 @@ block|}
 specifier|static
 name|match
 argument_list|(
-argument|line
+argument|char *line
 argument_list|,
-argument|name
+argument|char *name
 argument_list|)
-name|char
-operator|*
-name|line
-expr_stmt|;
-name|char
-modifier|*
-name|name
-decl_stmt|;
 block|{
 name|int
 name|len
-decl_stmt|;
+block|;
 name|len
 operator|=
 name|strlen
 argument_list|(
 name|name
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 operator|(
 name|strncmp
