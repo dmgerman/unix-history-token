@@ -10147,9 +10147,6 @@ case|:
 case|case
 name|CAM_BDR_SENT
 case|:
-case|case
-name|CAM_REQUEUE_REQ
-case|:
 if|if
 condition|(
 name|ccb
