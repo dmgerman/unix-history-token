@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.17 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,6 +216,51 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VEOL
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|termForw1Char
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VEOL2
+end_ifndef
+
+begin_decl_stmt
+name|char
+name|termForw2Char
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|char
+name|termForw2Char
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

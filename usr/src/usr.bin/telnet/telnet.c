@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.44 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,7 +337,11 @@ modifier|*
 name|prompt
 init|=
 literal|0
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|cc_t
 name|escape
 decl_stmt|,
 name|echoc
@@ -3710,10 +3714,10 @@ begin_struct
 struct|struct
 name|spc
 block|{
-name|char
+name|cc_t
 name|val
 decl_stmt|;
-name|char
+name|cc_t
 modifier|*
 name|valp
 decl_stmt|;
@@ -3779,7 +3783,7 @@ modifier|*
 name|spcp
 decl_stmt|;
 specifier|extern
-name|char
+name|cc_t
 modifier|*
 name|tcval
 parameter_list|()
@@ -4484,6 +4488,10 @@ index|[
 name|SLC_VALUE
 index|]
 operator|==
+operator|(
+name|unsigned
+name|char
+operator|)
 name|spcp
 operator|->
 name|val
@@ -4550,6 +4558,9 @@ name|spcp
 operator|->
 name|val
 operator|=
+operator|(
+name|cc_t
+operator|)
 name|cp
 index|[
 name|SLC_VALUE
@@ -4600,6 +4611,9 @@ name|spcp
 operator|->
 name|val
 operator|=
+operator|(
+name|cc_t
+operator|)
 name|cp
 index|[
 name|SLC_VALUE
@@ -4845,7 +4859,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
+name|cc_t
 name|value
 decl_stmt|;
 end_decl_stmt
@@ -4895,6 +4909,10 @@ operator|*
 name|slc_replyp
 operator|++
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 name|value
 operator|)
 operator|==

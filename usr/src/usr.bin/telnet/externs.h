@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)externs.h	1.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)externs.h	1.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -122,6 +122,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|char
+name|cc_t
+typedef|;
+end_typedef
 
 begin_endif
 endif|#
@@ -264,14 +276,22 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|char
+name|cc_t
 name|echoc
 decl_stmt|,
 comment|/* Toggle local echoing */
 name|escape
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Escape to command mode */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|char
 modifier|*
 name|prompt
 decl_stmt|;
@@ -920,85 +940,113 @@ end_define
 begin_define
 define|#
 directive|define
+name|termForw1Char
+value|ntc.t_brkc
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|termForw2Char
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
 name|termEofCharp
-value|(unsigned char *)&ntc.t_eofc
+value|(cc_t *)&ntc.t_eofc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termEraseCharp
-value|(unsigned char *)&nttyb.sg_erase
+value|(cc_t *)&nttyb.sg_erase
 end_define
 
 begin_define
 define|#
 directive|define
 name|termFlushCharp
-value|(unsigned char *)&nltc.t_flushc
+value|(cc_t *)&nltc.t_flushc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termIntCharp
-value|(unsigned char *)&ntc.t_intrc
+value|(cc_t *)&ntc.t_intrc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termKillCharp
-value|(unsigned char *)&nttyb.sg_kill
+value|(cc_t *)&nttyb.sg_kill
 end_define
 
 begin_define
 define|#
 directive|define
 name|termLiteralNextCharp
-value|(unsigned char *)&nltc.t_lnextc
+value|(cc_t *)&nltc.t_lnextc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termQuitCharp
-value|(unsigned char *)&ntc.t_quitc
+value|(cc_t *)&ntc.t_quitc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termSuspCharp
-value|(unsigned char *)&nltc.t_suspc
+value|(cc_t *)&nltc.t_suspc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termRprntCharp
-value|(unsigned char *)&nltc.t_rprntc
+value|(cc_t *)&nltc.t_rprntc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termWerasCharp
-value|(unsigned char *)&nltc.t_werasc
+value|(cc_t *)&nltc.t_werasc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termStartCharp
-value|(unsigned char *)&ntc.t_startc
+value|(cc_t *)&ntc.t_startc
 end_define
 
 begin_define
 define|#
 directive|define
 name|termStopCharp
-value|(unsigned char *)&ntc.t_stopc
+value|(cc_t *)&ntc.t_stopc
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw1Charp
+value|(cc_t *)&ntc.t_brkc
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw2Charp
+value|(cc_t *)&termForw2Char
 end_define
 
 begin_else
@@ -1262,6 +1310,66 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|VEOL
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|termForw1Char
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|termForw1Char
+value|new_tc.c_cc[VEOL]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VEOL2
+end_ifndef
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|termForw2Char
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|termForw2Char
+value|new_tc.c_cc[VEOL]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|CRAY
 end_ifndef
 
@@ -1347,6 +1455,20 @@ define|#
 directive|define
 name|termStopCharp
 value|&termStopChar
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw1Charp
+value|&termForw1Char
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw2Charp
+value|&termForw2Char
 end_define
 
 begin_else
@@ -1439,6 +1561,20 @@ begin_define
 define|#
 directive|define
 name|termStopCharp
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw1Charp
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|termForw2Charp
 value|0
 end_define
 
