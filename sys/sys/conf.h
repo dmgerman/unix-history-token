@@ -103,6 +103,11 @@ directive|define
 name|SI_CONSOPEN
 value|0x0040
 comment|/* opened by console */
+define|#
+directive|define
+name|SI_DUMPDEV
+value|0x0080
+comment|/* is kernel dumpdev */
 name|struct
 name|timespec
 name|si_atime
