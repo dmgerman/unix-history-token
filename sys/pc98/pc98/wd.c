@@ -4663,9 +4663,9 @@ argument|;
 endif|#
 directive|endif
 comment|/* PC98 */
-argument|if( command == WDCC_FEATURES) { 		if (old_epson_note) 			epson_outb(wdc + wd_features, count); 		else 			outb(wdc + wd_sdh, WDSD_IBM | (du->dk_unit<<
+argument|if( command == WDCC_FEATURES) { 		if (old_epson_note) 			epson_outb(wdc + wd_features, count); 		else { 			outb(wdc + wd_sdh, WDSD_IBM | (du->dk_unit<<
 literal|4
-argument|) | head); 			outb(wdc + wd_features, count); 			if ( count == WDFEA_SETXFER ) 				outb(wdc + wd_seccnt, sector); 	} else { 		if (old_epson_note) { 			epson_outb(wdc + wd_precomp, du->dk_dd.d_precompcyl/
+argument|) | head); 			outb(wdc + wd_features, count); 			if ( count == WDFEA_SETXFER ) 				outb(wdc + wd_seccnt, sector); 		} 	} else { 		if (old_epson_note) { 			epson_outb(wdc + wd_precomp, du->dk_dd.d_precompcyl/
 literal|4
 argument|); 			epson_outb(wdc + wd_cyl_lo, cylinder); 			epson_outb(wdc + wd_cyl_hi, cylinder>>
 literal|8
