@@ -840,7 +840,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Pentium III/Pentium III Xeon"
+literal|"Pentium III/Pentium III Xeon/Celeron"
 argument_list|)
 expr_stmt|;
 name|cpu
