@@ -6214,6 +6214,13 @@ operator|.
 name|cur_tx
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Set a timeout in case the chip goes out to lunch. 		 */
+name|ifp
+operator|->
+name|if_timer
+operator|=
+literal|5
+expr_stmt|;
 block|}
 comment|/* 	 * We broke out of the loop because all our TX slots are 	 * full. Mark the NIC as busy until it drains some of the 	 * packets from the queue. 	 */
 if|if
@@ -6230,13 +6237,6 @@ operator|->
 name|if_flags
 operator||=
 name|IFF_OACTIVE
-expr_stmt|;
-comment|/* 	 * Set a timeout in case the chip goes out to lunch. 	 */
-name|ifp
-operator|->
-name|if_timer
-operator|=
-literal|5
 expr_stmt|;
 name|RL_UNLOCK
 argument_list|(
