@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gcore.c	5.13 (Berkeley) %G%"
+literal|"@(#)gcore.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1194,24 +1194,33 @@ argument_list|(
 name|buffer
 argument_list|)
 condition|)
+if|if
+condition|(
+name|cc
+operator|<
+literal|0
+condition|)
 name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"read executable: %s"
 argument_list|,
-name|cc
-operator|>
-literal|0
-condition|?
-name|strerror
-argument_list|(
-name|EIO
-argument_list|)
-else|:
 name|strerror
 argument_list|(
 name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* Assume untouched bss page. */
+name|bzero
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
 argument_list|)
 argument_list|)
 expr_stmt|;
