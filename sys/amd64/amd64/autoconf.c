@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_nfs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_nfsroot.h"
 end_include
 
@@ -584,6 +590,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BOOTP
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|void
+name|bootpc_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Do legacy root filesystem discovery.  */
 end_comment
@@ -593,6 +620,14 @@ name|void
 name|cpu_rootconf
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|BOOTP
+name|bootpc_init
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
@@ -637,6 +672,14 @@ name|defined
 argument_list|(
 name|FFS_ROOT
 argument_list|)
+if|if
+condition|(
+operator|!
+name|rootdevnames
+index|[
+literal|0
+index|]
+condition|)
 name|setroot
 argument_list|()
 expr_stmt|;

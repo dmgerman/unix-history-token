@@ -616,6 +616,10 @@ expr_stmt|;
 comment|/* If the root device is a type "memory disk", mount RW */
 if|if
 condition|(
+name|rootdev
+operator|!=
+name|NODEV
+operator|&&
 name|devsw
 argument_list|(
 name|rootdev
