@@ -2509,21 +2509,12 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|LINUX
-comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the file and do an ioctl on it... 			 */
+comment|/* 			 * Linux has a nodump flag too but to read it 			 * we have to open() the dir and do an ioctl on it... 			 */
 if|if
 condition|(
 name|bsdtar
 operator|->
 name|option_honor_nodump
-operator|&&
-name|S_ISREG
-argument_list|(
-name|ftsent
-operator|->
-name|fts_statp
-operator|->
-name|st_mode
-argument_list|)
 operator|&&
 operator|(
 operator|(
@@ -2575,7 +2566,18 @@ operator|&
 name|EXT2_NODUMP_FL
 operator|)
 condition|)
+block|{
+name|fts_set
+argument_list|(
+name|fts
+argument_list|,
+name|ftsent
+argument_list|,
+name|FTS_SKIP
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 endif|#
 directive|endif
 comment|/* 			 * In -u mode, we need to check whether this 			 * is newer than what's already in the archive. 			 */
