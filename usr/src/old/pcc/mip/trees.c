@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.33 (Berkeley) %G%"
+literal|"@(#)trees.c	4.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2303,7 +2303,14 @@ argument|); 	if( p->tn.rval != NONAME&& o!=PLUS&& o!=MINUS ) return(
 literal|0
 argument|);
 comment|/* usual type conversions -- handle casts of constants */
-argument|utype = u ? UNSIGNED : INT; 	if( !ISPTR(p->in.type)&& p->in.type != utype ) 		p = makety(p, utype,
+define|#
+directive|define
+name|ISLONG
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == LONG || (t) == ULONG)
+argument|if (ISLONG(p->in.type) || ISLONG(q->in.type)) 		utype = u ? ULONG : LONG; 	else 		utype = u ? UNSIGNED : INT; 	if( !ISPTR(p->in.type)&& p->in.type != utype ) 		p = makety(p, utype,
 literal|0
 argument|, (int)utype); 	if( q->in.type != utype ) 		q = makety(q, utype,
 literal|0
