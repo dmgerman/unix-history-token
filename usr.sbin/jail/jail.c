@@ -456,6 +456,11 @@ argument_list|,
 literal|"setusercontext"
 argument_list|)
 expr_stmt|;
+name|login_close
+argument_list|(
+name|lcap
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
