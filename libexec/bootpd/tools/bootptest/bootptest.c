@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * bootptest.c - Test out a bootp server.  *  * This simple program was put together from pieces taken from  * various places, including the CMU BOOTP client and server.  * The packet printing routine is from the Berkeley "tcpdump"  * program with some enhancements I added.  The print-bootp.c  * file was shared with my copy of "tcpdump" and therefore uses  * some unusual utility routines that would normally be provided  * by various parts of the tcpdump program.  Gordon W. Ross  *  * Boilerplate:  *  * This program includes software developed by the University of  * California, Lawrence Berkeley Laboratory and its contributors.  * (See the copyright notice in print-bootp.c)  *  * The remainder of this program is public domain.  You may do  * whatever you like with it except claim that you wrote it.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * HISTORY:  *  * 12/02/93 Released version 1.4 (with bootp-2.3.2)  * 11/05/93 Released version 1.3  * 10/14/93 Released version 1.2  * 10/11/93 Released version 1.1  * 09/28/93 Released version 1.0  * 09/93 Original developed by Gordon W. Ross<gwr@mc.com>  *  *	$Id$  */
+comment|/*  * bootptest.c - Test out a bootp server.  *  * This simple program was put together from pieces taken from  * various places, including the CMU BOOTP client and server.  * The packet printing routine is from the Berkeley "tcpdump"  * program with some enhancements I added.  The print-bootp.c  * file was shared with my copy of "tcpdump" and therefore uses  * some unusual utility routines that would normally be provided  * by various parts of the tcpdump program.  Gordon W. Ross  *  * Boilerplate:  *  * This program includes software developed by the University of  * California, Lawrence Berkeley Laboratory and its contributors.  * (See the copyright notice in print-bootp.c)  *  * The remainder of this program is public domain.  You may do  * whatever you like with it except claim that you wrote it.  *  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * HISTORY:  *  * 12/02/93 Released version 1.4 (with bootp-2.3.2)  * 11/05/93 Released version 1.3  * 10/14/93 Released version 1.2  * 10/11/93 Released version 1.1  * 09/28/93 Released version 1.0  * 09/93 Original developed by Gordon W. Ross<gwr@mc.com>  *  *	$Id: bootptest.c,v 1.4 1997/02/22 14:21:20 peter Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -2013,9 +2013,14 @@ operator|*
 operator|)
 name|ina
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|b
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b
+argument_list|)
 argument_list|,
 literal|"%d.%d.%d.%d"
 argument_list|,
