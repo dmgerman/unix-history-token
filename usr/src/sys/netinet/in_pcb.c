@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_pcb.c	4.29	82/07/24	*/
+comment|/*	in_pcb.c	4.30	82/07/24	*/
 end_comment
 
 begin_include
