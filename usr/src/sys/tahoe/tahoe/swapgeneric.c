@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	7.1	88/05/21	*/
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)swapgeneric.c	1.7 (Berkeley) %G%  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"../machine/pte.h"
-end_include
 
 begin_include
 include|#
@@ -48,19 +42,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../tahoe/cpu.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/cp.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../tahoe/mtpr.h"
+file|"cp.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mtpr.h"
 end_include
 
 begin_include
