@@ -4621,8 +4621,12 @@ name|last_log
 operator|=
 name|time_second
 expr_stmt|;
-name|printf
+name|log
 argument_list|(
+name|LOG_SECURITY
+operator||
+name|LOG_INFO
+argument_list|,
 literal|"drop session, too many entries\n"
 argument_list|)
 expr_stmt|;
