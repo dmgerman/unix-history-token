@@ -3990,6 +3990,24 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cfe
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"no memory for config entry\n"
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|abort_cfe
+goto|;
+block|}
 operator|*
 name|cfe
 operator|=
