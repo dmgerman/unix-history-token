@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.15 1996/11/21 07:18:58 julian Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.16 1997/02/12 16:19:08 mpp Exp $  *  *  */
 end_comment
 
 begin_include
@@ -584,7 +584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Unmount the filesystem described by mp.  * Note: vnodes from this FS may hang around if being used..  * This should not be a problem, they should be self contained.  */
+comment|/*  *  Unmount the filesystem described by mp.  */
 end_comment
 
 begin_function
@@ -620,6 +620,44 @@ name|mp
 operator|->
 name|mnt_data
 decl_stmt|;
+name|int
+name|flags
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+name|mntflags
+operator|&
+name|MNT_FORCE
+condition|)
+block|{
+name|flags
+operator||=
+name|FORCECLOSE
+expr_stmt|;
+block|}
+name|error
+operator|=
+name|vflush
+argument_list|(
+name|mp
+argument_list|,
+name|NULLVP
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+name|error
+return|;
 name|DBPRINT
 argument_list|(
 operator|(

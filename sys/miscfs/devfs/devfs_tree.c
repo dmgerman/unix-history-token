@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.34 1997/02/12 16:19:04 mpp Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.35 1997/04/10 14:35:18 bde Exp $  */
 end_comment
 
 begin_include
@@ -1909,6 +1909,39 @@ condition|)
 comment|/* can be -1 for initial free, on error */
 block|{
 comment|/*probably need to do other cleanups XXX */
+if|if
+condition|(
+name|dnp
+operator|->
+name|nextsibling
+operator|!=
+name|dnp
+condition|)
+block|{
+name|dn_p
+modifier|*
+name|prevp
+init|=
+name|dnp
+operator|->
+name|prevsiblingp
+decl_stmt|;
+operator|*
+name|prevp
+operator|=
+name|dnp
+operator|->
+name|nextsibling
+expr_stmt|;
+name|dnp
+operator|->
+name|nextsibling
+operator|->
+name|prevsiblingp
+operator|=
+name|prevp
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|dnp
