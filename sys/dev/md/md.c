@@ -1681,6 +1681,10 @@ name|printf
 argument_list|(
 literal|"mdstrategy(%p) %s %x, %lld, %ld, %p)\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|bp
 argument_list|,
 name|devtoname
@@ -1708,6 +1712,10 @@ name|bio_bcount
 operator|/
 name|DEV_BSIZE
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|bp
 operator|->
 name|bio_data
