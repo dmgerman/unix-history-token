@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -134,12 +134,6 @@ include|#
 directive|include
 file|"tcp_debug.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|VAN
-end_define
 
 begin_decl_stmt
 name|int
@@ -1555,9 +1549,6 @@ index|]
 operator|=
 name|tcp_keepidle
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|VAN
 comment|/* 	 * Process options if not in LISTEN state, 	 * else do it below (after getting remote address). 	 */
 if|if
 condition|(
@@ -1584,9 +1575,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|VAN
 comment|/*  	 * Header prediction: check for the two common cases 	 * of a uni-directional data xfer.  If the packet has 	 * no control flags, is in-sequence, the window didn't 	 * change and we're not retransmitting, it's a 	 * candidate.  If the length is zero and the ack moved 	 * forward, we're the sender side of the xfer.  Just 	 * free the data acked& wake any higher level process 	 * that was blocked waiting for space.  If the length 	 * is non-zero and the ack didn't move, we're the 	 * receiver side.  If we're getting packets in-order 	 * (the reassembly queue is empty), add the data to 	 * the socket buffer and note that we need a delayed ack. 	 */
 if|if
 condition|(
@@ -2338,31 +2326,6 @@ comment|/* 	 * If the state is SYN_SENT: 	 *	if seg contains an ACK, but not for
 case|case
 name|TCPS_SYN_SENT
 case|:
-ifdef|#
-directive|ifdef
-name|VAN
-if|if
-condition|(
-name|om
-condition|)
-block|{
-name|tcp_dooptions
-argument_list|(
-name|tp
-argument_list|,
-name|om
-argument_list|,
-name|ti
-argument_list|)
-expr_stmt|;
-name|om
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|VAN
 if|if
 condition|(
 operator|(
@@ -2701,32 +2664,6 @@ expr_stmt|;
 goto|goto
 name|step6
 goto|;
-ifdef|#
-directive|ifdef
-name|VAN
-default|default:
-if|if
-condition|(
-name|om
-condition|)
-block|{
-name|tcp_dooptions
-argument_list|(
-name|tp
-argument_list|,
-name|om
-argument_list|,
-name|ti
-argument_list|)
-expr_stmt|;
-name|om
-operator|=
-literal|0
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|VAN
 block|}
 comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check that at least some bytes of segment are within  	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 */
 name|todrop
