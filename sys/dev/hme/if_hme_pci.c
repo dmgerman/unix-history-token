@@ -1341,7 +1341,7 @@ goto|goto
 name|fail_rres
 goto|;
 block|}
-comment|/* 	 * Read PCI VPD. 	 * SUNW,hme cards have a single large resource VPD-R tag 	 * containing one NA. SUNW,qfe cards have four large resource 	 * VPD-R tags containing one NA each. 	 * The VPD used on both cards is not in PCI 2.2 standard format 	 * however. The length in the resource header is in big endian 	 * and the end tag is non-standard (0x79) and followed by an 	 * all-zero "checksum" byte. Sun calls this a "Fresh Choice 	 * Ethernet" VPD... 	 */
+comment|/* 	 * Read PCI VPD. 	 * SUNW,hme cards have a single large resource VPD-R tag 	 * containing one NA. SUNW,qfe cards have four large resource 	 * VPD-R tags containing one NA each (all four HME chips share 	 * the same PROM). 	 * The VPD used on both cards is not in PCI 2.2 standard format 	 * however. The length in the resource header is in big endian 	 * and the end tag is non-standard (0x79) and followed by an 	 * all-zero "checksum" byte. Sun calls this a "Fresh Choice 	 * Ethernet" VPD... 	 */
 name|bus_space_read_region_1
 argument_list|(
 name|romt
