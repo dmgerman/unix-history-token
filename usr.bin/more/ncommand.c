@@ -87,11 +87,29 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|getint
+name|__P
+argument_list|(
+operator|(
+name|long
+operator|*
+name|numb
+operator|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|line
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 specifier|static
-name|getint
-argument_list|()
-operator|,
 name|getstr_free
 argument_list|()
 expr_stmt|;
@@ -948,6 +966,7 @@ name|getstr
 parameter_list|(
 name|line
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1022,6 +1041,7 @@ argument_list|(
 literal|1
 argument_list|)
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|c
@@ -1192,7 +1212,7 @@ literal|'('
 condition|)
 block|{
 comment|/* An arithmetic expression instead of a string...  Well, I 		 * guess this is valid.  See comment leading this function. */
-name|int
+name|long
 name|n
 decl_stmt|;
 if|if
@@ -1217,7 +1237,7 @@ argument_list|(
 operator|&
 name|retr
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|n
 argument_list|)
@@ -1648,6 +1668,7 @@ modifier|*
 name|numb
 decl_stmt|;
 comment|/* The read-in number is returned through this */
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1664,7 +1685,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|p
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|t
 decl_stmt|;
@@ -4044,6 +4067,7 @@ name|enum
 name|cident
 name|cident
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|args
