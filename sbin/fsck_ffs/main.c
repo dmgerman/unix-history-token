@@ -805,24 +805,6 @@ case|case
 operator|-
 literal|1
 case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|preen
-operator|&&
-name|sblock
-operator|.
-name|fs_clean
-operator|&&
-operator|!
-name|fflag
-condition|)
-block|{
 name|pwarn
 argument_list|(
 literal|"clean, %ld free "

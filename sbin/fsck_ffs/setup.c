@@ -676,27 +676,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|skipclean
-operator|&&
-name|sblock
-operator|.
-name|fs_clean
-condition|)
-block|{
-name|pwarn
-argument_list|(
-literal|"FILESYSTEM CLEAN; SKIPPING CHECKS\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 name|maxfsblock
 operator|=
 name|sblock
@@ -1411,6 +1390,24 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If we survive the above basic checks and are preening, 	 * quit here unless forced. 	 */
+if|if
+condition|(
+name|skipclean
+operator|&&
+name|sblock
+operator|.
+name|fs_clean
+operator|&&
+operator|!
+name|fflag
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 comment|/* 	 * allocate and initialize the necessary maps 	 */
 name|bmapsize
 operator|=
