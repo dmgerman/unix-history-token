@@ -1320,7 +1320,46 @@ asm|__asm __volatile("mov rr[%0]=%1" :: "r"(rrbase), "r"(v) : "memory");
 block|}
 end_function
 
+begin_comment
+comment|/*  * Read a CPUID register.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_cpuid
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=cpuid[%1]"
+block|:
+literal|"=r"
+operator|(
+name|result
+operator|)
+operator|:
+literal|"r"
+operator|(
+name|i
+operator|)
+block|)
+function|;
+end_function
+
+begin_return
+return|return
+name|result
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
