@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.6	82/01/19	*/
+comment|/*	tty_tty.c	4.7	82/01/24	*/
 end_comment
 
 begin_comment
@@ -230,8 +230,26 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|cmd
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|caddr_t
 name|addr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +281,15 @@ operator|->
 name|p_pgrp
 operator|=
 literal|0
+expr_stmt|;
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flags
+operator|&=
+operator|~
+name|SDETACH
 expr_stmt|;
 return|return;
 block|}
