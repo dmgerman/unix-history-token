@@ -339,18 +339,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* protects netconfig list */
-end_comment
-
-begin_decl_stmt
-name|pthread_mutex_t
-name|nc_lock
-init|=
-name|PTHREAD_MUTEX_INITIALIZER
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* xprtlist (svc_generic.c) */
 end_comment
 
