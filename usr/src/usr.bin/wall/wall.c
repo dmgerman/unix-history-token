@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wall.c	4.6 (Berkeley) 82/03/15"
+literal|"@(#)wall.c	4.7 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)time.c	4.4 (Berkeley) %G%"
+literal|"@(#)time.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,13 +45,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<resource.h>
+file|<sys/resource.h>
 end_include
 
 begin_function
