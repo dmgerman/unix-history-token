@@ -308,6 +308,10 @@ operator|&&
 name|c
 operator|!=
 literal|'-'
+operator|&&
+name|c
+operator|!=
+literal|'.'
 condition|)
 goto|goto
 name|bad

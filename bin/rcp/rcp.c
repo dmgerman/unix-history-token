@@ -1613,7 +1613,12 @@ argument_list|(
 name|suser
 argument_list|)
 condition|)
+block|{
+operator|++
+name|errs
+expr_stmt|;
 continue|continue;
+block|}
 operator|(
 name|void
 operator|)
@@ -2178,7 +2183,12 @@ argument_list|(
 name|suser
 argument_list|)
 condition|)
+block|{
+operator|++
+name|errs
+expr_stmt|;
 continue|continue;
+block|}
 block|}
 name|len
 operator|=
