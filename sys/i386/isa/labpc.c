@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"aio.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dataacq.h>
 end_include
 
 begin_include
