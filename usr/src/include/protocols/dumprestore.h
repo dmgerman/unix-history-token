@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dumprestore.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -179,6 +179,17 @@ name|long
 name|c_flags
 decl_stmt|;
 comment|/* additional information */
+name|long
+name|c_firstrec
+decl_stmt|;
+comment|/* first record on volume */
+name|long
+name|c_spare
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* reserved for future uses */
 block|}
 name|s_spcl
 struct|;
