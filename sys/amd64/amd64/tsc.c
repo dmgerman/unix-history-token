@@ -238,12 +238,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PROFILE
-end_ifdef
-
 begin_decl_stmt
 name|u_int
 name|stat_imask
@@ -252,21 +246,11 @@ name|SWI_CLOCK_MASK
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|timer0_max_count
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|u_int
@@ -835,12 +819,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PROFILE
-end_ifdef
-
 begin_comment
 comment|/*  * This routine receives statistical clock interrupts from the RTC.  * As explained above, these occur at 128 interrupts per second.  * When profiling, we receive interrupts at a rate of 1024 Hz.  *  * This does not actually add as much overhead as it sounds, because  * when the statistical clock is active, the hardclock driver no longer  * needs to keep (inaccurate) statistics on its own.  This decouples  * statistics gathering from scheduling interrupts.  *  * The RTC chip requires that we read status register C (RTC_INTR)  * to acknowledge an interrupt, before it will generate the next one.  */
 end_comment
@@ -953,19 +931,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* DDB */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PROFILE */
-end_comment
 
 begin_function
 specifier|static
@@ -1886,9 +1851,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROFILE
 comment|/* Disable RTC updates and interrupts. */
 name|writertc
 argument_list|(
@@ -1899,8 +1861,6 @@ operator||
 name|RTCSB_24HR
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Calculate local time	to put in RTC */
 name|tm
 operator|-=
@@ -2118,9 +2078,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Write back Month Day */
-ifdef|#
-directive|ifdef
-name|PROFILE
 comment|/* Reenable RTC updates and interrupts. */
 name|writertc
 argument_list|(
@@ -2131,8 +2088,6 @@ operator||
 name|RTCSB_PINTR
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2148,9 +2103,6 @@ block|{
 name|int
 name|diag
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PROFILE
 name|stathz
 operator|=
 name|RTC_NOPROFRATE
@@ -2159,8 +2111,6 @@ name|profhz
 operator|=
 name|RTC_PROFRATE
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Finish initializing 8253 timer 0. */
 name|register_intr
 argument_list|(
@@ -2258,9 +2208,6 @@ argument_list|,
 name|RTCDG_BITS
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PROFILE
 name|register_intr
 argument_list|(
 comment|/* irq */
@@ -2300,8 +2247,6 @@ operator||
 name|RTCSB_PINTR
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2313,9 +2258,6 @@ name|int
 name|newhz
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|PROFILE
 if|if
 condition|(
 name|newhz
@@ -2342,8 +2284,6 @@ argument_list|,
 name|rtc_statusa
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
