@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.118 1996/09/12 04:54:55 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from:	@(#)pmap.c	7.7 (Berkeley)	5/12/91  *	$Id: pmap.c,v 1.119 1996/09/13 07:10:00 bde Exp $  */
 end_comment
 
 begin_comment
@@ -1538,42 +1538,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * The below are finer grained pmap_update routines.  These eliminate  * the gratuitious tlb flushes on non-i386 architectures.  */
-end_comment
-
-begin_function
-specifier|static
-name|PMAP_INLINE
-name|void
-name|pmap_update_1pg
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|)
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|I386_CPU
-argument_list|)
-if|if
-condition|(
-name|cpu_class
-operator|==
-name|CPUCLASS_386
-condition|)
-name|pmap_update
-argument_list|()
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va));
-block|}
-end_function
-
 begin_function
 specifier|static
 name|PMAP_INLINE
@@ -1608,8 +1572,16 @@ else|else
 endif|#
 directive|endif
 block|{
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va1));
-asm|__asm __volatile(".byte 0xf,0x1,0x38": :"a" (va2));
+name|pmap_update_1pg
+argument_list|(
+name|va1
+argument_list|)
+expr_stmt|;
+name|pmap_update_1pg
+argument_list|(
+name|va2
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -4214,9 +4186,6 @@ name|pm_pdir
 operator|=
 literal|0
 expr_stmt|;
-name|pmap_update
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -5874,14 +5843,6 @@ operator|->
 name|pv_va
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|tpte
-operator|=
-operator|*
-name|pte
-condition|)
-block|{
 name|pv
 operator|->
 name|pv_pmap
@@ -5890,6 +5851,11 @@ name|pm_stats
 operator|.
 name|resident_count
 operator|--
+expr_stmt|;
+name|tpte
+operator|=
+operator|*
+name|pte
 expr_stmt|;
 operator|*
 name|pte
@@ -5911,7 +5877,7 @@ operator|.
 name|wired_count
 operator|--
 expr_stmt|;
-comment|/* 			 * Update the vm_page_t clean and reference bits. 			 */
+comment|/* 		 * Update the vm_page_t clean and reference bits. 		 */
 if|if
 condition|(
 name|tpte
@@ -6006,7 +5972,6 @@ name|update_needed
 operator|=
 literal|1
 expr_stmt|;
-block|}
 block|}
 name|TAILQ_REMOVE
 argument_list|(
@@ -8891,12 +8856,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_USED_YET
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -8904,7 +8863,7 @@ name|PMAP_REMOVE_PAGES_CURPROC_ONLY
 end_define
 
 begin_comment
-comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only.  */
+comment|/*  * Remove all pages from specified address space  * this aids process exit speeds.  Also, this code  * is special cased for current process only, but  * can have the more generic (and slightly slower)  * mode enabled.  This is much faster than pmap_remove  * in the case of running down an entire address space.  */
 end_comment
 
 begin_function
@@ -9201,11 +9160,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * pmap_testbit tests bits in pte's  * note that the testbit/changebit routines are inline,  * and a lot of things compile-time evaluate.  */
@@ -9534,12 +9488,6 @@ name|pv_list
 argument_list|)
 control|)
 block|{
-name|va
-operator|=
-name|pv
-operator|->
-name|pv_va
-expr_stmt|;
 comment|/* 		 * don't write protect pager mappings 		 */
 if|if
 condition|(
@@ -9583,7 +9531,9 @@ name|printf
 argument_list|(
 literal|"Null pmap (cb) at va: 0x%lx\n"
 argument_list|,
-name|va
+name|pv
+operator|->
+name|pv_va
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -9605,7 +9555,9 @@ name|pv
 operator|->
 name|pv_pmap
 argument_list|,
-name|va
+name|pv
+operator|->
+name|pv_va
 argument_list|)
 expr_stmt|;
 if|if
@@ -11186,10 +11138,6 @@ name|vm_offset_t
 name|pa
 decl_stmt|;
 block|{
-name|pv_table_t
-modifier|*
-name|ppv
-decl_stmt|;
 specifier|register
 name|pv_entry_t
 name|pv
@@ -11201,23 +11149,16 @@ argument_list|,
 name|pa
 argument_list|)
 expr_stmt|;
-name|ppv
-operator|=
-name|pa_to_pvh
-argument_list|(
-name|pa
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pv
 operator|=
 name|TAILQ_FIRST
 argument_list|(
-operator|&
-name|ppv
-operator|->
-name|pv_list
+name|pa_to_pvh
+argument_list|(
+name|pa
+argument_list|)
 argument_list|)
 init|;
 name|pv
