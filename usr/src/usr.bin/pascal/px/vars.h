@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)vars.h 1.1 %G%"; */
+comment|/* static char sccsid[] = "@(#)vars.h 1.2 %G%"; */
 end_comment
 
 begin_include
@@ -173,35 +173,35 @@ begin_define
 define|#
 directive|define
 name|relne
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|rellt
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|relgt
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|relle
+name|rellt
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
+name|relgt
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|relle
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|relge
-value|5
+value|10
 end_define
 
 begin_comment
@@ -362,7 +362,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * THE RUNTIME DISPLAY  *  * The entries in the display point to the active static block marks.  * The first entry in the display is for the global variables,  * then the procedure or function at level one, etc.  * Each display entry points to a stack frame as shown:  *  *		base of stack frame  *		  ---------------  *		  |		|  *		  | block mark  |  *		  |		|  *		  ---------------<-- display entry points here  *		  |             |  *		  |   local	|  *		  |  variables  |  *		  |		|  *		  ---------------  *		  |		|  *		  |  expression |  *		  |  temporary  |  *		  |  storage	|  *		  |		|  *		  - - - - - - - -  *  * The information in the block mark is thus at positive offsets from  * the display pointer entries while the local variables are at negative  * offsets. The block mark actually consists of two parts. The first  * part is created at CALL and the second at entry, i.e. BEGIN. Thus:  *  *		-------------------------  *		|			|  *		|  Saved lino		|  *		|  Saved lc		|  *		|  Saved dp		|  *		|			|  *		-------------------------  *		|			|  *		|  Saved (dp)		|  *		|			|  *		|  Current section name	|  *		|   and entry line ptr	|  *		|			|  *		|  Saved file name and	|  *		|   file buffer ptr	|  *		|			|  *		|  Empty tos value	|  *		|			|  *		-------------------------  */
+comment|/*  * THE RUNTIME DISPLAY  *  * The entries in the display point to the active static block marks.  * The first entry in the display is for the global variables,  * then the procedure or function at level one, etc.  * Each display entry points to a stack frame as shown:  *  *		base of stack frame  *		  ---------------  *		  |		|  *		  | block mark  |  *		  |		|  *		  ---------------<-- display entry "stp" points here  *		  |             |<-- display entry "locvars" points here  *		  |   local	|  *		  |  variables  |  *		  |		|  *		  ---------------  *		  |		|  *		  |  expression |  *		  |  temporary  |  *		  |  storage	|  *		  |		|  *		  - - - - - - - -  *  * The information in the block mark is thus at positive offsets from  * the display.stp pointer entries while the local variables are at negative  * offsets from display.locvars. The block mark actually consists of  * two parts. The first part is created at CALL and the second at entry,  * i.e. BEGIN. Thus:  *  *		-------------------------  *		|			|  *		|  Saved lino		|  *		|  Saved lc		|  *		|  Saved dp		|  *		|			|  *		-------------------------  *		|			|  *		|  Saved (dp)		|  *		|			|  *		|  Pointer to current 	|  *		|   routine header info	|  *		|			|  *		|  Saved value of	|  *		|   "curfile"		|  *		|			|  *		|  Empty tos value	|  *		|			|  *		-------------------------  */
 end_comment
 
 begin_escape
@@ -456,6 +456,30 @@ block|}
 struct|;
 end_struct
 
+begin_union
+union|union
+name|disply
+block|{
+name|struct
+name|disp
+name|frame
+index|[
+name|MAXLVL
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|raw
+index|[
+literal|2
+operator|*
+name|MAXLVL
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_comment
 comment|/*  * formal routine structure  */
 end_comment
@@ -490,12 +514,9 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|disp
+name|union
+name|disply
 name|_display
-index|[
-name|MAXLVL
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -513,7 +534,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* runtime display */
+comment|/* ptr to active frame */
 end_comment
 
 begin_decl_stmt
@@ -652,6 +673,9 @@ end_decl_stmt
 begin_comment
 comment|/* number of routine cntrs */
 end_comment
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/*  * The file i/o routines maintain a notion of a "current file".  * A pointer to this file structure is kept in "curfile".  *  * file structures  */
@@ -794,6 +818,9 @@ comment|/* file window element */
 block|}
 struct|;
 end_struct
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/*  * unit flags  */
@@ -979,107 +1006,37 @@ name|_err
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
+begin_comment
+comment|/*  * Px execution profile array  */
+end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|profile
+name|PROFILE
 end_ifdef
-
-begin_comment
-comment|/*  * Px execution profile data  */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|numops
+name|NUMOPS
 value|256
 end_define
 
-begin_struct
-struct|struct
-name|cntrec
-block|{
-name|double
-name|counts
-index|[
-name|numops
-index|]
-decl_stmt|;
-comment|/* instruction counts */
-name|long
-name|runs
-decl_stmt|;
-comment|/* number of interpreter runs */
-name|long
-name|startdate
-decl_stmt|;
-comment|/* date profile started */
-name|long
-name|usrtime
-decl_stmt|;
-comment|/* total user time consumed */
-name|long
-name|systime
-decl_stmt|;
-comment|/* total system time consumed */
-name|double
-name|stmts
-decl_stmt|;
-comment|/* number of pascal statements executed */
-block|}
-name|profdata
-struct|;
-end_struct
-
 begin_decl_stmt
+specifier|extern
 name|long
-name|profcnts
+name|_profcnts
 index|[
-name|numops
+name|NUMOPS
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|proffile
-value|"/usr/grad/mckusick/px/profile/pcnt.out"
-end_define
-
-begin_decl_stmt
-name|FILE
-modifier|*
-name|datafile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* input datafiles */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|profcnts
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* dummy just to keep the linker happy */
-end_comment
 
 begin_endif
 endif|#
 directive|endif
+endif|PROFILE
 end_endif
 
 end_unit
