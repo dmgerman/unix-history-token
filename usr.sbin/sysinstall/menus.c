@@ -5728,7 +5728,7 @@ block|,
 block|{
 literal|" perl"
 block|,
-literal|"Perl"
+literal|"The Perl distribution"
 block|,
 name|dmenuFlagCheck
 block|,
