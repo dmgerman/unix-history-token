@@ -741,12 +741,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_80000000
+name|B_REMFREE
 value|0x80000000
 end_define
 
 begin_comment
-comment|/* Available flag. */
+comment|/* Delayed bremfree */
 end_comment
 
 begin_define
@@ -2057,6 +2057,21 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|bremfreef
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX Force bremfree, only for nfs. */
+end_comment
 
 begin_function_decl
 name|int

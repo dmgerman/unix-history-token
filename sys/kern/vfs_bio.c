@@ -2529,12 +2529,99 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	bremfree:  *  *	Remove the buffer from the appropriate free list.  */
+comment|/*  *	bremfree:  *  *	Mark the buffer for removal from the appropriate free list in brelse.  *	  */
 end_comment
 
 begin_function
 name|void
 name|bremfree
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|BUF_REFCNT
+argument_list|(
+name|bp
+argument_list|)
+argument_list|,
+operator|(
+literal|"bremfree: buf must be locked."
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|bp
+operator|->
+name|b_qindex
+operator|!=
+name|QUEUE_NONE
+argument_list|,
+operator|(
+literal|"bremfree: buffer not on a queue."
+operator|)
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_REMFREE
+expr_stmt|;
+comment|/* Fixup numfreebuffers count.  */
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_INVAL
+operator|)
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_DELWRI
+operator|)
+operator|==
+literal|0
+condition|)
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|numfreebuffers
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	bremfreef:  *  *	Force an immediate removal from a free list.  Used only in nfs when  *	it abuses the b_freelist pointer.  */
+end_comment
+
+begin_function
+name|void
+name|bremfreef
 parameter_list|(
 name|struct
 name|buf
@@ -2562,6 +2649,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  *	bremfreel:  *  *	Removes a buffer from the free list, must be called with the  *	bqlock held.  */
+end_comment
+
 begin_function
 name|void
 name|bremfreel
@@ -2578,14 +2669,13 @@ init|=
 name|splbio
 argument_list|()
 decl_stmt|;
-name|int
-name|old_qindex
-init|=
-name|bp
-operator|->
-name|b_qindex
-decl_stmt|;
-name|GIANT_REQUIRED
+name|mtx_assert
+argument_list|(
+operator|&
+name|bqlock
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2651,7 +2741,31 @@ literal|"bremfree: removing a buffer not on a queue"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Fixup numfreebuffers count.  If the buffer is invalid or not 	 * delayed-write, and it was on the EMPTY, LRU, or AGE queues, 	 * the buffer was free and we must decrement numfreebuffers. 	 */
+comment|/* 	 * If this was a delayed bremfree() we only need to remove the buffer 	 * from the queue and return the stats are already done. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+condition|)
+block|{
+name|bp
+operator|->
+name|b_flags
+operator|&=
+operator|~
+name|B_REMFREE
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Fixup numfreebuffers count.  If the buffer is invalid or not 	 * delayed-write, the buffer was free and we must decrement 	 * numfreebuffers. 	 */
 if|if
 condition|(
 operator|(
@@ -2672,24 +2786,6 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-switch|switch
-condition|(
-name|old_qindex
-condition|)
-block|{
-case|case
-name|QUEUE_DIRTY
-case|:
-case|case
-name|QUEUE_CLEAN
-case|:
-case|case
-name|QUEUE_EMPTY
-case|:
-case|case
-name|QUEUE_EMPTYKVA
-case|:
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -2698,11 +2794,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-block|}
 name|splx
 argument_list|(
 name|s
@@ -4243,6 +4334,12 @@ name|KASSERT
 argument_list|(
 name|bp
 operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+operator|||
+name|bp
+operator|->
 name|b_qindex
 operator|==
 name|QUEUE_NONE
@@ -4353,6 +4450,12 @@ argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+operator|||
 name|bp
 operator|->
 name|b_qindex
@@ -5277,19 +5380,6 @@ block|}
 block|}
 if|if
 condition|(
-name|bp
-operator|->
-name|b_qindex
-operator|!=
-name|QUEUE_NONE
-condition|)
-name|panic
-argument_list|(
-literal|"brelse: free buffer onto another queue???"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|BUF_REFCNT
 argument_list|(
 name|bp
@@ -5316,6 +5406,33 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|bqlock
+argument_list|)
+expr_stmt|;
+comment|/* Handle delayed bremfree() processing. */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+condition|)
+name|bremfreel
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_qindex
+operator|!=
+name|QUEUE_NONE
+condition|)
+name|panic
+argument_list|(
+literal|"brelse: free buffer onto another queue???"
 argument_list|)
 expr_stmt|;
 comment|/* buffers with no memory */
@@ -5708,19 +5825,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bp
-operator|->
-name|b_qindex
-operator|!=
-name|QUEUE_NONE
-condition|)
-name|panic
-argument_list|(
-literal|"bqrelse: free buffer onto another queue???"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|BUF_REFCNT
 argument_list|(
 name|bp
@@ -5746,6 +5850,33 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|bqlock
+argument_list|)
+expr_stmt|;
+comment|/* Handle delayed bremfree() processing. */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_REMFREE
+condition|)
+name|bremfreel
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_qindex
+operator|!=
+name|QUEUE_NONE
+condition|)
+name|panic
+argument_list|(
+literal|"bqrelse: free buffer onto another queue???"
 argument_list|)
 expr_stmt|;
 comment|/* buffers with stale but valid contents */
@@ -6954,6 +7085,44 @@ name|b_bufobj
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * If we are defragging then we need a buffer with  		 * b_kvasize != 0.  XXX this situation should no longer 		 * occur, if defrag is non-zero the buffer's b_kvasize 		 * should also be non-zero at this point.  XXX 		 */
+if|if
+condition|(
+name|defrag
+operator|&&
+name|bp
+operator|->
+name|b_kvasize
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Warning: defrag empty buffer %p\n"
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* 		 * Start freeing the bp.  This is somewhat involved.  nbp 		 * remains valid only for QUEUE_EMPTY[KVA] bp's. 		 */
+if|if
+condition|(
+name|BUF_LOCK
+argument_list|(
+name|bp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_NOWAIT
+argument_list|,
+name|NULL
+argument_list|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
 comment|/* 		 * Sanity Checks 		 */
 name|KASSERT
 argument_list|(
@@ -6992,48 +7161,6 @@ name|bp
 operator|,
 name|qindex
 operator|)
-argument_list|)
-expr_stmt|;
-comment|/* 		 * If we are defragging then we need a buffer with  		 * b_kvasize != 0.  XXX this situation should no longer 		 * occur, if defrag is non-zero the buffer's b_kvasize 		 * should also be non-zero at this point.  XXX 		 */
-if|if
-condition|(
-name|defrag
-operator|&&
-name|bp
-operator|->
-name|b_kvasize
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Warning: defrag empty buffer %p\n"
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-comment|/* 		 * Start freeing the bp.  This is somewhat involved.  nbp 		 * remains valid only for QUEUE_EMPTY[KVA] bp's. 		 */
-if|if
-condition|(
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_NOWAIT
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"getnewbuf: locked buf"
 argument_list|)
 expr_stmt|;
 name|bremfreel
