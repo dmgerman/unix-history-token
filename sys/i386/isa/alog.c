@@ -723,7 +723,6 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|__inline
 name|int
 name|putfifo
 parameter_list|(
@@ -3260,7 +3259,6 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|__inline
 name|putfifo
 parameter_list|(
 name|talog_chan
