@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.24 1996/10/14 19:41:44 jkh Exp $"
+literal|"$Id: file.c,v 1.10.4.11 1996/10/15 18:38:44 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -721,6 +721,8 @@ name|tpid
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|status
 decl_stmt|;
 name|char
 modifier|*
@@ -1017,6 +1019,9 @@ argument_list|,
 name|uname
 argument_list|,
 name|pword
+argument_list|,
+operator|&
+name|status
 argument_list|)
 expr_stmt|;
 if|if
