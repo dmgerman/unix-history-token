@@ -3683,14 +3683,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"%s%d"
+literal|"%s"
 argument_list|,
-name|device_get_name
-argument_list|(
-name|brdev
-argument_list|)
-argument_list|,
-name|device_get_unit
+name|device_get_nameunit
 argument_list|(
 name|brdev
 argument_list|)
