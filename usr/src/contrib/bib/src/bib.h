@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.3	%G%  */
+comment|/*  *	@(#)bib.h	2.4	%G%  */
 end_comment
 
 begin_comment
@@ -70,6 +70,20 @@ define|#
 directive|define
 name|CITEEND
 value|(char) 03
+end_define
+
+begin_define
+define|#
+directive|define
+name|FMTSTART
+value|(char) 04
+end_define
+
+begin_define
+define|#
+directive|define
+name|FMTEND
+value|(char) 05
 end_define
 
 begin_comment
@@ -228,12 +242,19 @@ name|char
 modifier|*
 name|ri_ref
 decl_stmt|;
-comment|/* actual value */
+comment|/* actual value, base value */
 name|char
 modifier|*
 name|ri_cite
 decl_stmt|;
 comment|/* citation string */
+name|char
+name|ri_disambig
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* disambiguation string */
 name|int
 name|ri_length
 decl_stmt|;

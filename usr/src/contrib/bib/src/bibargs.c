@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bibargs.c	2.4	%G%"
+literal|"@(#)bibargs.c	2.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,8 +1260,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|j
-decl_stmt|,
 name|getwrd
 argument_list|()
 decl_stmt|;
@@ -2506,10 +2504,6 @@ decl_stmt|,
 modifier|*
 name|w
 decl_stmt|;
-name|reg
-name|int
-name|i
-decl_stmt|;
 name|q
 operator|=
 name|line2
@@ -2765,10 +2759,6 @@ modifier|*
 name|word
 decl_stmt|;
 block|{
-name|reg
-name|int
-name|i
-decl_stmt|;
 name|reg
 name|int
 name|lg
@@ -3950,7 +3940,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* makecites - make citation strings */
+comment|/* makecites - make standard citation strings, using citetemplate currently in effect */
 end_comment
 
 begin_macro
@@ -4030,7 +4020,6 @@ name|tempcite
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* leave room for disambig */
 if|if
 condition|(
 name|refinfo
@@ -5633,9 +5622,6 @@ name|j
 decl_stmt|;
 name|char
 name|adstr
-index|[
-literal|2
-index|]
 decl_stmt|;
 for|for
 control|(
@@ -5681,18 +5667,8 @@ literal|0
 condition|)
 block|{
 name|adstr
-index|[
-literal|0
-index|]
 operator|=
 literal|'a'
-expr_stmt|;
-name|adstr
-index|[
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
@@ -5726,9 +5702,6 @@ operator|++
 control|)
 block|{
 name|adstr
-index|[
-literal|0
-index|]
 operator|=
 literal|'a'
 operator|+
@@ -5745,26 +5718,47 @@ operator|==
 name|numrefs
 condition|)
 break|break;
-name|strcat
-argument_list|(
 name|refinfo
 index|[
 name|j
 index|]
 operator|.
-name|ri_cite
-argument_list|,
+name|ri_disambig
+index|[
+literal|0
+index|]
+operator|=
 name|adstr
-argument_list|)
 expr_stmt|;
 block|}
-name|adstr
+name|refinfo
+index|[
+name|i
+index|]
+operator|.
+name|ri_disambig
 index|[
 literal|0
 index|]
 operator|=
 literal|'a'
 expr_stmt|;
+block|}
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|numrefs
+condition|;
+name|i
+operator|++
+control|)
+block|{
 name|strcat
 argument_list|(
 name|refinfo
@@ -5774,10 +5768,14 @@ index|]
 operator|.
 name|ri_cite
 argument_list|,
-name|adstr
+name|refinfo
+index|[
+name|i
+index|]
+operator|.
+name|ri_disambig
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_block
