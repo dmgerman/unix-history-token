@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prof.c	6.1	83/07/29	*/
+comment|/*	subr_prof.c	6.2	84/07/28	*/
 end_comment
 
 begin_comment
@@ -229,10 +229,8 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|wmemall
+name|calloc
 argument_list|(
-name|memall
-argument_list|,
 name|ssiz
 argument_list|)
 expr_stmt|;
@@ -272,10 +270,8 @@ operator|(
 name|u_short
 operator|*
 operator|)
-name|wmemall
+name|calloc
 argument_list|(
-name|memall
-argument_list|,
 name|fromssize
 argument_list|)
 expr_stmt|;
@@ -291,7 +287,7 @@ argument_list|(
 literal|"No space for monitor buffer(s)\n"
 argument_list|)
 expr_stmt|;
-name|wmemfree
+name|cfreemem
 argument_list|(
 name|sbuf
 argument_list|,
@@ -364,10 +360,8 @@ expr|struct
 name|tostruct
 operator|*
 operator|)
-name|wmemall
+name|calloc
 argument_list|(
-name|memall
-argument_list|,
 name|tossize
 argument_list|)
 expr_stmt|;
@@ -383,7 +377,7 @@ argument_list|(
 literal|"No space for monitor buffer(s)\n"
 argument_list|)
 expr_stmt|;
-name|wmemfree
+name|cfreemem
 argument_list|(
 name|sbuf
 argument_list|,
@@ -394,7 +388,7 @@ name|sbuf
 operator|=
 literal|0
 expr_stmt|;
-name|wmemfree
+name|cfreemem
 argument_list|(
 name|froms
 argument_list|,

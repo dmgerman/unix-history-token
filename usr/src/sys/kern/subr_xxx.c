@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_xxx.c	6.2	83/09/09	*/
+comment|/*	subr_xxx.c	6.3	84/07/28	*/
 end_comment
 
 begin_include
@@ -401,6 +401,45 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Stub routine in case it is ever possible to free space.  */
+end_comment
+
+begin_macro
+name|cfreemem
+argument_list|(
+argument|cp
+argument_list|,
+argument|size
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|caddr_t
+name|cp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|size
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|printf
+argument_list|(
+literal|"freeing %x, size %d\n"
+argument_list|,
+name|cp
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 begin_ifndef
 ifndef|#
