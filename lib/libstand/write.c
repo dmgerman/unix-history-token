@@ -200,7 +200,9 @@ operator|)
 return|;
 return|return
 operator|(
-literal|0
+name|bcount
+operator|-
+name|resid
 operator|)
 return|;
 block|}
