@@ -1654,6 +1654,9 @@ name|printf
 argument_list|(
 literal|"%.*s %.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mpct
@@ -1665,6 +1668,9 @@ name|mpct
 operator|->
 name|oem_id
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mpct
