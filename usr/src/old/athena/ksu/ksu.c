@@ -85,7 +85,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<mit-copyright.h>
+file|<kerberos/mit-copyright.h>
 end_include
 
 begin_include
@@ -133,7 +133,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<krb.h>
+file|<kerberos/krb.h>
 end_include
 
 begin_include
