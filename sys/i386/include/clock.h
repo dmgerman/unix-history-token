@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.16 1996/08/02 21:16:13 bde Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.17 1996/10/09 19:47:26 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -14,12 +14,6 @@ define|#
 directive|define
 name|_MACHINE_CLOCK_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|"opt_cpu.h"
-end_include
 
 begin_if
 if|#
