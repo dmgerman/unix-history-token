@@ -1028,8 +1028,10 @@ condition|;
 name|i
 operator|++
 control|)
+comment|/* following if statement modified to cope with Q authors */
 if|if
 condition|(
+operator|(
 name|flds
 index|[
 name|i
@@ -1039,6 +1041,23 @@ literal|1
 index|]
 operator|==
 name|c
+operator|||
+operator|(
+name|c
+operator|==
+literal|'A'
+operator|&&
+name|flds
+index|[
+name|i
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'Q'
+operator|)
+operator|)
 operator|&&
 operator|++
 name|fnd
@@ -1046,6 +1065,16 @@ operator|>=
 name|seq
 condition|)
 block|{
+name|c
+operator|=
+name|flds
+index|[
+name|i
+index|]
+index|[
+literal|1
+index|]
+expr_stmt|;
 comment|/* for titles use first word otherwise last */
 if|if
 condition|(
@@ -1056,6 +1085,10 @@ operator|||
 name|c
 operator|==
 literal|'J'
+operator|||
+name|c
+operator|==
+literal|'Q'
 condition|)
 block|{
 name|p
