@@ -1789,6 +1789,7 @@ if|if
 condition|(
 name|kvread
 argument_list|(
+operator|&
 name|TAILQ_FIRST
 argument_list|(
 operator|&
