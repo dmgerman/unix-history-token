@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.119 1999/01/24 01:04:04 dillon Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_page.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_page.c,v 1.120 1999/01/24 02:29:26 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -2003,7 +2003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: this routine will raise itself to splvm(), the caller need not.   *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  */
+comment|/*  *	vm_page_rename:  *  *	Move the given memory entry from its  *	current object to the specified target object/offset.  *  *	The object must be locked.  *	This routine may not block.  *  *	Note: this routine will raise itself to splvm(), the caller need not.   *  *	Note: swap associated with the page must be invalidated by the move.  We  *	      have to do this for several reasons:  (1) we aren't freeing the  *	      page, (2) we are dirtying the page, (3) the VM system is probably  *	      moving the page from object A to B, and will then later move  *	      the backing store from A to B and we can't have a conflict.  *  *	Note: we *always* dirty the page.  It is necessary both for the  *	      fact that we moved it, and because we may be invalidating  *	      swap.  If the page is on the cache, we have to deactivate it  *	      or vm_page_dirty() will panic.  Dirty pages are not allowed  *	      on the cache.  */
 end_comment
 
 begin_function
@@ -2050,11 +2050,27 @@ argument_list|,
 name|new_pindex
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|m
 operator|->
-name|dirty
-operator|=
-name|VM_PAGE_BITS_ALL
+name|queue
+operator|-
+name|m
+operator|->
+name|pc
+operator|==
+name|PQ_CACHE
+condition|)
+name|vm_page_deactivate
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|vm_page_dirty
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(
@@ -4774,7 +4790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	The page queues must be locked.  *	This routine may not block.  */
+comment|/*  *	vm_page_unwire:  *  *	Release one wiring of this page, potentially  *	enabling it to be paged again.  *  *	Many pages placed on the inactive queue should actually go  *	into the cache, but it is difficult to figure out which.  What  *	we do instead, if the inactive target is well met, is to put  *	clean pages at the head of the inactive queue instead of the tail.  *	This will cause them to be moved to the cache more quickly and  *	if not actively re-referenced, freed more quickly.  If we just  *	stick these pages at the end of the inactive queue, heavy filesystem  *	meta-data accesses can cause an unnecessary paging load on memory bound   *	processes.  This optimization causes one-time-use metadata to be  *	reused more quickly.  *  *	A number of routines use vm_page_unwire() to guarentee that the page  *	will go into either the inactive or active queues, and will NEVER  *	be placed in the cache - for example, just after dirtying a page.  *	dirty pages in the cache are not allowed.  *  *	The page queues must be locked.  *	This routine may not block.  */
 end_comment
 
 begin_function
@@ -5778,11 +5794,10 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
+name|vm_page_dirty
+argument_list|(
 name|m
-operator|->
-name|dirty
-operator|=
-name|VM_PAGE_BITS_ALL
+argument_list|)
 expr_stmt|;
 block|}
 block|}
