@@ -2982,7 +2982,7 @@ name|vfc_flags
 operator|&
 name|MNT_VISFLAGMASK
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
@@ -3024,7 +3024,7 @@ name|td_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
@@ -4790,7 +4790,7 @@ name|vfc_flags
 operator|&
 name|MNT_VISFLAGMASK
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
@@ -4832,7 +4832,7 @@ name|td_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
@@ -6728,7 +6728,7 @@ name|vfc_flags
 operator|&
 name|MNT_VISFLAGMASK
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
@@ -6765,24 +6765,17 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|copystr
+name|strlcpy
 argument_list|(
-name|devname
-argument_list|,
 name|mp
 operator|->
 name|mnt_stat
 operator|.
 name|f_mntfromname
 argument_list|,
-name|MNAMELEN
-operator|-
-literal|1
+name|devname
 argument_list|,
-literal|0
+name|MNAMELEN
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -7276,7 +7269,7 @@ operator|~
 name|MNT_RDONLY
 expr_stmt|;
 comment|/*  	 * Set the mount path to be something useful, because the 	 * filesystem code isn't responsible now for initialising 	 * f_mntonname unless they want to override the default 	 * (which is `path'.) 	 */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|mp
 operator|->
