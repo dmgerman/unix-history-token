@@ -44,7 +44,7 @@ end_include
 begin_decl_stmt
 specifier|extern
 name|char
-name|__sigcode
+name|__sigtramp
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -57,7 +57,7 @@ name|sparc_sigtramp_install_args
 name|sia
 init|=
 block|{
-name|__sigcode
+name|__sigtramp
 block|,
 name|NULL
 block|}
