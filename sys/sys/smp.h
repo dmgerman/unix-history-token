@@ -123,6 +123,12 @@ begin_comment
 comment|/*  * Machine dependent functions used to initialize MP support.  *  * The cpu_mp_probe() should check to see if MP support is present and return  * zero if it is not or non-zero if it is.  If MP support is present, then  * cpu_mp_start() will be called so that MP can be enabled.  This function  * should do things such as startup secondary processors.  It should also  * setup mp_ncpus, all_cpus, and smp_cpus.  It should also ensure that  * smp_active and smp_started are initialized at the appropriate time.  * Once cpu_mp_start() returns, machine independent MP startup code will be  * executed and a simple message will be output to the console.  Finally,  * cpu_mp_announce() will be called so that machine dependent messages about  * the MP support may be output to the console if desired.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|cpu_mp_announce
