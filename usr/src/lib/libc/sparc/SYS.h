@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)SYS.h	5.3 (Berkeley) %G%  *  * from: $Header: SYS.h,v 1.2 92/07/03 18:57:00 torek Exp $  */
 end_comment
 
 begin_include
@@ -82,7 +82,7 @@ value|ENTRY(x); mov SYS_##x,%g1; t ST_SYSCALL; bcc 1f; nop; ERROR(); 1:
 end_define
 
 begin_comment
-comment|/*  * RSYSCALL is used when the system call should just return.  Here  * we use the SYSCALL_RFLAG to put the `success' return address in %g7  * and avoid a branch.  */
+comment|/*  * RSYSCALL is used when the system call should just return.  Here  * we use the SYSCALL_G2RFLAG to put the `success' return address in %g2  * and avoid a branch.  */
 end_comment
 
 begin_define
@@ -93,11 +93,11 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(x); mov (SYS_##x)|SYSCALL_RFLAG,%g1; add %o7,8,%g7; \ 	t ST_SYSCALL; ERROR()
+value|ENTRY(x); mov (SYS_##x)|SYSCALL_G2RFLAG,%g1; add %o7,8,%g2; \ 	t ST_SYSCALL; ERROR()
 end_define
 
 begin_comment
-comment|/*  * PSEUDO(x,y) is like  RSYSCALL(y) except that the name is x.  */
+comment|/*  * PSEUDO(x,y) is like RSYSCALL(y) except that the name is x.  */
 end_comment
 
 begin_define
@@ -110,7 +110,7 @@ parameter_list|,
 name|y
 parameter_list|)
 define|\
-value|ENTRY(x); mov (SYS_##y)|SYSCALL_RFLAG,%g1; add %o7,8,%g7; \ 	t ST_SYSCALL; ERROR()
+value|ENTRY(x); mov (SYS_##y)|SYSCALL_G2RFLAG,%g1; add %o7,8,%g2; \ 	t ST_SYSCALL; ERROR()
 end_define
 
 begin_define
