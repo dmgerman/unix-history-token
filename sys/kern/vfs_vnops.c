@@ -1457,12 +1457,6 @@ name|v_type
 operator|!=
 name|VCHR
 operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
 operator|(
 name|error
 operator|=
@@ -2046,12 +2040,6 @@ operator|->
 name|v_type
 operator|!=
 name|VCHR
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
 operator|&&
 operator|(
 name|error

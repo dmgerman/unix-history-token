@@ -8417,12 +8417,6 @@ operator|->
 name|v_type
 operator|!=
 name|VREG
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
 condition|)
 name|printf
 argument_list|(

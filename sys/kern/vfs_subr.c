@@ -5477,9 +5477,6 @@ break|break;
 case|case
 name|VCHR
 case|:
-case|case
-name|VBLK
-case|:
 if|if
 condition|(
 name|newvp
@@ -5846,7 +5843,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a vnode for a block device.  * Used for mounting the root file system.  * XXX: This now changed to a VCHR due to the block/char merging.  */
+comment|/*  * Create a vnode for a device.  * Used for mounting the root file system.  */
 end_comment
 
 begin_function
@@ -6021,9 +6018,16 @@ condition|(
 name|nvp
 operator|->
 name|v_type
-operator|!=
+operator|==
 name|VBLK
-operator|&&
+condition|)
+return|return
+operator|(
+name|nvp
+operator|)
+return|;
+if|if
+condition|(
 name|nvp
 operator|->
 name|v_type
@@ -6041,14 +6045,6 @@ name|udev2dev
 argument_list|(
 name|nvp_rdev
 argument_list|,
-name|nvp
-operator|->
-name|v_type
-operator|==
-name|VBLK
-condition|?
-literal|1
-else|:
 literal|0
 argument_list|)
 expr_stmt|;
@@ -6219,12 +6215,6 @@ decl_stmt|;
 block|{
 name|KASSERT
 argument_list|(
-name|nvp
-operator|->
-name|v_type
-operator|==
-name|VBLK
-operator|||
 name|nvp
 operator|->
 name|v_type
@@ -7230,12 +7220,6 @@ name|vp
 operator|->
 name|v_type
 operator|!=
-name|VBLK
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
 name|VCHR
 condition|)
 block|{
@@ -8108,25 +8092,23 @@ expr_stmt|;
 comment|/* 	 * If special device, remove it from special device alias list 	 * if it is on one. 	 */
 if|if
 condition|(
-operator|(
-name|vp
-operator|->
-name|v_type
-operator|==
-name|VBLK
-operator|||
 name|vp
 operator|->
 name|v_type
 operator|==
 name|VCHR
-operator|)
 operator|&&
 name|vp
 operator|->
 name|v_rdev
 operator|!=
 name|NULL
+operator|&&
+name|vp
+operator|->
+name|v_rdev
+operator|!=
+name|NODEV
 condition|)
 block|{
 name|simple_lock
@@ -12767,7 +12749,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * extract the dev_t from a VBLK or VCHR  */
+comment|/*  * extract the dev_t from a VCHR  */
 end_comment
 
 begin_function
@@ -12784,12 +12766,6 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
 name|vp
 operator|->
 name|v_type
@@ -12840,12 +12816,6 @@ name|cdevsw
 decl_stmt|;
 if|if
 condition|(
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
-operator|&&
 name|vp
 operator|->
 name|v_type

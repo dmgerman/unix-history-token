@@ -17032,12 +17032,6 @@ operator|->
 name|v_type
 operator|!=
 name|VCHR
-operator|&&
-name|vp
-operator|->
-name|v_type
-operator|!=
-name|VBLK
 condition|)
 block|{
 name|error
