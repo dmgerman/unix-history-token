@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash_page.c	5.12 (Berkeley) %G%"
+literal|"@(#)hash_page.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3733,6 +3733,10 @@ block|{
 name|free_page
 operator|++
 expr_stmt|;
+define|#
+directive|define
+name|OVMSG
+value|"hash: out of overflow pages; increase page size\n"
 if|if
 condition|(
 name|free_page
@@ -3740,11 +3744,21 @@ operator|>=
 name|NCACHED
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|write
 argument_list|(
-name|stderr
+name|STDERR_FILENO
 argument_list|,
-literal|"HASH: Out of overflow pages.  Increase page size\n"
+name|OVMSG
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|OVMSG
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
@@ -3811,11 +3825,21 @@ operator|>
 name|SPLITMASK
 condition|)
 block|{
-name|fprintf
+operator|(
+name|void
+operator|)
+name|write
 argument_list|(
-name|stderr
+name|STDERR_FILENO
 argument_list|,
-literal|"HASH: Out of overflow pages.  Increase page size\n"
+name|OVMSG
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|OVMSG
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 return|return
