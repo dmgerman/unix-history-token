@@ -873,7 +873,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"Device char-major=%d minor=%d "
+literal|"Device char-major=%d minor=0x%x "
 argument_list|,
 name|major
 argument_list|(
