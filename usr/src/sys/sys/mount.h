@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	8.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -437,6 +437,10 @@ name|int
 name|mnt_maxsymlinklen
 decl_stmt|;
 comment|/* max size of short symlink */
+name|uid_t
+name|mnt_owner
+decl_stmt|;
+comment|/* uid that did mount */
 name|struct
 name|statfs
 name|mnt_stat
@@ -625,17 +629,6 @@ end_define
 
 begin_comment
 comment|/* identifies the root filesystem */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_USER
-value|0x00008000
-end_define
-
-begin_comment
-comment|/* mounted by a user */
 end_comment
 
 begin_comment
