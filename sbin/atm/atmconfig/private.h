@@ -135,6 +135,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PATH_ILMI_SOCK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PATH_ILMI_SOCK
+value|"/var/run/ilmid.sock"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Builtin commands  */
 end_comment

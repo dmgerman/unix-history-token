@@ -86,14 +86,11 @@ begin_struct
 struct|struct
 name|amodule
 block|{
+specifier|const
 name|struct
 name|cmdtab
-name|cmd
-decl_stmt|;
-specifier|const
-name|char
 modifier|*
-name|help
+name|cmd
 decl_stmt|;
 block|}
 struct|;
@@ -105,12 +102,26 @@ directive|define
 name|DEF_MODULE
 parameter_list|(
 name|CMDTAB
-parameter_list|,
-name|HELP
 parameter_list|)
 define|\
-value|struct amodule amodule_1 = { CMDTAB, HELP };
+value|struct amodule amodule_1 = { CMDTAB }
 end_define
+
+begin_comment
+comment|/* for compiled-in modules */
+end_comment
+
+begin_function_decl
+name|void
+name|register_module
+parameter_list|(
+specifier|const
+name|struct
+name|amodule
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print a message if we are verbose */
@@ -219,6 +230,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pparse
+parameter_list|(
+name|int32_t
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|penum
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_enum
 enum|enum
 block|{
@@ -286,6 +316,19 @@ name|struct
 name|option
 modifier|*
 name|_opts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX while this is compiled in */
+end_comment
+
+begin_function_decl
+name|void
+name|device_register
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
