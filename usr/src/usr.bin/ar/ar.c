@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c 4.4 %G%"
+literal|"@(#)ar.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -395,6 +395,16 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|truncate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ok to truncate argument filenames */
+end_comment
 
 begin_function_decl
 name|char
@@ -1564,6 +1574,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|truncate
+operator|++
+expr_stmt|;
 name|getqf
 argument_list|()
 expr_stmt|;
@@ -2195,6 +2208,9 @@ specifier|register
 name|i
 operator|,
 name|f
+expr_stmt|;
+name|truncate
+operator|++
 expr_stmt|;
 for|for
 control|(
@@ -3437,6 +3453,7 @@ decl_stmt|,
 modifier|*
 name|p2
 decl_stmt|;
+comment|/* Strip trailing slashes */
 for|for
 control|(
 name|p1
@@ -3472,6 +3489,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* Find last component of path; do not zap the path */
 name|p2
 operator|=
 name|s
@@ -3501,6 +3519,61 @@ name|p1
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * Truncate name if too long, only if we are doing an 'add' 	 * type operation. We only allow 15 cause rest of ar 	 * isn't smart enough to deal with non-null terminated 	 * names.  Need an exit status convention... 	 * Need yet another new archive format... 	 */
+if|if
+condition|(
+name|truncate
+operator|&&
+name|strlen
+argument_list|(
+name|p2
+argument_list|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|arbuf
+operator|.
+name|ar_name
+argument_list|)
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ar: filename %s truncated to "
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+name|p2
+operator|+
+sizeof|sizeof
+argument_list|(
+name|arbuf
+operator|.
+name|ar_name
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|=
+literal|'\0'
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n"
+argument_list|,
+name|p2
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|p2
