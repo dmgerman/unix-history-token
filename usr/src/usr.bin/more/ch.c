@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ch.c	5.8 (Berkeley) %G%"
+literal|"@(#)ch.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,13 +72,6 @@ end_comment
 begin_comment
 comment|/*  * Pool of buffers holding the most recently used blocks of the input file.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BUFSIZ
-value|1024
-end_define
 
 begin_struct
 struct|struct
