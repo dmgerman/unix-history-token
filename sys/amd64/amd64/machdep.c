@@ -1105,6 +1105,7 @@ decl_stmt|;
 name|int
 name|physmem_est
 decl_stmt|;
+comment|/* in pages */
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|earlysetcpuclass
 argument_list|()
@@ -1333,12 +1334,15 @@ name|physmem
 expr_stmt|;
 block|}
 else|else
+block|{
 name|physmem_est
 operator|=
 name|min
 argument_list|(
 name|physmem
 argument_list|,
+name|btoc
+argument_list|(
 name|kernel_map
 operator|->
 name|max_offset
@@ -1347,7 +1351,9 @@ name|kernel_map
 operator|->
 name|min_offset
 argument_list|)
+argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * The nominal buffer size (and minimum KVA allocation) is BKVASIZE. 	 * For the first 64MB of ram nominally allocate sufficient buffers to 	 * cover 1/4 of our ram.  Beyond the first 64MB allocate additional 	 * buffers to cover 1/20 of our ram over 64MB.  When auto-sizing 	 * the buffer cache we limit the eventual kva reservation to 	 * maxbcache bytes. 	 * 	 * factor represents the 1/4 x ram conversion. 	 */
 if|if
 condition|(
@@ -1420,7 +1426,7 @@ name|maxbcache
 operator|&&
 name|nbuf
 operator|>
-name|physmem_est
+name|maxbcache
 operator|/
 name|BKVASIZE
 condition|)
