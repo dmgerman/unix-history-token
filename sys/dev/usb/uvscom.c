@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb/uvscom.c,v 1.1 2002/03/19 15:08:42 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 2001-2002, Shunsuke Akiyama<akiyama@jp.FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 2001-2003, 2005 Shunsuke Akiyama<akiyama@jp.FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -180,6 +180,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
 end_include
 
 begin_include
@@ -742,6 +748,10 @@ name|u_char
 name|sc_usr
 decl_stmt|;
 comment|/* unit status */
+name|struct
+name|task
+name|sc_task
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1006,6 +1016,19 @@ begin_function_decl
 name|Static
 name|void
 name|uvscom_close
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Static
+name|void
+name|uvscom_notify
 parameter_list|(
 name|void
 modifier|*
@@ -2162,6 +2185,20 @@ name|sc
 operator|->
 name|sc_intr_number
 operator|)
+argument_list|)
+expr_stmt|;
+name|TASK_INIT
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_task
+argument_list|,
+literal|0
+argument_list|,
+name|uvscom_notify
+argument_list|,
+name|sc
 argument_list|)
 expr_stmt|;
 name|ucom_attach
@@ -4346,6 +4383,56 @@ argument_list|,
 name|SER_DCD
 argument_list|)
 expr_stmt|;
+comment|/* Deferred notifying to the ucom layer */
+name|taskqueue_enqueue
+argument_list|(
+name|taskqueue_swi_giant
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_task
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|Static
+name|void
+name|uvscom_notify
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+block|{
+name|struct
+name|uvscom_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|uvscom_softc
+operator|*
+operator|)
+name|arg
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_ucom
+operator|.
+name|sc_dying
+condition|)
+return|return;
 name|ucom_status_change
 argument_list|(
 operator|&
