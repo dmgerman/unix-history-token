@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/data_mbg.c,v 4.3 1999/02/21 12:17:42 kardel RELEASE_19990228_A  *  * $Created: Sun Jul 20 12:08:14 1997 $  *  * Copyright (C) 1997, 1998 by Frank Kardel  */
+comment|/*  * /src/NTP/ntp-4/libparse/data_mbg.c,v 4.3 1999/02/21 12:17:42 kardel RELEASE_19991128_A  *  * $Created: Sun Jul 20 12:08:14 1997 $  *  * Copyright (C) 1997, 1998 by Frank Kardel  */
 end_comment
 
 begin_ifdef

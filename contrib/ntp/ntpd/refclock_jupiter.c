@@ -3331,41 +3331,45 @@ begin_comment
 comment|/* Compare two l_fp's, used with qsort() */
 end_comment
 
-begin_function
-name|int
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|QSORT_USES_VOID_P
+end_ifdef
+
+begin_decl_stmt
+name|int
 name|jupiter_cmpl_fp
-parameter_list|(
+argument_list|(
 specifier|register
 specifier|const
 name|void
-modifier|*
+operator|*
 name|p1
-parameter_list|,
+argument_list|,
 specifier|register
 specifier|const
 name|void
-modifier|*
+operator|*
 name|p2
-parameter_list|)
+argument_list|)
 else|#
 directive|else
-function|jupiter_cmpl_fp
-parameter_list|(
+name|int
+name|jupiter_cmpl_fp
+argument_list|(
 specifier|register
 specifier|const
 name|l_fp
-modifier|*
+operator|*
 name|fp1
-parameter_list|,
+argument_list|,
 specifier|register
 specifier|const
 name|l_fp
-modifier|*
+operator|*
 name|fp2
-parameter_list|)
+argument_list|)
 endif|#
 directive|endif
 block|{
@@ -3436,7 +3440,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -4217,7 +4221,10 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -4267,6 +4274,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __STDC__ */
+end_comment
+
 begin_block
 block|{
 name|va_list
@@ -4279,7 +4290,10 @@ condition|)
 block|{
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 name|va_start
 argument_list|(
 name|ap
@@ -4296,6 +4310,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* __STDC__ */
 comment|/* 		 * Print debug message to stdout 		 * In the future, we may want to get get more creative... 		 */
 name|vfprintf
 argument_list|(

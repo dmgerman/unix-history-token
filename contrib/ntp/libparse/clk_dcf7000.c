@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_dcf7000.c,v 4.5 1998/06/14 21:09:34 kardel RELEASE_19990228_A  *    * clk_dcf7000.c,v 4.5 1998/06/14 21:09:34 kardel RELEASE_19990228_A  *  * ELV DCF7000 module  *  * Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_dcf7000.c,v 4.6 1999/11/28 09:13:49 kardel RELEASE_19991128_A  *    * clk_dcf7000.c,v 4.6 1999/11/28 09:13:49 kardel RELEASE_19991128_A  *  * ELV DCF7000 module  *  * Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998 by Frank Kardel  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -778,7 +778,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_DCF7000) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 4.5  1998/06/14 21:09:34  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:01:59  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:27  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:24  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:51  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:28  kardel  * Start 4.0 release version numbering  *  * from V3 3.18 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 4.6  1999/11/28 09:13:49  kardel  * RECON_4_0_98F  *  * Revision 4.5  1998/06/14 21:09:34  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:01:59  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:27  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:24  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:51  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:28  kardel  * Start 4.0 release version numbering  *  * from V3 3.18 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

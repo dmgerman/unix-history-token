@@ -79,11 +79,11 @@ literal|"WWV_PST"
 block|}
 block|,
 block|{
-name|REFCLK_WWVB_SPECTRACOM
+name|REFCLK_SPECTRACOM
 block|,
-literal|"Spectracom WWVB Receiver (4)"
+literal|"Spectracom (generic) Receivers (4)"
 block|,
-literal|"WWVB_SPEC"
+literal|"SPECTRACOM"
 block|}
 block|,
 block|{
@@ -103,11 +103,11 @@ literal|"IRIG_AUDIO"
 block|}
 block|,
 block|{
-name|REFCLK_CHU
+name|REFCLK_CHU_AUDIO
 block|,
-literal|"Scratchbuilt CHU Receiver (7)"
+literal|"CHU Audio Demodulator/Decoder (7)"
 block|,
-literal|"CHU"
+literal|"CHU_AUDIO"
 block|}
 block|,
 block|{
@@ -313,7 +313,7 @@ block|,
 block|{
 name|REFCLK_DUMBCLOCK
 block|,
-literal|"Dumb generic hh:mm:ss local clock"
+literal|"Dumb generic hh:mm:ss local clock (33)"
 block|,
 literal|"DUMBCLOCK"
 block|}
@@ -321,9 +321,33 @@ block|,
 block|{
 name|REFCLK_ULINK
 block|,
-literal|"Ultralink M320 WWVB receiver"
+literal|"Ultralink M320 WWVB receiver (34)"
 block|,
 literal|"ULINK_M320"
+block|}
+block|,
+block|{
+name|REFCLK_PCF
+block|,
+literal|"Conrad parallel port radio clock (35)"
+block|,
+literal|"PCF"
+block|}
+block|,
+block|{
+name|REFCLK_WWV_AUDIO
+block|,
+literal|"WWV/H Audio Demodulator/Decoder (36)"
+block|,
+literal|"WWV_AUDIO"
+block|}
+block|,
+block|{
+name|REFCLK_FG
+block|,
+literal|"Forum Graphic GPS Dating Station (37)"
+block|,
+literal|"GPS_FG"
 block|}
 block|,
 block|{

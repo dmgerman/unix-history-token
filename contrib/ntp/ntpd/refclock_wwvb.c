@@ -30,7 +30,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|CLOCK_WWVB
+name|CLOCK_SPECTRACOM
 argument_list|)
 end_if
 

@@ -758,10 +758,10 @@ expr|struct
 name|savekey
 operator|*
 operator|)
-name|malloc
+name|calloc
 argument_list|(
 name|MEMINC
-operator|*
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct

@@ -1685,12 +1685,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|REFCLK_WWVB_SPECTRACOM
+name|REFCLK_SPECTRACOM
 value|4
 end_define
 
 begin_comment
-comment|/* Spectracom 8170/Netclock WWVB */
+comment|/* Spectracom (generic) Receivers */
 end_comment
 
 begin_define
@@ -1712,18 +1712,18 @@ value|6
 end_define
 
 begin_comment
-comment|/* IRIG-B audio decoder */
+comment|/* IRIG-B/W audio decoder */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|REFCLK_CHU
+name|REFCLK_CHU_AUDIO
 value|7
 end_define
 
 begin_comment
-comment|/* scratchbuilt CHU (Canada) */
+comment|/* CHU audio demodulator/decoder */
 end_comment
 
 begin_define
@@ -2015,8 +2015,41 @@ end_comment
 begin_define
 define|#
 directive|define
+name|REFCLK_PCF
+value|35
+end_define
+
+begin_comment
+comment|/* Conrad parallel port radio clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_WWV_AUDIO
+value|36
+end_define
+
+begin_comment
+comment|/* WWV/H audio demodulator/decoder */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REFCLK_FG
+value|37
+end_define
+
+begin_comment
+comment|/* Forum Graphic GPS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REFCLK_MAX
-value|34
+value|37
 end_define
 
 begin_comment

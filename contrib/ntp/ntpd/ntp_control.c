@@ -1892,6 +1892,15 @@ comment|/* REFCLK_DUMBCLOCK (32) */
 name|CTL_SST_TS_LF
 block|,
 comment|/* REFCLK_ULINK (33) */
+name|CTL_SST_TS_LF
+block|,
+comment|/* REFCLK_PCF (35) */
+name|CTL_SST_TS_LF
+block|,
+comment|/* REFCLK_WWW (36) */
+name|CTL_SST_TS_LF
+block|,
+comment|/* REFCLK_FG (37) */
 block|}
 decl_stmt|;
 end_decl_stmt

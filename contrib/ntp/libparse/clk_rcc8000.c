@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_rcc8000.c,v 4.5 1998/06/14 21:09:38 kardel RELEASE_19990228_A  *    * clk_rcc8000.c,v 4.5 1998/06/14 21:09:38 kardel RELEASE_19990228_A  *  * Radiocode Clocks Ltd RCC 8000 Intelligent Off-Air Master Clock support  *  * Created by R.E.Broughton from clk_trimtaip.c  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_rcc8000.c,v 4.6 1999/11/28 09:13:51 kardel RELEASE_19991128_A  *    * clk_rcc8000.c,v 4.6 1999/11/28 09:13:51 kardel RELEASE_19991128_A  *  * Radiocode Clocks Ltd RCC 8000 Intelligent Off-Air Master Clock support  *  * Created by R.E.Broughton from clk_trimtaip.c  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
@@ -700,7 +700,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_RCC8000) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_rcc8000.c,v  * Revision 4.5  1998/06/14 21:09:38  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:05:02  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:29  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:25  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.5 log info deleted 1998/04/11 kardel  */
+comment|/*  * History:  *  * clk_rcc8000.c,v  * Revision 4.6  1999/11/28 09:13:51  kardel  * RECON_4_0_98F  *  * Revision 4.5  1998/06/14 21:09:38  kardel  * Sun acc cleanup  *  * Revision 4.4  1998/06/13 12:05:02  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:29  kardel  * fix prototypes  *  * Revision 4.2  1998/06/12 09:13:25  kardel  * conditional compile macros fixed  * printf prototype  *  * Revision 4.1  1998/05/24 09:39:53  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:30  kardel  * Start 4.0 release version numbering  *  * from V3 3.5 log info deleted 1998/04/11 kardel  */
 end_comment
 
 end_unit

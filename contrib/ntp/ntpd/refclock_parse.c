@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/ntpd/refclock_parse.c,v 4.29 1999/02/28 19:58:23 kardel RELEASE_19990228_A  *  * refclock_parse.c,v 4.29 1999/02/28 19:58:23 kardel RELEASE_19990228_A  *  * generic reference clock driver for receivers  *  * optionally make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x  *  * the STREAMS module is not required for operation and may be omitted  * at the cost of reduced accuracy. As new kernel interfaces emerger this  * restriction may be lifted in future.  *  * Copyright (c) 1995-1999 by Frank Kardel<kardel@acm.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * This software may not be sold for profit without a written consent  * from the author.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/ntpd/refclock_parse.c,v 4.36 1999/11/28 17:18:20 kardel RELEASE_19991128_A  *  * refclock_parse.c,v 4.36 1999/11/28 17:18:20 kardel RELEASE_19991128_A  *  * generic reference clock driver for receivers  *  * optionally make use of a STREAMS module for input processing where  * available and configured. Currently the STREAMS module  * is only available for Suns running SunOS 4.x and SunOS5.x  *  * the STREAMS module is not required for operation and may be omitted  * at the cost of reduced accuracy. As new kernel interfaces emerger this  * restriction may be lifted in future.  *  * Copyright (c) 1995-1999 by Frank Kardel<kardel@acm.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * This software may not be sold for profit without a written consent  * from the author.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -374,7 +374,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"refclock_parse.c,v 4.29 1999/02/28 19:58:23 kardel RELEASE_19990228_A"
+literal|"refclock_parse.c,v 4.36 1999/11/28 17:18:20 kardel RELEASE_19991128_A"
 decl_stmt|;
 end_decl_stmt
 
@@ -1284,10 +1284,10 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* accumulated time of clock states */
-name|u_char
+name|u_long
 name|pollneeddata
 decl_stmt|;
-comment|/* 1 for receive sample expected in PPS mode */
+comment|/* current_time(!=0) for receive sample expected in PPS mode */
 name|u_short
 name|lastformat
 decl_stmt|;
@@ -2715,7 +2715,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|rawdcfdtr_init
+name|rawdcf_init_1
 name|P
 argument_list|(
 operator|(
@@ -2730,25 +2730,25 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|RAWDCFDTR_DESCRIPTION
-value|"RAW DCF77 CODE (DTR OPTION)"
+name|RAWDCFDTRSET_DESCRIPTION
+value|"RAW DCF77 CODE (DTR SET/RTS CLR)"
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAWDCFDTR_INIT
-value|rawdcfdtr_init
+name|RAWDCFDTRSET_INIT
+value|rawdcf_init_1
 end_define
 
 begin_comment
-comment|/*  * RAWDCF receivers that need to be powered from RTS  */
+comment|/*  * RAWDCF receivers that need to be powered from  * DTR CLR and RTS SET  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 name|int
-name|rawdcfrts_init
+name|rawdcf_init_2
 name|P
 argument_list|(
 operator|(
@@ -2763,15 +2763,15 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|RAWDCFRTS_DESCRIPTION
-value|"RAW DCF77 CODE (RTS OPTION)"
+name|RAWDCFDTRCLRRTSSET_DESCRIPTION
+value|"RAW DCF77 CODE (DTR CLR/RTS SET)"
 end_define
 
 begin_define
 define|#
 directive|define
-name|RAWDCFRTS_INIT
-value|rawdcfrts_init
+name|RAWDCFDTRCLRRTSSET_INIT
+value|rawdcf_init_2
 end_define
 
 begin_comment
@@ -3654,6 +3654,21 @@ directive|define
 name|COMPUTIME_KEEP
 value|3
 end_define
+
+begin_decl_stmt
+specifier|static
+name|poll_info_t
+name|we400a_pollinfo
+init|=
+block|{
+literal|60
+block|,
+literal|"T"
+block|,
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Varitext Radio Clock Receiver  */
@@ -4584,7 +4599,7 @@ name|RAWDCF_FLAGS
 block|,
 name|NO_POLL
 block|,
-name|RAWDCFDTR_INIT
+name|RAWDCFDTRSET_INIT
 block|,
 name|NO_EVENT
 block|,
@@ -4600,7 +4615,7 @@ name|RAWDCF_BASEDELAY
 block|,
 name|DCF_A_ID
 block|,
-name|RAWDCFDTR_DESCRIPTION
+name|RAWDCFDTRSET_DESCRIPTION
 block|,
 name|RAWDCF_FORMAT
 block|,
@@ -4628,10 +4643,10 @@ comment|/* mode 15 */
 literal|0
 block|,
 comment|/* operation flags (io modes) */
-name|NO_POLL
+name|poll_dpoll
 block|,
 comment|/* active poll routine */
-name|NO_INIT
+name|poll_init
 block|,
 comment|/* active poll init routine */
 name|NO_EVENT
@@ -4643,25 +4658,33 @@ comment|/* active poll end routine */
 name|NO_MESSAGE
 block|,
 comment|/* process a lower layer message */
-name|NO_DATA
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+operator|&
+name|we400a_pollinfo
+operator|)
+operator|)
 block|,
 comment|/* local data area for "poll" mechanism */
 literal|0
 block|,
 comment|/* rootdelay */
-literal|11.0
-comment|/* bits */
+literal|1.0
 operator|/
-literal|9600
+literal|960
 block|,
-comment|/* current offset by which the RS232 				time code is delayed from the actual time */
+comment|/* current offset by which the RS232 				           	time code is delayed from the actual time */
 name|DCF_ID
 block|,
 comment|/* ID code */
 literal|"WHARTON 400A Series clock"
 block|,
 comment|/* device name */
-literal|"WHARTON 400A Series clock Output Format 1"
+literal|"WHARTON 400A Series clock Output Format 5"
 block|,
 comment|/* fixed format */
 comment|/* Must match a format-name in a libparse/clk_xxx.c file */
@@ -4675,7 +4698,6 @@ literal|60
 operator|*
 literal|60
 operator|)
-comment|/*?*/
 block|,
 comment|/* time to trust oscillator after loosing synch */
 name|B9600
@@ -4704,17 +4726,60 @@ literal|0
 block|,
 comment|/* terminal local flags */
 literal|5
-comment|/*?*/
 block|,
 comment|/* samples for median filter */
 literal|3
-comment|/*?*/
 block|,
 comment|/* samples for median filter to keep */
 block|}
 block|,
 block|{
-comment|/* mode 16 */
+comment|/* mode 16 - RAWDCF RTS set, DTR clr */
+name|RAWDCF_FLAGS
+block|,
+name|NO_POLL
+block|,
+name|RAWDCFDTRCLRRTSSET_INIT
+block|,
+name|NO_EVENT
+block|,
+name|NO_END
+block|,
+name|NO_MESSAGE
+block|,
+name|NO_DATA
+block|,
+name|RAWDCF_ROOTDELAY
+block|,
+name|RAWDCF_BASEDELAY
+block|,
+name|DCF_A_ID
+block|,
+name|RAWDCFDTRCLRRTSSET_DESCRIPTION
+block|,
+name|RAWDCF_FORMAT
+block|,
+name|DCF_TYPE
+block|,
+name|RAWDCF_MAXUNSYNC
+block|,
+name|RAWDCF_SPEED
+block|,
+name|RAWDCF_CFLAG
+block|,
+name|RAWDCF_IFLAG
+block|,
+name|RAWDCF_OFLAG
+block|,
+name|RAWDCF_LFLAG
+block|,
+name|RAWDCF_SAMPLES
+block|,
+name|RAWDCF_KEEP
+block|}
+block|,
+block|{
+comment|/* mode 17 */
 name|VARITEXT_FLAGS
 block|,
 name|NO_POLL
@@ -4757,52 +4822,7 @@ name|VARITEXT_SAMPLES
 block|,
 name|VARITEXT_KEEP
 block|}
-block|,
-block|{
-comment|/* mode 17 */
-name|RAWDCF_FLAGS
-block|,
-name|NO_POLL
-block|,
-name|RAWDCFRTS_INIT
-block|,
-name|NO_EVENT
-block|,
-name|NO_END
-block|,
-name|NO_MESSAGE
-block|,
-name|NO_DATA
-block|,
-name|RAWDCF_ROOTDELAY
-block|,
-name|RAWDCF_BASEDELAY
-block|,
-name|DCF_A_ID
-block|,
-name|RAWDCFRTS_DESCRIPTION
-block|,
-name|RAWDCF_FORMAT
-block|,
-name|DCF_TYPE
-block|,
-name|RAWDCF_MAXUNSYNC
-block|,
-name|RAWDCF_SPEED
-block|,
-name|RAWDCF_CFLAG
-block|,
-name|RAWDCF_IFLAG
-block|,
-name|RAWDCF_OFLAG
-block|,
-name|RAWDCF_LFLAG
-block|,
-name|RAWDCF_SAMPLES
-block|,
-name|RAWDCF_KEEP
 block|}
-block|, }
 struct|;
 end_struct
 
@@ -10218,18 +10238,6 @@ name|sys_precision
 expr_stmt|;
 name|peer
 operator|->
-name|burst
-operator|=
-name|NTP_SHIFT
-expr_stmt|;
-name|peer
-operator|->
-name|flags
-operator||=
-name|FLAG_BURST
-expr_stmt|;
-name|peer
-operator|->
 name|stratum
 operator|=
 name|STRATUM_REFCLOCK
@@ -11522,9 +11530,49 @@ condition|(
 name|parse
 operator|->
 name|pollneeddata
+operator|&&
+operator|(
+operator|(
+name|current_time
+operator|-
+name|parse
+operator|->
+name|pollneeddata
+operator|)
+operator|>
+operator|(
+literal|1
+operator|<<
+operator|(
+name|max
+argument_list|(
+name|min
+argument_list|(
+name|parse
+operator|->
+name|peer
+operator|->
+name|hpoll
+argument_list|,
+name|parse
+operator|->
+name|peer
+operator|->
+name|ppoll
+argument_list|)
+argument_list|,
+name|parse
+operator|->
+name|peer
+operator|->
+name|minpoll
+argument_list|)
+operator|)
+operator|)
+operator|)
 condition|)
 block|{
-comment|/* 		 * bad news - didn't get a response last time 		 */
+comment|/* 		 * start worrying when exceeding a poll inteval 		 * bad news - didn't get a response last time 		 */
 name|parse
 operator|->
 name|generic
@@ -11569,7 +11617,7 @@ name|parse
 operator|->
 name|pollneeddata
 operator|=
-literal|1
+name|current_time
 expr_stmt|;
 if|if
 condition|(
@@ -14362,6 +14410,9 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_escape
+end_escape
 
 begin_comment
 comment|/**===========================================================================  ** special code for special clocks  **/
@@ -17256,6 +17307,9 @@ return|;
 block|}
 end_function
 
+begin_escape
+end_escape
+
 begin_comment
 comment|/**===========================================================================  ** Trimble support  **/
 end_comment
@@ -17586,7 +17640,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This driver supports the Trimble SVee Six Plus GPS receiver module.  * It should support other Trimble receivers which use the Trimble Standard  * Interface Protocol (see below).  *  * The module has a serial I/O port for command/data and a 1 pulse-per-second  * output, about 1 microsecond wide. The leading edge of the pulse is  * coincident with the change of the GPS second. This is the same as  * the change of the UTC second +/- ~1 microsecond. Some other clocks  * specifically use a feature in the data message as a timing reference, but  * the SVee Six Plus does not do this. In fact there is considerable jitter  * on the timing of the messages, so this driver only supports the use  * of the PPS pulse for accurate timing. Where it is determined that  * the offset is way off, when first starting up ntpd for example,  * the timing of the data stream is used until the offset becomes low enough  * (|offset|< clock_max), at which point the pps offset is used.  *  * It can use either option for receiving PPS information - the 'ppsclock'  * stream pushed onto the serial data interface to timestamp the Carrier  * Detect interrupts, where the 1PPS connects to the CD line. This only  * works on SunOS 4.1.x currently. To select this, define PPSPPS in  * Config.local. The other option is to use a pulse-stretcher/level-converter  * to convert the PPS pulse into a RS232 start pulse& feed this into another  * tty port. To use this option, define PPSCLK in Config.local. The pps input,  * by whichever method, is handled in ntp_loopfilter.c  *  * The receiver uses a serial message protocol called Trimble Standard  * Interface Protocol (it can support others but this driver only supports  * TSIP). Messages in this protocol have the following form:  *  *<DLE><id> ...<data> ...<DLE><ETX>  *  * Any bytes within the<data> portion of value 10 hex (<DLE>) are doubled  * on transmission and compressed back to one on reception. Otherwise  * the values of data bytes can be anything. The serial interface is RS-422  * asynchronous using 9600 baud, 8 data bits with odd party (**note** 9 bits  * in total!), and 1 stop bit. The protocol supports byte, integer, single,  * and double datatypes. Integers are two bytes, sent most significant first.  * Singles are IEEE754 single precision floating point numbers (4 byte) sent  * sign& exponent first. Doubles are IEEE754 double precision floating point  * numbers (8 byte) sent sign& exponent first.  * The receiver supports a large set of messages, only a small subset of  * which are used here. From driver to receiver the following are used:  *  *  ID    Description  *  *  21    Request current time  *  22    Mode Select  *  2C    Set/Request operating parameters  *  2F    Request UTC info  *  35    Set/Request I/O options   * From receiver to driver the following are recognised:  *  *  ID    Description  *  *  41    GPS Time  *  44    Satellite selection, PDOP, mode  *  46    Receiver health  *  4B    Machine code/status  *  4C    Report operating parameters (debug only)  *  4F    UTC correction data (used to get leap second warnings)  *  55    I/O options (debug only)  *  * All others are accepted but ignored.  *  */
+comment|/*  * This driver supports the Trimble SVee Six Plus GPS receiver module.  * It should support other Trimble receivers which use the Trimble Standard  * Interface Protocol (see below).  *  * The module has a serial I/O port for command/data and a 1 pulse-per-second  * output, about 1 microsecond wide. The leading edge of the pulse is  * coincident with the change of the GPS second. This is the same as  * the change of the UTC second +/- ~1 microsecond. Some other clocks  * specifically use a feature in the data message as a timing reference, but  * the SVee Six Plus does not do this. In fact there is considerable jitter  * on the timing of the messages, so this driver only supports the use  * of the PPS pulse for accurate timing. Where it is determined that  * the offset is way off, when first starting up ntpd for example,  * the timing of the data stream is used until the offset becomes low enough  * (|offset|< CLOCK_MAX), at which point the pps offset is used.  *  * It can use either option for receiving PPS information - the 'ppsclock'  * stream pushed onto the serial data interface to timestamp the Carrier  * Detect interrupts, where the 1PPS connects to the CD line. This only  * works on SunOS 4.1.x currently. To select this, define PPSPPS in  * Config.local. The other option is to use a pulse-stretcher/level-converter  * to convert the PPS pulse into a RS232 start pulse& feed this into another  * tty port. To use this option, define PPSCLK in Config.local. The pps input,  * by whichever method, is handled in ntp_loopfilter.c  *  * The receiver uses a serial message protocol called Trimble Standard  * Interface Protocol (it can support others but this driver only supports  * TSIP). Messages in this protocol have the following form:  *  *<DLE><id> ...<data> ...<DLE><ETX>  *  * Any bytes within the<data> portion of value 10 hex (<DLE>) are doubled  * on transmission and compressed back to one on reception. Otherwise  * the values of data bytes can be anything. The serial interface is RS-422  * asynchronous using 9600 baud, 8 data bits with odd party (**note** 9 bits  * in total!), and 1 stop bit. The protocol supports byte, integer, single,  * and double datatypes. Integers are two bytes, sent most significant first.  * Singles are IEEE754 single precision floating point numbers (4 byte) sent  * sign& exponent first. Doubles are IEEE754 double precision floating point  * numbers (8 byte) sent sign& exponent first.  * The receiver supports a large set of messages, only a small subset of  * which are used here. From driver to receiver the following are used:  *  *  ID    Description  *  *  21    Request current time  *  22    Mode Select  *  2C    Set/Request operating parameters  *  2F    Request UTC info  *  35    Set/Request I/O options   * From receiver to driver the following are recognised:  *  *  ID    Description  *  *  41    GPS Time  *  44    Satellite selection, PDOP, mode  *  46    Receiver health  *  4B    Machine code/status  *  4C    Report operating parameters (debug only)  *  4F    UTC correction data (used to get leap second warnings)  *  55    I/O options (debug only)  *  * All others are accepted but ignored.  *  */
 end_comment
 
 begin_define
@@ -17676,6 +17730,98 @@ comment|/* pointer to actual data buffer */
 block|}
 struct|;
 end_struct
+
+begin_decl_stmt
+name|void
+name|sendcmd
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|txbuf
+operator|*
+name|buf
+operator|,
+name|int
+name|c
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sendbyte
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|txbuf
+operator|*
+name|buf
+operator|,
+name|int
+name|b
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sendetx
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|txbuf
+operator|*
+name|buf
+operator|,
+expr|struct
+name|parseunit
+operator|*
+name|parse
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sendint
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|txbuf
+operator|*
+name|buf
+operator|,
+name|int
+name|a
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|sendflt
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|txbuf
+operator|*
+name|buf
+operator|,
+name|double
+name|a
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -21705,7 +21851,7 @@ comment|/**============================================================  ** RAWD
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------  * rawdcfdtr_init - set up modem lines for RAWDCF receivers  */
+comment|/*--------------------------------------------------  * rawdcf_init_1 - set up modem lines for RAWDCF receivers  * SET DTR line  */
 end_comment
 
 begin_if
@@ -21732,7 +21878,7 @@ end_if
 begin_function
 specifier|static
 name|int
-name|rawdcfdtr_init
+name|rawdcf_init_1
 parameter_list|(
 name|struct
 name|parseunit
@@ -21789,7 +21935,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"PARSE receiver #%d: rawdcf_init: WARNING: ioctl(fd, TIOCMSET, [C|T]IOCM_DTR): %m"
+literal|"PARSE receiver #%d: rawdcf_init_1: WARNING: ioctl(fd, TIOCMSET, [C|T]IOCM_DTR): %m"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -21826,7 +21972,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"PARSE receiver #%d: rawdcf_init: WARNING: OS interface incapable of setting DTR to power DCF modules"
+literal|"PARSE receiver #%d: rawdcf_init_1: WARNING: OS interface incapable of setting DTR to power DCF modules"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -21852,7 +21998,7 @@ comment|/* DTR initialisation type */
 end_comment
 
 begin_comment
-comment|/*--------------------------------------------------  * rawdcfrts_init - set up modem lines for RAWDCF receivers  */
+comment|/*--------------------------------------------------  * rawdcf_init_2 - set up modem lines for RAWDCF receivers  * CLR DTR line, SET RTS line  */
 end_comment
 
 begin_if
@@ -21879,7 +22025,7 @@ end_if
 begin_function
 specifier|static
 name|int
-name|rawdcfrts_init
+name|rawdcf_init_2
 parameter_list|(
 name|struct
 name|parseunit
@@ -21887,7 +22033,7 @@ modifier|*
 name|parse
 parameter_list|)
 block|{
-comment|/* 	 * You can use the RS232 to supply the power for a DCF77 receiver. 	 * Here a voltage between the RTS and the DTR line is used. 	 */
+comment|/* 	 * You can use the RS232 to supply the power for a DCF77 receiver. 	 * Here a voltage between the DTR and the RTS line is used. Unfortunately 	 * the name has changed from CIOCM_DTR to TIOCM_DTR recently. 	 */
 ifdef|#
 directive|ifdef
 name|TIOCM_RTS
@@ -21896,7 +22042,7 @@ name|sl232
 init|=
 name|TIOCM_RTS
 decl_stmt|;
-comment|/* turn on RTS for power supply */
+comment|/* turn on RTS, clear DTR for power supply */
 else|#
 directive|else
 name|int
@@ -21904,7 +22050,7 @@ name|sl232
 init|=
 name|CIOCM_RTS
 decl_stmt|;
-comment|/* turn on RTS for power supply */
+comment|/* turn on DTR for power supply */
 endif|#
 directive|endif
 if|if
@@ -21936,7 +22082,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"PARSE receiver #%d: rawdcf_init: WARNING: ioctl(fd, TIOCMSET, [C|T]IOCM_RTS): %m"
+literal|"PARSE receiver #%d: rawdcf_init_2: WARNING: ioctl(fd, TIOCMSET, [C|T]IOCM_RTS): %m"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -21961,7 +22107,7 @@ end_else
 begin_function
 specifier|static
 name|int
-name|rawdcfrts_init
+name|rawdcf_init_2
 parameter_list|(
 name|struct
 name|parseunit
@@ -21973,7 +22119,7 @@ name|msyslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"PARSE receiver #%d: rawdcf_init: WARNING: OS interface incapable of setting RTS to power DCF modules"
+literal|"PARSE receiver #%d: rawdcf_init_2: WARNING: OS interface incapable of setting RTS to power DCF modules"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -21995,7 +22141,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RTS initialisation type */
+comment|/* DTR initialisation type */
 end_comment
 
 begin_else
@@ -22023,7 +22169,7 @@ comment|/* defined(REFCLOCK)&& defined(PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * refclock_parse.c,v  * Revision 4.29  1999/02/28 19:58:23  kardel  * updated copyright information  *  * Revision 4.28  1999/02/28 19:01:50  kardel  * improved debug out on sent Meinberg messages  *  * Revision 4.27  1999/02/28 18:05:55  kardel  * no linux/ppsclock.h stuff  *  * Revision 4.26  1999/02/28 15:27:27  kardel  * wharton clock integration  *  * Revision 4.25  1999/02/28 14:04:46  kardel  * added missing double quotes to UTC information string  *  * Revision 4.24  1999/02/28 12:06:50  kardel  * (parse_control): using gmprettydate instead of prettydate()  * (mk_utcinfo): new function for formatting GPS derived UTC information  * (gps16x_message): changed to use mk_utcinfo()  * (trimbletsip_message): changed to use mk_utcinfo()  * ignoring position information in unsynchronized mode  * (parse_start): augument linux support for optional ASYNC_LOW_LATENCY  *  * Revision 4.23  1999/02/23 19:47:53  kardel  * fixed #endifs  * (stream_receive): fixed formats  *  * Revision 4.22  1999/02/22 06:21:02  kardel  * use new autoconfig symbols  *  * Revision 4.21  1999/02/21 12:18:13  kardel  * 4.91f reconcilation  *  * Revision 4.20  1999/02/21 10:53:36  kardel  * initial Linux PPSkit version  *  * Revision 4.19  1999/02/07 09:10:45  kardel  * clarify STREAMS mitigation rules in comment  *  * Revision 4.18  1998/12/20 23:45:34  kardel  * fix types and warnings  *  * Revision 4.17  1998/11/15 21:24:51  kardel  * cannot access mbg_ routines when CLOCK_MEINBERG  * is not defined  *  * Revision 4.16  1998/11/15 20:28:17  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.15  1998/08/22 21:56:08  kardel  * fixed IO handling for non-STREAM IO  *  * Revision 4.14  1998/08/16 19:00:48  kardel  * (gps16x_message): reduced UTC parameter information (dropped A0,A1)  * made uval a local variable (killed one of the last globals)  * (sendetx): added logging of messages when in debug mode  * (trimble_check): added periodic checks to facilitate re-initialization  * (trimbletsip_init): made use of EOL character if in non-kernel operation  * (trimbletsip_message): extended message interpretation  * (getdbl): fixed data conversion  *  * Revision 4.13  1998/08/09 22:29:13  kardel  * Trimble TSIP support  *  * Revision 4.12  1998/07/11 10:05:34  kardel  * Release 4.0.73d reconcilation  *  * Revision 4.11  1998/06/14 21:09:42  kardel  * Sun acc cleanup  *  * Revision 4.10  1998/06/13 12:36:45  kardel  * signed/unsigned, name clashes  *  * Revision 4.9  1998/06/12 15:30:00  kardel  * prototype fixes  *  * Revision 4.8  1998/06/12 11:19:42  kardel  * added direct input processing routine for refclocks in  * order to avaiod that single character io gobbles up all  * receive buffers and drops input data. (Problem started  * with fast machines so a character a buffer was possible  * one of the few cases where faster machines break existing  * allocation algorithms)  *  * Revision 4.7  1998/06/06 18:35:20  kardel  * (parse_start): added BURST mode initialisation  *  * Revision 4.6  1998/05/27 06:12:46  kardel  * RAWDCF_BASEDELAY default added  * old comment removed  * casts for ioctl()  *  * Revision 4.5  1998/05/25 22:05:09  kardel  * RAWDCF_SETDTR option removed  * clock type 14 attempts to set DTR for  * power supply of RAWDCF receivers  *  * Revision 4.4  1998/05/24 16:20:47  kardel  * updated comments referencing Meinberg clocks  * added RAWDCF clock with DTR set option as type 14  *  * Revision 4.3  1998/05/24 10:48:33  kardel  * calibrated CONRAD RAWDCF default fudge factor  *  * Revision 4.2  1998/05/24 09:59:35  kardel  * corrected version information (ntpq support)  *  * Revision 4.1  1998/05/24 09:52:31  kardel  * use fixed format only (new IO model)  * output debug to stdout instead of msyslog()  * don't include>"< in ASCII output in order not to confuse  * ntpq parsing  *  * Revision 4.0  1998/04/10 19:52:11  kardel  * Start 4.0 release version numbering  *  * Revision 1.2  1998/04/10 19:28:04  kardel  * initial NTP VERSION 4 integration of PARSE with GPS166 binary support  * derived from 3.105.1.2 from V3 tree  *  * Revision information 3.1 - 3.105 from log deleted 1998/04/10 kardel  *  */
+comment|/*  * History:  *  * refclock_parse.c,v  * Revision 4.36  1999/11/28 17:18:20  kardel  * disabled burst mode  *  * Revision 4.35  1999/11/28 09:14:14  kardel  * RECON_4_0_98F  *  * Revision 4.34  1999/05/14 06:08:05  kardel  * store current_time in a suitable container (u_long)  *  * Revision 4.33  1999/05/13 21:48:38  kardel  * double the no response timeout interval  *  * Revision 4.32  1999/05/13 20:09:13  kardel  * complain only about missing polls after a full poll interval  *  * Revision 4.31  1999/05/13 19:59:32  kardel  * add clock type 16 for RTS set DTR clr in RAWDCF  *  * Revision 4.30  1999/02/28 20:36:43  kardel  * fixed printf fmt  *  * Revision 4.29  1999/02/28 19:58:23  kardel  * updated copyright information  *  * Revision 4.28  1999/02/28 19:01:50  kardel  * improved debug out on sent Meinberg messages  *  * Revision 4.27  1999/02/28 18:05:55  kardel  * no linux/ppsclock.h stuff  *  * Revision 4.26  1999/02/28 15:27:27  kardel  * wharton clock integration  *  * Revision 4.25  1999/02/28 14:04:46  kardel  * added missing double quotes to UTC information string  *  * Revision 4.24  1999/02/28 12:06:50  kardel  * (parse_control): using gmprettydate instead of prettydate()  * (mk_utcinfo): new function for formatting GPS derived UTC information  * (gps16x_message): changed to use mk_utcinfo()  * (trimbletsip_message): changed to use mk_utcinfo()  * ignoring position information in unsynchronized mode  * (parse_start): augument linux support for optional ASYNC_LOW_LATENCY  *  * Revision 4.23  1999/02/23 19:47:53  kardel  * fixed #endifs  * (stream_receive): fixed formats  *  * Revision 4.22  1999/02/22 06:21:02  kardel  * use new autoconfig symbols  *  * Revision 4.21  1999/02/21 12:18:13  kardel  * 4.91f reconcilation  *  * Revision 4.20  1999/02/21 10:53:36  kardel  * initial Linux PPSkit version  *  * Revision 4.19  1999/02/07 09:10:45  kardel  * clarify STREAMS mitigation rules in comment  *  * Revision 4.18  1998/12/20 23:45:34  kardel  * fix types and warnings  *  * Revision 4.17  1998/11/15 21:24:51  kardel  * cannot access mbg_ routines when CLOCK_MEINBERG  * is not defined  *  * Revision 4.16  1998/11/15 20:28:17  kardel  * Release 4.0.73e13 reconcilation  *  * Revision 4.15  1998/08/22 21:56:08  kardel  * fixed IO handling for non-STREAM IO  *  * Revision 4.14  1998/08/16 19:00:48  kardel  * (gps16x_message): reduced UTC parameter information (dropped A0,A1)  * made uval a local variable (killed one of the last globals)  * (sendetx): added logging of messages when in debug mode  * (trimble_check): added periodic checks to facilitate re-initialization  * (trimbletsip_init): made use of EOL character if in non-kernel operation  * (trimbletsip_message): extended message interpretation  * (getdbl): fixed data conversion  *  * Revision 4.13  1998/08/09 22:29:13  kardel  * Trimble TSIP support  *  * Revision 4.12  1998/07/11 10:05:34  kardel  * Release 4.0.73d reconcilation  *  * Revision 4.11  1998/06/14 21:09:42  kardel  * Sun acc cleanup  *  * Revision 4.10  1998/06/13 12:36:45  kardel  * signed/unsigned, name clashes  *  * Revision 4.9  1998/06/12 15:30:00  kardel  * prototype fixes  *  * Revision 4.8  1998/06/12 11:19:42  kardel  * added direct input processing routine for refclocks in  * order to avaiod that single character io gobbles up all  * receive buffers and drops input data. (Problem started  * with fast machines so a character a buffer was possible  * one of the few cases where faster machines break existing  * allocation algorithms)  *  * Revision 4.7  1998/06/06 18:35:20  kardel  * (parse_start): added BURST mode initialisation  *  * Revision 4.6  1998/05/27 06:12:46  kardel  * RAWDCF_BASEDELAY default added  * old comment removed  * casts for ioctl()  *  * Revision 4.5  1998/05/25 22:05:09  kardel  * RAWDCF_SETDTR option removed  * clock type 14 attempts to set DTR for  * power supply of RAWDCF receivers  *  * Revision 4.4  1998/05/24 16:20:47  kardel  * updated comments referencing Meinberg clocks  * added RAWDCF clock with DTR set option as type 14  *  * Revision 4.3  1998/05/24 10:48:33  kardel  * calibrated CONRAD RAWDCF default fudge factor  *  * Revision 4.2  1998/05/24 09:59:35  kardel  * corrected version information (ntpq support)  *  * Revision 4.1  1998/05/24 09:52:31  kardel  * use fixed format only (new IO model)  * output debug to stdout instead of msyslog()  * don't include>"< in ASCII output in order not to confuse  * ntpq parsing  *  * Revision 4.0  1998/04/10 19:52:11  kardel  * Start 4.0 release version numbering  *  * Revision 1.2  1998/04/10 19:28:04  kardel  * initial NTP VERSION 4 integration of PARSE with GPS166 binary support  * derived from 3.105.1.2 from V3 tree  *  * Revision information 3.1 - 3.105 from log deleted 1998/04/10 kardel  *  */
 end_comment
 
 end_unit

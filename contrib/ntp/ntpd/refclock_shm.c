@@ -1245,8 +1245,6 @@ operator|=
 name|up
 operator|->
 name|receiveTimeStampSec
-operator|-
-literal|172800
 expr_stmt|;
 name|tvr
 operator|.
@@ -1292,8 +1290,6 @@ operator|=
 name|up
 operator|->
 name|receiveTimeStampSec
-operator|-
-literal|172800
 expr_stmt|;
 name|tvr
 operator|.
@@ -1344,7 +1340,6 @@ name|mode
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*msyslog(LOG_NOTICE,"poll2a tvr.s %d tvr.u %d tvt.s %d tvt.u %d",tvr.tv_sec,tvr.tv_usec,tvt.tv_sec,tvt.tv_usec);*/
 name|up
 operator|->
 name|valid
@@ -1390,8 +1385,9 @@ operator|=
 name|t
 operator|->
 name|tm_yday
+operator|+
+literal|1
 expr_stmt|;
-comment|/*+2; */
 name|pp
 operator|->
 name|hour
@@ -1415,6 +1411,12 @@ operator|=
 name|t
 operator|->
 name|tm_sec
+expr_stmt|;
+name|pp
+operator|->
+name|msec
+operator|=
+literal|0
 expr_stmt|;
 name|pp
 operator|->

@@ -207,7 +207,38 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CLOCK_WWVB
+name|CLOCK_WWV
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_wwv
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_wwv
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_SPECTRACOM
 end_ifdef
 
 begin_decl_stmt
@@ -874,7 +905,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SHM
+name|CLOCK_SHM
 end_ifdef
 
 begin_decl_stmt
@@ -1102,6 +1133,68 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_PCF
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_pcf
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_pcf
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CLOCK_FG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|refclock
+name|refclock_fg
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|refclock_fg
+value|refclock_none
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Order is clock_start(), clock_shutdown(), clock_poll(),  * clock_control(), clock_init(), clock_buginfo, clock_flags;  *  * Types are defined in ntp.h.  The index must match this.  */
 end_comment
@@ -1133,7 +1226,7 @@ comment|/* 3 REFCLK_WWV_PST */
 operator|&
 name|refclock_wwvb
 block|,
-comment|/* 4 REFCLK_WWVB_SPECTRACOM */
+comment|/* 4 REFCLK_SPECTRACOM */
 operator|&
 name|refclock_true
 block|,
@@ -1145,7 +1238,7 @@ comment|/* 6 REFCLK_IRIG_AUDIO */
 operator|&
 name|refclock_chu
 block|,
-comment|/* 7 REFCLK_CHU */
+comment|/* 7 REFCLK_CHU_AUDIO */
 operator|&
 name|refclock_parse
 block|,
@@ -1254,6 +1347,17 @@ operator|&
 name|refclock_ulink
 block|,
 comment|/* 34 REFCLOCK_ULINK */
+operator|&
+name|refclock_pcf
+block|,
+comment|/* 35 REFCLOCK_PCF */
+operator|&
+name|refclock_wwv
+block|,
+comment|/* 36 REFCLOCK_WWV_AUDIO */
+operator|&
+name|refclock_fg
+comment|/* 37 REFCLOCK_FG */
 block|}
 decl_stmt|;
 end_decl_stmt

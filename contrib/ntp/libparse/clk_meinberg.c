@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/clk_meinberg.c,v 4.7 1999/02/21 11:09:14 kardel RELEASE_19990228_A  *    * clk_meinberg.c,v 4.7 1999/02/21 11:09:14 kardel RELEASE_19990228_A  *  * Meinberg clock support  *  * Copyright (C) 1995-1999 by Frank Kardel<kardel@acm.org>  * Copyright (C) 1992-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/clk_meinberg.c,v 4.8 1999/11/28 09:13:50 kardel RELEASE_19991128_A  *    * clk_meinberg.c,v 4.8 1999/11/28 09:13:50 kardel RELEASE_19991128_A  *  * Meinberg clock support  *  * Copyright (C) 1995-1999 by Frank Kardel<kardel@acm.org>  * Copyright (C) 1992-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_ifdef
@@ -2874,7 +2874,7 @@ comment|/* not (REFCLOCK&& CLOCK_PARSE&& CLOCK_MEINBERG) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_meinberg.c,v  * Revision 4.7  1999/02/21 11:09:14  kardel  * cleanup  *  * Revision 4.6  1998/06/14 21:09:36  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 15:18:54  kardel  * fix mem*() to b*() function macro emulation  *  * Revision 4.4  1998/06/13 12:03:23  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.2  1998/05/24 16:14:42  kardel  * support current Meinberg standard data formats  *  * Revision 4.1  1998/05/24 09:39:52  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:29  kardel  * Start 4.0 release version numbering  *  * from V3 3.23 - log info deleted 1998/04/11 kardel  *  */
+comment|/*  * History:  *  * clk_meinberg.c,v  * Revision 4.8  1999/11/28 09:13:50  kardel  * RECON_4_0_98F  *  * Revision 4.7  1999/02/21 11:09:14  kardel  * cleanup  *  * Revision 4.6  1998/06/14 21:09:36  kardel  * Sun acc cleanup  *  * Revision 4.5  1998/06/13 15:18:54  kardel  * fix mem*() to b*() function macro emulation  *  * Revision 4.4  1998/06/13 12:03:23  kardel  * fix SYSV clock name clash  *  * Revision 4.3  1998/06/12 15:22:28  kardel  * fix prototypes  *  * Revision 4.2  1998/05/24 16:14:42  kardel  * support current Meinberg standard data formats  *  * Revision 4.1  1998/05/24 09:39:52  kardel  * implementation of the new IO handling model  *  * Revision 4.0  1998/04/10 19:45:29  kardel  * Start 4.0 release version numbering  *  * from V3 3.23 - log info deleted 1998/04/11 kardel  *  */
 end_comment
 
 end_unit

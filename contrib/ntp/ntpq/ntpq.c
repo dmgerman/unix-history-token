@@ -2744,7 +2744,7 @@ begin_define
 define|#
 directive|define
 name|DEFHOST
-value|"localhost"
+value|"127.0.0.1"
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp-4/libparse/parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19990228_A  *    * parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19990228_A  *  * STREAMS module for reference clocks  *  * Copyright (C) 1993-1998 by Frank Kardel  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp-4/libparse/parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A  *    * parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A  *  * STREAMS module for reference clocks  *  * Copyright (C) 1993-1998 by Frank Kardel  * derived work from parsestreams.c ((c) 1991-1993, Frank Kardel) and  * dcf77sync.c((c) Frank Kardel)  * Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_define
@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19990228_A"
+literal|"parsesolaris.c,v 4.6 1998/11/15 21:56:08 kardel RELEASE_19991128_A"
 decl_stmt|;
 end_decl_stmt
 

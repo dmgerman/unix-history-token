@@ -6457,7 +6457,7 @@ name|MAXHAVE
 index|]
 decl_stmt|;
 name|u_long
-name|poll
+name|poll_sec
 decl_stmt|;
 name|char
 name|type
@@ -7096,7 +7096,7 @@ literal|1
 operator|)
 return|;
 comment|/* 	 * Got everything, format the line 	 */
-name|poll
+name|poll_sec
 operator|=
 literal|1
 operator|<<
@@ -7211,7 +7211,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|poll
+name|poll_sec
 argument_list|)
 argument_list|,
 name|reach
@@ -7538,6 +7538,17 @@ name|fp
 argument_list|)
 condition|)
 return|return;
+name|maxhostlen
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|numhosts
+operator|>
+literal|1
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -7587,12 +7598,6 @@ name|fullname
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|numhosts
-operator|>
-literal|1
-condition|)
 operator|(
 name|void
 operator|)
@@ -7609,6 +7614,7 @@ argument_list|,
 literal|"host"
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

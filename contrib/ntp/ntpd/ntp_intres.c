@@ -625,6 +625,8 @@ name|DEBUG
 if|if
 condition|(
 name|debug
+operator|>
+literal|1
 condition|)
 block|{
 name|msyslog
