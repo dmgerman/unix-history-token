@@ -716,15 +716,6 @@ name|i
 operator|++
 index|]
 operator|=
-literal|"-odq"
-expr_stmt|;
-comment|/* queue it, don't try to deliver */
-name|args
-index|[
-name|i
-operator|++
-index|]
-operator|=
 literal|"-oi"
 expr_stmt|;
 comment|/* ignore '.' on a line by itself */
