@@ -640,7 +640,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FS_LFS
+name|FS_BSDLFS
 value|9
 end_define
 
@@ -679,6 +679,8 @@ block|,
 literal|"4.2BSD"
 block|,
 literal|"MSDOS"
+block|,
+literal|"4.4LFS"
 block|,
 literal|0
 block|}
