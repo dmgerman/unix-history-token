@@ -10504,47 +10504,28 @@ operator|(
 name|ENODEV
 operator|)
 return|;
-comment|/* do historical conversions */
-if|if
-condition|(
-name|t
-operator|->
-name|c_ispeed
-operator|==
-literal|0
-condition|)
-name|t
-operator|->
-name|c_ispeed
-operator|=
-name|t
-operator|->
-name|c_ospeed
-expr_stmt|;
 comment|/* check requested parameters */
-if|if
-condition|(
-name|t
-operator|->
-name|c_ospeed
-operator|==
-literal|0
-condition|)
-name|divisor
-operator|=
-literal|0
-expr_stmt|;
-else|else
-block|{
 if|if
 condition|(
 name|t
 operator|->
 name|c_ispeed
 operator|!=
+operator|(
 name|t
 operator|->
 name|c_ospeed
+operator|!=
+literal|0
+condition|?
+name|t
+operator|->
+name|c_ospeed
+else|:
+name|tp
+operator|->
+name|t_ospeed
+operator|)
 condition|)
 return|return
 operator|(
@@ -10575,7 +10556,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-block|}
 comment|/* parameters are OK, convert them to the com struct and the device */
 name|s
 operator|=
@@ -10584,7 +10564,9 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|divisor
+name|t
+operator|->
+name|c_ospeed
 operator|==
 literal|0
 condition|)
@@ -10698,10 +10680,6 @@ condition|(
 name|com
 operator|->
 name|hasfifo
-operator|&&
-name|divisor
-operator|!=
-literal|0
 condition|)
 block|{
 comment|/* 		 * Use a fifo trigger level low enough so that the input 		 * latency from the fifo is less than about 16 msec and 		 * the total latency is less than about 30 msec.  These 		 * latencies are reasonable for humans.  Serial comms 		 * protocols shouldn't expect anything better since modem 		 * latencies are larger. 		 * 		 * The fifo trigger level cannot be set at RX_HIGH for high 		 * speed connections without further work on reducing  		 * interrupt disablement times in other parts of the system, 		 * without producing silo overflow errors. 		 */
@@ -10719,7 +10697,7 @@ literal|0
 else|:
 name|t
 operator|->
-name|c_ospeed
+name|c_ispeed
 operator|<=
 literal|4800
 condition|?
@@ -10772,13 +10750,6 @@ operator|->
 name|c_ispeed
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|divisor
-operator|!=
-literal|0
-condition|)
-block|{
 name|sio_setreg
 argument_list|(
 name|com
@@ -10790,7 +10761,7 @@ operator||
 name|CFCR_DLAB
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Only set the divisor registers if they would change, 		 * since on some 16550 incompatibles (UMC8669F), setting 		 * them while input is arriving them loses sync until 		 * data stops arriving. 		 */
+comment|/* 	 * Only set the divisor registers if they would change, since on 	 * some 16550 incompatibles (UMC8669F), setting them while input 	 * is arriving loses sync until data stops arriving. 	 */
 name|dlbl
 operator|=
 name|divisor
@@ -10843,7 +10814,6 @@ argument_list|,
 name|dlbh
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
