@@ -1307,7 +1307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|psignal
 name|__P
 argument_list|(
@@ -1319,6 +1319,15 @@ name|char
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_siglist
+index|[]
 decl_stmt|;
 end_decl_stmt
 
