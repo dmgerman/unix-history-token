@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	unix7sys.h	4.1	82/05/12  */
+comment|/*  * 	unix7sys.h	4.2	83/07/31  */
 end_comment
 
 begin_define
@@ -104,6 +104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TIME
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|MKNOD
 value|14
 end_define
@@ -146,8 +153,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|STIME
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALARM
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSTAT
 value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|PAUSE
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|UTIME
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICE
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTIME
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|SETPGRP
+value|39
 end_define
 
 begin_define
@@ -183,6 +239,13 @@ define|#
 directive|define
 name|SIG
 value|48
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCTL
+value|54
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	unix6sys.h	4.1	82/05/12  */
+comment|/*  * 	unix6sys.h	4.2	83/07/31  */
 end_comment
 
 begin_define
@@ -104,6 +104,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|TIME
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|MKNOD
 value|14
 end_define
@@ -146,8 +153,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|STIME
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSTAT
 value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|STTY
+value|31
+end_define
+
+begin_define
+define|#
+directive|define
+name|GTTY
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICE
+value|34
 end_define
 
 begin_define
