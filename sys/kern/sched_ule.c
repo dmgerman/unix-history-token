@@ -625,14 +625,14 @@ begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_MAX
-value|((hz / 10)<< 10)
+value|((hz / 4)<< 10)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCHED_SLP_RUN_THROTTLE
-value|(10)
+value|(2)
 end_define
 
 begin_define
