@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.6 1997/08/23 23:15:19 smp Exp smp $  */
+comment|/*-  * Copyright (c) 1997 Bruce Evans.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ipl_funcs.c,v 1.3 1997/08/24 00:05:18 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -509,78 +509,6 @@ comment|/* XXX test cil */
 value|\ 	set_cpl;				\ 	IFCPL_UNLOCK();				\ 						\ 	return (x);				\ }
 end_define
 
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splbio
-argument_list|,
-argument|cpl |= bio_imask
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splclock
-argument_list|,
-argument|cpl = HWI_MASK | SWI_MASK
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splimp
-argument_list|,
-argument|cpl |= net_imask
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splnet
-argument_list|,
-argument|cpl |= SWI_NET_MASK
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splsoftclock
-argument_list|,
-argument|cpl = SWI_CLOCK_MASK
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splsofttty
-argument_list|,
-argument|cpl |= SWI_TTY_MASK
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splstatclock
-argument_list|,
-argument|cpl |= stat_imask
-argument_list|)
-end_macro
-
-begin_macro
-name|GENSPL
-argument_list|(
-argument|splvm
-argument_list|,
-argument|cpl |= net_imask | bio_imask
-argument_list|)
-end_macro
-
 begin_comment
 comment|/*  * This version has to check for smp_active,  * as calling simple_lock() (ie ss_lock) before then deadlocks the system.  */
 end_comment
@@ -599,6 +527,78 @@ value|unsigned name(void)				\ {						\ 	unsigned x;				\ 						\ 	if (smp_activ
 comment|/* XXX test cil */
 value|\ 	set_cpl;				\ 	if (smp_active)				\ 		IFCPL_UNLOCK();			\ 						\ 	return (x);				\ }
 end_define
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splbio
+argument_list|,
+argument|cpl |= bio_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splclock
+argument_list|,
+argument|cpl = HWI_MASK | SWI_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splimp
+argument_list|,
+argument|cpl |= net_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splnet
+argument_list|,
+argument|cpl |= SWI_NET_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splsoftclock
+argument_list|,
+argument|cpl = SWI_CLOCK_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splsofttty
+argument_list|,
+argument|cpl |= SWI_TTY_MASK
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splstatclock
+argument_list|,
+argument|cpl |= stat_imask
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL2
+argument_list|(
+argument|splvm
+argument_list|,
+argument|cpl |= net_imask | bio_imask
+argument_list|)
+end_macro
 
 begin_macro
 name|GENSPL2
