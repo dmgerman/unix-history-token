@@ -1027,6 +1027,13 @@ name|PAS_16
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAS_16D
+value|4
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1169,6 +1176,10 @@ block|,
 literal|0x30
 block|,
 literal|0x38
+block|,
+literal|0
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1187,6 +1198,14 @@ block|,
 literal|0x80
 block|,
 literal|0xC0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1222,7 +1241,7 @@ literal|0
 block|,
 literal|0
 block|,
-literal|3
+literal|4
 block|,
 literal|0
 block|,

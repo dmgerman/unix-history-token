@@ -53,7 +53,7 @@ name|n
 init|=
 name|num_midi_drivers
 decl_stmt|;
-comment|/* int  n = sizeof (midi_supported) / sizeof( struct generic_midi_info );    */
+comment|/*    * int  n = sizeof (midi_supported) / sizeof( struct generic_midi_info );    */
 for|for
 control|(
 name|i
@@ -280,7 +280,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Make double sure of healthiness -- doubt 	 * Need we check this again?? 	 * 	 */
+comment|/*    * Make double sure of healthiness -- doubt Need we check this again??    *     */
 if|if
 condition|(
 operator|!
@@ -375,7 +375,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Make double sure of healthiness -- doubt          * Need we check this again??          *          */
+comment|/*    * Make double sure of healthiness -- doubt Need we check this again??    *     */
 if|if
 condition|(
 operator|!
@@ -463,7 +463,7 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/* Make double sure of healthiness -- doubt          * Need we check this again??          *          */
+comment|/*    * Make double sure of healthiness -- doubt Need we check this again??    *     */
 if|if
 condition|(
 operator|!
