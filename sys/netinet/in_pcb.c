@@ -1382,11 +1382,21 @@ operator|.
 name|s_addr
 argument_list|)
 condition|)
+block|{
+name|inp
+operator|->
+name|inp_laddr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 name|inp
 operator|->
 name|inp_flags
@@ -1446,9 +1456,19 @@ name|PRISON_ROOT
 argument_list|)
 operator|)
 condition|)
+block|{
+name|inp
+operator|->
+name|inp_laddr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
 return|return
 name|error
 return|;
+block|}
 name|first
 operator|=
 name|ipport_lowfirstauto
@@ -1512,7 +1532,6 @@ literal|0
 condition|)
 block|{
 comment|/* completely used? */
-comment|/* 					 * Undo any address bind that may have 					 * occurred above. 					 */
 name|inp
 operator|->
 name|inp_laddr
@@ -1594,7 +1613,6 @@ literal|0
 condition|)
 block|{
 comment|/* completely used? */
-comment|/* 					 * Undo any address bind that may have 					 * occurred above. 					 */
 name|inp
 operator|->
 name|inp_laddr
@@ -1679,11 +1697,27 @@ operator|.
 name|s_addr
 argument_list|)
 condition|)
+block|{
+name|inp
+operator|->
+name|inp_laddr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_ANY
+expr_stmt|;
+name|inp
+operator|->
+name|inp_lport
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 if|if
 condition|(
 name|in_pcbinshash
