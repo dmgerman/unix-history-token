@@ -1745,33 +1745,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|SCLASS
-name|int
-name|_clock_res_usec
-comment|/* Clock resolution in usec.	*/
-ifdef|#
-directive|ifdef
-name|GLOBAL_PTHREAD_PRIVATE
-init|=
-name|CLOCK_RES_USEC
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Array of signal actions for this process.  */
 end_comment
