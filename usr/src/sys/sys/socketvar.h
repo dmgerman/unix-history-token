@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	6.4	84/08/21	*/
+comment|/*	socketvar.h	6.5	84/12/20	*/
 end_comment
 
 begin_comment
@@ -117,6 +117,11 @@ name|so_rcv
 struct|,
 name|so_snd
 struct|;
+define|#
+directive|define
+name|SB_MAX
+value|32767
+comment|/* max chars in sockbuf */
 define|#
 directive|define
 name|SB_LOCK
