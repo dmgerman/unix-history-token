@@ -2337,7 +2337,10 @@ if|if
 condition|(
 name|package_add
 argument_list|(
-name|PACKAGE_GATED
+name|variable_get
+argument_list|(
+name|VAR_GATED_PKG
+argument_list|)
 argument_list|)
 operator|!=
 name|DITEM_SUCCESS
@@ -2843,7 +2846,10 @@ name|ret
 operator|=
 name|package_add
 argument_list|(
-name|PACKAGE_PCNFSD
+name|variable_get
+argument_list|(
+name|VAR_PCNFSD_PKG
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

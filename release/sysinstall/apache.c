@@ -1083,7 +1083,10 @@ name|i
 operator|=
 name|package_add
 argument_list|(
-name|PACKAGE_APACHE
+name|variable_get
+argument_list|(
+name|VAR_APACHE_PKG
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

@@ -272,6 +272,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VAR_APACHE_PKG
+value|"apache_pkg"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_BLANKTIME
 value|"blanktime"
 end_define
@@ -386,6 +393,13 @@ define|#
 directive|define
 name|VAR_FTP_HOST
 value|"ftpHost"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_GATED_PKG
+value|"gated_pkg"
 end_define
 
 begin_define
@@ -538,6 +552,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_PCNFSD_PKG
+value|"pcnfsd_pkg"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_PKG_TMPDIR
 value|"PKG_TMPDIR"
 end_define
@@ -575,6 +596,13 @@ define|#
 directive|define
 name|VAR_ROUTERFLAGS
 value|"routerflags"
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAR_SAMBA_PKG
+value|"samba_pkg"
 end_define
 
 begin_define

@@ -139,7 +139,10 @@ name|DITEM_STATUS
 argument_list|(
 name|package_add
 argument_list|(
-name|PACKAGE_SAMBA
+name|variable_get
+argument_list|(
+name|VAR_SAMBA_PKG
+argument_list|)
 argument_list|)
 argument_list|)
 operator|!=

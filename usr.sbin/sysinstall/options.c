@@ -229,6 +229,34 @@ name|TIMEOUT_PROMPT
 value|"Please specify the number of seconds to wait for slow media:"
 end_define
 
+begin_define
+define|#
+directive|define
+name|APACHE_PKG_PROMPT
+value|"Please specify the package name for the Apache WEB server:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAMBA_PKG_PROMPT
+value|"Please specify the package name for the Samba server:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GATED_PKG_PROMPT
+value|"Please specify the package name for the gated software:"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCNFSD_PKG_PROMPT
+value|"Please specify the package name for the PCNFSD server:"
+end_define
+
 begin_decl_stmt
 specifier|static
 name|Option
@@ -377,34 +405,6 @@ name|varCheck
 block|}
 block|,
 block|{
-literal|"Browser Pkg"
-block|,
-literal|"This is the browser package that will be used for viewing HTML docs"
-block|,
-name|OPT_IS_VAR
-block|,
-name|BPKG_PROMPT
-block|,
-name|VAR_BROWSER_PACKAGE
-block|,
-name|varCheck
-block|}
-block|,
-block|{
-literal|"Browser Exec"
-block|,
-literal|"This is the path to the main binary of the browser package"
-block|,
-name|OPT_IS_VAR
-block|,
-name|BBIN_PROMPT
-block|,
-name|VAR_BROWSER_BINARY
-block|,
-name|varCheck
-block|}
-block|,
-block|{
 literal|"Media Type"
 block|,
 literal|"The current installation media type."
@@ -442,6 +442,90 @@ block|,
 name|PKG_PROMPT
 block|,
 name|VAR_PKG_TMPDIR
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Browser Exec"
+block|,
+literal|"This is the path to the main binary of the browser package"
+block|,
+name|OPT_IS_VAR
+block|,
+name|BBIN_PROMPT
+block|,
+name|VAR_BROWSER_BINARY
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Browser Pkg"
+block|,
+literal|"This is the browser package that will be used for viewing HTML docs"
+block|,
+name|OPT_IS_VAR
+block|,
+name|BPKG_PROMPT
+block|,
+name|VAR_BROWSER_PACKAGE
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Apache package"
+block|,
+literal|"The name of the Apache package to install if requested"
+block|,
+name|OPT_IS_VAR
+block|,
+name|APACHE_PKG_PROMPT
+block|,
+name|VAR_APACHE_PKG
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Samba package"
+block|,
+literal|"The name of the Samba package to install if requested"
+block|,
+name|OPT_IS_VAR
+block|,
+name|SAMBA_PKG_PROMPT
+block|,
+name|VAR_SAMBA_PKG
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"Gated package"
+block|,
+literal|"The name of the gated package to install if requested"
+block|,
+name|OPT_IS_VAR
+block|,
+name|GATED_PKG_PROMPT
+block|,
+name|VAR_GATED_PKG
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"PCNFSD package"
+block|,
+literal|"The name of the PCNFSD package to install if requested"
+block|,
+name|OPT_IS_VAR
+block|,
+name|PCNFSD_PKG_PROMPT
+block|,
+name|VAR_PCNFSD_PKG
 block|,
 name|varCheck
 block|}
