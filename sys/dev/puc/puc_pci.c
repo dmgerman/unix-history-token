@@ -155,12 +155,12 @@ name|pci_read_config
 argument_list|(
 name|dev
 argument_list|,
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 argument_list|,
 literal|1
 argument_list|)
 operator|&
-literal|0x7f
+name|PCIM_HDRTYPE
 operator|)
 operator|!=
 literal|0

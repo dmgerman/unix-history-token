@@ -1723,7 +1723,7 @@ name|hdrtype
 operator|=
 name|REG
 argument_list|(
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 argument_list|,
 literal|1
 argument_list|)
@@ -4157,7 +4157,7 @@ name|hdrtype
 operator|=
 name|REG
 argument_list|(
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 argument_list|,
 literal|1
 argument_list|)
@@ -4167,8 +4167,7 @@ condition|(
 operator|(
 name|hdrtype
 operator|&
-operator|~
-name|PCIM_MFDEV
+name|PCIM_HDRTYPE
 operator|)
 operator|>
 name|PCI_MAXHDRTYPE

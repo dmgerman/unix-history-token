@@ -1059,7 +1059,7 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 argument_list|,
 literal|1
 argument_list|)
@@ -1070,8 +1070,7 @@ condition|(
 operator|(
 name|hdrtype
 operator|&
-operator|~
-name|PCIM_MFDEV
+name|PCIM_HDRTYPE
 operator|)
 operator|>
 name|PCI_MAXHDRTYPE
@@ -1096,7 +1095,7 @@ operator|)
 condition|)
 name|pcifunchigh
 operator|=
-literal|7
+name|PCI_FUNCMAX
 expr_stmt|;
 else|else
 name|pcifunchigh

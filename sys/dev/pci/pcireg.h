@@ -277,28 +277,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 value|0x0e
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_HEADERTYPE_NORMAL
+name|PCIM_HDRTYPE
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIM_HDRTYPE_NORMAL
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_HEADERTYPE_BRIDGE
+name|PCIM_HDRTYPE_BRIDGE
 value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCIM_HEADERTYPE_CARDBUS
+name|PCIM_HDRTYPE_CARDBUS
 value|0x02
 end_define
 

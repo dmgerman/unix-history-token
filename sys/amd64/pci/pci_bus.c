@@ -1067,11 +1067,23 @@ name|slot
 argument_list|,
 name|func
 argument_list|,
-name|PCIR_HEADERTYPE
+name|PCIR_HDRTYPE
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When enumerating bus devices, the standard says that 		 * one should check the header type and ignore the slots whose 		 * header types that the software doesn't know about.  We use 		 * this to filter out devices. 		 */
+if|if
+condition|(
+operator|(
+name|hdrtype
+operator|&
+name|PCIM_HDRTYPE
+operator|)
+operator|>
+name|PCI_MAXHDRTYPE
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -1091,7 +1103,7 @@ operator|)
 condition|)
 name|pcifunchigh
 operator|=
-literal|7
+name|PCI_FUNCMAX
 expr_stmt|;
 else|else
 name|pcifunchigh
