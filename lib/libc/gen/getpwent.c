@@ -1525,6 +1525,7 @@ name|data
 operator|.
 name|data
 expr_stmt|;
+comment|/* increase buffer size for long lines if necessary */
 if|if
 condition|(
 name|data
@@ -1532,7 +1533,18 @@ operator|.
 name|size
 operator|>
 name|max
-operator|&&
+condition|)
+block|{
+name|max
+operator|=
+name|data
+operator|.
+name|size
+operator|+
+literal|1024
+expr_stmt|;
+if|if
+condition|(
 operator|!
 operator|(
 name|line
@@ -1542,8 +1554,6 @@ argument_list|(
 name|line
 argument_list|,
 name|max
-operator|+=
-literal|1024
 argument_list|)
 operator|)
 condition|)
@@ -1552,6 +1562,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 comment|/* THIS CODE MUST MATCH THAT IN pwd_mkdb. */
 name|t
 operator|=
