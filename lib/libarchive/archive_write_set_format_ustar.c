@@ -1932,13 +1932,20 @@ name|ustar
 modifier|*
 name|ustar
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
+name|r
+operator|=
+name|ARCHIVE_OK
+expr_stmt|;
 name|ustar
 operator|=
 name|a
 operator|->
 name|format_data
 expr_stmt|;
-comment|/* 	 * Suppress end-of-archive if nothing else was ever written. 	 * This fixes a problem where setting one format, then another ends up 	 * attempting to write a gratuitous end-of-archive marker. 	 */
+comment|/* 	 * Suppress end-of-archive if nothing else was ever written. 	 * This fixes a problem where setting one format, then another 	 * ends up writing a gratuitous end-of-archive marker. 	 */
 if|if
 condition|(
 name|ustar
@@ -1951,8 +1958,8 @@ name|compression_write
 operator|!=
 name|NULL
 condition|)
-if|if
-condition|(
+name|r
+operator|=
 name|write_nulls
 argument_list|(
 name|a
@@ -1961,21 +1968,10 @@ literal|512
 operator|*
 literal|2
 argument_list|)
-operator|<
-literal|512
-operator|*
-literal|2
-condition|)
-return|return
-operator|(
-name|ARCHIVE_FATAL
-operator|)
-return|;
+expr_stmt|;
 name|free
 argument_list|(
-name|a
-operator|->
-name|format_data
+name|ustar
 argument_list|)
 expr_stmt|;
 name|a
@@ -1986,7 +1982,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_OK
+name|r
 operator|)
 return|;
 block|}
@@ -2115,8 +2111,7 @@ name|to_write
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|ARCHIVE_FATAL
 operator|)
 return|;
 name|padding
@@ -2126,7 +2121,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}

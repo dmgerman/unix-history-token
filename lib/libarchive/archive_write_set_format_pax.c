@@ -2941,11 +2941,10 @@ argument_list|(
 name|pax_attr_entry
 argument_list|)
 expr_stmt|;
-name|free
+name|archive_string_free
 argument_list|(
+operator|&
 name|pax_entry_name
-operator|.
-name|s
 argument_list|)
 expr_stmt|;
 comment|/* Note that the 'x' header shouldn't ever fail to format */
@@ -3615,6 +3614,13 @@ name|pax
 modifier|*
 name|pax
 decl_stmt|;
+name|int
+name|r
+decl_stmt|;
+name|r
+operator|=
+name|ARCHIVE_OK
+expr_stmt|;
 name|pax
 operator|=
 name|a
@@ -3633,8 +3639,8 @@ name|compression_write
 operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
+name|r
+operator|=
 name|write_nulls
 argument_list|(
 name|a
@@ -3643,8 +3649,15 @@ literal|512
 operator|*
 literal|2
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
+name|archive_string_free
+argument_list|(
+operator|&
+name|pax
+operator|->
+name|pax_header
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|pax
@@ -3658,7 +3671,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|ARCHIVE_OK
+name|r
 operator|)
 return|;
 block|}
