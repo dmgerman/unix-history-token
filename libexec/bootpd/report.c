@@ -285,6 +285,7 @@ parameter_list|(
 name|int
 name|priority
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -305,6 +306,7 @@ parameter_list|)
 name|int
 name|priority
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -446,6 +448,7 @@ comment|/*  * Return pointer to static string which gives full filesystem error 
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|get_errmsg
