@@ -489,6 +489,8 @@ name|n
 operator|+
 sizeof|sizeof
 expr|"."
+operator|+
+literal|1
 operator|>
 name|dstsize
 condition|)
