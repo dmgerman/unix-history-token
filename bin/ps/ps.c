@@ -1871,20 +1871,12 @@ if|if
 condition|(
 name|dropgid
 condition|)
-block|{
 name|setgid
 argument_list|(
 name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
 name|kd
 operator|=
 name|kvm_openfiles
@@ -3096,7 +3088,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3289,7 +3280,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3458,7 +3448,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3487,7 +3476,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
@@ -3717,7 +3705,6 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* Do not add this value. */
 block|}
 if|if
 condition|(
