@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_std.c,v 1.5 1997/02/22 14:32:59 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,8 +171,10 @@ name|mntflags
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 comment|/* 	 * XXX 	 * mount(8) calls the mount programs with an argv[0] which is 	 * /just/ the filesystem name.  So, if there is no underscore 	 * in argv[0], we assume that we are being called from mount(8) 	 * and that argv[0] is thus the name of the filesystem type. 	 */
 name|fsname
@@ -291,17 +293,19 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 name|fsname
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -316,7 +320,6 @@ argument_list|(
 name|fsname
 argument_list|)
 condition|)
-block|{
 name|err
 argument_list|(
 name|EX_OSERR
@@ -326,22 +329,23 @@ argument_list|,
 name|fsname
 argument_list|)
 expr_stmt|;
-block|}
 name|endvfsent
 argument_list|()
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 name|fsname
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
@@ -357,8 +361,8 @@ condition|(
 name|mount
 argument_list|(
 name|vfc
-operator|->
-name|vfc_index
+operator|.
+name|vfc_name
 argument_list|,
 name|argv
 index|[
