@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readdir.c 1.4 %G%"
+literal|"@(#)readdir.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,23 +29,12 @@ begin_comment
 comment|/*  * read an old stlye directory entry and present it as a new one  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DIRSIZ
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|DIRSIZ
+name|ODIRSIZ
 value|14
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_struct
 struct|struct
@@ -57,7 +46,7 @@ decl_stmt|;
 name|char
 name|d_name
 index|[
-name|DIRSIZ
+name|ODIRSIZ
 index|]
 decl_stmt|;
 block|}
@@ -89,25 +78,10 @@ modifier|*
 name|dp
 decl_stmt|;
 specifier|static
-union|union
-block|{
 name|struct
 name|direct
-name|un_dir
-decl_stmt|;
-name|char
-name|pad
-index|[
-name|MAXDIRSIZ
-index|]
-decl_stmt|;
-block|}
-name|dirun
-union|;
-define|#
-directive|define
 name|dir
-value|dirun.un_dir
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -137,7 +111,7 @@ name|dirp
 operator|->
 name|dd_buf
 argument_list|,
-name|MAXDIRSIZ
+name|DIRBLKSIZ
 argument_list|)
 expr_stmt|;
 if|if
@@ -225,7 +199,7 @@ name|dp
 operator|->
 name|d_name
 argument_list|,
-name|DIRSIZ
+name|ODIRSIZ
 argument_list|)
 expr_stmt|;
 name|dir
@@ -243,24 +217,11 @@ name|dir
 operator|.
 name|d_reclen
 operator|=
-operator|(
-operator|(
-sizeof|sizeof
+name|DIRSIZ
 argument_list|(
-expr|struct
-name|direct
-argument_list|)
-operator|+
-name|dir
-operator|.
-name|d_namlen
-operator|)
-operator|+
-literal|4
-operator|)
 operator|&
-operator|~
-literal|03
+name|dir
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
