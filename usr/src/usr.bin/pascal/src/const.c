@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c 2.1 %G%"
+literal|"@(#)const.c 1.5.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,6 +476,30 @@ name|con
 operator|.
 name|crval
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC
+if|if
+condition|(
+name|cbn
+operator|==
+literal|1
+operator|&&
+name|con
+operator|.
+name|ctype
+operator|!=
+name|NIL
+condition|)
+block|{
+name|stabconst
+argument_list|(
+name|np
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_block
 
