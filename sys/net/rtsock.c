@@ -2107,26 +2107,6 @@ break|break;
 case|case
 name|RTM_CHANGE
 case|:
-comment|/* 			 * If they tried to change things but didn't specify 			 * the required gateway, then just use the old one. 			 * This can happen if the user tries to change the 			 * flags on the default route without changing the 			 * default gateway.  Changing flags still doesn't work. 			 */
-if|if
-condition|(
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_GATEWAY
-operator|)
-operator|&&
-operator|!
-name|gate
-condition|)
-name|gate
-operator|=
-name|rt
-operator|->
-name|rt_gateway
-expr_stmt|;
 comment|/* new gateway could require new ifaddr, ifp; 			   flags may also be different; ifp may be specified 			   by ll sockaddr when protocol address is ambiguous */
 define|#
 directive|define
