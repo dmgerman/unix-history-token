@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	1.2 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)umap_vfsops.c	7.1 (Berkeley) %G%  *  * @(#)null_vfsops.c       1.5 (Berkeley) 7/10/92  */
 end_comment
 
 begin_comment
@@ -843,10 +843,30 @@ name|FORCECLOSE
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-if|#
-directive|if
+ifdef|#
+directive|ifdef
+name|notyet
+name|mntflushbuf
+argument_list|(
+name|mp
+argument_list|,
 literal|0
-block|mntflushbuf(mp, 0);  	if (mntinvalbuf(mp, 1)) 		return (EBUSY);
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mntinvalbuf
+argument_list|(
+name|mp
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 endif|#
 directive|endif
 if|if

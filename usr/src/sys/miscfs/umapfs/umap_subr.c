@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_subr.c	1.2 (Berkeley) 6/18/92  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)umap_subr.c	7.1 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<umapfs/umap.h>
+file|<miscfs/umapfs/umap.h>
 end_include
 
 begin_define
@@ -347,7 +347,6 @@ goto|goto
 name|loop
 goto|;
 block|}
-empty_stmt|;
 return|return
 operator|(
 name|vp
@@ -539,10 +538,11 @@ operator|=
 name|othervp
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
-empty_stmt|;
 name|VREF
 argument_list|(
 name|lowervp
@@ -564,7 +564,9 @@ name|hd
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -666,7 +668,9 @@ name|aliasvp
 argument_list|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* 		 * aliasvp is already VREF'd by getnewvnode() 		 */
 block|}
@@ -762,7 +766,7 @@ literal|0
 comment|/* 	 * Can't do this check because vop_reclaim runs 	 * with funny vop vector. 	 */
 block|if (vp->v_op != umap_vnodeop_p) { 		printf ("umap_checkvp: on non-umap-node\n"); 		while (umap_checkvp_barrier)
 comment|/*WAIT*/
-block|; 		panic("umap_checkvp"); 	};
+block|; 		panic("umap_checkvp"); 	}
 endif|#
 directive|endif
 if|if
@@ -912,7 +916,6 @@ literal|"umap with unref'ed lowervp"
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 if|#
 directive|if
 literal|0
@@ -920,9 +923,11 @@ block|printf("umap %x/%d -> %x/%d [%s, %d]\n", 	        a->umap_vnode, a->umap_v
 endif|#
 directive|endif
 return|return
+operator|(
 name|a
 operator|->
 name|umap_lowervp
+operator|)
 return|;
 block|}
 end_function
