@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.3 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1174,7 +1174,22 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX When Carl has defined the cleanerinfo, initialize it here */
+name|cleaninfo
+operator|->
+name|clean
+operator|=
+name|lfsp
+operator|->
+name|lfs_nseg
+operator|-
+literal|1
+expr_stmt|;
+name|cleaninfo
+operator|->
+name|dirty
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1245,13 +1260,14 @@ name|segp
 operator|->
 name|su_flags
 operator|=
+name|SEGUSE_SUPERBLOCK
+operator||
 name|SEGUSE_DIRTY
 expr_stmt|;
 name|lfsp
 operator|->
 name|lfs_bfree
 operator|-=
-operator|(
 name|lfsp
 operator|->
 name|lfs_cleansz
@@ -1261,7 +1277,6 @@ operator|->
 name|lfs_segtabsz
 operator|+
 literal|4
-operator|)
 expr_stmt|;
 comment|/*  	 * Now figure out the address of the ifile inode. The inode block 	 * appears immediately after the segment summary. 	 */
 name|lfsp
@@ -1318,6 +1333,12 @@ condition|)
 block|{
 name|segp
 operator|->
+name|su_flags
+operator|=
+name|SEGUSE_SUPERBLOCK
+expr_stmt|;
+name|segp
+operator|->
 name|su_nbytes
 operator|=
 name|LFS_SBPAD
@@ -1336,21 +1357,23 @@ operator|)
 expr_stmt|;
 block|}
 else|else
+block|{
+name|segp
+operator|->
+name|su_flags
+operator|=
+literal|0
+expr_stmt|;
 name|segp
 operator|->
 name|su_nbytes
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|segp
 operator|->
 name|su_lastmod
-operator|=
-literal|0
-expr_stmt|;
-name|segp
-operator|->
-name|su_flags
 operator|=
 literal|0
 expr_stmt|;
