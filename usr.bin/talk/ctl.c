@@ -168,7 +168,7 @@ name|void
 name|open_sockt
 parameter_list|()
 block|{
-name|int
+name|socklen_t
 name|length
 decl_stmt|;
 operator|(
@@ -228,8 +228,9 @@ expr_stmt|;
 if|if
 condition|(
 name|sockt
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|p_error
 argument_list|(
@@ -308,7 +309,7 @@ name|void
 name|open_ctl
 parameter_list|()
 block|{
-name|int
+name|socklen_t
 name|length
 decl_stmt|;
 operator|(
@@ -368,8 +369,9 @@ expr_stmt|;
 if|if
 condition|(
 name|ctl_sockt
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|p_error
 argument_list|(
