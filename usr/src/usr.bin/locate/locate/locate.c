@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)locate.c	5.2 (Berkeley) %G%"
+literal|"@(#)locate.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,13 +529,14 @@ condition|(
 operator|!
 name|globflag
 operator|||
+operator|!
 name|fnmatch
 argument_list|(
 name|pathpart
 argument_list|,
 name|path
 argument_list|,
-name|FNM_QUOTE
+literal|0
 argument_list|)
 condition|)
 operator|(
