@@ -364,10 +364,14 @@ modifier|*
 name|la_hold
 decl_stmt|;
 comment|/* last packet until resolved/timeout */
-name|long
+name|u_short
+name|la_preempt
+decl_stmt|;
+comment|/* #times we QUERIED before entry expiration */
+name|u_short
 name|la_asked
 decl_stmt|;
-comment|/* last time we QUERIED for this addr */
+comment|/* #times we QUERIED following expiration */
 define|#
 directive|define
 name|la_timer
@@ -2376,7 +2380,7 @@ name|arp_maxtries
 operator|-
 name|la
 operator|->
-name|la_asked
+name|la_preempt
 operator|)
 operator|*
 name|arpt_down
@@ -2419,7 +2423,7 @@ argument_list|)
 expr_stmt|;
 name|la
 operator|->
-name|la_asked
+name|la_preempt
 operator|++
 expr_stmt|;
 block|}
@@ -2526,6 +2530,7 @@ operator|++
 operator|<
 name|arp_maxtries
 condition|)
+block|{
 name|arprequest
 argument_list|(
 name|ifp
@@ -2556,6 +2561,7 @@ name|ifp
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|rt
@@ -2570,6 +2576,10 @@ name|rt_expire
 operator|+=
 name|arpt_down
 expr_stmt|;
+name|la
+operator|->
+name|la_preempt
+operator|=
 name|la
 operator|->
 name|la_asked
@@ -3973,6 +3983,10 @@ name|RTF_REJECT
 expr_stmt|;
 name|la
 operator|->
+name|la_preempt
+operator|=
+name|la
+operator|->
 name|la_asked
 operator|=
 literal|0
@@ -4832,6 +4846,10 @@ name|sdl_alen
 operator|=
 literal|0
 expr_stmt|;
+name|la
+operator|->
+name|la_preempt
+operator|=
 name|la
 operator|->
 name|la_asked
