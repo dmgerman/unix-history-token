@@ -87,6 +87,13 @@ name|SUBTYPE_FAT
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|SUBTYPE_EFI
+value|239
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -2065,6 +2072,17 @@ condition|)
 name|partitiontype
 operator|=
 name|fat
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|subtype
+operator|==
+name|SUBTYPE_EFI
+condition|)
+name|partitiontype
+operator|=
+name|efi
 expr_stmt|;
 else|else
 name|partitiontype
