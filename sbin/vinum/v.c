@@ -4,7 +4,7 @@ comment|/* vinum.c: vinum interface program */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: v.c,v 1.27 1999/10/12 05:41:10 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: v.c,v 1.30 2000/05/07 04:20:53 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -273,6 +273,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* set to 1 to force some dangerous ops */
+end_comment
+
+begin_decl_stmt
+name|int
+name|interval
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interval in ms between init/revive */
 end_comment
 
 begin_decl_stmt
@@ -1467,6 +1479,85 @@ comment|/* -f: force */
 name|force
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* interval */
+name|interval
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+operator|!=
+literal|'\0'
+condition|)
+comment|/* operand follows, */
+name|interval
+operator|=
+name|atoi
+argument_list|(
+operator|&
+name|argv
+index|[
+name|i
+index|]
+index|[
+name|j
+operator|+
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+elseif|else
+if|if
+condition|(
+name|args
+operator|>
+operator|(
+name|i
+operator|+
+literal|1
+operator|)
+condition|)
+comment|/* another following, */
+name|interval
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+operator|++
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* use it */
+if|if
+condition|(
+name|interval
+operator|==
+literal|0
+condition|)
+comment|/* nothing valid, */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-i: no interval specified\n"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -3587,6 +3678,18 @@ condition|;
 control|)
 block|{
 comment|/* revive the subdisk */
+if|if
+condition|(
+name|interval
+condition|)
+name|usleep
+argument_list|(
+name|interval
+operator|*
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* pause between each copy */
 name|message
 operator|->
 name|index
@@ -3736,6 +3839,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+comment|/* parent */
 name|printf
 argument_list|(
 literal|"Reviving %s in the background\n"

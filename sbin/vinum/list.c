@@ -4,7 +4,7 @@ comment|/*      list.c: vinum interface program, list routines  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.21 2000/01/03 02:58:07 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.23 2000/03/01 02:38:55 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2297,6 +2297,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|isparity
 argument_list|(
 operator|(
@@ -2304,69 +2305,15 @@ operator|&
 name|plex
 operator|)
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|plex
-operator|.
-name|rebuildblock
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"\t\tRebuild block pointer:\t\t%s (%d%%)\n"
-argument_list|,
-name|roughlength
-argument_list|(
-name|plex
-operator|.
-name|rebuildblock
-operator|<<
-name|DEV_BSHIFT
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-call|(
-name|u_int64_t
-call|)
-argument_list|(
-name|plex
-operator|.
-name|rebuildblock
-operator|*
-literal|100
-argument_list|)
 operator|)
-operator|/
-name|plex
-operator|.
-name|length
-operator|/
+operator|&&
 operator|(
-name|plex
-operator|.
-name|subdisks
-operator|-
-literal|1
-operator|)
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|plex
 operator|.
 name|checkblock
 operator|!=
 literal|0
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -2374,11 +2321,21 @@ literal|"\t\tCheck block pointer:\t\t%s (%d%%)\n"
 argument_list|,
 name|roughlength
 argument_list|(
+operator|(
 name|plex
 operator|.
 name|checkblock
 operator|<<
 name|DEV_BSHIFT
+operator|)
+operator|*
+operator|(
+name|plex
+operator|.
+name|subdisks
+operator|-
+literal|1
+operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2399,11 +2356,7 @@ operator|*
 literal|100
 argument_list|)
 operator|)
-operator|/
-name|plex
-operator|.
-name|length
-operator|/
+operator|*
 operator|(
 name|plex
 operator|.
@@ -2411,10 +2364,13 @@ name|subdisks
 operator|-
 literal|1
 operator|)
+operator|/
+name|plex
+operator|.
+name|length
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|plex
@@ -5642,7 +5598,7 @@ case|:
 comment|/* subdisk I/O done */
 name|printf
 argument_list|(
-literal|"%s %dDN %s %p\t\t  0x%-9x\t%ld\t%d\n"
+literal|"%s %dSD %s %p\t\t  0x%-9x\t%ld\t%d\n"
 argument_list|,
 name|timetext
 argument_list|(
