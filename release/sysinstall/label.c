@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|60
+value|70
 end_define
 
 begin_else
@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|40
+value|50
 end_define
 
 begin_endif
@@ -153,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|SWAP_MIN_SIZE
-value|16
+value|32
 end_define
 
 begin_comment
