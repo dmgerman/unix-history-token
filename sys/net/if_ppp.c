@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.29 1995/12/14 09:53:13 phk Exp $ */
+comment|/* $Id: if_ppp.c,v 1.30 1996/01/24 21:09:18 phk Exp $ */
 end_comment
 
 begin_comment
@@ -694,11 +694,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_bpf
-argument_list|,
 operator|&
 name|sc
 operator|->
@@ -3176,15 +3171,13 @@ literal|0
 comment|/*      * See if bpf wants to look at the packet.      */
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|sc_bpf
+name|if_bpf
 condition|)
 name|bpf_mtap
 argument_list|(
-name|sc
-operator|->
-name|sc_bpf
+name|ifp
 argument_list|,
 name|m0
 argument_list|)
@@ -5996,13 +5989,16 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_bpf
+name|sc_if
+operator|.
+name|if_bpf
 condition|)
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|sc_bpf
+name|sc_if
 argument_list|,
 name|m
 argument_list|)

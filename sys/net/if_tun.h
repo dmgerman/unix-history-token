@@ -82,16 +82,6 @@ name|selinfo
 name|tun_wsel
 decl_stmt|;
 comment|/* write select (not used) */
-if|#
-directive|if
-name|NBPFILTER
-operator|>
-literal|0
-name|caddr_t
-name|tun_bpf
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

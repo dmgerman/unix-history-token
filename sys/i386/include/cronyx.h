@@ -2091,10 +2091,6 @@ modifier|*
 name|slaveq
 decl_stmt|;
 comment|/* slave queue pointer, or NULL */
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* packet filter data */
 name|cx_soft_opt_t
 name|sopt
 decl_stmt|;

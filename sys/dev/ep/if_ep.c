@@ -8,7 +8,7 @@ comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Ga
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.38 1996/01/26 09:27:22 phk Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.39 1996/01/29 03:16:12 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -2181,6 +2181,12 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ifp
+operator|->
 name|if_unit
 operator|=
 name|is
@@ -2234,6 +2240,11 @@ operator|=
 name|epwatchdog
 expr_stmt|;
 name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
@@ -2437,11 +2448,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_EN10MB
@@ -3146,13 +3152,9 @@ name|ep_softc
 modifier|*
 name|sc
 init|=
-operator|&
-name|ep_softc
-index|[
 name|ifp
 operator|->
-name|if_unit
-index|]
+name|if_softc
 decl_stmt|;
 specifier|register
 name|u_int
@@ -3582,14 +3584,21 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
 condition|)
 block|{
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|top
 argument_list|)
@@ -5262,14 +5271,21 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
 condition|)
 block|{
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|top
 argument_list|)
@@ -5668,13 +5684,9 @@ name|ep_softc
 modifier|*
 name|sc
 init|=
-operator|&
-name|ep_softc
-index|[
 name|ifp
 operator|->
-name|if_unit
-index|]
+name|if_softc
 decl_stmt|;
 name|struct
 name|ifreq

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.21 1995/12/15 00:54:10 bde Exp $  */
+comment|/* Copyright (c) 1994, Matthew E. Kimmel.  Permission is hereby granted  * to use, copy, modify and distribute this software provided that both  * the copyright notice and this permission notice appear in all copies  * of the software, derivative works or modified versions, and any  * portions thereof.  *  * Questions, comments, bug reports and fixes to kimmel@cs.umass.edu.  *  * $Id: if_el.c,v 1.22 1996/01/26 09:27:19 phk Exp $  */
 end_comment
 
 begin_comment
@@ -316,10 +316,6 @@ name|u_short
 name|el_base
 decl_stmt|;
 comment|/* Base I/O addr */
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* BPF magic cookie */
 name|char
 name|el_pktbuf
 index|[
@@ -1003,6 +999,12 @@ expr_stmt|;
 comment|/* Initialize ifnet structure */
 name|ifp
 operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ifp
+operator|->
 name|if_unit
 operator|=
 name|idev
@@ -1064,6 +1066,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
@@ -1214,11 +1221,6 @@ argument_list|)
 expr_stmt|;
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_EN10MB
@@ -1689,13 +1691,9 @@ decl_stmt|;
 comment|/* Get things pointing in the right directions */
 name|sc
 operator|=
-operator|&
-name|el_softc
-index|[
 name|ifp
 operator|->
-name|if_unit
-index|]
+name|if_softc
 expr_stmt|;
 name|base
 operator|=
@@ -1887,13 +1885,20 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
 condition|)
 name|bpf_tap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|sc
 operator|->
@@ -2968,14 +2973,21 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
 condition|)
 block|{
 name|bpf_tap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|buf
 argument_list|,
@@ -3495,13 +3507,9 @@ name|el_softc
 modifier|*
 name|sc
 init|=
-operator|&
-name|el_softc
-index|[
 name|ifp
 operator|->
-name|if_unit
-index|]
+name|if_softc
 decl_stmt|;
 name|struct
 name|ifreq

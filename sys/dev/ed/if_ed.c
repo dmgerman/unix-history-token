@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.92 1995/12/15 07:31:40 davidg Exp $  */
+comment|/*  * Copyright (c) 1995, David Greenman  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by David Greenman.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_ed.c,v 1.93 1996/01/24 21:06:02 phk Exp $  */
 end_comment
 
 begin_comment
@@ -286,10 +286,6 @@ name|int
 name|is790
 decl_stmt|;
 comment|/* set by the probe code if the card is 790 				 * based */
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* BPF "magic cookie" */
 name|caddr_t
 name|mem_start
 decl_stmt|;
@@ -6127,6 +6123,12 @@ block|{
 comment|/* 		 * Initialize ifnet structure 		 */
 name|ifp
 operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ifp
+operator|->
 name|if_unit
 operator|=
 name|isa_dev
@@ -6209,6 +6211,11 @@ operator|)
 expr_stmt|;
 comment|/* 		 * Attach the interface 		 */
 name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
+name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
@@ -6323,11 +6330,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_EN10MB
@@ -6369,12 +6371,9 @@ name|ed_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|int
 name|s
@@ -6507,12 +6506,9 @@ name|ed_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 if|if
 condition|(
@@ -6567,12 +6563,9 @@ name|ed_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|int
 name|i
@@ -7209,12 +7202,9 @@ name|ed_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|mbuf
@@ -7637,16 +7627,14 @@ operator|>
 literal|0
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|bpf
+name|if_bpf
 condition|)
 block|{
 name|bpf_mtap
 argument_list|(
-name|sc
-operator|->
-name|bpf
+name|ifp
 argument_list|,
 name|m0
 argument_list|)
@@ -7689,12 +7677,12 @@ name|ifnet
 modifier|*
 name|ifp
 init|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
+operator|&
 name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
 decl_stmt|;
 name|u_char
 name|boundry
@@ -8658,12 +8646,9 @@ name|ed_softc
 modifier|*
 name|sc
 init|=
-operator|(
-expr|struct
-name|ed_softc
-operator|*
-operator|)
 name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|ifreq
@@ -9564,14 +9549,21 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
+operator|.
+name|if_bpf
 condition|)
 block|{
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|arpcom
+operator|.
+name|ac_if
 argument_list|,
 name|m
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ar.c,v 1.3 1995/12/10 13:38:34 phk Exp $  */
+comment|/*  * Copyright (c) 1995 John Hay.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Hay.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY John Hay ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL John Hay BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_ar.c,v 1.4 1995/12/15 00:54:03 bde Exp $  */
 end_comment
 
 begin_comment
@@ -242,16 +242,6 @@ parameter_list|)
 value|outb(iobase+AR_MSCA_EN, 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ARUNIT2SC
-parameter_list|(
-name|unit
-parameter_list|)
-value|ar_sc_ind[unit]
-end_define
-
 begin_struct
 specifier|static
 struct|struct
@@ -353,9 +343,6 @@ name|ar_hardc
 modifier|*
 name|hc
 decl_stmt|;
-name|caddr_t
-name|bpf
-decl_stmt|;
 name|u_int
 name|txdesc
 decl_stmt|;
@@ -409,20 +396,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|ar_softc
-modifier|*
-name|ar_sc_ind
-index|[
-name|NAR
-operator|*
-name|NPORT
-index|]
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1670,6 +1643,12 @@ name|pp_if
 expr_stmt|;
 name|ifp
 operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ifp
+operator|->
 name|if_unit
 operator|=
 name|hc
@@ -1774,11 +1753,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_PPP
@@ -2061,12 +2035,9 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
-name|ARUNIT2SC
-argument_list|(
 name|ifp
 operator|->
-name|if_unit
-argument_list|)
+name|if_softc
 decl_stmt|;
 name|int
 name|i
@@ -2295,15 +2266,13 @@ operator|>
 literal|0
 if|if
 condition|(
-name|sc
+name|ifp
 operator|->
-name|bpf
+name|if_bpf
 condition|)
 name|bpf_mtap
 argument_list|(
-name|sc
-operator|->
-name|bpf
+name|ifp
 argument_list|,
 name|mtx
 argument_list|)
@@ -2529,12 +2498,9 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
-name|ARUNIT2SC
-argument_list|(
 name|ifp
 operator|->
-name|if_unit
-argument_list|)
+name|if_softc
 decl_stmt|;
 name|TRC
 argument_list|(
@@ -2717,12 +2683,9 @@ name|ar_softc
 modifier|*
 name|sc
 init|=
-name|ARUNIT2SC
-argument_list|(
 name|ifp
 operator|->
-name|if_unit
-argument_list|)
+name|if_softc
 decl_stmt|;
 if|if
 condition|(
@@ -3785,14 +3748,6 @@ expr_stmt|;
 name|next
 operator|+=
 name|bufmem
-expr_stmt|;
-comment|/* 		 * This is by ARUNIT2SC(). 		 */
-name|ar_sc_ind
-index|[
-name|x
-index|]
-operator|=
-name|sc
 expr_stmt|;
 block|}
 block|}
@@ -5576,13 +5531,20 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|ifsppp
+operator|.
+name|pp_if
+operator|.
+name|if_bpf
 condition|)
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|ifsppp
+operator|.
+name|pp_if
 argument_list|,
 name|m
 argument_list|)

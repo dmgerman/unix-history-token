@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.41 1996/01/23 21:47:00 se Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.42 1996/01/26 09:29:26 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -5498,9 +5498,7 @@ name|NULL
 condition|)
 name|bpf_tap
 argument_list|(
-name|sc
-operator|->
-name|tulip_bpf
+name|ifp
 argument_list|,
 name|mtod
 argument_list|(
@@ -6258,12 +6256,9 @@ modifier|*
 specifier|const
 name|sc
 init|=
-name|TULIP_UNIT_TO_SOFTC
-argument_list|(
 name|ifp
 operator|->
-name|if_unit
-argument_list|)
+name|if_softc
 decl_stmt|;
 name|struct
 name|ifqueue
@@ -6931,9 +6926,7 @@ name|NULL
 condition|)
 name|bpf_mtap
 argument_list|(
-name|sc
-operator|->
-name|tulip_bpf
+name|ifp
 argument_list|,
 name|m
 argument_list|)
@@ -9604,12 +9597,9 @@ modifier|*
 specifier|const
 name|sc
 init|=
-name|TULIP_UNIT_TO_SOFTC
-argument_list|(
 name|ifp
 operator|->
-name|if_unit
-argument_list|)
+name|if_softc
 decl_stmt|;
 name|struct
 name|ifaddr
@@ -10109,6 +10099,12 @@ name|tulip_if
 decl_stmt|;
 name|ifp
 operator|->
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ifp
+operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
@@ -10234,19 +10230,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|ether_ifattach
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|NBPFILTER
@@ -10254,11 +10242,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|tulip_bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_EN10MB

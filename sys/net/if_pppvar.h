@@ -4,7 +4,7 @@ comment|/*	from Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_pppvar.h,v 1.2 1995/10/31 20:24:11 peter Exp $	*/
+comment|/*	$Id: if_pppvar.h,v 1.3 1996/01/30 22:57:49 mpp Exp $	*/
 end_comment
 
 begin_comment
@@ -179,10 +179,6 @@ name|u_int
 name|sc_bytesrcvd
 decl_stmt|;
 comment|/* count of octets received */
-name|caddr_t
-name|sc_bpf
-decl_stmt|;
-comment|/* hook for BPF */
 name|enum
 name|NPmode
 name|sc_npmode

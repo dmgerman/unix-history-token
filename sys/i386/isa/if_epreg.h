@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.9 1996/01/29 03:16:14 gibbs Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_epreg.h,v 1.10 1996/01/30 22:55:43 mpp Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment
@@ -77,10 +77,6 @@ decl_stmt|;
 name|short
 name|cur_len
 decl_stmt|;
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* BPF  "magic cookie"		 */
 name|u_short
 name|ep_connectors
 decl_stmt|;

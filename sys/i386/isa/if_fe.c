@@ -568,11 +568,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|/* Just after fe_stop().  */
-comment|/* For BPF.  */
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* BPF "magic cookie" */
 comment|/* Transmission buffer management.  */
 name|u_short
 name|txb_free
@@ -647,10 +642,6 @@ name|sc_description
 value|kdc.kdc_description
 end_define
 
-begin_comment
-comment|/*  * Some entry functions receive a "struct ifnet *" typed pointer as an  * argument.  It points to arpcom.ac_if of our softc.  Remember arpcom.ac_if  * is located at very first of the fe_softc struct.  So, there is no  * difference between "struct fe_softc *" and "struct ifnet *" at the machine  * language level.  We just cast to turn a "struct ifnet *" value into "struct  * fe_softc * value".  If this were C++, we would need no such cast at all.  */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -658,7 +649,7 @@ name|IFNET2SOFTC
 parameter_list|(
 name|P
 parameter_list|)
-value|( ( struct fe_softc * )(P) )
+value|(P)->if_softc
 end_define
 
 begin_comment
@@ -933,18 +924,6 @@ begin_function_decl
 specifier|static
 name|void
 name|fe_loadmar
-parameter_list|(
-name|struct
-name|fe_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|fe_setlinkaddr
 parameter_list|(
 name|struct
 name|fe_softc
@@ -3979,6 +3958,14 @@ name|sc
 operator|->
 name|sc_if
 operator|.
+name|if_softc
+operator|=
+name|sc
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
 name|if_unit
 operator|=
 name|sc
@@ -4214,9 +4201,12 @@ name|sc_unit
 argument_list|)
 expr_stmt|;
 comment|/* This changes the state to IDLE.  */
-name|fe_setlinkaddr
+name|ether_ifattach
 argument_list|(
+operator|&
 name|sc
+operator|->
+name|sc_if
 argument_list|)
 expr_stmt|;
 comment|/* Print additional info when attached.  */
@@ -4453,11 +4443,6 @@ literal|0
 comment|/* If BPF is in the kernel, call the attach for it.  */
 name|bpfattach
 argument_list|(
-operator|&
-name|sc
-operator|->
-name|bpf
-argument_list|,
 operator|&
 name|sc
 operator|->
@@ -7309,6 +7294,9 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|notdef
+ifdef|#
+directive|ifdef
 name|SIOCSIFPHYSADDR
 case|case
 name|SIOCSIFPHYSADDR
@@ -7356,6 +7344,9 @@ break|break;
 block|}
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* notdef */
 ifdef|#
 directive|ifdef
 name|SIOCSIFFLAGS
@@ -7804,14 +7795,17 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bpf
+name|sc_if
+operator|.
+name|if_bpf
 condition|)
 block|{
 name|bpf_mtap
 argument_list|(
+operator|&
 name|sc
 operator|->
-name|bpf
+name|sc_if
 argument_list|,
 name|m
 argument_list|)
@@ -9134,138 +9128,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/*  * Copy the physical (Ethernet) address into the "data link" address  * entry of the address list for an interface.  * This is (said to be) useful for netstat(1) to keep track of which  * interface is which.  *  * What I'm not sure on this function is, why this is a driver's function.  * Probably this should be moved to somewhere independent to a specific  * hardware, such as if_ehtersubr.c.  FIXME.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|fe_setlinkaddr
-parameter_list|(
-name|struct
-name|fe_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-decl_stmt|;
-name|struct
-name|sockaddr_dl
-modifier|*
-name|sdl
-decl_stmt|;
-comment|/* 	 * Search down the ifa address list looking for the AF_LINK type entry. 	 */
-for|for
-control|(
-name|ifa
-operator|=
-name|sc
-operator|->
-name|sc_if
-operator|.
-name|if_addrlist
-init|;
-name|ifa
-operator|!=
-name|NULL
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_next
-control|)
-block|{
-if|if
-condition|(
-name|ifa
-operator|->
-name|ifa_addr
-operator|!=
-name|NULL
-operator|&&
-name|ifa
-operator|->
-name|ifa_addr
-operator|->
-name|sa_family
-operator|==
-name|AF_LINK
-condition|)
-block|{
-comment|/* 			 * We have found an AF_LINK type entry. 			 * Fill in the link-level address for this interface 			 */
-name|sdl
-operator|=
-operator|(
-expr|struct
-name|sockaddr_dl
-operator|*
-operator|)
-name|ifa
-operator|->
-name|ifa_addr
-expr_stmt|;
-name|sdl
-operator|->
-name|sdl_type
-operator|=
-name|IFT_ETHER
-expr_stmt|;
-name|sdl
-operator|->
-name|sdl_alen
-operator|=
-name|ETHER_ADDR_LEN
-expr_stmt|;
-name|sdl
-operator|->
-name|sdl_slen
-operator|=
-literal|0
-expr_stmt|;
-name|bcopy
-argument_list|(
-name|sc
-operator|->
-name|sc_enaddr
-argument_list|,
-name|LLADDR
-argument_list|(
-name|sdl
-argument_list|)
-argument_list|,
-name|ETHER_ADDR_LEN
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|FE_DEBUG
-operator|>=
-literal|3
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"fe%d: link address set\n"
-argument_list|,
-name|sc
-operator|->
-name|sc_unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
-block|}
-block|}
 block|}
 end_function
 

@@ -737,14 +737,6 @@ operator|>
 literal|0
 name|bpfattach
 argument_list|(
-operator|&
-name|tunctl
-index|[
-name|i
-index|]
-operator|.
-name|tun_bpf
-argument_list|,
 name|ifp
 argument_list|,
 name|DLT_NULL
@@ -1628,9 +1620,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|tp
+name|ifp
 operator|->
-name|tun_bpf
+name|if_bpf
 condition|)
 block|{
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer to it). 		 */
@@ -1670,9 +1662,7 @@ name|af
 expr_stmt|;
 name|bpf_mtap
 argument_list|(
-name|tp
-operator|->
-name|tun_bpf
+name|ifp
 argument_list|,
 operator|&
 name|m
@@ -2796,12 +2786,9 @@ operator|>
 literal|0
 if|if
 condition|(
-name|tunctl
-index|[
-name|unit
-index|]
-operator|.
-name|tun_bpf
+name|ifp
+operator|->
+name|if_bpf
 condition|)
 block|{
 comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer to it). 		 */
@@ -2839,12 +2826,7 @@ name|af
 expr_stmt|;
 name|bpf_mtap
 argument_list|(
-name|tunctl
-index|[
-name|unit
-index|]
-operator|.
-name|tun_bpf
+name|ifp
 argument_list|,
 operator|&
 name|m
