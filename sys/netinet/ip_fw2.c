@@ -8213,7 +8213,7 @@ argument_list|(
 name|m
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 operator|)
 expr_stmt|;
 endif|#
