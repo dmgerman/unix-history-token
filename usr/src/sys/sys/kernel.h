@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -146,67 +146,6 @@ end_decl_stmt
 begin_comment
 comment|/* once a second sleep address */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_43
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|)
-end_if
-
-begin_decl_stmt
-name|double
-name|avenrun
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GPROF
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|profiling
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_short
-modifier|*
-name|kcount
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
