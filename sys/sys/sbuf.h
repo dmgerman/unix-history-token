@@ -211,6 +211,7 @@ name|sbuf
 modifier|*
 name|s
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
