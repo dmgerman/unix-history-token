@@ -643,6 +643,11 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mii_phy_auto_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|mii_dev
