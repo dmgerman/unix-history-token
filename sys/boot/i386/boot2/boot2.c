@@ -1082,8 +1082,6 @@ parameter_list|)
 block|{
 name|int
 name|autoboot
-decl_stmt|,
-name|i
 decl_stmt|;
 name|ino_t
 name|ino
