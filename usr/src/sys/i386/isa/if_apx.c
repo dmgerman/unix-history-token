@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_apx.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -476,7 +476,9 @@ name|moffset
 init|=
 literal|0
 decl_stmt|,
-name|subunit
+name|nchips
+init|=
+literal|2
 decl_stmt|,
 name|unit
 init|=
@@ -485,6 +487,8 @@ operator|->
 name|id_unit
 operator|<<
 literal|1
+decl_stmt|,
+name|subunit
 decl_stmt|;
 name|struct
 name|apc_reg
@@ -510,6 +514,19 @@ name|apx_softc
 operator|+
 name|unit
 decl_stmt|;
+comment|/* 	 * Probing for the second MK5025 on all ISA/EISA adax boards 	 * manufactured prior to July 1992 (and some time following) 	 * will hang the bus and the system.  Thus, it is essential 	 * not to probe for the second mk5025 if it is known not to be there. 	 * As the current config scheme for 386BSD does not have a flags 	 * field, we adopt the convention of using the low order bit of 	 * the memsize to warn us that we have a single chip board. 	 */
+if|if
+condition|(
+name|id
+operator|->
+name|id_msize
+operator|&
+literal|1
+condition|)
+name|nchips
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|subunit
@@ -518,7 +535,7 @@ literal|0
 init|;
 name|subunit
 operator|<
-literal|2
+name|nchips
 condition|;
 name|subunit
 operator|++
@@ -1906,6 +1923,11 @@ name|apx
 operator|->
 name|apx_txnum
 index|]
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 name|dx
