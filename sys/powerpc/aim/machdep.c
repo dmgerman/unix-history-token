@@ -2765,7 +2765,7 @@ if|if
 condition|(
 name|va
 operator|<
-literal|0x90000000
+literal|0x80000000
 condition|)
 comment|/* XXX */
 continue|continue;
