@@ -116,6 +116,15 @@ decl_stmt|;
 name|u_int
 name|d_fwheads
 decl_stmt|;
+name|u_int
+name|d_stripe_offset
+decl_stmt|;
+name|u_int
+name|d_stripe_width
+decl_stmt|;
+name|u_int
+name|d_max_request
+decl_stmt|;
 name|struct
 name|g_geom
 modifier|*
