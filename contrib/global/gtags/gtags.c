@@ -1112,12 +1112,12 @@ name|NULL
 condition|;
 control|)
 block|{
-comment|/* 		 * GRTAGS and GSYMS doesn't treat asembler. 		 */
+comment|/* 		 * GSYMS doesn't treat asembler. 		 */
 if|if
 condition|(
 name|db
-operator|!=
-name|GTAGS
+operator|==
+name|GSYMS
 condition|)
 block|{
 name|char

@@ -181,7 +181,7 @@ name|sprintf
 argument_list|(
 name|dbpath
 argument_list|,
-literal|"%s%s"
+literal|"%s/%s"
 argument_list|,
 name|candidate
 argument_list|,
@@ -421,9 +421,20 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|strcpy
+if|if
+condition|(
+name|realpath
 argument_list|(
+name|p
+argument_list|,
 name|root
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|die1
+argument_list|(
+literal|"cannot get real path of '%s'."
 argument_list|,
 name|p
 argument_list|)
