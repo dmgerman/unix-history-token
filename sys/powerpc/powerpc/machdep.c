@@ -1890,6 +1890,16 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|enable_fpu
+argument_list|(
+name|thread0
+operator|->
+name|td_pcb
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|globalp
 operator|=
 name|pmap_steal_memory
@@ -3822,5 +3832,249 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|enable_fpu
+parameter_list|(
+name|pcb
+parameter_list|)
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
+block|{
+name|int
+name|msr
+decl_stmt|,
+name|scratch
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|pcb
+operator|->
+name|pcb_flags
+operator|&
+name|PCB_FPU
+operator|)
+condition|)
+block|{
+name|bzero
+argument_list|(
+operator|&
+name|pcb
+operator|->
+name|pcb_fpu
+argument_list|,
+sizeof|sizeof
+name|pcb
+operator|->
+name|pcb_fpu
+argument_list|)
+expr_stmt|;
+name|pcb
+operator|->
+name|pcb_flags
+operator||=
+name|PCB_FPU
+expr_stmt|;
+block|}
+asm|__asm volatile ("mfmsr %0; ori %1,%0,%2; mtmsr %1; isync"
+block|:
+literal|"=r"
+operator|(
+name|msr
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|scratch
+operator|)
+operator|:
+literal|"K"
+operator|(
+name|PSL_FP
+operator|)
+block|)
+function|;
+end_function
+
+begin_asm
+asm|__asm volatile ("lfd 0,0(%0); mtfsf 0xff,0" :: "b"(&pcb->pcb_fpu.fpscr));
+end_asm
+
+begin_asm
+asm|__asm ("lfd 0,0(%0);"
+end_asm
+
+begin_expr_stmt
+literal|"lfd 1,8(%0);"
+literal|"lfd 2,16(%0);"
+literal|"lfd 3,24(%0);"
+literal|"lfd 4,32(%0);"
+literal|"lfd 5,40(%0);"
+literal|"lfd 6,48(%0);"
+literal|"lfd 7,56(%0);"
+literal|"lfd 8,64(%0);"
+literal|"lfd 9,72(%0);"
+literal|"lfd 10,80(%0);"
+literal|"lfd 11,88(%0);"
+literal|"lfd 12,96(%0);"
+literal|"lfd 13,104(%0);"
+literal|"lfd 14,112(%0);"
+literal|"lfd 15,120(%0);"
+literal|"lfd 16,128(%0);"
+literal|"lfd 17,136(%0);"
+literal|"lfd 18,144(%0);"
+literal|"lfd 19,152(%0);"
+literal|"lfd 20,160(%0);"
+literal|"lfd 21,168(%0);"
+literal|"lfd 22,176(%0);"
+literal|"lfd 23,184(%0);"
+literal|"lfd 24,192(%0);"
+literal|"lfd 25,200(%0);"
+literal|"lfd 26,208(%0);"
+literal|"lfd 27,216(%0);"
+literal|"lfd 28,224(%0);"
+literal|"lfd 29,232(%0);"
+literal|"lfd 30,240(%0);"
+literal|"lfd 31,248(%0)"
+operator|::
+literal|"b"
+operator|(
+operator|&
+name|pcb
+operator|->
+name|pcb_fpu
+operator|.
+name|fpr
+index|[
+literal|0
+index|]
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm volatile ("mtmsr %0; isync" :: "r"(msr));
+end_asm
+
+begin_macro
+unit|}  void
+name|save_fpu
+argument_list|(
+argument|pcb
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|pcb
+modifier|*
+name|pcb
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|int
+name|msr
+decl_stmt|,
+name|scratch
+decl_stmt|;
+asm|__asm volatile ("mfmsr %0; ori %1,%0,%2; mtmsr %1; isync"
+block|:
+literal|"=r"
+operator|(
+name|msr
+operator|)
+operator|,
+literal|"=r"
+operator|(
+name|scratch
+operator|)
+operator|:
+literal|"K"
+operator|(
+name|PSL_FP
+operator|)
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm ("stfd 0,0(%0);"
+end_asm
+
+begin_expr_stmt
+literal|"stfd 1,8(%0);"
+literal|"stfd 2,16(%0);"
+literal|"stfd 3,24(%0);"
+literal|"stfd 4,32(%0);"
+literal|"stfd 5,40(%0);"
+literal|"stfd 6,48(%0);"
+literal|"stfd 7,56(%0);"
+literal|"stfd 8,64(%0);"
+literal|"stfd 9,72(%0);"
+literal|"stfd 10,80(%0);"
+literal|"stfd 11,88(%0);"
+literal|"stfd 12,96(%0);"
+literal|"stfd 13,104(%0);"
+literal|"stfd 14,112(%0);"
+literal|"stfd 15,120(%0);"
+literal|"stfd 16,128(%0);"
+literal|"stfd 17,136(%0);"
+literal|"stfd 18,144(%0);"
+literal|"stfd 19,152(%0);"
+literal|"stfd 20,160(%0);"
+literal|"stfd 21,168(%0);"
+literal|"stfd 22,176(%0);"
+literal|"stfd 23,184(%0);"
+literal|"stfd 24,192(%0);"
+literal|"stfd 25,200(%0);"
+literal|"stfd 26,208(%0);"
+literal|"stfd 27,216(%0);"
+literal|"stfd 28,224(%0);"
+literal|"stfd 29,232(%0);"
+literal|"stfd 30,240(%0);"
+literal|"stfd 31,248(%0)"
+operator|::
+literal|"b"
+operator|(
+operator|&
+name|pcb
+operator|->
+name|pcb_fpu
+operator|.
+name|fpr
+index|[
+literal|0
+index|]
+operator|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_asm
+asm|__asm volatile ("mffs 0; stfd 0,0(%0)" :: "b"(&pcb->pcb_fpu.fpscr));
+end_asm
+
+begin_asm
+asm|__asm volatile ("mtmsr %0; isync" :: "r"(msr));
+end_asm
+
+unit|}
 end_unit
 
