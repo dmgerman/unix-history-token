@@ -195,8 +195,6 @@ name|i
 decl_stmt|,
 name|fd
 decl_stmt|,
-name|kflag
-decl_stmt|,
 name|lflag
 decl_stmt|,
 name|nflag
@@ -213,6 +211,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|kernel
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|p
@@ -263,8 +263,6 @@ name|howto
 operator|=
 literal|0
 expr_stmt|;
-name|kflag
-operator|=
 name|lflag
 operator|=
 name|nflag
@@ -307,10 +305,6 @@ break|break;
 case|case
 literal|'k'
 case|:
-name|kflag
-operator|=
-literal|1
-expr_stmt|;
 name|kernel
 operator|=
 name|optarg
@@ -435,7 +429,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|kflag
+name|kernel
+operator|!=
+name|NULL
 condition|)
 block|{
 name|fd
