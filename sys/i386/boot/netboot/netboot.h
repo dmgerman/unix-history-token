@@ -86,7 +86,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_BOOTFILE
-value|"kernel"
+value|"/kernel"
 end_define
 
 begin_endif
