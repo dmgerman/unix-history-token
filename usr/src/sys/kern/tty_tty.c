@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.1	%G%	*/
+comment|/*	tty_tty.c	4.2	%G%	*/
 end_comment
 
 begin_comment
@@ -71,6 +71,16 @@ operator|.
 name|u_ttyp
 operator|==
 name|NULL
+operator|||
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SDETACH
+operator|)
 condition|)
 block|{
 name|u
@@ -119,6 +129,25 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SDETACH
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
 operator|(
 operator|*
 name|cdevsw
@@ -155,6 +184,25 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SDETACH
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
 operator|(
 operator|*
 name|cdevsw
@@ -203,6 +251,25 @@ end_decl_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SDETACH
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENXIO
+expr_stmt|;
+return|return;
+block|}
 operator|(
 operator|*
 name|cdevsw
