@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Expands front end tree to back end RTL for GNU C-Compiler    Copyright (C) 1987, 88, 89, 91-98, 1999 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Expands front end tree to back end RTL for GNU C-Compiler    Copyright (C) 1987, 1988, 1989, 1991, 1992, 1993, 1994, 1995, 1996, 1997,    1998, 1999, 2000, 2001 Free Software Foundation, Inc.  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -13293,49 +13293,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Make sure to unshare any shared rtl that store_bit_field 		     might have created.  */
-for|for
-control|(
-name|p
-operator|=
-name|get_insns
-argument_list|()
-init|;
-name|p
-condition|;
-name|p
-operator|=
-name|NEXT_INSN
-argument_list|(
-name|p
-argument_list|)
-control|)
-block|{
-name|reset_used_flags
-argument_list|(
-name|PATTERN
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|reset_used_flags
-argument_list|(
-name|REG_NOTES
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|reset_used_flags
-argument_list|(
-name|LOG_LINKS
-argument_list|(
-name|p
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|unshare_all_rtl
+name|unshare_all_rtl_again
 argument_list|(
 name|get_insns
 argument_list|()
@@ -14431,6 +14389,13 @@ expr_stmt|;
 name|purge_addressof_replacements
 operator|=
 literal|0
+expr_stmt|;
+comment|/* REGs are shared.  purge_addressof will destructively replace a REG      with a MEM, which creates shared MEMs.       Unfortunately, the children of put_reg_into_stack assume that MEMs      referring to the same stack slot are shared (fixup_var_refs and      the associated hash table code).       So, we have to do another unsharing pass after we have flushed any      REGs that had their address taken into the stack.       It may be worth tracking whether or not we converted any REGs into      MEMs to avoid this overhead when it is not needed.  */
+name|unshare_all_rtl_again
+argument_list|(
+name|get_insns
+argument_list|()
+argument_list|)
 expr_stmt|;
 block|}
 end_function
