@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ioctl.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1489,7 +1489,7 @@ comment|/* !_IOCTL_H_ */
 end_comment
 
 begin_comment
-comment|/* - note: keep outside _IOCTL_H_  * Compatability with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43  */
+comment|/* - note: keep outside _IOCTL_H_  * Compatability with old terminal driver  *  * Source level -> #define USE_OLD_TTY  * Kernel level -> options COMPAT_43 or COMPAT_SUNOS  */
 end_comment
 
 begin_if
@@ -1503,6 +1503,11 @@ operator|||
 name|defined
 argument_list|(
 name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
 argument_list|)
 end_if
 
