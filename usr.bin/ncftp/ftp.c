@@ -1222,7 +1222,7 @@ name|PERROR
 argument_list|(
 literal|"hookup"
 argument_list|,
-literal|"connect"
+name|host
 argument_list|)
 expr_stmt|;
 switch|switch

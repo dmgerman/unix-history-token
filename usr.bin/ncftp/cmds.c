@@ -9043,6 +9043,15 @@ literal|0
 index|]
 condition|)
 block|{
+if|if
+condition|(
+name|domain
+index|[
+literal|0
+index|]
+operator|!=
+literal|'.'
+condition|)
 operator|(
 name|void
 operator|)
