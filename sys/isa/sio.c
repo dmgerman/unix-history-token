@@ -6409,7 +6409,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unable to activate interrupt in fast mode - using normal mode"
+literal|"unable to activate interrupt in fast mode - using normal mode\n"
 argument_list|)
 expr_stmt|;
 block|}
