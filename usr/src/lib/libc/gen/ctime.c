@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.19 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1469,10 +1469,6 @@ operator|-
 literal|1
 return|;
 block|{
-specifier|register
-name|int
-name|doaccess
-decl_stmt|;
 name|char
 name|fullname
 index|[
@@ -1493,19 +1489,14 @@ condition|)
 operator|++
 name|name
 expr_stmt|;
-name|doaccess
-operator|=
+if|if
+condition|(
 name|name
 index|[
 literal|0
 index|]
-operator|==
+operator|!=
 literal|'/'
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|doaccess
 condition|)
 block|{
 if|if
@@ -1575,44 +1566,11 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 			** Set doaccess if '.' (as in "../") shows up in name. 			*/
-if|if
-condition|(
-name|strchr
-argument_list|(
-name|name
-argument_list|,
-literal|'.'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-name|doaccess
-operator|=
-name|TRUE
-expr_stmt|;
 name|name
 operator|=
 name|fullname
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|doaccess
-operator|&&
-name|access
-argument_list|(
-name|name
-argument_list|,
-name|ACCESS_MODE
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 if|if
 condition|(
 operator|(
