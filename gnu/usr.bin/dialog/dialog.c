@@ -1374,6 +1374,12 @@ operator|-
 name|offset
 operator|!=
 literal|5
+operator|&&
+name|argc
+operator|-
+name|offset
+operator|!=
+literal|6
 condition|)
 block|{
 name|Usage
@@ -1391,6 +1397,32 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|argc
+operator|-
+name|offset
+operator|==
+literal|6
+condition|)
+name|strcpy
+argument_list|(
+name|result
+argument_list|,
+name|argv
+index|[
+name|offset
+operator|+
+literal|5
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|result
+operator|=
+literal|'\0'
+expr_stmt|;
 name|init_dialog
 argument_list|()
 expr_stmt|;
@@ -1500,7 +1532,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ \ndialog version 0.3, by Savio Lam (lam836@cs.cuhk.hk).\ \n  patched to version %s by Stuart Herbert (S.Herbert@shef.ac.uk)\ \n\ \n* Display dialog boxes from shell scripts *\ \n\ \nUsage: %s --clear\ \n       %s --create-rc<file>\ \n       %s [--title<title>] [--clear]<Box options>\ \n\ \nBox options:\ \n\ \n  --yesno<text><height><width>\ \n  --msgbox<text><height><width>\ \n  --prgbox    \"<command line>\"<height><width>\ \n  --infobox<text><height><width>\ \n  --inputbox<text><height><width>\ \n  --textbox<file><height><width>\ \n  --menu<text><height><width><menu height><tag1><item1>...\ \n  --checklist<text><height><width><list height><tag1><item1><status1>...\ \n  --radiolist<text><height><width><list height><tag1><item1><status1>...\n"
+literal|"\ \ndialog version 0.3, by Savio Lam (lam836@cs.cuhk.hk).\ \n  patched to version %s by Stuart Herbert (S.Herbert@shef.ac.uk)\ \n\ \n* Display dialog boxes from shell scripts *\ \n\ \nUsage: %s --clear\ \n       %s --create-rc<file>\ \n       %s [--title<title>] [--clear]<Box options>\ \n\ \nBox options:\ \n\ \n  --yesno<text><height><width>\ \n  --msgbox<text><height><width>\ \n  --prgbox    \"<command line>\"<height><width>\ \n  --infobox<text><height><width>\ \n  --inputbox<text><height><width> [<init string>]\ \n  --textbox<file><height><width>\ \n  --menu<text><height><width><menu height><tag1><item1>...\ \n  --checklist<text><height><width><list height><tag1><item1><status1>...\ \n  --radiolist<text><height><width><list height><tag1><item1><status1>...\n"
 argument_list|,
 name|VERSION
 argument_list|,
