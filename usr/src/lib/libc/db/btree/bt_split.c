@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_split.c	5.15 (Berkeley) %G%"
+literal|"@(#)bt_split.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -476,7 +476,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RECNO
+name|R_RECNO
 argument_list|)
 condition|)
 name|WR_RLEAF
@@ -512,7 +512,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RECNO
+name|R_RECNO
 argument_list|)
 condition|?
 name|bt_rroot
@@ -1355,7 +1355,7 @@ name|ISSET
 argument_list|(
 name|t
 argument_list|,
-name|BTF_RECNO
+name|R_RECNO
 argument_list|)
 condition|?
 name|bt_rroot
@@ -3070,7 +3070,7 @@ argument_list|(
 name|indx_t
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 * 	 * Don't bother checking for the BTF_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
+comment|/* 	 * If splitting the page that the cursor was on, the cursor has to be 	 * adjusted to point to the same record as before the split.  If the 	 * cursor is at or past the skipped slot, the cursor is incremented by 	 * one.  If the cursor is on the right page, it is decremented by the 	 * number of records split to the left page. 	 * 	 * Don't bother checking for the B_SEQINIT flag, the page number will 	 * be P_INVALID. 	 */
 name|c
 operator|=
 operator|&
