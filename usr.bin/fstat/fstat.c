@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fstat.c,v 1.13 1997/08/31 01:27:04 alex Exp $"
+literal|"$Id: fstat.c,v 1.14 1997/09/18 23:16:17 dima Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,12 @@ begin_include
 include|#
 directive|include
 file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
