@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.2 1995/05/04 03:51:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: devices.c,v 1.3 1995/05/04 19:48:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"sysinstall.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"libdisk.h"
 end_include
 
 begin_include
@@ -216,10 +210,6 @@ specifier|static
 name|void
 name|record_chunks
 parameter_list|(
-name|char
-modifier|*
-name|disk
-parameter_list|,
 name|struct
 name|disk
 modifier|*
@@ -252,7 +242,9 @@ name|msgFatal
 argument_list|(
 literal|"No chunk list found for %s!"
 argument_list|,
-name|disk
+name|d
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|c1
@@ -324,10 +316,6 @@ specifier|static
 name|void
 name|print_chunks
 parameter_list|(
-name|char
-modifier|*
-name|disk
-parameter_list|,
 name|struct
 name|disk
 modifier|*
@@ -361,7 +349,28 @@ argument_list|)
 expr_stmt|;
 name|addstr
 argument_list|(
-name|disk
+name|d
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|attrset
+argument_list|(
+name|A_NORMAL
+argument_list|)
+expr_stmt|;
+name|attrset
+argument_list|(
+name|A_REVERSE
+argument_list|)
+expr_stmt|;
+name|mvaddstr
+argument_list|(
+literal|0
+argument_list|,
+literal|55
+argument_list|,
+literal|"Master Partition Editor"
 argument_list|)
 expr_stmt|;
 name|attrset
@@ -539,11 +548,20 @@ parameter_list|()
 block|{
 name|mvprintw
 argument_list|(
-literal|15
+literal|14
 argument_list|,
 literal|0
 argument_list|,
 literal|"The following commands are supported (in upper or lower case):"
+argument_list|)
+expr_stmt|;
+name|mvprintw
+argument_list|(
+literal|16
+argument_list|,
+literal|0
+argument_list|,
+literal|"A = Use Entire Disk        B = Scan For Bad Blocks"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -561,7 +579,7 @@ literal|18
 argument_list|,
 literal|0
 argument_list|,
-literal|"B = Scan For Bad Blocks    U = Undo All Changes"
+literal|"G = Set BIOS Geometry      U = Undo All Changes"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -570,7 +588,7 @@ literal|19
 argument_list|,
 literal|0
 argument_list|,
-literal|"W = Write Changes          ESC = Proceed to next screen"
+literal|"W = `Wizard' Mode          ESC = Proceed to next screen"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -597,15 +615,6 @@ argument_list|(
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|22
-argument_list|,
-literal|0
-argument_list|,
-literal|"Use F1 or `?' for help on this screen"
-argument_list|)
-expr_stmt|;
 name|move
 argument_list|(
 literal|0
@@ -622,16 +631,12 @@ name|disk
 modifier|*
 name|device_slice_disk
 parameter_list|(
-name|char
-modifier|*
-name|disk
-parameter_list|)
-block|{
 name|struct
 name|disk
 modifier|*
 name|d
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|p
@@ -650,54 +655,29 @@ name|msg
 init|=
 name|NULL
 decl_stmt|;
-name|d
-operator|=
-name|Open_Disk
-argument_list|(
-name|disk
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|d
-condition|)
-name|msgFatal
-argument_list|(
-literal|"Couldn't open disk `%s'!"
-argument_list|,
-name|disk
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|CheckRules
-argument_list|(
-name|d
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-block|}
+name|char
+name|name
+index|[
+literal|40
+index|]
+decl_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
 name|chunking
 operator|=
 name|TRUE
+expr_stmt|;
+name|strncpy
+argument_list|(
+name|name
+argument_list|,
+name|d
+operator|->
+name|name
+argument_list|,
+literal|40
+argument_list|)
 expr_stmt|;
 name|keypad
 argument_list|(
@@ -708,8 +688,6 @@ argument_list|)
 expr_stmt|;
 name|record_chunks
 argument_list|(
-name|disk
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
@@ -723,8 +701,6 @@ argument_list|()
 expr_stmt|;
 name|print_chunks
 argument_list|(
-name|disk
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
@@ -856,6 +832,20 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'A'
+case|:
+name|All_FreeBSD
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+name|record_chunks
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'B'
 case|:
 if|if
@@ -873,7 +863,24 @@ name|msg
 operator|=
 literal|"Can only scan for bad blocks in FreeBSD partition."
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|name
+argument_list|,
+literal|"sd"
+argument_list|,
+literal|2
+argument_list|)
+operator|||
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"This typically makes sense only for ESDI, IDE or MFM drives.\nAre you sure you want to do this on a SCSI disk?"
+argument_list|)
+condition|)
 name|chunk_info
 index|[
 name|current_chunk
@@ -949,9 +956,13 @@ operator|&&
 operator|(
 name|size
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|val
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|>
@@ -985,8 +996,6 @@ argument_list|)
 expr_stmt|;
 name|record_chunks
 argument_list|(
-name|disk
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
@@ -1025,12 +1034,15 @@ argument_list|)
 expr_stmt|;
 name|record_chunks
 argument_list|(
-name|disk
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'G'
+case|:
+comment|/* Set geometry */
 break|break;
 case|case
 literal|'U'
@@ -1044,13 +1056,23 @@ name|d
 operator|=
 name|Open_Disk
 argument_list|(
-name|disk
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|d
+condition|)
+name|msgFatal
+argument_list|(
+literal|"Can't reopen disk %s!"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 name|record_chunks
 argument_list|(
-name|disk
-argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
@@ -1063,18 +1085,48 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Are you sure you want to write this to disk?"
+literal|"Are you sure you want to go into Wizard mode?\nNo seat belts whatsoever are provided!"
 argument_list|)
 condition|)
-name|Write_Disk
+block|{
+name|clear
+argument_list|()
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|DialogActive
+operator|=
+name|FALSE
+expr_stmt|;
+name|slice_wizard
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|clear
+argument_list|()
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|DialogActive
+operator|=
+name|TRUE
+expr_stmt|;
+name|record_chunks
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|msg
 operator|=
-literal|"Write not confirmed"
+literal|"Wise choice!"
 expr_stmt|;
 break|break;
 case|case
@@ -1087,12 +1139,38 @@ name|FALSE
 expr_stmt|;
 break|break;
 default|default:
+name|beep
+argument_list|()
+expr_stmt|;
 name|msg
 operator|=
-literal|"Invalid character typed."
+literal|"Type F1 or ? for help"
 expr_stmt|;
 break|break;
 block|}
+block|}
+name|p
+operator|=
+name|CheckRules
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 name|clear
 argument_list|()
