@@ -373,6 +373,8 @@ decl_stmt|,
 name|sc_loc_y
 decl_stmt|,
 name|sc_loc_z
+decl_stmt|,
+name|sc_loc_t
 decl_stmt|;
 name|struct
 name|hid_location
@@ -399,6 +401,11 @@ directive|define
 name|UMS_Z
 value|0x01
 comment|/* z direction available */
+define|#
+directive|define
+name|UMS_T
+value|0x02
+comment|/* aa direction available (tilt) */
 define|#
 directive|define
 name|UMS_SPUR_BUT_UP
@@ -517,6 +524,9 @@ name|dy
 parameter_list|,
 name|int
 name|dz
+parameter_list|,
+name|int
+name|dt
 parameter_list|,
 name|int
 name|buttons
@@ -1251,6 +1261,30 @@ argument_list|,
 operator|&
 name|flags
 argument_list|)
+operator|||
+name|hid_locate
+argument_list|(
+name|desc
+argument_list|,
+name|size
+argument_list|,
+name|HID_USAGE2
+argument_list|(
+name|HUP_GENERIC_DESKTOP
+argument_list|,
+name|HUG_TWHEEL
+argument_list|)
+argument_list|,
+name|hid_input
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_loc_z
+argument_list|,
+operator|&
+name|flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1283,6 +1317,55 @@ operator||=
 name|UMS_Z
 expr_stmt|;
 block|}
+block|}
+comment|/* The Microsoft Wireless Intellimouse 2.0 reports it's wheel 	 * using 0x0048 (i've called it HUG_TWHEEL) and seems to expect 	 * you to know that the byte after the wheel is the tilt axis. 	 * There are no other HID axis descriptors other than X,Y and  	 * TWHEEL */
+if|if
+condition|(
+name|hid_locate
+argument_list|(
+name|desc
+argument_list|,
+name|size
+argument_list|,
+name|HID_USAGE2
+argument_list|(
+name|HUP_GENERIC_DESKTOP
+argument_list|,
+name|HUG_TWHEEL
+argument_list|)
+argument_list|,
+name|hid_input
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_loc_t
+argument_list|,
+operator|&
+name|flags
+argument_list|)
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_loc_t
+operator|.
+name|pos
+operator|=
+name|sc
+operator|->
+name|sc_loc_t
+operator|.
+name|pos
+operator|+
+literal|8
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|UMS_T
+expr_stmt|;
 block|}
 comment|/* figure out the number of buttons */
 for|for
@@ -1377,7 +1460,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%s: %d buttons%s\n"
+literal|"%s: %d buttons%s%s.\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1396,7 +1479,17 @@ name|flags
 operator|&
 name|UMS_Z
 condition|?
-literal|" and Z dir."
+literal|" and Z dir"
+else|:
+literal|""
+argument_list|,
+name|sc
+operator|->
+name|flags
+operator|&
+name|UMS_T
+condition|?
+literal|" and a TILT dir"
 else|:
 literal|""
 argument_list|)
@@ -2120,6 +2213,8 @@ decl_stmt|,
 name|dy
 decl_stmt|,
 name|dz
+decl_stmt|,
+name|dt
 decl_stmt|;
 name|u_char
 name|buttons
@@ -2154,7 +2249,7 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"ums_intr: data = %02x %02x %02x\n"
+literal|"ums_intr: data = %02x %02x %02x %02x %02x %02x\n"
 operator|,
 name|sc
 operator|->
@@ -2175,6 +2270,27 @@ operator|->
 name|sc_ibuf
 index|[
 literal|2
+index|]
+operator|,
+name|sc
+operator|->
+name|sc_ibuf
+index|[
+literal|3
+index|]
+operator|,
+name|sc
+operator|->
+name|sc_ibuf
+index|[
+literal|4
+index|]
+operator|,
+name|sc
+operator|->
+name|sc_ibuf
+index|[
+literal|5
 index|]
 operator|)
 argument_list|)
@@ -2215,6 +2331,12 @@ operator|->
 name|sc_intrpipe
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|USBD_IOERROR
+condition|)
 return|return;
 block|}
 name|ibuf
@@ -2223,6 +2345,36 @@ name|sc
 operator|->
 name|sc_ibuf
 expr_stmt|;
+comment|/* 	 * The M$ Wireless Intellimouse 2.0 sends 1 extra leading byte of 	 * data compared to most USB mice. This byte frequently switches 	 * from 0x01 (usual state) to 0x02. I assume it is to allow 	 * extra, non-standard, reporting (say battery-life). However 	 * at the same time it generates a left-click message on the button 	 * byte which causes spurious left-click's where there shouldn't be. 	 * This should sort that. 	 * Currently it's the only user of UMS_T so use it as an identifier. 	 * We probably should switch to some more official quirk. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|UMS_T
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_iid
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|ibuf
+operator|++
+operator|==
+literal|0x02
+condition|)
+return|return;
+block|}
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|sc
@@ -2241,6 +2393,7 @@ operator|->
 name|sc_iid
 condition|)
 return|return;
+block|}
 block|}
 name|dx
 operator|=
@@ -2279,6 +2432,32 @@ name|sc
 operator|->
 name|sc_loc_z
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|UMS_T
+condition|)
+name|dt
+operator|=
+operator|-
+name|hid_get_data
+argument_list|(
+name|ibuf
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_loc_t
+argument_list|)
+expr_stmt|;
+else|else
+name|dt
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -2329,6 +2508,8 @@ name|dy
 operator|||
 name|dz
 operator|||
+name|dt
+operator|||
 operator|(
 name|sc
 operator|->
@@ -2351,13 +2532,15 @@ argument_list|(
 literal|5
 argument_list|,
 operator|(
-literal|"ums_intr: x:%d y:%d z:%d buttons:0x%x\n"
+literal|"ums_intr: x:%d y:%d z:%d t:%d buttons:0x%x\n"
 operator|,
 name|dx
 operator|,
 name|dy
 operator|,
 name|dz
+operator|,
+name|dt
 operator|,
 name|buttons
 operator|)
@@ -2395,6 +2578,8 @@ name|dz
 operator|+=
 name|dz
 expr_stmt|;
+comment|/* sc->status.dt += dt;*/
+comment|/* no way to export this yet */
 comment|/* Discard data in case of full buffer */
 if|if
 condition|(
@@ -2437,6 +2622,10 @@ operator|==
 literal|0
 operator|&&
 name|dz
+operator|==
+literal|0
+operator|&&
+name|dt
 operator|==
 literal|0
 operator|&&
@@ -2494,6 +2683,8 @@ name|dy
 argument_list|,
 name|dz
 argument_list|,
+name|dt
+argument_list|,
 name|buttons
 argument_list|)
 expr_stmt|;
@@ -2538,6 +2729,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2566,6 +2759,9 @@ name|dy
 parameter_list|,
 name|int
 name|dz
+parameter_list|,
+name|int
+name|dt
 parameter_list|,
 name|int
 name|buttons
@@ -2663,6 +2859,28 @@ operator|-
 literal|128
 condition|)
 name|dz
+operator|=
+operator|-
+literal|128
+expr_stmt|;
+if|if
+condition|(
+name|dt
+operator|>
+literal|126
+condition|)
+name|dt
+operator|=
+literal|126
+expr_stmt|;
+if|if
+condition|(
+name|dt
+operator|<
+operator|-
+literal|128
+condition|)
+name|dt
 operator|=
 operator|-
 literal|128
@@ -3018,6 +3236,7 @@ operator|->
 name|status
 operator|.
 name|dz
+comment|/* = sc->status.dt */
 operator|=
 literal|0
 expr_stmt|;
@@ -4417,6 +4636,7 @@ name|status
 operator|.
 name|dz
 operator|=
+comment|/* sc->status.dt = */
 literal|0
 expr_stmt|;
 name|splx
@@ -4437,6 +4657,7 @@ operator|||
 name|status
 operator|->
 name|dz
+comment|/* || status->dt */
 condition|)
 name|status
 operator|->
