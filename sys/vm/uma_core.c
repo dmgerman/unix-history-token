@@ -4960,6 +4960,17 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|isitem
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|isitem
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 block|}
