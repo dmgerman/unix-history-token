@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	config.h	1.13	83/06/16	*/
+comment|/*	config.h	1.14	84/08/20	*/
 end_comment
 
 begin_comment
@@ -278,7 +278,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``vax'',  * it will build from ``makefile.vax'' and use ``../vax/asm.sed''  * in the makerules, etc.  */
+comment|/*  * Config has a global notion of which machine type is  * being used.  It uses the name of the machine in choosing  * files and directories.  Thus if the name of the machine is ``vax'',  * it will build from ``makefile.vax'' and use ``../vax/inline''  * in the makerules, etc.  */
 end_comment
 
 begin_decl_stmt
