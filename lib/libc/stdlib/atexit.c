@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atexit.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)atexit.c	8.2 (Berkeley) 7/3/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,18 @@ include|#
 directive|include
 file|"atexit.h"
 end_include
+
+begin_decl_stmt
+name|struct
+name|atexit
+modifier|*
+name|__atexit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* points to head of LIFO stack */
+end_comment
 
 begin_comment
 comment|/*  * Register a function to be performed at exit.  */
