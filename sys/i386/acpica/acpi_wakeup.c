@@ -514,9 +514,6 @@ operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
-name|ACPI_DISABLE_IRQS
-argument_list|()
-expr_stmt|;
 comment|/* Create Identity Mapping */
 if|if
 condition|(
@@ -605,6 +602,9 @@ expr_stmt|;
 name|ret_addr
 operator|=
 literal|0
+expr_stmt|;
+name|ACPI_DISABLE_IRQS
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
