@@ -2193,13 +2193,15 @@ argument_list|(
 name|pgrp
 argument_list|,
 name|sig
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Send sig to all all members of the process group  */
+comment|/*  * Send sig to every member of a process group.  * If checktty is 1, limit to members which have a controlling  * terminal.  */
 end_comment
 
 begin_macro
@@ -2208,6 +2210,8 @@ argument_list|(
 argument|pgrp
 argument_list|,
 argument|sig
+argument_list|,
+argument|checkctty
 argument_list|)
 end_macro
 
@@ -2249,6 +2253,18 @@ name|p
 operator|->
 name|p_pgrpnxt
 control|)
+if|if
+condition|(
+name|checkctty
+operator|==
+literal|0
+operator|||
+name|p
+operator|->
+name|p_flag
+operator|&
+name|SCTTY
+condition|)
 name|psignal
 argument_list|(
 name|p
