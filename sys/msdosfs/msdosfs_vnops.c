@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.17.2.1 1995/08/25 01:54:39 davidg Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.17.2.2 1995/09/12 08:57:53 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -4001,9 +4001,15 @@ operator|->
 name|a_fcnp
 operator|->
 name|cn_flags
+operator||
+name|ap
+operator|->
+name|a_tcnp
+operator|->
+name|cn_flags
+operator|)
 operator|&
 name|ISDOTDOT
-operator|)
 condition|)
 block|{
 name|VOP_ABORTOP
