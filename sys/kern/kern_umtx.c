@@ -1023,6 +1023,10 @@ literal|"contested umtx is not."
 operator|)
 argument_list|)
 expr_stmt|;
+name|blocked
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* 	 * When unlocking the umtx, it must be marked as unowned if 	 * there is zero or one thread only waiting for it. 	 * Otherwise, it must be marked as contested. 	 */
 name|UMTX_LOCK
 argument_list|()
