@@ -397,6 +397,11 @@ argument_list|(
 name|date
 argument_list|)
 expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|is_rannotate
@@ -1132,7 +1137,7 @@ name|which
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|LOCK_READ
 argument_list|,
 name|where
 argument_list|,

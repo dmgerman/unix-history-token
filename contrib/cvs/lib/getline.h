@@ -145,7 +145,7 @@ name|FILE
 operator|*
 name|_stream
 operator|,
-name|char
+name|int
 name|_terminator
 operator|,
 name|int

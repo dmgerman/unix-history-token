@@ -204,7 +204,7 @@ name|int
 name|aflag
 decl_stmt|;
 name|int
-name|readlock
+name|locktype
 decl_stmt|;
 name|int
 name|dosrcs
@@ -300,7 +300,7 @@ name|which
 parameter_list|,
 name|aflag
 parameter_list|,
-name|readlock
+name|locktype
 parameter_list|,
 name|update_preload
 parameter_list|,
@@ -341,7 +341,7 @@ name|int
 name|aflag
 decl_stmt|;
 name|int
-name|readlock
+name|locktype
 decl_stmt|;
 name|char
 modifier|*
@@ -433,9 +433,9 @@ name|aflag
 expr_stmt|;
 name|frame
 operator|.
-name|readlock
+name|locktype
 operator|=
-name|readlock
+name|locktype
 expr_stmt|;
 name|frame
 operator|.
@@ -1487,7 +1487,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|should_readlock
+name|locktype
 decl_stmt|;
 name|int
 name|process_this_directory
@@ -1508,15 +1508,15 @@ operator|(
 literal|0
 operator|)
 return|;
-name|should_readlock
+name|locktype
 operator|=
 name|noexec
 condition|?
-literal|0
+name|LOCK_NONE
 else|:
 name|frame
 operator|->
-name|readlock
+name|locktype
 expr_stmt|;
 comment|/* The fact that locks are not active here is what makes us fail to have        the             If someone commits some changes in one cvs command, 	   then an update by someone else will either get all the 	   changes, or none of them.         property (see node Concurrency in cvs.texinfo).         The most straightforward fix would just to readlock the whole        tree before starting an update, but that means that if a commit        gets blocked on a big update, it might need to wait a *long*        time.         A more adequate fix would be a two-pass design for update,        checkout, etc.  The first pass would go through the repository,        with the whole tree readlocked, noting what versions of each        file we want to get.  The second pass would release all locks        (except perhaps short-term locks on one file at a        time--although I think RCS already deals with this) and        actually get the files, specifying the particular versions it wants.         This could be sped up by separating out the data needed for the        first pass into a separate file(s)--for example a file        attribute for each file whose value contains the head revision        for each branch.  The structure should be designed so that        commit can relatively quickly update the information for a        single file or a handful of files (file attributes, as        implemented in Jan 96, are probably acceptable; improvements        would be possible such as branch attributes which are in        separate files for each branch).  */
 if|#
@@ -1530,17 +1530,14 @@ name|defined
 argument_list|(
 name|SERVER_FLOWCONTROL
 argument_list|)
-comment|/*      * Now would be a good time to check to see if we need to stop      * generating data, to give the buffers a chance to drain to the      * remote client.  We should not have locks active at this point.      */
+comment|/*      * Now would be a good time to check to see if we need to stop      * generating data, to give the buffers a chance to drain to the      * remote client.  We should not have locks active at this point,      * but if there are writelocks around, we cannot pause here.  */
 if|if
 condition|(
 name|server_active
-comment|/* If there are writelocks around, we cannot pause here.  */
 operator|&&
-operator|(
-name|should_readlock
-operator|||
-name|noexec
-operator|)
+name|locktype
+operator|!=
+name|LOCK_NONE
 condition|)
 name|server_pause_check
 argument_list|()
@@ -1962,10 +1959,18 @@ decl_stmt|;
 comment|/* read lock it if necessary */
 if|if
 condition|(
-name|should_readlock
-operator|&&
 name|repository
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|locktype
+operator|==
+name|LOCK_READ
+condition|)
+block|{
+if|if
+condition|(
 name|Reader_Lock
 argument_list|(
 name|repository
@@ -1982,6 +1987,20 @@ argument_list|,
 literal|"read lock failed - giving up"
 argument_list|)
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|locktype
+operator|==
+name|LOCK_WRITE
+condition|)
+name|lock_dir_for_write
+argument_list|(
+name|repository
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|CLIENT_SUPPORT
@@ -2050,7 +2069,9 @@ expr_stmt|;
 comment|/* unlock it */
 if|if
 condition|(
-name|should_readlock
+name|locktype
+operator|!=
+name|LOCK_NONE
 condition|)
 name|Lock_Cleanup
 argument_list|()

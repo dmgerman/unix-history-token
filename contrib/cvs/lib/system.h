@@ -2349,6 +2349,13 @@ name|FOPEN_BINARY_WRITE
 value|("wb")
 end_define
 
+begin_define
+define|#
+directive|define
+name|FOPEN_BINARY_READWRITE
+value|("r+b")
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -3798,7 +3798,7 @@ end_ifndef
 begin_if
 if|#
 directive|if
-name|HAVE_ST_BLKSIZE
+name|HAVE_STRUCT_STAT_ST_BLKSIZE
 end_if
 
 begin_define

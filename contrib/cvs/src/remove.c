@@ -323,7 +323,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|LOCK_NONE
 argument_list|,
 operator|(
 name|char
@@ -350,6 +350,11 @@ condition|)
 name|send_arg
 argument_list|(
 literal|"-l"
+argument_list|)
+expr_stmt|;
+name|send_arg
+argument_list|(
+literal|"--"
 argument_list|)
 expr_stmt|;
 comment|/* FIXME: Can't we set SEND_NO_CONTENTS here?  Needs investigation.  */
@@ -428,7 +433,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-literal|1
+name|LOCK_READ
 argument_list|,
 operator|(
 name|char

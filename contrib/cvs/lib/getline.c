@@ -132,7 +132,7 @@ name|FILE
 modifier|*
 name|stream
 decl_stmt|;
-name|char
+name|int
 name|terminator
 decl_stmt|;
 name|int

@@ -2665,20 +2665,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 	       because I'm not sure whether we want to call server_cleanup. 	       Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	       NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -3162,7 +3150,7 @@ operator|->
 name|directory
 argument_list|)
 decl_stmt|;
-comment|/* I think isabsolute (repos) should always be true, and that        any RELATIVE_REPOS stuff should only be in CVS/Repository        files, not the protocol (for compatibility), but I'm putting        in the isabsolute check just in case.  */
+comment|/* I think isabsolute (repos) should always be true, and that        any RELATIVE_REPOS stuff should only be in CVS/Repository        files, not the protocol (for compatibility), but I'm putting        in the isabsolute check just in case.              This is a good security precaution regardless. -DRP      */
 if|if
 condition|(
 operator|!
@@ -10966,12 +10954,6 @@ decl_stmt|;
 name|int
 name|numfds
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|SERVER_FLOWCONTROL
-name|int
-name|bufmemsize
-decl_stmt|;
 name|struct
 name|timeval
 modifier|*
@@ -10980,6 +10962,12 @@ decl_stmt|;
 name|struct
 name|timeval
 name|timeout
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SERVER_FLOWCONTROL
+name|int
+name|bufmemsize
 decl_stmt|;
 comment|/* 	     * See if we are swamping the remote client and filling our VM. 	     * Tell child to hold off if we do. 	     */
 name|bufmemsize
@@ -11926,6 +11914,10 @@ argument_list|(
 name|protocol_inbuf
 argument_list|)
 expr_stmt|;
+name|protocol_inbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|buf_shutdown
 argument_list|(
 name|stderrbuf
@@ -11936,6 +11928,10 @@ argument_list|(
 name|stderrbuf
 argument_list|)
 expr_stmt|;
+name|stderrbuf
+operator|=
+name|NULL
+expr_stmt|;
 name|buf_shutdown
 argument_list|(
 name|stdoutbuf
@@ -11945,6 +11941,10 @@ name|buf_free
 argument_list|(
 name|stdoutbuf
 argument_list|)
+expr_stmt|;
+name|stdoutbuf
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -13759,7 +13759,7 @@ decl_stmt|;
 block|{
 name|do_cvs_command
 argument_list|(
-literal|"watch_on"
+literal|"watch"
 argument_list|,
 name|watch_on
 argument_list|)
@@ -13795,7 +13795,7 @@ decl_stmt|;
 block|{
 name|do_cvs_command
 argument_list|(
-literal|"watch_off"
+literal|"watch"
 argument_list|,
 name|watch_off
 argument_list|)
@@ -13831,7 +13831,7 @@ decl_stmt|;
 block|{
 name|do_cvs_command
 argument_list|(
-literal|"watch_add"
+literal|"watch"
 argument_list|,
 name|watch_add
 argument_list|)
@@ -13867,7 +13867,7 @@ decl_stmt|;
 block|{
 name|do_cvs_command
 argument_list|(
-literal|"watch_remove"
+literal|"watch"
 argument_list|,
 name|watch_remove
 argument_list|)
@@ -18607,7 +18607,6 @@ name|status
 operator|!=
 literal|0
 condition|)
-block|{
 name|error
 argument_list|(
 literal|0
@@ -18617,7 +18616,15 @@ argument_list|,
 literal|"shutting down buffer from client"
 argument_list|)
 expr_stmt|;
-block|}
+name|buf_free
+argument_list|(
+name|buf_from_net
+argument_list|)
+expr_stmt|;
+name|buf_from_net
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -18648,6 +18655,19 @@ name|buf_shutdown
 argument_list|(
 name|buf_to_net
 argument_list|)
+expr_stmt|;
+name|buf_free
+argument_list|(
+name|buf_to_net
+argument_list|)
+expr_stmt|;
+name|buf_to_net
+operator|=
+name|NULL
+expr_stmt|;
+name|error_use_protocol
+operator|=
+literal|0
 expr_stmt|;
 block|}
 return|return;
@@ -18951,6 +18971,19 @@ argument_list|(
 name|buf_to_net
 argument_list|)
 expr_stmt|;
+name|buf_free
+argument_list|(
+name|buf_to_net
+argument_list|)
+expr_stmt|;
+name|buf_to_net
+operator|=
+name|NULL
+expr_stmt|;
+name|error_use_protocol
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -18980,6 +19013,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|error_prog_name
+decl_stmt|;
+comment|/* Used in error messages */
 if|if
 condition|(
 name|argc
@@ -19128,20 +19166,8 @@ argument_list|(
 literal|"E Fatal server error, aborting.\n\ error ENOMEM Virtual memory exhausted.\n"
 argument_list|)
 expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 		   because I'm not sure whether we want to call server_cleanup. 		   Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket 		   subsystems on NT and OS2 or dealing with windows 		   and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 name|strcpy
@@ -19402,96 +19428,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|SIGABRT
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGABRT
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGHUP
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGINT
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGINT
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGQUIT
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGQUIT
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGPIPE
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGPIPE
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|SIGTERM
-operator|(
-name|void
-operator|)
-name|SIG_register
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|server_cleanup
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Now initialize our argument vector (for arguments from the client).  */
 comment|/* Small for testing.  */
 name|argument_vector_size
@@ -19505,7 +19441,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|argument_vector_size
 operator|*
@@ -19516,46 +19452,38 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|argument_vector
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* 	 * Strictly speaking, we're not supposed to output anything 	 * now.  But we're about to exit(), give it a try. 	 */
-name|printf
-argument_list|(
-literal|"E Fatal server error, aborting.\n\ error ENOMEM Virtual memory exhausted.\n"
-argument_list|)
-expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 	   because I'm not sure whether we want to call server_cleanup. 	   Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	   NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
-expr_stmt|;
-block|}
 name|argument_count
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This gets printed if the client supports an option which the        server doesn't, causing the server to print a usage message.        FIXME: probably should be using program_name here.        FIXME: just a nit, I suppose, but the usage message the server        prints isn't literally true--it suggests "cvs server" followed        by options which are for a particular command.  Might be nice to        say something like "client apparently supports an option not supported        by this server" or something like that instead of usage message.  */
+comment|/* This gets printed if the client supports an option which the        server doesn't, causing the server to print a usage message.        FIXME: just a nit, I suppose, but the usage message the server        prints isn't literally true--it suggests "cvs server" followed        by options which are for a particular command.  Might be nice to        say something like "client apparently supports an option not supported        by this server" or something like that instead of usage message.  */
+name|error_prog_name
+operator|=
+name|xmalloc
+argument_list|(
+name|strlen
+argument_list|(
+name|program_name
+argument_list|)
+operator|+
+literal|8
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|error_prog_name
+argument_list|,
+literal|"%s server"
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
 name|argument_vector
 index|[
 literal|0
 index|]
 operator|=
-literal|"cvs server"
+name|error_prog_name
 expr_stmt|;
 while|while
 condition|(
@@ -19796,6 +19724,11 @@ name|orig_cmd
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|error_prog_name
+argument_list|)
+expr_stmt|;
 name|server_cleanup
 argument_list|(
 literal|0
@@ -20283,7 +20216,7 @@ decl_stmt|;
 name|int
 name|namelen
 decl_stmt|;
-comment|/* We don't use current_parsed_root->directory because it hasn't been set yet      * -- our `repository' argument came from the authentication      * protocol, not the regular CVS protocol.      */
+comment|/* We don't use current_parsed_root->directory because it hasn't been      * set yet -- our `repository' argument came from the authentication      * protocol, not the regular CVS protocol.      */
 name|filename
 operator|=
 name|xmalloc
@@ -20806,7 +20739,6 @@ name|system_auth
 condition|)
 block|{
 comment|/* No cvs password found, so try /etc/passwd. */
-specifier|const
 name|char
 modifier|*
 name|found_passwd
@@ -20888,22 +20820,18 @@ argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 	       because I'm not sure whether we want to call server_cleanup. 	       Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	       NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-name|exit
+block|}
+comment|/* Allow for dain bramaged HPUX passwd aging 	 *  - Basically, HPUX adds a comma and some data 	 *    about whether the passwd has expired or not 	 *    on the end of the passwd field. 	 *  - This code replaces the ',' with '\0'. 	 * 	 * FIXME - our workaround is brain damaged too.  I'm 	 * guessing that HPUX WANTED other systems to think the 	 * password was wrong so logins would fail if the 	 * system didn't handle expired passwds and the passwd 	 * might be expired.  I think the way to go here 	 * is with PAM. 	 */
+name|strtok
 argument_list|(
-name|EXIT_FAILURE
+name|found_passwd
+argument_list|,
+literal|","
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|*
@@ -20990,20 +20918,8 @@ argument_list|,
 name|username
 argument_list|)
 expr_stmt|;
-comment|/* I'm doing this manually rather than via error_exit () 	   because I'm not sure whether we want to call server_cleanup. 	   Needs more investigation....  */
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	   NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -21808,19 +21724,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	   NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 ifdef|#
@@ -21923,19 +21828,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	   NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 name|memcpy
@@ -21980,19 +21874,8 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SYSTEM_CLEANUP
-comment|/* Hook for OS-specific behavior, for example socket subsystems on 	   NT and OS2 or dealing with windows and arguments on Mac.  */
-name|SYSTEM_CLEANUP
+name|error_exit
 argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|exit
-argument_list|(
-name|EXIT_FAILURE
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* Switch to run as this user. */
@@ -23666,6 +23549,10 @@ name|SERVER_SUPPORT
 if|if
 condition|(
 name|error_use_protocol
+operator|&&
+name|buf_to_net
+operator|!=
+name|NULL
 condition|)
 block|{
 name|buf_output
@@ -23691,6 +23578,10 @@ elseif|else
 if|if
 condition|(
 name|server_active
+operator|&&
+name|protocol
+operator|!=
+name|NULL
 condition|)
 block|{
 name|buf_output

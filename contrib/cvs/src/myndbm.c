@@ -91,6 +91,16 @@ name|CVS_FOPEN
 argument_list|(
 name|file
 argument_list|,
+operator|(
+name|flags
+operator|&
+name|O_ACCMODE
+operator|)
+operator|!=
+name|O_RDONLY
+condition|?
+name|FOPEN_BINARY_READWRITE
+else|:
 name|FOPEN_BINARY_READ
 argument_list|)
 expr_stmt|;

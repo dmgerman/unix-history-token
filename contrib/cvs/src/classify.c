@@ -355,7 +355,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 	     * There is no user file, but there should be one; remove the 	     * entry 	     */
+if|if
+condition|(
+name|pipeout
+condition|)
+block|{
+name|ret
+operator|=
+name|T_CHECKOUT
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * There is no user file, but there should be one; remove the 		 * entry 		 */
 if|if
 condition|(
 operator|!
@@ -378,6 +390,7 @@ name|ret
 operator|=
 name|T_REMOVE_ENTRY
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -408,6 +421,18 @@ else|else
 block|{
 if|if
 condition|(
+name|pipeout
+condition|)
+block|{
+name|ret
+operator|=
+name|T_CHECKOUT
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
 name|vers
 operator|->
 name|srcfile
@@ -425,7 +450,7 @@ operator|&
 name|VALID
 condition|)
 block|{
-comment|/* This file has been added on some branch other than 		   the one we are looking at.  In the branch we are 		   looking at, the file was already valid.  */
+comment|/* This file has been added on some branch other than 		       the one we are looking at.  In the branch we are 		       looking at, the file was already valid.  */
 if|if
 condition|(
 operator|!
@@ -447,7 +472,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * There is an RCS file, so someone else must have checked 		 * one in behind our back; conflict 		 */
+comment|/* 		     * There is an RCS file, so someone else must have checked 		     * one in behind our back; conflict 		     */
 if|if
 condition|(
 operator|!
@@ -471,6 +496,7 @@ name|ret
 operator|=
 name|T_CONFLICT
 expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
