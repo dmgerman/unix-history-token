@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	4.9 (Berkeley) %G%"
+literal|"@(#)input.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,7 +483,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/* update timer for interface on which the packet arrived */
+comment|/* 		 * Update timer for interface on which the packet arrived. 		 * If from other end of a point-to-point link that isn't 		 * in the routing tables, (re-)add the route. 		 */
 if|if
 condition|(
 operator|(
@@ -508,6 +508,21 @@ operator|->
 name|rt_timer
 operator|=
 literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ifp
+operator|=
+name|if_ifwithdstaddr
+argument_list|(
+name|from
+argument_list|)
+condition|)
+name|addrouteforif
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|size
 operator|-=
