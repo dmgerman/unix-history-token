@@ -1617,7 +1617,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|atapi_start
+name|atapi_strt
 parameter_list|(
 name|int
 name|ctrlr

@@ -244,7 +244,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|atapi_start_cmd
+name|atapi_strt_cmd
 parameter_list|(
 name|struct
 name|atapi
@@ -2380,7 +2380,7 @@ end_comment
 
 begin_function
 name|int
-name|atapi_start
+name|atapi_strt
 parameter_list|(
 name|int
 name|ctrlr
@@ -2421,7 +2421,7 @@ return|;
 comment|/* Start packet command. */
 if|if
 condition|(
-name|atapi_start_cmd
+name|atapi_strt_cmd
 argument_list|(
 name|ata
 argument_list|,
@@ -2496,7 +2496,7 @@ end_comment
 
 begin_function
 name|int
-name|atapi_start_cmd
+name|atapi_strt_cmd
 parameter_list|(
 name|struct
 name|atapi
@@ -5230,7 +5230,7 @@ expr_stmt|;
 comment|/* Start packet command, wait for DRQ. */
 if|if
 condition|(
-name|atapi_start_cmd
+name|atapi_strt_cmd
 argument_list|(
 name|ata
 argument_list|,

@@ -3433,9 +3433,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|atapi_start
+name|atapi_strt
 operator|&&
-name|atapi_start
+name|atapi_strt
 argument_list|(
 name|ctrlr_atapi
 argument_list|)
