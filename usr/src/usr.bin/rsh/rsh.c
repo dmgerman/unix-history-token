@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsh.c	5.3 (Berkeley) %G%"
+literal|"@(#)rsh.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,6 +897,17 @@ name|SIGTERM
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -904,6 +915,17 @@ argument_list|,
 name|sendsig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -911,6 +933,17 @@ argument_list|,
 name|sendsig
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_IGN
+argument_list|)
+operator|!=
+name|SIG_IGN
+condition|)
 name|signal
 argument_list|(
 name|SIGTERM
