@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	5.12 (Berkeley) %G%"
+literal|"@(#)commands.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11686,8 +11686,14 @@ name|htons
 argument_list|)
 name|u_short
 name|htons
-parameter_list|()
-function_decl|;
+name|P
+argument_list|(
+operator|(
+name|unsigned
+name|short
+operator|)
+argument_list|)
+decl_stmt|;
 endif|#
 directive|endif
 comment|/* !defined(htons) */
