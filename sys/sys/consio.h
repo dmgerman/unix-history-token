@@ -1427,6 +1427,27 @@ end_define
 begin_define
 define|#
 directive|define
+name|SW_PC98_EGC640x400
+value|_IO('S', M_PC98_EGC640x400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_PC98_PEGC640x400
+value|_IO('S', M_PC98_PEGC640x400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SW_PC98_PEGC640x480
+value|_IO('S', M_PC98_PEGC640x480)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SW_VGA_C90x25
 value|_IO('S', M_VGA_C90x25)
 end_define

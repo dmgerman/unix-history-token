@@ -2968,6 +2968,21 @@ case|:
 case|case
 name|SW_VGA_MODEX
 case|:
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* PC98 GRAPHICS MODES */
+case|case
+name|SW_PC98_EGC640x400
+case|:
+case|case
+name|SW_PC98_PEGC640x400
+case|:
+case|case
+name|SW_PC98_PEGC640x480
+case|:
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
