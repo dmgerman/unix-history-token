@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fsck.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -151,7 +151,7 @@ modifier|*
 name|b_prev
 decl_stmt|;
 comment|/* free list queue */
-name|daddr_t
+name|ufs_daddr_t
 name|b_bno
 decl_stmt|;
 name|int
@@ -170,7 +170,7 @@ modifier|*
 name|b_buf
 decl_stmt|;
 comment|/* buffer space */
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|b_indir
 decl_stmt|;
@@ -305,7 +305,7 @@ parameter_list|(
 name|bp
 parameter_list|)
 define|\
-value|(bp)->b_dirty = 0; \ 	(bp)->b_bno = (daddr_t)-1; \ 	(bp)->b_flags = 0;
+value|(bp)->b_dirty = 0; \ 	(bp)->b_bno = (ufs_daddr_t)-1; \ 	(bp)->b_flags = 0;
 end_define
 
 begin_define
@@ -378,7 +378,7 @@ name|ino_t
 name|id_parent
 decl_stmt|;
 comment|/* for DATA nodes, their parent */
-name|daddr_t
+name|ufs_daddr_t
 name|id_blkno
 decl_stmt|;
 comment|/* current block number being examined */
@@ -448,7 +448,7 @@ name|dups
 modifier|*
 name|next
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dup
 decl_stmt|;
 block|}
@@ -545,7 +545,7 @@ name|u_int
 name|i_numblks
 decl_stmt|;
 comment|/* size of block array in bytes */
-name|daddr_t
+name|ufs_daddr_t
 name|i_blks
 index|[
 literal|1
@@ -745,7 +745,7 @@ comment|/* file descriptor for writing file system */
 end_comment
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|maxfsblock
 decl_stmt|;
 end_decl_stmt
@@ -850,7 +850,7 @@ comment|/* lost& found directory creation mode */
 end_comment
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|n_blks
 decl_stmt|;
 end_decl_stmt
@@ -860,7 +860,7 @@ comment|/* number of blocks in use */
 end_comment
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|n_files
 decl_stmt|;
 end_decl_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.6 (Berkeley) %G%"
+literal|"@(#)setup.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1688,7 +1688,7 @@ end_expr_stmt
 
 begin_block
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|super
 init|=
 name|bflag

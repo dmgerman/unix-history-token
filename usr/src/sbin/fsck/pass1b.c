@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1b.c	8.1 (Berkeley) %G%"
+literal|"@(#)pass1b.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ name|res
 init|=
 name|KEEPON
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 init|=
 name|idesc

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) %G%"
+literal|"@(#)main.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -662,7 +662,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|n_ffree
 decl_stmt|,
 name|n_bfree

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	8.5 (Berkeley) %G%"
+literal|"@(#)inode.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,8 +117,7 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|ap
 decl_stmt|;
@@ -500,17 +499,14 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|ap
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 modifier|*
 name|aplim
 decl_stmt|;
-specifier|register
 name|struct
 name|bufarea
 modifier|*
@@ -913,7 +909,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 end_decl_stmt
@@ -1119,7 +1115,7 @@ name|ino_t
 name|inumber
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|iblk
 decl_stmt|;
 if|if
@@ -1286,7 +1282,7 @@ block|{
 name|long
 name|size
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dblk
 decl_stmt|;
 specifier|static
@@ -1659,7 +1655,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1745,7 +1741,7 @@ name|blks
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -2465,8 +2461,6 @@ operator|&
 name|dp
 operator|->
 name|di_mtime
-operator|.
-name|ts_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2514,7 +2508,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 end_decl_stmt
@@ -2779,8 +2773,6 @@ operator|&
 name|dp
 operator|->
 name|di_atime
-operator|.
-name|ts_sec
 argument_list|)
 expr_stmt|;
 name|dp

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.5 (Berkeley) %G%"
+literal|"@(#)dir.c	8.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3103,7 +3103,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|lastbn
 decl_stmt|,
 name|newblk
@@ -4059,7 +4059,7 @@ name|blkno
 parameter_list|,
 name|size
 parameter_list|)
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 name|long

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	8.2 (Berkeley) %G%"
+literal|"@(#)pass1.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,14 +78,14 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|badblk
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|daddr_t
+name|ufs_daddr_t
 name|dupblk
 decl_stmt|;
 end_decl_stmt
@@ -407,7 +407,7 @@ name|NDADDR
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 operator|||
@@ -433,7 +433,7 @@ name|NIADDR
 operator|*
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 operator|||
@@ -784,7 +784,7 @@ name|di_size
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|daddr_t
+name|ufs_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1405,7 +1405,7 @@ name|anyout
 decl_stmt|,
 name|nfrags
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 init|=
 name|idesc

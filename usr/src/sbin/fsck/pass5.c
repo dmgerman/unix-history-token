@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	8.6 (Berkeley) %G%"
+literal|"@(#)pass5.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,6 @@ name|mapsize
 decl_stmt|,
 name|savednrpos
 decl_stmt|;
-specifier|register
 name|struct
 name|fs
 modifier|*
@@ -95,7 +94,6 @@ init|=
 operator|&
 name|sblock
 decl_stmt|;
-specifier|register
 name|struct
 name|cg
 modifier|*
@@ -104,16 +102,14 @@ init|=
 operator|&
 name|cgrp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|dbase
 decl_stmt|,
 name|dmax
 decl_stmt|;
-specifier|register
-name|daddr_t
+name|ufs_daddr_t
 name|d
 decl_stmt|;
-specifier|register
 name|long
 name|i
 decl_stmt|,

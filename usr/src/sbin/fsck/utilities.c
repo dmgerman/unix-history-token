@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	8.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,7 +607,7 @@ name|blkno
 parameter_list|,
 name|size
 parameter_list|)
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 name|long
@@ -794,14 +794,14 @@ name|bufarea
 modifier|*
 name|bp
 decl_stmt|;
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 name|long
 name|size
 decl_stmt|;
 block|{
-name|daddr_t
+name|ufs_daddr_t
 name|dblk
 decl_stmt|;
 name|dblk
@@ -1082,7 +1082,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 end_decl_stmt
@@ -1385,7 +1385,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 end_decl_stmt
@@ -1650,7 +1650,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blk
 decl_stmt|;
 end_decl_stmt
@@ -2028,7 +2028,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|daddr_t
+name|ufs_daddr_t
 name|blkno
 decl_stmt|;
 end_decl_stmt
