@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)position.c	5.5 (Berkeley) %G%"
+literal|"@(#)position.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -368,6 +368,10 @@ literal|25
 expr_stmt|;
 name|table
 operator|=
+operator|(
+name|off_t
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|tablesize
@@ -392,6 +396,10 @@ name|sc_height
 expr_stmt|;
 name|table
 operator|=
+operator|(
+name|off_t
+operator|*
+operator|)
 name|realloc
 argument_list|(
 name|table
