@@ -1558,6 +1558,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|g_topology_assert_not
+parameter_list|()
+define|\
+value|do {							\ 		g_sanity(NULL);					\ 		sx_assert(&topology_lock, SX_UNLOCKED);		\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DECLARE_GEOM_CLASS
 parameter_list|(
 name|class
