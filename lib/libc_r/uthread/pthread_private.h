@@ -88,6 +88,12 @@ directive|include
 file|<sched.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<spinlock.h>
+end_include
+
 begin_comment
 comment|/*  * Kernel fatal error handler macro.  */
 end_comment
@@ -223,8 +229,8 @@ name|long
 name|m_flags
 decl_stmt|;
 comment|/* 	 * Lock for accesses to this structure. 	 */
-name|long
-name|access_lock
+name|spinlock_t
+name|lock
 decl_stmt|;
 block|}
 struct|;
@@ -317,8 +323,8 @@ name|long
 name|c_flags
 decl_stmt|;
 comment|/* 	 * Lock for accesses to this structure. 	 */
-name|long
-name|access_lock
+name|spinlock_t
+name|lock
 decl_stmt|;
 block|}
 struct|;
@@ -535,13 +541,16 @@ begin_struct
 struct|struct
 name|pthread_key
 block|{
-specifier|volatile
-name|long
-name|access_lock
+name|spinlock_t
+name|lock
 decl_stmt|;
 specifier|volatile
 name|int
 name|allocated
+decl_stmt|;
+specifier|volatile
+name|int
+name|count
 decl_stmt|;
 name|void
 function_decl|(
@@ -633,8 +642,8 @@ struct|struct
 name|fd_table_entry
 block|{
 comment|/* 	 * Lock for accesses to this file descriptor table 	 * entry. This is passed to _spinlock() to provide atomic 	 * access to this structure. It does *not* represent the 	 * state of the lock on the file descriptor. 	 */
-name|long
-name|access_lock
+name|spinlock_t
+name|lock
 decl_stmt|;
 name|struct
 name|pthread_queue
@@ -778,8 +787,8 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
-name|long
-name|access_lock
+name|spinlock_t
+name|lock
 decl_stmt|;
 comment|/* 	 * Pointer to the next thread in the thread linked list. 	 */
 name|struct
@@ -935,6 +944,10 @@ comment|/* Miscellaneous data. */
 name|char
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|PTHREAD_EXITING
+value|0x0100
 name|char
 name|pthread_priority
 decl_stmt|;
@@ -1525,6 +1538,74 @@ directive|undef
 name|SCLASS
 end_undef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LOCK_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_FD_LOCK
+parameter_list|(
+name|_fd
+parameter_list|,
+name|_type
+parameter_list|,
+name|_ts
+parameter_list|)
+value|_thread_fd_lock_debug(_fd, _type, \ 						_ts, __FILE__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FD_UNLOCK
+parameter_list|(
+name|_fd
+parameter_list|,
+name|_type
+parameter_list|)
+value|_thread_fd_unlock_debug(_fd, _type, \ 						__FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_FD_LOCK
+parameter_list|(
+name|_fd
+parameter_list|,
+name|_type
+parameter_list|,
+name|_ts
+parameter_list|)
+value|_thread_fd_lock(_fd, _type, _ts)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_FD_UNLOCK
+parameter_list|(
+name|_fd
+parameter_list|,
+name|_type
+parameter_list|)
+value|_thread_fd_unlock(_fd, _type)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Function prototype definitions.  */
 end_comment
@@ -1621,6 +1702,21 @@ end_function_decl
 begin_function_decl
 name|int
 name|_thread_fd_lock
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_thread_fd_lock_debug
 parameter_list|(
 name|int
 parameter_list|,
@@ -1734,6 +1830,22 @@ name|void
 name|_thread_fd_unlock
 parameter_list|(
 name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_fd_unlock_debug
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
