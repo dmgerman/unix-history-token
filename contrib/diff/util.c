@@ -835,7 +835,11 @@ literal|"-h"
 argument_list|,
 name|name
 argument_list|,
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 else|#
@@ -852,7 +856,11 @@ literal|"-h"
 argument_list|,
 name|name
 argument_list|,
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 endif|#
