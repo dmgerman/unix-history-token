@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -7440,6 +7440,22 @@ name|EXDEV
 operator|)
 return|;
 block|}
+comment|/* 	 * Push all writes to the server, so that the attribute cache 	 * doesn't get "out of sync" with the server. 	 * XXX There should be a better way! 	 */
+name|VOP_FSYNC
+argument_list|(
+name|tdvp
+argument_list|,
+name|cnp
+operator|->
+name|cn_cred
+argument_list|,
+name|MNT_WAIT
+argument_list|,
+name|cnp
+operator|->
+name|cn_proc
+argument_list|)
+expr_stmt|;
 name|nfsstats
 operator|.
 name|rpccnt
