@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.11 1998/10/14 08:31:27 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.12 1998/11/06 02:13:14 peter Exp $ */
 end_comment
 
 begin_comment
@@ -4763,7 +4763,7 @@ name|vtobus
 parameter_list|(
 name|va
 parameter_list|)
-value|(vtophys(va)  | (1*1024*1024*1024))
+value|alpha_XXX_dmamap((vm_offset_t)va)
 end_define
 
 begin_else
