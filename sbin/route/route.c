@@ -753,7 +753,7 @@ argument_list|()
 expr_stmt|;
 name|uid
 operator|=
-name|getuid
+name|geteuid
 argument_list|()
 expr_stmt|;
 if|if
