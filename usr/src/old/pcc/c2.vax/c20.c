@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c	4.6 (Berkeley) %G%"
+literal|"@(#)c20.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,13 +346,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|setbuf
-argument_list|(
-name|stdin
-argument_list|,
-name|_sibuf
-argument_list|)
-expr_stmt|;
 operator|++
 name|infound
 expr_stmt|;
@@ -389,13 +382,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|setbuf
-argument_list|(
-name|stdout
-argument_list|,
-name|_sobuf
-argument_list|)
-expr_stmt|;
 name|argc
 operator|--
 expr_stmt|;
@@ -403,6 +389,20 @@ name|argv
 operator|++
 expr_stmt|;
 block|}
+name|setbuf
+argument_list|(
+name|stdin
+argument_list|,
+name|_sibuf
+argument_list|)
+expr_stmt|;
+name|setbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|_sobuf
+argument_list|)
+expr_stmt|;
 name|lasta
 operator|=
 name|lastr
