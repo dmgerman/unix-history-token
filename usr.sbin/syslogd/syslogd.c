@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslogd.c,v 1.45 1998/12/29 20:36:22 cwt Exp $"
+literal|"$Id: syslogd.c,v 1.46 1998/12/29 23:14:50 cwt Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,6 +960,9 @@ end_comment
 begin_decl_stmt
 name|int
 name|finet
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -2034,6 +2037,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|SecureMode
+operator|>
+literal|1
+condition|)
 name|finet
 operator|=
 name|socket
