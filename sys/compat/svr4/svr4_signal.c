@@ -621,14 +621,14 @@ name|sig_t
 operator|)
 name|ssa
 operator|->
-name|sa_handler
+name|ssa_handler
 expr_stmt|;
 name|svr4_to_bsd_sigset
 argument_list|(
 operator|&
 name|ssa
 operator|->
-name|sa_mask
+name|ssa_mask
 argument_list|,
 operator|&
 name|bsa
@@ -647,7 +647,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_ONSTACK
 operator|)
@@ -665,7 +665,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_RESETHAND
 operator|)
@@ -683,7 +683,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_RESTART
 operator|)
@@ -701,7 +701,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_SIGINFO
 operator|)
@@ -720,7 +720,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_NOCLDSTOP
 operator|)
@@ -738,7 +738,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_NODEFER
 operator|)
@@ -756,7 +756,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 name|SVR4_SA_NOCLDWAIT
 operator|)
@@ -774,7 +774,7 @@ condition|(
 operator|(
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|&
 operator|~
 name|SVR4_SA_ALLBITS
@@ -814,7 +814,7 @@ decl_stmt|;
 block|{
 name|ssa
 operator|->
-name|sa_handler
+name|ssa_handler
 operator|=
 operator|(
 name|svr4_sig_t
@@ -833,12 +833,12 @@ argument_list|,
 operator|&
 name|ssa
 operator|->
-name|sa_mask
+name|ssa_mask
 argument_list|)
 expr_stmt|;
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator|=
 literal|0
 expr_stmt|;
@@ -856,7 +856,7 @@ literal|0
 condition|)
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator||=
 name|SVR4_SA_ONSTACK
 expr_stmt|;
@@ -874,7 +874,7 @@ literal|0
 condition|)
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator||=
 name|SVR4_SA_RESETHAND
 expr_stmt|;
@@ -892,7 +892,7 @@ literal|0
 condition|)
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator||=
 name|SVR4_SA_RESTART
 expr_stmt|;
@@ -910,7 +910,7 @@ literal|0
 condition|)
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator||=
 name|SVR4_SA_NODEFER
 expr_stmt|;
@@ -928,7 +928,7 @@ literal|0
 condition|)
 name|ssa
 operator|->
-name|sa_flags
+name|ssa_flags
 operator||=
 name|SVR4_SA_NOCLDSTOP
 expr_stmt|;

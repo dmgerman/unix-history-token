@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.14 1998/12/21 19:21:36 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_signal.c,v 1.15 1999/05/06 18:44:26 peter Exp $  */
 end_comment
 
 begin_include
@@ -232,7 +232,7 @@ name|linux_to_bsd_sigset
 argument_list|(
 name|lsa
 operator|->
-name|sa_mask
+name|lsa_mask
 argument_list|)
 expr_stmt|;
 name|bsa
@@ -241,7 +241,7 @@ name|sa_handler
 operator|=
 name|lsa
 operator|->
-name|sa_handler
+name|lsa_handler
 expr_stmt|;
 name|bsa
 operator|->
@@ -253,7 +253,7 @@ if|if
 condition|(
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|&
 name|LINUX_SA_NOCLDSTOP
 condition|)
@@ -267,7 +267,7 @@ if|if
 condition|(
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|&
 name|LINUX_SA_ONSTACK
 condition|)
@@ -281,7 +281,7 @@ if|if
 condition|(
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|&
 name|LINUX_SA_RESTART
 condition|)
@@ -295,7 +295,7 @@ if|if
 condition|(
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|&
 name|LINUX_SA_ONESHOT
 condition|)
@@ -309,7 +309,7 @@ if|if
 condition|(
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|&
 name|LINUX_SA_NOMASK
 condition|)
@@ -339,7 +339,7 @@ parameter_list|)
 block|{
 name|lsa
 operator|->
-name|sa_handler
+name|lsa_handler
 operator|=
 name|bsa
 operator|->
@@ -347,14 +347,14 @@ name|sa_handler
 expr_stmt|;
 name|lsa
 operator|->
-name|sa_restorer
+name|lsa_restorer
 operator|=
 name|NULL
 expr_stmt|;
 comment|/* unsupported */
 name|lsa
 operator|->
-name|sa_mask
+name|lsa_mask
 operator|=
 name|bsd_to_linux_sigset
 argument_list|(
@@ -365,7 +365,7 @@ argument_list|)
 expr_stmt|;
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator|=
 literal|0
 expr_stmt|;
@@ -379,7 +379,7 @@ name|SA_NOCLDSTOP
 condition|)
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator||=
 name|LINUX_SA_NOCLDSTOP
 expr_stmt|;
@@ -393,7 +393,7 @@ name|SA_ONSTACK
 condition|)
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator||=
 name|LINUX_SA_ONSTACK
 expr_stmt|;
@@ -407,7 +407,7 @@ name|SA_RESTART
 condition|)
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator||=
 name|LINUX_SA_RESTART
 expr_stmt|;
@@ -421,7 +421,7 @@ name|SA_RESETHAND
 condition|)
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator||=
 name|LINUX_SA_ONESHOT
 expr_stmt|;
@@ -435,7 +435,7 @@ name|SA_NODEFER
 condition|)
 name|lsa
 operator|->
-name|sa_flags
+name|lsa_flags
 operator||=
 name|LINUX_SA_NOMASK
 expr_stmt|;

@@ -329,13 +329,13 @@ struct|struct
 name|ibcs2_sigaction
 block|{
 name|ibcs2_sig_t
-name|sa_handler
+name|isa_handler
 decl_stmt|;
 name|ibcs2_sigset_t
-name|sa_mask
+name|isa_mask
 decl_stmt|;
 name|int
-name|sa_flags
+name|isa_flags
 decl_stmt|;
 block|}
 struct|;
