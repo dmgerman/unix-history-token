@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.3 (Berkeley) 87/05/02"
+literal|"@(#)gethead.c	5.4 (Berkeley) 87/09/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,7 +139,7 @@ block|,
 block|{
 name|NO
 block|,
-name|NO
+name|YES
 block|,
 name|NULL
 block|,
@@ -152,7 +152,7 @@ block|,
 block|{
 name|NO
 block|,
-name|NO
+name|YES
 block|,
 name|NULL
 block|,
@@ -178,13 +178,26 @@ block|,
 block|{
 name|NO
 block|,
-name|NO
+name|YES
 block|,
 name|NULL
 block|,
 name|ENT
 argument_list|(
 literal|"To:"
+argument_list|)
+block|, }
+block|,
+block|{
+name|NO
+block|,
+name|NO
+block|,
+name|NULL
+block|,
+name|ENT
+argument_list|(
+literal|"Apparently-To:"
 argument_list|)
 block|, }
 block|,

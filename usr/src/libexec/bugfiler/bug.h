@@ -1,13 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)bug.h	1.1 (Berkeley) 11/25/86  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)bug.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|BUGS_HOME
-value|"owner-bugs@ucbvax.BERKELEY.EDU"
+value|"owner-bugs@ucbvax.Berkeley.EDU"
 end_define
 
 begin_define
@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|MAIL_CMD
-value|"/usr/lib/sendmail -i -t -F \"Bugs Bunny\" -f owner-bugs@ucbvax.BERKELEY.EDU"
+value|"/usr/lib/sendmail -i -t -F \"Bugs Bunny\" -f owner-bugs"
 end_define
 
 begin_comment
@@ -345,6 +345,17 @@ end_define
 
 begin_comment
 comment|/* "To:" offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|APPAR_TO_TAG
+value|9
+end_define
+
+begin_comment
+comment|/* "Apparently-To:" offset */
 end_comment
 
 begin_comment

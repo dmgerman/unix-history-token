@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.3 (Berkeley) 87/04/11"
+literal|"@(#)redist.c	5.4 (Berkeley) 87/09/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,15 +232,6 @@ argument_list|,
 name|CHN
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|pf
-argument_list|,
-literal|"Reply-To: %s\n"
-argument_list|,
-name|BUGS_HOME
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|mailhead
@@ -270,6 +261,45 @@ argument_list|(
 literal|"Subject: Untitled Bug Report\n"
 argument_list|,
 name|pf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mailhead
+index|[
+name|TO_TAG
+index|]
+operator|.
+name|line
+operator|==
+literal|0
+operator|&&
+name|mailhead
+index|[
+name|APPAR_TO_TAG
+index|]
+operator|.
+name|line
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|pf
+argument_list|,
+literal|"To%s"
+argument_list|,
+name|index
+argument_list|(
+name|mailhead
+index|[
+name|APPAR_TO_TAG
+index|]
+operator|.
+name|line
+argument_list|,
+literal|':'
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fputs
