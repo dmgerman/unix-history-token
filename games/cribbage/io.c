@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)io.c	8.1 (Berkeley) 5/31/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)io.c	8.1 (Berkeley) 5/31/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -413,6 +426,8 @@ name|NULL
 condition|)
 name|addmsg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|mid
 argument_list|)
 expr_stmt|;
@@ -830,6 +845,8 @@ control|)
 block|{
 name|msg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
@@ -1566,6 +1583,8 @@ control|)
 block|{
 name|msg
 argument_list|(
+literal|"%s"
+argument_list|,
 name|prompt
 argument_list|)
 expr_stmt|;
