@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.2 1995/03/25 18:14:37 bde Exp $ */
+comment|/* $Id: scd.c,v 1.3 1995/04/12 20:48:02 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -1695,7 +1695,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"scd%d: strategy failure: blkno = %d, bcount = %d\n"
+literal|"scd%d: strategy failure: blkno = %ld, bcount = %ld\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -2141,7 +2141,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"scd%d: ioctl: cmd=0x%lx\n"
+literal|"scd%d: ioctl: cmd=0x%x\n"
 operator|,
 name|unit
 operator|,
@@ -2428,7 +2428,7 @@ return|;
 default|default:
 name|printf
 argument_list|(
-literal|"scd%d: unsupported ioctl (cmd=0x%lx)\n"
+literal|"scd%d: unsupported ioctl (cmd=0x%x)\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -6319,7 +6319,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"scd%d: firstsector = %d, lastsector = %d"
+literal|"scd%d: firstsector = %ld, lastsector = %ld"
 operator|,
 name|unit
 operator|,
