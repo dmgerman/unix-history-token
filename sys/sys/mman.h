@@ -503,6 +503,17 @@ begin_comment
 comment|/* revert to including pages in a core file */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MADV_PROTECT
+value|10
+end_define
+
+begin_comment
+comment|/* protect process from pageout kill */
+end_comment
+
 begin_comment
 comment|/*  * Return bits from mincore  */
 end_comment

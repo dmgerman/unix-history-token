@@ -4102,7 +4102,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 			 * if this is a system process, skip it 			 */
+comment|/* 			 * If this is a system or protected process, skip it. 			 */
 if|if
 condition|(
 operator|(
@@ -4119,6 +4119,14 @@ operator|->
 name|p_pid
 operator|==
 literal|1
+operator|)
+operator|||
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_PROTECTED
 operator|)
 operator|||
 operator|(

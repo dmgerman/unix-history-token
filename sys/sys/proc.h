@@ -2280,6 +2280,17 @@ begin_comment
 comment|/* Proc has continued from a stopped state. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|P_PROTECTED
+value|0x20000
+end_define
+
+begin_comment
+comment|/* Do not kill on memory overcommit. */
+end_comment
+
 begin_comment
 comment|/* flags that control how threads may be suspended for some reason */
 end_comment
