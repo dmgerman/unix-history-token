@@ -345,6 +345,12 @@ parameter_list|)
 value|__asm("frstor %0" : : "m" (*(addr)))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -364,6 +370,11 @@ name|addr
 parameter_list|)
 value|__asm __volatile("fxsave %0" : "=m" (*(addr)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -503,6 +514,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|fxsave
@@ -528,6 +545,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
@@ -2992,18 +3014,22 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 if|if
 condition|(
-operator|!
 name|cpu_fxsr
 condition|)
-name|fnsave
+name|fxsave
 argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
 else|else
-name|fxsave
+endif|#
+directive|endif
+name|fnsave
 argument_list|(
 name|addr
 argument_list|)
@@ -3024,18 +3050,22 @@ modifier|*
 name|addr
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
 if|if
 condition|(
-operator|!
 name|cpu_fxsr
 condition|)
-name|frstor
+name|fxrstor
 argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
 else|else
-name|fxrstor
+endif|#
+directive|endif
+name|frstor
 argument_list|(
 name|addr
 argument_list|)
