@@ -2746,7 +2746,7 @@ literal|0
 end_if
 
 begin_endif
-unit|long double	fmodl(long double, long double); long double	frexpl(long double	value, int *); long double	hypotl(long double, long double);
+unit|long double	fmodl(long double, long double); long double	frexpl(long double value, int *); long double	hypotl(long double, long double);
 endif|#
 directive|endif
 end_endif
