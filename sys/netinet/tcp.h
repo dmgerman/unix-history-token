@@ -15,6 +15,12 @@ directive|define
 name|_NETINET_TCP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_if
 if|#
 directive|if
