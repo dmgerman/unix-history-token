@@ -14566,6 +14566,7 @@ decl_stmt|;
 name|int
 name|new_argc
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -14661,6 +14662,7 @@ expr_stmt|;
 name|new_argv
 operator|=
 operator|(
+specifier|const
 name|char
 operator|*
 operator|*
