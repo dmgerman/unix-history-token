@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/* $Id: commands.c,v 1.10 1999/03/23 04:54:59 grog Exp $ */
+comment|/* $Id: commands.c,v 1.6 1999/03/23 03:40:07 grog Exp grog $ */
 end_comment
 
 begin_include
@@ -2721,6 +2721,127 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+name|int
+name|doit
+init|=
+literal|0
+decl_stmt|;
+comment|/* set to 1 if we pass our tests */
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|drive_object
+case|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't start a drive: %s\n"
+argument_list|,
+name|argv
+index|[
+name|index
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|sd_object
+case|:
+if|if
+condition|(
+name|sd
+operator|.
+name|state
+operator|==
+name|sd_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|plex_object
+case|:
+if|if
+condition|(
+name|plex
+operator|.
+name|state
+operator|==
+name|plex_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|plex
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|volume_object
+case|:
+if|if
+condition|(
+name|vol
+operator|.
+name|state
+operator|==
+name|volume_up
+condition|)
+comment|/* already up */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s is already up\n"
+argument_list|,
+name|vol
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+name|doit
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+default|default:
+block|}
+if|if
+condition|(
+name|doit
+condition|)
+block|{
 name|message
 operator|->
 name|index
@@ -2835,6 +2956,7 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
