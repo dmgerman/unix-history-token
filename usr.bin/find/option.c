@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: option.c,v 1.6 1997/11/28 15:48:08 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,14 @@ block|,
 name|O_ZERO
 block|}
 block|,
+comment|/*  * NetBSD doesn't provide a getvfsbyname(), so this option  * is not available if using a NetBSD kernel.  */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 block|{
 literal|"-fstype"
 block|,
@@ -258,6 +266,8 @@ block|,
 name|O_ARGV
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"-group"
 block|,
