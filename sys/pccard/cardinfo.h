@@ -454,6 +454,18 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Device flags */
+name|u_int
+name|manufacturer
+decl_stmt|;
+comment|/* Manufacturer ID */
+name|u_int
+name|product
+decl_stmt|;
+comment|/* Product ID */
+name|u_int
+name|prodext
+decl_stmt|;
+comment|/* Product ID (extended) */
 name|u_char
 name|misc
 index|[

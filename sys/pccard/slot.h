@@ -235,6 +235,18 @@ literal|128
 index|]
 decl_stmt|;
 comment|/* For any random info */
+name|u_int
+name|manufacturer
+decl_stmt|;
+comment|/* Manufacturer ID */
+name|u_int
+name|product
+decl_stmt|;
+comment|/* Product ID */
+name|u_int
+name|prodext
+decl_stmt|;
+comment|/* Product ID (extended) */
 name|struct
 name|slot
 modifier|*
