@@ -225,9 +225,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|u_char
-name|prio
 parameter_list|)
 function_decl|;
 end_function_decl

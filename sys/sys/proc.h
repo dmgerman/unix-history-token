@@ -330,6 +330,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|sleepqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|td_sched
 struct_decl|;
 end_struct_decl
@@ -454,6 +460,12 @@ argument_list|)
 name|td_selq
 expr_stmt|;
 comment|/* (p) List of selinfos. */
+name|struct
+name|sleepqueue
+modifier|*
+name|td_sleepqueue
+decl_stmt|;
+comment|/* (k) Associated sleep queue. */
 name|struct
 name|turnstile
 modifier|*
@@ -815,34 +827,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDF_CVWAITQ
-value|0x000080
-end_define
-
-begin_comment
-comment|/* Thread is on a cv_waitq (not slpq). */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TDF_TSNOBLOCK
 value|0x000100
 end_define
 
 begin_comment
 comment|/* Don't block on a turnstile due to race. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TDF_ONSLEEPQ
-value|0x000200
-end_define
-
-begin_comment
-comment|/* On the sleep queue. */
 end_comment
 
 begin_define
@@ -1353,26 +1343,6 @@ parameter_list|(
 name|td
 parameter_list|)
 value|(td)->td_state = TDS_CAN_RUN
-end_define
-
-begin_define
-define|#
-directive|define
-name|TD_SET_ON_SLEEPQ
-parameter_list|(
-name|td
-parameter_list|)
-value|do {(td)->td_flags |= TDF_ONSLEEPQ; } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TD_CLR_ON_SLEEPQ
-parameter_list|(
-name|td
-parameter_list|)
-value|do {			\ 		(td)->td_flags&= ~TDF_ONSLEEPQ;	\ 		(td)->td_wchan = NULL;			\ } while (0)
 end_define
 
 begin_comment

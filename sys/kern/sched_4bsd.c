@@ -2115,9 +2115,6 @@ name|struct
 name|thread
 modifier|*
 name|td
-parameter_list|,
-name|u_char
-name|prio
 parameter_list|)
 block|{
 name|mtx_assert
@@ -2138,9 +2135,11 @@ literal|0
 expr_stmt|;
 name|td
 operator|->
-name|td_priority
+name|td_base_pri
 operator|=
-name|prio
+name|td
+operator|->
+name|td_priority
 expr_stmt|;
 block|}
 end_function

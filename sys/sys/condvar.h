@@ -57,17 +57,6 @@ begin_struct
 struct|struct
 name|cv
 block|{
-name|struct
-name|cv_waitq
-name|cv_waitq
-decl_stmt|;
-comment|/* Queue of condition waiters. */
-name|struct
-name|mtx
-modifier|*
-name|cv_mtx
-decl_stmt|;
-comment|/* 					 * Mutex passed in by cv_*wait*(), 					 * currently only used for INVARIANTS. 					 */
 specifier|const
 name|char
 modifier|*
@@ -220,40 +209,6 @@ parameter_list|(
 name|cvp
 parameter_list|)
 value|cv_broadcastpri(cvp, -1)
-end_define
-
-begin_function_decl
-name|void
-name|cv_waitq_remove
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cv_abort
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|cv_waitq_empty
-parameter_list|(
-name|cvp
-parameter_list|)
-value|(TAILQ_EMPTY(&(cvp)->cv_waitq))
 end_define
 
 begin_define
