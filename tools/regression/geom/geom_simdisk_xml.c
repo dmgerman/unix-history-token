@@ -1079,6 +1079,18 @@ literal|"diskimage"
 argument_list|)
 condition|)
 block|{ 	}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|name
+argument_list|,
+literal|"FreeBSD"
+argument_list|)
+condition|)
+block|{ 	}
 else|else
 block|{
 name|printf
