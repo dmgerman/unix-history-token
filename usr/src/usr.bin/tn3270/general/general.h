@@ -64,7 +64,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ClearStructure
+name|ClearElement
 parameter_list|(
 name|x
 parameter_list|)
