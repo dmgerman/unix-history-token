@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.10 (Berkeley) %G%"
+literal|"@(#)tail.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -146,6 +146,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -157,8 +158,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 name|struct
@@ -301,6 +302,21 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+if|if
+condition|(
+name|fflag
+operator|&&
+name|argc
+operator|>
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"-f option only appropriate for a single file"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If displaying in reverse, don't permit follow option, and convert 	 * style values. 	 */
 if|if
 condition|(
@@ -324,6 +340,7 @@ name|style
 operator|=
 name|RBYTES
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|style
@@ -400,6 +417,17 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|||
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+operator|&
+name|sb
+argument_list|)
 condition|)
 block|{
 name|ierr
@@ -464,13 +492,17 @@ operator|&
 name|sb
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|fp
-operator|=
-name|stdin
-expr_stmt|;
 name|fname
 operator|=
 literal|"stdin"
@@ -481,7 +513,7 @@ name|fstat
 argument_list|(
 name|fileno
 argument_list|(
-name|fp
+name|stdin
 argument_list|)
 argument_list|,
 operator|&
@@ -505,7 +537,7 @@ name|lseek
 argument_list|(
 name|fileno
 argument_list|(
-name|fp
+name|stdin
 argument_list|)
 argument_list|,
 literal|0L
@@ -537,7 +569,7 @@ name|rflag
 condition|)
 name|reverse
 argument_list|(
-name|fp
+name|stdin
 argument_list|,
 name|style
 argument_list|,
@@ -550,7 +582,7 @@ expr_stmt|;
 else|else
 name|forward
 argument_list|(
-name|fp
+name|stdin
 argument_list|,
 name|style
 argument_list|,
@@ -582,8 +614,8 @@ name|argv
 parameter_list|)
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|register
@@ -936,7 +968,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: tail [-f | -r] [-b # | -c # | -n #] [file]\n"
+literal|"usage: tail [-f | -r] [-b # | -c # | -n #] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
