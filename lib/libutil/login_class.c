@@ -480,6 +480,9 @@ name|char
 modifier|*
 name|def
 decl_stmt|;
+name|int
+name|overwrite
+decl_stmt|;
 block|}
 name|pathvars
 index|[]
@@ -491,6 +494,8 @@ block|,
 literal|"PATH"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -499,6 +504,8 @@ block|,
 literal|"CDPATH"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -507,6 +514,8 @@ block|,
 literal|"MANPATH"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -515,6 +524,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 struct|,
@@ -528,6 +539,8 @@ block|,
 literal|"LANG"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -536,6 +549,8 @@ block|,
 literal|"MM_CHARSET"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -544,6 +559,8 @@ block|,
 literal|"TZ"
 block|,
 name|NULL
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -552,6 +569,8 @@ block|,
 literal|"TERM"
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -560,6 +579,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 struct|;
@@ -1060,7 +1081,9 @@ name|var
 argument_list|,
 name|np
 argument_list|,
-literal|1
+name|vars
+operator|->
+name|overwrite
 argument_list|)
 expr_stmt|;
 name|free
