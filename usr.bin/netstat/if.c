@@ -2184,7 +2184,13 @@ name|AF_INET6
 case|:
 name|printf
 argument_list|(
-literal|"%23s %-19.19s(refs: %d)\n"
+literal|"%*s %-19.19s(refs: %d)\n"
+argument_list|,
+name|Wflag
+condition|?
+literal|27
+else|:
+literal|25
 argument_list|,
 literal|""
 argument_list|,
@@ -2262,7 +2268,13 @@ name|fmt
 condition|)
 name|printf
 argument_list|(
-literal|"%23s %s\n"
+literal|"%*s %s\n"
+argument_list|,
+name|Wflag
+condition|?
+literal|27
+else|:
+literal|25
 argument_list|,
 literal|""
 argument_list|,
