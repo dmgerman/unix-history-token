@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.17	82/06/20	*/
+comment|/*	raw_usrreq.c	4.18	82/07/24	*/
 end_comment
 
 begin_include
@@ -496,6 +496,7 @@ name|n
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|n
 operator|=
 name|m_copy
@@ -511,6 +512,9 @@ name|int
 operator|)
 name|M_COPYALL
 argument_list|)
+operator|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|nospace

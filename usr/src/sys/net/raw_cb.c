@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_cb.c	4.10	82/06/26	*/
+comment|/*	raw_cb.c	4.11	82/07/24	*/
 end_comment
 
 begin_include
@@ -530,7 +530,7 @@ name|rcb_socket
 operator|->
 name|so_state
 operator|&
-name|SS_USERGONE
+name|SS_NOFDREF
 condition|)
 name|raw_detach
 argument_list|(
