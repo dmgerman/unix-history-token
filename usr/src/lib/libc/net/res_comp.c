@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	4.1 (Berkeley) %G%"
+literal|"@(#)res_comp.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,7 +45,7 @@ file|<nameser.h>
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name format to full domain name.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to upper case.  * 'msg' is a pointer to the begining of the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_macro
@@ -103,7 +103,8 @@ decl_stmt|;
 name|int
 name|len
 init|=
-literal|0
+operator|-
+literal|1
 decl_stmt|;
 name|dn
 operator|=
@@ -148,12 +149,26 @@ name|dn
 operator|!=
 name|exp_dn
 condition|)
+block|{
+if|if
+condition|(
+name|dn
+operator|>=
+name|eom
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 operator|*
 name|dn
 operator|++
 operator|=
 literal|'.'
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dn
@@ -196,12 +211,44 @@ name|c
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|c
+operator|==
+literal|'.'
+condition|)
+block|{
+if|if
+condition|(
+name|dn
+operator|+
+name|n
+operator|+
+literal|1
+operator|>=
+name|eom
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+operator|*
+name|dn
+operator|++
+operator|=
+literal|'\\'
+expr_stmt|;
+block|}
 operator|*
 name|dn
 operator|++
 operator|=
 name|c
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|INDIR_MASK
@@ -209,7 +256,7 @@ case|:
 if|if
 condition|(
 name|len
-operator|==
+operator|<
 literal|0
 condition|)
 name|len
@@ -262,7 +309,7 @@ expr_stmt|;
 if|if
 condition|(
 name|len
-operator|==
+operator|<
 literal|0
 condition|)
 name|len
@@ -280,7 +327,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Compress domain name. Return the size of the compressed name or -1.  * Dnptrs is a list of pointers to previous compressed names. dnptrs[0]  * is a pointer to the beginning of the message. The list ends with NULL.  */
+comment|/*  * Compress domain name 'exp_dn' into 'comp_dn'.  * Return the size of the compressed name or -1.  * 'length' is the size of the array pointed to by 'comp_dn'.  * 'dnptrs' is a list of pointers to previous compressed names. dnptrs[0]  * is a pointer to the beginning of the message. The list ends with NULL.  * 'lastdnptr' is a pointer to the end of the arrary pointed to  * by 'dnptrs'. Side effect is to update the list of pointers for  * labels inserted into the message as we compress the name.  * If 'dnptr' is NULL, we don't try to compress names. If 'lastdnptr'  * is NULL, we don't update the list.  */
 end_comment
 
 begin_macro
@@ -558,6 +605,27 @@ break|break;
 block|}
 if|if
 condition|(
+name|c
+operator|==
+literal|'\\'
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|c
+operator|=
+operator|*
+name|dn
+operator|++
+operator|)
+operator|==
+literal|'\0'
+condition|)
+break|break;
+block|}
+if|if
+condition|(
 name|cp
 operator|>=
 name|eob
@@ -588,6 +656,7 @@ operator|!=
 literal|'\0'
 condition|)
 do|;
+comment|/* catch trailing '.'s but not '..' */
 if|if
 condition|(
 operator|(
@@ -599,6 +668,22 @@ name|sp
 operator|-
 literal|1
 operator|)
+operator|==
+literal|0
+operator|&&
+name|c
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|cp
+operator|--
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|l
 operator|<=
 literal|0
 operator|||
@@ -647,20 +732,20 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Skip over a compressed domain name. Return the size.  */
+comment|/*  * Skip over a compressed domain name. Return the size or -1.  */
 end_comment
 
 begin_macro
 name|dn_skip
 argument_list|(
-argument|buf
+argument|comp_dn
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|char
 modifier|*
-name|buf
+name|comp_dn
 decl_stmt|;
 end_decl_stmt
 
@@ -677,7 +762,7 @@ name|n
 decl_stmt|;
 name|cp
 operator|=
-name|buf
+name|comp_dn
 expr_stmt|;
 while|while
 condition|(
@@ -727,7 +812,7 @@ return|return
 operator|(
 name|cp
 operator|-
-name|buf
+name|comp_dn
 operator|)
 return|;
 block|}
@@ -847,6 +932,17 @@ name|n
 operator|>=
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|dn
+operator|==
+literal|'\\'
+condition|)
+name|dn
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -860,6 +956,7 @@ condition|)
 goto|goto
 name|next
 goto|;
+block|}
 if|if
 condition|(
 operator|(

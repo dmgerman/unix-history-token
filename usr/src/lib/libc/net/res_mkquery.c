@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	res_mkquery.c	4.1	85/03/01	*/
+comment|/*	res_mkquery.c	4.2	85/03/15	*/
 end_comment
 
 begin_include
@@ -184,12 +184,6 @@ modifier|*
 modifier|*
 name|lastdnptr
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|_res
@@ -354,8 +348,16 @@ sizeof|sizeof
 argument_list|(
 name|dnptrs
 argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|dnptrs
+index|[
+literal|0
+index|]
+argument_list|)
 expr_stmt|;
-comment|/* 	 * If the domain name consists of a single label, then 	 * append the default domain name to the one given. 	 */
+comment|/* 	 * If the domain name does not end in '.', then 	 * append the default domain name to the one given. 	 */
 if|if
 condition|(
 operator|(
@@ -366,21 +368,25 @@ operator|&
 name|RES_DEFNAMES
 operator|)
 operator|&&
-name|dname
-index|[
-literal|0
-index|]
-operator|!=
-literal|'\0'
-operator|&&
-name|index
+operator|(
+name|n
+operator|=
+name|strlen
 argument_list|(
 name|dname
-argument_list|,
-literal|'.'
 argument_list|)
-operator|==
-name|NULL
+operator|)
+operator|>
+literal|0
+operator|&&
+name|dname
+index|[
+name|n
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'.'
 condition|)
 block|{
 if|if
