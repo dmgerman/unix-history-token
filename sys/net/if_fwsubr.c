@@ -1311,8 +1311,6 @@ decl_stmt|;
 name|uint32_t
 name|id
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 comment|/* 	 * Find an existing reassembly buffer or create a new one. 	 */
 name|enc
 operator|=
