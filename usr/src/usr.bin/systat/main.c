@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,15 +161,11 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+begin_decl_stmt
+name|sig_t
 name|sigtstpdfl
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1065,6 +1061,19 @@ end_macro
 
 begin_block
 block|{
+name|move
+argument_list|(
+name|CMDLINE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|clrtoeol
+argument_list|()
+expr_stmt|;
+name|refresh
+argument_list|()
+expr_stmt|;
 name|endwin
 argument_list|()
 expr_stmt|;
