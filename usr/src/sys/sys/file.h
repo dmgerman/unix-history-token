@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	3.2	%G%	*/
+comment|/*	file.h	3.3	%G%	*/
 end_comment
 
 begin_comment
@@ -11,10 +11,10 @@ begin_struct
 struct|struct
 name|file
 block|{
-name|char
+name|short
 name|f_flag
 decl_stmt|;
-name|char
+name|short
 name|f_count
 decl_stmt|;
 comment|/* reference count */
