@@ -1367,6 +1367,8 @@ argument_list|(
 name|mailcmd
 argument_list|,
 literal|"w"
+argument_list|,
+name|e
 argument_list|)
 operator|)
 condition|)
@@ -1391,7 +1393,9 @@ name|fprintf
 argument_list|(
 name|mail
 argument_list|,
-literal|"From: root (Cron Daemon)\n"
+literal|"From: %s (Cron Daemon)\n"
+argument_list|,
+name|usernm
 argument_list|)
 expr_stmt|;
 name|fprintf
