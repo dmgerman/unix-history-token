@@ -2040,15 +2040,6 @@ literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|error
 operator|=
 name|copyinstr
