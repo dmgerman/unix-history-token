@@ -1513,6 +1513,7 @@ condition|)
 return|return
 name|tbp
 return|;
+comment|/* 	 * We are synthesizing a buffer out of vm_page_t's, but 	 * if the block size is not page aligned then the starting 	 * address may not be either.  Inherit the b_data offset 	 * from the original buffer. 	 */
 name|bp
 operator|->
 name|b_data
@@ -1686,7 +1687,10 @@ name|v_mount
 operator|->
 name|mnt_iosize_max
 condition|)
+block|{
 break|break;
+block|}
+comment|/* 			 * Shortcut some checks and try to avoid buffers that 			 * would block in the lock.  The same checks have to 			 * be made again after we officially get the buffer. 			 */
 if|if
 condition|(
 operator|(
@@ -1737,6 +1741,7 @@ condition|;
 name|j
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|tbp
@@ -1749,6 +1754,7 @@ operator|->
 name|valid
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|j
@@ -1785,7 +1791,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the buffer is already fully valid or locked 			 * (which could also mean that a background write is 			 * in progress), or the buffer is not backed by VMIO, 			 * stop. 			 */
+comment|/* 			 * Stop scanning if the buffer is fuly valid  			 * (marked B_CACHE), or locked (may be doing a 			 * background write), or if the buffer is not 			 * VMIO backed.  The clustering code can only deal 			 * with VMIO-backed buffers. 			 */
 if|if
 condition|(
 operator|(
@@ -1818,6 +1824,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * The buffer must be completely invalid in order to 			 * take part in the cluster.  If it is partially valid 			 * then we stop. 			 */
 for|for
 control|(
 name|j
@@ -1863,6 +1870,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Set a read-ahead mark as appropriate 			 */
 if|if
 condition|(
 operator|(
@@ -1891,6 +1899,7 @@ name|b_flags
 operator||=
 name|B_RAM
 expr_stmt|;
+comment|/* 			 * Set the buffer up for an async read (XXX should 			 * we do this only if we do not wind up brelse()ing?). 			 * Set the block number if it isn't set, otherwise 			 * if it is make sure it matches the block number we 			 * expect. 			 */
 name|tbp
 operator|->
 name|b_flags
@@ -2082,6 +2091,7 @@ operator|->
 name|b_bufsize
 expr_stmt|;
 block|}
+comment|/* 	 * Fully valid pages in the cluster are already good and do not need 	 * to be re-read from disk.  Replace the page with bogus_page 	 */
 for|for
 control|(
 name|j
@@ -2115,6 +2125,7 @@ operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
+block|{
 name|bp
 operator|->
 name|b_pages
@@ -2124,6 +2135,7 @@ index|]
 operator|=
 name|bogus_page
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -3391,6 +3403,7 @@ name|tbp
 operator|->
 name|b_offset
 expr_stmt|;
+comment|/* 		 * We are synthesizing a buffer out of vm_page_t's, but 		 * if the block size is not page aligned then the starting 		 * address may not be either.  Inherit the b_data offset 		 * from the original buffer. 		 */
 name|bp
 operator|->
 name|b_data
@@ -3692,7 +3705,7 @@ argument_list|(
 name|tbp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the IO is via the VM then we do some 			 * special VM hackery. (yuck) 			 */
+comment|/* 			 * If the IO is via the VM then we do some 			 * special VM hackery (yuck).  Since the buffer's 			 * block size may not be page-aligned it is possible 			 * for a page to be shared between two buffers.  We 			 * have to get rid of the duplication when building 			 * the cluster. 			 */
 if|if
 condition|(
 name|tbp
