@@ -224,6 +224,13 @@ comment|/* arg1=bitmap (1:loop, 2:out)	*/
 name|O_TCPDATALEN
 block|,
 comment|/* arg1 = tcp data len		*/
+comment|/* 	 * actions for ng_ipfw 	 */
+name|O_NETGRAPH
+block|,
+comment|/* send to ng_ipfw		*/
+name|O_NGTEE
+block|,
+comment|/* copy to ng_ipfw		*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -933,6 +940,8 @@ block|,
 name|IP_FW_DUMMYNET
 block|,
 name|IP_FW_NETGRAPH
+block|,
+name|IP_FW_NGTEE
 block|, }
 enum|;
 end_enum
