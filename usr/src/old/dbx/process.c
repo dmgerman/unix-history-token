@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c 1.10 %G%"
+literal|"@(#)process.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +303,13 @@ end_define
 begin_comment
 comment|/* maximum number of arguments to RUN */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|private
@@ -1593,6 +1600,9 @@ name|public
 name|printstatus
 parameter_list|()
 block|{
+name|int
+name|status
+decl_stmt|;
 if|if
 condition|(
 name|process
@@ -2452,6 +2462,11 @@ block|{
 name|int
 name|status
 decl_stmt|;
+name|Fileid
+name|in
+decl_stmt|,
+name|out
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -2476,6 +2491,24 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ... kill it! */
+name|pwait
+argument_list|(
+name|p
+operator|->
+name|pid
+argument_list|,
+operator|&
+name|status
+argument_list|)
+expr_stmt|;
+comment|/* wait for it to exit */
+name|unptraced
+argument_list|(
+name|p
+operator|->
+name|pid
+argument_list|)
+expr_stmt|;
 block|}
 name|psigtrace
 argument_list|(
@@ -2486,16 +2519,18 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|p
 operator|->
 name|pid
 operator|=
 name|vfork
 argument_list|()
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|pid
 operator|==
 operator|-
 literal|1
@@ -2517,11 +2552,6 @@ name|pid
 argument_list|)
 condition|)
 block|{
-name|Fileid
-name|in
-decl_stmt|,
-name|out
-decl_stmt|;
 name|traceme
 argument_list|()
 expr_stmt|;
@@ -2745,6 +2775,13 @@ literal|"program could not begin execution"
 argument_list|)
 expr_stmt|;
 block|}
+name|ptraced
+argument_list|(
+name|p
+operator|->
+name|pid
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2824,7 +2861,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"can't continue process"
+literal|"error %d trying to continue process"
+argument_list|,
+name|errno
 argument_list|)
 expr_stmt|;
 block|}
