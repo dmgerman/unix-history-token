@@ -1342,6 +1342,16 @@ block|,
 block|{
 literal|0x0e11
 block|,
+literal|0x4091
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array 6i"
+block|}
+block|,
+block|{
+literal|0x0e11
+block|,
 literal|0x409A
 block|,
 name|CISS_BOARD_SA5
