@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ldconfig.c,v 1.19 1997/07/11 14:45:41 jkh Exp $  */
+comment|/*  * Copyright (c) 1993,1995 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: ldconfig.c,v 1.15.2.2 1997/08/08 02:18:10 jdp Exp $  */
 end_comment
 
 begin_include
@@ -188,14 +188,6 @@ name|minor
 end_undef
 
 begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|int
 name|verbose
@@ -220,6 +212,13 @@ begin_decl_stmt
 specifier|static
 name|int
 name|merge
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rescan
 decl_stmt|;
 end_decl_stmt
 
@@ -416,7 +415,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:mrsv"
+literal|"Rf:mrsv"
 argument_list|)
 operator|)
 operator|!=
@@ -428,6 +427,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'R'
+case|:
+name|rescan
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'f'
 case|:
@@ -473,9 +480,13 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Usage: %s [-mrsv] [-f hints_file] [dir | file ...]"
+literal|"Usage: %s [-Rmrsv] [-f hints_file] "
+literal|"[dir | file ...]"
 argument_list|,
-name|__progname
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -493,6 +504,8 @@ condition|(
 name|justread
 operator|||
 name|merge
+operator|||
+name|rescan
 condition|)
 block|{
 if|if
@@ -517,6 +530,9 @@ name|nostd
 operator|&&
 operator|!
 name|merge
+operator|&&
+operator|!
+name|rescan
 condition|)
 name|std_search_path
 argument_list|()
@@ -2578,6 +2594,44 @@ operator|->
 name|hh_strtab
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|hdr
+operator|->
+name|hh_version
+operator|>=
+name|LD_HINTS_VERSION_2
+condition|)
+name|add_search_path
+argument_list|(
+name|strtab
+operator|+
+name|hdr
+operator|->
+name|hh_dirlist
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|rescan
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s too old and does not contain the search path"
+argument_list|,
+name|hints_file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rescan
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
@@ -2742,23 +2796,6 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|hdr
-operator|->
-name|hh_version
-operator|>=
-name|LD_HINTS_VERSION_2
-condition|)
-name|add_search_path
-argument_list|(
-name|strtab
-operator|+
-name|hdr
-operator|->
-name|hh_dirlist
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
