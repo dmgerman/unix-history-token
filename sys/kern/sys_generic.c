@@ -3685,6 +3685,7 @@ name|td_proc
 operator|->
 name|p_fd
 expr_stmt|;
+comment|/* 	 * XXX: kern_select() currently requires that we acquire Giant 	 * even if none of the file descriptors we poll requires Giant. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4660,6 +4661,7 @@ name|uap
 operator|->
 name|nfds
 expr_stmt|;
+comment|/* 	 * XXX: poll() currently requires that we acquire Giant even if 	 * none of the file descriptors we poll requires Giant. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
