@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/bio.h>
 end_include
 
@@ -48,25 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/devicestat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/disklabel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/devicestat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -5328,6 +5328,8 @@ operator|->
 name|res_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|fdc_intr
 argument_list|,
