@@ -32,12 +32,11 @@ end_if
 
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strcasecmp.c	5.10 (Berkeley) %G%"
+literal|"@(#)strcasecmp.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
