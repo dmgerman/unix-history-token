@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.10 (Berkeley) %G%"
+literal|"@(#)more.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7583,6 +7583,10 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|read
@@ -7603,10 +7607,8 @@ name|errno
 operator|!=
 name|EINTR
 condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
+name|end_it
+argument_list|()
 expr_stmt|;
 else|else
 name|ch
