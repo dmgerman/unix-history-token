@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	1.6	87/04/02	*/
+comment|/*	boot.c	1.7	88/03/04	*/
 end_comment
 
 begin_include
@@ -66,27 +66,12 @@ begin_comment
 comment|/* vd/dk */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UNIX
-value|"/vmunix"
-end_define
-
 begin_decl_stmt
 name|char
 name|line
 index|[
 literal|100
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|retry
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -115,7 +100,7 @@ name|cp
 decl_stmt|;
 comment|/* skip r12 */
 specifier|register
-name|unsigned
+name|u_int
 name|howto
 decl_stmt|,
 name|devtype
@@ -123,6 +108,8 @@ decl_stmt|;
 comment|/* howto=r11, devtype=r10 */
 name|int
 name|io
+decl_stmt|,
+name|retry
 decl_stmt|,
 name|type
 decl_stmt|;
@@ -212,9 +199,6 @@ name|type
 index|]
 operator|.
 name|dv_name
-index|[
-literal|0
-index|]
 condition|)
 name|strcpy
 argument_list|(
@@ -235,6 +219,9 @@ endif|#
 directive|endif
 for|for
 control|(
+name|retry
+operator|=
+literal|0
 init|;
 condition|;
 control|)
