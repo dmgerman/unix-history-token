@@ -60,6 +60,31 @@ value|0x600
 end_define
 
 begin_comment
+comment|/* The base offset for the AC97 test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NM_MIXER_PRESENCE
+value|0xa06
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_PRESENCE_MASK
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_PRESENCE_VALUE
+value|0x040
+end_define
+
+begin_comment
 comment|/* The maximum size of a coefficient entry. */
 end_comment
 
