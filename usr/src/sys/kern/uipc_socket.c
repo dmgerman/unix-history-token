@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.38	82/04/01	*/
+comment|/*	uipc_socket.c	4.39	82/04/10	*/
 end_comment
 
 begin_include
@@ -3183,9 +3183,6 @@ name|struct
 name|rtentry
 name|route
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 operator|!
@@ -3193,8 +3190,6 @@ name|suser
 argument_list|()
 condition|)
 return|return;
-endif|#
-directive|endif
 if|if
 condition|(
 name|copyin
