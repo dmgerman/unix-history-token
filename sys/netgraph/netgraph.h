@@ -569,7 +569,7 @@ name|_NG_HOOK_IS_VALID
 parameter_list|(
 name|hook
 parameter_list|)
-value|(!(hook)->hk_flags& HK_INVALID)
+value|(!((hook)->hk_flags& HK_INVALID))
 end_define
 
 begin_define
