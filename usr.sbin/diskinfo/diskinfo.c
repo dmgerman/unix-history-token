@@ -63,7 +63,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: diskinfo [-tv]\n"
+literal|"usage: diskinfo [-tv] disk ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -200,6 +200,15 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 for|for
 control|(
