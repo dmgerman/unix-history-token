@@ -2863,6 +2863,13 @@ block|}
 block|,
 comment|/* SUP1650 - Supra 336i Sp Intl */
 block|{
+literal|0x7016b04e
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SUP1670 - Supra 336i V+ Intl */
+block|{
 literal|0x7420b04e
 block|,
 name|NULL
