@@ -35,8 +35,6 @@ parameter_list|,
 name|r2
 parameter_list|,
 name|r3
-parameter_list|,
-name|l1
 parameter_list|)
 define|\
 value|setx	var, r2, r1 ; \ 	setx	mask, r3, r2 ; \ 	lduw	[r1], r3 ; \ 	and	r2, r3, r1
@@ -60,7 +58,7 @@ parameter_list|,
 name|l1
 parameter_list|)
 define|\
-value|AND(var, mask, r1, r2, r3, l1) ; \ 	brz	r1, l1 ## f ; \ 	 nop
+value|AND(var, mask, r1, r2, r3) ; \ 	brz	r1, l1 ## f ; \ 	 nop
 end_define
 
 begin_comment
