@@ -1,20 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Copyright (c) 1981 Regents of the University of California */
+comment|/*	alloc.c	4.1	82/03/25	*/
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-name|vers
-index|[]
-init|=
-literal|"@(#)ffs_alloc.c 2.1 %G%"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* merged into kernel:	@(#)ffs_alloc.c 2.2 %G% */
+end_comment
 
 begin_comment
-comment|/*	alloc.c	4.8	81/03/08	*/
+comment|/* last monet version:	alloc.c	4.8	81/03/08	*/
 end_comment
 
 begin_include
