@@ -40,6 +40,7 @@ specifier|static
 name|int
 name|cd9660_open
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|path
@@ -371,6 +372,7 @@ name|path
 parameter_list|,
 name|pp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
@@ -458,6 +460,7 @@ name|path
 parameter_list|,
 name|dp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
@@ -634,6 +637,7 @@ name|path
 parameter_list|,
 name|f
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|path
