@@ -4,7 +4,7 @@ comment|/*  * iop.c - do i/o related things.  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -155,7 +155,7 @@ return|;
 comment|/* conservative in case of DECnet access */
 else|else
 return|return
-literal|24
+literal|32
 operator|*
 literal|512
 return|;
@@ -463,15 +463,19 @@ operator|->
 name|off
 decl_stmt|;
 comment|/* beginning of record */
-name|int
-name|saw_newline
-decl_stmt|;
 name|char
 name|rs
 decl_stmt|;
 name|int
+name|saw_newline
+init|=
+literal|0
+decl_stmt|,
 name|eat_whitespace
+init|=
+literal|0
 decl_stmt|;
+comment|/* used iff grRS==0 */
 if|if
 condition|(
 name|iop
@@ -480,10 +484,17 @@ name|cnt
 operator|==
 name|EOF
 condition|)
+block|{
 comment|/* previous read hit EOF */
+operator|*
+name|out
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|EOF
 return|;
+block|}
 if|if
 condition|(
 name|grRS
@@ -495,14 +506,6 @@ comment|/* special case:  grRS == "" */
 name|rs
 operator|=
 literal|'\n'
-expr_stmt|;
-name|eat_whitespace
-operator|=
-literal|0
-expr_stmt|;
-name|saw_newline
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -593,21 +596,6 @@ name|long
 name|len
 decl_stmt|;
 comment|/* record length so far */
-if|if
-condition|(
-operator|(
-name|iop
-operator|->
-name|flag
-operator|&
-name|IOP_IS_INTERNAL
-operator|)
-operator|!=
-literal|0
-condition|)
-name|cant_happen
-argument_list|()
-expr_stmt|;
 name|len
 operator|=
 name|bp
@@ -974,11 +962,22 @@ name|iop
 operator|->
 name|end
 operator|&&
-name|isspace
-argument_list|(
+operator|(
 operator|*
 name|bp
-argument_list|)
+operator|==
+literal|' '
+operator|||
+operator|*
+name|bp
+operator|==
+literal|'\t'
+operator|||
+operator|*
+name|bp
+operator|==
+literal|'\n'
+operator|)
 condition|)
 name|bp
 operator|++
@@ -1106,9 +1105,16 @@ operator|==
 name|bp
 operator|)
 condition|)
+block|{
+operator|*
+name|out
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|EOF
 return|;
+block|}
 name|iop
 operator|->
 name|off
@@ -1140,6 +1146,33 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* there could be more newlines left, clean 'em out now */
+while|while
+condition|(
+operator|*
+operator|(
+name|iop
+operator|->
+name|off
+operator|)
+operator|==
+name|rs
+operator|&&
+name|iop
+operator|->
+name|off
+operator|<=
+name|iop
+operator|->
+name|end
+condition|)
+operator|(
+name|iop
+operator|->
+name|off
+operator|)
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|*

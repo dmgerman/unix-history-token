@@ -4,7 +4,7 @@ comment|/*  * awk.h -- Definitions for gawk.   */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -14,14 +14,31 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LIMITS_H_MISSING
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<limits.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -66,6 +83,12 @@ operator|!
 name|defined
 argument_list|(
 name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OS2
 argument_list|)
 end_if
 
@@ -112,6 +135,26 @@ end_endif
 begin_comment
 comment|/* ----------------- System dependencies (with more includes) -----------*/
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<floatingpoint.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -189,12 +232,6 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"config.h"
 end_include
 
 begin_ifdef
@@ -389,11 +426,21 @@ begin_comment
 comment|/* atarist || VMS */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|MSDOS
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -570,6 +617,26 @@ name|ALLOCA_PROTO
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|extern
 name|char
@@ -578,6 +645,15 @@ name|alloca
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_endif
 endif|#
@@ -901,7 +977,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|gnu_strftime
 name|P
 argument_list|(
@@ -1020,6 +1096,19 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|getpgrp
+name|P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1028,55 +1117,6 @@ end_endif
 begin_comment
 comment|/*VMS*/
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSDOS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<io.h>
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|popen
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|pclose
-name|P
-argument_list|(
-operator|(
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1116,7 +1156,7 @@ name|re_registers
 name|regs
 decl_stmt|;
 name|struct
-name|regexp
+name|dfa
 name|dfareg
 decl_stmt|;
 name|int
@@ -1201,6 +1241,27 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__MINT__
+end_ifndef
+
+begin_undef
+undef|#
+directive|undef
+name|NGROUPS_MAX
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __MINT__ */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1241,6 +1302,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|double_to_int
+name|P
+argument_list|(
+operator|(
+name|double
+name|d
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* ------------------ Constants, Structures, Typedefs  ------------------ */
@@ -1504,6 +1579,9 @@ name|char
 modifier|*
 name|param_name
 decl_stmt|;
+name|long
+name|ll
+decl_stmt|;
 block|}
 name|l
 union|;
@@ -1555,6 +1633,9 @@ name|struct
 name|exp_node
 modifier|*
 name|extra
+decl_stmt|;
+name|long
+name|xl
 decl_stmt|;
 block|}
 name|x
@@ -1615,7 +1696,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
+name|size_t
 name|length
 decl_stmt|;
 name|struct
@@ -1723,7 +1804,12 @@ define|#
 directive|define
 name|MAYBE_NUM
 value|128
-comment|/* user input:  if NUMERIC then 						 * a NUMBER 						 */
+comment|/* user input:  if NUMERIC then 						 * a NUMBER */
+define|#
+directive|define
+name|ARRAYMAXED
+value|256
+comment|/* array is at max size */
 name|char
 modifier|*
 name|vname
@@ -1898,6 +1984,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|array_size
+value|sub.nodep.l.ll
+end_define
+
+begin_define
+define|#
+directive|define
+name|table_size
+value|sub.nodep.x.xl
+end_define
+
+begin_define
+define|#
+directive|define
 name|condpair
 value|lnode
 end_define
@@ -1949,17 +2049,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* a quick profile suggests that the following is a good value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASHSIZE
-value|127
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1992,13 +2081,10 @@ name|search
 block|{
 name|NODE
 modifier|*
-modifier|*
-name|arr_ptr
+name|sym
 decl_stmt|;
-name|NODE
-modifier|*
-modifier|*
-name|arr_end
+name|size_t
+name|idx
 decl_stmt|;
 name|NODE
 modifier|*
@@ -2217,6 +2303,78 @@ name|TAG_RETURN
 value|3
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INT_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|INT_MAX
+value|(~(1<< (sizeof (int) * 8 - 1)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LONG_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LONG_MAX
+value|(~(1<< (sizeof (long) * 8 - 1)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ULONG_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ULONG_MAX
+value|(~(unsigned long)0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LONG_MIN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LONG_MIN
+value|(-LONG_MAX - 1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -2234,21 +2392,21 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|NF
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|NR
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|long
 name|FNR
 decl_stmt|;
 end_decl_stmt
@@ -2609,6 +2767,24 @@ parameter_list|)
 value|r_tree_eval(t)
 end_define
 
+begin_define
+define|#
+directive|define
+name|get_lhs
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|r_get_lhs((p), (a))
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|freenode
+end_undef
+
 begin_else
 else|#
 directive|else
@@ -2617,11 +2793,23 @@ end_else
 begin_define
 define|#
 directive|define
+name|get_lhs
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|((p)->type == Node_var ? (&(p)->var_value) : \ 			r_get_lhs((p), (a)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|tree_eval
 parameter_list|(
 name|t
 parameter_list|)
-value|(_t = (t),(_t) == NULL ? Nnull_string : \ 			((_t)->type == Node_val ? (_t) : \ 			((_t)->type == Node_var ? (_t)->var_value : \ 			((_t)->type == Node_param_list ? \ 			(stack_ptr[(_t)->param_cnt])->var_value : \ 			r_tree_eval((_t))))))
+value|(_t = (t),_t == NULL ? Nnull_string : \ 			(_t->type == Node_param_list ? r_tree_eval(_t) : \ 			(_t->type == Node_val ? _t : \ 			(_t->type == Node_var ? _t->var_value : \ 			r_tree_eval(_t)))))
 end_define
 
 begin_endif
@@ -2636,7 +2824,7 @@ name|make_number
 parameter_list|(
 name|x
 parameter_list|)
-value|mk_number((x), (MALLOC|NUM|NUMBER))
+value|mk_number((x), (unsigned int)(MALLOC|NUM|NUMBER))
 end_define
 
 begin_define
@@ -2646,7 +2834,7 @@ name|tmp_number
 parameter_list|(
 name|x
 parameter_list|)
-value|mk_number((x), (MALLOC|TEMP|NUM|NUMBER))
+value|mk_number((x), (unsigned int)(MALLOC|TEMP|NUM|NUMBER))
 end_define
 
 begin_define
@@ -2981,12 +3169,17 @@ name|hash
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|s
 operator|,
-name|int
+name|size_t
 name|len
+operator|,
+name|unsigned
+name|long
+name|hsize
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3169,6 +3362,7 @@ name|lookup
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|name
@@ -3658,7 +3852,7 @@ specifier|extern
 name|NODE
 modifier|*
 modifier|*
-name|get_lhs
+name|r_get_lhs
 name|P
 argument_list|(
 operator|(
@@ -3987,10 +4181,12 @@ name|devopen
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|name
 operator|,
+specifier|const
 name|char
 operator|*
 name|mode
@@ -4006,6 +4202,7 @@ name|pathopen
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|file
@@ -4195,12 +4392,6 @@ begin_comment
 comment|/* msg.c */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MSDOS
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -4208,23 +4399,30 @@ name|err
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|s
 operator|,
+specifier|const
 name|char
 operator|*
 name|emsg
 operator|,
-name|char
-operator|*
 name|va_list
-operator|,
-operator|...
+name|argp
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|==
+literal|510
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -4233,8 +4431,7 @@ name|msg
 name|P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|va_list
 name|va_alist
 operator|,
 operator|...
@@ -4250,8 +4447,7 @@ name|warning
 name|P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|va_list
 name|va_alist
 operator|,
 operator|...
@@ -4267,8 +4463,7 @@ name|fatal
 name|P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|va_list
 name|va_alist
 operator|,
 operator|...
@@ -4281,14 +4476,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_function_decl
-specifier|extern
-name|void
-name|err
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|extern
@@ -4517,7 +4704,7 @@ name|char
 operator|*
 name|s
 operator|,
-name|int
+name|size_t
 name|len
 operator|,
 name|int
@@ -4548,7 +4735,7 @@ operator|,
 name|int
 name|start
 operator|,
-name|int
+name|size_t
 name|len
 operator|,
 name|int

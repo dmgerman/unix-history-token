@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Getopt for GNU.    Copyright (C) 1987, 88, 89, 90, 91, 1992 Free Software Foundation, Inc.  This file is part of the libiberty library. Libiberty is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  Libiberty is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public License for more details.  You should have received a copy of the GNU Library General Public License along with libiberty; see the file COPYING.LIB.  If not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987, 88, 89, 90, 91, 92, 1993 	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
@@ -9,18 +9,48 @@ end_escape
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|LIBC
+name|HAVE_CONFIG_H
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|emacs
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
 begin_comment
-comment|/* For when compiled as part of the GNU C library.  */
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<ansidecl.h>
+file|<config.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -39,6 +69,16 @@ directive|ifndef
 name|__STDC__
 end_ifndef
 
+begin_comment
+comment|/* This is a separate conditional since some stdc systems    reject `defined (const)'.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|const
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -50,14 +90,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_comment
+comment|/* Comment out all this code if we are using the GNU C Library, and are not    actually compiling the library itself.  This code is part of the GNU C    Library, but also included in many other GNU distributions.  Compiling    and linking in this code is a waste when using the GNU C library    (especially if it is a shared library).  Rather than having every GNU    program understand `configure --with-gnu-libc' and omit the object files,    it is simpler to just do this in the source for each such file.  */
+end_comment
+
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|STDC_HEADERS
+name|_LIBC
 argument_list|)
 operator|||
+operator|!
+name|defined
+argument_list|(
+name|__GNU_LIBRARY__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* This needs to come after some library #include    to get __GNU_LIBRARY__ defined.  */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__GNU_LIBRARY__
@@ -65,7 +134,17 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|LIBC
+name|OS2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|atarist
 argument_list|)
 end_if
 
@@ -80,10 +159,6 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* STDC_HEADERS or __GNU_LIBRARY__ */
-end_comment
-
 begin_function_decl
 name|char
 modifier|*
@@ -97,19 +172,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* STDC_HEADERS or __GNU_LIBRARY__ */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NULL
-argument_list|)
-end_if
+end_ifndef
 
 begin_define
 define|#
@@ -182,7 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like getopt_long, but '-' as well as '--' can indicate a long option.    If an option that starts with '-' (not '--') doesn't match a long option,    but does match a short option, it is parsed as a short option    instead. */
+comment|/* Like getopt_long, but '-' as well as '--' can indicate a long option.    If an option that starts with '-' (not '--') doesn't match a long option,    but does match a short option, it is parsed as a short option    instead.  */
 end_comment
 
 begin_function
@@ -242,6 +309,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _LIBC or not __GNU_LIBRARY__.  */
+end_comment
 
 begin_escape
 end_escape

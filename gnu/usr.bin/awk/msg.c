@@ -4,7 +4,7 @@ comment|/*  * msg.c - routines for error messages  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -44,10 +44,12 @@ name|emsg
 parameter_list|,
 name|argp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|s
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|emsg
@@ -138,6 +140,16 @@ name|var_value
 operator|->
 name|stptr
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|'('
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|file
@@ -149,7 +161,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"(FILENAME=%s "
+literal|"FILENAME=%s "
 argument_list|,
 name|file
 argument_list|)
@@ -161,7 +173,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"FNR=%d) "
+literal|"FNR=%ld) "
 argument_list|,
 name|FNR
 argument_list|)

@@ -49,7 +49,7 @@ comment|/* 2.14		Mostly bug fixes. */
 end_comment
 
 begin_comment
-comment|/* 2.15		Bug fixes plus intermixing of command-line source and files, 		GNU long options, ARGIND, ERRNO and Plan 9 style /dev/ files. */
+comment|/* 2.15		Bug fixes plus intermixing of command-line source and files, 		GNU long options, ARGIND, ERRNO and Plan 9 style /dev/ files. 		`delete array'. OS/2 port added. */
 end_comment
 
 end_unit
