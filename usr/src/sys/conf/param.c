@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.c	6.7	84/08/23	*/
+comment|/*	param.c	6.8	84/12/20	*/
 end_comment
 
 begin_include
@@ -119,6 +119,18 @@ init|=
 literal|1000000
 operator|/
 name|HZ
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tickadj
+init|=
+literal|1000000
+operator|/
+name|HZ
+operator|/
+literal|10
 decl_stmt|;
 end_decl_stmt
 
