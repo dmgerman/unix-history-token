@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.34 (Berkeley) %G%"
+literal|"@(#)df.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1057,13 +1057,7 @@ argument_list|(
 operator|&
 name|mntbuf
 argument_list|,
-operator|(
-name|nflag
-condition|?
 name|MNT_NOWAIT
-else|:
-name|MNT_WAIT
-operator|)
 argument_list|)
 expr_stmt|;
 for|for
