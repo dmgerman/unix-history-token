@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.37 1998/07/06 19:54:39 bde Exp $"
+literal|"$Id: ifconfig.c,v 1.38 1998/08/07 06:36:53 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -886,6 +886,35 @@ block|}
 block|,
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VLANS
+block|{
+literal|"vlan"
+block|,
+name|NEXTARG
+block|,
+name|setvlantag
+block|}
+block|,
+block|{
+literal|"vlandev"
+block|,
+name|NEXTARG
+block|,
+name|setvlandev
+block|}
+block|,
+block|{
+literal|"-vlandev"
+block|,
+name|NEXTARG
+block|,
+name|unsetvlandev
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"normal"
 block|,
@@ -1182,6 +1211,13 @@ ifdef|#
 directive|ifdef
 name|USE_IF_MEDIA
 block|{ "media", AF_INET, media_status, NULL },
+comment|/* XXX not real!! */
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VLANS
+block|{ "vlan", AF_INET, media_status, NULL },
 comment|/* XXX not real!! */
 endif|#
 directive|endif
@@ -3256,6 +3292,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Note: doing an SIOCIGIFFLAGS scribbles on the union portion  * of the ifreq structure, which may confuse other parts of ifconfig.  * Make a private copy so we can avoid that.  */
+end_comment
+
 begin_function
 name|void
 name|setifflags
@@ -3286,6 +3326,33 @@ modifier|*
 name|afp
 decl_stmt|;
 block|{
+name|struct
+name|ifreq
+name|my_ifr
+decl_stmt|;
+name|bcopy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|ifr
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|my_ifr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ifreq
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -3298,7 +3365,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|ifr
+name|my_ifr
 argument_list|)
 operator|<
 literal|0
@@ -3317,7 +3384,7 @@ expr_stmt|;
 block|}
 name|strncpy
 argument_list|(
-name|ifr
+name|my_ifr
 operator|.
 name|ifr_name
 argument_list|,
@@ -3325,7 +3392,7 @@ name|name
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ifr
+name|my_ifr
 operator|.
 name|ifr_name
 argument_list|)
@@ -3333,7 +3400,7 @@ argument_list|)
 expr_stmt|;
 name|flags
 operator|=
-name|ifr
+name|my_ifr
 operator|.
 name|ifr_flags
 expr_stmt|;
@@ -3360,7 +3427,7 @@ name|flags
 operator||=
 name|value
 expr_stmt|;
-name|ifr
+name|my_ifr
 operator|.
 name|ifr_flags
 operator|=
@@ -3378,7 +3445,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|&
-name|ifr
+name|my_ifr
 argument_list|)
 operator|<
 literal|0
@@ -3874,6 +3941,17 @@ name|media_status
 operator|&&
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VLANS
+name|afp
+operator|->
+name|af_status
+operator|!=
+name|vlan_status
+operator|&&
+endif|#
+directive|endif
 name|afp
 operator|->
 name|af_status
@@ -3938,6 +4016,17 @@ operator|->
 name|af_status
 operator|!=
 name|media_status
+operator|&&
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VLANS
+name|p
+operator|->
+name|af_status
+operator|!=
+name|vlan_status
 operator|&&
 endif|#
 directive|endif
@@ -4028,6 +4117,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|USE_VLANS
+if|if
+condition|(
+name|allfamilies
+operator|||
+name|afp
+operator|->
+name|af_status
+operator|==
+name|vlan_status
+condition|)
+name|vlan_status
+argument_list|(
+name|s
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -4047,6 +4158,12 @@ operator|->
 name|af_status
 operator|!=
 name|ether_status
+operator|&&
+name|afp
+operator|->
+name|af_status
+operator|!=
+name|vlan_status
 condition|)
 name|warnx
 argument_list|(
