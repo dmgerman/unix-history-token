@@ -78,9 +78,10 @@ end_comment
 
 begin_decl_stmt
 name|char
+modifier|*
 name|args
 index|[
-literal|100
+literal|16
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -96,7 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* length of args */
+comment|/* number of args */
 end_comment
 
 begin_decl_stmt
