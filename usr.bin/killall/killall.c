@@ -119,6 +119,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -535,6 +541,13 @@ name|killed
 init|=
 literal|0
 decl_stmt|;
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
