@@ -391,6 +391,7 @@ argument_list|(
 name|buf
 argument_list|,
 literal|0
+argument_list|,
 sizeof|sizeof
 argument_list|(
 name|buf
