@@ -895,6 +895,26 @@ block|,
 comment|/*quirks*/
 name|DA_Q_NO_SYNC_CACHE
 block|}
+block|,
+block|{
+comment|/*                     * SEAGRAND NP-900 MP3 Player                     * PR: kern/64563                     */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"SEAGRAND"
+block|,
+literal|"NP-900*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_SYNC_CACHE
+operator||
+name|DA_Q_NO_PREVENT
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
