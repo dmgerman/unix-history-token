@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttychars.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ttychars.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -90,7 +90,7 @@ name|CTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|('c'&037)
+value|(c&037)
 end_define
 
 begin_comment
@@ -108,14 +108,14 @@ begin_define
 define|#
 directive|define
 name|CKILL
-value|CTRL(u)
+value|CTRL('u')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CINTR
-value|CTRL(c)
+value|CTRL('c')
 end_define
 
 begin_define
@@ -133,21 +133,21 @@ begin_define
 define|#
 directive|define
 name|CSTART
-value|CTRL(q)
+value|CTRL('q')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CSTOP
-value|CTRL(s)
+value|CTRL('s')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CEOF
-value|CTRL(d)
+value|CTRL('d')
 end_define
 
 begin_define
@@ -168,42 +168,42 @@ begin_define
 define|#
 directive|define
 name|CSUSP
-value|CTRL(z)
+value|CTRL('z')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CDSUSP
-value|CTRL(y)
+value|CTRL('y')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CRPRNT
-value|CTRL(r)
+value|CTRL('r')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CFLUSH
-value|CTRL(o)
+value|CTRL('o')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CWERASE
-value|CTRL(w)
+value|CTRL('w')
 end_define
 
 begin_define
 define|#
 directive|define
 name|CLNEXT
-value|CTRL(v)
+value|CTRL('v')
 end_define
 
 begin_endif

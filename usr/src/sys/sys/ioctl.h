@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -352,7 +352,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(IOC_VOID|('x'<<8)|y)
+value|(IOC_VOID|(x<<8)|y)
 end_define
 
 begin_define
@@ -366,7 +366,7 @@ name|y
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+value|(IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
 end_define
 
 begin_define
@@ -380,7 +380,7 @@ name|y
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+value|(IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
 end_define
 
 begin_comment
@@ -398,7 +398,7 @@ name|y
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
+value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
 end_define
 
 begin_endif
@@ -414,7 +414,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGETD
-value|_IOR(t, 0, int)
+value|_IOR('t', 0, int)
 end_define
 
 begin_comment
@@ -425,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETD
-value|_IOW(t, 1, int)
+value|_IOW('t', 1, int)
 end_define
 
 begin_comment
@@ -436,7 +436,7 @@ begin_define
 define|#
 directive|define
 name|TIOCHPCL
-value|_IO(t, 2)
+value|_IO('t', 2)
 end_define
 
 begin_comment
@@ -447,7 +447,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMODG
-value|_IOR(t, 3, int)
+value|_IOR('t', 3, int)
 end_define
 
 begin_comment
@@ -458,7 +458,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMODS
-value|_IOW(t, 4, int)
+value|_IOW('t', 4, int)
 end_define
 
 begin_comment
@@ -582,7 +582,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGETP
-value|_IOR(t, 8,struct sgttyb)
+value|_IOR('t', 8,struct sgttyb)
 end_define
 
 begin_comment
@@ -593,7 +593,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETP
-value|_IOW(t, 9,struct sgttyb)
+value|_IOW('t', 9,struct sgttyb)
 end_define
 
 begin_comment
@@ -604,7 +604,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETN
-value|_IOW(t,10,struct sgttyb)
+value|_IOW('t',10,struct sgttyb)
 end_define
 
 begin_comment
@@ -615,7 +615,7 @@ begin_define
 define|#
 directive|define
 name|TIOCEXCL
-value|_IO(t, 13)
+value|_IO('t', 13)
 end_define
 
 begin_comment
@@ -626,7 +626,7 @@ begin_define
 define|#
 directive|define
 name|TIOCNXCL
-value|_IO(t, 14)
+value|_IO('t', 14)
 end_define
 
 begin_comment
@@ -637,7 +637,7 @@ begin_define
 define|#
 directive|define
 name|TIOCFLUSH
-value|_IOW(t, 16, int)
+value|_IOW('t', 16, int)
 end_define
 
 begin_comment
@@ -648,7 +648,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSETC
-value|_IOW(t,17,struct tchars)
+value|_IOW('t',17,struct tchars)
 end_define
 
 begin_comment
@@ -659,7 +659,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGETC
-value|_IOR(t,18,struct tchars)
+value|_IOR('t',18,struct tchars)
 end_define
 
 begin_comment
@@ -1147,7 +1147,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLBIS
-value|_IOW(t, 127, int)
+value|_IOW('t', 127, int)
 end_define
 
 begin_comment
@@ -1158,7 +1158,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLBIC
-value|_IOW(t, 126, int)
+value|_IOW('t', 126, int)
 end_define
 
 begin_comment
@@ -1169,7 +1169,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLSET
-value|_IOW(t, 125, int)
+value|_IOW('t', 125, int)
 end_define
 
 begin_comment
@@ -1180,7 +1180,7 @@ begin_define
 define|#
 directive|define
 name|TIOCLGET
-value|_IOR(t, 124, int)
+value|_IOR('t', 124, int)
 end_define
 
 begin_comment
@@ -1296,7 +1296,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSBRK
-value|_IO(t, 123)
+value|_IO('t', 123)
 end_define
 
 begin_comment
@@ -1307,7 +1307,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCBRK
-value|_IO(t, 122)
+value|_IO('t', 122)
 end_define
 
 begin_comment
@@ -1318,7 +1318,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSDTR
-value|_IO(t, 121)
+value|_IO('t', 121)
 end_define
 
 begin_comment
@@ -1329,7 +1329,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCDTR
-value|_IO(t, 120)
+value|_IO('t', 120)
 end_define
 
 begin_comment
@@ -1340,7 +1340,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGPGRP
-value|_IOR(t, 119, int)
+value|_IOR('t', 119, int)
 end_define
 
 begin_comment
@@ -1351,7 +1351,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSPGRP
-value|_IOW(t, 118, int)
+value|_IOW('t', 118, int)
 end_define
 
 begin_comment
@@ -1362,7 +1362,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSLTC
-value|_IOW(t,117,struct ltchars)
+value|_IOW('t',117,struct ltchars)
 end_define
 
 begin_comment
@@ -1373,7 +1373,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGLTC
-value|_IOR(t,116,struct ltchars)
+value|_IOR('t',116,struct ltchars)
 end_define
 
 begin_comment
@@ -1384,7 +1384,7 @@ begin_define
 define|#
 directive|define
 name|TIOCOUTQ
-value|_IOR(t, 115, int)
+value|_IOR('t', 115, int)
 end_define
 
 begin_comment
@@ -1395,7 +1395,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSTI
-value|_IOW(t, 114, char)
+value|_IOW('t', 114, char)
 end_define
 
 begin_comment
@@ -1406,7 +1406,7 @@ begin_define
 define|#
 directive|define
 name|TIOCNOTTY
-value|_IO(t, 113)
+value|_IO('t', 113)
 end_define
 
 begin_comment
@@ -1417,7 +1417,7 @@ begin_define
 define|#
 directive|define
 name|TIOCPKT
-value|_IOW(t, 112, int)
+value|_IOW('t', 112, int)
 end_define
 
 begin_comment
@@ -1505,7 +1505,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSTOP
-value|_IO(t, 111)
+value|_IO('t', 111)
 end_define
 
 begin_comment
@@ -1516,7 +1516,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSTART
-value|_IO(t, 110)
+value|_IO('t', 110)
 end_define
 
 begin_comment
@@ -1527,7 +1527,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMSET
-value|_IOW(t, 109, int)
+value|_IOW('t', 109, int)
 end_define
 
 begin_comment
@@ -1538,7 +1538,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMBIS
-value|_IOW(t, 108, int)
+value|_IOW('t', 108, int)
 end_define
 
 begin_comment
@@ -1549,7 +1549,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMBIC
-value|_IOW(t, 107, int)
+value|_IOW('t', 107, int)
 end_define
 
 begin_comment
@@ -1560,7 +1560,7 @@ begin_define
 define|#
 directive|define
 name|TIOCMGET
-value|_IOR(t, 106, int)
+value|_IOR('t', 106, int)
 end_define
 
 begin_comment
@@ -1571,7 +1571,7 @@ begin_define
 define|#
 directive|define
 name|TIOCREMOTE
-value|_IOW(t, 105, int)
+value|_IOW('t', 105, int)
 end_define
 
 begin_comment
@@ -1582,7 +1582,7 @@ begin_define
 define|#
 directive|define
 name|TIOCGWINSZ
-value|_IOR(t, 104, struct winsize)
+value|_IOR('t', 104, struct winsize)
 end_define
 
 begin_comment
@@ -1593,7 +1593,7 @@ begin_define
 define|#
 directive|define
 name|TIOCSWINSZ
-value|_IOW(t, 103, struct winsize)
+value|_IOW('t', 103, struct winsize)
 end_define
 
 begin_comment
@@ -1604,7 +1604,7 @@ begin_define
 define|#
 directive|define
 name|TIOCUCNTL
-value|_IOW(t, 102, int)
+value|_IOW('t', 102, int)
 end_define
 
 begin_comment
@@ -1618,7 +1618,7 @@ name|UIOCCMD
 parameter_list|(
 name|n
 parameter_list|)
-value|_IO(u, n)
+value|_IO('u', n)
 end_define
 
 begin_comment
@@ -1629,7 +1629,7 @@ begin_define
 define|#
 directive|define
 name|TIOCCONS
-value|_IO(t, 98)
+value|_IO('t', 98)
 end_define
 
 begin_comment
@@ -1695,7 +1695,7 @@ begin_define
 define|#
 directive|define
 name|FIOCLEX
-value|_IO(f, 1)
+value|_IO('f', 1)
 end_define
 
 begin_comment
@@ -1706,7 +1706,7 @@ begin_define
 define|#
 directive|define
 name|FIONCLEX
-value|_IO(f, 2)
+value|_IO('f', 2)
 end_define
 
 begin_comment
@@ -1721,7 +1721,7 @@ begin_define
 define|#
 directive|define
 name|FIONREAD
-value|_IOR(f, 127, int)
+value|_IOR('f', 127, int)
 end_define
 
 begin_comment
@@ -1732,7 +1732,7 @@ begin_define
 define|#
 directive|define
 name|FIONBIO
-value|_IOW(f, 126, int)
+value|_IOW('f', 126, int)
 end_define
 
 begin_comment
@@ -1743,7 +1743,7 @@ begin_define
 define|#
 directive|define
 name|FIOASYNC
-value|_IOW(f, 125, int)
+value|_IOW('f', 125, int)
 end_define
 
 begin_comment
@@ -1754,7 +1754,7 @@ begin_define
 define|#
 directive|define
 name|FIOSETOWN
-value|_IOW(f, 124, int)
+value|_IOW('f', 124, int)
 end_define
 
 begin_comment
@@ -1765,7 +1765,7 @@ begin_define
 define|#
 directive|define
 name|FIOGETOWN
-value|_IOR(f, 123, int)
+value|_IOR('f', 123, int)
 end_define
 
 begin_comment
@@ -1780,7 +1780,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSHIWAT
-value|_IOW(s,  0, int)
+value|_IOW('s',  0, int)
 end_define
 
 begin_comment
@@ -1791,7 +1791,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGHIWAT
-value|_IOR(s,  1, int)
+value|_IOR('s',  1, int)
 end_define
 
 begin_comment
@@ -1802,7 +1802,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSLOWAT
-value|_IOW(s,  2, int)
+value|_IOW('s',  2, int)
 end_define
 
 begin_comment
@@ -1813,7 +1813,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGLOWAT
-value|_IOR(s,  3, int)
+value|_IOR('s',  3, int)
 end_define
 
 begin_comment
@@ -1824,7 +1824,7 @@ begin_define
 define|#
 directive|define
 name|SIOCATMARK
-value|_IOR(s,  7, int)
+value|_IOR('s',  7, int)
 end_define
 
 begin_comment
@@ -1835,7 +1835,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSPGRP
-value|_IOW(s,  8, int)
+value|_IOW('s',  8, int)
 end_define
 
 begin_comment
@@ -1846,7 +1846,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGPGRP
-value|_IOR(s,  9, int)
+value|_IOR('s',  9, int)
 end_define
 
 begin_comment
@@ -1857,7 +1857,7 @@ begin_define
 define|#
 directive|define
 name|SIOCADDRT
-value|_IOW(r, 10, struct rtentry)
+value|_IOW('r', 10, struct rtentry)
 end_define
 
 begin_comment
@@ -1868,7 +1868,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDELRT
-value|_IOW(r, 11, struct rtentry)
+value|_IOW('r', 11, struct rtentry)
 end_define
 
 begin_comment
@@ -1879,7 +1879,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFADDR
-value|_IOW(i, 12, struct ifreq)
+value|_IOW('i', 12, struct ifreq)
 end_define
 
 begin_comment
@@ -1890,7 +1890,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFADDR
-value|_IOWR(i,13, struct ifreq)
+value|_IOWR('i',13, struct ifreq)
 end_define
 
 begin_comment
@@ -1901,7 +1901,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFDSTADDR
-value|_IOW(i, 14, struct ifreq)
+value|_IOW('i', 14, struct ifreq)
 end_define
 
 begin_comment
@@ -1912,7 +1912,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFDSTADDR
-value|_IOWR(i,15, struct ifreq)
+value|_IOWR('i',15, struct ifreq)
 end_define
 
 begin_comment
@@ -1923,7 +1923,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFFLAGS
-value|_IOW(i, 16, struct ifreq)
+value|_IOW('i', 16, struct ifreq)
 end_define
 
 begin_comment
@@ -1934,7 +1934,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFFLAGS
-value|_IOWR(i,17, struct ifreq)
+value|_IOWR('i',17, struct ifreq)
 end_define
 
 begin_comment
@@ -1945,7 +1945,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFBRDADDR
-value|_IOWR(i,18, struct ifreq)
+value|_IOWR('i',18, struct ifreq)
 end_define
 
 begin_comment
@@ -1956,7 +1956,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFBRDADDR
-value|_IOW(i,19, struct ifreq)
+value|_IOW('i',19, struct ifreq)
 end_define
 
 begin_comment
@@ -1967,7 +1967,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFCONF
-value|_IOWR(i,20, struct ifconf)
+value|_IOWR('i',20, struct ifconf)
 end_define
 
 begin_comment
@@ -1978,7 +1978,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFNETMASK
-value|_IOWR(i,21, struct ifreq)
+value|_IOWR('i',21, struct ifreq)
 end_define
 
 begin_comment
@@ -1989,7 +1989,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFNETMASK
-value|_IOW(i,22, struct ifreq)
+value|_IOW('i',22, struct ifreq)
 end_define
 
 begin_comment
@@ -2000,7 +2000,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGIFMETRIC
-value|_IOWR(i,23, struct ifreq)
+value|_IOWR('i',23, struct ifreq)
 end_define
 
 begin_comment
@@ -2011,7 +2011,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSIFMETRIC
-value|_IOW(i,24, struct ifreq)
+value|_IOW('i',24, struct ifreq)
 end_define
 
 begin_comment
@@ -2022,7 +2022,7 @@ begin_define
 define|#
 directive|define
 name|SIOCSARP
-value|_IOW(i, 30, struct arpreq)
+value|_IOW('i', 30, struct arpreq)
 end_define
 
 begin_comment
@@ -2033,7 +2033,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGARP
-value|_IOWR(i,31, struct arpreq)
+value|_IOWR('i',31, struct arpreq)
 end_define
 
 begin_comment
@@ -2044,7 +2044,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDARP
-value|_IOW(i, 32, struct arpreq)
+value|_IOW('i', 32, struct arpreq)
 end_define
 
 begin_comment
