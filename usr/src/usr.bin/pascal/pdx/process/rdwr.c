@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rdwr.c	5.1 (Berkeley) %G%"
+literal|"@(#)rdwr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,7 +148,6 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-operator|&
 name|rwerr
 argument_list|)
 expr_stmt|;
@@ -259,7 +258,6 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-operator|&
 name|rwerr
 argument_list|)
 expr_stmt|;
@@ -370,7 +368,6 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-operator|&
 name|rwerr
 argument_list|)
 expr_stmt|;
@@ -449,7 +446,6 @@ name|onsyserr
 argument_list|(
 name|EIO
 argument_list|,
-operator|&
 name|rwerr
 argument_list|)
 expr_stmt|;
