@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.103 1999/04/24 20:13:59 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.104 1999/05/03 09:36:29 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -28040,12 +28040,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PCI_DRIVER
-end_ifdef
-
 begin_expr_stmt
 name|COMPAT_PCI_DRIVER
 argument_list|(
@@ -28055,30 +28049,6 @@ name|dedevice
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|dedevice
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_PCI_DRIVER */
-end_comment
 
 begin_endif
 endif|#

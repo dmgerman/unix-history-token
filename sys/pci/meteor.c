@@ -314,12 +314,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PCI_DRIVER
-end_ifdef
-
 begin_expr_stmt
 name|COMPAT_PCI_DRIVER
 argument_list|(
@@ -329,30 +323,6 @@ name|met_device
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|met_device
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_PCI_DRIVER */
-end_comment
 
 begin_if
 if|#

@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.24 1999/04/17 08:36:07 peter Exp $ */
+comment|/*	$Id: if_tx.c,v 1.25 1999/04/24 20:14:01 peter Exp $ */
 end_comment
 
 begin_comment
@@ -2022,12 +2022,6 @@ begin_comment
 comment|/* Append this driver to pci drivers list */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PCI_DRIVER
-end_ifdef
-
 begin_expr_stmt
 name|COMPAT_PCI_DRIVER
 argument_list|(
@@ -2037,30 +2031,6 @@ name|txdevice
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|txdevice
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_PCI_DRIVER */
-end_comment
 
 begin_comment
 comment|/* Synopsis: Check if device id corresponds with SMC83C170 id.  */

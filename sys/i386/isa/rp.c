@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) Comtrol Corporation<support@comtrol.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted prodived that the follwoing conditions  * are met.  * 1. Redistributions of source code must retain the above copyright   *    notive, this list of conditions and the following disclainer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials prodided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *       This product includes software developed by Comtrol Corporation.  * 4. The name of Comtrol Corporation may not be used to endorse or   *    promote products derived from this software without specific   *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY COMTROL CORPORATION ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL COMTROL CORPORATION BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rp.c,v 1.24 1999/04/27 11:15:12 phk Exp $  */
+comment|/*   * Copyright (c) Comtrol Corporation<support@comtrol.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted prodived that the follwoing conditions  * are met.  * 1. Redistributions of source code must retain the above copyright   *    notive, this list of conditions and the following disclainer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials prodided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *       This product includes software developed by Comtrol Corporation.  * 4. The name of Comtrol Corporation may not be used to endorse or   *    promote products derived from this software without specific   *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY COMTROL CORPORATION ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL COMTROL CORPORATION BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: rp.c,v 1.25 1999/05/06 18:44:04 peter Exp $  */
 end_comment
 
 begin_comment
@@ -3720,12 +3720,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PCI_DRIVER
-end_ifdef
-
 begin_expr_stmt
 name|COMPAT_PCI_DRIVER
 argument_list|(
@@ -3735,30 +3729,6 @@ name|rp_pcidevice
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|rp_pcidevice
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_PCI_DRIVER */
-end_comment
 
 begin_decl_stmt
 specifier|static

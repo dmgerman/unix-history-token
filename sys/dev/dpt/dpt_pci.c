@@ -8,7 +8,7 @@ comment|/*  *  dptpci.c:  PCI Bus Attachment for DPT SCSI HBAs  */
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.c,v 1.11 1998/12/14 06:32:55 dillon Exp $"
+empty|#ident "$Id: dpt_pci.c,v 1.12 1999/04/24 20:13:58 peter Exp $"
 end_empty
 
 begin_include
@@ -197,12 +197,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_PCI_DRIVER
-end_ifdef
-
 begin_expr_stmt
 name|COMPAT_PCI_DRIVER
 argument_list|(
@@ -212,30 +206,6 @@ name|dpt_pci_driver
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|DATA_SET
-argument_list|(
-name|pcidevice_set
-argument_list|,
-name|dpt_pci_driver
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_PCI_DRIVER */
-end_comment
 
 begin_comment
 comment|/*  * Probe the PCI device.  * Some of this work will have to be duplicated in _attach  * because we do not know for sure how the two relate.  */
