@@ -8939,6 +8939,14 @@ name|id_buf
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|inodedep
+operator|->
+name|id_state
+operator|&
+name|ONWORKLIST
+condition|)
 name|WORKLIST_REMOVE
 argument_list|(
 operator|&
