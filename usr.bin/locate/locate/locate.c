@@ -77,6 +77,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fnmatch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"locate.h"
 end_include
 
@@ -229,10 +241,6 @@ name|patend
 decl_stmt|,
 modifier|*
 name|q
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|,
 modifier|*
 name|patprep
@@ -529,13 +537,14 @@ condition|(
 operator|!
 name|globflag
 operator|||
+operator|!
 name|fnmatch
 argument_list|(
 name|pathpart
 argument_list|,
 name|path
 argument_list|,
-name|FNM_QUOTE
+literal|0
 argument_list|)
 condition|)
 operator|(
