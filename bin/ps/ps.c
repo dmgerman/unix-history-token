@@ -3170,9 +3170,18 @@ name|len
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * if last letter is a 't' flag with no argument (in the context 	 * of the oldps options -- option string NOT starting with a '-' -- 	 * then convert to 'T' (meaning *this* terminal, i.e. ttyname(0)). 	 */
+comment|/* 	 * if last letter is a 't' flag with no argument (in the context 	 * of the oldps options -- option string NOT starting with a '-' -- 	 * then convert to 'T' (meaning *this* terminal, i.e. ttyname(0)). 	 * 	 * However, if a flag accepting a string argument is found in the 	 * option string, the remainder of the string is the argument to 	 * that flag; do not modify that argument. 	 */
 if|if
 condition|(
+name|strcspn
+argument_list|(
+name|s
+argument_list|,
+literal|"MNOoUW"
+argument_list|)
+operator|==
+name|len
+operator|&&
 operator|*
 name|cp
 operator|==
