@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: demand.c,v 1.3 1997/08/19 17:52:36 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -108,17 +108,17 @@ directive|include
 file|<sys/socket.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|PPP_FILTER
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
 
 begin_include
 include|#

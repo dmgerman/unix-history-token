@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.15 1997/10/10 06:02:56 peter Exp $"
+literal|"$Id: options.c,v 1.16 1997/10/10 09:28:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2532,7 +2532,9 @@ name|setmslanman
 name|__P
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -12200,7 +12202,14 @@ begin_function
 specifier|static
 name|int
 name|setmslanman
-parameter_list|()
+parameter_list|(
+name|argv
+parameter_list|)
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
 block|{
 name|ms_lanman
 operator|=

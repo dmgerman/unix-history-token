@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.14 1997/08/22 12:03:55 peter Exp $"
+literal|"$Id: main.c,v 1.15 1997/10/10 09:28:37 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,18 +136,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/if.h>
 end_include
 
 begin_include
@@ -296,7 +284,7 @@ begin_decl_stmt
 name|char
 name|ifname
 index|[
-name|IFNAMSIZ
+literal|32
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -988,8 +976,6 @@ name|int
 name|i
 decl_stmt|,
 name|n
-decl_stmt|,
-name|nonblock
 decl_stmt|,
 name|fdflags
 decl_stmt|;
@@ -2148,7 +2134,7 @@ name|connector
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* set line speed, flow control, etc.; set CLOCAL for now */
+comment|/* 	     * Set line speed, flow control, etc. 	     * On most systems we set CLOCAL for now so that we can talk 	     * to the modem before carrier comes up.  But this has the 	     * side effect that we might miss it if CD drops before we 	     * get to clear CLOCAL below.  On systems where we can talk 	     * successfully to the modem with CLOCAL clear and CD down, 	     * we can clear CLOCAL at this point. 	     */
 name|set_up_tty
 argument_list|(
 name|ttyfd
@@ -2836,7 +2822,11 @@ condition|(
 operator|!
 name|persist
 condition|)
-break|break;
+name|die
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|demand

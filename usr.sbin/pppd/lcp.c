@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: lcp.c,v 1.7 1997/08/19 17:52:40 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1388,7 +1388,7 @@ name|unit
 argument_list|,
 name|PPP_MRU
 argument_list|,
-literal|0x00000000
+literal|0xffffffff
 argument_list|,
 name|wo
 operator|->
@@ -2888,7 +2888,7 @@ argument|CI_MRU
 argument_list|,
 argument|neg_mru
 argument_list|,
-argument|if (cishort<= wo->mru || cishort< DEFMRU) 		       try.mru = cishort;
+argument|if (cishort<= wo->mru || cishort<= DEFMRU) 		       try.mru = cishort;
 argument_list|)
 empty_stmt|;
 block|}
@@ -5239,7 +5239,6 @@ operator|->
 name|neg_accompression
 argument_list|)
 expr_stmt|;
-comment|/*      * If the asyncmap hasn't been negotiated, we really should      * set the receive asyncmap to ffffffff, but we set it to 0      * for backwards contemptibility.      */
 name|ppp_recv_config
 argument_list|(
 name|f
@@ -5274,7 +5273,7 @@ name|go
 operator|->
 name|asyncmap
 else|:
-literal|0x00000000
+literal|0xffffffff
 operator|)
 argument_list|,
 name|go
@@ -5395,7 +5394,7 @@ name|go
 operator|->
 name|asyncmap
 else|:
-literal|0x00000000
+literal|0xffffffff
 operator|)
 argument_list|,
 name|go
@@ -6530,7 +6529,6 @@ block|{
 if|if
 condition|(
 name|lcp_echos_pending
-operator|++
 operator|>=
 name|lcp_echo_fails
 condition|)
@@ -6595,6 +6593,9 @@ name|pktp
 operator|-
 name|pkt
 argument_list|)
+expr_stmt|;
+operator|++
+name|lcp_echos_pending
 expr_stmt|;
 block|}
 block|}

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: chap.c,v 1.8 1997/08/19 17:52:34 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2355,6 +2355,15 @@ operator|->
 name|chal_interval
 argument_list|)
 expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"CHAP peer authentication succeeded for %s"
+argument_list|,
+name|rhostname
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2362,7 +2371,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"CHAP peer authentication failed"
+literal|"CHAP peer authentication failed for remote host %s"
+argument_list|,
+name|rhostname
 argument_list|)
 expr_stmt|;
 name|cstate
