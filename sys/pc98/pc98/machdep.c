@@ -1150,6 +1150,13 @@ name|Giant
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|icu_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -7967,21 +7974,16 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|mtx_init
 argument_list|(
 operator|&
-name|imen_mtx
+name|icu_lock
 argument_list|,
-literal|"imen"
+literal|"icu"
 argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|mtx_lock
 argument_list|(
 operator|&
