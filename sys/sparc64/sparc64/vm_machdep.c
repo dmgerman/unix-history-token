@@ -445,7 +445,7 @@ name|vm
 operator|->
 name|vm_refcnt
 operator|>
-literal|1
+literal|0
 condition|)
 return|return;
 name|SLIST_FOREACH
