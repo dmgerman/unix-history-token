@@ -894,6 +894,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ath.outdoor"
+argument_list|,
+operator|&
+name|ath_outdoor
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -924,6 +935,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"country code"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ath.countrycode"
+argument_list|,
+operator|&
+name|ath_countrycode
 argument_list|)
 expr_stmt|;
 end_expr_stmt
