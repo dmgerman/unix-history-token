@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * To do:  *  * Don't store drive configuration on the config DB: read each drive's header  * to decide where it is.  *  * Accept any old crap in the config_<foo> functions, and complain when  * we try to bring it up.  *  * When trying to bring volumes up, check that the complete address range  * is covered.  */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.30 2000/05/01 09:45:50 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumconfig.c,v 1.38 2003/04/28 02:54:07 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -170,7 +166,7 @@ comment|/* maximum length of a formatted message */
 end_comment
 
 begin_comment
-comment|/*  * Format an error message and return to the user in the reply.  * CARE: This routine is designed to be called only from the  * configuration routines, so it assumes it's the owner of  * the configuration lock, and unlocks it on exit  */
+comment|/*  * Format an error message and return to the user  * in the reply.  CARE: This routine is designed  * to be called only from the configuration  * routines, so it assumes it's the owner of the  * configuration lock, and unlocks it on exit.  */
 end_comment
 
 begin_function
@@ -417,7 +413,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/*      * We have a problem here: we want to unlock the      * configuration, which implies tidying up, but      * if we find an error while tidying up, we could      * recurse for ever.  Use this kludge to only try      * once      */
+comment|/*      * We have a problem here: we want to unlock the      * configuration, which implies tidying up, but      * if we find an error while tidying up, we      * could recurse for ever.  Use this kludge to      * only try once.      */
 name|was_finishing
 operator|=
 name|finishing
@@ -2232,11 +2228,11 @@ expr_stmt|;
 comment|/* newly born drive */
 name|strcpy
 argument_list|(
-literal|"unknown"
-argument_list|,
 name|drive
 operator|->
 name|devicename
+argument_list|,
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 comment|/* and make the name ``unknown'' */
@@ -2435,7 +2431,7 @@ end_comment
 
 begin_function
 name|int
-name|find_drive_by_dev
+name|find_drive_by_name
 parameter_list|(
 specifier|const
 name|char
@@ -2631,7 +2627,7 @@ name|vinum_conf
 operator|.
 name|subdisks_allocated
 condition|)
-comment|/* 	 * We've run out of space.  sdno is pointing 	 * where we want it, but at the moment we 	 * don't have the space.  Get it. 	 */
+comment|/* 	 * We've run out of space.  sdno is pointing 	 * where we want it, but at the moment we 	 * don't have the space.  Get it. 	 * 	 * XXX We should check for overflow here.  We 	 * shouldn't allocate more than VINUM_MAXSD 	 * subdisks (currently at least a quarter of a 	 * million). 	 */
 name|EXPAND
 argument_list|(
 name|SD
@@ -4366,7 +4362,7 @@ operator|++
 expr_stmt|;
 name|otherdriveno
 operator|=
-name|find_drive_by_dev
+name|find_drive_by_name
 argument_list|(
 name|token
 index|[
@@ -5761,6 +5757,7 @@ name|dev
 operator|==
 name|NULL
 condition|)
+comment|/* 	 * sdno can (at least theoretically) overflow 	 * into the low order bit of the type field. 	 * This gives rise to a subdisk with type 	 * VINUM_SD2_TYPE.  This is a feature, not a 	 * bug. 	 */
 name|sd
 operator|->
 name|dev
@@ -5770,11 +5767,11 @@ argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUMRMINOR
+name|VINUMMINOR
 argument_list|(
 name|sdno
 argument_list|,
-name|VINUM_RAWSD_TYPE
+name|VINUM_SD_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -6734,11 +6731,11 @@ argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUMRMINOR
+name|VINUMMINOR
 argument_list|(
 name|plexno
 argument_list|,
-name|VINUM_RAWPLEX_TYPE
+name|VINUM_PLEX_TYPE
 argument_list|)
 argument_list|,
 name|UID_ROOT
@@ -7338,7 +7335,7 @@ argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUMRMINOR
+name|VINUMMINOR
 argument_list|(
 name|volno
 argument_list|,
