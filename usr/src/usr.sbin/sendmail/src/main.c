@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	1.7	%G%"
+literal|"@(#)main.c	1.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -465,17 +465,6 @@ block|}
 endif|#
 directive|endif
 endif|DEBUGFILE
-if|if
-condition|(
-name|Debug
-condition|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|Version
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 name|errno
@@ -728,6 +717,13 @@ case|:
 comment|/* debug */
 name|Debug
 operator|++
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|Version
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#
