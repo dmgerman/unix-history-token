@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.29 1997/12/24 00:59:02 imp Exp $"
+literal|"$Id: ping.c,v 1.30 1998/04/01 00:32:18 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3954,7 +3954,7 @@ if|if
 condition|(
 name|i
 operator|<
-name|MAXIPOPTLEN
+name|MAX_IPOPTLEN
 condition|)
 block|{
 name|old_rrlen
