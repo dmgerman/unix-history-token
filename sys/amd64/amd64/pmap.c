@@ -1128,7 +1128,8 @@ name|addr
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|I686_CPU
+name|I686_CPU_not
+comment|/* Problem seems to have gone away */
 comment|/* Deal with un-resolved Pentium4 issues */
 if|if
 condition|(
@@ -1493,7 +1494,8 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|I686_CPU
+name|I686_CPU_not
+comment|/* Problem seems to have gone away */
 comment|/* Deal with un-resolved Pentium4 issues */
 if|if
 condition|(
@@ -1558,7 +1560,8 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|I686_CPU
+name|I686_CPU_not
+comment|/* Problem seems to have gone away */
 comment|/* Deal with un-resolved Pentium4 issues */
 if|if
 condition|(
