@@ -145,9 +145,12 @@ comment|/* True when wall time is in cmos clock, else UTC */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -174,6 +177,7 @@ comment|/*  * Return 1 for boolean true, and 0 for false, according to the  * in
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_true
 parameter_list|(
@@ -300,10 +304,16 @@ name|usage
 argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|int2bcd
 parameter_list|(
@@ -362,6 +372,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|bcd2int
 parameter_list|(
@@ -420,6 +431,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_suspend
 parameter_list|(
@@ -452,6 +464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_standby
 parameter_list|(
@@ -484,6 +497,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_getinfo
 parameter_list|(
@@ -519,6 +533,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_enable
 parameter_list|(
@@ -580,6 +595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_all_info
 parameter_list|(
@@ -600,6 +616,34 @@ decl_stmt|;
 name|int
 name|apmerr
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|batt_msg
+index|[]
+init|=
+block|{
+literal|"high"
+block|,
+literal|"low"
+block|,
+literal|"critical"
+block|,
+literal|"charging"
+block|}
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|line_msg
+index|[]
+init|=
+block|{
+literal|"off-line"
+block|,
+literal|"on-line"
+block|}
+decl_stmt|;
 name|printf
 argument_list|(
 literal|"APM version: %d.%d\n"
@@ -617,7 +661,6 @@ name|printf
 argument_list|(
 literal|"APM Management: %s\n"
 argument_list|,
-operator|(
 name|aip
 operator|->
 name|ai_status
@@ -625,7 +668,6 @@ condition|?
 literal|"Enabled"
 else|:
 literal|"Disabled"
-operator|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -638,7 +680,7 @@ condition|(
 name|aip
 operator|->
 name|ai_acline
-operator|==
+operator|>=
 literal|255
 condition|)
 name|printf
@@ -665,23 +707,11 @@ name|ai_acline
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|char
-modifier|*
-name|messages
-index|[]
-init|=
-block|{
-literal|"off-line"
-block|,
-literal|"on-line"
-block|}
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|messages
+name|line_msg
 index|[
 name|aip
 operator|->
@@ -689,7 +719,6 @@ name|ai_acline
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -705,7 +734,7 @@ condition|(
 name|aip
 operator|->
 name|ai_batt_stat
-operator|==
+operator|>=
 literal|255
 condition|)
 name|printf
@@ -732,27 +761,11 @@ name|ai_batt_stat
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|char
-modifier|*
-name|messages
-index|[]
-init|=
-block|{
-literal|"high"
-block|,
-literal|"low"
-block|,
-literal|"critical"
-block|,
-literal|"charging"
-block|}
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|messages
+name|batt_msg
 index|[
 name|aip
 operator|->
@@ -760,7 +773,6 @@ name|ai_batt_stat
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -776,7 +788,7 @@ condition|(
 name|aip
 operator|->
 name|ai_batt_life
-operator|==
+operator|>=
 literal|255
 condition|)
 name|printf
@@ -903,12 +915,8 @@ condition|(
 name|aip
 operator|->
 name|ai_batteries
-operator|==
-operator|(
-name|u_int
-operator|)
-operator|-
-literal|1
+operator|>=
+literal|255
 condition|)
 name|printf
 argument_list|(
@@ -917,7 +925,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|struct
@@ -1001,7 +1009,7 @@ condition|(
 name|aps
 operator|.
 name|ap_batt_flag
-operator|!=
+operator|<=
 literal|255
 operator|&&
 operator|(
@@ -1025,7 +1033,7 @@ condition|(
 name|aps
 operator|.
 name|ap_batt_stat
-operator|==
+operator|>=
 literal|255
 condition|)
 name|printf
@@ -1052,27 +1060,11 @@ name|ap_batt_stat
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-name|char
-modifier|*
-name|messages
-index|[]
-init|=
-block|{
-literal|"high"
-block|,
-literal|"low"
-block|,
-literal|"critical"
-block|,
-literal|"charging"
-block|}
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"%s\n"
 argument_list|,
-name|messages
+name|batt_msg
 index|[
 name|aps
 operator|.
@@ -1080,7 +1072,6 @@ name|ap_batt_stat
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\tRemaining battery life: "
@@ -1091,7 +1082,7 @@ condition|(
 name|aps
 operator|.
 name|ap_batt_life
-operator|==
+operator|>=
 literal|255
 condition|)
 name|printf
@@ -1676,6 +1667,7 @@ comment|/*  * currently, it can turn off the display, but the display never come
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|apm_display
 parameter_list|(
@@ -1712,6 +1704,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_haltcpu
 parameter_list|(
@@ -1777,6 +1770,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|apm_set_timer
 parameter_list|(
@@ -1994,7 +1988,7 @@ decl_stmt|,
 name|fd
 decl_stmt|;
 name|int
-name|sleep
+name|dosleep
 init|=
 literal|0
 decl_stmt|,
@@ -2132,7 +2126,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|sleep
+name|dosleep
 operator|=
 literal|1
 expr_stmt|;
@@ -2296,7 +2290,7 @@ break|break;
 case|case
 literal|'z'
 case|:
-name|sleep
+name|dosleep
 operator|=
 literal|1
 expr_stmt|;
@@ -2355,7 +2349,7 @@ literal|1
 operator|||
 name|delta
 operator|||
-name|sleep
+name|dosleep
 operator|||
 name|standby
 condition|)
@@ -2461,7 +2455,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sleep
+name|dosleep
 condition|)
 name|apm_suspend
 argument_list|(
