@@ -1,18 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * Copyright (c) 1989, 1990 William Jolitz  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)vm_machdep.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1989, 1990 William F. Jolitz  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * All rights reserved.  The Utah Software License Agreement  * specifies the terms and conditions for redistribution.  *  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vm_machdep.c	7.1 (Berkeley) 6/5/86  */
+comment|/*  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  */
 end_comment
 
 begin_include
