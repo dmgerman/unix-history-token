@@ -115,7 +115,7 @@ name|VINUM_SD_WIDTH
 init|=
 literal|8
 block|,
-comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers   */
+comment|/*    * Shifts for the second half of raw plex and    * subdisk numbers  */
 name|VINUM_RAWPLEX_SHIFT
 init|=
 literal|8
@@ -374,7 +374,7 @@ begin_struct
 struct|struct
 name|devcode
 block|{
-comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around   */
+comment|/*  * CARE.  These fields assume a big-endian word.  On a  * little-endian system, they're the wrong way around  */
 name|unsigned
 name|volume
 range|:
@@ -411,7 +411,7 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* type of object */
-comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,                                             VINUM_RAWSD = 6 */
+comment|/*      * type field      VINUM_VOLUME = 0,      VINUM_PLEX = 1,      VINUM_SUBDISK = 2,      VINUM_DRIVE = 3,      VINUM_SUPERDEV = 4,      VINUM_RAWPLEX = 5,      VINUM_RAWSD = 6 */
 name|unsigned
 name|signbit
 range|:
@@ -512,7 +512,7 @@ comment|/* super device for daemon only */
 end_comment
 
 begin_comment
-comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.   */
+comment|/*  * Flags for all objects.  Most of them only apply to  * specific objects, but we have space for all in any  * 32 bit flags word.  */
 end_comment
 
 begin_enum
@@ -795,7 +795,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose   */
+comment|/*  * hostname is 256 bytes long, but we don't need to shlep  * multiple copies in vinum.  We use the host name just  * to identify this system, and 32 bytes should be ample  * for that purpose  */
 end_comment
 
 begin_struct
@@ -897,7 +897,7 @@ comment|/*** Drive definitions ***/
 end_comment
 
 begin_comment
-comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theoretically be a complete, unpartitioned disk   */
+comment|/*  * A drive corresponds to a disk slice.  We use a different term to show  * the difference in usage: it doesn't have to be a slice, and could  * theoretically be a complete, unpartitioned disk  */
 end_comment
 
 begin_struct
@@ -1061,7 +1061,7 @@ name|int64_t
 name|driveoffset
 decl_stmt|;
 comment|/* offset on drive */
-comment|/*      * plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset       */
+comment|/*      * plexoffset is the offset from the beginning of the      * plex to the very first part of the subdisk, in      * sectors.  For striped and RAID-5 plexes, only      * the first stripe is located at this offset      */
 name|int64_t
 name|plexoffset
 decl_stmt|;
@@ -1406,7 +1406,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly   */
+comment|/*  * Table expansion.  Expand table, which contains oldcount  * entries of type element, by increment entries, and change  * oldcount accordingly  */
 end_comment
 
 begin_define
@@ -1487,7 +1487,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c   */
+comment|/*  * These enums are used by the state transition  * routines.  They're in bit map format:  *  * Bit 0: Other plexes in the volume are down  * Bit 1: Other plexes in the volume are up  * Bit 2: The current plex is up  * Maybe they should be local to  * state.c  */
 end_comment
 
 begin_enum
@@ -1539,47 +1539,53 @@ name|sd_downstate
 init|=
 literal|2
 block|,
-comment|/* found an SD which is down */
+comment|/* SD is down */
 name|sd_crashedstate
 init|=
 literal|4
 block|,
-comment|/* found an SD which is crashed */
+comment|/* SD is crashed */
 name|sd_obsoletestate
 init|=
 literal|8
 block|,
-comment|/* found an SD which is obsolete */
+comment|/* SD is obsolete */
 name|sd_stalestate
 init|=
 literal|16
 block|,
-comment|/* found an SD which is stale */
+comment|/* SD is stale */
 name|sd_rebornstate
 init|=
 literal|32
 block|,
-comment|/* found an SD which is reborn */
+comment|/* SD is reborn */
 name|sd_upstate
 init|=
 literal|64
 block|,
-comment|/* found an SD which is up */
+comment|/* SD is up */
 name|sd_initstate
 init|=
 literal|128
 block|,
-comment|/* found an SD which is init */
-name|sd_otherstate
+comment|/* SD is initializing */
+name|sd_initializedstate
 init|=
 literal|256
-comment|/* found an SD in some other state */
+block|,
+comment|/* SD is initialized */
+name|sd_otherstate
+init|=
+literal|512
+block|,
+comment|/* SD is in some other state */
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/*  * This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here   */
+comment|/*  * This is really just a parameter to pass to  * set_<foo>_state, but since it needs to be known  * in the external definitions, we need to define  * it here  */
 end_comment
 
 begin_enum

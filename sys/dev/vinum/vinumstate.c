@@ -451,6 +451,32 @@ return|;
 comment|/* don't do it */
 break|break;
 case|case
+name|sd_initialized
+case|:
+if|if
+condition|(
+operator|(
+name|sd
+operator|->
+name|state
+operator|==
+name|sd_initializing
+operator|)
+comment|/* we were initializing */
+operator|||
+operator|(
+name|flags
+operator|&
+name|setstate_force
+operator|)
+condition|)
+comment|/* or we forced it */
+break|break;
+return|return
+literal|0
+return|;
+comment|/* can't do it otherwise */
+case|case
 name|sd_up
 case|:
 if|if
@@ -497,7 +523,7 @@ case|case
 name|sd_down
 case|:
 comment|/* been down, no data lost */
-comment|/* 		 * If we're associated with a plex, and 		 * the plex isn't up, or we're the only 		 * subdisk in the plex, we can do it 		 */
+comment|/* 		 * If we're associated with a plex, and 		 * the plex isn't up, or we're the only 		 * subdisk in the plex, we can do it. 		 */
 if|if
 condition|(
 operator|(
@@ -540,7 +566,6 @@ operator|)
 condition|)
 break|break;
 comment|/* do it */
-comment|/* 		 * XXX Get this right: make sure that other plexes in 		 * the volume cover this address space, otherwise 		 * we make this one sd_up. 		 * 		 * Do we even want this any more? 		 */
 if|if
 condition|(
 name|oldstate
@@ -599,9 +624,6 @@ comment|/* we're doing this while configuring */
 break|break;
 comment|/* otherwise it's like being empty */
 comment|/* FALLTHROUGH */
-case|case
-name|sd_initializing
-case|:
 case|case
 name|sd_empty
 case|:
@@ -760,10 +782,30 @@ literal|1
 operator|)
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|==
+name|sd_initializing
+condition|)
+comment|/* it's finished initializing  */
+name|sd
+operator|->
+name|state
+operator|=
+name|sd_initialized
+expr_stmt|;
+else|else
 return|return
 literal|0
 return|;
 comment|/* can't do it */
+block|}
+else|else
+block|{
 name|sd
 operator|->
 name|state
@@ -783,6 +825,7 @@ operator|=
 name|EAGAIN
 expr_stmt|;
 comment|/* need to repeat */
+block|}
 break|break;
 case|case
 name|sd_reviving
@@ -801,7 +844,7 @@ return|;
 comment|/* no, try again */
 default|default:
 comment|/* can't do it */
-comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived 		 */
+comment|/* 		 * There's no way to bring subdisks up directly from 		 * other states.  First they need to be initialized 		 * or revived. 		 */
 return|return
 literal|0
 return|;
@@ -1718,8 +1761,17 @@ operator|==
 name|sd_emptystate
 operator|)
 comment|/* all subdisks empty */
-operator|&&
+operator|||
 operator|(
+name|statemap
+operator|==
+name|sd_initializedstate
+operator|)
+condition|)
+block|{
+comment|/* or all initialized */
+if|if
+condition|(
 operator|(
 name|vps
 operator|&
@@ -1727,29 +1779,9 @@ name|volplex_otherup
 operator|)
 operator|==
 literal|0
-operator|)
-comment|/* and no other plex is up */
-operator|&&
-operator|(
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_concat
-operator|)
-comment|/* and we're not RAID-5 */
-operator|||
-operator|(
-name|plex
-operator|->
-name|organization
-operator|==
-name|plex_striped
-operator|)
-operator|)
 condition|)
 block|{
+comment|/*  no other plex is up */
 name|struct
 name|volume
 modifier|*
@@ -1764,7 +1796,7 @@ name|volno
 index|]
 decl_stmt|;
 comment|/* possible volume to which it points */
-comment|/* 	 * If we're a striped or concat plex associated with a 	 * volume, none of whose plexes are up, and we're new and 	 * untested, and the volume has the setupstate bit set, we 	 * can pretend to be in a consistent state. 	 * 	 * We need to do this in one swell foop: on the next call 	 * we will no longer be just empty. 	 * 	 * This code assumes that all the other plexes are also 	 * capable of coming up (i.e. all the sds are up), but 	 * that's OK: we'll come back to this function for the 	 * remaining plexes in the volume. 	 */
+comment|/* 	     * If we're a striped or concat plex 	     * associated with a volume, none of whose 	     * plexes are up, and we're new and untested, 	     * and the volume has the setupstate bit set, 	     * we can pretend to be in a consistent state. 	     * 	     * We need to do this in one swell foop: on 	     * the next call we will no longer be just 	     * empty. 	     * 	     * This code assumes that all the other plexes 	     * are also capable of coming up (i.e. all the 	     * sds are up), but that's OK: we'll come back 	     * to this function for the remaining plexes 	     * in the volume. 	     */
 if|if
 condition|(
 operator|(
@@ -1823,13 +1855,107 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+operator|(
+name|statemap
+operator|==
+name|sd_initializedstate
+operator|)
+comment|/* if it's initialized (not empty) */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_concat
+operator|)
+comment|/* and we're not RAID-5 */
+operator|||
+operator|(
+name|plex
+operator|->
+name|organization
+operator|==
+name|plex_striped
+operator|)
+condition|)
 name|forceup
 argument_list|(
 name|plexno
 argument_list|)
 expr_stmt|;
 comment|/* we'll do it */
+comment|/* 	     * This leaves a case where things don't get 	     * done: the plex is RAID-5, and the subdisks 	     * are all empty.  They need to be initialized 	     * first. 	     */
+block|}
+else|else
+block|{
+comment|/* another plex is up */
+name|int
+name|sdno
+decl_stmt|;
+name|plex
+operator|->
+name|state
+operator|=
+name|plex_faulty
+expr_stmt|;
+comment|/* and bring it up */
+comment|/* change the subdisks to up state */
+for|for
+control|(
+name|sdno
+operator|=
+literal|0
+init|;
+name|sdno
+operator|<
+name|plex
+operator|->
+name|subdisks
+condition|;
+name|sdno
+operator|++
+control|)
+block|{
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+operator|.
+name|state
+operator|=
+name|sd_reviving
+expr_stmt|;
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+comment|/* tell them about it */
+literal|"vinum: %s is reviving\n"
+argument_list|,
+name|SD
+index|[
+name|plex
+operator|->
+name|sdnos
+index|[
+name|sdno
+index|]
+index|]
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 elseif|else
 if|if
@@ -2656,6 +2782,22 @@ expr_stmt|;
 comment|/* another unusable subdisk */
 break|break;
 case|case
+name|sd_initialized
+case|:
+name|statemap
+operator||=
+name|sd_initializedstate
+expr_stmt|;
+operator|(
+name|plex
+operator|->
+name|sddowncount
+operator|)
+operator|++
+expr_stmt|;
+comment|/* another unusable subdisk */
+break|break;
+case|case
 name|sd_unallocated
 case|:
 case|case
@@ -2952,6 +3094,9 @@ name|sd_init
 case|:
 case|case
 name|sd_initializing
+case|:
+case|case
+name|sd_initialized
 case|:
 case|case
 name|sd_empty
@@ -3850,6 +3995,135 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+name|object_initialized
+case|:
+if|if
+condition|(
+name|msg
+operator|->
+name|type
+operator|==
+name|sd_object
+condition|)
+block|{
+name|sd
+operator|=
+operator|&
+name|SD
+index|[
+name|msg
+operator|->
+name|index
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|msg
+operator|->
+name|index
+operator|>=
+name|vinum_conf
+operator|.
+name|subdisks_allocated
+operator|)
+operator|||
+operator|(
+name|sd
+operator|->
+name|state
+operator|<=
+name|sd_referenced
+operator|)
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|ioctl_reply
+operator|->
+name|msg
+argument_list|,
+literal|"Invalid subdisk %d"
+argument_list|,
+name|msg
+operator|->
+name|index
+argument_list|)
+expr_stmt|;
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EFAULT
+expr_stmt|;
+return|return;
+block|}
+name|set_sd_state
+argument_list|(
+name|msg
+operator|->
+name|index
+argument_list|,
+name|sd_initialized
+argument_list|,
+name|msg
+operator|->
+name|force
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|state
+operator|!=
+name|sd_initializing
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|ioctl_reply
+operator|->
+name|msg
+argument_list|,
+literal|"Can't set state"
+argument_list|)
+expr_stmt|;
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EBUSY
+expr_stmt|;
+block|}
+else|else
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|strcpy
+argument_list|(
+name|ioctl_reply
+operator|->
+name|msg
+argument_list|,
+literal|"Invalid object"
+argument_list|)
+expr_stmt|;
+name|ioctl_reply
+operator|->
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|object_up
 case|:
 name|start_object
@@ -3860,6 +4134,18 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
