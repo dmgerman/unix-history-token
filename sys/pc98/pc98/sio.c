@@ -2219,8 +2219,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|sio_slow_ih
 decl_stmt|;
@@ -2228,8 +2227,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|struct
-name|intrhand
+name|void
 modifier|*
 name|sio_fast_ih
 decl_stmt|;
@@ -6645,7 +6643,7 @@ argument_list|(
 operator|&
 name|sio_lock
 argument_list|,
-literal|"sio"
+name|driver_name
 argument_list|,
 name|MTX_SPIN
 argument_list|)
@@ -10686,15 +10684,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|sio_fast_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"tty:sio"
-argument_list|,
 operator|&
 name|tty_ithd
 argument_list|,
+literal|"tty:sio"
+argument_list|,
 name|siopoll
 argument_list|,
 name|NULL
@@ -10702,17 +10698,18 @@ argument_list|,
 name|SWI_TTY
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|sio_fast_ih
 argument_list|)
 expr_stmt|;
-name|sio_slow_ih
-operator|=
-name|sinthand_add
+name|swi_add
 argument_list|(
-literal|"tty:sio"
-argument_list|,
 operator|&
 name|clk_ithd
 argument_list|,
+literal|"tty:sio"
+argument_list|,
 name|siopoll
 argument_list|,
 name|NULL
@@ -10720,6 +10717,9 @@ argument_list|,
 name|SWI_TTY
 argument_list|,
 literal|0
+argument_list|,
+operator|&
+name|sio_slow_ih
 argument_list|)
 expr_stmt|;
 block|}
@@ -14795,7 +14795,7 @@ name|com
 operator|->
 name|hotchar
 condition|)
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
@@ -14842,7 +14842,7 @@ expr_stmt|;
 operator|++
 name|com_events
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|sio_slow_ih
 argument_list|,
@@ -14853,7 +14853,7 @@ if|#
 directive|if
 literal|0
 comment|/* for testing input latency vs efficiency */
-block|if (com->iptr - com->ibuf == 8) 	sched_swi(sio_fast_ih, SWI_NOSWITCH);
+block|if (com->iptr - com->ibuf == 8) 	swi_sched(sio_fast_ih, SWI_NOSWITCH);
 endif|#
 directive|endif
 name|ioptr
@@ -15089,7 +15089,7 @@ name|state
 operator||=
 name|CS_CHECKMSR
 expr_stmt|;
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
@@ -15610,7 +15610,7 @@ operator||=
 name|CS_ODONE
 expr_stmt|;
 comment|/* handle at high level ASAP */
-name|sched_swi
+name|swi_sched
 argument_list|(
 name|sio_fast_ih
 argument_list|,
