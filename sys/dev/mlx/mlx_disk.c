@@ -1081,7 +1081,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"%uMB (%u sectors), RAID %d (%s)\n"
+literal|"%uMB (%u sectors) RAID %d (%s)\n"
 argument_list|,
 name|sc
 operator|->

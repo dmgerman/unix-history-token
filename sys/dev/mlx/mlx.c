@@ -6956,9 +6956,15 @@ index|]
 expr_stmt|;
 name|blkcount
 operator|=
+operator|(
 name|bp
 operator|->
 name|b_bcount
+operator|+
+name|MLX_BLKSIZE
+operator|-
+literal|1
+operator|)
 operator|/
 name|MLX_BLKSIZE
 expr_stmt|;
