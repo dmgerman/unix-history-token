@@ -299,35 +299,11 @@ literal|"[%d] child_process('%s')\n"
 argument|, getpid(), e->cmd)
 argument_list|)
 comment|/* mark ourselves as different to PS command watchers by upshifting 	 * our program name.  This has no effect on some kernels. 	 */
-comment|/*local*/
-block|{
-specifier|register
-name|char
-modifier|*
-name|pch
-decl_stmt|;
-for|for
-control|(
-name|pch
-operator|=
-name|ProgramName
-init|;
-operator|*
-name|pch
-condition|;
-name|pch
-operator|++
-control|)
-operator|*
-name|pch
-operator|=
-name|MkUpper
+name|setproctitle
 argument_list|(
-operator|*
-name|pch
+literal|"running job"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* discover some useful and important environment settings 	 */
 name|usernm
 operator|=
