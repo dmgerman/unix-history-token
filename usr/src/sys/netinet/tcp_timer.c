@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_timer.c	4.21	82/06/08	*/
+comment|/*	tcp_timer.c	4.22	82/06/12	*/
 end_comment
 
 begin_include
@@ -743,6 +743,11 @@ comment|/* 	 * Persistance timer into zero window. 	 * Force a byte to be output
 case|case
 name|TCPT_PERSIST
 case|:
+name|tcp_setpersist
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_force

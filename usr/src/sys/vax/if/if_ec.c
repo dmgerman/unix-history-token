@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.14	82/06/05	*/
+comment|/*	if_ec.c	4.15	82/06/12	*/
 end_comment
 
 begin_include
@@ -1287,8 +1287,6 @@ name|es
 operator|->
 name|es_if
 argument_list|,
-name|RTF_DIRECT
-operator||
 name|RTF_UP
 argument_list|)
 expr_stmt|;
@@ -3309,21 +3307,6 @@ name|i
 operator|++
 expr_stmt|;
 block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|mp
-operator|->
-name|m_len
-condition|;
-name|i
-operator|++
-control|)
 while|while
 condition|(
 name|i
@@ -3950,8 +3933,6 @@ operator|->
 name|if_addr
 argument_list|,
 name|RTF_UP
-operator||
-name|RTF_DIRECT
 operator||
 name|RTF_HOST
 argument_list|)

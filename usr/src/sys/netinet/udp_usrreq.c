@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.28	82/04/25	*/
+comment|/*	udp_usrreq.c	4.29	82/06/12	*/
 end_comment
 
 begin_include
@@ -818,6 +818,12 @@ modifier|*
 name|ui
 decl_stmt|;
 specifier|register
+name|struct
+name|socket
+modifier|*
+name|so
+decl_stmt|;
+specifier|register
 name|int
 name|len
 init|=
@@ -984,14 +990,24 @@ name|ui
 operator|->
 name|ui_ulen
 operator|=
+name|len
+expr_stmt|;
+if|#
+directive|if
+name|vax
+name|ui
+operator|->
+name|ui_ulen
+operator|=
 name|htons
 argument_list|(
-operator|(
-name|u_short
-operator|)
-name|len
+name|ui
+operator|->
+name|ui_ulen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Stuff checksum and output datagram. 	 */
 name|ui
 operator|->
@@ -1048,6 +1064,12 @@ name|ip_ttl
 operator|=
 name|MAXTTL
 expr_stmt|;
+name|so
+operator|=
+name|inp
+operator|->
+name|inp_socket
+expr_stmt|;
 return|return
 operator|(
 name|ip_output
@@ -1061,11 +1083,25 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DONTROUTE
+operator|)
+condition|?
+operator|&
+name|routetoif
+else|:
+operator|(
+expr|struct
+name|route
+operator|*
+operator|)
 literal|0
 argument_list|,
-name|inp
-operator|->
-name|inp_socket
+name|so
 operator|->
 name|so_state
 operator|&

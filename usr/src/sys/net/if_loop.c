@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_loop.c	4.11	82/04/16	*/
+comment|/*	if_loop.c	4.12	82/06/12	*/
 end_comment
 
 begin_comment
@@ -204,8 +204,6 @@ name|if_rtinit
 argument_list|(
 name|ifp
 argument_list|,
-name|RTF_DIRECT
-operator||
 name|RTF_UP
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.32	82/05/14	*/
+comment|/*	if_imp.c	4.33	82/06/12	*/
 end_comment
 
 begin_include
@@ -470,8 +470,6 @@ name|sc
 operator|->
 name|imp_if
 argument_list|,
-name|RTF_DIRECT
-operator||
 name|RTF_UP
 argument_list|)
 expr_stmt|;
