@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makpipe.c	4.3	(Berkeley)	%G%"
+literal|"@(#)makpipe.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"stdio.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_macro
@@ -87,18 +93,7 @@ directive|if
 name|BSD4_2
 name|execl
 argument_list|(
-literal|"/bin/sh"
-argument_list|,
-literal|"sh"
-argument_list|,
-literal|"-i"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-literal|"/usr/ucb/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
@@ -111,7 +106,7 @@ else|#
 directive|else
 name|execlp
 argument_list|(
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|,
 literal|"csh"
 argument_list|,
@@ -120,7 +115,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*execl ("/usr/ucb/bin/csh", "csh", "-if", 0);*/
 endif|#
 directive|endif
 name|write

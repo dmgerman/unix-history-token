@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)selsub.c	4.5	(Berkeley)	%G%"
+literal|"@(#)selsub.c	4.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,31 +24,37 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lrnref.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -643,7 +649,7 @@ if|if
 condition|(
 name|chdir
 argument_list|(
-literal|"/tmp"
+name|_PATH_TMP
 argument_list|)
 operator|!=
 literal|0
@@ -651,7 +657,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/tmp"
+name|_PATH_TMP
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wrapup.c	4.3	(Berkeley)	%G%"
+literal|"@(#)wrapup.c	4.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,19 +24,25 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|<sys/signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|"lrnref.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -112,14 +118,14 @@ argument_list|)
 expr_stmt|;
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_TTY
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/stty"
+name|_PATH_STTY
 argument_list|,
 literal|"stty"
 argument_list|,
@@ -133,20 +139,7 @@ endif|#
 directive|endif
 name|execl
 argument_list|(
-literal|"/bin/rm"
-argument_list|,
-literal|"rm"
-argument_list|,
-literal|"-rf"
-argument_list|,
-name|dir
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-literal|"/usr/bin/rm"
+name|_PATH_RM
 argument_list|,
 literal|"rm"
 argument_list|,
@@ -159,7 +152,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"bin/rm"
+name|_PATH_RM
 argument_list|)
 expr_stmt|;
 name|fprintf

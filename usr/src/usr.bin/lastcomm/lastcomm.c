@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lastcomm.c	5.7 (Berkeley) %G%"
+literal|"@(#)lastcomm.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -215,7 +221,7 @@ parameter_list|()
 function_decl|;
 name|acctfile
 operator|=
-name|NULL
+name|_PATH_ACCT
 expr_stmt|;
 while|while
 condition|(
@@ -270,15 +276,6 @@ block|}
 name|argv
 operator|+=
 name|optind
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|acctfile
-condition|)
-name|acctfile
-operator|=
-literal|"/usr/adm/acct"
 expr_stmt|;
 name|fd
 operator|=
@@ -1203,7 +1200,7 @@ name|fd
 operator|=
 name|opendir
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 operator|)
 operator|==
@@ -1212,7 +1209,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"/dev"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1487,7 +1484,7 @@ name|strcpy
 argument_list|(
 name|name
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)learn.c	4.4	(Berkeley)	%G%"
+literal|"@(#)learn.c	4.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,7 +24,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"stdio.h"
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -36,7 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -44,13 +50,9 @@ name|char
 modifier|*
 name|direct
 init|=
-literal|"/usr/lib/learn"
+name|_PATH_LEARN
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* CHANGE THIS ON YOUR SYSTEM */
-end_comment
 
 begin_decl_stmt
 name|int

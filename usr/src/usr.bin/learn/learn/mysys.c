@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mysys.c	4.5	(Berkeley)	%G%"
+literal|"@(#)mysys.c	4.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,13 +24,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<sys/signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"stdio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"signal.h"
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -125,7 +131,7 @@ name|sprintf
 argument_list|(
 name|path
 argument_list|,
-literal|"PATH=%s/bin:/usr/cc/bin:/usr/ucb/bin:"
+name|_PATH_DEFPATH
 argument_list|,
 name|direct
 argument_list|)
@@ -676,7 +682,6 @@ argument_list|(
 name|t
 argument_list|)
 expr_stmt|;
-comment|/*	sprintf(b, "/usr/ucb/bin/%s", t); 				execv(b, np); 				sprintf(b, "/usr/ucb/%s", t); 				execv(b, np); 				sprintf(b, "/bin/%s", t); 				execv(b, np); 				sprintf(b, "/usr/bin/%s", t); 				execv(b, np); 				perror(b); */
 name|fprintf
 argument_list|(
 name|stderr
@@ -803,7 +808,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|,
 literal|"csh"
 argument_list|,

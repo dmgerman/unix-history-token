@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.14 (Berkeley) %G%"
+literal|"@(#)last.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_define
@@ -254,7 +260,7 @@ name|char
 modifier|*
 name|file
 init|=
-literal|"/usr/adm/wtmp"
+name|_PATH_WTMP
 decl_stmt|;
 end_decl_stmt
 
@@ -1996,11 +2002,11 @@ name|strncmp
 argument_list|(
 name|arg
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 sizeof|sizeof
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 operator|-
 literal|1

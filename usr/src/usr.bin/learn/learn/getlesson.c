@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getlesson.c	4.2	(Berkeley)	%G%"
+literal|"@(#)getlesson.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|"lrnref.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_function
@@ -297,7 +303,7 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|,
 literal|"csh"
 argument_list|,
@@ -310,7 +316,7 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|)
 expr_stmt|;
 name|fprintf
