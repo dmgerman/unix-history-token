@@ -5135,9 +5135,7 @@ name|object
 argument_list|,
 literal|0
 argument_list|,
-name|object
-operator|->
-name|size
+literal|0
 argument_list|,
 operator|(
 name|flags

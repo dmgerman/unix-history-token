@@ -5620,7 +5620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_remove: [internal]  *  *	Removes all physical pages in the specified  *	object range from the object's list of pages.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_remove:  *  *	Removes all physical pages in the given range from the  *	object's list of pages.  If the range's end is zero, all  *	physical pages from the range's start to the end of the object  *	are deleted.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -5757,11 +5757,17 @@ name|p
 operator|!=
 name|NULL
 operator|&&
+operator|(
 name|p
 operator|->
 name|pindex
 operator|<
 name|end
+operator|||
+name|end
+operator|==
+literal|0
+operator|)
 condition|;
 name|p
 operator|=
