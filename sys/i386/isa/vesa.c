@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.8 1998/10/02 03:42:19 yokota Exp $  */
+comment|/*-  * Copyright (c) 1998 Kazutaka YOKOTA and Michael Smith  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: vesa.c,v 1.9 1998/12/07 21:58:24 archie Exp $  */
 end_comment
 
 begin_include
@@ -42,7 +42,7 @@ operator|)
 operator|||
 name|defined
 argument_list|(
-name|VESA_MODULE
+name|KLD_MODULE
 argument_list|)
 end_if
 
@@ -62,6 +62,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -117,43 +123,6 @@ include|#
 directive|include
 file|<i386/isa/videoio.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VESA_MODULE
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/lkm.h>
-end_include
-
-begin_expr_stmt
-name|MOD_MISC
-argument_list|(
-name|vesa
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* VESA video adapter state buffer stub */
@@ -4342,7 +4311,7 @@ name|i
 decl_stmt|;
 ifndef|#
 directive|ifndef
-name|VESA_MODULE
+name|KLD_MODULE
 comment|/* call the previous handler first */
 call|(
 modifier|*
@@ -4712,31 +4681,18 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VESA_MODULE
+name|KLD_MODULE
 end_ifdef
 
-begin_decl_stmt
+begin_function
 specifier|static
-name|int
-name|vesa_load
-argument_list|(
-expr|struct
-name|lkm_table
-operator|*
-name|lkmtp
-argument_list|,
-name|int
-name|cmd
-argument_list|)
-else|#
-directive|else
-name|int
-name|vesa_load
-argument_list|(
-name|void
-argument_list|)
 endif|#
 directive|endif
+name|int
+name|vesa_load
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|adapters
@@ -4746,7 +4702,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|VESA_MODULE
+name|KLD_MODULE
 name|int
 name|s
 decl_stmt|;
@@ -4883,7 +4839,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|VESA_MODULE
+name|KLD_MODULE
 name|s
 operator|=
 name|spltty
@@ -4938,7 +4894,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|VESA_MODULE
+name|KLD_MODULE
 name|splx
 argument_list|(
 name|s
@@ -4961,12 +4917,12 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|VESA_MODULE
+name|KLD_MODULE
 end_ifdef
 
 begin_function
@@ -4974,13 +4930,7 @@ specifier|static
 name|int
 name|vesa_unload
 parameter_list|(
-name|struct
-name|lkm_table
-modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
+name|void
 parameter_list|)
 block|{
 name|int
@@ -5064,40 +5014,77 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
-name|vesa_mod
+name|vesa_mod_event
 parameter_list|(
-name|struct
-name|lkm_table
+name|module_t
+name|mod
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|void
 modifier|*
-name|lkmtp
-parameter_list|,
-name|int
-name|cmd
-parameter_list|,
-name|int
-name|ver
+name|data
 parameter_list|)
 block|{
-name|MOD_DISPATCH
+switch|switch
+condition|(
+name|type
+condition|)
+block|{
+case|case
+name|MOD_LOAD
+case|:
+return|return
+name|vesa_load
+argument_list|()
+return|;
+case|case
+name|MOD_UNLOAD
+case|:
+return|return
+name|vesa_unload
+argument_list|()
+return|;
+default|default:
+break|break;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|moduledata_t
+name|vesa_mod
+init|=
+block|{
+literal|"vesa"
+block|,
+name|vesa_mod_event
+block|,
+name|NULL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|DECLARE_MODULE
 argument_list|(
 name|vesa
 argument_list|,
-name|lkmtp
+name|vesa_mod
 argument_list|,
-name|cmd
+name|SI_SUB_PSEUDO
 argument_list|,
-name|ver
-argument_list|,
-name|vesa_load
-argument_list|,
-name|vesa_unload
-argument_list|,
-name|lkm_nullcmd
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
-block|}
-end_function
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -5105,7 +5092,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* VESA_MODULE */
+comment|/* KLD_MODULE */
 end_comment
 
 begin_endif
@@ -5114,7 +5101,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* (NSC> 0&& VESA&& VM86) || VESA_MODULE */
+comment|/* (NSC> 0&& VESA&& VM86) || KLD_MODULE */
 end_comment
 
 end_unit
