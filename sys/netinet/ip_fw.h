@@ -1272,52 +1272,6 @@ value|0x10
 end_define
 
 begin_comment
-comment|/*  * Definitions for TCP flags.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_FIN
-value|TH_FIN
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_SYN
-value|TH_SYN
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_RST
-value|TH_RST
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_PSH
-value|TH_PUSH
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_ACK
-value|TH_ACK
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_TCPF_URG
-value|TH_URG
-end_define
-
-begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
 end_comment
 
