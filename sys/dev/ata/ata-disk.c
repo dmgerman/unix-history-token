@@ -396,7 +396,7 @@ name|_hw_ata
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ata_wc
+name|wc
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -417,7 +417,7 @@ name|_hw_ata
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|ata_tags
+name|tags
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
@@ -1204,6 +1204,13 @@ argument_list|,
 literal|"removed from configuration\n"
 argument_list|)
 expr_stmt|;
+name|ad_invalidatequeue
+argument_list|(
+name|adp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|request
@@ -1350,7 +1357,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|ATA_WAIT_INTR
+name|ATA_WAIT_READY
 argument_list|)
 condition|)
 name|ata_printf
