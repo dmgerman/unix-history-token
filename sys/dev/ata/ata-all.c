@@ -3079,9 +3079,13 @@ name|device
 argument_list|)
 operator|)
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|ENXIO
-return|;
+expr_stmt|;
+break|break;
+block|}
 name|error
 operator|=
 name|ata_reinit
