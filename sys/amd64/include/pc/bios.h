@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.h,v 1.3 1999/07/29 01:49:19 msmith Exp $  */
+comment|/*-  * Copyright (c) 1997 Michael Smith  * Copyright (c) 1998 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: bios.h,v 1.4 1999/08/17 07:10:34 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -137,93 +137,6 @@ value|(((x) - atdevbase) + ISA_HOLE_START)
 end_define
 
 begin_comment
-comment|/*  * System Management BIOS / Desktop Management Interface tables  */
-end_comment
-
-begin_struct
-struct|struct
-name|DMI_table
-block|{
-name|u_int8_t
-name|sig
-index|[
-literal|5
-index|]
-decl_stmt|;
-comment|/* "_DMI_" */
-name|u_int8_t
-name|cksum
-decl_stmt|;
-comment|/* checksum */
-name|u_int16_t
-name|st_size
-decl_stmt|;
-comment|/* total length of SMBIOS table (bytes)*/
-name|u_int32_t
-name|st_base
-decl_stmt|;
-comment|/* base address of the SMBIOS table (physical) */
-name|u_int16_t
-name|st_entries
-decl_stmt|;
-comment|/* total number of structures present in the table */
-name|u_int8_t
-name|bcd_revision
-decl_stmt|;
-comment|/* interface revision number */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|SMBIOS_table
-block|{
-name|u_int8_t
-name|sig
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* "_SM_" */
-name|u_int8_t
-name|cksum
-decl_stmt|;
-comment|/* checksum */
-name|u_int8_t
-name|len
-decl_stmt|;
-comment|/* structure length */
-name|u_int8_t
-name|major
-decl_stmt|,
-name|minor
-decl_stmt|;
-comment|/* major/minor revision numbers */
-name|u_int16_t
-name|st_maxsize
-decl_stmt|;
-comment|/* largest structure size (bytes) */
-name|u_int8_t
-name|revision
-decl_stmt|;
-comment|/* entrypoint revision */
-name|u_int8_t
-name|pad
-index|[
-literal|5
-index|]
-decl_stmt|;
-name|struct
-name|DMI_table
-name|dmi
-decl_stmt|;
-comment|/* follows immediately */
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*   * PnP BIOS presence structure  */
 end_comment
 
@@ -305,15 +218,6 @@ specifier|extern
 name|struct
 name|bios32_SDentry
 name|PCIbios
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|SMBIOS_table
-modifier|*
-name|SMBIOStable
 decl_stmt|;
 end_decl_stmt
 
