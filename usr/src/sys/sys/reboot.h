@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	reboot.h	4.2	81/02/19	*/
+comment|/*	reboot.h	4.3	82/10/31	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|RB_ASKNAME
-value|1
+value|0x01
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|RB_SINGLE
-value|2
+value|0x02
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|RB_NOSYNC
-value|4
+value|0x04
 end_define
 
 begin_comment
@@ -55,11 +55,22 @@ begin_define
 define|#
 directive|define
 name|RB_HALT
-value|8
+value|0x08
 end_define
 
 begin_comment
 comment|/* don't reboot, just halt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RB_INITNAME
+value|0x10
+end_define
+
+begin_comment
+comment|/* name given for /etc/init */
 end_comment
 
 begin_define
