@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.23	82/11/17	*/
+comment|/*	sys_generic.c	5.24	82/12/05	*/
 end_comment
 
 begin_include
@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/tty.h"
 end_include
 
@@ -38,12 +44,6 @@ include|#
 directive|include
 file|"../h/file.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|IDEBUG
-end_define
 
 begin_include
 include|#
