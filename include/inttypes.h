@@ -69,6 +69,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|intmax_t
 name|imaxabs
 argument_list|(
@@ -161,6 +162,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#
