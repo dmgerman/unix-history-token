@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	8.3 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_vfsops.c	8.4 (Berkeley) %G%  *  * @(#)lofs_vfsops.c	1.2 (Berkeley) 6/18/92  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -363,11 +363,9 @@ name|qaddr_t
 operator|)
 name|xmp
 expr_stmt|;
-name|getnewfsid
+name|vfs_getnewfsid
 argument_list|(
 name|mp
-argument_list|,
-name|MOUNT_LOFS
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1263,11 +1261,20 @@ name|nullfs_init
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|vfsconf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nullfs_sysctl
+value|((int (*) __P((int *, u_int, void *, size_t *, void *, \ 	    size_t, struct proc *)))eopnotsupp)
+end_define
 
 begin_decl_stmt
 name|struct
@@ -1296,6 +1303,8 @@ block|,
 name|nullfs_vptofh
 block|,
 name|nullfs_init
+block|,
+name|nullfs_sysctl
 block|, }
 decl_stmt|;
 end_decl_stmt

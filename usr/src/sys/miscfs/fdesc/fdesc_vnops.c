@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.12 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	8.13 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -226,8 +226,18 @@ end_comment
 
 begin_macro
 name|fdesc_init
-argument_list|()
+argument_list|(
+argument|vfsp
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -3341,23 +3351,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * /dev/fd vnode unsupported operation  */
-end_comment
-
-begin_function
-name|int
-name|fdesc_enotsupp
-parameter_list|()
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * /dev/fd "should never get here" operation  */
 end_comment
 
@@ -3375,35 +3368,18 @@ comment|/* NOTREACHED */
 block|}
 end_function
 
-begin_comment
-comment|/*  * /dev/fd vnode null operation  */
-end_comment
-
-begin_function
-name|int
-name|fdesc_nullop
-parameter_list|()
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
 name|fdesc_create
-value|((int (*) __P((struct  vop_create_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_create_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_mknod
-value|((int (*) __P((struct  vop_mknod_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mknod_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3424,7 +3400,7 @@ begin_define
 define|#
 directive|define
 name|fdesc_mmap
-value|((int (*) __P((struct  vop_mmap_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mmap_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3445,42 +3421,42 @@ begin_define
 define|#
 directive|define
 name|fdesc_remove
-value|((int (*) __P((struct  vop_remove_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_remove_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_link
-value|((int (*) __P((struct  vop_link_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_link_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_rename
-value|((int (*) __P((struct  vop_rename_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_rename_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_mkdir
-value|((int (*) __P((struct  vop_mkdir_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_mkdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_rmdir
-value|((int (*) __P((struct  vop_rmdir_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_rmdir_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_symlink
-value|((int (*) __P((struct vop_symlink_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct vop_symlink_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3529,7 +3505,7 @@ begin_define
 define|#
 directive|define
 name|fdesc_advlock
-value|((int (*) __P((struct vop_advlock_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct vop_advlock_args *)))eopnotsupp)
 end_define
 
 begin_define
@@ -3537,21 +3513,14 @@ define|#
 directive|define
 name|fdesc_blkatoff
 define|\
-value|((int (*) __P((struct  vop_blkatoff_args *)))fdesc_enotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|fdesc_vget
-value|((int (*) __P((struct  vop_vget_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_blkatoff_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_valloc
-value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) fdesc_enotsupp)
+value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) eopnotsupp)
 end_define
 
 begin_define
@@ -3559,21 +3528,21 @@ define|#
 directive|define
 name|fdesc_truncate
 define|\
-value|((int (*) __P((struct  vop_truncate_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_truncate_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_update
-value|((int (*) __P((struct  vop_update_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_update_args *)))eopnotsupp)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdesc_bwrite
-value|((int (*) __P((struct  vop_bwrite_args *)))fdesc_enotsupp)
+value|((int (*) __P((struct  vop_bwrite_args *)))eopnotsupp)
 end_define
 
 begin_function_decl
