@@ -107,6 +107,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EMU10K1_DELL_PCI_ID
+value|0x00061102
+end_define
+
+begin_define
+define|#
+directive|define
 name|EMU10K2_PCI_ID
 value|0x00041102
 end_define
@@ -10872,6 +10879,14 @@ literal|"Creative EMU10K1"
 expr_stmt|;
 break|break;
 case|case
+name|EMU10K1_DELL_PCI_ID
+case|:
+name|s
+operator|=
+literal|"Creative EMU10K1 (Dell)"
+expr_stmt|;
+break|break;
+case|case
 name|EMU10K2_PCI_ID
 case|:
 if|if
@@ -11872,6 +11887,19 @@ case|:
 name|s
 operator|=
 literal|"Creative EMU10K1 Joystick"
+expr_stmt|;
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x70041102
+case|:
+name|s
+operator|=
+literal|"Creative EMU10K1 Joystick (Dell)"
 expr_stmt|;
 name|device_quiet
 argument_list|(
