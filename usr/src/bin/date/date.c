@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	4.20 (Berkeley) %G%"
+literal|"@(#)date.c	4.20 (Berkeley) 3/24/87"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,13 +237,6 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-specifier|static
-name|char
-name|usage
-index|[]
-init|=
-literal|"usage: date [-n] [-u] [yymmddhhmm[.ss]]\n"
-decl_stmt|;
 name|struct
 name|timezone
 name|tz
@@ -286,18 +279,19 @@ modifier|*
 name|getlogin
 argument_list|()
 decl_stmt|;
-name|openlog
-argument_list|(
-literal|"date"
-argument_list|,
-name|LOG_ODELAY
-argument_list|,
-name|LOG_AUTH
-argument_list|)
-expr_stmt|;
 name|nflag
 operator|=
 name|uflag
+operator|=
+literal|0
+expr_stmt|;
+name|tz
+operator|.
+name|tz_dsttime
+operator|=
+name|tz
+operator|.
+name|tz_minuteswest
 operator|=
 literal|0
 expr_stmt|;
@@ -312,7 +306,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"nu"
+literal|"d:nut:"
 argument_list|)
 operator|)
 operator|!=
@@ -352,8 +346,26 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'u'
+case|:
+name|uflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
+comment|/* error check; we can't allow "PST" */
+if|if
+condition|(
+name|isdigit
+argument_list|(
+operator|*
+name|optarg
+argument_list|)
+condition|)
+block|{
 name|tz
 operator|.
 name|tz_minuteswest
@@ -364,21 +376,11 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'u'
-case|:
-name|uflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
+block|}
+comment|/*FALLTHROUGH*/
 default|default:
-name|fputs
-argument_list|(
 name|usage
-argument_list|,
-name|stderr
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -401,12 +403,8 @@ operator|>
 literal|1
 condition|)
 block|{
-name|fputs
-argument_list|(
 name|usage
-argument_list|,
-name|stderr
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -484,27 +482,6 @@ condition|)
 goto|goto
 name|display
 goto|;
-if|if
-condition|(
-name|getuid
-argument_list|()
-condition|)
-block|{
-name|fputs
-argument_list|(
-literal|"You are not superuser: date not set.\n"
-argument_list|,
-name|stderr
-argument_list|)
-expr_stmt|;
-name|retval
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|display
-goto|;
-block|}
 name|wtmp
 index|[
 literal|0
@@ -525,12 +502,8 @@ name|argv
 argument_list|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 name|usage
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|retval
 operator|=
@@ -720,9 +693,11 @@ literal|"root"
 expr_stmt|;
 name|syslog
 argument_list|(
+name|LOG_AUTH
+operator||
 name|LOG_NOTICE
 argument_list|,
-literal|"set by %s"
+literal|"date set by %s"
 argument_list|,
 name|username
 argument_list|)
@@ -2088,6 +2063,23 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_block
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|fputs
+argument_list|(
+literal|"usage: date [-nu] [-d dst] [-t minutes_west] [yymmddhhmm[.ss]]\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
