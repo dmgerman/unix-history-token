@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: i686_mem.c,v 1.2 1999/04/30 22:09:38 msmith Exp $  */
+comment|/*-  * Copyright (c) 1999 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: i686_mem.c,v 1.3 1999/06/18 19:24:40 green Exp $  */
 end_comment
 
 begin_include
@@ -56,6 +56,23 @@ include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"machine/smp.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * i686 memory range operations  *  * This code will probably be impenetrable without reference to the  * Intel Pentium Pro documentation.  */
@@ -262,7 +279,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|i686_mrstore
 parameter_list|(
 name|struct
@@ -275,13 +292,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|i686_mrstoreone
 parameter_list|(
-name|struct
-name|mem_range_softc
+name|void
 modifier|*
-name|sc
+name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -377,29 +393,37 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* MTRR type to text conversion */
+comment|/*   * i686 MTRR conflict matrix for overlapping ranges   *  * Specifically, this matrix allows writeback and uncached ranges  * to overlap (the overlapped region is uncached).  The array index  * is the translated i686 code for the flags (because they map well).  */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|i686_mtrrtotext
+name|int
+name|i686_mtrrconflict
 index|[]
 init|=
 block|{
-literal|"uncacheable"
+name|MDF_WRITECOMBINE
+operator||
+name|MDF_WRITETHROUGH
+operator||
+name|MDF_WRITEPROTECT
 block|,
-literal|"write-combine"
+name|MDF_ATTRMASK
 block|,
-literal|"invalid"
+literal|0
 block|,
-literal|"invalid"
+literal|0
 block|,
-literal|"write-through"
-literal|"write-protect"
+name|MDF_ATTRMASK
 block|,
-literal|"write-back"
+name|MDF_ATTRMASK
+block|,
+name|MDF_WRITECOMBINE
+operator||
+name|MDF_WRITETHROUGH
+operator||
+name|MDF_WRITEPROTECT
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1096,7 +1120,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|i686_mrstore
 parameter_list|(
 name|struct
@@ -1109,46 +1133,71 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/*      * We should use all_but_self_ipi() to call other CPUs into a       * locking gate, then call a target function to do this work.      * The "proper" solution involves a generalised locking gate      * implementation, not ready yet.      */
-return|return
+name|smp_rendezvous
+argument_list|(
+name|NULL
+argument_list|,
+name|i686_mrstoreone
+argument_list|,
+name|NULL
+argument_list|,
 operator|(
-name|EOPNOTSUPP
+name|void
+operator|*
 operator|)
-return|;
-endif|#
-directive|endif
+name|sc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|disable_intr
 argument_list|()
 expr_stmt|;
 comment|/* disable interrupts */
-return|return
-operator|(
 name|i686_mrstoreone
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
 name|sc
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 name|enable_intr
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  */
+comment|/*  * Update the current CPU's MTRRs with those represented in the  * descriptor list.  Note that we do this wholesale rather than  * just stuffing one entry; this is simpler (but slower, of course).  */
 end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|i686_mrstoreone
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|struct
 name|mem_range_softc
 modifier|*
 name|sc
-parameter_list|)
-block|{
+init|=
+operator|(
+expr|struct
+name|mem_range_softc
+operator|*
+operator|)
+name|arg
+decl_stmt|;
 name|struct
 name|mem_range_desc
 modifier|*
@@ -1167,6 +1216,12 @@ decl_stmt|;
 name|u_int
 name|cr4save
 decl_stmt|;
+name|mrd
+operator|=
+name|sc
+operator|->
+name|mr_desc
+expr_stmt|;
 name|cr4save
 operator|=
 name|rcr4
@@ -1204,11 +1259,7 @@ comment|/* disable caches (CD = 1, NW = 0) */
 name|wbinvd
 argument_list|()
 expr_stmt|;
-comment|/* flush caches */
-name|invltlb
-argument_list|()
-expr_stmt|;
-comment|/* flush TLBs */
+comment|/* flush caches, TLBs */
 name|wrmsr
 argument_list|(
 name|MSR_MTRRdefType
@@ -1223,12 +1274,6 @@ literal|0x800
 argument_list|)
 expr_stmt|;
 comment|/* disable MTRRs (E = 0) */
-name|mrd
-operator|=
-name|sc
-operator|->
-name|mr_desc
-expr_stmt|;
 comment|/* Set fixed-range MTRRs */
 if|if
 condition|(
@@ -1599,11 +1644,7 @@ block|}
 name|wbinvd
 argument_list|()
 expr_stmt|;
-comment|/* flush caches */
-name|invltlb
-argument_list|()
-expr_stmt|;
-comment|/* flush TLB */
+comment|/* flush caches, TLBs */
 name|wrmsr
 argument_list|(
 name|MSR_MTRRdefType
@@ -1637,11 +1678,6 @@ name|cr4save
 argument_list|)
 expr_stmt|;
 comment|/* restore cr4 */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -2017,7 +2053,7 @@ name|curr_md
 expr_stmt|;
 break|break;
 block|}
-comment|/* non-exact overlap? */
+comment|/* non-exact overlap ? */
 if|if
 condition|(
 name|mroverlap
@@ -2027,11 +2063,48 @@ argument_list|,
 name|mrd
 argument_list|)
 condition|)
+block|{
+comment|/* between conflicting region types? */
+if|if
+condition|(
+operator|(
+name|i686_mtrrconflict
+index|[
+name|i686_mtrrtype
+argument_list|(
+name|curr_md
+operator|->
+name|mr_flags
+argument_list|)
+index|]
+operator|&
+name|mrd
+operator|->
+name|mr_flags
+operator|)
+operator|||
+operator|(
+name|i686_mtrrconflict
+index|[
+name|i686_mtrrtype
+argument_list|(
+name|mrd
+operator|->
+name|mr_flags
+argument_list|)
+index|]
+operator|&
+name|curr_md
+operator|->
+name|mr_flags
+operator|)
+condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2116,7 +2189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle requests to set memory range attributes by manipulating MTRRs.  *  * Note that we're not too smart here; we'll split a range to insert a  * region inside, and coalesce regions to make smaller ones, but nothing  * really fancy.  */
+comment|/*  * Handle requests to set memory range attributes by manipulating MTRRs.  *  */
 end_comment
 
 begin_function
@@ -2346,16 +2419,10 @@ operator|)
 return|;
 block|}
 comment|/* update the hardware */
-if|if
-condition|(
 name|i686_mrstore
 argument_list|(
 name|sc
 argument_list|)
-condition|)
-name|error
-operator|=
-name|EIO
 expr_stmt|;
 name|i686_mrfetch
 argument_list|(
@@ -2365,7 +2432,7 @@ expr_stmt|;
 comment|/* refetch to see where we're at */
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -2443,63 +2510,9 @@ literal|0xff
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Pentium Pro MTRR support enabled, default memory type is "
+literal|"Pentium Pro MTRR support enabled\n"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|mtrrdef
-operator|&
-literal|0xff
-operator|)
-operator|<
-operator|(
-sizeof|sizeof
-argument_list|(
-name|i686_mtrrtotext
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|i686_mtrrtotext
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|i686_mtrrtotext
-index|[
-name|mtrrdef
-operator|&
-literal|0xff
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"unknown (0x%x)\n"
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|mtrrdef
-operator|&
-literal|0xff
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* If fixed MTRRs supported and enabled */
 if|if
 condition|(
@@ -2789,6 +2802,10 @@ parameter_list|)
 block|{
 name|i686_mrstoreone
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|sc
 argument_list|)
 expr_stmt|;
