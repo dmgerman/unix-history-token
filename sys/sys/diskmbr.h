@@ -1525,17 +1525,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DIOCGFWCYLINDERS
-value|_IOR('d', 132, u_int)
-end_define
-
-begin_comment
-comment|/* Get firmware cyl'scount */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DIOCGKERNELDUMP
 value|_IOW('d', 133, u_int)
 end_define
