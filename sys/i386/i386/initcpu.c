@@ -1984,9 +1984,14 @@ directive|endif
 default|default:
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|I686_CPU
 name|enable_sse
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
