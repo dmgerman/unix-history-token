@@ -3287,6 +3287,14 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|curthread
+operator|->
+name|td_pcb
+operator|->
+name|pcb_flags
+operator||=
+name|PCB_NPXINITDONE
+expr_stmt|;
 block|}
 end_function
 
