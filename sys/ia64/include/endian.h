@@ -45,15 +45,15 @@ name|_QUAD_LOWWORD
 value|0
 end_define
 
-begin_comment
-comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|_POSIX_SOURCE
 end_ifndef
+
+begin_comment
+comment|/*  * Definitions for byte order, according to byte significance from low  * address to high.  */
+end_comment
 
 begin_define
 define|#
@@ -107,20 +107,8 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|__GNUC__
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_BSWAP64_DEFINED
-end_define
 
 begin_function
 specifier|static
@@ -156,15 +144,8 @@ name|__r
 return|;
 end_return
 
-begin_define
-unit|}
-define|#
-directive|define
-name|_BSWAP32_DEFINED
-end_define
-
 begin_function
-unit|static
+unit|}  static
 name|__inline
 name|__uint32_t
 name|__bswap32
@@ -185,12 +166,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|_BSWAP16_DEFINED
-end_define
 
 begin_function
 specifier|static
@@ -215,49 +190,6 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !__GNUC__ */
-end_comment
-
-begin_comment
-comment|/* XXX: use the libkern versions for now; these might go away soon. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_BSWAP16_DEFINED
-end_define
-
-begin_function_decl
-name|__uint16_t
-name|__bswap16
-parameter_list|(
-name|__uint16_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|_BSWAP32_DEFINED
-end_define
-
-begin_function_decl
-name|__uint32_t
-name|__bswap32
-parameter_list|(
-name|__uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -267,14 +199,45 @@ begin_comment
 comment|/* __GNUC__ */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|__htonl
+parameter_list|(
+name|x
+parameter_list|)
+value|__bswap32(x)
+end_define
 
-begin_comment
-comment|/* _KERNEL */
-end_comment
+begin_define
+define|#
+directive|define
+name|__htons
+parameter_list|(
+name|x
+parameter_list|)
+value|__bswap16(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ntohl
+parameter_list|(
+name|x
+parameter_list|)
+value|__bswap32(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ntohs
+parameter_list|(
+name|x
+parameter_list|)
+value|__bswap16(x)
+end_define
 
 begin_endif
 endif|#
