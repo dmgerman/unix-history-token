@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2629,6 +2635,9 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DDB
 if|if
 condition|(
 name|console_pausing
@@ -2643,6 +2652,21 @@ literal|'\n'
 operator|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|console_pausing
+operator|&&
+operator|(
+name|c
+operator|==
+literal|'\n'
+operator|)
+condition|)
+block|{
+endif|#
+directive|endif
 for|for
 control|(
 name|cp
@@ -2705,9 +2729,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 name|void
 name|cndbctl
 parameter_list|(
@@ -2786,9 +2807,6 @@ name|refcount
 operator|++
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|void
 name|cn_drvinit
@@ -2817,9 +2835,6 @@ literal|"console"
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_macro
 name|SYSINIT
 argument_list|(
 argument|cndev
@@ -2832,7 +2847,7 @@ argument|cn_drvinit
 argument_list|,
 argument|NULL
 argument_list|)
-end_macro
+end_function
 
 end_unit
 
