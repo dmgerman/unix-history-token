@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_ext2fs.c,v 1.6 1997/02/22 14:32:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,6 +104,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
@@ -179,8 +185,10 @@ name|options
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|options
 operator|=
@@ -306,17 +314,19 @@ name|ex_flags
 operator|=
 literal|0
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"ext2fs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -344,24 +354,26 @@ name|endvfsent
 argument_list|()
 expr_stmt|;
 comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"ext2fs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ext2fs filesystem not available"
+literal|"ext2fs filesystem is not available"
 argument_list|)
 expr_stmt|;
 if|if
@@ -369,8 +381,8 @@ condition|(
 name|mount
 argument_list|(
 name|vfc
-operator|->
-name|vfc_index
+operator|.
+name|vfc_name
 argument_list|,
 name|fs_name
 argument_list|,

@@ -34,7 +34,7 @@ name|lint
 end_ifndef
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)mount_umap.c	8.3 (Berkeley) 3/27/94"; */
+comment|/* static char sccsid[] = "@(#)mount_umap.c	8.5 (Berkeley) 4/26/95"; */
 end_comment
 
 begin_decl_stmt
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_umap.c,v 1.9 1997/02/22 14:33:00 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,8 +263,10 @@ index|]
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|mntflags
 operator|=
@@ -949,17 +951,19 @@ name|gmapdata
 operator|=
 name|gmapdata
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"umap"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -984,36 +988,35 @@ expr_stmt|;
 name|endvfsent
 argument_list|()
 expr_stmt|;
-comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"umap"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
-block|{
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"umap filesystem not available"
+literal|"umap filesystem is not available"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mount
 argument_list|(
 name|vfc
-operator|->
-name|vfc_index
+operator|.
+name|vfc_name
 argument_list|,
 name|argv
 index|[

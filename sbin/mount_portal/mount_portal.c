@@ -34,7 +34,7 @@ name|lint
 end_ifndef
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)mount_portal.c	8.4 (Berkeley) 3/27/94"; */
+comment|/* static char sccsid[] = "@(#)mount_portal.c	8.6 (Berkeley) 4/26/95"; */
 end_comment
 
 begin_decl_stmt
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_portal.c,v 1.9 1997/02/22 14:32:53 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -272,6 +272,10 @@ condition|(
 name|pid
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ECHILD
 condition|)
 name|syslog
 argument_list|(
@@ -336,7 +340,6 @@ index|]
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
 decl_stmt|;
 name|qelem
@@ -606,17 +609,19 @@ name|pa_config
 operator|=
 name|tag
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"portal"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -641,19 +646,20 @@ expr_stmt|;
 name|endvfsent
 argument_list|()
 expr_stmt|;
-comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"portal"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
@@ -667,12 +673,8 @@ operator|=
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
-operator|->
-name|vfc_index
-else|:
-name|MOUNT_PORTAL
+operator|.
+name|vfc_name
 argument_list|,
 name|mountpt
 argument_list|,
@@ -695,9 +697,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 comment|/* 	 * Everything is ready to go - now is a good time to fork 	 */
 name|daemon
 argument_list|(
@@ -706,8 +705,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Start logging (and change name) 	 */
 name|openlog
 argument_list|(
@@ -1024,7 +1021,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* stupid errors.... tidied up... wrtp*/
 default|default:
 operator|(
 name|void

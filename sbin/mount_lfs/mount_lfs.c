@@ -35,7 +35,7 @@ name|lint
 end_ifndef
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)mount_lfs.c	8.3 (Berkeley) 3/27/94"; */
+comment|/* static char sccsid[] = "@(#)mount_lfs.c	8.4 (Berkeley) 4/26/95"; */
 end_comment
 
 begin_decl_stmt
@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_lfs.c,v 1.7 1997/02/22 14:32:46 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,6 +68,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
@@ -206,8 +212,10 @@ name|options
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|int
 name|short_rds
@@ -368,17 +376,19 @@ name|ex_flags
 operator|=
 literal|0
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"lfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -403,19 +413,21 @@ expr_stmt|;
 name|endvfsent
 argument_list|()
 expr_stmt|;
-comment|/* flush cache */
-name|vfc
+comment|/* clear cache */
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"lfs"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
@@ -429,12 +441,8 @@ condition|(
 name|mount
 argument_list|(
 name|vfc
-condition|?
-name|vfc
-operator|->
-name|vfc_index
-else|:
-name|MOUNT_LFS
+operator|.
+name|vfc_name
 argument_list|,
 name|fs_name
 argument_list|,
@@ -446,11 +454,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
-name|args
-operator|.
-name|fspec
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

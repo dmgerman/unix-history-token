@@ -34,7 +34,7 @@ name|lint
 end_ifndef
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)mount_null.c	8.5 (Berkeley) 3/27/94"; */
+comment|/* static char sccsid[] = "@(#)mount_null.c	8.6 (Berkeley) 4/26/95"; */
 end_comment
 
 begin_decl_stmt
@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mount_null.c,v 1.7 1997/02/22 14:32:51 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,8 +199,10 @@ index|]
 decl_stmt|;
 name|struct
 name|vfsconf
-modifier|*
 name|vfc
+decl_stmt|;
+name|int
+name|error
 decl_stmt|;
 name|mntflags
 operator|=
@@ -339,17 +341,19 @@ name|target
 operator|=
 name|target
 expr_stmt|;
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"null"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 operator|&&
 name|vfsisloadable
 argument_list|(
@@ -374,25 +378,26 @@ expr_stmt|;
 name|endvfsent
 argument_list|()
 expr_stmt|;
-comment|/* flush cache */
-name|vfc
+name|error
 operator|=
 name|getvfsbyname
 argument_list|(
 literal|"null"
+argument_list|,
+operator|&
+name|vfc
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|vfc
+name|error
 condition|)
 name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"null filesystem is not available"
+literal|"null/loopback filesystem is not available"
 argument_list|)
 expr_stmt|;
 if|if
@@ -400,8 +405,8 @@ condition|(
 name|mount
 argument_list|(
 name|vfc
-operator|->
-name|vfc_index
+operator|.
+name|vfc_name
 argument_list|,
 name|argv
 index|[
@@ -416,9 +421,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|EX_OSERR
+literal|1
 argument_list|,
-name|target
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
