@@ -480,6 +480,10 @@ name|int
 name|excode
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SignalBundle
+condition|)
 name|server_Close
 argument_list|(
 name|SignalBundle
@@ -497,6 +501,11 @@ name|excode
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SignalBundle
+condition|)
+block|{
 name|bundle_Close
 argument_list|(
 name|SignalBundle
@@ -511,6 +520,7 @@ argument_list|(
 name|SignalBundle
 argument_list|)
 expr_stmt|;
+block|}
 name|log_Close
 argument_list|()
 expr_stmt|;
