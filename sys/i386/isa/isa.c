@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.8 1993/11/14 23:53:32 ache Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: isa.c,v 1.9 1993/11/17 00:21:03 ache Exp $  */
 end_comment
 
 begin_comment
@@ -18,6 +18,20 @@ include|#
 directive|include
 file|"systm.h"
 end_include
+
+begin_comment
+comment|/* isn't it a joy */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"kernel.h"
+end_include
+
+begin_comment
+comment|/* to have three of these */
+end_comment
 
 begin_include
 include|#
@@ -206,7 +220,7 @@ comment|/* clear first/last FF */
 end_comment
 
 begin_decl_stmt
-name|int
+name|void
 name|config_isadev
 name|__P
 argument_list|(
@@ -919,31 +933,23 @@ begin_comment
 comment|/*  * Configure an ISA device.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|config_isadev
-argument_list|(
-argument|isdp
-argument_list|,
-argument|mp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|isdp
+parameter_list|,
+name|mp
+parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|isdp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|isa_driver
@@ -1284,7 +1290,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1512,12 +1518,10 @@ begin_comment
 comment|/*  * Fill in default interrupt table (in case of spuruious interrupt  * during configuration of kernel, setup interrupt control unit  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|isa_defaultirq
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1751,7 +1755,7 @@ argument_list|)
 expr_stmt|;
 comment|/* default to IRR on read */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* region of physical memory known to be contiguous */
@@ -2388,18 +2392,19 @@ begin_comment
 comment|/*  * Check for problems with the address range of a DMA transfer  * (non-contiguous physical pages, outside of bus address space,  * crossing DMA page boundaries).  * Return true if special handling needed.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isa_dmarangecheck
-argument_list|(
-argument|caddr_t va
-argument_list|,
-argument|unsigned length
-argument_list|,
-argument|unsigned chan
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|caddr_t
+name|va
+parameter_list|,
+name|unsigned
+name|length
+parameter_list|,
+name|unsigned
+name|chan
+parameter_list|)
 block|{
 name|vm_offset_t
 name|phys
@@ -2558,7 +2563,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* head of queue waiting for physmem to become available */
@@ -2639,6 +2644,9 @@ name|B_WANTED
 expr_stmt|;
 name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|isaphysmemflag
 argument_list|,
@@ -2698,6 +2706,9 @@ name|B_WANTED
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|isaphysmemflag
 argument_list|)
@@ -2720,14 +2731,15 @@ begin_comment
 comment|/*  * Handle a NMI, possibly a machine check.  * return true to panic system, false to ignore.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isa_nmi
-argument_list|(
-argument|cd
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|cd
+parameter_list|)
+name|int
+name|cd
+decl_stmt|;
 block|{
 name|log
 argument_list|(
@@ -2752,20 +2764,21 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Caught a stray interrupt, notify  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|isa_strayintr
-argument_list|(
-argument|d
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|d
+parameter_list|)
+name|int
+name|d
+decl_stmt|;
 block|{
 comment|/* DON'T BOTHER FOR NOW! */
 comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
@@ -2806,7 +2819,7 @@ literal|"Too many ISA strayintr not logging any more\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wait "n" microseconds.  * Relies on timer 1 counting down from (TIMER_FREQ / hz) at  * (1 * TIMER_FREQ) Hz.  * Note: timer had better have been programmed before this is first used!  * (The standard programming causes the timer to generate a square wave and  * the counter is decremented twice every cycle.)  */
@@ -2830,19 +2843,8 @@ begin_comment
 comment|/* XXX - should be elsewhere */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX - should be elsewhere */
-end_comment
-
 begin_function
-name|int
+name|void
 name|DELAY
 parameter_list|(
 name|n
@@ -3090,16 +3092,20 @@ directive|endif
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|getit
-argument_list|(
-argument|unit
-argument_list|,
-argument|timer
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|unit
+parameter_list|,
+name|timer
+parameter_list|)
+name|int
+name|unit
+decl_stmt|;
+name|int
+name|timer
+decl_stmt|;
 block|{
 name|int
 name|high
@@ -3157,20 +3163,30 @@ name|low
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
+name|int
 name|beeping
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|sysbeepstop
-argument_list|(
-argument|f
-argument_list|)
+parameter_list|(
+name|f
+parameter_list|,
+name|dummy
+parameter_list|)
+name|caddr_t
+name|f
+decl_stmt|;
+name|int
+name|dummy
+decl_stmt|;
 block|{
 comment|/* disable counter 2 */
 name|outb
@@ -3184,7 +3200,7 @@ argument_list|)
 operator|&
 literal|0xFC
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|f
@@ -3193,8 +3209,14 @@ name|timeout
 argument_list|(
 name|sysbeepstop
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|f
 argument_list|)
 expr_stmt|;
@@ -3204,7 +3226,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
 begin_function
 name|void
@@ -3271,9 +3293,14 @@ name|timeout
 argument_list|(
 name|sysbeepstop
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|period
 operator|/
 literal|2
+argument_list|)
 argument_list|,
 name|period
 argument_list|)
@@ -3292,6 +3319,9 @@ name|kbc_8042cmd
 parameter_list|(
 name|val
 parameter_list|)
+name|int
+name|val
+decl_stmt|;
 block|{
 while|while
 condition|(

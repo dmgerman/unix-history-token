@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)uipc_socket2.c	7.17 (Berkeley) 5/4/91  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)uipc_socket2.c	7.17 (Berkeley) 5/4/91  *	$Id: uipc_socket2.c,v 1.2 1993/10/16 15:25:12 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -72,6 +72,7 @@ comment|/* strings for sleep message: */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 name|netio
 index|[]
@@ -81,6 +82,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|netcon
 index|[]
@@ -90,6 +92,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|netcls
 index|[]
@@ -114,20 +117,18 @@ begin_comment
 comment|/*  * Procedures to manipulate state flags of socket  * and do appropriate wakeups.  Normal sequence from the  * active (originating) side is that soisconnecting() is  * called during processing of connect() call,  * resulting in an eventual call to soisconnected() if/when the  * connection is established.  When the connection is torn down  * soisdisconnecting() is called during processing of disconnect() call,  * and soisdisconnected() is called when the connection to the peer  * is totally severed.  The semantics of these routines are such that  * connectionless protocols can call soisconnected() and soisdisconnected()  * only, bypassing the in-progress calls when setting up a ``connection''  * takes no time.  *  * From the passive side, a socket is created with  * two queues of sockets: so_q0 for connections in progress  * and so_q for connections already made and awaiting user acceptance.  * As a protocol is preparing incoming connections, it creates a socket  * structure queued on so_q0 by calling sonewconn().  When the connection  * is established, soisconnected() is called, and transfers the  * socket structure to so_q, making it available to accept().  *   * If a socket is closed with sockets on either  * so_q0 or so_q, these sockets are dropped.  *  * If higher level protocols are implemented in  * the kernel, the wakeups done here will sometimes  * cause software-interrupt process scheduling.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|soisconnecting
-argument_list|(
+parameter_list|(
 name|so
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|so
 operator|->
@@ -147,22 +148,20 @@ operator||=
 name|SS_ISCONNECTING
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|soisconnected
-argument_list|(
+parameter_list|(
 name|so
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -256,22 +255,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|soisdisconnecting
-argument_list|(
+parameter_list|(
 name|so
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|so
 operator|->
@@ -314,22 +311,20 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|soisdisconnected
-argument_list|(
+parameter_list|(
 name|so
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|so
 operator|->
@@ -376,7 +371,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When an attempt at a new connection is noted on a socket  * which accepts connections, sonewconn is called.  If the  * connection is possible (subject to space constraints, etc.)  * then we allocate a new structure, propoerly linked into the  * data structure of the original socket, and return this.  * Connstatus may be 0, or SO_ISCONFIRMING, or SO_ISCONNECTED.  *  * Currently, sonewconn() is defined as sonewconn1() in socketvar.h  * to catch calls that are missing the (new) second parameter.  */
@@ -692,25 +687,26 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|soqinsque
-argument_list|(
+parameter_list|(
 name|head
-argument_list|,
+parameter_list|,
 name|so
-argument_list|,
+parameter_list|,
 name|q
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|head
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|so
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_decl_stmt
 name|int
@@ -828,28 +824,23 @@ expr_stmt|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|int
 name|soqremque
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|q
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|q
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -973,28 +964,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Socantsendmore indicates that no more data will be sent on the  * socket; it would normally be applied to a socket when the user  * informs the system that no more data is to be sent, by the protocol  * code (in case PRU_SHUTDOWN).  Socantrcvmore indicates that no more data  * will be received, and will normally be applied to the socket by a  * protocol when it detects that the peer will send no more data.  * Data queued for reading in the socket may yet be read.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|socantsendmore
-argument_list|(
-argument|so
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|so
 operator|->
@@ -1008,24 +994,19 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|socantrcvmore
-argument_list|(
-argument|so
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|so
 operator|->
@@ -1039,7 +1020,7 @@ name|so
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Socket select/wakeup routines.  */
@@ -1049,32 +1030,24 @@ begin_comment
 comment|/*  * Queue a process for a select on a socket buffer.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sbselqueue
-argument_list|(
-argument|sb
-argument_list|,
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|,
+name|cp
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -1132,28 +1105,23 @@ name|SB_SEL
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wait for data to arrive at/drain from a socket buffer.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sbwait
-argument_list|(
-argument|sb
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sb
 operator|->
@@ -1196,26 +1164,24 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   * Lock a sockbuf already known to be locked;  * return any error returned from sleep (EINTR).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|sb_lock
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|error
@@ -1286,37 +1252,32 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wakeup processes waiting on a socket buffer.  * Do asynchronous notification via SIGIO  * if the socket has the SS_ASYNC flag set.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sowakeup
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|sb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -1447,38 +1408,33 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Socket buffer (struct sockbuf) utility routines.  *  * Each socket contains two socket buffers: one for sending data and  * one for receiving data.  Each buffer contains a queue of mbufs,  * information about the number of mbufs and amount of data in the  * queue, and other fields allowing select() statements and notification  * on data availability to be implemented.  *  * Data stored in a socket buffer is maintained as a list of records.  * Each record is a list of mbufs chained together with the m_next  * field.  Records are chained together with the m_nextpkt field. The upper  * level routine soreceive() expects the following conventions to be  * observed when placing information in the receive buffer:  *  * 1. If the protocol requires each message be preceded by the sender's  *    name, then a record containing that name must be present before  *    any associated data (mbuf's must be of type MT_SONAME).  * 2. If the protocol supports the exchange of ``access rights'' (really  *    just additional data associated with the message), and there are  *    ``rights'' to be received, then a record containing this data  *    should be present (mbuf's must be of type MT_RIGHTS).  * 3. If a name or rights record exists, then it must be followed by  *    a data record, perhaps of zero length.  *  * Before using a new socket structure it is first necessary to reserve  * buffer space to the socket, by calling sbreserve().  This should commit  * some of the available buffer space in the system buffer pool for the  * socket (currently, it does nothing but enforce limits).  The space  * should be released by calling sbrelease() when the socket is destroyed.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|soreserve
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|sndcc
-argument_list|,
+parameter_list|,
 name|rcvcc
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|u_long
 name|sndcc
 decl_stmt|,
 name|rcvcc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1599,36 +1555,28 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Allot mbufs to a sockbuf.  * Attempt to scale mbmax so that mbcnt doesn't become limiting  * if buffering efficiency is near the normal case.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sbreserve
-argument_list|(
-argument|sb
-argument_list|,
-argument|cc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|,
+name|cc
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|cc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1692,28 +1640,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free mbufs held by a socket, and reserved mbuf space.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sbrelease
-argument_list|(
-argument|sb
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sbflush
 argument_list|(
@@ -1731,7 +1674,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routines to add and remove  * data from an mbuf queue.  *  * The routines sbappend() or sbappendrecord() are normally called to  * append new mbufs to a socket buffer, after checking that adequate  * space is available, comparing the function sbspace() with the amount  * of data to be added.  sbappendrecord() differs from sbappend() in  * that data supplied is treated as the beginning of a new record.  * To place a sender's address, optional access rights, and data in a  * socket receive buffer, sbappendaddr() should be used.  To place  * access rights and data in a socket receive buffer, sbappendrights()  * should be used.  In either case, the new data begins a new record.  * Note that unlike sbappend() and sbappendrecord(), these routines check  * for the caller that there will be enough space to store the data.  * Each fails if there is not enough space, or if it cannot find mbufs  * to store additional information in.  *  * Reliable protocols may use the socket send buffer to hold data  * awaiting acknowledgement.  Data is normally copied from a socket  * send buffer in a protocol with m_copy for output to a peer,  * and then removing the data from the socket buffer with sbdrop()  * or sbdroprecord() when the data is acknowledged by the peer.  */
@@ -1741,32 +1684,24 @@ begin_comment
 comment|/*  * Append mbuf chain m to the last record in the  * socket buffer sb.  The additional space associated  * the mbuf chain is recorded in sb.  Empty mbufs are  * discarded and mbufs are compacted where possible.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sbappend
-argument_list|(
-argument|sb
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|,
+name|m
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1850,7 +1785,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1994,31 +1929,26 @@ begin_comment
 comment|/*  * As above, except the mbuf chain  * begins a new record.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbappendrecord
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|,
+parameter_list|,
 name|m0
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2127,37 +2057,32 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * As above except that OOB data  * is inserted at the beginning of the sockbuf,  * but after any other OOB data.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbinsertoob
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|,
+parameter_list|,
 name|m0
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2307,49 +2232,44 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Append address and data, and optionally, control (ancillary) data  * to the receive queue of a socket.  If present,  * m0 must include a packet header with total length.  * Returns 0 if no space in sockbuf or insufficient mbufs.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|sbappendaddr
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|,
+parameter_list|,
 name|asa
-argument_list|,
+parameter_list|,
 name|m0
-argument_list|,
+parameter_list|,
 name|control
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
 name|asa
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|,
-modifier|*
+decl|*
 name|control
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2592,35 +2512,30 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|sbappendcontrol
-argument_list|(
-argument|sb
-argument_list|,
-argument|m0
-argument_list|,
-argument|control
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sb
+parameter_list|,
+name|m0
+parameter_list|,
+name|control
+parameter_list|)
 name|struct
 name|sockbuf
 modifier|*
 name|sb
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|control
 decl_stmt|,
-modifier|*
+decl|*
 name|m0
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2793,34 +2708,32 @@ begin_comment
 comment|/*  * Compress mbuf chain m into the socket  * buffer sb following mbuf n.  If n  * is null, the buffer is presumed empty.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbcompress
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|,
+parameter_list|,
 name|m
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|,
-modifier|*
+decl|*
 name|n
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -3078,20 +2991,18 @@ begin_comment
 comment|/*  * Free all mbufs in a sockbuf.  * Check that all resources are reclaimed.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbflush
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3140,35 +3051,30 @@ literal|"sbflush 2"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Drop data from (the front of) a sockbuf.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbdrop
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|,
+parameter_list|,
 name|len
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3347,26 +3253,24 @@ operator|=
 name|next
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Drop a record off the front of a sockbuf  * and move the next record to the front.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sbdroprecord
-argument_list|(
+parameter_list|(
 name|sb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockbuf
-operator|*
+modifier|*
 name|sb
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -3422,7 +3326,7 @@ condition|)
 do|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

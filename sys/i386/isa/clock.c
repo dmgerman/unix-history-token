@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.2 1993/10/16 13:45:44 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.3 1993/11/04 01:56:31 ache Exp $  */
 end_comment
 
 begin_comment
@@ -91,12 +91,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
-name|startrtclock
-argument_list|()
-end_macro
+begin_function_decl
+specifier|static
+name|void
+name|findcpuspeed
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_block
+begin_function
+name|void
+name|startrtclock
+parameter_list|()
 block|{
 name|int
 name|s
@@ -229,7 +237,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|unsigned
@@ -249,12 +257,11 @@ name|FIRST_GUESS
 value|0x2000
 end_define
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|findcpuspeed
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|unsigned
 name|char
@@ -344,26 +351,21 @@ name|remainder
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* convert 2 digit BCD number */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bcd
-argument_list|(
-argument|i
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|i
+parameter_list|)
 name|int
 name|i
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -383,7 +385,7 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* convert years to seconds (from 1970) */
@@ -603,20 +605,15 @@ begin_comment
 comment|/*  * Initialize the time of day register, based on the time base which is, e.g.  * from a filesystem.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|inittodr
-argument_list|(
-argument|base
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|base
+parameter_list|)
 name|time_t
 name|base
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|long
@@ -823,7 +820,7 @@ operator|=
 name|sec
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1006,14 +1003,12 @@ begin_comment
 comment|/*  * Restart the clock.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|resettodr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{ }
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wire clock interrupt in.  */
@@ -1039,12 +1034,10 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_function
+name|void
 name|enablertclock
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|setidt
 argument_list|(
@@ -1069,7 +1062,7 @@ name|IRQ0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delay for some number of milliseconds.  */

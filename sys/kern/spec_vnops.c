@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)spec_vnops.c	7.37 (Berkeley) 5/30/91  *	$Id$  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)spec_vnops.c	7.37 (Berkeley) 5/30/91  *	$Id: spec_vnops.c,v 1.2 1993/10/16 15:24:37 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -108,6 +108,7 @@ comment|/* symbolic sleep message strings for devices */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devopn
 index|[]
@@ -117,6 +118,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devio
 index|[]
@@ -126,6 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devwait
 index|[]
@@ -135,6 +138,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devin
 index|[]
@@ -144,6 +148,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devout
 index|[]
@@ -153,6 +158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devioc
 index|[]
@@ -162,6 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|devcls
 index|[]
@@ -283,42 +290,31 @@ begin_comment
 comment|/*  * Trivial lookup routine that always fails.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_lookup
-argument_list|(
-argument|vp
-argument_list|,
-argument|ndp
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|ndp
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|nameidata
 modifier|*
 name|ndp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|ndp
 operator|->
@@ -338,7 +334,7 @@ name|ENOTDIR
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Open a special file: Don't allow open if fs is mounted -nodev,  * and don't allow opens of block devices that are currently mounted.  * Otherwise, call device driver open function.  */
@@ -348,48 +344,37 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|spec_open
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|mode
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -554,7 +539,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Vnode op for read  */
@@ -564,49 +549,38 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|spec_read
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|,
+parameter_list|,
 name|ioflag
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ioflag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -1090,7 +1064,7 @@ expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Vnode op for write  */
@@ -1100,49 +1074,38 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|spec_write
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|,
+parameter_list|,
 name|ioflag
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|ioflag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -1597,7 +1560,7 @@ expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Device ioctl operation.  */
@@ -1607,66 +1570,46 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_ioctl
-argument_list|(
-argument|vp
-argument_list|,
-argument|com
-argument_list|,
-argument|data
-argument_list|,
-argument|fflag
-argument_list|,
-argument|cred
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|com
+parameter_list|,
+name|data
+parameter_list|,
+name|fflag
+parameter_list|,
+name|cred
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|com
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|fflag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -1789,60 +1732,46 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_select
-argument_list|(
-argument|vp
-argument_list|,
-argument|which
-argument_list|,
-argument|fflags
-argument_list|,
-argument|cred
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|which
+parameter_list|,
+name|fflags
+parameter_list|,
+name|cred
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|which
 decl_stmt|,
 name|fflags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|dev_t
@@ -1894,26 +1823,24 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Just call the device strategy routine  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|spec_strategy
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 operator|(
 operator|*
@@ -1939,56 +1866,42 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This is a noop, simply returning what one has been given.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_bmap
-argument_list|(
-argument|vp
-argument_list|,
-argument|bn
-argument_list|,
-argument|vpp
-argument_list|,
-argument|bnp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|bn
+parameter_list|,
+name|vpp
+parameter_list|,
+name|bnp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|daddr_t
 name|bn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|daddr_t
 modifier|*
 name|bnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2018,7 +1931,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * At the moment we do not do any locking.  */
@@ -2028,22 +1941,17 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_lock
-argument_list|(
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2051,28 +1959,23 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_unlock
-argument_list|(
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2080,7 +1983,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Device close routine  */
@@ -2090,48 +1993,37 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|spec_close
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -2147,7 +2039,8 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|dev_t
+name|int
+comment|/*dev_t*/
 operator|,
 name|int
 operator|,
@@ -2306,28 +2199,23 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out the contents of a special device vnode.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|spec_print
-argument_list|(
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2349,7 +2237,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Special device advisory byte-level locks.  */
@@ -2359,56 +2247,39 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_advlock
-argument_list|(
-argument|vp
-argument_list|,
-argument|id
-argument_list|,
-argument|op
-argument_list|,
-argument|fl
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|id
+parameter_list|,
+name|op
+parameter_list|,
+name|fl
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|flock
 modifier|*
 name|fl
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -2416,18 +2287,16 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Special device failed operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_ebadf
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 return|return
 operator|(
@@ -2435,18 +2304,16 @@ name|EBADF
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Special device bad operation  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|spec_badop
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|panic
 argument_list|(
@@ -2455,7 +2322,7 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 end_unit
 

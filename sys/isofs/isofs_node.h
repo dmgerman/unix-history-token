@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_node.h,v 1.2 1993/07/20 03:27:31 jkh Exp $  */
+comment|/*  *	$Id: isofs_node.h,v 1.3 1993/11/07 17:46:04 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -672,7 +672,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|isofs_print
 name|__P
 argument_list|(
@@ -700,6 +700,28 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|iso_ilock
+parameter_list|(
+name|struct
+name|iso_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|iso_iunlock
+parameter_list|(
+name|struct
+name|iso_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

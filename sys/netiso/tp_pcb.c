@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_pcb.c	7.11 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_pcb.c	7.11 (Berkeley) 5/6/91  *	$Id: tp_pcb.c,v 1.2 1993/10/16 21:05:55 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -599,41 +599,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|in_pcbbind
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|in_pcbconnect
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|in_pcbdisconnect
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|in_pcbdetach
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|in_pcballoc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|tpip_output
 parameter_list|()
 function_decl|;
@@ -656,8 +621,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|INET
 end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -729,14 +697,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|iso_pcbdisconnect
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|iso_pcbdetach
 parameter_list|()
 function_decl|;
@@ -780,8 +748,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -853,14 +824,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|iso_pcbdisconnect
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|iso_pcbdetach
 parameter_list|()
 function_decl|;
@@ -890,8 +861,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|TPCONS
 end_endif
+
+begin_comment
+comment|/* TPCONS */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1687,30 +1661,22 @@ begin_comment
 comment|/*  * NAME: tp_attach()  *  * CALLED FROM:  *	tp_usrreq, PRU_ATTACH  *  * FUNCTION and ARGUMENTS:  *  given a socket (so) and a protocol family (dom), allocate a tpcb  *  and ref structure, initialize everything in the structures that  *  needs to be initialized.  *  * RETURN VALUE:  *  0 ok  *  EINVAL if DEBUG(X) in is on and a disaster has occurred  *  ENOPROTOOPT if TP hasn't been configured or if the  *   socket wasn't created with tp as its protocol  *  EISCONN if this socket is already part of a connection  *  ETOOMANYREFS if ran out of tp reference numbers.  *  E* whatever error is returned from soreserve()  *    for from the network-layer pcb allocation routine  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tp_attach
-argument_list|(
-argument|so
-argument_list|,
-argument|dom
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|dom
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dom
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1751,34 +1717,25 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|IFTRACE
-parameter_list|(
+argument_list|(
 name|D_CONN
-parameter_list|)
-function_decl|tptrace
-parameter_list|(
+argument_list|)
+name|tptrace
+argument_list|(
 name|TPPTmisc
-parameter_list|,
-function_decl|"tp_attach:dom so"
-operator|,
-function_decl|dom
-operator|,
-function_decl|so
-operator|,
-function_decl|0
-operator|,
-function_decl|0
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
+argument_list|,
+literal|"tp_attach:dom so"
+argument_list|,
+name|dom
+argument_list|,
+name|so
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 name|ENDTRACE
-end_macro
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -1796,9 +1753,6 @@ goto|goto
 name|bad2
 goto|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|so
@@ -1813,9 +1767,6 @@ name|EISCONN
 return|;
 comment|/* socket already part of a connection*/
 block|}
-end_if
-
-begin_expr_stmt
 name|error
 operator|=
 name|soreserve
@@ -1827,13 +1778,7 @@ argument_list|,
 name|TP_SOCKBUFSIZE
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* later an ioctl will allow reallocation IF still in closed state */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|error
@@ -1841,9 +1786,6 @@ condition|)
 goto|goto
 name|bad2
 goto|;
-end_if
-
-begin_expr_stmt
 name|MALLOC
 argument_list|(
 name|tpcb
@@ -1863,9 +1805,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -1881,9 +1820,6 @@ goto|goto
 name|bad2
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 operator|(
@@ -1898,9 +1834,6 @@ name|tp_pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -1929,27 +1862,18 @@ goto|goto
 name|bad3
 goto|;
 block|}
-end_if
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_sock
 operator|=
 name|so
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_domain
 operator|=
 name|dom
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|protocol
@@ -1993,9 +1917,6 @@ name|ISO_CLNS
 expr_stmt|;
 comment|/* the default */
 block|}
-end_if
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|_tp_param
@@ -2007,40 +1928,25 @@ operator|->
 name|tp_netservice
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_cong_win
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_state
 operator|=
 name|TP_CLOSED
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_vers
 operator|=
 name|TP_VERSION
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Spec says default is 128 octets, 			* that is, if the tpdusize argument never appears, use 128. 			* As the initiator, we will always "propose" the 2048 			* size, that is, we will put this argument in the CR  			* always, but accept what the other side sends on the CC. 			* If the initiator sends us something larger on a CR, 			* we'll respond w/ this. 			* Our maximum is 4096.  See tp_chksum.c comments. 			*/
-end_comment
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_l_tpdusize
@@ -2051,27 +1957,18 @@ name|tpcb
 operator|->
 name|tp_tpdusize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_seqmask
 operator|=
 name|TP_NML_FMT_MASK
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_seqbit
 operator|=
 name|TP_NML_FMT_BIT
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_seqhalf
@@ -2082,9 +1979,6 @@ name|tp_seqbit
 operator|>>
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_sndhiwat
@@ -2095,30 +1989,15 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* a kludge but it works */
-end_comment
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_s_subseq
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* attach to a network-layer protoswitch */
-end_comment
-
-begin_comment
 comment|/* new way */
-end_comment
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_nlproto
@@ -2131,9 +2010,6 @@ operator|->
 name|tp_netservice
 index|]
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ASSERT
 argument_list|(
 name|tpcb
@@ -2147,32 +2023,17 @@ operator|->
 name|tp_domain
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|notdef
-end_ifdef
-
-begin_comment
 comment|/* OLD WAY */
-end_comment
-
-begin_comment
 comment|/* TODO: properly, this search would be on the basis of  	* domain,netservice or just netservice only (if you have 	* IN_CLNS, ISO_CLNS, and ISO_CONS) 	*/
-end_comment
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_nlproto
 operator|=
 name|nl_protosw
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|tpcb
@@ -2211,19 +2072,10 @@ name|tp_nlproto
 operator|++
 expr_stmt|;
 block|}
-end_while
-
-begin_endif
 endif|#
 directive|endif
 endif|notdef
-end_endif
-
-begin_comment
 comment|/* xx_pcballoc sets so_pcb */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|error
@@ -2250,9 +2102,6 @@ goto|goto
 name|bad4
 goto|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|dom
@@ -2271,13 +2120,7 @@ name|caddr_t
 operator|)
 name|tpcb
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* nothing to do for iso case */
-end_comment
-
-begin_expr_stmt
 name|tpcb
 operator|->
 name|tp_npcb
@@ -2289,9 +2132,6 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|so
 operator|->
 name|so_tpcb
@@ -2301,27 +2141,15 @@ name|caddr_t
 operator|)
 name|tpcb
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 literal|0
 return|;
-end_return
-
-begin_label
 name|bad4
 label|:
-end_label
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"BAD4 in tp_attach, so 0x%x\n"
@@ -2329,32 +2157,20 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|ENDDEBUG
 name|tp_freeref
-parameter_list|(
+argument_list|(
 name|tpcb
 operator|->
 name|tp_refp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_label
+argument_list|)
+decl_stmt|;
 name|bad3
 label|:
-end_label
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"BAD3 in tp_attach, so 0x%x\n"
@@ -2362,9 +2178,6 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|ENDDEBUG
 name|free
 argument_list|(
@@ -2376,25 +2189,13 @@ argument_list|,
 name|M_PCB
 argument_list|)
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* never a cluster  */
-end_comment
-
-begin_label
 name|bad2
 label|:
-end_label
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"BAD2 in tp_attach, so 0x%x\n"
@@ -2402,9 +2203,6 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|ENDDEBUG
 name|so
 operator|->
@@ -2412,29 +2210,17 @@ name|so_pcb
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|so
 operator|->
 name|so_tpcb
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*bad:*/
-end_comment
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"BAD in tp_attach, so 0x%x\n"
@@ -2442,38 +2228,29 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|ENDDEBUG
-end_macro
-
-begin_return
 return|return
 name|error
 return|;
-end_return
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * NAME:  tp_detach()  *  * CALLED FROM:  *	tp.trans, on behalf of a user close request  *  and when the reference timer goes off  * (if the disconnect  was initiated by the protocol entity   * rather than by the user)  *  * FUNCTION and ARGUMENTS:  *  remove the tpcb structure from the list of active or  *  partially active connections, recycle all the mbufs  *  associated with the pcb, ref structure, sockbufs, etc.  *  Only free the ref structure if you know that a ref timer  *  wasn't set for this tpcb.  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *  * NOTES:  *  tp_soisdisconnected() was already when this is called  */
 end_comment
 
-begin_expr_stmt
-unit|void
+begin_function
+name|void
 name|tp_detach
-argument_list|(
+parameter_list|(
 name|tpcb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tp_pcb
-operator|*
+modifier|*
 name|tpcb
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|void
 name|tp_freeref
@@ -2504,43 +2281,34 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|IFTRACE
-parameter_list|(
+argument_list|(
 name|D_CONN
-parameter_list|)
-function_decl|tptraceTPCB
-parameter_list|(
+argument_list|)
+name|tptraceTPCB
+argument_list|(
 name|TPPTmisc
-parameter_list|,
-function_decl|"tp_detach tpcb so lsufx"
-operator|,
-function_decl|tpcb
-operator|,
-function_decl|so
-operator|,
-function_decl|*
-parameter_list|(
+argument_list|,
+literal|"tp_detach tpcb so lsufx"
+argument_list|,
+name|tpcb
+argument_list|,
+name|so
+argument_list|,
+operator|*
+operator|(
 name|u_short
-modifier|*
-parameter_list|)
-parameter_list|(
+operator|*
+operator|)
+operator|(
 name|tpcb
 operator|->
 name|tp_lsuffix
-parameter_list|)
-operator|,
-function_decl|0
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 name|ENDTRACE
-end_macro
-
-begin_if
 if|if
 condition|(
 name|so
@@ -2578,16 +2346,10 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"tp_detach(freeing RTC list snduna 0x%x rcvnxt 0x%x)\n"
@@ -2601,9 +2363,6 @@ operator|->
 name|tp_rcvnxt_rtc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|ENDDEBUG
 define|#
 directive|define
@@ -2614,15 +2373,12 @@ parameter_list|)
 define|\
 value|{ register struct tp_rtc *xxr = XXX, *xxs; while (xxr) {\ 		xxs = xxr->tprt_next;\ 		m_freem( xxr->tprt_data );\ 		m_free( dtom(xxr) ); xxr = xxs; }\ 		XXX = (struct tp_rtc *)0;\ 	}
 name|FREE_RTC_LIST
-parameter_list|(
+argument_list|(
 name|tpcb
 operator|->
 name|tp_snduna_rtc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|)
+decl_stmt|;
 name|tpcb
 operator|->
 name|tp_sndhiwat_rtc
@@ -2634,9 +2390,6 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|FREE_RTC_LIST
 argument_list|(
 name|tpcb
@@ -2644,22 +2397,13 @@ operator|->
 name|tp_rcvnxt_rtc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_undef
 undef|#
 directive|undef
 name|FREE_RTC_LIST
-end_undef
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"so_snd at 0x%x so_rcv at 0x%x\n"
@@ -2675,9 +2419,6 @@ operator|->
 name|so_rcv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dump_mbuf
 argument_list|(
 name|so
@@ -2689,9 +2430,6 @@ argument_list|,
 literal|"so_snd at detach "
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"about to call LL detach, nlproto 0x%x, nl_detach 0x%x\n"
@@ -2707,13 +2445,7 @@ operator|->
 name|nlp_pcbdetach
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|ENDDEBUG
-end_macro
-
-begin_if
 if|if
 condition|(
 name|so
@@ -2732,9 +2464,6 @@ operator|->
 name|so_snd
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -2762,9 +2491,6 @@ operator|.
 name|sb_cc
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -2778,16 +2504,10 @@ operator|->
 name|tp_ucddata
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"calling (...nlproto->...)(0x%x, so 0x%x)\n"
@@ -2799,9 +2519,6 @@ argument_list|,
 name|so
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"so 0x%x so_head 0x%x,  qlen %d q0len %d qlimit %d\n"
@@ -2825,9 +2542,6 @@ operator|->
 name|so_qlimit
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|ENDDEBUG
 function_decl|(
 name|tpcb
@@ -2842,32 +2556,17 @@ operator|->
 name|so_pcb
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* does an sofree(so) */
-end_comment
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"after xxx_pcbdetach\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|ENDDEBUG
-end_macro
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -2905,16 +2604,13 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|tp_freeref
-parameter_list|(
+argument_list|(
 name|tpcb
 operator|->
 name|tp_refp
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -2938,9 +2634,6 @@ name|tp_Xsnd
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|so
 operator|->
 name|so_tpcb
@@ -2950,19 +2643,10 @@ name|caddr_t
 operator|)
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  	 * Get rid of the cluster mbuf allocated for performance measurements, if 	 * there is one.  Note that tpcb->tp_perf_on says nothing about whether or  	 * not a cluster mbuf was allocated, so you have to check for a pointer  	 * to one (that is, we need the TP_PERF_MEASs around the following section  	 * of code, not the IFPERFs) 	 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|TP_PERF_MEAS
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -3031,22 +2715,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
 endif|TP_PERF_MEAS
-end_endif
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"end of detach, NOT single, tpcb 0x%x\n"
@@ -3054,16 +2729,10 @@ argument_list|,
 name|tpcb
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ENDDEBUG
-end_expr_stmt
-
-begin_comment
 comment|/* free((caddr_t)tpcb, M_PCB); WHere to put this ? */
-end_comment
+block|}
+end_function
 
-unit|}
 end_unit
 

@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ioctl.h"
 end_include
 
@@ -72,10 +78,6 @@ include|#
 directive|include
 file|"uio.h"
 end_include
-
-begin_comment
-comment|/* #include "kernel.h" */
-end_comment
 
 begin_include
 include|#
@@ -225,7 +227,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|if (uiomove(target, count, source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} else
+value|do { if (uiomove(target, count, source)) { \ 		printf ("sb: Bad copyin()!\n"); \ 	} } while(0)
 end_define
 
 begin_comment
@@ -246,7 +248,7 @@ parameter_list|,
 name|count
 parameter_list|)
 define|\
-value|if (uiomove(source, count, target)) { \ 		printf ("sb: Bad copyout()!\n"); \ 	} else
+value|do { if (uiomove(source, count, target)) { \ 		printf ("sb: Bad copyout()!\n"); \ 	} } while(0)
 end_define
 
 begin_comment
@@ -467,7 +469,7 @@ parameter_list|,
 name|flag
 parameter_list|)
 define|\
-value|{ \ 	  flag = 1; \ 	  flag=tsleep(&(on_what), (PRIBIO-5)|PCATCH, "sndint", __timeout_val); \ 	  if(flag == ERESTART) __process_aborting = 1;\ 	  else __process_aborting = 0;\ 	  __timeout_val = 0; \ 	  flag = 0; \ 	}
+value|{ \ 	  flag = 1; \ 	  flag=tsleep((caddr_t)&(on_what), (PRIBIO-5)|PCATCH, "sndint", __timeout_val); \ 	  if(flag == ERESTART) __process_aborting = 1;\ 	  else __process_aborting = 0;\ 	  __timeout_val = 0; \ 	  flag = 0; \ 	}
 end_define
 
 begin_comment
@@ -481,7 +483,7 @@ name|WAKE_UP
 parameter_list|(
 name|who
 parameter_list|)
-value|wakeup(&(who))
+value|wakeup((caddr_t)&(who))
 end_define
 
 begin_comment
@@ -493,13 +495,6 @@ ifndef|#
 directive|ifndef
 name|HZ
 end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -647,7 +642,7 @@ name|ALLOC_DMA_CHN
 parameter_list|(
 name|chn
 parameter_list|)
-value|(0)
+value|({ 0; })
 end_define
 
 begin_define
@@ -657,7 +652,7 @@ name|RELEASE_DMA_CHN
 parameter_list|(
 name|chn
 parameter_list|)
-value|(0)
+value|({ 0; })
 end_define
 
 begin_define

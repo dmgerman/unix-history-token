@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if_ether.c	7.13 (Berkeley) 10/31/90  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if_ether.c	7.13 (Berkeley) 10/31/90  *	$Id: if_ether.c,v 1.3 1993/10/16 18:25:54 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -102,6 +102,34 @@ include|#
 directive|include
 file|"if_ether.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|in_arpinput
+parameter_list|(
+name|struct
+name|arpcom
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|arptfree
+parameter_list|(
+name|struct
+name|arptab
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -275,12 +303,10 @@ begin_comment
 comment|/*  * Timeout routine.  Age arp_tab entries once a minute.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|arptimer
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -377,36 +403,31 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Broadcast an ARP packet, asking who has addr on interface ac.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|arpwhohas
-argument_list|(
+parameter_list|(
 name|ac
-argument_list|,
+parameter_list|,
 name|addr
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|arpcom
-operator|*
+modifier|*
 name|ac
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|in_addr
 modifier|*
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -709,7 +730,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -727,60 +748,46 @@ begin_comment
 comment|/*  * Resolve an IP address into an ethernet address.  If success,   * desten is filled in.  If there is no entry in arptab,  * set one up and broadcast a request for the IP address.  * Hold onto this mbuf and resend it once the address  * is finally resolved.  A return value of 1 indicates  * that desten has been filled in and the packet should be sent  * normally; a 0 return indicates that the packet has been  * taken over here, either now or for later transmission.  *  * We do some (conservative) locking here at splimp, since  * arptab is also altered from input interrupt service (ecintr/ilintr  * calls arpinput when ETHERTYPE_ARP packets come in).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|arpresolve
-argument_list|(
+parameter_list|(
 name|ac
-argument_list|,
+parameter_list|,
 name|m
-argument_list|,
+parameter_list|,
 name|destip
-argument_list|,
+parameter_list|,
 name|desten
-argument_list|,
+parameter_list|,
 name|usetrailers
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|arpcom
-operator|*
+modifier|*
 name|ac
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|in_addr
 modifier|*
 name|destip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|u_char
 modifier|*
 name|desten
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|usetrailers
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1233,38 +1240,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Called from 10 Mb/s Ethernet interrupt handlers  * when ether packet type ETHERTYPE_ARP  * is received.  Common length and type checks are done here,  * then the protocol-specific routine is called.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|arpinput
-argument_list|(
-argument|ac
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ac
+parameter_list|,
+name|m
+parameter_list|)
 name|struct
 name|arpcom
 modifier|*
 name|ac
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1387,36 +1386,31 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * ARP for Internet protocols on 10 Mb/s Ethernet.  * Algorithm is that given in RFC 826.  * In addition, a sanity check is performed on the sender  * protocol address, to catch impersonators.  * We also handle negotiations for use of trailer protocol:  * ARP replies for protocol type ETHERTYPE_TRAIL are sent  * along with IP replies if we want trailers sent to us,  * and also send them in response to IP replies.  * This allows either end to announce the desire to receive  * trailer packets.  * We reply to requests for ETHERTYPE_TRAIL protocol as well,  * but don't normally send requests.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|in_arpinput
-argument_list|(
+parameter_list|(
 name|ac
-argument_list|,
+parameter_list|,
 name|m
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|arpcom
-operator|*
+modifier|*
 name|ac
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1434,6 +1428,8 @@ name|struct
 name|arptab
 modifier|*
 name|at
+init|=
+literal|0
 decl_stmt|;
 comment|/* same as "merge" flag */
 specifier|register
@@ -2418,26 +2414,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free an arptab entry.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|arptfree
-argument_list|(
+parameter_list|(
 name|at
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|arptab
-operator|*
+modifier|*
 name|at
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|s
@@ -2488,7 +2482,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Enter a new address in arptab, pushing out the oldest entry   * from the bucket if there is no room.  * This always succeeds since no bucket can be completely filled  * with permanent entries (except from arpioctl when testing whether  * another permanent entry will fit).  * MUST BE CALLED AT SPLIMP.  */
@@ -2676,28 +2670,20 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|arpioctl
-argument_list|(
-argument|cmd
-argument_list|,
-argument|data
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|data
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3178,7 +3164,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

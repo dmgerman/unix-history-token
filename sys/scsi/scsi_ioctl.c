@@ -85,6 +85,23 @@ directive|include
 file|<sys/scsiio.h>
 end_include
 
+begin_function_decl
+name|void
+name|scsierr
+parameter_list|(
+name|struct
+name|buf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX ??? */
+end_comment
+
 begin_comment
 comment|/*  * We let the user interpret his own sense in the generic scsi world.  * This routine is called at interrupt time if the SCSI_USER bit was set  * in the flags passed to scsi_scsi_cmd(). No other completion processing  * takes place, even if we are running over another device driver.  * The lower level routines that call us here, will free the xs and restart  * the device's queue if such exists.  */
 end_comment
@@ -1310,30 +1327,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|scsierr
-argument_list|(
-argument|bp
-argument_list|,
-argument|err
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bp
+parameter_list|,
+name|err
+parameter_list|)
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|err
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|bp
 operator|->
@@ -1354,7 +1363,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 end_unit
 

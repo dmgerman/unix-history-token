@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if.c	7.14 (Berkeley) 4/20/91  *	$Id: if.c,v 1.4 1993/10/16 17:43:10 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1980, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)if.c	7.14 (Berkeley) 4/20/91  *	$Id: if.c,v 1.5 1993/11/07 17:46:53 wollman Exp $  */
 end_comment
 
 begin_include
@@ -112,16 +112,56 @@ begin_comment
 comment|/* list of configured interfaces */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|link_rtrequest
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|if_qflush
+parameter_list|(
+name|struct
+name|ifqueue
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|if_slowtimo
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Network interface utility routines.  *  * Routines with ifa_ifwith* names take sockaddr *'s as  * parameters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ifinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -162,10 +202,17 @@ operator|=
 name|ifqmaxlen
 expr_stmt|;
 name|if_slowtimo
-argument_list|()
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -270,22 +317,17 @@ begin_comment
 comment|/*  * Attach an interface to the  * list of "active" interfaces.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|if_attach
-argument_list|(
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|socksize
@@ -334,21 +376,6 @@ name|if_indexlim
 init|=
 literal|8
 decl_stmt|;
-extern|extern link_rtrequest(
-block|)
-end_block
-
-begin_operator
-operator|,
-end_operator
-
-begin_expr_stmt
-name|ether_output
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 operator|*
@@ -366,17 +393,11 @@ operator|->
 name|if_next
 operator|)
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 operator|*
 name|p
 operator|=
 name|ifp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifp
 operator|->
 name|if_index
@@ -384,9 +405,6 @@ operator|=
 operator|++
 name|if_index
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ifnet_addrs
@@ -471,66 +489,7 @@ operator|=
 name|q
 expr_stmt|;
 block|}
-end_if
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|&&
-name|NETHER
-operator|>
-literal|0
-end_if
-
-begin_comment
-comment|/* XXX -- Temporary fix before changing 10 ethernet drivers */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_output
-operator|==
-name|ether_output
-condition|)
-block|{
-name|ifp
-operator|->
-name|if_type
-operator|=
-name|IFT_ETHER
-expr_stmt|;
-name|ifp
-operator|->
-name|if_addrlen
-operator|=
-literal|6
-expr_stmt|;
-name|ifp
-operator|->
-name|if_hdrlen
-operator|=
-literal|14
-expr_stmt|;
-block|}
-end_if
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* 	 * create a Link Level name for this device 	 */
-end_comment
-
-begin_expr_stmt
 name|unitname
 operator|=
 name|sprint_d
@@ -550,9 +509,6 @@ name|workbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|namelen
 operator|=
 name|strlen
@@ -562,9 +518,6 @@ operator|->
 name|if_name
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|unitlen
 operator|=
 name|strlen
@@ -572,9 +525,6 @@ argument_list|(
 name|unitname
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_define
 define|#
 directive|define
 name|_offsetof
@@ -584,9 +534,6 @@ parameter_list|,
 name|m
 parameter_list|)
 value|((int)((caddr_t)&((t *)0)->m))
-end_define
-
-begin_expr_stmt
 name|socksize
 operator|=
 name|_offsetof
@@ -608,9 +555,6 @@ name|ifp
 operator|->
 name|if_addrlen
 expr_stmt|;
-end_expr_stmt
-
-begin_define
 define|#
 directive|define
 name|ROUNDUP
@@ -618,9 +562,6 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(1 + (((a) - 1) | (sizeof(long) - 1)))
-end_define
-
-begin_expr_stmt
 name|socksize
 operator|=
 name|ROUNDUP
@@ -628,9 +569,6 @@ argument_list|(
 name|socksize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|socksize
@@ -649,9 +587,6 @@ operator|*
 name|sdl
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|ifasize
 operator|=
 sizeof|sizeof
@@ -664,9 +599,6 @@ literal|2
 operator|*
 name|socksize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifa
 operator|=
 operator|(
@@ -683,9 +615,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|ifa
@@ -693,9 +622,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 name|ifnet_addrs
 index|[
 name|if_index
@@ -705,9 +631,6 @@ index|]
 operator|=
 name|ifa
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bzero
 argument_list|(
 operator|(
@@ -718,9 +641,6 @@ argument_list|,
 name|ifasize
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|=
 operator|(
@@ -734,9 +654,6 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifa
 operator|->
 name|ifa_addr
@@ -748,36 +665,24 @@ operator|*
 operator|)
 name|sdl
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifa
 operator|->
 name|ifa_ifp
 operator|=
 name|ifp
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|->
 name|sdl_len
 operator|=
 name|socksize
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|->
 name|sdl_family
 operator|=
 name|AF_LINK
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bcopy
 argument_list|(
 name|ifp
@@ -791,9 +696,6 @@ argument_list|,
 name|namelen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bcopy
 argument_list|(
 name|unitname
@@ -810,9 +712,6 @@ argument_list|,
 name|unitlen
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|->
 name|sdl_nlen
@@ -823,9 +722,6 @@ operator|+=
 name|unitlen
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|->
 name|sdl_index
@@ -834,9 +730,6 @@ name|ifp
 operator|->
 name|if_index
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|=
 operator|(
@@ -853,9 +746,6 @@ operator|)
 name|sdl
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifa
 operator|->
 name|ifa_netmask
@@ -867,9 +757,6 @@ operator|*
 operator|)
 name|sdl
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sdl
 operator|->
 name|sdl_len
@@ -880,9 +767,6 @@ name|ifp
 operator|->
 name|if_addrlen
 expr_stmt|;
-end_expr_stmt
-
-begin_while
 while|while
 condition|(
 name|namelen
@@ -899,9 +783,6 @@ index|]
 operator|=
 literal|0xff
 expr_stmt|;
-end_while
-
-begin_expr_stmt
 name|ifa
 operator|->
 name|ifa_next
@@ -910,28 +791,22 @@ name|ifp
 operator|->
 name|if_addrlist
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifa
 operator|->
 name|ifa_rtrequest
 operator|=
 name|link_rtrequest
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ifp
 operator|->
 name|if_addrlist
 operator|=
 name|ifa
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Locate an interface based on a complete address.  */
 end_comment
 
@@ -940,7 +815,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-unit|struct
+name|struct
 name|ifaddr
 modifier|*
 name|ifa_ifwithaddr
@@ -1769,32 +1644,30 @@ begin_comment
 comment|/*  * Default action when installing a route with a Link Level gateway.  * Lookup an appropriate real ifa to point to.  * This should be moved to /sys/net/link.c eventually.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|link_rtrequest
-argument_list|(
+parameter_list|(
 name|cmd
-argument_list|,
+parameter_list|,
 name|rt
-argument_list|,
+parameter_list|,
 name|sa
-argument_list|)
+parameter_list|)
+name|int
+name|cmd
+decl_stmt|;
 specifier|register
-expr|struct
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1904,26 +1777,24 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Mark an interface down and notify protocols of  * the transition.  * NOTE: must be called at splnet or eqivalent.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|if_down
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1972,26 +1843,25 @@ name|if_snd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush an interface queue.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|if_qflush
-argument_list|(
+parameter_list|(
 name|ifq
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifqueue
-operator|*
+modifier|*
 name|ifq
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2046,18 +1916,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle interface watchdog timer routines.  Called  * from softclock, we decrement timers (if set) and  * call the appropriate interface routine on expiration.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|if_slowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|caddr_t
+name|dummy1
+parameter_list|,
+name|int
+name|dummy2
+parameter_list|)
 block|{
 specifier|register
 name|struct
@@ -2139,7 +2014,7 @@ name|IFNET_SLOWHZ
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Map interface name to  * interface structure pointer.  */
@@ -2344,48 +2219,34 @@ begin_comment
 comment|/*  * Interface ioctls.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ifioctl
-argument_list|(
-argument|so
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2956,7 +2817,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return interface configuration  * of system.  List may be used  * in later ioctl's (above) to get  * other information.  */
@@ -2966,28 +2827,20 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ifconf
-argument_list|(
-argument|cmd
-argument_list|,
-argument|data
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|data
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3470,7 +3323,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

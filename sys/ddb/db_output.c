@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id$  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_output.c,v 1.4 1993/10/16 16:47:20 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -27,6 +27,12 @@ begin_include
 include|#
 directive|include
 file|<machine/stdarg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ddb/ddb.h"
 end_include
 
 begin_comment
@@ -93,10 +99,16 @@ comment|/* output line width */
 end_comment
 
 begin_function_decl
-specifier|extern
+specifier|static
 name|void
-name|db_check_interrupt
-parameter_list|()
+name|db_printf_guts
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -181,24 +193,16 @@ begin_comment
 comment|/*  * Output character.  Buffer whitespace.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|db_putchar
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|)
 name|int
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* character to output */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -301,7 +305,7 @@ expr_stmt|;
 block|}
 comment|/* other characters are assumed non-printing */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return output position  */
@@ -324,27 +328,17 @@ begin_comment
 comment|/*  * Printing  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|db_radix
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*VARARGS1*/
-end_comment
-
-begin_macro
+begin_function
+name|void
 name|db_printf
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|va_list
 name|listp
@@ -369,7 +363,7 @@ name|listp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* alternate name */
@@ -379,16 +373,16 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|kdbprintf
-argument_list|(
-argument|char *fmt
-argument_list|,
-argument|...
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
 block|{
 name|va_list
 name|listp
@@ -413,7 +407,7 @@ name|listp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * End line if too long.  */
@@ -535,28 +529,24 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|db_printf_guts
-argument_list|(
+parameter_list|(
 name|fmt
-argument_list|,
+parameter_list|,
 name|ap
-argument_list|)
+parameter_list|)
 specifier|register
 specifier|const
 name|char
-operator|*
+modifier|*
 name|fmt
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1522,7 +1512,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

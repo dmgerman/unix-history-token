@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_clock.c	7.16 (Berkeley) 5/9/91  *	$Id: kern_clock.c,v 1.8 1993/11/09 04:23:29 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_clock.c	7.16 (Berkeley) 5/9/91  *	$Id: kern_clock.c,v 1.9 1993/11/09 17:07:27 ache Exp $  */
 end_comment
 
 begin_include
@@ -80,6 +80,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|gatherstats
+parameter_list|(
+name|clockframe
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* From callout.h */
 end_comment
@@ -131,20 +142,15 @@ begin_comment
 comment|/*  * The hz hardware interval timer.  * We update the events relating to real time.  * If this timer is also being used to gather statistics,  * we run through the statistics gathering routine as well.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|hardclock
-argument_list|(
-argument|frame
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|frame
+parameter_list|)
 name|clockframe
 name|frame
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -165,6 +171,8 @@ name|struct
 name|pstats
 modifier|*
 name|pstats
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|struct
@@ -702,7 +710,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -716,21 +724,16 @@ begin_comment
 comment|/*  * Gather statistics on resource utilization.  *  * We make a gross assumption: that the system has been in the  * state it is in (user state, kernel state, interrupt state,  * or idle state) for the entire last time interval, and  * update statistics accordingly.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|gatherstats
-argument_list|(
-argument|framep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|framep
+parameter_list|)
 name|clockframe
 modifier|*
 name|framep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -872,7 +875,7 @@ index|]
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Software priority level clock interrupt.  * Run periodic events from timeout queue.  */
@@ -882,20 +885,15 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|softclock
-argument_list|(
-argument|frame
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|frame
+parameter_list|)
 name|clockframe
 name|frame
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 for|for
 control|(
@@ -914,13 +912,9 @@ name|caddr_t
 name|arg
 decl_stmt|;
 specifier|register
-name|int
-function_decl|(
-modifier|*
+name|timeout_func_t
 name|func
-function_decl|)
-parameter_list|()
-function_decl|;
+decl_stmt|;
 specifier|register
 name|int
 name|a
@@ -1104,47 +1098,32 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Arrange that (*func)(arg) is called in t/hz seconds.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|timeout
-argument_list|(
-argument|func
-argument_list|,
-argument|arg
-argument_list|,
-argument|t
-argument_list|)
-end_macro
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+parameter_list|(
 name|func
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
+name|arg
+parameter_list|,
+name|t
+parameter_list|)
+name|timeout_func_t
+name|func
+decl_stmt|;
 name|caddr_t
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1281,38 +1260,26 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * untimeout is called to remove a function timeout call  * from the callout structure.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|untimeout
-argument_list|(
-argument|func
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
+parameter_list|(
 name|func
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+parameter_list|,
+name|arg
+parameter_list|)
+name|timeout_func_t
+name|func
+decl_stmt|;
 name|caddr_t
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1418,7 +1385,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute number of hz until specified time.  * Used to compute third argument to timeout() from an  * absolute time.  */
@@ -1428,22 +1395,17 @@ begin_comment
 comment|/* XXX clock_t */
 end_comment
 
-begin_macro
+begin_function
+name|u_long
 name|hzto
-argument_list|(
-argument|tv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tv
+parameter_list|)
 name|struct
 name|timeval
 modifier|*
 name|tv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|unsigned
@@ -1625,7 +1587,7 @@ name|ticks
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

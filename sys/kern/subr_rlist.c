@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software is a component of "386BSD" developed by  	William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: subr_rlist.c,v 1.2 1993/10/16 15:24:44 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -35,33 +35,28 @@ begin_comment
 comment|/*  * Add space to a resource list. Used to either  * initialize a list or return free space to it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|rlist_free
-argument_list|(
+parameter_list|(
 name|rlp
-argument_list|,
+parameter_list|,
 name|start
-argument_list|,
+parameter_list|,
 name|end
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rlist
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|rlp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|unsigned
 name|start
 decl_stmt|,
 name|end
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|rlist
@@ -473,7 +468,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Obtain a region of desired size from a resource list.  * If nothing available of that size, return 0. Otherwise,  * return a value of 1 and set resource start location with  * "*loc". (Note: loc can be zero if we don't wish the value)  */
@@ -635,23 +630,18 @@ begin_comment
 comment|/*  * Finished with this resource list, reclaim all space and  * mark it as being empty.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rlist_destroy
-argument_list|(
-argument|rlp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rlp
+parameter_list|)
 name|struct
 name|rlist
 modifier|*
 modifier|*
 name|rlp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|rlist
@@ -696,7 +686,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

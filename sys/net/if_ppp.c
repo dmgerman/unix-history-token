@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/*  *	$Id: if_ppp.c,v 1.3 1993/09/06 19:48:58 rgrimes Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
+comment|/*  *	$Id: if_ppp.c,v 1.4 1993/10/07 02:19:37 rgrimes Exp $  * 	From: if_ppp.c,v 1.22 1993/08/31 23:20:40 paulus Exp  *	From: if_ppp.c,v 1.21 1993/08/29 11:22:37 paulus Exp  *	From: if_sl.c,v 1.11 84/10/04 12:54:47 rick Exp   */
 end_comment
 
 begin_include
@@ -506,6 +506,11 @@ expr|struct
 name|sockaddr
 operator|*
 name|dst
+operator|,
+expr|struct
+name|rtentry
+operator|*
+name|rt
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1460,6 +1465,8 @@ name|s
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1958,6 +1965,8 @@ name|m0
 argument_list|,
 operator|&
 name|dst
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -2970,6 +2979,8 @@ parameter_list|,
 name|m0
 parameter_list|,
 name|dst
+parameter_list|,
+name|rt
 parameter_list|)
 name|struct
 name|ifnet
@@ -2985,6 +2996,11 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|rt
 decl_stmt|;
 block|{
 specifier|register
@@ -6409,36 +6425,28 @@ begin_comment
 comment|/*  * Process an ioctl request to interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|pppioctl
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|data
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -6628,7 +6636,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#

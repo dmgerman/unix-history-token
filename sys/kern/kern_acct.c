@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_acct.c	7.18 (Berkeley) 5/11/91  *	$Id: kern_acct.c,v 1.7 1993/11/09 17:04:24 ache Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_acct.c	7.18 (Berkeley) 5/11/91  *	$Id: kern_acct.c,v 1.8 1993/11/12 21:19:58 nate Exp $  */
 end_comment
 
 begin_include
@@ -166,6 +166,18 @@ begin_comment
 comment|/* file to which to do accounting when space */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|acctwatch
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Enable or disable process accounting.  *  * If a non-null filename is given, that file is used to store accounting  * records on process exit. If a null filename is given process accounting  * is suspended. If accounting is enabled, the system checks the amount  * of freespace on the filesystem at timeval intervals. If the amount of  * freespace is below acctsuspend percent, accounting is suspended. If  * accounting has been suspended, and freespace rises above acctresume,  * accounting is resumed.  */
 end_comment
@@ -190,41 +202,30 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|sysacct
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sysacct_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -242,9 +243,6 @@ name|attr
 decl_stmt|;
 name|int
 name|rv
-decl_stmt|,
-name|acctwatch
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -502,8 +500,13 @@ argument_list|)
 expr_stmt|;
 name|acctwatch
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|chk
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* look for full system */
@@ -536,29 +539,40 @@ name|rv
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Periodically check the file system to see if accounting  * should be turned on or off.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|acctwatch
-argument_list|(
-argument|resettime
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg1
+parameter_list|,
+name|arg2
+parameter_list|)
+name|caddr_t
+name|arg1
+decl_stmt|;
+name|int
+name|arg2
+decl_stmt|;
+block|{
 name|struct
 name|timeval
 modifier|*
 name|resettime
+init|=
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
+name|arg1
 decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
 name|struct
 name|statfs
 name|sb
@@ -719,7 +733,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine calculates an accounting record for a process and,  * if accounting is enabled, writes it to the accounting file.  */
@@ -729,20 +743,18 @@ begin_comment
 comment|/* Mark Tinguely (tinguely@plains.NoDak.edu) 8/10/93 */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|acct
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|acct
@@ -1109,7 +1121,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  int2comp converts from ticks in a microsecond to ticks in 1/AHZ second  *   * comp_t is a psuedo-floating point number with 13 bits of  * mantissa and 3 bits of base 8 exponent and has resolution  * of 1/AHZ seconds.  *  * notice I already converted the incoming values into microseconds  * I need to convert back into AHZ ticks.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: iso.h,v 1.2 1993/07/20 03:27:24 jkh Exp $  */
+comment|/*  *	$Id: iso.h,v 1.3 1993/11/07 17:46:01 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -980,11 +980,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
 name|isofs_init
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

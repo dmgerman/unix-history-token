@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *	$Id$  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *	$Id: ufs_lookup.c,v 1.4 1993/10/16 18:17:55 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -106,41 +106,33 @@ begin_comment
 comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ufs_lookup
-argument_list|(
+parameter_list|(
 name|vdp
-argument_list|,
+parameter_list|,
 name|ndp
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|nameidata
 modifier|*
 name|ndp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -173,6 +165,8 @@ decl_stmt|;
 comment|/* the current directory entry */
 name|int
 name|entryoffsetinblock
+init|=
+literal|0
 decl_stmt|;
 comment|/* offset of ep in bp's buffer */
 enum|enum
@@ -194,14 +188,20 @@ decl_stmt|;
 comment|/* offset of area with free space */
 name|int
 name|slotsize
+init|=
+literal|0
 decl_stmt|;
 comment|/* size of area at slotoffset */
 name|int
 name|slotfreespace
+init|=
+literal|0
 decl_stmt|;
 comment|/* amount of space free in slot */
 name|int
 name|slotneeded
+init|=
+literal|0
 decl_stmt|;
 comment|/* size of the entry we're seeking */
 name|int
@@ -214,6 +214,8 @@ decl_stmt|;
 comment|/* offset to end directory search */
 name|int
 name|prevoff
+init|=
+literal|0
 decl_stmt|;
 comment|/* ndp->ni_ufs.ufs_offset of previous entry */
 name|struct
@@ -1979,41 +1981,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|dirbad
-argument_list|(
-argument|ip
-argument_list|,
-argument|offset
-argument_list|,
-argument|how
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|,
+name|how
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|off_t
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|how
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2050,34 +2041,29 @@ literal|"bad dir"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Do consistency checking on a directory entry:  *	record length must be multiple of 4  *	entry must fit in rest of its DIRBLKSIZ block  *	record must be large enough to contain entry  *	name is not longer than MAXNAMLEN  *	name must be as long as advertised, and null terminated  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|dirbadentry
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|,
+parameter_list|,
 name|entryoffsetinblock
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|direct
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|entryoffsetinblock
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2173,39 +2159,31 @@ index|]
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write a directory entry after a call to namei, using the parameters  * that it left in nameidata.  The argument ip is the inode which the new  * directory entry will refer to.  The nameidata field ndp->ni_dvp is a  * pointer to the directory to be written, which was left locked by namei.  * Remaining parameters (ndp->ni_ufs.ufs_offset, ndp->ni_ufs.ufs_count)  * indicate how the space for the new entry is to be obtained.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|direnter
-argument_list|(
-argument|ip
-argument_list|,
-argument|ndp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|ndp
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|nameidata
 modifier|*
 name|ndp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2860,26 +2838,24 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove a directory entry after a call to namei, using  * the parameters which it left in nameidata. The entry  * ni_ufs.ufs_offset contains the offset into the directory of the  * entry to be eliminated.  The ni_ufs.ufs_count field contains the  * size of the previous record in the directory.  If this  * is 0, the first entry is being deleted, so we need only  * zero the inode number to mark the entry as free.  If the  * entry is not the first in the directory, we must reclaim  * the space of the now empty record by adding the record size  * to the size of the previous entry.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|dirremove
-argument_list|(
+parameter_list|(
 name|ndp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|nameidata
-operator|*
+modifier|*
 name|ndp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -3050,33 +3026,31 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Rewrite an existing directory entry to point at the inode  * supplied.  The parameters describing the directory entry are  * set up by a call to namei.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|dirrewrite
-argument_list|(
-argument|dp
-argument_list|,
-argument|ip
-argument_list|,
-argument|ndp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dp
+parameter_list|,
+name|ip
+parameter_list|,
+name|ndp
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|dp
 decl_stmt|,
-modifier|*
+decl|*
 name|ip
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|struct
@@ -3167,51 +3141,37 @@ begin_comment
 comment|/*  * Return buffer with contents of block "offset"  * from the beginning of directory "ip".  If "res"  * is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|blkatoff
-argument_list|(
-argument|ip
-argument_list|,
-argument|offset
-argument_list|,
-argument|res
-argument_list|,
-argument|bpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|,
+name|res
+parameter_list|,
+name|bpp
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|off_t
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|res
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|buf
 modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3325,44 +3285,36 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check if a directory is empty or not.  * Inode supplied must be locked.  *  * Using a struct dirtemplate here is not precisely  * what we want, but better than using a struct direct.  *  * NB: does not handle corrupted directories.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|dirempty
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|,
+parameter_list|,
 name|parentino
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|ino_t
 name|parentino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|off_t
@@ -3559,33 +3511,31 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check if source directory is in the path of the target directory.  * Target is supplied locked, source is unlocked.  * The target is always iput() before returning.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|checkpath
-argument_list|(
-argument|source
-argument_list|,
-argument|target
-argument_list|,
-argument|cred
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|source
+parameter_list|,
+name|target
+parameter_list|,
+name|cred
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|source
 decl_stmt|,
-modifier|*
+decl|*
 name|target
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)hd_output.c	7.6 (Berkeley) 5/29/91  *	$Id$  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)hd_output.c	7.6 (Berkeley) 5/29/91  *	$Id: hd_output.c,v 1.2 1993/10/16 19:46:36 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -91,30 +91,25 @@ begin_comment
 comment|/*  *      HDLC OUTPUT INTERFACE  *  *      This routine is called when the X.25 packet layer output routine  *      has a information frame (iframe)  to write.   It is  also called   *      by the input and control routines of the HDLC layer.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|hd_output
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|m0
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|x25config
@@ -239,22 +234,20 @@ name|hdp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|hd_start
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -339,45 +332,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This procedure is passed a buffer descriptor for an iframe. It builds  *  the rest of the control part of the frame and then writes it out.  It  *  also  starts the  acknowledgement  timer and keeps  the iframe in the  *  Retransmit queue (Retxq) just in case  we have to do this again.  *  *  Note: This routine is also called from hd_input.c when retransmission  *       of old frames is required.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|hd_send_iframe
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|buf
-argument_list|,
+parameter_list|,
 name|poll_bit
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|poll_bit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -622,33 +607,28 @@ name|hdp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|hd_ifoutput
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|,
+parameter_list|,
 name|m
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|hdcb
 modifier|*
 name|hdp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 specifier|register
@@ -734,26 +714,24 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*   *  This routine gets control when the timer expires because we have not  *  received an acknowledgement for a iframe.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|hd_resend_iframe
-argument_list|(
+parameter_list|(
 name|hdp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|hdcb
-operator|*
+modifier|*
 name|hdp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -866,7 +844,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_denode.c,v 1.2 1993/10/16 19:29:32 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't reoove this notice.  *  *  This software is provided "as is".  *  *  The authop supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_denode.c,v 1.3 1993/11/07 21:48:09 wollman Exp $  */
 end_comment
 
 begin_include
@@ -170,12 +170,12 @@ index|]
 union|;
 end_union
 
-begin_macro
+begin_function
+name|void
 name|pcfs_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -239,7 +239,7 @@ name|deh
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  If deget() succeeds it returns with the gotten denode  *  locked().  *  pmp - address of pcfsmount structure of the filesystem  *    containing the denode of interest.  The pm_dev field  *    and the address of the pcfsmount structure are used.   *  dirclust - which cluster bp contains, if dirclust is 0  *    (root directory) diroffset is relative to the beginning  *    of the root directory, otherwise it is cluster relative.  *  diroffset - offset past begin of cluster of denode we  *    want  *  direntptr - address of the direntry structure of interest.  *    direntptr is NULL, the block is read if necessary.  *  depp - returns the address of the gotten denode.  */
@@ -1702,22 +1702,17 @@ begin_comment
 comment|/*  *  Move a denode to its correct hash queue after  *  the file it represents has been moved to a new  *  directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|reinsert
-argument_list|(
-argument|dep
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dep
+parameter_list|)
 name|struct
 name|denode
 modifier|*
 name|dep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|pcfsmount
@@ -1782,7 +1777,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int

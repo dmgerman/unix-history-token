@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)route.c	7.22 (Berkeley) 6/27/91  *	$Id: route.c,v 1.2 1993/10/16 17:43:39 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)route.c	7.22 (Berkeley) 6/27/91  *	$Id: route.c,v 1.3 1993/11/07 17:47:07 wollman Exp $  */
 end_comment
 
 begin_include
@@ -248,12 +248,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|rtinitheads
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -291,26 +289,24 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Packet routing routines.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|rtalloc
-argument_list|(
+parameter_list|(
 name|ro
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|route
-operator|*
+modifier|*
 name|ro
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -351,7 +347,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -607,20 +603,18 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+name|void
 name|rtfree
-argument_list|(
+parameter_list|(
 name|rt
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|rtentry
-operator|*
+modifier|*
 name|rt
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -697,36 +691,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Force a routing table entry to the specified  * destination to go through the given gateway.  * Normally called as a result of a routing redirect  * message from the network layer.  *  * N.B.: must be called at splnet  *  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rtredirect
-argument_list|(
-argument|dst
-argument_list|,
-argument|gateway
-argument_list|,
-argument|netmask
-argument_list|,
-argument|flags
-argument_list|,
-argument|src
-argument_list|,
-argument|rtp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dst
+parameter_list|,
+name|gateway
+parameter_list|,
+name|netmask
+parameter_list|,
+name|flags
+parameter_list|,
+name|src
+parameter_list|,
+name|rtp
+parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|,
-modifier|*
+decl|*
 name|gateway
 decl_stmt|,
 modifier|*
@@ -735,7 +727,7 @@ decl_stmt|,
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -1089,38 +1081,27 @@ begin_comment
 comment|/* * Routing table ioctl interface. */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rtioctl
-argument_list|(
-argument|req
-argument_list|,
-argument|data
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|req
+parameter_list|,
+name|data
+parameter_list|,
+name|p
+parameter_list|)
 name|int
 name|req
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifndef|#
 directive|ifndef
@@ -1509,7 +1490,7 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function
 name|struct
@@ -1728,44 +1709,39 @@ parameter_list|)
 value|(a>0 ? (1 + (((a) - 1) | (sizeof(long) - 1))) : sizeof(long))
 end_define
 
-begin_macro
+begin_function
+name|int
 name|rtrequest
-argument_list|(
-argument|req
-argument_list|,
-argument|dst
-argument_list|,
-argument|gateway
-argument_list|,
-argument|netmask
-argument_list|,
-argument|flags
-argument_list|,
-argument|ret_nrt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|req
+parameter_list|,
+name|dst
+parameter_list|,
+name|gateway
+parameter_list|,
+name|netmask
+parameter_list|,
+name|flags
+parameter_list|,
+name|ret_nrt
+parameter_list|)
 name|int
 name|req
 decl_stmt|,
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|,
-modifier|*
+decl|*
 name|gateway
 decl_stmt|,
 modifier|*
 name|netmask
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|struct
@@ -2388,30 +2364,28 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|rt_maskedcopy
-argument_list|(
-argument|src
-argument_list|,
-argument|dst
-argument_list|,
-argument|netmask
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|netmask
+parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|src
 decl_stmt|,
-modifier|*
+decl|*
 name|dst
 decl_stmt|,
 modifier|*
 name|netmask
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2545,32 +2519,27 @@ begin_comment
 comment|/*  * Set up a routing table entry, normally  * for an interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|rtinit
-argument_list|(
+parameter_list|(
 name|ifa
-argument_list|,
+parameter_list|,
 name|cmd
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifaddr
-operator|*
+modifier|*
 name|ifa
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cmd
 decl_stmt|,
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2853,7 +2822,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_er.c	7.7 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_er.c	7.7 (Berkeley) 5/6/91  *	$Id: clnp_er.c,v 1.2 1993/10/16 21:04:45 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -142,52 +142,32 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_er_input  *  * PURPOSE:			Process an ER pdu.  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_er_input
-argument_list|(
-argument|m
-argument_list|,
-argument|src
-argument_list|,
-argument|reason
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|src
+parameter_list|,
+name|reason
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to packet itself */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to src of er */
-end_comment
-
-begin_decl_stmt
 name|u_char
 name|reason
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* reason code of er */
-end_comment
-
-begin_block
 block|{
 name|int
 name|cmd
@@ -220,7 +200,7 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|INCSTAT
-parameter_list|(
+argument_list|(
 name|cns_er_inhist
 index|[
 name|clnp_er_index
@@ -228,8 +208,8 @@ argument_list|(
 name|reason
 argument_list|)
 index|]
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 switch|switch
 condition|(
 name|reason
@@ -388,44 +368,30 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_discard  *  * PURPOSE:			Discard a clnp datagram  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	Will emit an ER pdu if possible  *  * NOTES:			This code assumes that we have previously tried to pull  *					up the header of the datagram into one mbuf.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_discard
-argument_list|(
-argument|m
-argument_list|,
-argument|reason
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|reason
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* header of packet to discard */
-end_comment
-
-begin_decl_stmt
 name|char
 name|reason
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* reason for discard */
-end_comment
-
-begin_block
 block|{
 name|IFDEBUG
 argument_list|(
@@ -516,44 +482,30 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_emit_er  *  * PURPOSE:			Send an ER pdu.  *					The src of the of the ER pdu is the host that is sending  *					the ER (ie. us), *not* the original destination of the  *					packet.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			Takes responsibility for freeing mbuf passed  *					This function may be called with a packet that  *					was created by us; in this case, do not send  *					an ER.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_emit_er
-argument_list|(
-argument|m
-argument_list|,
-argument|reason
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|reason
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* header of packet to discard */
-end_comment
-
-begin_decl_stmt
 name|char
 name|reason
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* reason for discard */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -899,51 +851,40 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|IFDEBUG
-parameter_list|(
+argument_list|(
 name|D_DISCARD
-parameter_list|)
-function_decl|printf
-parameter_list|(
-function_decl|"clnp_emit_er: packet routed to %s\n"
-operator|,
-function_decl|clnp_iso_addrp
-parameter_list|(
-function_decl|&
-parameter_list|(
-function_decl|(struct sockaddr_iso *
-block|)
-end_block
-
-begin_expr_stmt
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_emit_er: packet routed to %s\n"
+argument_list|,
+name|clnp_iso_addrp
+argument_list|(
+operator|&
+operator|(
+operator|(
+expr|struct
+name|sockaddr_iso
+operator|*
+operator|)
 name|first_hop
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
+operator|)
 operator|->
 name|siso_addr
-end_expr_stmt
-
-begin_empty_stmt
-unit|))
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+argument_list|)
+argument_list|)
+decl_stmt|;
 name|ENDDEBUG
 comment|/* allocate mbuf for er pdu header: punt on no space */
 name|MGET
-parameter_list|(
+argument_list|(
 name|m0
-parameter_list|,
+argument_list|,
 name|M_DONTWAIT
-parameter_list|,
+argument_list|,
 name|MT_HEADER
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_if
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|m0
@@ -953,18 +894,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
-end_if
-
-begin_expr_stmt
 name|m0
 operator|->
 name|m_next
 operator|=
 name|m
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|er
 operator|=
 name|mtod
@@ -976,25 +911,13 @@ name|clnp_fixed
 operator|*
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|*
 name|er
 operator|=
 name|er_template
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* setup src/dst on er pdu */
-end_comment
-
-begin_comment
 comment|/* NOTE REVERSAL OF SRC/DST */
-end_comment
-
-begin_expr_stmt
 name|hoff
 operator|=
 operator|(
@@ -1008,9 +931,6 @@ expr|struct
 name|clnp_fixed
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
@@ -1018,9 +938,6 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|CLNP_INSERT_ADDR
 argument_list|(
 name|hoff
@@ -1029,73 +946,37 @@ operator|*
 name|our_addr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 *	TODO: if complete src rt was specified, then reverse path, and 	 *	copy into er as option. 	 */
-end_comment
-
-begin_comment
 comment|/* add er option */
-end_comment
-
-begin_expr_stmt
 operator|*
 name|hoff
 operator|++
 operator|=
 name|CLNPOVAL_ERREAS
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* code */
-end_comment
-
-begin_expr_stmt
 operator|*
 name|hoff
 operator|++
 operator|=
 literal|2
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* length */
-end_comment
-
-begin_expr_stmt
 operator|*
 name|hoff
 operator|++
 operator|=
 name|reason
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* discard reason */
-end_comment
-
-begin_expr_stmt
 operator|*
 name|hoff
 operator|++
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* error localization = not specified */
-end_comment
-
-begin_comment
 comment|/* set length */
-end_comment
-
-begin_expr_stmt
 name|er
 operator|->
 name|cnf_hdr_len
@@ -1116,9 +997,6 @@ operator|)
 name|er
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|total_len
 operator|=
 name|m0
@@ -1129,9 +1007,6 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|HTOC
 argument_list|(
 name|er
@@ -1145,13 +1020,7 @@ argument_list|,
 name|total_len
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* compute checksum (on header only) */
-end_comment
-
-begin_expr_stmt
 name|iso_gen_csum
 argument_list|(
 name|m0
@@ -1166,13 +1035,7 @@ operator|->
 name|cnf_hdr_len
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* trim packet if too large for interface */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|total_len
@@ -1195,13 +1058,7 @@ name|if_mtu
 operator|)
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_comment
 comment|/* send packet */
-end_comment
-
-begin_expr_stmt
 name|INCSTAT
 argument_list|(
 name|cns_er_outhist
@@ -1213,9 +1070,6 @@ argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 call|(
 name|void
 call|)
@@ -1237,37 +1091,19 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_goto
 goto|goto
 name|done
 goto|;
-end_goto
-
-begin_label
 name|bad
 label|:
-end_label
-
-begin_expr_stmt
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_label
 name|done
 label|:
-end_label
-
-begin_comment
 comment|/* free route if it is a temp */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|route
@@ -1283,19 +1119,18 @@ operator|.
 name|ro_rt
 argument_list|)
 expr_stmt|;
-end_if
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  clnp_er_index
-operator|(
+begin_function
+name|int
+name|clnp_er_index
+parameter_list|(
 name|p
-operator|)
+parameter_list|)
 name|u_char
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|u_char
@@ -1339,7 +1174,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_input.c	7.13 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_input.c	7.13 (Berkeley) 5/6/91  *	$Id: clnp_input.c,v 1.2 1993/10/16 21:04:48 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -202,9 +202,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|clnp_input
-parameter_list|()
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|snpa_hdr
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -238,12 +246,10 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_init  *  * PURPOSE:			clnp initialization. Fill in clnp switch tables.  *  * RETURNS:			none  *  * SIDE EFFECTS:	fills in clnp_protox table with correct offsets into  *					the isosw table.  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -333,18 +339,16 @@ operator|=
 name|clnpqmaxlen
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnlintr  *  * PURPOSE:			Process a packet on the clnl input queue  *  * RETURNS:			nothing.  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnlintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1016,46 +1020,32 @@ goto|goto
 name|next
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_input  *  * PURPOSE:			process an incoming clnp packet  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	increments fields of clnp_stat structure.  *					  * NOTES:  *	TODO: I would like to make seg_part a pointer into the mbuf, but   *	will it be correctly aligned?  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_input
-argument_list|(
-argument|m
-argument_list|,
-argument|shp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|shp
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to first mbuf of pkt */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|snpa_hdr
 modifier|*
 name|shp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* subnetwork header */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2236,13 +2226,16 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id$  */
+comment|/*   * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_examine.c,v 1.2 1993/10/16 16:47:13 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -16,18 +16,20 @@ end_include
 begin_include
 include|#
 directive|include
+file|"systm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/db_machdep.h>
+file|"ddb/ddb.h"
 end_include
-
-begin_comment
-comment|/* type definitions */
-end_comment
 
 begin_include
 include|#
@@ -77,6 +79,39 @@ end_function_decl
 begin_comment
 comment|/* instruction disassembler */
 end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|db_examine
+parameter_list|(
+name|db_addr_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|db_search
+parameter_list|(
+name|db_addr_t
+parameter_list|,
+name|int
+parameter_list|,
+name|db_expr_t
+parameter_list|,
+name|db_expr_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Examine (print) data.  */
@@ -154,43 +189,30 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|db_examine
-argument_list|(
+parameter_list|(
 name|addr
-argument_list|,
+parameter_list|,
 name|fmt
-argument_list|,
+parameter_list|,
 name|count
-argument_list|)
+parameter_list|)
 specifier|register
 name|db_addr_t
 name|addr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* format string */
-end_comment
-
-begin_decl_stmt
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* repeat count */
-end_comment
-
-begin_block
 block|{
 name|int
 name|c
@@ -701,7 +723,7 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print value.  */
@@ -893,20 +915,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|db_print_loc_and_inst
-argument_list|(
-argument|loc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|loc
+parameter_list|)
 name|db_addr_t
 name|loc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|db_printsym
 argument_list|(
@@ -931,45 +948,7 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
-name|db_strcpy
-argument_list|(
-name|dst
-argument_list|,
-name|src
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|dst
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-specifier|register
-name|char
-modifier|*
-name|src
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-while|while
-condition|(
-operator|*
-name|dst
-operator|++
-operator|=
-operator|*
-name|src
-operator|++
-condition|)
-empty_stmt|;
-block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Search for a value in memory.  * Syntax: search [/bhl] addr value [mask] [,count]  */
@@ -978,7 +957,20 @@ end_comment
 begin_function
 name|void
 name|db_search_cmd
-parameter_list|()
+parameter_list|(
+name|db_expr_t
+name|dummy1
+parameter_list|,
+name|int
+name|dummy2
+parameter_list|,
+name|db_expr_t
+name|dummy3
+parameter_list|,
+name|char
+modifier|*
+name|dummy4
+parameter_list|)
 block|{
 name|int
 name|t
@@ -1101,6 +1093,10 @@ condition|(
 operator|!
 name|db_expression
 argument_list|(
+operator|(
+name|db_expr_t
+operator|*
+operator|)
 operator|&
 name|addr
 argument_list|)
@@ -1215,51 +1211,38 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|db_search
-argument_list|(
+parameter_list|(
 name|addr
-argument_list|,
+parameter_list|,
 name|size
-argument_list|,
+parameter_list|,
 name|value
-argument_list|,
+parameter_list|,
 name|mask
-argument_list|,
+parameter_list|,
 name|count
-argument_list|)
+parameter_list|)
 specifier|register
 name|db_addr_t
 name|addr
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|db_expr_t
 name|value
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|db_expr_t
 name|mask
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|int
 name|count
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 while|while
 condition|(
@@ -1301,7 +1284,7 @@ operator|=
 name|addr
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

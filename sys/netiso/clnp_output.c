@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_output.c	7.10 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_output.c	7.10 (Berkeley) 5/6/91  *	$Id: clnp_output.c,v 1.2 1993/10/16 21:04:52 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -259,64 +259,38 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_output  *  * PURPOSE:			output the data in the mbuf as a clnp datagram  *  *					The data specified by m0 is sent as a clnp datagram.   *					The mbuf chain m0 will be freed when this routine has  *					returned.  *  *					If options is non-null, it points to an mbuf which contains  *					options to be sent with the datagram. The options must  *					be formatted in the mbuf according to clnp rules. Options  *					will not be freed.  *  *					Datalen specifies the length of the data in m0.   *  *					Src and dst are the addresses for the packet.   *  *					If route is non-null, it is used as the route for   *					the packet.   *  *					By default, a DT is sent. However, if flags& CNLP_SEND_ER  *					then an ER will be sent. If flags& CLNP_SEND_RAW, then  *					the packet will be send as raw clnp.  *  * RETURNS:			0	success  *					appropriate error code  *  * SIDE EFFECTS:	none  *  * NOTES:			  *					Flags are interpretated as follows:  *						CLNP_NO_SEG - do not allow this pkt to be segmented.  *						CLNP_NO_ER  - have pkt request ER suppression.  *						CLNP_SEND_RAW - send pkt as RAW DT rather than TP DT  *						CLNP_NO_CKSUM - don't compute clnp checksum  *						CLNP_ECHO - send as ECHO packet  *  *					When checking for a cached packet, clnp checks  *					that the route taken is still up. It does not  *					check that the route is still to the same destination.  *					This means that any entity that alters an existing  *					route for an isopcb (such as when a redirect arrives)  *					must invalidate the clnp cache. It might be perferable  *					to have clnp check that the route has the same dest, but  *					by avoiding this check, we save a call to iso_addrmatch1.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_output
-argument_list|(
-argument|m0
-argument_list|,
-argument|isop
-argument_list|,
-argument|datalen
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m0
+parameter_list|,
+name|isop
+parameter_list|,
+name|datalen
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* data for the packet */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|isopcb
 modifier|*
 name|isop
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* iso pcb */
-end_comment
-
-begin_decl_stmt
 name|int
 name|datalen
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of bytes of data in m0 */
-end_comment
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* flags */
-end_comment
-
-begin_block
 block|{
 name|int
 name|error
@@ -915,12 +889,12 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|m_free
-parameter_list|(
+argument_list|(
 name|clcp
 operator|->
 name|clc_hdr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_OUTPUT
@@ -1033,10 +1007,10 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|m_freem
-parameter_list|(
+argument_list|(
 name|m0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 return|return
 operator|(
 name|EINVAL
@@ -1069,10 +1043,10 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|INCSTAT
-parameter_list|(
+argument_list|(
 name|cns_odropped
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|m_freem
 argument_list|(
 name|m0
@@ -2050,13 +2024,17 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int
 name|clnp_ctloutput
 parameter_list|()
-block|{ }
+block|{
+return|return
+name|EINVAL
+return|;
+block|}
 end_function
 
 end_unit

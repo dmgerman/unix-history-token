@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vfs_subr.c	7.60 (Berkeley) 6/21/91  *	$Id: vfs_subr.c,v 1.5 1993/11/07 17:46:27 wollman Exp $  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vfs_subr.c	7.60 (Berkeley) 6/21/91  *	$Id: vfs_subr.c,v 1.6 1993/11/07 21:44:50 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -72,6 +78,22 @@ include|#
 directive|include
 file|"malloc.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|insmntque
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -161,20 +183,18 @@ begin_comment
 comment|/*  * Lock a filesystem.  * Used to prevent access to it while mounting and unmounting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vfs_lock
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -218,7 +238,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock a locked filesystem.  * Panic if filesystem is not locked.  */
@@ -293,20 +313,18 @@ begin_comment
 comment|/*  * Mark a mount point as busy.  * Used to synchronize access and to delay unmounting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vfs_busy
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -366,26 +384,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free a busy filesystem.  * Panic if filesystem is not busy.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vfs_unbusy
-argument_list|(
+parameter_list|(
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mount
-operator|*
+modifier|*
 name|mp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -440,7 +456,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lookup a mount point by filesystem identifier.  */
@@ -689,14 +705,6 @@ name|spec_vnodeops
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|void
-name|vclean
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|long
 name|numvnodes
@@ -714,12 +722,10 @@ begin_comment
 comment|/*  * Initialize the vnode structures and initialize each file system type.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vfsinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|vfsops
@@ -782,55 +788,44 @@ operator|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the next vnode from the free list.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|getnewvnode
-argument_list|(
+parameter_list|(
 name|tag
-argument_list|,
+parameter_list|,
 name|mp
-argument_list|,
+parameter_list|,
 name|vops
-argument_list|,
+parameter_list|,
 name|vpp
-argument_list|)
-expr|enum
+parameter_list|)
+name|enum
 name|vtagtype
 name|tag
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnodeops
 modifier|*
 name|vops
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1041,37 +1036,33 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Move a vnode from one mount queue to another.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|insmntque
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|mp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1178,36 +1169,28 @@ operator|=
 name|vp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Make sure all write-behind blocks associated  * with mount point are flushed out (from sync).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|mntflushbuf
-argument_list|(
-argument|mountp
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mountp
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mountp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1294,34 +1277,29 @@ name|loop
 goto|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush all dirty buffers associated with a vnode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vflushbuf
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1525,26 +1503,24 @@ name|loop
 goto|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Update outstanding I/O count and do wakeup if requested.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vwakeup
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1627,28 +1603,23 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Invalidate in core blocks belonging to closed or umounted filesystem  *  * Go through the list of vnodes associated with the file system;  * for each vnode invalidate any buffers that it holds. Normally  * this routine is preceeded by a bflush call, so that on a quiescent  * filesystem there will be no dirty buffers when we are done. Binval  * returns the count of dirty buffers when it is finished.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|mntinvalbuf
-argument_list|(
-argument|mountp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mountp
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mountp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1739,34 +1710,29 @@ name|dirty
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush out and invalidate all buffers associated with a vnode.  * Called with the underlying object locked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vinvalbuf
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|save
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|save
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1974,37 +1940,32 @@ name|dirty
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Associate a buffer with a vnode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|bgetvp
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|,
+parameter_list|,
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2109,26 +2070,24 @@ operator|=
 name|bp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Disassociate a buffer from a vnode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|brelvp
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|struct
 name|buf
@@ -2225,37 +2184,32 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reassign a buffer from one vnode to another.  * Used to assign file specific control information  * (indirect blocks) to the vnode to which they belong.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|reassignbuf
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|,
+parameter_list|,
 name|newvp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|buf
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|vnode
 modifier|*
 name|newvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2368,37 +2322,29 @@ operator|=
 name|bp
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a vnode for a block device.  * Used for root filesystem, argdev, and swap areas.  * Also used for memory file system special devices.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|bdevvp
-argument_list|(
-argument|dev
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|vpp
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2511,7 +2457,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if the new vnode represents a special device  * for which we already have a vnode (either because of  * bdevvp() or because of a different vnode representing  * the same block device). If such an alias exists, deallocate  * the existing contents and return the aliased vnode. The  * caller is responsible for filling it with its new contents.  */
@@ -2800,20 +2746,18 @@ begin_comment
 comment|/*  * Grab a particular vnode from the free list, increment its  * reference count and lock it. The vnode lock bit is set the  * vnode is being eliminated in vgone. The process is awakened  * when the transition is completed, and an error returned to  * indicate that the vnode is no longer usable (possibly having  * been changed to a new file system type).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vget
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2924,7 +2868,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Vnode reference, just increment the count  */
@@ -3130,20 +3074,18 @@ begin_comment
 comment|/*  * Page or buffer structure gets a reference.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vhold
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|vp
 operator|->
@@ -3151,26 +3093,24 @@ name|v_holdcnt
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Page or buffer structure frees a reference.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|holdrele
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3191,7 +3131,7 @@ name|v_holdcnt
 operator|--
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove any vnodes in the vnode table belonging to mount point mp.  *  * If MNT_NOFORCE is specified, there should not be any active ones,  * return error if any are found (nb: this is a user error, not a  * system error). If MNT_FORCE is specified, detach any active vnodes  * that are found.  */
@@ -3209,40 +3149,29 @@ begin_comment
 comment|/* patch to print out busy vnodes */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|vflush
-argument_list|(
-argument|mp
-argument_list|,
-argument|skipvp
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|,
+name|skipvp
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 name|skipvp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3442,7 +3371,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Disassociate the underlying file system from a vnode.  */
@@ -3850,6 +3779,8 @@ name|struct
 name|vnode
 modifier|*
 name|vx
+init|=
+literal|0
 decl_stmt|;
 name|long
 name|count
@@ -4209,40 +4140,29 @@ begin_comment
 comment|/*  * Lookup a vnode by device number.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|vfinddev
-argument_list|(
-argument|dev
-argument_list|,
-argument|type
-argument_list|,
-argument|vpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|type
+parameter_list|,
+name|vpp
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|enum
 name|vtype
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4303,26 +4223,24 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Calculate the total number of references to a special device.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vcount
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -4427,7 +4345,7 @@ name|count
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print out a description of a vnode.  */
@@ -4462,32 +4380,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|vprint
-argument_list|(
-argument|label
-argument_list|,
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|label
+parameter_list|,
+name|vp
+parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|label
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|buf
@@ -4675,7 +4586,7 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -4802,45 +4713,37 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kinfo_vnode
-argument_list|(
-argument|op
-argument_list|,
-argument|where
-argument_list|,
-argument|acopysize
-argument_list|,
-argument|arg
-argument_list|,
-argument|aneeded
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|,
+name|where
+parameter_list|,
+name|acopysize
+parameter_list|,
+name|arg
+parameter_list|,
+name|aneeded
+parameter_list|)
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|where
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|acopysize
 decl_stmt|,
 name|arg
 decl_stmt|,
-modifier|*
+decl|*
 name|aneeded
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{

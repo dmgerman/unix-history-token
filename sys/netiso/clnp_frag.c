@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_frag.c	7.12 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_frag.c	7.12 (Berkeley) 5/6/91  *	$Id: clnp_frag.c,v 1.3 1993/10/16 21:04:46 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -116,6 +116,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
+name|void
+name|clnp_insert_frag
+parameter_list|(
+name|struct
+name|clnp_fragl
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|clnp_segment
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|mbuf
 modifier|*
@@ -128,104 +148,60 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_fragment  *  * PURPOSE:			Fragment a datagram, and send the itty bitty pieces  *					out over an interface.  *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			If there is an error sending the packet, clnp_discard  *					is called to discard the packet and send an ER. If  *					clnp_fragment was called from clnp_output, then  *					we generated the packet, and should not send an   *					ER -- clnp_emit_er will check for this. Otherwise,  *					the packet was fragmented during forwarding. In this  *					case, we ought to send an ER back.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_fragment
-argument_list|(
-argument|ifp
-argument_list|,
-argument|m
-argument_list|,
-argument|first_hop
-argument_list|,
-argument|total_len
-argument_list|,
-argument|segoff
-argument_list|,
-argument|flags
-argument_list|,
-argument|rt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|,
+name|first_hop
+parameter_list|,
+name|total_len
+parameter_list|,
+name|segoff
+parameter_list|,
+name|flags
+parameter_list|,
+name|rt
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to outgoing interface */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to packet */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|first_hop
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to first hop */
-end_comment
-
-begin_decl_stmt
 name|int
 name|total_len
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* length of datagram */
-end_comment
-
-begin_decl_stmt
 name|int
 name|segoff
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* offset of segpart in hdr */
-end_comment
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* flags passed to clnp_output */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* route if direct ether */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|clnp_fixed
@@ -1040,7 +1016,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_reass  *  * PURPOSE:			Attempt to reassemble a clnp packet given the current  *					fragment. If reassembly succeeds (all the fragments  *					are present), then return a pointer to an mbuf chain  *					containing the reassembled packet. This packet will  *					appear in the mbufs as if it had just arrived in  *					one piece.   *  *					If reassembly fails, then save this fragment and  *					return 0.  *  * RETURNS:			Ptr to assembled packet, or 0  *  * SIDE EFFECTS:	  *  * NOTES:			  *		clnp_slowtimo can not affect this code because clnpintr, and thus  *		this code, is called at a higher priority than clnp_slowtimo.  */
@@ -1261,68 +1237,42 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_newpkt  *  * PURPOSE:			Create the necessary structures to handle a new  *					fragmented clnp packet.  *  * RETURNS:			non-zero if it succeeds, zero if fails.  *  * SIDE EFFECTS:	  *  * NOTES:			Failure is only due to insufficient resources.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_newpkt
-argument_list|(
-argument|m
-argument_list|,
-argument|src
-argument_list|,
-argument|dst
-argument_list|,
-argument|seg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|seg
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* new fragment */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* src of new fragment */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* dst of new fragment */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_segment
 modifier|*
 name|seg
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* segment part of fragment header */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1539,60 +1489,41 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_insert_frag  *  * PURPOSE:			Insert fragment into list headed by 'cf'.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			This is the 'guts' of the reassembly algorithm.  *					Each fragment in this list contains a clnp_frag  *					structure followed by the data of the fragment.  *					The clnp_frag structure actually lies on top of  *					part of the old clnp header.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|clnp_insert_frag
-argument_list|(
-argument|cfh
-argument_list|,
-argument|m
-argument_list|,
-argument|seg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cfh
+parameter_list|,
+name|m
+parameter_list|,
+name|seg
+parameter_list|)
 name|struct
 name|clnp_fragl
 modifier|*
 name|cfh
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* header of list of packet fragments */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* new fragment */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_segment
 modifier|*
 name|seg
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* segment part of fragment header */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2174,7 +2105,7 @@ operator|=
 name|cf
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_comp_pdu  *  * PURPOSE:			Scan the list of fragments headed by cfh. Merge  *					any contigious fragments into one. If, after  *					traversing all the fragments, it is determined that  *					the packet is complete, then return a pointer to  *					the packet (with header prepended). Otherwise,  *					return NULL.  *  * RETURNS:			NULL, or a pointer to the assembled pdu in an mbuf chain.  *  * SIDE EFFECTS:	Will colapse contigious fragments into one.  *  * NOTES:			This code assumes that there are no overlaps of  *					fragment pdus.  */
@@ -2821,52 +2752,38 @@ begin_comment
 comment|/*  * FUNCTION:		troll_output  *  * PURPOSE:			Do something sneaky with the datagram passed. Possible  *					operations are:  *						Duplicate the packet  *						Drop the packet  *						Trim some number of bytes from the packet  *						Munge some byte in the packet  *  * RETURNS:			0, or unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			The operation of this procedure is regulated by the  *					troll control structure (Troll).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|troll_output
-argument_list|(
-argument|ifp
-argument_list|,
-argument|m
-argument_list|,
-argument|dst
-argument_list|,
-argument|rt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|,
+name|dst
+parameter_list|,
+name|rt
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|err
@@ -3072,8 +2989,11 @@ name|err
 operator|)
 return|;
 block|}
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

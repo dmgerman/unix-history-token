@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.c	7.44 (Berkeley) 5/28/91  *	$Id: tty.c,v 1.7 1993/11/08 19:15:00 ache Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tty.c	7.44 (Berkeley) 5/28/91  *	$Id: tty.c,v 1.8 1993/11/14 23:29:31 ache Exp $  */
 end_comment
 
 begin_include
@@ -176,6 +176,7 @@ comment|/* symbolic sleep message strings */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttyin
 index|[]
@@ -185,6 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttyout
 index|[]
@@ -194,6 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttopen
 index|[]
@@ -203,6 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttclos
 index|[]
@@ -212,6 +216,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttybg
 index|[]
@@ -221,6 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 name|ttybuf
 index|[]
@@ -1228,22 +1234,17 @@ parameter_list|)
 value|((c) == '\n' || ((c) == cc[VEOF] || \ 	(c) == cc[VEOL] || (c) == cc[VEOL2])&& (c) != _POSIX_VDISABLE)
 end_define
 
-begin_macro
+begin_function
+name|void
 name|ttychars
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|bcopy
 argument_list|(
@@ -1260,28 +1261,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Flush tty after output has drained.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ttywflush
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -1312,26 +1308,24 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wait for output to drain.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttywait
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|int
 name|error
@@ -1434,7 +1428,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1450,26 +1444,28 @@ begin_comment
 comment|/*  * Flush TTY read and/or write queues,  * notifying anyone waiting.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyflush
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|rw
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
+name|int
+name|rw
+decl_stmt|;
 block|{
 specifier|register
+name|int
 name|s
-expr_stmt|;
+decl_stmt|;
 name|s
 operator|=
 name|spltty
@@ -1775,7 +1771,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle input high water.  Send stop character for the IXOFF case.  Turn  * on all enabled input flow control bits and propagate the change to the  * driver.  */
@@ -1785,22 +1781,17 @@ begin_comment
 comment|/* static void */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ttyblock
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1880,7 +1871,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle input low water.  Send start character for the IXOFF case.  Turn  * off our input flow control bits and propagate the change to the driver.  */
@@ -1891,7 +1882,7 @@ comment|/* static */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ttyunblock
 parameter_list|(
 name|tp
@@ -1958,22 +1949,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|ttstart
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1993,28 +1979,20 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ttrstrt
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|tp
+parameter_list|)
 comment|/* XXX */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -2045,7 +2023,7 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Common code for ioctls on tty devices.  * Called after line-discipline-specific ioctl  * has been called to do discipline-specific functions  * and/or reject any of these ioctl commands.  */
@@ -2055,32 +2033,33 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttioctl
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|com
-argument_list|,
+parameter_list|,
 name|data
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
+name|int
+name|com
+decl_stmt|;
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flag
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2359,6 +2338,8 @@ operator|(
 name|dev
 operator|,
 name|tp
+operator|,
+literal|0
 operator|)
 expr_stmt|;
 if|if
@@ -2384,6 +2365,8 @@ argument_list|(
 name|dev
 argument_list|,
 name|tp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|splx
@@ -3511,24 +3494,19 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ttnread
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|nread
@@ -3586,40 +3564,29 @@ name|nread
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ttselect
-argument_list|(
-argument|dev
-argument_list|,
-argument|rw
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|rw
+parameter_list|,
+name|p
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|rw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3834,37 +3801,34 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initial open of tty, or (re)entry to standard tty line discipline.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ttyopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|tp
+parameter_list|,
+name|dummy
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|dummy
+decl_stmt|;
 block|{
 name|tp
 operator|->
@@ -3947,36 +3911,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * "close" a line discipline  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ttylclose
-argument_list|(
-argument|tp
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|flag
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -4000,26 +3956,24 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle close() on a tty line: flush and set to initial state,  * bumping generation number so that pending read/write calls  * can detect recycling of the tty.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttyclose
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -4069,28 +4023,29 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle modem control transition on a tty.  * Flag indicates new state of carrier.  * Returns 0 if the line should be turned off, otherwise 1.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttymodem
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -4269,34 +4224,29 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Default modem control routine (for other line disciplines).  * Return argument flag, to turn off device on carrier drop.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|nullmodem
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -4366,26 +4316,24 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * reinput pending characters after state switch  * call at spltty().  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttypend
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|c
@@ -4470,34 +4418,30 @@ operator|~
 name|TS_TYPEN
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process input of a single character received on a tty.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyinput
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -6029,34 +5973,30 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Output a single character on a tty, doing output processing  * as needed (expanding tabs, newline processing, etc.).  * Returns< 0 if putc succeeds, otherwise returns char to resend.  * Must be recursive.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttyoutput
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -6515,38 +6455,36 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a read call on a tty device.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttread
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flag
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -7035,34 +6973,29 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check the output queue on tp for space for a kernel message  * (from uprintf/tprintf).  Allow some space over the normal  * hiwater mark so we don't lose messages due to normal flow  * control, but don't let the tty run amok.  * Sleeps here are not interruptible, but we return prematurely  * if new signals come in.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttycheckoutq
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|wait
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|wait
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|hiwat
@@ -7071,11 +7004,6 @@ name|s
 decl_stmt|,
 name|oldsig
 decl_stmt|;
-specifier|extern
-name|int
-name|wakeup
-parameter_list|()
-function_decl|;
 name|hiwat
 operator|=
 name|tp
@@ -7164,6 +7092,9 @@ return|;
 block|}
 name|timeout
 argument_list|(
+operator|(
+name|timeout_func_t
+operator|)
 name|wakeup
 argument_list|,
 operator|(
@@ -7177,6 +7108,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|tp
 operator|->
 name|t_state
@@ -7214,44 +7146,44 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a write call on a tty device.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttwrite
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|uio
-argument_list|,
+parameter_list|,
 name|flag
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|flag
+decl_stmt|;
 block|{
 specifier|register
 name|char
 modifier|*
 name|cp
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
@@ -8169,34 +8101,30 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Rubout one character from the rawq of tp  * as cleanly as possible.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyrub
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -8592,34 +8520,29 @@ name|t_rocount
 operator|--
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Crt back over cnt chars perhaps  * erasing them.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyrubo
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|,
+parameter_list|,
 name|cnt
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 while|while
 condition|(
@@ -8636,26 +8559,24 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reprint the rawq line.  * We assume c_cc has already been checked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyretype
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -8825,34 +8746,30 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Echo a typed character to the terminal.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyecho
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
+name|int
 name|c
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -8993,36 +8910,31 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * send string cp to tp  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyoutstr
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -9047,26 +8959,24 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wake up any readers on a tty.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttwakeup
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -9133,28 +9043,29 @@ name|t_raw
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up a code for a specified speed in a conversion table;  * used by drivers to map software speed values to hardware parameters.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ttspeedtab
-argument_list|(
+parameter_list|(
 name|speed
-argument_list|,
+parameter_list|,
 name|table
-argument_list|)
+parameter_list|)
+name|int
+name|speed
+decl_stmt|;
 specifier|register
-expr|struct
+name|struct
 name|speedtab
-operator|*
+modifier|*
 name|table
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 for|for
 control|(
@@ -9191,28 +9102,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * set tty hi and low water marks  *  * Try to arrange the dynamics so there's about one second  * from hi to low water.  *   */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ttsetwater
-argument_list|(
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|cps
@@ -9284,26 +9190,24 @@ undef|#
 directive|undef
 name|clamp
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Report on state of foreground process group.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ttyinfo
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -9616,7 +9520,7 @@ literal|0
 expr_stmt|;
 comment|/* so pending input will be retyped if BS */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Returns 1 if p2 is "better" than p1  *  * The algorithm for picking the "interesting" process is thus:  *  *	1) (Only foreground processes are eligable - implied)  *	2) Runnable processes are favored over anything  *	   else.  The runner with the highest cpu  *	   utilization is picked (p_cpu).  Ties are  *	   broken by picking the highest pid.  *	3  Next, the sleeper with the shortest sleep  *	   time is favored.  With ties, we pick out  *	   just "short-term" sleepers (SSINTR == 0).  *	   Further ties are broken by picking the highest  *	   pid.  *  */
@@ -9926,30 +9830,22 @@ begin_comment
 comment|/*  * Output char to tty; console putchar style.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tputchar
-argument_list|(
-argument|c
-argument_list|,
-argument|tp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|,
+name|tp
+parameter_list|)
 name|int
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|s
@@ -10032,61 +9928,45 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Sleep on chan, returning ERESTART if tty changed  * while we napped and returning any errors (e.g. EINTR/ETIMEDOUT)  * reported by tsleep.  If the tty is revoked, restarting a pending  * call will redo validation done at the start of the call.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ttysleep
-argument_list|(
-argument|tp
-argument_list|,
-argument|chan
-argument_list|,
-argument|pri
-argument_list|,
-argument|wmesg
-argument_list|,
-argument|timo
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|chan
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
 name|struct
 name|tty
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|chan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|pri
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|wmesg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|timo
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|error
@@ -10137,7 +10017,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id$  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_fat.c,v 1.2 1993/10/16 19:29:34 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -96,6 +96,26 @@ include|#
 directive|include
 file|"fat.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|fc_lookup
+parameter_list|(
+name|struct
+name|denode
+modifier|*
+parameter_list|,
+name|u_long
+parameter_list|,
+name|u_long
+modifier|*
+parameter_list|,
+name|u_long
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *  Fat cache stats.  */
@@ -336,6 +356,8 @@ name|cn
 decl_stmt|;
 name|u_long
 name|prevcn
+init|=
+literal|0
 decl_stmt|;
 name|u_long
 name|byteoffset
@@ -790,48 +812,35 @@ begin_comment
 comment|/*  *  Find the closest entry in the fat cache to the  *  cluster we are looking for.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|fc_lookup
-argument_list|(
-argument|dep
-argument_list|,
-argument|findcn
-argument_list|,
-argument|frcnp
-argument_list|,
-argument|fsrcnp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dep
+parameter_list|,
+name|findcn
+parameter_list|,
+name|frcnp
+parameter_list|,
+name|fsrcnp
+parameter_list|)
 name|struct
 name|denode
 modifier|*
 name|dep
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 name|findcn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|frcnp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_long
 modifier|*
 name|fsrcnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -927,36 +936,28 @@ name|fc_fsrcn
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  Purge the fat cache in denode dep of all entries  *  relating to file relative cluster frcn and beyond.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fc_purge
-argument_list|(
-argument|dep
-argument_list|,
-argument|frcn
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dep
+parameter_list|,
+name|frcn
+parameter_list|)
 name|struct
 name|denode
 modifier|*
 name|dep
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|frcn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -1011,7 +1012,7 @@ name|FCE_EMPTY
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *  Once the first fat is updated the other copies of  *  the fat must also be updated.  This function does  *  this.  *  pmp - pcfsmount structure for filesystem to update  *  bp - addr of modified fat block  *  fatbn - block number relative to begin of filesystem  *    of the modified fat block.  */

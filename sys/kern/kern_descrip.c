@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_descrip.c	7.28 (Berkeley) 6/25/91  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_descrip.c	7.28 (Berkeley) 6/25/91  *	$Id: kern_descrip.c,v 1.4 1993/10/16 15:24:11 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -138,41 +138,30 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getdtablesize
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|*
 name|retval
@@ -192,7 +181,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Duplicate a file descriptor.  */
@@ -213,41 +202,30 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|dup
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dup_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -409,7 +387,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Duplicate a file descriptor to a particular value.  */
@@ -433,41 +411,30 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|dup2
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|dup2_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -701,7 +668,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The file control system call.  */
@@ -728,42 +695,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fcntl
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|fcntl_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1715,7 +1671,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Close a file descriptor.  */
@@ -1736,41 +1692,30 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|close
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|close_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1924,7 +1869,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return status information about a file descriptor.  */
@@ -1950,42 +1895,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fstat
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|fstat_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2137,7 +2071,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Allocate a file descriptor for the process.  */
@@ -2149,39 +2083,28 @@ name|fdexpand
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|fdalloc
-argument_list|(
-argument|p
-argument_list|,
-argument|want
-argument_list|,
-argument|result
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|want
+parameter_list|,
+name|result
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|want
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|result
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2523,37 +2446,29 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see whether n user file descriptors  * are available to the process p.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fdavail
-argument_list|(
-argument|p
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|n
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2665,46 +2580,38 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a new open file structure and allocate  * a file decriptor for the process that refers to it.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|falloc
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|resultfp
-argument_list|,
+parameter_list|,
 name|resultfd
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|file
 modifier|*
 modifier|*
 name|resultfp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|resultfd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2911,26 +2818,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free a file descriptor.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ffree
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|file
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -3002,7 +2907,7 @@ name|M_FILE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Copy a filedesc structure.  */
@@ -3643,31 +3548,26 @@ begin_comment
 comment|/*  * Internal form of close.  * Decrement reference count on file structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|closef
-argument_list|(
+parameter_list|(
 name|fp
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|file
-operator|*
+modifier|*
 name|fp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|vnode
@@ -3893,7 +3793,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Apply an advisory lock on a file descriptor.  *  * Just attempt to get a record lock of the requested type on  * the entire file (l_whence = SEEK_SET, l_start = 0, l_len = 0).  */
@@ -3917,42 +3817,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|flock
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|flock_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4192,7 +4081,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * File Descriptor pseudo-device driver (/dev/fd/).  *  * Opening minor device N dup()s the file (if any) connected to file  * descriptor N belonging to the calling process.  Note that this driver  * consists of only the ``open()'' routine, because all subsequent  * references to this file will be direct to the other driver.  */
@@ -4202,32 +4091,24 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|fdopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|mode
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|mode
+parameter_list|,
+name|type
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mode
 decl_stmt|,
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* 	 * XXX Kludge: set curproc->p_dupfd to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
 name|curproc
@@ -4246,47 +4127,39 @@ name|ENODEV
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Duplicate the specified descriptor to a free descriptor.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|dupfdopen
-argument_list|(
+parameter_list|(
 name|fdp
-argument_list|,
+parameter_list|,
 name|indx
-argument_list|,
+parameter_list|,
 name|dfd
-argument_list|,
+parameter_list|,
 name|mode
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|filedesc
-operator|*
+modifier|*
 name|fdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|int
 name|indx
 decl_stmt|,
 name|dfd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4418,7 +4291,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_glue.c	7.8 (Berkeley) 5/15/91  *	$Id: vm_glue.c,v 1.10 1993/11/07 17:54:11 wollman Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_glue.c	7.8 (Berkeley) 5/15/91  *	$Id: vm_glue.c,v 1.11 1993/11/07 21:48:36 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -73,6 +73,18 @@ directive|include
 file|"machine/stdarg.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|swapout
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|int
 name|avefree
@@ -97,32 +109,24 @@ begin_comment
 comment|/* XXX allow kgdb to read kernel buffer pool */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|kernacc
-argument_list|(
-argument|addr
-argument_list|,
-argument|len
-argument_list|,
-argument|rw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|rw
+parameter_list|)
 name|caddr_t
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|,
 name|rw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|boolean_t
 name|rv
@@ -212,34 +216,26 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|useracc
-argument_list|(
-argument|addr
-argument_list|,
-argument|len
-argument_list|,
-argument|rw
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|rw
+parameter_list|)
 name|caddr_t
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|,
 name|rw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|boolean_t
 name|rv
@@ -325,7 +321,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -402,28 +398,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_function
+name|void
 name|vslock
-argument_list|(
-argument|addr
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|)
 name|caddr_t
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|vm_map_pageable
 argument_list|(
@@ -450,38 +438,27 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|vsunlock
-argument_list|(
-argument|addr
-argument_list|,
-argument|len
-argument_list|,
-argument|dirtied
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|dirtied
+parameter_list|)
 name|caddr_t
 name|addr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|dirtied
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -517,31 +494,32 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Implement fork's actions on an address space.  * Here we arrange for the address space to be copied or referenced,  * allocate a user struct (pcb and kernel stack), then call the  * machine-dependent layer to fill those in and make the new process  * ready to run.  * NOTE: the kernel stack may be at a different location in the child  * process, and thus addresses of automatic variables may be invalid  * after cpu_fork returns in the child process.  We do nothing here  * after cpu_fork returns.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vm_fork
-argument_list|(
+parameter_list|(
 name|p1
-argument_list|,
+parameter_list|,
 name|p2
-argument_list|,
+parameter_list|,
 name|isvfork
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|p2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_decl_stmt
 name|int
@@ -867,20 +845,18 @@ begin_comment
 comment|/*  * Set default limits for VM system.  * Called for proc 0, and then inherited by all others.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vm_init_limits
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 comment|/* 	 * Set up the initial limits on process VM. 	 * Set the maximum resident set size to be all 	 * of (reasonably) available memory.  This causes 	 * any single, large process to start random page 	 * replacement once it fills memory. 	 */
 name|p
@@ -951,7 +927,7 @@ name|vm_page_free_count
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_include
 include|#
@@ -1011,12 +987,11 @@ begin_comment
 comment|/*  * Brutally simple:  *	1. Attempt to swapin every swaped-out, runnable process in  *	   order of priority.  *	2. If not enough memory, wake the pageout daemon and let it  *	   clear some space.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
+comment|/* XXX should be __dead, too */
 name|sched
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1371,7 +1346,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -1388,12 +1363,10 @@ begin_comment
 comment|/*  * Swapout is driven by the pageout daemon.  Very simple, we find eligible  * procs and unwire their u-areas.  We try to always "swap" at least one  * process in case we need the room for a swapin.  * If any procs have been sleeping/stopped for at least maxslp seconds,  * they are swapped.  Else, we swap the longest-sleeping or stopped process,  * if any, otherwise the longest-resident process.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|swapout_threads
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1615,22 +1588,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|swapout
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|vm_offset_t
 name|addr
@@ -1837,7 +1809,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * The rest of these routines fake thread handling  */
@@ -1878,7 +1850,12 @@ end_function
 begin_function
 name|void
 name|thread_block
-parameter_list|()
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|wmesg
+parameter_list|)
 block|{
 name|int
 name|s
@@ -1892,6 +1869,7 @@ name|curproc
 operator|->
 name|p_thread
 condition|)
+block|{
 name|tsleep
 argument_list|(
 operator|(
@@ -1903,11 +1881,12 @@ name|p_thread
 argument_list|,
 name|PVM
 argument_list|,
-literal|"vmblock"
+name|wmesg
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
@@ -1916,45 +1895,28 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
-name|thread_sleep
-argument_list|(
-argument|event
-argument_list|,
-argument|lock
-argument_list|,
-argument|ruptible
-argument_list|)
-end_macro
-
-begin_decl_stmt
+begin_function
+name|void
+name|thread_sleep_
+parameter_list|(
+name|event
+parameter_list|,
+name|lock
+parameter_list|,
+name|wmesg
+parameter_list|)
 name|int
 name|event
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|simple_lock_t
 name|lock
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|boolean_t
-name|ruptible
+specifier|const
+name|char
+modifier|*
+name|wmesg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|ruptible
-operator|++
-expr_stmt|;
-endif|#
-directive|endif
 name|int
 name|s
 init|=
@@ -1978,6 +1940,7 @@ name|curproc
 operator|->
 name|p_thread
 condition|)
+block|{
 name|tsleep
 argument_list|(
 operator|(
@@ -1987,40 +1950,37 @@ name|event
 argument_list|,
 name|PVM
 argument_list|,
-literal|"vmsleep"
+name|wmesg
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|thread_wakeup
-argument_list|(
-argument|event
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|event
+parameter_list|)
 name|int
 name|event
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|int s = splhigh();
+comment|/* XXX is this really necessary??? */
+endif|#
+directive|endif
 name|wakeup
 argument_list|(
 operator|(
@@ -2029,13 +1989,14 @@ operator|)
 name|event
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|splx(s);
+endif|#
+directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * DEBUG stuff  */

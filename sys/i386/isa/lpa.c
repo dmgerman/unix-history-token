@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *   This software is a component of "386BSD" developed by   *   William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1990 William F. Jolitz, TeleMuse  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *   This software is a component of "386BSD" developed by   *   William F. Jolitz, TeleMuse.  * 4. Neither the name of the developer nor the name "386BSD"  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS A COMPONENT OF 386BSD DEVELOPED BY WILLIAM F. JOLITZ   * AND IS INTENDED FOR RESEARCH AND EDUCATIONAL PURPOSES ONLY. THIS   * SOFTWARE SHOULD NOT BE CONSIDERED TO BE A COMMERCIAL PRODUCT.   * THE DEVELOPER URGES THAT USERS WHO REQUIRE A COMMERCIAL PRODUCT   * NOT MAKE USE OF THIS WORK.  *  * FOR USERS WHO WISH TO UNDERSTAND THE 386BSD SYSTEM DEVELOPED  * BY WILLIAM F. JOLITZ, WE RECOMMEND THE USER STUDY WRITTEN   * REFERENCES SUCH AS THE  "PORTING UNIX TO THE 386" SERIES   * (BEGINNING JANUARY 1991 "DR. DOBBS JOURNAL", USA AND BEGINNING   * JUNE 1991 "UNIX MAGAZIN", GERMANY) BY WILLIAM F. JOLITZ AND   * LYNNE GREER JOLITZ, AS WELL AS OTHER BOOKS ON UNIX AND THE   * ON-LINE 386BSD USER MANUAL BEFORE USE. A BOOK DISCUSSING THE INTERNALS   * OF 386BSD ENTITLED "386BSD FROM THE INSIDE OUT" WILL BE AVAILABLE LATE 1992.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: lpa.c,v 1.3 1993/09/24 20:37:32 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -222,6 +222,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
+value|(void)
 end_define
 
 begin_else
@@ -699,22 +700,17 @@ begin_comment
 comment|/*  * lpaattach()  *	Install device  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lpaattach
-argument_list|(
-argument|isdp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|isdp
+parameter_list|)
 name|struct
 name|isa_device
 modifier|*
 name|isdp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|lpa_softc
@@ -782,34 +778,26 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lpaopen()  *	New open on device.  *  * We forbid all but first open  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lpaopen
-argument_list|(
-argument|dev
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|lpa_softc
@@ -1007,6 +995,9 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sc
 argument_list|,
 name|LPPRI
@@ -1052,26 +1043,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pushbytes()  *	Workhorse for actually spinning and writing bytes to printer  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|pushbytes
-argument_list|(
-argument|sc
-argument_list|)
-expr|struct
-name|lpa_softc
-operator|*
+parameter_list|(
 name|sc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|struct
+name|lpa_softc
+modifier|*
+name|sc
+decl_stmt|;
 block|{
 name|int
 name|spin
@@ -1178,6 +1167,9 @@ name|err
 operator|=
 name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|sc
 argument_list|,
 name|LPPRI
@@ -1244,34 +1236,26 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lpaclose()  *	Close on lp.  Try to flush data in buffer out.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lpaclose
-argument_list|(
-argument|dev
-argument_list|,
-argument|flag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|flag
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|lpa_softc
@@ -1335,36 +1319,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * lpawrite()  *	Copy from user's buffer, then print  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lpawrite
-argument_list|(
-argument|dev
-argument_list|,
-argument|uio
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dev
+parameter_list|,
+name|uio
+parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|uio
 modifier|*
 name|uio
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|lpa_softc
@@ -1477,7 +1453,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|int

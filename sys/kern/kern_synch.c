@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_synch.c	7.18 (Berkeley) 6/27/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_synch.c	7.18 (Berkeley) 6/27/91  *	$Id: kern_synch.c,v 1.2 1993/10/16 15:24:32 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -51,6 +51,18 @@ directive|include
 file|"machine/cpu.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|endtsleep
+parameter_list|(
+name|caddr_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|u_char
 name|curpri
@@ -65,12 +77,20 @@ begin_comment
 comment|/*  * Force switch among equal priority processes every 100ms.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|roundrobin
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|dummy1
+parameter_list|,
+name|dummy2
+parameter_list|)
+name|caddr_t
+name|dummy1
+decl_stmt|;
+name|int
+name|dummy2
+decl_stmt|;
 block|{
 name|need_resched
 argument_list|()
@@ -90,7 +110,7 @@ literal|10
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * constants for digital decay and forget  *	90% of (p_cpu) usage in 5*loadav time  *	95% of (p_pctcpu) usage in 60 seconds (load insensitive)  *          Note that, as ps(1) mentions, this can let percentages  *          total over 100% (I've seen 137.9% for 3 processes).  *  * Note that hardclock updates p_cpu and p_cpticks independently.  *  * We wish to decay away 90% of p_cpu in (5 * loadavg) seconds.  * That is, the system wants to compute a value of decay such  * that the following for loop:  * 	for (i = 0; i< (5 * loadavg); i++)  * 		p_cpu *= decay;  * will compute  * 	p_cpu *= 0.1;  * for all values of loadavg:  *  * Mathematically this loop can be expressed by saying:  * 	decay ** (5 * loadavg) ~= .1  *  * The system computes decay as:  * 	decay = (2 * loadavg) / (2 * loadavg + 1)  *  * We wish to prove that the system's computation of decay  * will always fulfill the equation:  * 	decay ** (5 * loadavg) ~= .1  *  * If we compute b as:  * 	b = 2 * loadavg  * then  * 	decay = b / (b + 1)  *  * We now need to prove two things:  *	1) Given factor ** (5 * loadavg) ~= .1, prove factor == b/(b+1)  *	2) Given b/(b+1) ** power ~= .1, prove power == (5 * loadavg)  *	  * Facts:  *         For x close to zero, exp(x) =~ 1 + x, since  *              exp(x) = 0! + x**1/1! + x**2/2! + ... .  *              therefore exp(-1/b) =~ 1 - (1/b) = (b-1)/b.  *         For x close to zero, ln(1+x) =~ x, since  *              ln(1+x) = x - x**2/2 + x**3/3 - ...     -1< x< 1  *              therefore ln(b/(b+1)) = ln(1 - 1/(b+1)) =~ -1/(b+1).  *         ln(.1) =~ -2.30  *  * Proof of (1):  *    Solve (factor)**(power) =~ .1 given power (5*loadav):  *	solving for factor,  *      ln(factor) =~ (-2.30/5*loadav), or  *      factor =~ exp(-1/((5/2.30)*loadav)) =~ exp(-1/(2*loadav)) =  *          exp(-1/b) =~ (b-1)/b =~ b/(b+1).                    QED  *  * Proof of (2):  *    Solve (factor)**(power) =~ .1 given factor == (b/(b+1)):  *	solving for power,  *      power*ln(b/(b+1)) =~ -2.30, or  *      power =~ 2.3 * (b + 1) = 4.6*loadav + 2.3 =~ 5*loadav.  QED  *  * Actual power values for the implemented algorithm are as follows:  *      loadav: 1       2       3       4  *      power:  5.68    10.32   14.94   19.55  */
@@ -155,12 +175,20 @@ begin_comment
 comment|/*  * Recompute process priorities, once a second  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|schedcpu
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|dummy1
+parameter_list|,
+name|dummy2
+parameter_list|)
+name|caddr_t
+name|dummy1
+decl_stmt|;
+name|int
+name|dummy2
+decl_stmt|;
 block|{
 specifier|register
 name|fixpt_t
@@ -516,26 +544,24 @@ name|hz
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Recalculate the priority of a process after it has slept for a while.  * For all load averages>= 1 and max p_cpu of 255, sleeping for at least  * six times the loadfactor will decay p_cpu to zero.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|updatepri
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|unsigned
@@ -621,7 +647,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -681,45 +707,32 @@ begin_comment
 comment|/*  * General sleep call.  * Suspends current process until a wakeup is made on chan.  * The process will then be made runnable with priority pri.  * Sleeps at most timo/hz seconds (0 means no timeout).  * If pri includes PCATCH flag, signals are checked  * before and after sleeping, else signals are not checked.  * Returns 0 if awakened, EWOULDBLOCK if the timeout expires.  * If PCATCH is set and a signal needs to be delivered,  * ERESTART is returned if the current system call should be restarted  * if possible, and EINTR is returned if the system call should  * be interrupted by the signal (return EINTR).  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tsleep
-argument_list|(
-argument|chan
-argument_list|,
-argument|pri
-argument_list|,
-argument|wmesg
-argument_list|,
-argument|timo
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|chan
+parameter_list|,
+name|pri
+parameter_list|,
+name|wmesg
+parameter_list|,
+name|timo
+parameter_list|)
 name|caddr_t
 name|chan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|pri
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|wmesg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|timo
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -740,6 +753,8 @@ name|s
 expr_stmt|;
 name|int
 name|sig
+init|=
+literal|0
 decl_stmt|,
 name|catch
 init|=
@@ -751,10 +766,6 @@ specifier|extern
 name|int
 name|cold
 decl_stmt|;
-name|int
-name|endtsleep
-parameter_list|()
-function_decl|;
 name|s
 operator|=
 name|splhigh
@@ -981,9 +992,11 @@ expr_stmt|;
 include|#
 directive|include
 file|"ddb.h"
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NDDB
+operator|>
+literal|0
 comment|/* handy breakpoint location after process "wakes" */
 asm|asm(".globl bpendtsleep ; bpendtsleep:");
 endif|#
@@ -1105,27 +1118,40 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Implement timeout for tsleep.  * If process hasn't been awakened (wchan non-zero),  * set timeout flag and undo the sleep.  If proc  * is stopped, just unsleep so it will remain stopped.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|endtsleep
-argument_list|(
-name|p
-argument_list|)
+parameter_list|(
+name|arg1
+parameter_list|,
+name|dummy
+parameter_list|)
+name|caddr_t
+name|arg1
+decl_stmt|;
+name|int
+name|dummy
+decl_stmt|;
+block|{
 specifier|register
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+operator|(
 expr|struct
 name|proc
 operator|*
-name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
-block|{
+operator|)
+name|arg1
+decl_stmt|;
 name|int
 name|s
 init|=
@@ -1171,34 +1197,36 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* XXX this should go away... */
+end_comment
 
 begin_comment
 comment|/*  * Short-term, non-interruptable sleep.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|sleep
-argument_list|(
-argument|chan
-argument_list|,
-argument|pri
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|chan
+parameter_list|,
+name|pri
+parameter_list|)
 name|caddr_t
 name|chan
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|pri
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1388,9 +1416,11 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NDDB
+operator|>
+literal|0
 comment|/* handy breakpoint location after process "wakes" */
 asm|asm(".globl bpendsleep ; bpendsleep:");
 endif|#
@@ -1407,26 +1437,29 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Remove a process from its wait queue  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|unsleep
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1530,24 +1563,22 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Wakeup on "chan"; set all processes  * sleeping on chan to run state.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|wakeup
-argument_list|(
+parameter_list|(
 name|chan
-argument_list|)
+parameter_list|)
 specifier|register
 name|caddr_t
 name|chan
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1764,18 +1795,16 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize the (doubly-linked) run queues  * to be empty.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rqinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1820,26 +1849,24 @@ name|i
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change process state to be runnable,  * placing it on the run queue if it is in memory,  * and awakening the swapper if it isn't in memory.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|setrun
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1970,26 +1997,24 @@ name|need_resched
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compute priority of process when running in user mode.  * Arrange to reschedule if the resulting priority  * is better than that of the current process.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|setpri
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|unsigned
@@ -2037,13 +2062,15 @@ name|need_resched
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|NDDB
-end_ifdef
+operator|>
+literal|0
+end_if
 
 begin_define
 define|#
@@ -2056,6 +2083,7 @@ value|ddb_##s
 end_define
 
 begin_function
+name|void
 name|DDBFUNC
 function|(
 name|ps

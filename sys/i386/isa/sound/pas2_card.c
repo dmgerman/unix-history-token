@@ -356,6 +356,9 @@ return|;
 else|#
 directive|else
 comment|/* #  error This routine does not work with this OS	 */
+return|return
+name|EINVAL
+return|;
 endif|#
 directive|endif
 block|}

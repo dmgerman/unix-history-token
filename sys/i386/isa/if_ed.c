@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based eth
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ed.c,v 2.14 1993/11/22 10:55:30 davidg Exp davidg $  */
+comment|/*  * $Id: if_ed.c,v 1.23 1993/11/22 11:08:14 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -363,39 +363,117 @@ index|]
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ed_attach
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ed_init
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|edintr
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ed_ioctl
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|caddr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ed_probe
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ed_start
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ed_reset
-argument_list|()
-decl_stmt|,
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ed_watchdog
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ed_get_packet
+parameter_list|(
+name|struct
+name|ed_softc
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+comment|/*u_short*/
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
 name|void
 name|ed_stop
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -4052,6 +4130,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -4060,14 +4141,20 @@ comment|/*  * Reset interface.  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|ed_reset
 parameter_list|(
 name|unit
+parameter_list|,
+name|uban
 parameter_list|)
 name|int
 name|unit
 decl_stmt|;
+name|int
+name|uban
+decl_stmt|;
+comment|/* XXX */
 block|{
 name|int
 name|s
@@ -4197,7 +4284,7 @@ comment|/*  * Device timeout/watchdog routine. Entered if the device neglects to
 end_comment
 
 begin_function
-name|int
+name|void
 name|ed_watchdog
 parameter_list|(
 name|unit
@@ -4238,6 +4325,8 @@ expr_stmt|;
 name|ed_reset
 argument_list|(
 name|unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4247,20 +4336,15 @@ begin_comment
 comment|/*  * Initialize device.   */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ed_init
-argument_list|(
-argument|unit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|unit
+parameter_list|)
 name|int
 name|unit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ed_softc
@@ -4833,7 +4917,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine actually starts the transmission on the interface  */
@@ -5045,7 +5129,7 @@ comment|/*  * Start output on interface.  * We make two assumptions here:  *  1)
 end_comment
 
 begin_function
-name|int
+name|void
 name|ed_start
 parameter_list|(
 name|ifp
@@ -5889,6 +5973,8 @@ expr_stmt|;
 name|ed_reset
 argument_list|(
 name|unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6023,7 +6109,7 @@ comment|/*  * Ethernet interface interrupt processor  */
 end_comment
 
 begin_function
-name|int
+name|void
 name|edintr
 parameter_list|(
 name|unit
@@ -6320,6 +6406,8 @@ comment|/* 				 * Stop/reset/re-init NIC 				 */
 name|ed_reset
 argument_list|(
 name|unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -7031,39 +7119,29 @@ begin_comment
 comment|/*  * Retreive packet from shared memory and send to the next level up via  *	ether_input(). If there is a BPF listener, give a copy to BPF, too.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|ed_get_packet
-argument_list|(
-argument|sc
-argument_list|,
-argument|buf
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sc
+parameter_list|,
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
 name|struct
 name|ed_softc
 modifier|*
 name|sc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_short
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ether_header
@@ -7077,6 +7155,8 @@ name|m
 decl_stmt|,
 modifier|*
 name|head
+init|=
+literal|0
 decl_stmt|,
 modifier|*
 name|ed_ring_to_mbuf
@@ -7635,7 +7715,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Supporting routines  */
@@ -8432,6 +8512,8 @@ operator|.
 name|ac_if
 operator|.
 name|if_unit
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

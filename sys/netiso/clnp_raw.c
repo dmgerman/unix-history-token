@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_raw.c	7.8 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_raw.c	7.8 (Berkeley) 5/6/91  *	$Id: clnp_raw.c,v 1.2 1993/10/16 21:04:53 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -134,66 +134,40 @@ begin_comment
 comment|/*  * FUNCTION:		rclnp_input  *  * PURPOSE:			Setup generic address an protocol structures for  *					raw input routine, then pass them along with the  *					mbuf chain.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			The protocol field of rclnp_proto is set to zero indicating  *					no protocol.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rclnp_input
-argument_list|(
-argument|m
-argument_list|,
-argument|src
-argument_list|,
-argument|dst
-argument_list|,
-argument|hdrlen
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|src
+parameter_list|,
+name|dst
+parameter_list|,
+name|hdrlen
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to packet */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|sockaddr_iso
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to src address */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|sockaddr_iso
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to dest address */
-end_comment
-
-begin_decl_stmt
 name|int
 name|hdrlen
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* length (in bytes) of clnp header */
-end_comment
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -256,46 +230,32 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		rclnp_output  *  * PURPOSE:			Prepare to send a raw clnp packet. Setup src and dest  *					addresses, count the number of bytes to send, and  *					call clnp_output.  *  * RETURNS:			success - 0  *					failure - an appropriate error code  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rclnp_output
-argument_list|(
-argument|m0
-argument_list|,
-argument|so
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m0
+parameter_list|,
+name|so
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* packet to send */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* socket to send from */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -463,83 +423,51 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		rclnp_ctloutput  *  * PURPOSE:			Raw clnp socket option processing  *					All options are stored inside an mbuf.   *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:	If the options mbuf does not exist, it the mbuf passed  *					is used.  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|rclnp_ctloutput
-argument_list|(
-argument|op
-argument_list|,
-argument|so
-argument_list|,
-argument|level
-argument_list|,
-argument|optname
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|op
+parameter_list|,
+name|so
+parameter_list|,
+name|level
+parameter_list|,
+name|optname
+parameter_list|,
+name|m
+parameter_list|)
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* type of operation */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to socket */
-end_comment
-
-begin_decl_stmt
 name|int
 name|level
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* level of option */
-end_comment
-
-begin_decl_stmt
 name|int
 name|optname
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* name of option */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to ptr to option data */
-end_comment
-
-begin_block
 block|{
 name|int
 name|error
@@ -869,24 +797,25 @@ name|error
 return|;
 block|}
 comment|/*ARGSUSED*/
+name|int
 name|clnp_usrreq
-argument_list|(
+parameter_list|(
 name|so
-argument_list|,
+parameter_list|,
 name|req
-argument_list|,
+parameter_list|,
 name|m
-argument_list|,
+parameter_list|,
 name|nam
-argument_list|,
+parameter_list|,
 name|control
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|socket
-operator|*
+modifier|*
 name|so
-expr_stmt|;
+decl_stmt|;
 name|int
 name|req
 decl_stmt|;
@@ -895,7 +824,7 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|,
-modifier|*
+decl|*
 name|nam
 decl_stmt|,
 modifier|*
@@ -1413,7 +1342,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ns_input.c	7.8 (Berkeley) 6/27/91  *	$Id: ns_input.c,v 1.2 1993/10/16 19:54:23 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ns_input.c	7.8 (Berkeley) 6/27/91  *	$Id: ns_input.c,v 1.3 1993/11/18 00:10:53 wollman Exp $  */
 end_comment
 
 begin_include
@@ -123,6 +123,30 @@ directive|include
 file|"ns_error.h"
 end_include
 
+begin_function_decl
+specifier|static
+name|void
+name|idp_forward
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|idp_undo_route
+parameter_list|(
+name|struct
+name|route
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * NS initialization.  */
 end_comment
@@ -233,12 +257,10 @@ name|ns_pexseq
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|ns_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|struct
@@ -336,7 +358,7 @@ operator|=
 name|ns_broadhost
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Idp input routine.  Pass to next level.  */
@@ -358,12 +380,10 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|nsintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -963,7 +983,7 @@ goto|goto
 name|next
 goto|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|u_char
@@ -1071,28 +1091,20 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|idp_ctlinput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|arg
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ns_addr
@@ -1108,6 +1120,8 @@ name|struct
 name|ns_errp
 modifier|*
 name|errp
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|idp_abort
@@ -1311,7 +1325,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -1347,22 +1361,18 @@ name|idp_sroute
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|idp_forward
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1991,34 +2001,26 @@ name|mcopy
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|idp_do_route
-argument_list|(
-argument|src
-argument_list|,
-argument|ro
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|src
+parameter_list|,
+name|ro
+parameter_list|)
 name|struct
 name|ns_addr
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|route
 modifier|*
 name|ro
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr_ns
@@ -2123,22 +2125,21 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|idp_undo_route
-argument_list|(
+parameter_list|(
 name|ro
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|route
-operator|*
+modifier|*
 name|ro
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2156,34 +2157,26 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|ns_watch_output
-argument_list|(
-argument|m
-argument_list|,
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|ifp
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2370,7 +2363,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 	$Id: isofs_bmap.c,v 1.2 1993/05/20 03:30:44 cgd Exp $  */
+comment|/*  * 	$Id: isofs_bmap.c,v 1.2 1993/07/20 03:27:26 jkh Exp $  */
 end_comment
 
 begin_include
@@ -51,39 +51,28 @@ directive|include
 file|"isofs_node.h"
 end_include
 
-begin_macro
+begin_function
+name|int
 name|iso_bmap
-argument_list|(
-argument|ip
-argument_list|,
-argument|lblkno
-argument_list|,
-argument|result
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|lblkno
+parameter_list|,
+name|result
+parameter_list|)
 name|struct
 name|iso_node
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|lblkno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|result
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|*
 name|result
@@ -112,7 +101,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

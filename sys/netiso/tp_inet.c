@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_inet.c	7.8 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_inet.c	7.8 (Berkeley) 5/6/91  *	$Id: tp_inet.c,v 1.2 1993/10/16 21:05:42 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -134,51 +134,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|tpin_abort
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * NAME:			in_getsufx()   * CALLED FROM: 	pr_usrreq() on PRU_BIND,   *					PRU_CONNECT, PRU_ACCEPT, and PRU_PEERADDR  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  * 	Get a transport suffix from an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		internet port / transport suffix  *  			(CAST TO AN INT)  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|in_getsufx
-argument_list|(
-argument|inp
-argument_list|,
-argument|lenp
-argument_list|,
-argument|data_out
-argument_list|,
-argument|which
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inp
+parameter_list|,
+name|lenp
+parameter_list|,
+name|data_out
+parameter_list|,
+name|which
+parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|u_short
 modifier|*
 name|lenp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data_out
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|which
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|*
 name|lenp
@@ -224,7 +224,7 @@ name|inp_fport
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * NAME:		in_putsufx()  *  * CALLED FROM: tp_newsocket(); i.e., when a connection   *		is being established by an incoming CR_TPDU.  *  * FUNCTION, ARGUMENTS:  * 	Put a transport suffix (found in name) into an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
@@ -253,6 +253,9 @@ name|inp
 decl_stmt|;
 name|caddr_t
 name|sufxloc
+decl_stmt|;
+name|int
+name|sufxlen
 decl_stmt|;
 name|int
 name|which
@@ -431,39 +434,31 @@ begin_comment
 comment|/*  * NAME:	in_putnetaddr()  *  * CALLED FROM:  * 	tp_input() when a connection is being established by an  * 	incoming CR_TPDU, and considered for interception.  *  * FUNCTION and ARGUMENTS:  * 	Compare a whole net addr from a struct sockaddr (name),  * 	with that implicitly stored in an inpcb (inp).  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|in_cmpnetaddr
-argument_list|(
+parameter_list|(
 name|inp
-argument_list|,
+parameter_list|,
 name|name
-argument_list|,
+parameter_list|,
 name|which
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|which
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -538,7 +533,7 @@ name|s_addr
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * NAME:	in_getnetaddr()  *  * CALLED FROM:  *  pr_usrreq() PRU_SOCKADDR, PRU_ACCEPT, PRU_PEERADDR  * FUNCTION and ARGUMENTS:  * 	Copy a whole net addr from an inpcb (inp) into  * 	an mbuf (name);  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
@@ -1742,16 +1737,6 @@ name|inetctlerrmap
 index|[]
 decl_stmt|;
 specifier|extern
-name|ProtoHook
-name|tpin_abort
-parameter_list|()
-function_decl|;
-specifier|extern
-name|ProtoHook
-name|in_rtchange
-parameter_list|()
-function_decl|;
-specifier|extern
 name|struct
 name|in_addr
 name|zeroin_addr
@@ -1812,6 +1797,11 @@ argument_list|(
 operator|&
 name|tp_inpcb
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 literal|0
@@ -1823,7 +1813,7 @@ argument_list|,
 name|cmd
 argument_list|,
 operator|(
-name|int
+name|void
 argument_list|(
 operator|*
 argument_list|)
@@ -1853,6 +1843,11 @@ argument_list|(
 operator|&
 name|tp_inpcb
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 literal|0
@@ -1874,6 +1869,11 @@ argument_list|(
 operator|&
 name|tp_inpcb
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|sin
 argument_list|,
 literal|0
@@ -1899,15 +1899,21 @@ comment|/*  * NAME:	tpin_abort()  *  * CALLED FROM:  *	xxx_notify() from tp_ctli
 end_comment
 
 begin_function
-name|ProtoHook
+specifier|static
+name|void
 name|tpin_abort
 parameter_list|(
 name|inp
+parameter_list|,
+name|errno
 parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
+decl_stmt|;
+name|int
+name|errno
 decl_stmt|;
 block|{
 name|struct
@@ -1949,9 +1955,6 @@ operator|&
 name|e
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
@@ -1961,20 +1964,18 @@ directive|ifdef
 name|ARGO_DEBUG
 end_ifdef
 
-begin_expr_stmt
+begin_function
+name|void
 name|dump_inaddr
-argument_list|(
+parameter_list|(
 name|addr
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockaddr_in
-operator|*
+modifier|*
 name|addr
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|printf
 argument_list|(
@@ -1990,13 +1991,16 @@ name|sin_addr
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 begin_comment
 comment|/*  * NAME:	tpip_route()  *  * CALLED FROM: tpip_mtu()  *  * FUNCTION and ARGUMENTS:	given a destination addresss,  *	find the interface that would be used to send something to this address.  *  * RETURNS:	 pointer to an ifnet structure  *  * SIDE EFFECTS:  *  * NOTES:			  */

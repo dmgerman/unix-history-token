@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ip_input.c	7.19 (Berkeley) 5/25/91  *	$Id: ip_input.c,v 1.4 1993/11/12 04:03:55 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ip_input.c	7.19 (Berkeley) 5/25/91  *	$Id: ip_input.c,v 1.5 1993/11/18 00:08:20 wollman Exp $  */
 end_comment
 
 begin_include
@@ -270,6 +270,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+specifier|static
+name|void
+name|ip_freef
+parameter_list|(
+name|struct
+name|ipq
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ip_enq
+parameter_list|(
+name|struct
+name|ipasfrag
+modifier|*
+parameter_list|,
+name|struct
+name|ipasfrag
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ip_deq
+parameter_list|(
+name|struct
+name|ipasfrag
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|save_rte
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+name|struct
+name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ip_forward
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -418,12 +486,10 @@ begin_comment
 comment|/*  * IP initialization: fill in IP protocol switch table.  * All protocols not implemented in kernel go to raw IP protocol handler.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -603,7 +669,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_function_decl
 name|struct
@@ -641,12 +707,10 @@ begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ipintr
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1549,7 +1613,7 @@ goto|goto
 name|next
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Take incoming datagram fragment and try to  * reassemble it into whole datagram.  If a chain for  * reassembly of this datagram already exists, then it  * is given as fp; otherwise have to make a chain.  */
@@ -2275,22 +2339,18 @@ begin_comment
 comment|/*  * Free a fragment reassembly header and all  * associated datagrams.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|ip_freef
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|ipq
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2360,29 +2420,31 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Put an ip fragment on a reassembly chain.  * Like insque, but pointers in middle of structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|ip_enq
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|prev
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ipasfrag
-operator|*
+modifier|*
 name|p
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|prev
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2421,20 +2483,19 @@ begin_comment
 comment|/*  * To ip_enq as remque is to insque.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|ip_deq
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ipasfrag
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|p
 operator|->
@@ -2457,18 +2518,16 @@ operator|->
 name|ipf_prev
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * IP timer processing;  * if a timer expires on a reassembly  * queue, discard it.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_slowtimo
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2552,18 +2611,16 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Drain off all datagram fragments.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ip_drain
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 while|while
 condition|(
@@ -2589,7 +2646,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|extern
@@ -2614,22 +2671,17 @@ begin_comment
 comment|/*  * Do option processing on a datagram,  * possibly discarding it if bad options are encountered,  * or forwarding it if source-routed.  * Returns 1 if packet has been forwarded/freed,  * 0 if the packet should be processed further.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ip_dooptions
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3595,7 +3647,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Given address of next destination (final or next hop),  * return internet address info of interface to be used to get there.  */
@@ -3740,30 +3792,23 @@ begin_comment
 comment|/*  * Save incoming source route for use in replies,  * to be picked up later by ip_srcroute if the receiver is interested.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|save_rte
-argument_list|(
-argument|option
-argument_list|,
-argument|dst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|option
+parameter_list|,
+name|dst
+parameter_list|)
 name|u_char
 modifier|*
 name|option
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|in_addr
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|unsigned
 name|olen
@@ -3850,7 +3895,7 @@ operator|=
 name|dst
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Retrieve incoming source route for use in replies,  * in the same form used by setsockopt.  * The first hop is placed before the options, will be removed later.  */
@@ -4171,30 +4216,25 @@ begin_comment
 comment|/*  * Strip out IP options, at higher  * level protocol in the kernel.  * Second argument is buffer to which options  * will be moved, and return value is their length.  * XXX should be deleted; last arg currently ignored.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ip_stripoptions
-argument_list|(
+parameter_list|(
 name|m
-argument_list|,
+parameter_list|,
 name|mopt
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|mbuf
-operator|*
+modifier|*
 name|m
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
 name|mopt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -4313,7 +4353,7 @@ operator|>>
 literal|2
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|u_char
@@ -4422,30 +4462,23 @@ begin_comment
 comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repertoire  * of codes and types.  *  * If not forwarding, just drop the packet.  This could be confusing  * if ipforwarding was zero but some routing protocol was advancing  * us as a gateway to somewhere.  However, we must let the routing  * protocol deal with that.  *  * The srcrt parameter indicates whether the packet is being forwarded  * via a source route.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|ip_forward
-argument_list|(
-argument|m
-argument_list|,
-argument|srcrt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|srcrt
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|srcrt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4482,6 +4515,8 @@ init|=
 literal|0
 decl_stmt|,
 name|code
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4494,6 +4529,8 @@ name|dest
 decl_stmt|;
 name|int
 name|mtu
+init|=
+literal|0
 decl_stmt|;
 name|dest
 operator|.
@@ -5151,7 +5188,7 @@ name|mtu
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

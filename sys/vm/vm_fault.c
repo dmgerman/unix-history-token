@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	7.6 (Berkeley) 5/7/91  *	$Id: vm_fault.c,v 1.5 1993/10/16 16:20:24 rgrimes Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_fault.c	7.6 (Berkeley) 5/7/91  *	$Id: vm_fault.c,v 1.6 1993/11/07 17:54:09 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -45,44 +45,30 @@ begin_comment
 comment|/*  *	vm_fault:  *  *	Handle a page fault occuring at the given address,  *	requiring the given permissions, in the map specified.  *	If successful, the page is inserted into the  *	associated physical map.  *  *	NOTE: the given address should be truncated to the  *	proper page address.  *  *	KERN_SUCCESS is returned if the page fault is handled; otherwise,  *	a standard error specifying why the fault is fatal is returned.  *  *  *	The map in question must be referenced, and remains so.  *	Caller may hold no locks.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|vm_fault
-argument_list|(
-argument|map
-argument_list|,
-argument|vaddr
-argument_list|,
-argument|fault_type
-argument_list|,
-argument|change_wiring
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|map
+parameter_list|,
+name|vaddr
+parameter_list|,
+name|fault_type
+parameter_list|,
+name|change_wiring
+parameter_list|)
 name|vm_map_t
 name|map
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_offset_t
 name|vaddr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_prot_t
 name|fault_type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|change_wiring
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|vm_object_t
 name|first_object
@@ -301,7 +287,9 @@ expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pagein"
+argument_list|)
 expr_stmt|;
 name|wait_result
 operator|=
@@ -343,13 +331,18 @@ name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_wakeup
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|&
 name|vm_pages_needed
 argument_list|)
 expr_stmt|;
 comment|/* XXX! */
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pagein"
+argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -417,7 +410,9 @@ expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pgunlck"
+argument_list|)
 expr_stmt|;
 name|wait_result
 operator|=
@@ -476,13 +471,18 @@ name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_wakeup
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|&
 name|vm_pages_needed
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pgunlck"
+argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -1225,7 +1225,9 @@ expr_stmt|;
 name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pagein"
+argument_list|)
 expr_stmt|;
 name|wait_result
 operator|=
@@ -1283,13 +1285,18 @@ name|UNLOCK_THINGS
 expr_stmt|;
 name|thread_wakeup
 argument_list|(
+operator|(
+name|int
+operator|)
 operator|&
 name|vm_pages_needed
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
+comment|/* XXX  ^^^^^*/
 name|thread_block
-argument_list|()
+argument_list|(
+literal|"pagein"
+argument_list|)
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
@@ -1793,7 +1800,7 @@ name|KERN_SUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_fault_wire:  *  *	Wire down a range of virtual addresses in a map.  */

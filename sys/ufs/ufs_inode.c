@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_inode.c	7.40 (Berkeley) 5/8/91  *	$Id: ufs_inode.c,v 1.4 1993/11/07 17:53:44 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_inode.c	7.40 (Berkeley) 5/8/91  *	$Id: ufs_inode.c,v 1.5 1993/11/07 21:48:19 wollman Exp $  */
 end_comment
 
 begin_include
@@ -192,12 +192,10 @@ begin_comment
 comment|/*  * Initialize hash links for inodes.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ufs_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -276,47 +274,36 @@ endif|#
 directive|endif
 comment|/* QUOTA */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up a UFS dinode number to find its incore vnode.  * If it is not in core, read it in from the specified device.  * If it is in core, wait for the lock bit to clear, then  * return the inode locked. Detection and handling of mount  * points must be done by the calling routine.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iget
-argument_list|(
-argument|xp
-argument_list|,
-argument|ino
-argument_list|,
-argument|ipp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|xp
+parameter_list|,
+name|ino
+parameter_list|,
+name|ipp
+parameter_list|)
 name|struct
 name|inode
 modifier|*
 name|xp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ino_t
 name|ino
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|inode
 modifier|*
 modifier|*
 name|ipp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|dev_t
 name|dev
@@ -1054,26 +1041,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock and decrement the reference count of an inode structure.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|iput
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -1106,38 +1091,30 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Last reference to an inode, write the inode out and if necessary,  * truncate and deallocate the file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ufs_inactive
-argument_list|(
-argument|vp
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|,
+name|p
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1363,26 +1340,24 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Reclaim an inode so that it can be used for other purposes.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ufs_reclaim
-argument_list|(
+parameter_list|(
 name|vp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1526,41 +1501,39 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Update the access, modified, and inode change times as specified  * by the IACC, IMOD, and ICHG flags respectively. The IUPD flag  * is used to specify that the inode needs to be updated but that  * the times have already been set. The access and modified times  * are taken from the second and third parameters; the inode change  * time is always taken from the current time. If waitfor is set,  * then wait for the disk write of the inode to complete.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iupdat
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|,
+parameter_list|,
 name|ta
-argument_list|,
+parameter_list|,
 name|tm
-argument_list|,
+parameter_list|,
 name|waitfor
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|timeval
 modifier|*
 name|ta
 decl_stmt|,
-modifier|*
+decl|*
 name|tm
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -1850,36 +1823,28 @@ begin_comment
 comment|/*  * Truncate the inode ip to at most length size.  Free affected disk  * blocks -- the blocks of the file are removed in reverse order.  *  * NB: triple indirect blocks are untested.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|itrunc
-argument_list|(
+parameter_list|(
 name|oip
-argument_list|,
+parameter_list|,
 name|length
-argument_list|,
+parameter_list|,
 name|flags
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|oip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|u_long
 name|length
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|daddr_t
@@ -2841,55 +2806,44 @@ name|allerror
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Release blocks associated with the inode ip and  * stored in the indirect block bn.  Blocks are free'd  * in LIFO order up to (but not including) lastbn.  If  * level is greater than SINGLE, the block is an indirect  * block and recursive calls to indirtrunc must be used to  * cleanse other indirect blocks.  *  * NB: triple indirect blocks are untested.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|indirtrunc
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|,
+parameter_list|,
 name|bn
-argument_list|,
+parameter_list|,
 name|lastbn
-argument_list|,
+parameter_list|,
 name|level
-argument_list|,
+parameter_list|,
 name|countp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|daddr_t
 name|bn
 decl_stmt|,
 name|lastbn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|level
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 modifier|*
 name|countp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3328,26 +3282,24 @@ name|allerror
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Lock an inode. If its already locked, set the WANT bit and sleep.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|ilock
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -3426,26 +3378,24 @@ operator||=
 name|ILOCKED
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Unlock an inode.  If WANT bit is on, wakeup.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|iunlock
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3508,7 +3458,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

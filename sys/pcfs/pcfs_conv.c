@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id$  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_conv.c,v 1.2 1993/10/16 19:29:31 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -996,6 +996,8 @@ name|i
 decl_stmt|;
 name|u_char
 name|c
+init|=
+literal|0
 decl_stmt|;
 comment|/*  *  Fill the dos filename string with blanks.  *  These are DOS's pad characters.  */
 for|for

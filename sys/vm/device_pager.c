@@ -1259,7 +1259,9 @@ name|pager
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|panic
 argument_list|(
 literal|"dev_pager_putpage called"

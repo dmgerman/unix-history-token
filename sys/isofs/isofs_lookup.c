@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 1983 Atsushi Murai (amurai@spec.co.jp)  * All rights reserved for Rock Ridge Extension Support.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *	$Id: isofs_lookup.c,v 1.3 1993/07/27 10:52:35 davidg Exp $  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Copyright (c) 1983 Atsushi Murai (amurai@spec.co.jp)  * All rights reserved for Rock Ridge Extension Support.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)ufs_lookup.c	7.33 (Berkeley) 5/19/91  *	$Id: isofs_lookup.c,v 1.4 1993/10/17 01:48:27 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -80,41 +80,33 @@ begin_comment
 comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|isofs_lookup
-argument_list|(
+parameter_list|(
 name|vdp
-argument_list|,
+parameter_list|,
 name|ndp
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|vnode
-operator|*
+modifier|*
 name|vdp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|nameidata
 modifier|*
 name|ndp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -147,6 +139,8 @@ decl_stmt|;
 comment|/* the current directory entry */
 name|int
 name|entryoffsetinblock
+init|=
+literal|0
 decl_stmt|;
 comment|/* offset of ep in bp's buffer */
 enum|enum
@@ -1321,57 +1315,43 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return buffer with contents of block "offset"  * from the beginning of directory "ip".  If "res"  * is non-zero, fill it in with a pointer to the  * remaining space in the directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_blkatoff
-argument_list|(
-argument|ip
-argument_list|,
-argument|offset
-argument_list|,
-argument|res
-argument_list|,
-argument|bpp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ip
+parameter_list|,
+name|offset
+parameter_list|,
+name|res
+parameter_list|,
+name|bpp
+parameter_list|)
 name|struct
 name|iso_node
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|off_t
 name|offset
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|res
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|buf
 modifier|*
 modifier|*
 name|bpp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1482,7 +1462,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

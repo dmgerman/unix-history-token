@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_object.c,v 1.7 1993/11/07 17:54:18 wollman Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	7.4 (Berkeley) 5/7/91  *	$Id: vm_object.c,v 1.8 1993/11/14 03:07:03 jkh Exp $  */
 end_comment
 
 begin_comment
@@ -40,6 +40,48 @@ include|#
 directive|include
 file|"vm_page.h"
 end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|_vm_object_allocate
+parameter_list|(
+name|vm_size_t
+parameter_list|,
+name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vm_object_deactivate_pages
+parameter_list|(
+name|vm_object_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vm_object_cache_trim
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vm_object_remove
+parameter_list|(
+name|vm_pager_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *	Virtual memory objects maintain the actual data  *	associated with allocated virtual memory.  A given  *	page of memory exists within exactly one object.  *  *	An object is only deallocated when all "references"  *	are given up.  Only one "reference" to a given  *	region of an object should be writeable.  *  *	Associated with each object is a list of all resident  *	memory pages belonging to that object; this list is  *	maintained by the "vm_page" module, and locked by the object's  *	lock.  *  *	Each object also records a "pager" routine which is  *	used to retrieve (and store) pages to the proper backing  *	storage.  In addition, objects may be backed by other  *	objects from which they were virtual-copied.  *  *	The only items within the object structure which are  *	modified after time of creation are:  *		reference count		locked by object's lock  *		pager routine		locked by object's lock  *  */
@@ -325,29 +367,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|_vm_object_allocate
-argument_list|(
-argument|size
-argument_list|,
-argument|object
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|size
+parameter_list|,
+name|object
+parameter_list|)
 name|vm_size_t
 name|size
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|vm_object_t
 name|object
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|queue_init
 argument_list|(
@@ -467,7 +502,7 @@ name|vm_object_list_lock
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_object_reference:  *  *	Gets another reference to the given object.  */
@@ -808,6 +843,9 @@ condition|)
 block|{
 name|vm_object_sleep
 argument_list|(
+operator|(
+name|int
+operator|)
 name|object
 argument_list|,
 name|object
@@ -1085,36 +1123,28 @@ begin_comment
 comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  *	Leaves page on whatever queue it is currently on.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vm_object_page_clean
-argument_list|(
+parameter_list|(
 name|object
-argument_list|,
+parameter_list|,
 name|start
-argument_list|,
+parameter_list|,
 name|end
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_object_t
 name|object
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|vm_offset_t
 name|start
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|vm_offset_t
 name|end
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|vm_page_t
@@ -1289,24 +1319,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_object_deactivate_pages  *  *	Deactivate all pages in the specified object.  (Keep its pages  *	in memory even though it is no longer referenced.)  *  *	The object must be locked.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|vm_object_deactivate_pages
-argument_list|(
+parameter_list|(
 name|object
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_object_t
 name|object
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|vm_page_t
@@ -1382,18 +1411,17 @@ name|next
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	Trim the object cache to size.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|vm_object_cache_trim
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|vm_object_t
@@ -1454,7 +1482,7 @@ name|vm_object_cache_unlock
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_object_shutdown()  *  *	Shut down the object system.  Unfortunately, while we  *	may be trying to do this, init is happily waiting for  *	processes to exit, and therefore will be causing some objects  *	to be deallocated.  To handle this, we gain a fake reference  *	to all objects we release paging areas for.  This will prevent  *	a duplicate deallocation.  This routine is probably full of  *	race conditions!  */
@@ -2833,18 +2861,17 @@ begin_comment
 comment|/*  *	vm_object_remove:  *  *	Remove the pager from the hash table.  *	Note:  This assumes that the object cache  *	is locked.  XXX this should be fixed  *	by reorganizing vm_object_deallocate.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|vm_object_remove
-argument_list|(
+parameter_list|(
 name|pager
-argument_list|)
+parameter_list|)
 specifier|register
 name|vm_pager_t
 name|pager
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|queue_t
@@ -2946,7 +2973,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	vm_object_cache_clear removes all objects from the cache.  *  */

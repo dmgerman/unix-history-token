@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_options.c	7.8 (Berkeley) 5/6/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_options.c	7.8 (Berkeley) 5/6/91  *	$Id: clnp_options.c,v 1.2 1993/10/16 21:04:50 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -105,40 +105,26 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_update_srcrt  *  * PURPOSE:			Process src rt option accompanying a clnp datagram.  *						- bump src route ptr if src routing and  *							we appear current in src route list.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			If source routing has been terminated, do nothing.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_update_srcrt
-argument_list|(
-argument|options
-argument_list|,
-argument|oidx
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|options
+parameter_list|,
+name|oidx
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to options mbuf */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_optidx
 modifier|*
 name|oidx
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to option index */
-end_comment
-
-begin_block
 block|{
 name|u_char
 name|len
@@ -255,74 +241,48 @@ name|len
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_dooptions  *  * PURPOSE:			Process options accompanying a clnp datagram.  *					Processing includes  *						- log our address if recording route  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_dooptions
-argument_list|(
-argument|options
-argument_list|,
-argument|oidx
-argument_list|,
-argument|ifp
-argument_list|,
-argument|isoa
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|options
+parameter_list|,
+name|oidx
+parameter_list|,
+name|ifp
+parameter_list|,
+name|isoa
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to options mbuf */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_optidx
 modifier|*
 name|oidx
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to option index */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to interface pkt is leaving on */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|isoa
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to our address for this ifp */
-end_comment
-
-begin_block
 block|{
 comment|/* 	 *	If record route is specified, move all 	 *	existing records over, and insert the address of 	 *	interface passed 	 */
 if|if
@@ -526,48 +486,34 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_set_opts  *  * PURPOSE:			Check the data mbuf passed for option sanity. If it is  *					ok, then set the options ptr to address the data mbuf.  *					If an options mbuf exists, free it. This implies that  *					any old options will be lost. If data is NULL, simply  *					free any old options.  *  * RETURNS:			unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_set_opts
-argument_list|(
-argument|options
-argument_list|,
-argument|data
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|options
+parameter_list|,
+name|data
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* target for option information */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 modifier|*
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* source of option information */
-end_comment
-
-begin_block
 block|{
 name|int
 name|error
@@ -686,73 +632,49 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_opt_sanity  *  * PURPOSE:			Check the options (beginning at opts for len bytes) for  *					sanity. In addition, fill in the option index structure   *					in with information about each option discovered.  *  * RETURNS:			success (options check out) - 0  *					failure - an ER pdu error code describing failure  *  * SIDE EFFECTS:	  *  * NOTES:			Each pointer field of the option index is filled in with  *					the offset from the beginning of the mbuf data, not the  *					actual address.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_opt_sanity
-argument_list|(
-argument|m
-argument_list|,
-argument|opts
-argument_list|,
-argument|len
-argument_list|,
-argument|oidx
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|len
+parameter_list|,
+name|oidx
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* mbuf options reside in */
-end_comment
-
-begin_decl_stmt
 name|caddr_t
 name|opts
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to buffer containing options */
-end_comment
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* length of buffer */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_optidx
 modifier|*
 name|oidx
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* RETURN: filled in with option idx info */
-end_comment
-
-begin_block
 block|{
 name|u_char
 name|opcode
+init|=
+literal|0
 decl_stmt|;
 comment|/* code of particular option */
 name|u_char
@@ -1604,7 +1526,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

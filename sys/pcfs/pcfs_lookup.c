@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_lookup.c,v 1.4 1993/10/17 01:48:37 rgrimes Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_lookup.c,v 1.5 1993/11/17 23:26:17 wollman Exp $  */
 end_comment
 
 begin_include
@@ -128,9 +128,13 @@ name|FOUND
 value|1
 name|int
 name|slotoffset
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|slotcluster
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|frcn
@@ -183,6 +187,8 @@ name|struct
 name|direntry
 modifier|*
 name|dep
+init|=
+literal|0
 decl_stmt|;
 name|u_char
 name|dosfilename
@@ -611,7 +617,7 @@ endif|#
 directive|endif
 comment|/* defined(PCFSDEBUG) */
 name|cluster
-operator|==
+operator|=
 name|PCFSROOT
 expr_stmt|;
 name|diroff

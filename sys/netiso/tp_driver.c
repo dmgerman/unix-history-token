@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from: unknown  *	$Id$  */
+comment|/*  *	from: unknown  *	$Id: tp_driver.c,v 1.3 1993/10/16 21:05:37 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -6303,30 +6303,25 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function
+name|int
 name|tp_driver
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
 name|tp_PCB_
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tp_event
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -6471,7 +6466,7 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.15 1993/11/18 05:01:51 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.16 1993/11/22 09:46:44 davidg Exp $  */
 end_comment
 
 begin_include
@@ -49,28 +49,20 @@ argument_list|()
 decl_stmt|,
 name|enodev
 argument_list|()
-decl_stmt|,
-name|rawread
-argument_list|()
-decl_stmt|,
-name|rawwrite
-argument_list|()
-decl_stmt|,
-name|swstrategy
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_rdwr_t
 name|rawread
-argument_list|()
 decl_stmt|,
 name|rawwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
 name|swstrategy
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -103,28 +95,38 @@ operator|)
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|wdopen
-argument_list|()
-decl_stmt|,
-name|wdclose
-argument_list|()
-decl_stmt|,
-name|wdstrategy
-argument_list|()
-decl_stmt|,
-name|wdioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_close_t
+name|wdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|wdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|wdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_dump_t
 name|wddump
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
 name|wdsize
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -137,42 +139,42 @@ begin_define
 define|#
 directive|define
 name|wdopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -195,28 +197,38 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|sdopen
-argument_list|()
-decl_stmt|,
-name|sdclose
-argument_list|()
-decl_stmt|,
-name|sdstrategy
-argument_list|()
-decl_stmt|,
-name|sdioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_close_t
+name|sdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|sdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|sdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_dump_t
 name|sddump
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
 name|sdsize
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -229,42 +241,42 @@ begin_define
 define|#
 directive|define
 name|sdopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -287,18 +299,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|stopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|stclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
 name|ststrategy
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|stioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -310,14 +330,14 @@ begin_define
 define|#
 directive|define
 name|stdump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|stsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_else
@@ -329,42 +349,42 @@ begin_define
 define|#
 directive|define
 name|stopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|stclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ststrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|stioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|stdump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|stsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -387,34 +407,40 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|cdopen
-argument_list|()
-decl_stmt|,
-name|cdclose
-argument_list|()
-decl_stmt|,
-name|cdstrategy
-argument_list|()
-decl_stmt|,
-name|cdioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-comment|/*cddump(),*/
+begin_decl_stmt
+name|d_close_t
+name|cdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|cdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|cdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
 name|cdsize
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|cddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_else
@@ -426,42 +452,42 @@ begin_define
 define|#
 directive|define
 name|cdopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|cddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|cdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -484,34 +510,40 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|mcdopen
-argument_list|()
-decl_stmt|,
-name|mcdclose
-argument_list|()
-decl_stmt|,
-name|mcdstrategy
-argument_list|()
-decl_stmt|,
-name|mcdioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-comment|/*mcddump(),*/
+begin_decl_stmt
+name|d_close_t
+name|mcdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|mcdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|mcdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
 name|mcdsize
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|mcddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_else
@@ -523,42 +555,42 @@ begin_define
 define|#
 directive|define
 name|mcdopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mcdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -581,15 +613,20 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|chopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|chclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|chioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -602,21 +639,21 @@ begin_define
 define|#
 directive|define
 name|chopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|chclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|chioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -639,28 +676,38 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|wtopen
-argument_list|()
-decl_stmt|,
-name|wtclose
-argument_list|()
-decl_stmt|,
-name|wtstrategy
-argument_list|()
-decl_stmt|,
-name|wtioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_close_t
+name|wtclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
+name|wtstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|wtioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_dump_t
 name|wtdump
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_psize_t
 name|wtsize
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -673,42 +720,42 @@ begin_define
 define|#
 directive|define
 name|wtopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtdump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|wtsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -731,18 +778,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|Fdopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|fdclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_strategy_t
 name|fdstrategy
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|fdioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -750,14 +805,14 @@ begin_define
 define|#
 directive|define
 name|fddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_else
@@ -769,42 +824,42 @@ begin_define
 define|#
 directive|define
 name|Fdopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdstrategy
-value|enxio
+value|(d_strategy_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fddump
-value|enxio
+value|(d_dump_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|fdsize
-value|NULL
+value|(d_psize_t *)0
 end_define
 
 begin_endif
@@ -812,16 +867,52 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|swopen
+value|(d_open_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|swclose
+value|(d_close_t *)enodev
+end_define
+
 begin_decl_stmt
-name|int
+name|d_strategy_t
 name|swstrategy
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|swioctl
+value|(d_ioctl_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|swdump
+value|(d_dump_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|swsize
+value|(d_psize_t *)enodev
+end_define
+
+begin_decl_stmt
+name|d_rdwr_t
 name|swread
-argument_list|()
 decl_stmt|,
 name|swwrite
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -846,24 +937,24 @@ name|wddump
 block|,
 name|wdsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
-name|enodev
+name|swopen
 block|,
-name|enodev
+name|swclose
 block|,
 name|swstrategy
 block|,
-name|enodev
+name|swioctl
 block|,
 comment|/*1*/
-name|enodev
+name|swdump
 block|,
-name|enodev
+name|swsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
@@ -880,7 +971,7 @@ name|fddump
 block|,
 name|fdsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
@@ -914,7 +1005,7 @@ name|sddump
 block|,
 name|sdsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
@@ -931,7 +1022,7 @@ name|stdump
 block|,
 name|stsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
@@ -948,7 +1039,7 @@ name|cddump
 block|,
 name|cdsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
 block|{
@@ -965,10 +1056,10 @@ name|mcddump
 block|,
 name|mcdsize
 block|,
-name|NULL
+literal|0
 block|}
 block|,
-comment|/*  * If you need a bdev major number, please contact the 386bsd patchkit  * coordinator by sending mail to "patches@cs.montana.edu".   * If you assign one yourself it may conflict with someone else.  */
+comment|/*  * If you need a bdev major number, please contact the FreeBSD team  * by sending mail to "FreeBSD-hackers@freefall.cdrom.com".  * If you assign one yourself it may conflict with someone else.  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -992,47 +1083,75 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* console */
+end_comment
+
 begin_decl_stmt
-name|int
+name|d_open_t
 name|cnopen
-argument_list|()
-decl_stmt|,
-name|cnclose
-argument_list|()
-decl_stmt|,
-name|cnread
-argument_list|()
-decl_stmt|,
-name|cnwrite
-argument_list|()
-decl_stmt|,
-name|cnioctl
-argument_list|()
-decl_stmt|,
-name|cnselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_close_t
+name|cnclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|cnread
+decl_stmt|,
+name|cnwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|cnioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|cnselect
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* more console */
+end_comment
+
+begin_decl_stmt
+name|d_open_t
 name|pcopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|pcclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|pcread
-argument_list|()
 decl_stmt|,
 name|pcwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|pcioctl
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_mmap_t
 name|pcmmap
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1044,38 +1163,61 @@ name|pccons
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* controlling TTY */
+end_comment
+
 begin_decl_stmt
-name|int
+name|d_open_t
 name|cttyopen
-argument_list|()
-decl_stmt|,
-name|cttyread
-argument_list|()
-decl_stmt|,
-name|cttywrite
-argument_list|()
-decl_stmt|,
-name|cttyioctl
-argument_list|()
-decl_stmt|,
-name|cttyselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_rdwr_t
+name|cttyread
+decl_stmt|,
+name|cttywrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|cttyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|cttyselect
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* /dev/mem */
+end_comment
+
+begin_decl_stmt
+name|d_open_t
 name|mmopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|mmclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|mmrw
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_mmap_t
 name|memmmap
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1101,51 +1243,65 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|ptsopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|ptsclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|ptsread
-argument_list|()
 decl_stmt|,
 name|ptswrite
-argument_list|()
-decl_stmt|,
-name|ptsstop
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_stop_t
+name|ptsstop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_open_t
 name|ptcopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|ptcclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|ptcread
-argument_list|()
 decl_stmt|,
 name|ptcwrite
-argument_list|()
-decl_stmt|,
-name|ptcselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
-name|ptyioctl
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_decl_stmt
+name|d_select_t
+name|ptcselect
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+name|d_ioctl_t
+name|ptyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|tty
 name|pt_tty
@@ -1162,63 +1318,63 @@ begin_define
 define|#
 directive|define
 name|ptsopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptswrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptcwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptyioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
@@ -1232,14 +1388,14 @@ begin_define
 define|#
 directive|define
 name|ptcselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ptsstop
-value|nullop
+value|(d_stop_t *)nullop
 end_define
 
 begin_endif
@@ -1262,24 +1418,38 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|comopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|comclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|comread
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|comwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|comioctl
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|comselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1287,7 +1457,7 @@ begin_define
 define|#
 directive|define
 name|comreset
-value|enxio
+value|(d_reset_t *)enxio
 end_define
 
 begin_decl_stmt
@@ -1308,49 +1478,49 @@ begin_define
 define|#
 directive|define
 name|comopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comreset
-value|enxio
+value|(d_reset_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|comselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_define
@@ -1365,32 +1535,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* /dev/klog */
+end_comment
+
 begin_decl_stmt
-name|int
+name|d_open_t
 name|logopen
-argument_list|()
-decl_stmt|,
-name|logclose
-argument_list|()
-decl_stmt|,
-name|logread
-argument_list|()
-decl_stmt|,
-name|logioctl
-argument_list|()
-decl_stmt|,
-name|logselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|d_close_t
+name|logclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|logread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|logioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|logselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|ttselect
-argument_list|()
 decl_stmt|,
 name|seltrue
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1409,18 +1592,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|lptopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|lptclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|lptwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|lptioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1433,28 +1624,28 @@ begin_define
 define|#
 directive|define
 name|lptopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lptioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -1477,21 +1668,28 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|twopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|twclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|twread
-argument_list|()
 decl_stmt|,
 name|twwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|twselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1504,35 +1702,35 @@ begin_define
 define|#
 directive|define
 name|twopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|twclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|twread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|twwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|twselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_endif
@@ -1559,30 +1757,36 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|sbopen
-argument_list|()
-decl_stmt|,
-name|sbclose
-argument_list|()
-decl_stmt|,
-name|sbioctl
-argument_list|()
-decl_stmt|,
-name|sbread
-argument_list|()
-decl_stmt|,
-name|sbwrite
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|d_close_t
+name|sbclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|sbioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|sbread
+decl_stmt|,
+name|sbwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|sbselect
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -1593,35 +1797,35 @@ begin_define
 define|#
 directive|define
 name|sbopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sbclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sbioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sbread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sbwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
@@ -1651,21 +1855,32 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|psmopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|psmclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|psmread
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|psmselect
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|psmioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1678,35 +1893,35 @@ begin_define
 define|#
 directive|define
 name|psmopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|psmioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -1733,30 +1948,36 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|sndopen
-argument_list|()
-decl_stmt|,
-name|sndclose
-argument_list|()
-decl_stmt|,
-name|sndioctl
-argument_list|()
-decl_stmt|,
-name|sndread
-argument_list|()
-decl_stmt|,
-name|sndwrite
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|int
+begin_decl_stmt
+name|d_close_t
+name|sndclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|sndioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|sndread
+decl_stmt|,
+name|sndwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|sndselect
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -1767,35 +1988,35 @@ begin_define
 define|#
 directive|define
 name|sndopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sndwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
@@ -1810,12 +2031,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|int
+begin_comment
+comment|/* /dev/fd/NNN */
+end_comment
+
+begin_decl_stmt
+name|d_open_t
 name|fdopen
-parameter_list|()
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_include
 include|#
@@ -1832,24 +2056,34 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|bpfopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|bpfclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|bpfread
-argument_list|()
 decl_stmt|,
 name|bpfwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|bpfselect
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|bpfioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1862,42 +2096,42 @@ begin_define
 define|#
 directive|define
 name|bpfopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfwrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|bpfioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -1920,21 +2154,32 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|dcfclkopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|dcfclkclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|dcfclkread
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|dcfclkioctl
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|dcfclkselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -1947,35 +2192,35 @@ begin_define
 define|#
 directive|define
 name|dcfclkopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dcfclkclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dcfclkread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dcfclkioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|dcfclkselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_endif
@@ -1998,18 +2243,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|lpaopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|lpaclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|lpawrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|lpaioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2022,28 +2275,28 @@ begin_define
 define|#
 directive|define
 name|lpaopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpaclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpawrite
-value|enxio
+value|(d_write_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|lpaioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -2066,18 +2319,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|spkropen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|spkrclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|spkrwrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|spkrioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2090,28 +2351,28 @@ begin_define
 define|#
 directive|define
 name|spkropen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrwrite
-value|enxio
+value|(d_write_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|spkrioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -2134,18 +2395,26 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|mseopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|mseclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|mseread
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|mseselect
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2158,28 +2427,28 @@ begin_define
 define|#
 directive|define
 name|mseopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|mseselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_endif
@@ -2202,27 +2471,40 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|sioopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|sioclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|sioread
-argument_list|()
 decl_stmt|,
 name|siowrite
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|sioioctl
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
 name|sioselect
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_stop_t
 name|siostop
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2230,7 +2512,7 @@ begin_define
 define|#
 directive|define
 name|sioreset
-value|enxio
+value|(d_reset_t *)enxio
 end_define
 
 begin_decl_stmt
@@ -2251,56 +2533,56 @@ begin_define
 define|#
 directive|define
 name|sioopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioread
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|siowrite
-value|enxio
+value|(d_rdwr_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|siostop
-value|enxio
+value|(d_stop_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioreset
-value|enxio
+value|(d_reset_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|sioselect
-value|enxio
+value|(d_select_t *)enxio
 end_define
 
 begin_define
@@ -2330,24 +2612,22 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|suopen
-argument_list|()
-decl_stmt|,
-name|suclose
-argument_list|()
-decl_stmt|,
-name|suioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|susize
-value|NULL
-end_define
+begin_decl_stmt
+name|d_close_t
+name|suclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|suioctl
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
@@ -2358,28 +2638,21 @@ begin_define
 define|#
 directive|define
 name|suopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|suclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|suioctl
-value|enxio
-end_define
-
-begin_define
-define|#
-directive|define
-name|susize
-value|NULL
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
@@ -2402,15 +2675,20 @@ literal|0
 end_if
 
 begin_decl_stmt
-name|int
+name|d_open_t
 name|ukopen
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
 name|ukclose
-argument_list|()
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
 name|ukioctl
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -2423,27 +2701,129 @@ begin_define
 define|#
 directive|define
 name|ukopen
-value|enxio
+value|(d_open_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ukclose
-value|enxio
+value|(d_close_t *)enxio
 end_define
 
 begin_define
 define|#
 directive|define
 name|ukioctl
-value|enxio
+value|(d_ioctl_t *)enxio
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|noopen
+value|(d_open_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noclose
+value|(d_close_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noread
+value|(d_rdwr_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nowrite
+value|noread
+end_define
+
+begin_define
+define|#
+directive|define
+name|noioc
+value|(d_ioctl_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nostop
+value|(d_stop_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noreset
+value|(d_reset_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|noselect
+value|(d_select_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nommap
+value|(d_mmap_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nostrat
+value|(d_strategy_t *)enodev
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullopen
+value|(d_open_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullclose
+value|(d_close_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullstop
+value|(d_stop_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
+name|nullreset
+value|(d_reset_t *)nullop
+end_define
+
+begin_comment
+comment|/* open, close, read, write, ioctl, stop, reset, ttys, select, mmap, strat */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -2464,16 +2844,16 @@ block|,
 comment|/*0*/
 name|cnioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* console */
 name|cnselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2481,7 +2861,7 @@ block|,
 block|{
 name|cttyopen
 block|,
-name|nullop
+name|nullclose
 block|,
 name|cttyread
 block|,
@@ -2490,16 +2870,16 @@ block|,
 comment|/*1*/
 name|cttyioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* tty */
 name|cttyselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2514,11 +2894,11 @@ block|,
 name|mmrw
 block|,
 comment|/*2*/
-name|enodev
+name|noioc
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
@@ -2542,42 +2922,42 @@ block|,
 comment|/*3*/
 name|wdioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* wd */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|wdstrategy
 block|}
 block|,
 block|{
-name|nullop
+name|nullopen
 block|,
-name|nullop
+name|nullclose
 block|,
 name|rawread
 block|,
 name|rawwrite
 block|,
 comment|/*4*/
-name|enodev
+name|noioc
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|noreset
 block|,
 name|NULL
 block|,
 comment|/* swap */
-name|enodev
+name|noselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|swstrategy
 block|}
@@ -2596,14 +2976,14 @@ name|ptyioctl
 block|,
 name|ptsstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|pt_tty
 block|,
 comment|/* ttyp */
 name|ttselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2620,16 +3000,16 @@ block|,
 comment|/*6*/
 name|ptyioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|pt_tty
 block|,
 comment|/* ptyp */
 name|ptcselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2641,21 +3021,21 @@ name|logclose
 block|,
 name|logread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*7*/
 name|logioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* klog */
 name|logselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2672,7 +3052,7 @@ block|,
 comment|/*8*/
 name|comioctl
 block|,
-name|enodev
+name|nostop
 block|,
 name|comreset
 block|,
@@ -2681,7 +3061,7 @@ block|,
 comment|/* com */
 name|comselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -2698,16 +3078,16 @@ block|,
 comment|/*9*/
 name|fdioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* Fd (!=fd) */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|fdstrategy
 block|}
@@ -2724,43 +3104,43 @@ block|,
 comment|/*10*/
 name|wtioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* wt */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|wtstrategy
 block|}
 block|,
 block|{
-name|enodev
+name|noopen
 block|,
-name|enodev
+name|noclose
 block|,
-name|enodev
+name|noread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*11*/
-name|enodev
+name|noioc
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
-name|enodev
+name|nostrat
 block|}
 block|,
 block|{
@@ -2775,9 +3155,9 @@ block|,
 comment|/*12*/
 name|pcioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 operator|&
 name|pccons
@@ -2802,16 +3182,16 @@ block|,
 comment|/*13*/
 name|sdioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* sd */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|sdstrategy
 block|}
@@ -2828,16 +3208,16 @@ block|,
 comment|/*14*/
 name|stioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* st */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|ststrategy
 block|}
@@ -2849,21 +3229,21 @@ name|cdclose
 block|,
 name|rawread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*15*/
 name|cdioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* cd */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|cdstrategy
 block|}
@@ -2873,25 +3253,25 @@ name|lptopen
 block|,
 name|lptclose
 block|,
-name|nullop
+name|noread
 block|,
 name|lptwrite
 block|,
 comment|/*16*/
 name|lptioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* lpt */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
-name|enodev
+name|nostrat
 block|}
 block|,
 block|{
@@ -2899,25 +3279,25 @@ name|chopen
 block|,
 name|chclose
 block|,
-name|enxio
+name|noread
 block|,
-name|enxio
+name|nowrite
 block|,
 comment|/*17*/
 name|chioctl
 block|,
-name|enxio
+name|nostop
 block|,
-name|enxio
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* ch */
-name|enxio
+name|noselect
 block|,
-name|enxio
+name|nommap
 block|,
-name|enxio
+name|nostrat
 block|}
 block|,
 block|{
@@ -2925,25 +3305,25 @@ name|suopen
 block|,
 name|suclose
 block|,
-name|enodev
+name|noread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*18*/
 name|suioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* scsi 'generic' */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
-name|enodev
+name|nostrat
 block|}
 block|,
 block|{
@@ -2956,20 +3336,20 @@ block|,
 name|twwrite
 block|,
 comment|/*19*/
-name|enodev
+name|noioc
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* tw */
 name|twselect
 block|,
-name|enodev
+name|nommap
 block|,
-name|enodev
+name|nostrat
 block|}
 block|,
 block|{
@@ -2984,16 +3364,16 @@ block|,
 comment|/*20*/
 name|sbioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|enodev
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* soundblaster*/
 name|sbselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3005,21 +3385,21 @@ name|psmclose
 block|,
 name|psmread
 block|,
-name|nullop
+name|nowrite
 block|,
 comment|/*21*/
 name|psmioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* psm mice */
 name|psmselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3027,27 +3407,27 @@ block|,
 block|{
 name|fdopen
 block|,
-name|enxio
+name|noclose
 block|,
-name|enxio
+name|noread
 block|,
-name|enxio
+name|nowrite
 block|,
 comment|/*22*/
-name|enxio
+name|noioc
 block|,
-name|enxio
+name|nostop
 block|,
-name|enxio
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* fd (!=Fd) */
-name|enxio
+name|noselect
 block|,
-name|enxio
+name|nommap
 block|,
-name|enxio
+name|nostrat
 block|}
 block|,
 block|{
@@ -3062,16 +3442,16 @@ block|,
 comment|/*23*/
 name|bpfioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* bpf */
 name|bpfselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3083,21 +3463,21 @@ name|dcfclkclose
 block|,
 name|dcfclkread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*24*/
 name|dcfclkioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* dcfclk */
 name|dcfclkselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3107,25 +3487,25 @@ name|lpaopen
 block|,
 name|lpaclose
 block|,
-name|nullop
+name|noread
 block|,
 name|lpawrite
 block|,
 comment|/*25*/
 name|lpaioctl
 block|,
-name|nullop
+name|nullstop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* lpa */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
-name|enodev
+name|NULL
 block|}
 block|,
 block|{
@@ -3133,25 +3513,25 @@ name|spkropen
 block|,
 name|spkrclose
 block|,
-name|enxio
+name|noread
 block|,
 name|spkrwrite
 block|,
 comment|/*26*/
 name|spkrioctl
 block|,
-name|enxio
+name|nostop
 block|,
-name|enxio
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* spkr */
-name|enxio
+name|seltrue
 block|,
-name|enxio
+name|nommap
 block|,
-name|enxio
+name|NULL
 block|}
 block|,
 block|{
@@ -3161,21 +3541,21 @@ name|mseclose
 block|,
 name|mseread
 block|,
-name|nullop
+name|nowrite
 block|,
 comment|/*27*/
-name|nullop
+name|noioc
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* mse */
 name|mseselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3201,7 +3581,7 @@ block|,
 comment|/* sio */
 name|sioselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3213,21 +3593,21 @@ name|mcdclose
 block|,
 name|rawread
 block|,
-name|enodev
+name|nowrite
 block|,
 comment|/*29*/
 name|mcdioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|nullop
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* mitsumi cd */
 name|seltrue
 block|,
-name|enodev
+name|nommap
 block|,
 name|mcdstrategy
 block|}
@@ -3244,16 +3624,16 @@ block|,
 comment|/*30*/
 name|sndioctl
 block|,
-name|enodev
+name|nostop
 block|,
-name|enodev
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* sound driver */
 name|sndselect
 block|,
-name|enodev
+name|nommap
 block|,
 name|NULL
 block|}
@@ -3263,25 +3643,25 @@ name|ukopen
 block|,
 name|ukclose
 block|,
-name|enxio
+name|noread
 block|,
-name|enxio
+name|nowrite
 block|,
 comment|/*31*/
 name|ukioctl
 block|,
-name|enxio
+name|nostop
 block|,
-name|enxio
+name|nullreset
 block|,
 name|NULL
 block|,
 comment|/* unknown */
-name|enxio
+name|seltrue
 block|,
-name|enxio
+name|nommap
 block|,
-name|enxio
+name|NULL
 block|}
 block|,
 comment|/* scsi */

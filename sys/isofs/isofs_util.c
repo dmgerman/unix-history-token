@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: isofs_util.c,v 1.3 1993/07/19 13:40:08 cgd Exp $  */
+comment|/*  *	$Id: isofs_util.c,v 1.2 1993/07/20 03:27:33 jkh Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
+end_include
 
 begin_function
 name|int
@@ -336,20 +348,24 @@ begin_comment
 comment|/*  * translate and compare a filename  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isofncmp
-argument_list|(
-argument|char *fn
-argument_list|,
-argument|int fnlen
-argument_list|,
-argument|char *isofn
-argument_list|,
-argument|int isolen
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|char
+modifier|*
+name|fn
+parameter_list|,
+name|int
+name|fnlen
+parameter_list|,
+name|char
+modifier|*
+name|isofn
+parameter_list|,
+name|int
+name|isolen
+parameter_list|)
 block|{
 name|int
 name|fnidx
@@ -459,7 +475,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * translate a filename  */

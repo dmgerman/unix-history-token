@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in.c	7.17 (Berkeley) 4/20/91  *	$Id: in.c,v 1.4 1993/11/07 22:55:02 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)in.c	7.17 (Berkeley) 4/20/91  *	$Id: in.c,v 1.5 1993/11/18 00:08:13 wollman Exp $  */
 end_comment
 
 begin_include
@@ -89,6 +89,22 @@ name|ifqueue
 name|ipintrq
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|void
+name|in_ifscrub
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|in_ifaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Formulate an Internet address from network + host.  */
@@ -343,32 +359,24 @@ begin_comment
 comment|/*  * Compute and save network mask as sockaddr from an internet address.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|in_sockmaskof
-argument_list|(
-argument|in
-argument_list|,
-argument|sockmask
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|,
+name|sockmask
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
 name|sockmask
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -590,7 +598,7 @@ break|break;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return the host portion of an internet address.  */
@@ -772,21 +780,16 @@ begin_comment
 comment|/*  * Return 1 if an internet address is for a ``local'' host  * (one to which we have a connection).  If subnetsarelocal  * is true, this includes other subnets of the local net.  * Otherwise, it includes only the directly-connected (sub)nets.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|in_localaddr
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -886,27 +889,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Determine whether an IP address is in a reserved set of addresses  * that may not be forwarded, or whether datagrams to that destination  * may be forwarded.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|in_canforward
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|u_long
@@ -971,7 +969,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -999,49 +997,35 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|in_control
-argument_list|(
-argument|so
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|ifp
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1738,6 +1722,9 @@ name|ifp
 argument_list|,
 name|SIOCSIFDSTADDR
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ia
 argument_list|)
 operator|)
@@ -2356,37 +2343,33 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete any existing route for an interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|in_ifscrub
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|ia
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -2456,49 +2439,44 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize an interface's internet address  * and routing table entry.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|in_ifinit
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|ia
-argument_list|,
+parameter_list|,
 name|sin
-argument_list|,
+parameter_list|,
 name|scrub
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|in_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|scrub
+decl_stmt|;
 block|{
 specifier|register
 name|u_long
@@ -2563,6 +2541,9 @@ name|ifp
 argument_list|,
 name|SIOCSIFADDR
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ia
 argument_list|)
 operator|)
@@ -2931,7 +2912,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return address info for specified internet network.  */
@@ -2999,21 +2980,16 @@ begin_comment
 comment|/*  * Return 1 if the address might be a local broadcast address.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|in_broadcast
-argument_list|(
-argument|in
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|in
+parameter_list|)
 name|struct
 name|in_addr
 name|in
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -3124,7 +3100,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

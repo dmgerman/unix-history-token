@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vfs_cache.c	7.8 (Berkeley) 2/28/91  *	$Id$  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vfs_cache.c	7.8 (Berkeley) 2/28/91  *	$Id: vfs_cache.c,v 1.2 1993/10/16 15:25:19 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -162,20 +162,18 @@ begin_comment
 comment|/*  * Look for a the name in the cache. We don't do this  * if the segment name is long, simply so the cache can avoid  * holding long names (which would either waste space, or  * add greatly to the complexity).  *  * Lookup is called with ni_dvp pointing to the directory to search,  * ni_ptr pointing to the name of the entry being sought, ni_namelen  * tells the length of the name, and ni_hash contains a hash of  * the name. If the lookup succeeds, the vnode is returned in ni_vp  * and a status of -1 is returned. If the lookup determines that  * the name does not exist (negative cacheing), a status of ENOENT  * is returned. If the lookup fails, a status of zero is returned.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|cache_lookup
-argument_list|(
+parameter_list|(
 name|ndp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|nameidata
-operator|*
+modifier|*
 name|ndp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -625,26 +623,24 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add an entry to the cache  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|cache_enter
-argument_list|(
+parameter_list|(
 name|ndp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|nameidata
-operator|*
+modifier|*
 name|ndp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -882,18 +878,16 @@ name|nhp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Name cache initialization, from vfs_init() when we are booting  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|nchinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|union
@@ -1021,28 +1015,23 @@ name|nchp
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Cache flush, a particular vnode; called when a vnode is renamed to  * hide entries that would now be invalid  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cache_purge
-argument_list|(
-argument|vp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|vp
+parameter_list|)
 name|struct
 name|vnode
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|union
 name|nchash
@@ -1132,28 +1121,23 @@ operator|++
 name|nextvnodeid
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Cache flush, a whole filesystem; called when filesys is umounted to  * remove entries that would now be invalid  *  * The line "nxtcp = nchhead" near the end is to avoid potential problems  * if the cache lru chain is modified while we are dumping the  * inode.  This makes the algorithm O(n^2), but do you think I care?  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cache_purgevfs
-argument_list|(
-argument|mp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mp
+parameter_list|)
 name|struct
 name|mount
 modifier|*
 name|mp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1293,7 +1277,7 @@ name|ncp
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sys_process.c	7.22 (Berkeley) 5/11/91  *	$Id$  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)sys_process.c	7.22 (Berkeley) 5/11/91  *	$Id: sys_process.c,v 1.6 1993/11/16 09:55:03 davidg Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -302,9 +308,14 @@ literal|0
 expr_stmt|;
 name|bcopy
 argument_list|(
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|kva
 operator|+
 name|page_offset
+argument_list|)
 argument_list|,
 name|retval
 argument_list|,
@@ -622,9 +633,14 @@ argument_list|(
 operator|&
 name|datum
 argument_list|,
+call|(
+name|caddr_t
+call|)
+argument_list|(
 name|kva
 operator|+
 name|page_offset
+argument_list|)
 argument_list|,
 sizeof|sizeof
 name|datum
@@ -695,42 +711,31 @@ begin_comment
 comment|/*  * Process debugging system call.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|ptrace
-argument_list|(
-argument|curp
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|curp
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|curp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ptrace_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|proc
@@ -1496,28 +1501,26 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|procxmt
-argument_list|(
+parameter_list|(
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 return|return
 literal|1
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Enable process profiling system call.  */
@@ -1552,42 +1555,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|profil
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|profil_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 comment|/* from looking at man pages, and include files, looks like 	 * this just sets up the fields of p->p_stats->p_prof... 	 * and those fields come straight from the args. 	 * only thing *we* have to do is check the args for validity... 	 * 	 * cgd 	 */
 comment|/* check to make sure that the buffer is OK.  addupc (in locore) 	 * checks for faults, but would one be generated, say, writing to 	 * kernel space?  probably not -- it just uses "movl"... 	 * 	 * so we've gotta check to make sure that the info set up for 	 * addupc is set right... it's gotta be writable by the user... 	 */
@@ -1668,7 +1660,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

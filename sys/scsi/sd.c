@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 2.7 93/10/24 12:44:40 julian Exp Locker: julian $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.12 1993/11/18 05:03:02 rgrimes Exp $  */
 end_comment
 
 begin_define
@@ -368,19 +368,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|errval
+begin_decl_stmt
+name|void
 name|sdstrategy
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|buf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|sdstart
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|u_int32
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -1481,7 +1493,7 @@ comment|/*  * Actually translate the requested transfer into one the physical dr
 end_comment
 
 begin_function
-name|errval
+name|void
 name|sdstrategy
 parameter_list|(
 name|bp
@@ -1737,7 +1749,7 @@ name|opri
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+comment|/*0*/
 return|;
 name|bad
 label|:
@@ -1764,7 +1776,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+comment|/*0*/
 return|;
 block|}
 end_function

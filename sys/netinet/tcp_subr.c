@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tcp_subr.c	7.20 (Berkeley) 12/1/90  *	$Id: tcp_subr.c,v 1.3 1993/11/07 17:48:08 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tcp_subr.c	7.20 (Berkeley) 12/1/90  *	$Id: tcp_subr.c,v 1.4 1993/11/18 00:08:22 wollman Exp $  */
 end_comment
 
 begin_include
@@ -251,12 +251,10 @@ begin_comment
 comment|/*  * Tcp initialization  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|tcp_iss
 operator|=
@@ -310,7 +308,7 @@ literal|"tcp_init"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create template to be used to send tcp packets on a connection.  * Call after host entry created, allocates an mbuf and fills  * in a skeletal tcp/ip header, minimizing the amount of work  * necessary when the connection is used.  */
@@ -540,64 +538,47 @@ begin_comment
 comment|/*  * Send a single message to the TCP at address specified by  * the given TCP/IP header.  If m == 0, then we make a copy  * of the tcpiphdr at ti and send directly to the addressed host.  * This is used to force keep alive messages out using the TCP  * template for a connection tp->t_template.  If flags are given  * then we send a message back to the TCP which originated the  * segment ti, and discard the mbuf containing it and any other  * attached mbufs.  *  * In any case the ack and sequence number of the transmitted  * segment are as specified by the parameters.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_respond
-argument_list|(
-argument|tp
-argument_list|,
-argument|ti
-argument_list|,
-argument|m
-argument_list|,
-argument|ack
-argument_list|,
-argument|seq
-argument_list|,
-argument|flags
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tp
+parameter_list|,
+name|ti
+parameter_list|,
+name|m
+parameter_list|,
+name|ack
+parameter_list|,
+name|seq
+parameter_list|,
+name|flags
+parameter_list|)
 name|struct
 name|tcpcb
 modifier|*
 name|tp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|tcpiphdr
 modifier|*
 name|ti
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|tcp_seq
 name|ack
 decl_stmt|,
 name|seq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -988,7 +969,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a new TCP control block, making an  * empty reassembly queue and hooking it to the argument  * protocol control block.  */
@@ -1409,6 +1390,8 @@ block|{
 specifier|register
 name|u_long
 name|i
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1808,41 +1791,34 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|tcp_drain
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{  }
-end_block
+end_function
 
 begin_comment
 comment|/*  * Notify a tcp user of an asynchronous error;  * store error as soft error, but wake up user  * (for now, won't do anything until can select for soft error).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|tcp_notify
-argument_list|(
+parameter_list|(
 name|inp
-argument_list|,
+parameter_list|,
 name|error
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inpcb
-operator|*
+modifier|*
 name|inp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 operator|(
@@ -1887,14 +1863,14 @@ name|inp_socket
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When we get a PRC_MSGSIZE error (generated by the ICMP layer upon  * receipt of an ICMP_UNREACH_NEEDFRAG message), we need to get the  * IP layer to check the cached MTU data that it has in its PCBs.  * If things have changed, this will cause us to receive a  * PRC_MTUCHANGED message for /every/ connection to the same  * destination; that is handled by he tcp_mtuchanged() function,  * below.  *  * In the immortal words of Ken and Dennis, ``You are not expected to  * understand this.''  */
 end_comment
 
 begin_function
-name|int
+name|void
 comment|/* grrr... should be void... */
 name|tcp_checkmtu
 parameter_list|(
@@ -1961,41 +1937,30 @@ begin_comment
 comment|/* MTUDISC */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_ctlinput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|sa
-argument_list|,
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|sa
+parameter_list|,
+name|ip
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 name|sa
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ip
 modifier|*
 name|ip
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2003,17 +1968,20 @@ name|tcphdr
 modifier|*
 name|th
 decl_stmt|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|notify
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|struct
+name|inpcb
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
 init|=
 name|tcp_notify
-operator|,
-function_decl|tcp_quench
-parameter_list|()
 function_decl|;
 if|if
 condition|(
@@ -2144,28 +2112,28 @@ name|notify
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * When a source quench is received, close congestion window  * to one segment.  We will gradually open it again as we proceed.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tcp_quench
-argument_list|(
-argument|inp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inp
+parameter_list|,
+name|errno
+parameter_list|)
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|errno
+decl_stmt|;
 block|{
 name|struct
 name|tcpcb
@@ -2190,7 +2158,7 @@ operator|->
 name|t_maxseg
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)iso.c	7.14 (Berkeley) 6/27/91  *	$Id: iso.c,v 1.3 1993/10/16 21:05:15 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)iso.c	7.14 (Berkeley) 6/27/91  *	$Id: iso.c,v 1.4 1993/11/07 17:49:40 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -129,6 +129,22 @@ directive|ifdef
 name|ISO
 end_ifdef
 
+begin_function_decl
+specifier|static
+name|void
+name|iso_ifscrub
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|iso_ifaddr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|struct
 name|iso_ifaddr
@@ -168,15 +184,19 @@ begin_comment
 comment|/* loopback interface */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|ether_output
-argument_list|()
-decl_stmt|,
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|llc_rtrequest
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * FUNCTION:		iso_init  *  * PURPOSE:			initialize the iso address family  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	1) initializes the routing table.  *  *  * NOTES:			  */
@@ -190,12 +210,10 @@ name|iso_rnhead
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|iso_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|static
 name|iso_init_done
@@ -222,29 +240,30 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		iso_addrmatch1  *  * PURPOSE:			decide if the two iso_addrs passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iso_addrmatch1
-argument_list|(
+parameter_list|(
 name|isoaa
-argument_list|,
+parameter_list|,
 name|isoab
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iso_addr
-operator|*
+modifier|*
 name|isoaa
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|isoab
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_comment
 comment|/* addresses to check */
@@ -483,25 +502,23 @@ begin_comment
 comment|/*  * FUNCTION:		iso_addrmatch  *  * PURPOSE:			decide if the two sockadrr_isos passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_addrmatch
-argument_list|(
-argument|sisoa
-argument_list|,
-argument|sisob
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|sisoa
+parameter_list|,
+name|sisob
+parameter_list|)
 name|struct
 name|sockaddr_iso
 modifier|*
 name|sisoa
 decl_stmt|,
-modifier|*
+decl|*
 name|sisob
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/* addresses to check */
@@ -1368,49 +1385,35 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_control
-argument_list|(
-argument|so
-argument_list|,
-argument|cmd
-argument_list|,
-argument|data
-argument_list|,
-argument|ifp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|so
+parameter_list|,
+name|cmd
+parameter_list|,
+name|data
+parameter_list|,
+name|ifp
+parameter_list|)
 name|struct
 name|socket
 modifier|*
 name|so
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2315,37 +2318,33 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete any existing route for an interface.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|iso_ifscrub
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|ia
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|iso_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|nsellength
@@ -2464,49 +2463,44 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize an interface's internet address  * and routing table entry.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|iso_ifinit
-argument_list|(
+parameter_list|(
 name|ifp
-argument_list|,
+parameter_list|,
 name|ia
-argument_list|,
+parameter_list|,
 name|siso
-argument_list|,
+parameter_list|,
 name|scrub
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ifnet
-operator|*
+modifier|*
 name|ifp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|iso_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|sockaddr_iso
 modifier|*
 name|siso
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|int
+name|scrub
+decl_stmt|;
 block|{
 name|struct
 name|sockaddr_iso
@@ -2556,6 +2550,9 @@ name|ifp
 argument_list|,
 name|SIOCSIFADDR
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|ia
 argument_list|)
 operator|)
@@ -2851,7 +2848,7 @@ name|error
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -3145,26 +3142,18 @@ begin_comment
 comment|/*  * FUNCTION:		iso_ck_addr  *  * PURPOSE:			return true if the iso_addr passed is   *					within the legal size limit for an iso address.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:	  *  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_ck_addr
-argument_list|(
-argument|isoa
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|isoa
+parameter_list|)
 name|struct
 name|iso_addr
 modifier|*
 name|isoa
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* address to check */
-end_comment
-
-begin_block
 block|{
 return|return
 operator|(
@@ -3176,7 +3165,7 @@ literal|20
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -3554,62 +3543,36 @@ begin_comment
 comment|/*  * FUNCTION:		iso_nlctloutput  *  * PURPOSE:			Set options at the network level  *  * RETURNS:			E*  *  * SIDE EFFECTS:	  *  * NOTES:			This could embody some of the functions of  *					rclnp_ctloutput and cons_ctloutput.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iso_nlctloutput
-argument_list|(
-argument|cmd
-argument_list|,
-argument|optname
-argument_list|,
-argument|pcb
-argument_list|,
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cmd
+parameter_list|,
+name|optname
+parameter_list|,
+name|pcb
+parameter_list|,
+name|m
+parameter_list|)
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* command:set or get */
-end_comment
-
-begin_decl_stmt
 name|int
 name|optname
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* option of interest */
-end_comment
-
-begin_decl_stmt
 name|caddr_t
 name|pcb
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* nl pcb */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* data for set, buffer for get */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|isopcb
@@ -3792,7 +3755,7 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -3810,22 +3773,17 @@ begin_comment
 comment|/*  * FUNCTION:		dump_isoaddr  *  * PURPOSE:			debugging  *  * RETURNS:			nada   *  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump_isoaddr
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|struct
 name|sockaddr_iso
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -3940,13 +3898,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 end_unit
 

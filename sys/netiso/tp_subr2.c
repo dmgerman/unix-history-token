@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_subr2.c	7.10 (Berkeley) 6/27/91  *	$Id$  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)tp_subr2.c	7.10 (Berkeley) 6/27/91  *	$Id: tp_subr2.c,v 1.3 1993/10/16 21:06:04 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -958,30 +958,22 @@ begin_comment
 comment|/*  * NAME:	tp_netcmd()  *  * CALLED FROM:			  *  * FUNCTION and ARGUMENTS:			  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tp_netcmd
-argument_list|(
-argument|tpcb
-argument_list|,
-argument|cmd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|tpcb
+parameter_list|,
+name|cmd
+parameter_list|)
 name|struct
 name|tp_pcb
 modifier|*
 name|tpcb
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cmd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -1078,7 +1070,7 @@ break|break;
 block|}
 else|#
 directive|else
-else|TPCONS
+comment|/* TPCONS */
 name|printf
 argument_list|(
 literal|"tp_netcmd(): X25 NOT CONFIGURED!!\n"
@@ -1087,7 +1079,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * CALLED FROM:  *  tp_ctloutput() and tp_emit()  * FUNCTION and ARGUMENTS:  * 	Convert a class mask to the highest numeric value it represents.  */
@@ -1214,23 +1206,24 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|copyQOSparms
-argument_list|(
-argument|src
-argument_list|,
-argument|dst
-argument_list|)
-expr|struct
-name|tp_conn_param
-operator|*
+parameter_list|(
 name|src
-operator|,
-operator|*
+parameter_list|,
 name|dst
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+name|struct
+name|tp_conn_param
+modifier|*
+name|src
+decl_stmt|,
+decl|*
+name|dst
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -1982,39 +1975,43 @@ directive|ifndef
 name|TPCONS
 end_ifndef
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|pk_flowcontrol
-argument_list|()
+parameter_list|()
 block|{}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* class zero version */
+end_comment
+
+begin_function
 name|void
 name|tp0_stash
-argument_list|(
+parameter_list|(
 name|tpcb
-argument_list|,
+parameter_list|,
 name|e
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tp_pcb
-operator|*
+modifier|*
 name|tpcb
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|tp_event
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifndef|#
 directive|ifndef
@@ -2107,56 +2104,53 @@ argument_list|)
 expr_stmt|;
 name|ENDPERF
 name|IFDEBUG
-parameter_list|(
+argument_list|(
 name|D_STASH
-parameter_list|)
-function_decl|printf
-parameter_list|(
-function_decl|"stash EQ: seq 0x%x datalen 0x%x eot 0x%x"
-operator|,
-function_decl|E.e_seq
-operator|,
-function_decl|E.e_datalen
-operator|,
-function_decl|E.e_eot
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_function_decl
+argument_list|)
+name|printf
+argument_list|(
+literal|"stash EQ: seq 0x%x datalen 0x%x eot 0x%x"
+argument_list|,
+name|E
+operator|.
+name|e_seq
+argument_list|,
+name|E
+operator|.
+name|e_datalen
+argument_list|,
+name|E
+operator|.
+name|e_eot
+argument_list|)
+decl_stmt|;
 name|ENDDEBUG
 name|IFTRACE
-parameter_list|(
+argument_list|(
 name|D_STASH
-parameter_list|)
-function_decl|tptraceTPCB
-parameter_list|(
+argument_list|)
+name|tptraceTPCB
+argument_list|(
 name|TPPTmisc
-parameter_list|,
-function_decl|"stash EQ: seq len eot"
-operator|,
-function_decl|E.e_seq
-operator|,
-function_decl|E.e_datalen
-operator|,
-function_decl|E.e_eot
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_macro
+argument_list|,
+literal|"stash EQ: seq len eot"
+argument_list|,
+name|E
+operator|.
+name|e_seq
+argument_list|,
+name|E
+operator|.
+name|e_datalen
+argument_list|,
+name|E
+operator|.
+name|e_eot
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 name|ENDTRACE
-end_macro
-
-begin_if
 if|if
 condition|(
 name|E
@@ -2188,9 +2182,6 @@ name|MNULL
 expr_stmt|;
 comment|/* set on tp_input */
 block|}
-end_if
-
-begin_expr_stmt
 name|sbappend
 argument_list|(
 name|sb
@@ -2200,16 +2191,10 @@ operator|.
 name|e_data
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|IFDEBUG
 argument_list|(
 argument|D_STASH
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|dump_mbuf
 argument_list|(
 name|sb
@@ -2219,13 +2204,7 @@ argument_list|,
 literal|"stash 0: so_rcv after appending"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
 name|ENDDEBUG
-end_macro
-
-begin_if
 if|if
 condition|(
 name|tpcb
@@ -2271,23 +2250,21 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
+block|}
+end_function
 
-begin_expr_stmt
-unit|}   void
+begin_function
+name|void
 name|tp0_openflow
-argument_list|(
+parameter_list|(
 name|tpcb
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tp_pcb
-operator|*
+modifier|*
 name|tpcb
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2351,7 +2328,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -2539,20 +2516,18 @@ directive|ifdef
 name|ARGO_DEBUG
 end_ifdef
 
-begin_expr_stmt
+begin_function
+name|void
 name|dump_addr
-argument_list|(
+parameter_list|(
 name|addr
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|sockaddr
-operator|*
+modifier|*
 name|addr
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 switch|switch
 condition|(
@@ -2594,7 +2569,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|ISO
+comment|/* ISO */
 default|default:
 name|printf
 argument_list|(
@@ -2608,7 +2583,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -2621,28 +2596,21 @@ begin_comment
 comment|/*  *	Dump the buffer to the screen in a readable format. Format is:  *  *		hex/dec  where hex is the hex format, dec is the decimal format.  *		columns of hex/dec numbers will be printed, followed by the  *		character representations (if printable).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|Dump_buf
-argument_list|(
-argument|buf
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|caddr_t
+parameter_list|(
+name|buf
+parameter_list|,
+name|len
+parameter_list|)
+name|char
+modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -2814,13 +2782,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|ARGO_DEBUG
 end_endif
+
+begin_comment
+comment|/* ARGO_DEBUG */
+end_comment
 
 end_unit
 

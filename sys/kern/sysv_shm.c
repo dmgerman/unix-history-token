@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *	from: @(#)sysv_shm.c	7.15 (Berkeley) 5/13/91  *	$Id: sysv_shm.c,v 1.4 1993/10/16 15:24:52 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department. Originally from University of Wisconsin.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: Utah $Hdr: uipc_shm.c 1.9 89/08/14$  *	from: @(#)sysv_shm.c	7.15 (Berkeley) 5/13/91  *	$Id: sysv_shm.c,v 1.5 1993/11/07 17:46:20 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -131,6 +131,10 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_function_decl
 name|int
 function_decl|(
@@ -150,8 +154,12 @@ operator|,
 function_decl|shmget
 end_function_decl
 
-begin_decl_stmt
+begin_comment
 unit|};
+comment|/* XXX */
+end_comment
+
+begin_decl_stmt
 name|int
 name|shmtot
 init|=
@@ -195,6 +203,34 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+specifier|static
+name|void
+name|shmufree
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|shmdesc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|shmfree
+parameter_list|(
+name|struct
+name|shmid_ds
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|vm_map_t
 name|shm_map
@@ -205,12 +241,10 @@ begin_comment
 comment|/* address space for shared memory segments */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|shminit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -296,7 +330,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Entry point for all SHM calls  */
@@ -313,41 +347,30 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|shmsys
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|shmsys_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -398,7 +421,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get a shared memory segment  */
@@ -421,42 +444,31 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|shmget
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|shmget_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1037,7 +1049,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Shared memory control  */
@@ -1064,42 +1076,31 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|shmctl
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|shmctl_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1462,7 +1463,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Attach to shared memory segment.  */
@@ -1485,42 +1486,31 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_function
+name|int
 name|shmat
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|shmat_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1958,7 +1948,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Detach from shared memory segment.  */
@@ -1979,41 +1969,30 @@ begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|shmdt
-argument_list|(
-argument|p
-argument_list|,
-argument|uap
-argument_list|,
-argument|retval
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|uap
+parameter_list|,
+name|retval
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|shmdt_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 modifier|*
 name|retval
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2109,30 +2088,31 @@ name|p
 operator|->
 name|p_pid
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|shmfork
-argument_list|(
-argument|p1
-argument_list|,
-argument|p2
-argument_list|,
-argument|isvfork
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|isvfork
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p1
 decl_stmt|,
-modifier|*
+decl|*
 name|p2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -2251,22 +2231,17 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|shmexit
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2345,20 +2320,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|shmvalid
-argument_list|(
+parameter_list|(
 name|id
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|id
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -2438,38 +2411,31 @@ name|EINVAL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free user resources associated with a shared memory segment  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|shmufree
-argument_list|(
-argument|p
-argument_list|,
-argument|shmd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|shmd
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|shmdesc
 modifier|*
 name|shmd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2564,26 +2530,25 @@ name|shp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Deallocate resources associated with a shared memory segment  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|shmfree
-argument_list|(
+parameter_list|(
 name|shp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|shmid_ds
-operator|*
+modifier|*
 name|shp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -2702,45 +2667,37 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * XXX This routine would be common to all sysV style IPC  *     (if the others were implemented).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|ipcaccess
-argument_list|(
+parameter_list|(
 name|ipc
-argument_list|,
+parameter_list|,
 name|mode
-argument_list|,
+parameter_list|,
 name|cred
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|ipc_perm
-operator|*
+modifier|*
 name|ipc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|ucred
 modifier|*
 name|cred
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2841,7 +2798,7 @@ name|EACCES
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

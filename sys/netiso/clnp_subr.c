@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_subr.c	7.13 (Berkeley) 5/6/91  *	$Id: clnp_subr.c,v 1.3 1993/10/16 21:04:56 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clnp_subr.c	7.13 (Berkeley) 5/6/91  *	$Id: clnp_subr.c,v 1.4 1993/11/07 17:49:25 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -496,24 +496,19 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_ours  *  * PURPOSE:			Decide whether the supplied packet is destined for  *					us, or that it should be forwarded on.  *  * RETURNS:			packet is for us - 1  *					packet is not for us - 0  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|clnp_ours
-argument_list|(
+parameter_list|(
 name|dst
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|iso_addr
-operator|*
+modifier|*
 name|dst
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+decl_stmt|;
 comment|/* ptr to destination address */
-end_comment
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -610,7 +605,7 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* Dec bit set if ifp qlen is greater than congest_threshold */
@@ -628,92 +623,54 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_forward  *  * PURPOSE:			Forward the datagram passed  *					clnpintr guarantees that the header will be  *					contigious (a cluster mbuf will be used if necessary).  *  *					If oidx is NULL, no options are present.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_forward
-argument_list|(
-argument|m
-argument_list|,
-argument|len
-argument_list|,
-argument|dst
-argument_list|,
-argument|oidx
-argument_list|,
-argument|seg_off
-argument_list|,
-argument|inbound_shp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|,
+name|len
+parameter_list|,
+name|dst
+parameter_list|,
+name|oidx
+parameter_list|,
+name|seg_off
+parameter_list|,
+name|inbound_shp
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* pkt to forward */
-end_comment
-
-begin_decl_stmt
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* length of pkt */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* destination address */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_optidx
 modifier|*
 name|oidx
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* option index */
-end_comment
-
-begin_decl_stmt
 name|int
 name|seg_off
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* offset of segmentation part */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|snpa_hdr
 modifier|*
 name|inbound_shp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* subnetwork header of inbound packet */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|clnp_fixed
@@ -882,10 +839,10 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|INCSTAT
-parameter_list|(
+argument_list|(
 name|cns_ttlexpired
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|clnp_discard
 argument_list|(
 name|m
@@ -975,12 +932,12 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|clnp_discard
-parameter_list|(
+argument_list|(
 name|m
-parameter_list|,
+argument_list|,
 name|ADDR_DESTUNREACH
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|INCSTAT
 argument_list|(
 name|cns_cantforward
@@ -1022,10 +979,10 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 name|INCSTAT
-parameter_list|(
+argument_list|(
 name|cns_forward
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/* 	 *	If we are an intermediate system and 	 *	we are routing outbound on the same ifp that the packet 	 *	arrived upon, and we know the next hop snpa,  	 *	then generate a redirect request 	 */
 if|if
 condition|(
@@ -1323,7 +1280,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#
@@ -1442,83 +1399,51 @@ begin_comment
 comment|/*  * FUNCTION:		clnp_route  *  * PURPOSE:			Route a clnp datagram to the first hop toward its   *					destination. In many cases, the first hop will be  *					the destination. The address of a route  *					is specified. If a routing entry is present in  *					that route, and it is still up to the same destination,  *					then no further action is necessary. Otherwise, a  *					new routing entry will be allocated.  *  * RETURNS:			route found - 0  *					unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			It is up to the caller to free the routing entry  *					allocated in route.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_route
-argument_list|(
-argument|dst
-argument_list|,
-argument|ro
-argument_list|,
-argument|flags
-argument_list|,
-argument|first_hop
-argument_list|,
-argument|ifa
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dst
+parameter_list|,
+name|ro
+parameter_list|,
+name|flags
+parameter_list|,
+name|first_hop
+parameter_list|,
+name|ifa
+parameter_list|)
 name|struct
 name|iso_addr
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to datagram destination */
-end_comment
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|route_iso
 modifier|*
 name|ro
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* existing route structure */
-end_comment
-
-begin_decl_stmt
 name|int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* flags for routing */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 modifier|*
 name|first_hop
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* result: fill in with ptr to firsthop */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_ifaddr
 modifier|*
 modifier|*
 name|ifa
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* result: fill in with ptr to interface */
-end_comment
-
-begin_block
 block|{
 if|if
 condition|(
@@ -1736,12 +1661,12 @@ expr_stmt|;
 name|ENDDEBUG
 comment|/* free old route entry */
 name|RTFREE
-parameter_list|(
+argument_list|(
 name|ro
 operator|->
 name|ro_rt
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|ro
 operator|->
 name|ro_rt
@@ -1956,104 +1881,66 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_srcroute  *  * PURPOSE:			Source route the datagram. If complete source  *					routing is specified but not possible, then  *					return an error. If src routing is terminated, then  *					try routing on destination.  *					Usage of first_hop,  *					ifp, and error return is identical to clnp_route.  *  * RETURNS:			0 or unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			Remember that option index pointers are really  *					offsets from the beginning of the mbuf.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_srcroute
-argument_list|(
-argument|options
-argument_list|,
-argument|oidx
-argument_list|,
-argument|ro
-argument_list|,
-argument|first_hop
-argument_list|,
-argument|ifa
-argument_list|,
-argument|final_dst
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|options
+parameter_list|,
+name|oidx
+parameter_list|,
+name|ro
+parameter_list|,
+name|first_hop
+parameter_list|,
+name|ifa
+parameter_list|,
+name|final_dst
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|options
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* ptr to options */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|clnp_optidx
 modifier|*
 name|oidx
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* index to options */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|route_iso
 modifier|*
 name|ro
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* route structure */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|sockaddr
 modifier|*
 modifier|*
 name|first_hop
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* RETURN: fill in with ptr to firsthop */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_ifaddr
 modifier|*
 modifier|*
 name|ifa
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* RETURN: fill in with ptr to interface */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|iso_addr
 modifier|*
 name|final_dst
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* final destination */
-end_comment
-
-begin_block
 block|{
 name|struct
 name|iso_addr
@@ -2214,71 +2101,45 @@ return|return
 name|error
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_badmtu  *  * PURPOSE:			print notice of route with mtu not initialized.  *  * RETURNS:			mtu of ifp.  *  * SIDE EFFECTS:	prints notice, slows down system.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|clnp_badmtu
-argument_list|(
-argument|ifp
-argument_list|,
-argument|rt
-argument_list|,
-argument|line
-argument_list|,
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|ifp
+parameter_list|,
+name|rt
+parameter_list|,
+name|line
+parameter_list|,
+name|file
+parameter_list|)
 name|struct
 name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* outgoing interface */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* dst route */
-end_comment
-
-begin_decl_stmt
 name|int
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* where the dirty deed occured */
-end_comment
-
-begin_decl_stmt
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* where the dirty deed occured */
-end_comment
-
-begin_block
 block|{
 name|printf
 argument_list|(
@@ -2315,54 +2176,34 @@ operator|->
 name|if_mtu
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * FUNCTION:		clnp_ypocb - backwards bcopy  *  * PURPOSE:			bcopy starting at end of src rather than beginning.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			No attempt has been made to make this efficient  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|clnp_ypocb
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|,
-argument|len
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|,
+name|len
+parameter_list|)
 name|caddr_t
 name|from
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* src buffer */
-end_comment
-
-begin_decl_stmt
 name|caddr_t
 name|to
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* dst buffer */
-end_comment
-
-begin_decl_stmt
 name|u_int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* number of bytes */
-end_comment
-
-begin_block
 block|{
 while|while
 condition|(
@@ -2384,13 +2225,16 @@ name|len
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
 directive|endif
-endif|ISO
 end_endif
+
+begin_comment
+comment|/* ISO */
+end_comment
 
 end_unit
 
