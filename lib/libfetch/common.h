@@ -179,6 +179,16 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* for _fetch_writev */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|iovec
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|void
 name|_fetch_seterr
@@ -324,6 +334,22 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ssize_t
+name|_fetch_writev
+parameter_list|(
+name|conn_t
+modifier|*
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
