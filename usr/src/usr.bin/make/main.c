@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -607,14 +607,7 @@ literal|"-x	    	Allow exportation of commands."
 block|,
 endif|#
 directive|endif
-literal|"System configuration information:"
-block|,
-name|SYSPATHDOC
-block|,
-name|SHELLDOC
-block|,
-name|SYSMKDOC
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 

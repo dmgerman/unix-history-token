@@ -1,32 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)config.h	5.2 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*-  * config.h --  *	Configuration constants for the local site.  */
-end_comment
-
-begin_comment
-comment|/*  * DEFSYSPATH  *	Is the absolute path of the location of system makefiles.  * SYSPATHDOC  *	Documentation string to tell what the directory is.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DEFSYSPATH
-value|"/usr/public/lib/pmake"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SYSPATHDOC
-value|"\tDirectory for system makefiles: /usr/public/lib/pmake"
-end_define
-
-begin_comment
-comment|/*  * DEFSHELL  *	The index of the default shell description in job.c. It indexes the  *	'shells' table:  *	    0	  	C Shell  *	    1	  	Bourne Shell  *	    2	  	Unknown  * SHELLDOC  *	Documentation string to tell what shell is used by default.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990 The Regents of the University of California.  * Copyright (c) 1988, 1989 by Adam de Boor  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)config.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -36,15 +10,8 @@ name|DEFSHELL
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|SHELLDOC
-value|"\tDefault shell: Bourne"
-end_define
-
 begin_comment
-comment|/*  * DEFSHELLDIR  *	The directory in which the C Shell and Bourne Shell are to be found.  */
+comment|/* Bourne shell */
 end_comment
 
 begin_define
@@ -55,22 +22,30 @@ value|"/bin"
 end_define
 
 begin_comment
-comment|/*  * DEFSYSMK  *	The absolute path of the default system makefile. It should probably  *	be in DEFSYSPATH.  * SYSMKDOC  *	Documentation string to tell where the system makefile is.  */
+comment|/* Bourne shell directory */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|DEFSYSMK
-value|"/usr/public/lib/pmake/system.mk"
+value|"/usr/share/mk/sys.mk"
 end_define
+
+begin_comment
+comment|/* system makefile */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SYSMKDOC
-value|"\tSystem makefile: /usr/public/lib/pmake/system.mk"
+name|DEFSYSPATH
+value|"/usr/share/mk"
 end_define
+
+begin_comment
+comment|/* system makefile directory */
+end_comment
 
 begin_comment
 comment|/*  * DEFMAXJOBS  * DEFMAXLOCAL  *	These control the default concurrency. On no occasion will more  *	than DEFMAXJOBS targets be created at once (locally or remotely)  *	DEFMAXLOCAL is the highest number of targets which will be  *	created on the local machine at once. Note that if you set this  *	to 0, nothing will ever happen...  */
