@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.c	6.2	83/10/20	*/
+comment|/*	route.c	6.3	83/12/15	*/
 end_comment
 
 begin_include
@@ -183,9 +183,19 @@ operator|->
 name|ro_rt
 operator|->
 name|rt_ifp
+operator|&&
+operator|(
+name|ro
+operator|->
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_UP
+operator|)
 condition|)
-comment|/* XXX */
 return|return;
+comment|/* XXX */
 if|if
 condition|(
 name|af
@@ -552,6 +562,8 @@ argument_list|(
 argument|dst
 argument_list|,
 argument|gateway
+argument_list|,
+argument|flags
 argument_list|)
 end_macro
 
@@ -563,6 +575,12 @@ name|dst
 decl_stmt|,
 modifier|*
 name|gateway
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -691,7 +709,51 @@ operator|&
 name|RTF_GATEWAY
 condition|)
 block|{
-comment|/* 		 * Smash the current notion of the gateway to 		 * this destination.  This is probably not right, 		 * as it's conceivable a flurry of redirects could 		 * cause the gateway value to fluctuate wildly during 		 * dynamic routing reconfiguration. 		 */
+if|if
+condition|(
+operator|(
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_HOST
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|flags
+operator|&
+name|RTF_HOST
+operator|)
+condition|)
+block|{
+comment|/* 			 * Changing from route to gateway => route to host. 			 * Create new route, rather than smashing route to net. 			 */
+name|rtfree
+argument_list|(
+name|rt
+argument_list|)
+expr_stmt|;
+name|rtinit
+argument_list|(
+name|dst
+argument_list|,
+name|gateway
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
+name|rtstat
+operator|.
+name|rts_newgateway
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			 * Smash the current notion of the gateway to 			 * this destination.  This is probably not right, 			 * as it's conceivable a flurry of redirects could 			 * cause the gateway value to fluctuate wildly during 			 * dynamic routing reconfiguration. 			 */
 name|rt
 operator|->
 name|rt_gateway
@@ -709,7 +771,7 @@ operator|.
 name|rts_newgateway
 operator|++
 expr_stmt|;
-return|return;
+block|}
 block|}
 block|}
 end_block
