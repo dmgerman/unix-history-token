@@ -2298,10 +2298,10 @@ if|if
 condition|(
 name|va
 operator|>=
-name|VM_MIN_KERNEL_ADDRESS
+name|VM_MAX_ADDRESS
 condition|)
 block|{
-comment|/* 			 * Don't allow user-mode faults for kernel virtual 			 * addresses 			 */
+comment|/* 			 * Don't allow user-mode faults for kernel virtual 			 * addresses, including the gateway page. 			 */
 if|if
 condition|(
 name|user
