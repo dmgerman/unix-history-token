@@ -864,7 +864,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for ((var) = CIRCLEQ_FIRST((head));				\ 	    (var) != (void *)(head);					\ 	    (var) = CIRCLEQ_NEXT((var), field))
+value|for ((var) = CIRCLEQ_FIRST((head));				\ 	    (var) != (void *)(head) || ((var) = NULL);			\ 	    (var) = CIRCLEQ_NEXT((var), field))
 end_define
 
 begin_define
@@ -879,7 +879,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for ((var) = CIRCLEQ_LAST((head));				\ 	    (var) != (void *)(head);					\ 	    (var) = CIRCLEQ_PREV((var), field))
+value|for ((var) = CIRCLEQ_LAST((head));				\ 	    (var) != (void *)(head) || ((var) = NULL);			\ 	    (var) = CIRCLEQ_PREV((var), field))
 end_define
 
 begin_define
