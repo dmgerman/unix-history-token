@@ -1486,10 +1486,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|u_int32_t
+name|u_int64_t
 name|paddr
 decl_stmt|;
-name|u_int32_t
+name|u_int64_t
 name|psize
 decl_stmt|;
 name|u_int32_t

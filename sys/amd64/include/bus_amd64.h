@@ -1400,7 +1400,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh
@@ -1585,7 +1585,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh
@@ -1770,7 +1770,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh
@@ -2881,7 +2881,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh
@@ -3067,7 +3067,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh
@@ -3253,7 +3253,7 @@ else|else
 endif|#
 directive|endif
 block|{
-name|int
+name|bus_space_handle_t
 name|_port_
 init|=
 name|bsh

@@ -731,7 +731,7 @@ condition|(
 name|td
 operator|->
 name|td_critnest
-operator|==
+operator|!=
 literal|0
 condition|)
 name|trap_fatal

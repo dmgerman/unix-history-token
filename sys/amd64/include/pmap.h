@@ -244,17 +244,6 @@ comment|/* access from User mode (UPL) */
 end_comment
 
 begin_comment
-comment|/*  * Size of Kernel address space.  This is the number of level 4 (top)  * entries.  We use half of them for the kernel due to the 48 bit  * virtual address sign extension.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KVA_PAGES
-value|1536
-end_define
-
-begin_comment
 comment|/*  * Pte related macros.  This is complicated by having to deal with  * the sign extension of the 48th bit.  */
 end_comment
 
@@ -307,53 +296,118 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPDE
-end_ifndef
+begin_define
+define|#
+directive|define
+name|NKPML4E
+value|1
+end_define
+
+begin_comment
+comment|/* number of kernel PML4 slots */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NKPDPE
+value|1
+end_define
+
+begin_comment
+comment|/* number of kernel PDP slots */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|NKPDE
-value|(KVA_PAGES)
+value|(NKPDPE*NPDEPG)
 end_define
 
 begin_comment
-comment|/* number of page tables/pde's */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The *PTDI values control the layout of virtual memory  */
+comment|/* number of kernel PD slots */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|KPTDI
-value|(NPDEPTD-NKPDE)
+name|NUPML4E
+value|1
 end_define
 
 begin_comment
-comment|/* start of kernel virtual pde's */
+comment|/* number of userland PML4 pages */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PTDPTDI
-value|(KPTDI-NPGPTD)
+name|NUPDPE
+value|(NUPML4E*NPDPEPG)
 end_define
 
 begin_comment
-comment|/* ptd entry that points to ptd! */
+comment|/* number of userland PDP pages */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NUPDE
+value|(NUPDPE*NPDEPG)
+end_define
+
+begin_comment
+comment|/* number of userland PD entries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDMPML4E
+value|1
+end_define
+
+begin_comment
+comment|/* number of dmap PML4 slots */
+end_comment
+
+begin_comment
+comment|/*  * The *PDI values control the layout of virtual memory  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PML4PML4I
+value|(NPML4EPG/2)
+end_define
+
+begin_comment
+comment|/* Index of recursive pml4 mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KPML4I
+value|(NPML4EPG-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMPML4I
+value|(KPML4I-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KPDPI
+value|(NPDPEPG-1)
+end_define
 
 begin_comment
 comment|/*  * XXX doesn't really belong here I guess...  */
@@ -454,55 +508,82 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|addr_PTmap
+value|(VADDR(PML4PML4I, 0, 0, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|addr_PDmap
+value|(VADDR(PML4PML4I, PML4PML4I, 0, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|addr_PDPmap
+value|(VADDR(PML4PML4I, PML4PML4I, PML4PML4I, 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|addr_PML4map
+value|(VADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I))
+end_define
+
+begin_define
+define|#
+directive|define
+name|addr_PML4pml4e
+value|(addr_PML4map + (PML4PML4I * sizeof(pml4_entry_t)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|PTmap
-value|((pt_entry_t *)(VADDR(0, 0, PTDPTDI, 0)))
+value|((pt_entry_t *)(addr_PTmap))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTD
-value|((pd_entry_t *)(VADDR(0, 0, PTDPTDI, PTDPTDI)))
+name|PDmap
+value|((pd_entry_t *)(addr_PDmap))
 end_define
 
 begin_define
 define|#
 directive|define
-name|PTDpde
-value|((pd_entry_t *)(VADDR(0, 0, PTDPTDI, PTDPTDI) + (PTDPTDI * sizeof(pd_entry_t))))
+name|PDPmap
+value|((pd_entry_t *)(addr_PDPmap))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PML4map
+value|((pd_entry_t *)(addr_PML4map))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PML4pml4e
+value|((pd_entry_t *)(addr_PML4pml4e))
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|u_int64_t
-name|IdlePML4
+name|KPML4phys
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* physical address of "Idle" state directory */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int64_t
-name|IdlePDP
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* physical address of "Idle" state directory */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int64_t
-name|IdlePTD
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* physical address of "Idle" state directory */
+comment|/* physical address of kernel level 4 */
 end_comment
 
 begin_endif
@@ -520,103 +601,24 @@ begin_comment
 comment|/*  * virtual address to page table entry and  * to physical address. Likewise for alternate address space.  * Note: these work recursively, thus vtopte of a pte will give  * the corresponding pde that in turn maps it.  */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|pt_entry_t
+modifier|*
 name|vtopte
 parameter_list|(
-name|va
+name|vm_offset_t
 parameter_list|)
-value|(PTmap + amd64_btop(va))
-end_define
+function_decl|;
+end_function_decl
 
-begin_comment
-comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
+begin_function_decl
 name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
-name|va
 parameter_list|)
-block|{
-name|vm_paddr_t
-name|pa
-decl_stmt|;
-name|pa
-operator|=
-name|PTD
-index|[
-name|va
-operator|>>
-name|PDRSHIFT
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|pa
-operator|&
-name|PG_PS
-condition|)
-block|{
-name|pa
-operator|=
-operator|(
-name|pa
-operator|&
-operator|~
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
-operator|)
-operator||
-operator|(
-name|va
-operator|&
-operator|(
-name|NBPDR
-operator|-
-literal|1
-operator|)
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|pa
-operator|=
-operator|*
-name|vtopte
-argument_list|(
-name|va
-argument_list|)
-expr_stmt|;
-name|pa
-operator|=
-operator|(
-name|pa
-operator|&
-name|PG_FRAME
-operator|)
-operator||
-operator|(
-name|va
-operator|&
-name|PAGE_MASK
-operator|)
-expr_stmt|;
-block|}
-return|return
-name|pa
-return|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -775,11 +777,11 @@ begin_struct
 struct|struct
 name|pmap
 block|{
-name|pd_entry_t
+name|pml4_entry_t
 modifier|*
-name|pm_pdir
+name|pm_pml4
 decl_stmt|;
-comment|/* KVA of page directory */
+comment|/* KVA of level 4 page table */
 name|vm_object_t
 name|pm_pteobj
 decl_stmt|;
@@ -808,16 +810,6 @@ argument_list|)
 name|pm_list
 expr_stmt|;
 comment|/* List of all pmaps */
-name|pdp_entry_t
-modifier|*
-name|pm_pdp
-decl_stmt|;
-comment|/* KVA of level 3 page table */
-name|pml4_entry_t
-modifier|*
-name|pm_pml4
-decl_stmt|;
-comment|/* KVA of level 4 page table */
 block|}
 struct|;
 end_struct
@@ -1049,8 +1041,7 @@ name|void
 name|pmap_bootstrap
 parameter_list|(
 name|vm_paddr_t
-parameter_list|,
-name|vm_paddr_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -213,6 +213,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|NPTEPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPTEPG) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PAGE_SHIFT
 value|12
 end_define
@@ -249,6 +260,17 @@ directive|define
 name|NPDEPG
 value|(PAGE_SIZE/(sizeof (pd_entry_t)))
 end_define
+
+begin_define
+define|#
+directive|define
+name|NPDEPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPDEPG) */
+end_comment
 
 begin_define
 define|#
@@ -293,6 +315,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|NPDPEPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPDPEPG) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PDPSHIFT
 value|30
 end_define
@@ -333,6 +366,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|NPML4EPGSHIFT
+value|9
+end_define
+
+begin_comment
+comment|/* LOG2(NPML4EPG) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PML4SHIFT
 value|39
 end_define
@@ -357,49 +401,6 @@ define|#
 directive|define
 name|PML4MASK
 value|(NBPML4T-1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NKPML4E
-value|1
-end_define
-
-begin_comment
-comment|/* addressable number of page tables/pde's */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NKPDPE
-value|1
-end_define
-
-begin_comment
-comment|/* addressable number of page tables/pde's */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPGPTD
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NBPTD
-value|(NPGPTD<<PAGE_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NPDEPTD
-value|(NBPTD/(sizeof (pd_entry_t)))
 end_define
 
 begin_define

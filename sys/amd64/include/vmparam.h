@@ -157,6 +157,16 @@ value|20
 end_define
 
 begin_comment
+comment|/*  * We provide a machine specific single page allocator through the tuse  * of the direct mapped segment.  This uses 2MB pages for reduced  * TLB pressure.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UMA_MD_SMALL_ALLOC
+end_define
+
+begin_comment
 comment|/*  * Virtual addresses of things.  Derived from the page directory and  * page table indexes from pmap.h for precision.  * Because of the page that is both a PD and PT, it looks a little  * messy at times, but hey, we'll do anything to save a page :-)  */
 end_comment
 
@@ -164,42 +174,56 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|VADDR(0, 0, KPTDI+NKPDE-1, NPTEPG-1)
+value|VADDR(KPML4I, NPDPEPG-1, NKPDE-1, NPTEPG-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MIN_KERNEL_ADDRESS
-value|VADDR(0, 0, PTDPTDI, PTDPTDI)
+value|VADDR(KPML4I, KPDPI, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAP_MIN_ADDRESS
+value|VADDR(DMPML4I, 0, 0, 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAP_MAX_ADDRESS
+value|VADDR(DMPML4I+1, 0, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|KERNBASE
-value|VADDR(0, 0, KPTDI, 0)
+value|VADDR(KPML4I, KPDPI, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MAX_ADDRESS
-value|VADDR(0, 0, PTDPTDI, PTDPTDI)
+value|VADDR(PML4PML4I, PML4PML4I, PML4PML4I, PML4PML4I)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UPT_MIN_ADDRESS
-value|VADDR(0, 0, PTDPTDI, 0)
+value|VADDR(PML4PML4I, 0, 0, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|UPT_MIN_ADDRESS
+value|VADDR(NUPML4E, 0, 0, 0)
 end_define
 
 begin_define
@@ -221,6 +245,26 @@ define|#
 directive|define
 name|VM_MIN_ADDRESS
 value|(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYS_TO_DMAP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) | DMAP_MIN_ADDRESS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMAP_TO_PHYS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ~DMAP_MIN_ADDRESS)
 end_define
 
 begin_comment

@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/vmparam.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -697,16 +703,7 @@ operator|<
 operator|(
 name|vm_offset_t
 operator|)
-name|VADDR
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|PTDPTDI
-argument_list|,
-literal|0
-argument_list|)
+name|KERNBASE
 condition|)
 return|return
 operator|(

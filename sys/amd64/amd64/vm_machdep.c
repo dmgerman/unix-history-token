@@ -799,9 +799,9 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|PTD
+name|PML4map
 argument_list|,
-name|NBPTD
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* "good night, sweet prince ....<THUNK!>" */
