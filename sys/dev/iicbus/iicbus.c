@@ -169,6 +169,7 @@ comment|/*  * list of known devices  *  * XXX only one smb driver should exist f
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|iicbus_device
 name|iicbus_children

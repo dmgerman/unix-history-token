@@ -1353,6 +1353,14 @@ operator|(
 literal|"AcerLabs M5243 PCI-PCI bridge"
 operator|)
 return|;
+case|case
+literal|0x710110b9
+case|:
+return|return
+operator|(
+literal|"AcerLabs M15x3 Power Management Unit"
+operator|)
+return|;
 comment|/* Cyrix -- vendor 0x1078 */
 case|case
 literal|0x00001078

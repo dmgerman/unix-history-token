@@ -499,7 +499,7 @@ name|DRIVER_MODULE
 argument_list|(
 name|smbus
 argument_list|,
-name|smbv
+name|alsmb
 argument_list|,
 name|smbus_driver
 argument_list|,
