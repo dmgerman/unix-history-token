@@ -5018,9 +5018,6 @@ block|{
 case|case
 name|LINUX_F_GETLK
 case|:
-case|case
-name|LINUX_F_GETLK64
-case|:
 name|error
 operator|=
 name|copyin
@@ -5132,9 +5129,6 @@ return|;
 case|case
 name|LINUX_F_SETLK
 case|:
-case|case
-name|LINUX_F_SETLK64
-case|:
 name|error
 operator|=
 name|copyin
@@ -5208,9 +5202,6 @@ operator|)
 return|;
 case|case
 name|LINUX_F_SETLKW
-case|:
-case|case
-name|LINUX_F_SETLKW64
 case|:
 name|error
 operator|=
@@ -5428,6 +5419,9 @@ block|{
 case|case
 name|LINUX_F_GETLK
 case|:
+case|case
+name|LINUX_F_GETLK64
+case|:
 name|error
 operator|=
 name|copyin
@@ -5539,6 +5533,9 @@ return|;
 case|case
 name|LINUX_F_SETLK
 case|:
+case|case
+name|LINUX_F_SETLK64
+case|:
 name|error
 operator|=
 name|copyin
@@ -5612,6 +5609,9 @@ operator|)
 return|;
 case|case
 name|LINUX_F_SETLKW
+case|:
+case|case
+name|LINUX_F_SETLKW64
 case|:
 name|error
 operator|=
