@@ -2178,14 +2178,7 @@ decl_stmt|;
 name|int
 name|st
 decl_stmt|;
-name|DEB
-argument_list|(
-name|printf
-argument_list|(
-literal|"viachan_intr\n"
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* DEB(printf("viachan_intr\n")); */
 comment|/* Read channel */
 name|st
 operator|=
@@ -2296,7 +2289,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"VIA VT82C686A AC'97 Audio"
+literal|"VIA VT82C686A"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2510,7 +2503,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"via: Cannot allocate bus resource."
+literal|"cannot allocate bus resource."
 argument_list|)
 expr_stmt|;
 goto|goto
