@@ -1191,6 +1191,16 @@ modifier|*
 name|hpm_devvp
 decl_stmt|;
 name|struct
+name|g_consumer
+modifier|*
+name|hpm_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|hpm_bo
+decl_stmt|;
+name|struct
 name|cdev
 modifier|*
 name|hpm_dev
