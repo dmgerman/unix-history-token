@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)set.c	5.18 (Berkeley) %G%"
+literal|"@(#)set.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1900,10 +1900,15 @@ argument_list|)
 operator|==
 name|num
 operator|&&
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|n
+operator|)
 operator|==
-operator|-
-literal|32768
+literal|0x8000
 condition|)
 block|{
 operator|*
@@ -1942,10 +1947,15 @@ argument_list|)
 operator|==
 name|num
 operator|&&
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|n
+operator|)
 operator|==
-operator|-
-literal|2147483648
+literal|0x80000000
 condition|)
 block|{
 operator|*
