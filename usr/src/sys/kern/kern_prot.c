@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.15	83/02/20	*/
+comment|/*	kern_prot.c	5.16	83/03/31	*/
 end_comment
 
 begin_comment
@@ -1238,8 +1238,7 @@ control|)
 operator|*
 name|gp
 operator|=
-operator|-
-literal|1
+name|NOGROUP
 expr_stmt|;
 block|}
 end_block
@@ -1392,6 +1391,14 @@ begin_comment
 comment|/* END DEFUNCT */
 end_comment
 
+begin_comment
+comment|/*  * Group utility functions.  */
+end_comment
+
+begin_comment
+comment|/*  * Delete gid from the group set.  */
+end_comment
+
 begin_macro
 name|leavegroup
 argument_list|(
@@ -1477,11 +1484,14 @@ expr_stmt|;
 operator|*
 name|gp
 operator|=
-operator|-
-literal|1
+name|NOGROUP
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Add gid to the group set.  */
+end_comment
 
 begin_macro
 name|entergroup
@@ -1580,6 +1590,89 @@ return|return
 operator|(
 operator|-
 literal|1
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Check if gid is a member of the group set.  */
+end_comment
+
+begin_macro
+name|groupmember
+argument_list|(
+argument|gid
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|gid
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+modifier|*
+name|gp
+decl_stmt|;
+if|if
+condition|(
+name|u
+operator|.
+name|u_gid
+operator|==
+name|gid
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+for|for
+control|(
+name|gp
+operator|=
+name|u
+operator|.
+name|u_groups
+init|;
+name|gp
+operator|<
+operator|&
+name|u
+operator|.
+name|u_groups
+index|[
+name|NGROUPS
+index|]
+operator|&&
+operator|*
+name|gp
+operator|!=
+name|NOGROUP
+condition|;
+name|gp
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|gp
+operator|==
+name|gid
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

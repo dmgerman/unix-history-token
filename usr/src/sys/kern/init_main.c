@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.47	83/03/01	*/
+comment|/*	init_main.c	4.48	83/03/31	*/
 end_comment
 
 begin_include
@@ -356,8 +356,7 @@ index|[
 name|i
 index|]
 operator|=
-operator|-
-literal|1
+name|NOGROUP
 expr_stmt|;
 for|for
 control|(
