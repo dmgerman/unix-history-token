@@ -1900,19 +1900,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dumping
-operator|++
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Dump already in progress, bailing...\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
 operator|!
 name|dodump
 condition|)
@@ -1948,6 +1935,22 @@ name|d_dump
 operator|)
 condition|)
 return|return;
+if|if
+condition|(
+name|dumping
+operator|++
+condition|)
+block|{
+name|dumping
+operator|--
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Dump already in progress, bailing...\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dumpsize
 operator|=
 name|Maxmem
@@ -1983,6 +1986,9 @@ operator|)
 operator|(
 name|dumpdev
 operator|)
+expr_stmt|;
+name|dumping
+operator|--
 expr_stmt|;
 if|if
 condition|(
