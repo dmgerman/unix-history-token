@@ -4560,6 +4560,11 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
+literal|"echo '#/usr/src and /usr/ports read-only to machines named after trouble makers'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
 literal|"echo '#/home and all directories under it to machines named after dead rock stars'>> /etc/exports"
 argument_list|)
 expr_stmt|;
@@ -4570,12 +4575,17 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/usr                huey louie dewie'>> /etc/exports"
+literal|"echo '#/usr                   huey louie dewie'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"echo '#/home   -alldirs    janice jimmy frank'>> /etc/exports"
+literal|"echo '#/usr/src /usr/obj -ro  calvin hobbes'>> /etc/exports"
+argument_list|)
+expr_stmt|;
+name|vsystem
+argument_list|(
+literal|"echo '#/home   -alldirs       janice jimmy frank'>> /etc/exports"
 argument_list|)
 expr_stmt|;
 name|vsystem
