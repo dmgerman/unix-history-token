@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.10 (Berkeley) 85/05/27"
+literal|"@(#)quot.c	4.11 (Berkeley) 85/09/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -424,6 +424,12 @@ argument_list|(
 operator|*
 name|argv
 operator|++
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -568,6 +574,10 @@ condition|(
 name|check
 argument_list|(
 name|dev
+argument_list|,
+name|fs
+operator|->
+name|fs_file
 argument_list|)
 operator|==
 literal|0
@@ -586,6 +596,8 @@ begin_macro
 name|check
 argument_list|(
 argument|file
+argument_list|,
+argument|fsdir
 argument_list|)
 end_macro
 
@@ -593,6 +605,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|file
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|fsdir
 decl_stmt|;
 end_decl_stmt
 
@@ -709,9 +728,63 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"%s:\n"
+literal|"%s"
 argument_list|,
 name|file
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fsdir
+operator|==
+name|NULL
+condition|)
+block|{
+specifier|register
+name|struct
+name|fstab
+modifier|*
+name|fs
+init|=
+name|getfsspec
+argument_list|(
+name|file
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|fs
+operator|!=
+name|NULL
+condition|)
+name|fsdir
+operator|=
+name|fs
+operator|->
+name|fs_file
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|fsdir
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|fsdir
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|" (%s)"
+argument_list|,
+name|fsdir
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|":\n"
 argument_list|)
 expr_stmt|;
 name|sync
@@ -875,6 +948,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
@@ -912,7 +990,7 @@ name|frags
 decl_stmt|,
 name|size
 decl_stmt|;
-name|char
+name|int
 name|n
 decl_stmt|;
 specifier|static
