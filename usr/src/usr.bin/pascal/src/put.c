@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.15 %G%"
+literal|"@(#)put.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -255,11 +255,19 @@ index|]
 condition|)
 block|{
 case|case
+literal|0
+case|:
+break|break;
+case|case
 literal|2
 case|:
 name|op
 operator|=
 name|O_AS2
+expr_stmt|;
+name|n
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -269,6 +277,10 @@ name|op
 operator|=
 name|O_AS4
 expr_stmt|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|8
@@ -277,16 +289,16 @@ name|op
 operator|=
 name|O_AS8
 expr_stmt|;
+name|n
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 goto|goto
 name|pack
 goto|;
 block|}
-name|n
-operator|=
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
