@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -1321,12 +1327,6 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<math.h>
 end_include
 
@@ -1664,6 +1664,7 @@ name|char
 modifier|*
 name|thousands_sep
 decl_stmt|;
+comment|/* locale specific thousands separator */
 ifdef|#
 directive|ifdef
 name|FLOATING_POINT
@@ -1671,6 +1672,7 @@ name|char
 modifier|*
 name|decimal_point
 decl_stmt|;
+comment|/* locale specific decimal point */
 name|char
 name|softsign
 decl_stmt|;
