@@ -1453,7 +1453,7 @@ argument_list|(
 name|m
 argument_list|,
 operator|(
-literal|"m_tag_find: null mbuf"
+literal|"m_tag_locate: null mbuf"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1646,7 +1646,7 @@ operator|&&
 name|from
 argument_list|,
 operator|(
-literal|"m_tag_copy: null argument, to %p from %p"
+literal|"m_tag_copy_chain: null argument, to %p from %p"
 operator|,
 name|to
 operator|,
