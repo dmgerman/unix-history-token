@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: unwrap.c,v 1.10 1999/12/02 17:05:04 joda Exp $"
+literal|"$Id: unwrap.c,v 1.11 2000/01/25 23:13:38 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,8 +160,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|struct
-name|md5
+name|MD5_CTX
 name|md5
 decl_stmt|;
 name|u_char
@@ -401,13 +400,14 @@ expr_stmt|;
 name|des_cbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+specifier|const
+name|void
 operator|*
 operator|)
 name|p
 argument_list|,
 operator|(
-name|des_cblock
+name|void
 operator|*
 operator|)
 name|p
@@ -504,13 +504,13 @@ condition|)
 return|return
 name|GSS_S_BAD_MIC
 return|;
-name|md5_init
+name|MD5Init
 argument_list|(
 operator|&
 name|md5
 argument_list|)
 expr_stmt|;
-name|md5_update
+name|MD5Update
 argument_list|(
 operator|&
 name|md5
@@ -522,7 +522,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|md5_update
+name|MD5Update
 argument_list|(
 operator|&
 name|md5
@@ -536,12 +536,12 @@ operator|-
 name|len
 argument_list|)
 expr_stmt|;
-name|md5_finito
+name|MD5Final
 argument_list|(
+name|hash
+argument_list|,
 operator|&
 name|md5
-argument_list|,
-name|hash
 argument_list|)
 expr_stmt|;
 name|memset
@@ -576,13 +576,14 @@ expr_stmt|;
 name|des_cbc_cksum
 argument_list|(
 operator|(
-name|des_cblock
+specifier|const
+name|void
 operator|*
 operator|)
 name|hash
 argument_list|,
 operator|(
-name|des_cblock
+name|void
 operator|*
 operator|)
 name|hash
@@ -717,13 +718,14 @@ expr_stmt|;
 name|des_cbc_encrypt
 argument_list|(
 operator|(
-name|des_cblock
+specifier|const
+name|void
 operator|*
 operator|)
 name|p
 argument_list|,
 operator|(
-name|des_cblock
+name|void
 operator|*
 operator|)
 name|p

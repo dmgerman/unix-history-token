@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -52,7 +52,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: principal.c,v 1.57 2000/01/08 08:08:03 assar Exp $"
+literal|"$Id: principal.c,v 1.63 2000/02/07 03:19:05 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -436,7 +436,7 @@ goto|goto
 name|exit
 goto|;
 block|}
-name|strncpy
+name|memcpy
 argument_list|(
 name|comp
 index|[
@@ -547,7 +547,7 @@ goto|goto
 name|exit
 goto|;
 block|}
-name|strncpy
+name|memcpy
 argument_list|(
 name|realm
 argument_list|,
@@ -619,7 +619,7 @@ goto|goto
 name|exit
 goto|;
 block|}
-name|strncpy
+name|memcpy
 argument_list|(
 name|comp
 index|[
@@ -769,7 +769,7 @@ name|char
 name|quotable_chars
 index|[]
 init|=
-literal|"\n\t\b\\/@"
+literal|" \n\t\b\\/@"
 decl_stmt|;
 end_decl_stmt
 
@@ -780,7 +780,7 @@ name|char
 name|replace_chars
 index|[]
 init|=
-literal|"ntb\\/@"
+literal|" ntb\\/@"
 decl_stmt|;
 end_decl_stmt
 
@@ -1566,7 +1566,9 @@ parameter_list|,
 name|krb5_principal
 name|p
 parameter_list|,
-name|general_string
+specifier|const
+name|char
+modifier|*
 name|comp
 parameter_list|,
 name|size_t
@@ -1637,6 +1639,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|princ_ncomp
+argument_list|(
+name|p
+argument_list|,
+name|len
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 name|memcpy
 argument_list|(
 name|princ_ncomp
@@ -1695,6 +1711,7 @@ condition|(
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1724,6 +1741,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -1763,6 +1781,7 @@ condition|(
 literal|1
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1773,6 +1792,7 @@ name|va_arg
 argument_list|(
 name|ap
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -3844,7 +3864,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|tmpinst
 argument_list|,
@@ -3855,18 +3875,6 @@ argument_list|(
 name|tmpinst
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|tmpinst
-index|[
-sizeof|sizeof
-argument_list|(
-name|tmpinst
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
 expr_stmt|;
 name|p
 operator|=
@@ -4056,7 +4064,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|krb5_expand_hostname
+name|krb5_expand_hostname_realms
 argument_list|(
 name|context
 argument_list|,
@@ -4064,6 +4072,9 @@ name|hostname
 argument_list|,
 operator|&
 name|host
+argument_list|,
+operator|&
+name|realms
 argument_list|)
 expr_stmt|;
 if|if
@@ -4083,6 +4094,8 @@ operator|=
 name|host
 expr_stmt|;
 block|}
+else|else
+block|{
 name|ret
 operator|=
 name|krb5_get_host_realm
@@ -4102,6 +4115,7 @@ condition|)
 return|return
 name|ret
 return|;
+block|}
 name|ret
 operator|=
 name|krb5_make_principal

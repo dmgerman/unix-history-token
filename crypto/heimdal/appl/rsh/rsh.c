@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rsh.c,v 1.46 1999/12/16 11:53:50 assar Exp $"
+literal|"$Id: rsh.c,v 1.47 2000/02/06 05:58:55 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -87,6 +87,12 @@ name|crypto
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KRB4
+end_ifdef
+
 begin_decl_stmt
 name|des_key_schedule
 name|schedule
@@ -98,6 +104,11 @@ name|des_cblock
 name|iv
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  *  */

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context.c,v 1.51 1999/12/02 17:05:08 joda Exp $"
+literal|"$Id: context.c,v 1.52 2000/02/04 17:10:26 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -388,7 +388,7 @@ name|context
 operator|->
 name|time_fmt
 operator|=
-literal|"%d-%b-%Y %H:%M:%S"
+literal|"%Y-%m-%dT%H:%M:%S"
 expr_stmt|;
 name|context
 operator|->

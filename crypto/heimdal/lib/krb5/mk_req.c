@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: mk_req.c,v 1.18 1999/12/02 17:05:11 joda Exp $"
+literal|"$Id: mk_req.c,v 1.20 2000/01/16 10:22:42 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -32,10 +32,12 @@ specifier|const
 name|krb5_flags
 name|ap_req_options
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|service
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|hostname
@@ -53,7 +55,7 @@ name|outbuf
 parameter_list|)
 block|{
 name|krb5_error_code
-name|r
+name|ret
 decl_stmt|;
 name|krb5_creds
 name|this_cred
@@ -86,7 +88,7 @@ name|this_cred
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|r
+name|ret
 operator|=
 name|krb5_cc_get_principal
 argument_list|(
@@ -102,47 +104,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|ret
 condition|)
 return|return
-name|r
+name|ret
 return|;
-name|r
+name|ret
 operator|=
-name|krb5_expand_hostname
+name|krb5_expand_hostname_realms
 argument_list|(
 name|context
 argument_list|,
 name|hostname
 argument_list|,
 operator|&
-name|real_hostname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|r
-condition|)
-block|{
-name|krb5_free_principal
-argument_list|(
-name|context
-argument_list|,
-name|this_cred
-operator|.
-name|client
-argument_list|)
-expr_stmt|;
-return|return
-name|r
-return|;
-block|}
-name|r
-operator|=
-name|krb5_get_host_realm
-argument_list|(
-name|context
-argument_list|,
 name|real_hostname
 argument_list|,
 operator|&
@@ -151,7 +126,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|ret
 condition|)
 block|{
 name|krb5_free_principal
@@ -164,7 +139,7 @@ name|client
 argument_list|)
 expr_stmt|;
 return|return
-name|r
+name|ret
 return|;
 block|}
 name|realm_data
@@ -184,7 +159,7 @@ operator|=
 operator|*
 name|realms
 expr_stmt|;
-name|r
+name|ret
 operator|=
 name|krb5_build_principal
 argument_list|(
@@ -225,7 +200,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|ret
 condition|)
 block|{
 name|krb5_free_principal
@@ -238,7 +213,7 @@ name|client
 argument_list|)
 expr_stmt|;
 return|return
-name|r
+name|ret
 return|;
 block|}
 name|this_cred
@@ -276,7 +251,7 @@ operator|)
 operator|->
 name|keytype
 expr_stmt|;
-name|r
+name|ret
 operator|=
 name|krb5_get_credentials
 argument_list|(
@@ -295,10 +270,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|r
+name|ret
 condition|)
 return|return
-name|r
+name|ret
 return|;
 return|return
 name|krb5_mk_req_extended

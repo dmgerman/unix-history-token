@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/*   * $Id: ktutil_locl.h,v 1.9 2000/01/06 08:03:06 assar Exp $  */
+comment|/*   * $Id: ktutil_locl.h,v 1.11 2000/02/07 04:26:37 assar Exp $  */
 end_comment
 
 begin_ifndef
@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<des.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<krb5.h>
 end_include
 
@@ -141,20 +147,6 @@ begin_decl_stmt
 specifier|extern
 name|krb5_keytab
 name|keytab
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|help_flag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|version_flag
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos4.c,v 1.24 1999/12/02 17:04:59 joda Exp $"
+literal|"$Id: kerberos4.c,v 1.26 2000/02/02 01:26:41 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -475,6 +475,10 @@ parameter_list|)
 value|if(X){make_err_reply(reply, KFAILURE, "Packet too short"); goto L;}
 end_define
 
+begin_comment
+comment|/*  * Process the v4 request in `buf, len' (received from `addr'  * (with string `from').  * Return an error code and a reply in `reply'.  */
+end_comment
+
 begin_function
 name|krb5_error_code
 name|do_version4
@@ -856,6 +860,57 @@ argument_list|(
 name|reply
 argument_list|,
 name|KERB_ERR_PRINCIPAL_UNKNOWN
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out1
+goto|;
+block|}
+comment|/* 	 * There's no way to do pre-authentication in v4 and thus no 	 * good error code to return if preauthentication is required. 	 */
+if|if
+condition|(
+name|require_preauth
+operator|||
+name|client
+operator|->
+name|flags
+operator|.
+name|require_preauth
+operator|||
+name|server
+operator|->
+name|flags
+operator|.
+name|require_preauth
+condition|)
+block|{
+name|kdc_log
+argument_list|(
+literal|0
+argument_list|,
+literal|"Pre-authentication required for v4-request: "
+literal|"%s.%s@%s for %s.%s@%s"
+argument_list|,
+name|name
+argument_list|,
+name|inst
+argument_list|,
+name|realm
+argument_list|,
+name|sname
+argument_list|,
+name|sinst
+argument_list|,
+name|v4_realm
+argument_list|)
+expr_stmt|;
+name|make_err_reply
+argument_list|(
+name|reply
+argument_list|,
+name|KERB_ERR_NULL_KEY
 argument_list|,
 name|NULL
 argument_list|)
@@ -1493,6 +1548,11 @@ name|data
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|krb_ignore_ip_address
+operator|=
+operator|!
+name|check_ticket_addresses
 expr_stmt|;
 name|ret
 operator|=
