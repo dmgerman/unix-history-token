@@ -175,6 +175,8 @@ name|noslot
 block|,
 name|empty
 block|,
+name|suspend
+block|,
 name|filled
 block|}
 enum|;

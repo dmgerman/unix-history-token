@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.18 1997/10/06 11:36:06 charnier Exp $"
+literal|"$Id: cardd.c,v 1.19 1997/10/26 04:36:24 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1004,6 +1004,11 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|suspend
+case|:
+comment|/* ignored */
 break|break;
 block|}
 block|}
