@@ -165,6 +165,9 @@ name|timespec
 name|bst_lastupdated
 decl_stmt|;
 name|int
+name|flags
+decl_stmt|;
+name|int
 name|present
 decl_stmt|;
 name|int
@@ -844,7 +847,7 @@ operator|->
 name|bst_lastupdated
 argument_list|)
 expr_stmt|;
-comment|/* XXX Should we shut down here? */
+comment|/* XXX If all batteries are critical, perhaps we should suspend. */
 if|if
 condition|(
 name|sc
@@ -855,12 +858,42 @@ name|state
 operator|&
 name|ACPI_BATT_STAT_CRITICAL
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|ACPI_BATT_STAT_CRITICAL
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|sc
+operator|->
+name|flags
+operator||=
+name|ACPI_BATT_STAT_CRITICAL
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
 literal|"critically low charge!\n"
 argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|ACPI_BATT_STAT_CRITICAL
 expr_stmt|;
 name|end
 label|:
