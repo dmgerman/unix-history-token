@@ -68,6 +68,13 @@ name|PCIC_VG468
 value|6
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCIC_VG469
+value|7
+end_define
+
 begin_comment
 comment|/*  *	Address of the controllers. Each controller can manage  *	two PCMCIA slots. Up to 8 slots are supported in total.  *	The PCIC controller is accessed via an index port and a  *	data port. The index port has the 8 bit address of the  *	register accessed via the data port. How I long for  *	real memory mapped I/O!  *	The top two bits of the index address are used to  *	identify the port number, and the lower 6 bits  *	select one of the 64 possible data registers.  */
 end_comment
@@ -473,6 +480,17 @@ end_define
 
 begin_comment
 comment|/* Auto Pwer Switch Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIC_PCPWRE
+value|0x10
+end_define
+
+begin_comment
+comment|/* PC Card Power Enable */
 end_comment
 
 begin_define

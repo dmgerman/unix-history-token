@@ -7,65 +7,122 @@ begin_comment
 comment|/*  *	Controller data - Specific to each slot controller.  */
 end_comment
 
+begin_struct_decl
+struct_decl|struct
+name|slot
+struct_decl|;
+end_struct_decl
+
 begin_struct
 struct|struct
-name|slot_cont
+name|slot_ctrl
 block|{
 name|int
-function_decl|(
-modifier|*
-name|mapmem
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*mapmem
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Map memory */
 name|int
-function_decl|(
-modifier|*
-name|mapio
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*mapio
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Map io */
 name|void
-function_decl|(
-modifier|*
-name|reset
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*reset
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* init */
 name|void
-function_decl|(
-modifier|*
-name|disable
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*disable
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Disable slot */
 name|int
-function_decl|(
-modifier|*
-name|power
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*power
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Set power values */
 name|int
-function_decl|(
-modifier|*
-name|ioctl
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*ioctl
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|,
+name|int
+operator|,
+name|caddr_t
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* ioctl to lower level */
 name|void
-function_decl|(
-modifier|*
-name|mapirq
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*mapirq
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|slot
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Map interrupt number */
 name|int
 name|extra
@@ -88,9 +145,9 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* controller name */
-comment|/*  *	The rest is maintained by the mainline PC-CARD code.  */
+comment|/* 	 *	The rest is maintained by the mainline PC-CARD code. 	 */
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 name|next
 decl_stmt|;
@@ -285,14 +342,12 @@ modifier|*
 name|devices
 decl_stmt|;
 comment|/* List of drivers attached */
-comment|/*  *	flags.  */
+comment|/* 	 *	flags. 	 */
 name|unsigned
 name|int
-name|insert_timeout
-range|:
-literal|1
+name|insert_seq
 decl_stmt|;
-comment|/* Insert timeout active */
+comment|/* Firing up under the card */
 name|enum
 name|cardstate
 name|state
@@ -327,9 +382,9 @@ name|pwr
 decl_stmt|;
 comment|/* Power values */
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
-name|cinfo
+name|ctrl
 decl_stmt|;
 comment|/* Per-controller data */
 name|void
@@ -337,6 +392,16 @@ modifier|*
 name|cdata
 decl_stmt|;
 comment|/* Controller specific data */
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|devfs_token
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEVFS*/
 block|}
 struct|;
 end_struct
@@ -359,7 +424,7 @@ modifier|*
 name|pccard_alloc_slot
 parameter_list|(
 name|struct
-name|slot_cont
+name|slot_ctrl
 modifier|*
 parameter_list|)
 function_decl|;
@@ -384,25 +449,7 @@ name|void
 name|pccard_remove_controller
 parameter_list|(
 name|struct
-name|slot_cont
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pccard_alloc_intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pccard_add_driver
-parameter_list|(
-name|struct
-name|pccard_drv
+name|slot_ctrl
 modifier|*
 parameter_list|)
 function_decl|;

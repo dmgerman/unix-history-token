@@ -327,7 +327,7 @@ value|0x46
 end_define
 
 begin_comment
-comment|/* Organisation of data on card */
+comment|/* Organization of data on card */
 end_comment
 
 begin_define

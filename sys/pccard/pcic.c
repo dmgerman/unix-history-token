@@ -32,14 +32,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NPCIC
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -115,6 +107,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -151,8 +149,75 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pccard/driver.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pccard/slot.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|kern_devconf
+name|kdc_pccard0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|kern_devconf
+name|kdc_pcic
+index|[
+name|PCIC_MAX_SLOTS
+index|]
+init|=
+block|{
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"pcic"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_BUS
+block|,
+literal|0
+block|}
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|BUS_EXTERNALLEN
+block|,
+operator|&
+name|kdc_pccard0
+block|,
+comment|/* parent is the CPU */
+literal|0
+block|,
+comment|/* no parentdata */
+name|DC_UNKNOWN
+block|,
+literal|"PCMCIA or PCCARD slot"
+block|,
+name|DC_CLS_BUS
+comment|/* class */
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	Prototypes for interrupt handler.  */
@@ -208,16 +273,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|pcic_reset
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|slot
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +309,60 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|timeout_t
+name|pcictimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|pcic_handle
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|lkm_table
+operator|*
+name|lkmtp
+operator|,
+name|int
+name|cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|pcic_memory
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|pcic_io
+parameter_list|(
+name|struct
+name|slot
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  *	Per-slot data table.  */
@@ -289,7 +400,7 @@ comment|/* Device Revision */
 name|struct
 name|slot
 modifier|*
-name|sp
+name|slotp
 decl_stmt|;
 comment|/* Back ptr to slot */
 block|}
@@ -310,7 +421,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|long
 name|pcic_imask
 decl_stmt|;
 end_decl_stmt
@@ -318,45 +428,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|slot_cont
+name|slot_ctrl
 name|cinfo
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|int
-name|pcic_memory
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pcic_io
-parameter_list|(
-name|struct
-name|slot
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pcic_probe
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  *	Internal inline functions for accessing the PCIC.  */
@@ -607,20 +682,13 @@ begin_comment
 comment|/*  *	This defines the lkm_misc module use by modload  *	to define the module name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"pcic"
+name|pcic
 argument_list|)
-end_macro
-
-begin_function_decl
-specifier|static
-name|int
-name|pcic_unload
-parameter_list|()
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *	Module handler that processes loads and unloads.  *	Once the module is loaded, the probe routine  *	is called to install the slots (if any).  */
@@ -631,18 +699,14 @@ specifier|static
 name|int
 name|pcic_handle
 parameter_list|(
-name|lkmtp
-parameter_list|,
-name|cmd
-parameter_list|)
 name|struct
 name|lkm_table
 modifier|*
 name|lkmtp
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|err
@@ -671,7 +735,7 @@ operator|(
 name|EEXIST
 operator|)
 return|;
-comment|/*  *	Call the probe routine to find the slots. If  *	no slots exist, then don't bother loading the module.  */
+comment|/* 		 *	Call the probe routine to find the slots. If 		 *	no slots exist, then don't bother loading the module. 		 */
 if|if
 condition|(
 name|pcic_probe
@@ -686,7 +750,7 @@ operator|)
 return|;
 break|break;
 comment|/* Success*/
-comment|/*  *	Attempt to unload the slot driver.  */
+comment|/* 	 *	Attempt to unload the slot driver. 	 */
 case|case
 name|LKM_E_UNLOAD
 case|:
@@ -698,7 +762,11 @@ expr_stmt|;
 name|err
 operator|=
 name|pcic_unload
-argument_list|()
+argument_list|(
+name|lkmtp
+argument_list|,
+name|cmd
+argument_list|)
 expr_stmt|;
 break|break;
 comment|/* Success*/
@@ -719,45 +787,40 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "nosys".  If  * called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
+comment|/*  * External entry point; should generally match name of .o file.  The  * arguments are always the same for all loaded modules.  The "load",  * "unload", and "stat" functions in "DISPATCH" will be called under  * their respective circumstances unless their value is "lkm_nullcmd".  * If called, they are called with the same arguments (cmd is included to  * allow the use of a single function, ver is included for version  * matching between modules and the kernel loader for the modules).  *  * Since we expect to link in the kernel and add external symbols to  * the kernel symbol name space in a future version, generally all  * functions used in the implementation of a particular module should  * be static unless they are expected to be seen in other modules or  * to resolve unresolved symbols alread existing in the kernel (the  * second case is not likely to ever occur).  *  * The entry point should return 0 unless it is refusing load (in which  * case it should return an errno from errno.h).  */
 end_comment
 
 begin_function
 name|int
-name|lkm_pcic
+name|pcic_mod
 parameter_list|(
-name|lkmtp
-parameter_list|,
-name|cmd
-parameter_list|,
-name|ver
-parameter_list|)
 name|struct
 name|lkm_table
 modifier|*
 name|lkmtp
-decl_stmt|;
+parameter_list|,
 name|int
 name|cmd
-decl_stmt|;
+parameter_list|,
 name|int
 name|ver
-decl_stmt|;
+parameter_list|)
 block|{
 name|DISPATCH
 argument_list|(
-argument|lkmtp
+name|lkmtp
 argument_list|,
-argument|cmd
+name|cmd
 argument_list|,
-argument|ver
+name|ver
 argument_list|,
-argument|pcic_handle
+name|pcic_handle
 argument_list|,
-argument|pcic_handle
+name|pcic_handle
 argument_list|,
-argument|nosys
+name|lkm_nullcmd
 argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -769,7 +832,15 @@ begin_function
 specifier|static
 name|int
 name|pcic_unload
-parameter_list|()
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
 block|{
 name|int
 name|slot
@@ -777,10 +848,17 @@ decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
-name|cp
+name|sp
 init|=
 name|pcic_slots
 decl_stmt|;
+name|untimeout
+argument_list|(
+name|pcictimeout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcic_irq
@@ -799,24 +877,35 @@ condition|;
 name|slot
 operator|++
 operator|,
-name|cp
+name|sp
 operator|++
 control|)
+block|{
 if|if
 condition|(
-name|cp
-operator|->
 name|sp
+operator|->
+name|slotp
 condition|)
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_STAT_INT
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_UNCONFIGURED
+expr_stmt|;
+block|}
 name|unregister_intr
 argument_list|(
 name|pcic_irq
@@ -842,8 +931,11 @@ end_function
 begin_endif
 endif|#
 directive|endif
-endif|LKM
 end_endif
+
+begin_comment
+comment|/* LKM */
+end_comment
 
 begin_if
 if|#
@@ -852,12 +944,12 @@ literal|0
 end_if
 
 begin_comment
-unit|static void pcic_dump_attributes (unsigned char *scratch, int maxlen) { 	int i,j,k;  	i = 0; 	while (scratch[i] != 0xff&& i< maxlen) { 	unsigned char link = scratch[i+2];
-comment|/*  *	Dump attribute memory  */
+unit|static void pcic_dump_attributes (unsigned char *scratch, int maxlen) { 	int i,j,k;  	i = 0; 	while (scratch[i] != 0xff&& i< maxlen) { 		unsigned char link = scratch[i+2];
+comment|/* 		 *	Dump attribute memory 		 */
 end_comment
 
 begin_endif
-unit|if (scratch[i]) 		{ 		printf ("[%02x] ", i); 		for (j = 0; j< 2 * link + 4&& j< 128; j += 2) 			printf ("%02x ", scratch[j + i]); 		printf ("\n"); 		} 	i += 4 + 2 * link; 	} }
+unit|if (scratch[i]) { 			printf ("[%02x] ", i); 			for (j = 0; j< 2 * link + 4&& j< 128; j += 2) 				printf ("%02x ", scratch[j + i]); 			printf ("\n"); 		} 		i += 4 + 2 * link; 	} }
 endif|#
 directive|endif
 end_endif
@@ -874,7 +966,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|sp
+name|slotp
 parameter_list|,
 name|int
 name|win
@@ -883,9 +975,9 @@ block|{
 name|struct
 name|pcic_slot
 modifier|*
-name|cp
-init|=
 name|sp
+init|=
+name|slotp
 operator|->
 name|cdata
 decl_stmt|;
@@ -895,7 +987,7 @@ modifier|*
 name|mp
 init|=
 operator|&
-name|sp
+name|slotp
 operator|->
 name|mem
 index|[
@@ -936,10 +1028,10 @@ name|start
 operator|>>
 literal|12
 decl_stmt|;
-comment|/*  *	Write the addresses, card offsets and length.  *	The values are all stored as the upper 12 bits of the  *	24 bit address i.e everything is allocated as 4 Kb chunks.  */
+comment|/* 		 * Write the addresses, card offsets and length. 		 * The values are all stored as the upper 12 bits of the 		 * 24 bit address i.e everything is allocated as 4 Kb chunks. 		 */
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 argument_list|,
@@ -950,7 +1042,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -975,7 +1067,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -998,31 +1090,11 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|1
-name|printf
-argument_list|(
-literal|"card offs = 0x%x, sys_addr = 0x%x\n"
-argument_list|,
-operator|(
-operator|(
-name|mp
-operator|->
-name|card
-operator|>>
-literal|12
-operator|)
-operator|-
-name|sys_addr
-operator|)
-operator|&
-literal|0x3FFF
-argument_list|,
-name|sys_addr
-argument_list|)
-expr_stmt|;
+literal|0
+block|printf("card offs = card_adr = 0x%x 0x%x, sys_addr = 0x%x\n",  			mp->card, ((mp->card>> 12) - sys_addr)& 0x3FFF, 			sys_addr);
 endif|#
 directive|endif
-comment|/*  *	Each 16 bit register has some flags in the upper bits.  */
+comment|/* 		 *	Each 16 bit register has some flags in the upper bits. 		 */
 if|if
 condition|(
 name|mp
@@ -1033,7 +1105,7 @@ name|MDF_16BITS
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1052,7 +1124,7 @@ name|MDF_ZEROWS
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1071,7 +1143,7 @@ name|MDF_WS0
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1090,7 +1162,7 @@ name|MDF_WS1
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1109,7 +1181,7 @@ name|MDF_ATTR
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1128,7 +1200,7 @@ name|MDF_WP
 condition|)
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1140,13 +1212,13 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("Slot number %d, reg 0x%x, offs 0x%x\n", 		cp->slot, reg, cp->offset); 	printf("Map window to sys addr 0x%x for %d bytes, card 0x%x\n", 		mp->start, mp->size, mp->card); 	printf("regs are: 0x%02x%02x 0x%02x%02x 0x%02x%02x flags 0x%x\n", 		getb(cp, reg), getb(cp, reg+1), 		getb(cp, reg+2), getb(cp, reg+3), 		getb(cp, reg+4), getb(cp, reg+5), 		mp->flags);
+block|printf("Slot number %d, reg 0x%x, offs 0x%x\n", 		sp->slot, reg, sp->offset); 	printf("Map window to sys addr 0x%x for %d bytes, card 0x%x\n", 		mp->start, mp->size, mp->card); 	printf("regs are: 0x%02x%02x 0x%02x%02x 0x%02x%02x flags 0x%x\n", 		getb(sp, reg), getb(sp, reg+1), 		getb(sp, reg+2), getb(sp, reg+3), 		getb(sp, reg+4), getb(sp, reg+5), 		mp->flags);
 endif|#
 directive|endif
-comment|/*  *	Enable the memory window. By experiment, we need a delay.  */
+comment|/* 		 * Enable the memory window. By experiment, we need a delay. 		 */
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ADDRWINE
 argument_list|,
@@ -1175,7 +1247,7 @@ endif|#
 directive|endif
 name|clrb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ADDRWINE
 argument_list|,
@@ -1186,7 +1258,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 argument_list|,
@@ -1195,7 +1267,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1206,7 +1278,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1236,7 +1308,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|sp
+name|slotp
 parameter_list|,
 name|int
 name|win
@@ -1250,9 +1322,9 @@ decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
-name|cp
-init|=
 name|sp
+init|=
+name|slotp
 operator|->
 name|cdata
 decl_stmt|;
@@ -1262,7 +1334,7 @@ modifier|*
 name|ip
 init|=
 operator|&
-name|sp
+name|slotp
 operator|->
 name|io
 index|[
@@ -1311,7 +1383,7 @@ literal|0
 decl_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 argument_list|,
@@ -1322,7 +1394,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1388,14 +1460,14 @@ name|x
 operator||=
 name|PCIC_IO_16BIT
 expr_stmt|;
-comment|/*  *	Extract the current flags and merge with new flags.  *	Flags for window 0 in lower nybble, and in upper nybble  *	for window 1.  */
+comment|/* 		 * Extract the current flags and merge with new flags. 		 * Flags for window 0 in lower nybble, and in upper nybble 		 * for window 1. 		 */
 if|if
 condition|(
 name|win
 condition|)
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_IOCTL
 argument_list|,
@@ -1408,7 +1480,7 @@ operator||
 operator|(
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_IOCTL
 argument_list|)
@@ -1420,7 +1492,7 @@ expr_stmt|;
 else|else
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_IOCTL
 argument_list|,
@@ -1429,7 +1501,7 @@ operator||
 operator|(
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_IOCTL
 argument_list|)
@@ -1440,7 +1512,7 @@ argument_list|)
 expr_stmt|;
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ADDRWINE
 argument_list|,
@@ -1457,7 +1529,7 @@ else|else
 block|{
 name|clrb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ADDRWINE
 argument_list|,
@@ -1466,7 +1538,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 argument_list|,
@@ -1475,7 +1547,7 @@ argument_list|)
 expr_stmt|;
 name|putw
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|reg
 operator|+
@@ -1514,18 +1586,18 @@ decl_stmt|;
 name|struct
 name|slot
 modifier|*
-name|sp
+name|slotp
 decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
-name|cp
+name|sp
 decl_stmt|;
 name|unsigned
 name|char
 name|c
 decl_stmt|;
-comment|/*  *	Initialise controller information structure.  */
+comment|/* 	 *	Initialise controller information structure. 	 */
 name|cinfo
 operator|.
 name|mapmem
@@ -1601,7 +1673,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|cp
+name|sp
 operator|=
 name|pcic_slots
 expr_stmt|;
@@ -1618,11 +1690,11 @@ condition|;
 name|slot
 operator|++
 operator|,
-name|cp
+name|sp
 operator|++
 control|)
 block|{
-comment|/*  *	Initialise the PCIC slot table.  */
+comment|/* 		 *	Initialise the PCIC slot table. 		 */
 if|if
 condition|(
 name|slot
@@ -1630,19 +1702,19 @@ operator|<
 literal|4
 condition|)
 block|{
-name|cp
+name|sp
 operator|->
 name|index
 operator|=
 name|PCIC_INDEX_0
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|data
 operator|=
 name|PCIC_DATA_0
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|offset
 operator|=
@@ -1653,19 +1725,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cp
+name|sp
 operator|->
 name|index
 operator|=
 name|PCIC_INDEX_1
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|data
 operator|=
 name|PCIC_DATA_1
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|offset
 operator|=
@@ -1678,17 +1750,17 @@ operator|*
 name|PCIC_SLOT_SIZE
 expr_stmt|;
 block|}
-comment|/* 	 * see if there's a PCMCIA controller here 	 * Intel PCMCIA controllers use 0x82 and 0x83 	 * IBM clone chips use 0x88 and 0x89, apparently 	 */
+comment|/* 		 * see if there's a PCMCIA controller here 		 * Intel PCMCIA controllers use 0x82 and 0x83 		 * IBM clone chips use 0x88 and 0x89, apparently 		 */
 name|c
 operator|=
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ID_REV
 argument_list|)
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|revision
 operator|=
@@ -1700,20 +1772,20 @@ condition|(
 name|c
 condition|)
 block|{
-comment|/*  *	82365 or clones.  */
+comment|/* 		 *	82365 or clones. 		 */
 case|case
 literal|0x82
 case|:
 case|case
 literal|0x83
 case|:
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
 name|PCIC_I82365
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|revision
 operator|=
@@ -1721,10 +1793,10 @@ name|c
 operator|&
 literal|1
 expr_stmt|;
-comment|/*  *	Now check for VADEM chips.  */
+comment|/* 			 *	Now check for VADEM chips. 			 */
 name|outb
 argument_list|(
-name|cp
+name|sp
 operator|->
 name|index
 argument_list|,
@@ -1733,7 +1805,7 @@ argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|cp
+name|sp
 operator|->
 name|index
 argument_list|,
@@ -1742,7 +1814,7 @@ argument_list|)
 expr_stmt|;
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 literal|0x3A
 argument_list|,
@@ -1753,7 +1825,7 @@ name|c
 operator|=
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_ID_REV
 argument_list|)
@@ -1765,23 +1837,31 @@ operator|&
 literal|0x08
 condition|)
 block|{
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
-name|PCIC_VG468
-expr_stmt|;
-name|cp
+operator|(
+operator|(
+name|sp
 operator|->
 name|revision
 operator|=
 name|c
 operator|&
 literal|7
+operator|)
+operator|==
+literal|4
+operator|)
+condition|?
+name|PCIC_VG469
+else|:
+name|PCIC_VG468
 expr_stmt|;
 name|clrb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 literal|0x3A
 argument_list|,
@@ -1790,11 +1870,11 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/*  *	VLSI chips.  */
+comment|/* 		 *	VLSI chips. 		 */
 case|case
 literal|0x84
 case|:
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
@@ -1807,13 +1887,13 @@ case|:
 case|case
 literal|0x89
 case|:
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
 name|PCIC_IBM
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|revision
 operator|=
@@ -1825,10 +1905,10 @@ break|break;
 default|default:
 continue|continue;
 block|}
-comment|/*  *	Check for Cirrus logic chips.  */
+comment|/* 		 *	Check for Cirrus logic chips. 		 */
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 literal|0x1F
 argument_list|,
@@ -1839,7 +1919,7 @@ name|c
 operator|=
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 literal|0x1F
 argument_list|)
@@ -1859,7 +1939,7 @@ name|c
 operator|=
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 literal|0x1F
 argument_list|)
@@ -1881,20 +1961,20 @@ name|c
 operator|&
 literal|0x20
 condition|)
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
 name|PCIC_PD672X
 expr_stmt|;
 else|else
-name|cp
+name|sp
 operator|->
 name|controller
 operator|=
 name|PCIC_PD6710
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|revision
 operator|=
@@ -1914,7 +1994,7 @@ block|}
 block|}
 switch|switch
 condition|(
-name|cp
+name|sp
 operator|->
 name|controller
 condition|)
@@ -1969,6 +2049,16 @@ operator|=
 literal|"Vadem 468"
 expr_stmt|;
 break|break;
+case|case
+name|PCIC_VG469
+case|:
+name|cinfo
+operator|.
+name|name
+operator|=
+literal|"Vadem 469"
+expr_stmt|;
+break|break;
 default|default:
 name|cinfo
 operator|.
@@ -1978,7 +2068,7 @@ literal|"Unknown!"
 expr_stmt|;
 break|break;
 block|}
-comment|/*  *	clear out the registers.  */
+comment|/* 		 *	clear out the registers. 		 */
 for|for
 control|(
 name|i
@@ -1994,24 +2084,89 @@ operator|++
 control|)
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|i
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/*  *	OK it seems we have a PCIC or lookalike.  *	Allocate a slot and initialise the data structures.  */
+comment|/* 		 *	OK it seems we have a PCIC or lookalike. 		 *	Allocate a slot and initialise the data structures. 		 */
 name|validslots
 operator|++
 expr_stmt|;
-name|cp
+name|sp
 operator|->
 name|slot
 operator|=
 name|slot
 expr_stmt|;
-name|sp
+if|if
+condition|(
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|==
+name|DC_UNKNOWN
+condition|)
+block|{
+if|if
+condition|(
+name|slot
+operator|!=
+literal|0
+condition|)
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|=
+name|kdc_pcic
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_unit
+operator|=
+name|slot
+expr_stmt|;
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_UNCONFIGURED
+expr_stmt|;
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_description
+operator|=
+name|cinfo
+operator|.
+name|name
+expr_stmt|;
+name|dev_attach
+argument_list|(
+name|kdc_pcic
+operator|+
+name|slot
+argument_list|)
+expr_stmt|;
+block|}
+name|slotp
 operator|=
 name|pccard_alloc_slot
 argument_list|(
@@ -2021,24 +2176,33 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sp
+name|slotp
 operator|==
 literal|0
 condition|)
 continue|continue;
-name|sp
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
+name|slotp
 operator|->
 name|cdata
 operator|=
-name|cp
+name|sp
 expr_stmt|;
-name|cp
+name|sp
 operator|->
-name|sp
+name|slotp
 operator|=
-name|sp
+name|slotp
 expr_stmt|;
-comment|/*  *	If we haven't allocated an interrupt for the controller,  *	then attempt to get one.  */
+comment|/* 		 *	If we haven't allocated an interrupt for the controller, 		 *	then attempt to get one. 		 */
 if|if
 condition|(
 name|pcic_irq
@@ -2060,12 +2224,6 @@ operator|&
 name|pcic_imask
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|for (try = 0; try< 16; try++) 			if (((1<< try)& PCIC_INT_MASK_ALLOWED)&& 			    !pccard_alloc_intr(try, pcicintr, 0,&tty_imask)) 				{ 				pcic_irq = try; 				break; 				}
-endif|#
-directive|endif
 if|if
 condition|(
 name|pcic_irq
@@ -2078,14 +2236,14 @@ literal|"pcic: failed to allocate IRQ\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Check for a card in this slot.  */
+comment|/* 		 *	Check for a card in this slot. 		 */
 name|setb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_POWER
 argument_list|,
-name|PCIC_APSENA
+name|PCIC_PCPWRE
 operator||
 name|PCIC_DISRST
 argument_list|)
@@ -2095,7 +2253,7 @@ condition|(
 operator|(
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_STATUS
 argument_list|)
@@ -2105,23 +2263,25 @@ operator|)
 operator|!=
 name|PCIC_CD
 condition|)
-name|sp
+block|{
+name|slotp
 operator|->
 name|laststate
 operator|=
-name|sp
+name|slotp
 operator|->
 name|state
 operator|=
 name|empty
 expr_stmt|;
+block|}
 else|else
 block|{
-name|sp
+name|slotp
 operator|->
 name|laststate
 operator|=
-name|sp
+name|slotp
 operator|->
 name|state
 operator|=
@@ -2129,15 +2289,15 @@ name|filled
 expr_stmt|;
 name|pccard_event
 argument_list|(
-name|cp
-operator|->
 name|sp
+operator|->
+name|slotp
 argument_list|,
 name|card_inserted
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  *	Assign IRQ for slot changes  */
+comment|/* 		 *	Assign IRQ for slot changes 		 */
 if|if
 condition|(
 name|pcic_irq
@@ -2146,7 +2306,7 @@ literal|0
 condition|)
 name|putb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_STAT_INT
 argument_list|,
@@ -2160,6 +2320,21 @@ literal|0xF
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|validslots
+condition|)
+name|timeout
+argument_list|(
+name|pcictimeout
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|validslots
@@ -2180,7 +2355,7 @@ parameter_list|(
 name|struct
 name|slot
 modifier|*
-name|sp
+name|slotp
 parameter_list|,
 name|int
 name|cmd
@@ -2200,7 +2375,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/*  * Get/set PCIC registers  */
+comment|/* 	 * Get/set PCIC registers 	 */
 case|case
 name|PIOCGREG
 case|:
@@ -2217,7 +2392,7 @@ name|value
 operator|=
 name|getb
 argument_list|(
-name|sp
+name|slotp
 operator|->
 name|cdata
 argument_list|,
@@ -2239,7 +2414,7 @@ name|PIOCSREG
 case|:
 name|putb
 argument_list|(
-name|sp
+name|slotp
 operator|->
 name|cdata
 argument_list|,
@@ -2297,7 +2472,7 @@ name|reg
 init|=
 name|PCIC_DISRST
 operator||
-name|PCIC_APSENA
+name|PCIC_PCPWRE
 decl_stmt|;
 name|struct
 name|pcic_slot
@@ -2320,6 +2495,9 @@ name|PCIC_PD672X
 case|:
 case|case
 name|PCIC_PD6710
+case|:
+case|case
+name|PCIC_VG469
 case|:
 switch|switch
 condition|(
@@ -2386,6 +2564,24 @@ name|reg
 operator||=
 name|PCIC_VCC_5V
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|controller
+operator|==
+name|PCIC_VG469
+condition|)
+name|setb
+argument_list|(
+name|sp
+argument_list|,
+literal|0x2f
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+else|else
 name|setb
 argument_list|(
 name|sp
@@ -2403,6 +2599,24 @@ name|reg
 operator||=
 name|PCIC_VCC_5V
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|controller
+operator|==
+name|PCIC_VG469
+condition|)
+name|clrb
+argument_list|(
+name|sp
+argument_list|,
+literal|0x2f
+argument_list|,
+literal|0x03
+argument_list|)
+expr_stmt|;
+else|else
 name|clrb
 argument_list|(
 name|sp
@@ -2536,7 +2750,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	pcic_reset - Reset the card and enable initial power.  *	Allow  */
+comment|/*  *	pcic_reset - Reset the card and enable initial power.  */
 end_comment
 
 begin_function
@@ -2544,12 +2758,18 @@ specifier|static
 name|void
 name|pcic_reset
 parameter_list|(
+name|void
+modifier|*
+name|chan
+parameter_list|)
+block|{
 name|struct
 name|slot
 modifier|*
 name|slotp
-parameter_list|)
-block|{
+init|=
+name|chan
+decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
@@ -2559,6 +2779,27 @@ name|slotp
 operator|->
 name|cdata
 decl_stmt|;
+switch|switch
+condition|(
+name|slotp
+operator|->
+name|insert_seq
+condition|)
+block|{
+case|case
+literal|0
+case|:
+comment|/* Something funny happended on the way to the pub... */
+return|return;
+case|case
+literal|1
+case|:
+comment|/* Assert reset */
+name|printf
+argument_list|(
+literal|"R"
+argument_list|)
+expr_stmt|;
 name|clrb
 argument_list|(
 name|sp
@@ -2568,11 +2809,35 @@ argument_list|,
 name|PCIC_CARDRESET
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|slotp
+operator|->
+name|insert_seq
+operator|=
+literal|2
+expr_stmt|;
+name|timeout
 argument_list|(
-literal|200
+name|pcic_reset
+argument_list|,
+operator|(
+name|void
 operator|*
-literal|1000
+operator|)
+name|slotp
+argument_list|,
+name|hz
+operator|/
+literal|4
+argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|2
+case|:
+comment|/* Deassert it again */
+name|printf
+argument_list|(
+literal|"r"
 argument_list|)
 expr_stmt|;
 name|setb
@@ -2586,12 +2851,78 @@ operator||
 name|PCIC_IOCARD
 argument_list|)
 expr_stmt|;
-name|DELAY
+name|slotp
+operator|->
+name|insert_seq
+operator|=
+literal|3
+expr_stmt|;
+name|timeout
 argument_list|(
-literal|200
+name|pcic_reset
+argument_list|,
+operator|(
+name|void
 operator|*
-literal|1000
+operator|)
+name|slotp
+argument_list|,
+name|hz
+operator|/
+literal|4
 argument_list|)
+expr_stmt|;
+return|return;
+case|case
+literal|3
+case|:
+comment|/* Wait if card needs more time */
+if|if
+condition|(
+operator|!
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_STATUS
+argument_list|)
+operator|&
+name|PCIC_READY
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"_"
+argument_list|)
+expr_stmt|;
+name|timeout
+argument_list|(
+name|pcic_reset
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|slotp
+argument_list|,
+name|hz
+operator|/
+literal|10
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|".\n"
+argument_list|)
+expr_stmt|;
+name|slotp
+operator|->
+name|insert_seq
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -2663,6 +2994,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|selwakeup
+argument_list|(
+operator|&
+name|slotp
+operator|->
+name|selp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2712,6 +3051,39 @@ block|}
 end_function
 
 begin_comment
+comment|/*  *	PCIC timer, it seems that we loose interrupts sometimes  *	so poll just in case...  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pcictimeout
+parameter_list|(
+name|void
+modifier|*
+name|chan
+parameter_list|)
+block|{
+name|timeout
+argument_list|(
+name|pcictimeout
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+literal|2
+argument_list|)
+expr_stmt|;
+name|pcicintr
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  *	PCIC Interrupt handler.  *	Check each slot in turn, and read the card status change  *	register. If this is non-zero, then a change has occurred  *	on this card, so send an event to the main code.  */
 end_comment
 
@@ -2736,7 +3108,7 @@ decl_stmt|;
 name|struct
 name|pcic_slot
 modifier|*
-name|cp
+name|sp
 init|=
 name|pcic_slots
 decl_stmt|;
@@ -2758,23 +3130,21 @@ condition|;
 name|slot
 operator|++
 operator|,
-name|cp
+name|sp
 operator|++
 control|)
 if|if
 condition|(
-name|cp
-operator|->
 name|sp
-condition|)
-if|if
-condition|(
+operator|->
+name|slotp
+operator|&&
 operator|(
 name|chg
 operator|=
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_STAT_CHG
 argument_list|)
@@ -2794,7 +3164,7 @@ condition|(
 operator|(
 name|getb
 argument_list|(
-name|cp
+name|sp
 argument_list|,
 name|PCIC_STATUS
 argument_list|)
@@ -2804,25 +3174,49 @@ operator|)
 operator|==
 name|PCIC_CD
 condition|)
+block|{
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_BUSY
+expr_stmt|;
+empty_stmt|;
 name|pccard_event
 argument_list|(
-name|cp
-operator|->
 name|sp
+operator|->
+name|slotp
 argument_list|,
 name|card_inserted
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
 name|pccard_event
 argument_list|(
-name|cp
-operator|->
 name|sp
+operator|->
+name|slotp
 argument_list|,
 name|card_removed
 argument_list|)
 expr_stmt|;
+name|kdc_pcic
+index|[
+name|slot
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
+empty_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
@@ -2831,11 +3225,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
