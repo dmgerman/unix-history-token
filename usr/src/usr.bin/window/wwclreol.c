@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.1 83/08/09"
+literal|"@(#)wwclreol.c	3.2 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,12 +26,47 @@ directive|include
 file|"ww.h"
 end_include
 
+begin_macro
+name|wwclreol
+argument_list|(
+argument|w
+argument_list|,
+argument|line
+argument_list|,
+argument|col
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|wwclreol1
+argument_list|(
+name|w
+argument_list|,
+name|line
+argument_list|,
+name|col
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Clear w to the end of line.  * If cleared is true, then the screen line has already been cleared  * previously.  */
 end_comment
 
 begin_expr_stmt
-name|wwclreol
+name|wwclreol1
 argument_list|(
 name|w
 argument_list|,
@@ -52,6 +87,14 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|line
+decl_stmt|,
+name|col
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|cleared
 decl_stmt|;
 end_decl_stmt
 

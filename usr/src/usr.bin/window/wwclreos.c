@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreos.c	3.1 83/08/09"
+literal|"@(#)wwclreos.c	3.2 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,6 +30,10 @@ begin_expr_stmt
 name|wwclreos
 argument_list|(
 name|w
+argument_list|,
+name|line
+argument_list|,
+name|col
 argument_list|)
 specifier|register
 expr|struct
@@ -41,9 +45,43 @@ end_expr_stmt
 
 begin_block
 block|{
+specifier|register
+name|i
+expr_stmt|;
+name|wwclreol
+argument_list|(
 name|w
+argument_list|,
+name|line
+argument_list|,
+name|col
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
 operator|=
+name|line
+operator|+
+literal|1
+init|;
+name|i
+operator|<
 name|w
+operator|->
+name|ww_nline
+condition|;
+name|i
+operator|++
+control|)
+name|wwclreol
+argument_list|(
+name|w
+argument_list|,
+name|i
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
