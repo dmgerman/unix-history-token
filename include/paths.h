@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_NOLOGIN
-value|"/etc/nologin"
+value|"/var/run/nologin"
 end_define
 
 begin_define
