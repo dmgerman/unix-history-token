@@ -446,7 +446,7 @@ index|]
 argument_list|)
 expr_stmt|;
 goto|goto
-name|free
+name|pfree
 goto|;
 comment|/* NOTREACHED */
 case|case
@@ -636,7 +636,7 @@ index|]
 operator|=
 name|pid
 expr_stmt|;
-name|free
+name|pfree
 label|:
 for|for
 control|(
@@ -654,6 +654,7 @@ condition|;
 name|argc
 operator|++
 control|)
+block|{
 name|blkfree
 argument_list|(
 operator|(
@@ -667,6 +668,19 @@ name|argc
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|argv
+index|[
+name|argc
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|iop
