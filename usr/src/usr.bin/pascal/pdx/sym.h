@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sym.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sym.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -297,121 +297,133 @@ begin_comment
 comment|/* evaluate a subscript index */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|unmkstring
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* free a constant string type */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|chkboolean
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* check if a tree is boolean-valued */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printdecl
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print out a symbol's declaration */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printparams
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print out values of a fn's parameters */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printentry
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* note entrance of a block */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printexit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* note exiting from a block */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printcall
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* note call of a function */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printval
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print an eval result */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printv
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print the name and value of a variable */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printwhich
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print the full "path" of an identifier */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|maketypes
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* initialize basic types */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|make_keyword
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* create a keyword in a given symbol table */

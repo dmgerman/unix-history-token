@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)runtime.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)runtime.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -62,41 +62,45 @@ begin_comment
 comment|/* entry of caller of current proc/func */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|where
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print out currently active procedures */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|dump
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* dump the world */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|callproc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* call a procedure */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|procreturn
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* return from a "call"-ed procedure */
@@ -124,21 +128,23 @@ begin_comment
 comment|/* address of first line in a procedure */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|findbeginning
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* find address of beginning of a procedure */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|runtofirst
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* step to first line in current procedure */

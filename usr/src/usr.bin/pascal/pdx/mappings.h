@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mappings.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mappings.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -52,11 +52,12 @@ begin_comment
 comment|/* look for a line number with exactly given address */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|newfunc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* record the appearance of a new function */
@@ -74,11 +75,12 @@ begin_comment
 comment|/* find the function associated with an address */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|clrfunctab
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* re-initialize function table */

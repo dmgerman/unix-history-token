@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)process.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)process.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -22,151 +22,166 @@ name|process
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|initstart
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* initial process start up */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|run
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* start program running */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|arginit
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* initialize program arguments */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|setargs
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* special argument handling */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|newarg
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* add a new argument to list for program */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|inarg
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set standard input for program */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|outarg
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set standard output for program */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|cont
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* continue execution where last left off */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|step
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* single step */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|stepc
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* single step command */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|stepto
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* execute up to a given address */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|next
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* single step, skip over calls */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|endprogram
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* note the termination of the program */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printstatus
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print current error */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printwhere
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print current source line and file */
@@ -183,27 +198,29 @@ begin_comment
 comment|/* TRUE if process has terminated */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|iread
 argument_list|()
-operator|,
+decl_stmt|,
 name|dread
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* read from the process' address space */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|iwrite
 argument_list|()
-operator|,
+decl_stmt|,
 name|dwrite
 argument_list|()
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* write to the process' address space */

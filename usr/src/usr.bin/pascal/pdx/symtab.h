@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)symtab.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)symtab.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -26,11 +26,12 @@ begin_comment
 comment|/* create a symbol table */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|st_destroy
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* destroy a symbol table, i.e. free storage */
@@ -60,31 +61,34 @@ begin_comment
 comment|/* lookup a symbol */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|dumpvars
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* dump the symbols of a function */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|print_alias
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print out currently active aliases */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|enter_alias
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* create a new name for a command */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)breakpoint.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)breakpoint.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -139,61 +139,67 @@ begin_comment
 comment|/*  * routines available from this module  */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|addvar
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* add a variable to the trace list */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|delvar
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* delete a variable from the trace list */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|printvarnews
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* print out variables that have changed */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|trfree
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* free the entire trace list */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|addcond
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* add a condition to the list */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|delcond
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* delete a condition from the list */
@@ -221,51 +227,56 @@ begin_comment
 comment|/* determine if any stop condition is true */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|addbp
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* add a breakpoint */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|delbp
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* delete a breakpoint, return FALSE if unsuccessful */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|bpfree
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* free all breakpoint information */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|setallbps
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* set traps for all breakpoints */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|unsetallbps
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* remove traps at all breakpoints */
@@ -282,21 +293,23 @@ begin_comment
 comment|/* handle a breakpoint */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|fixbps
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* destroy temporary breakpoints left after a fault */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
+name|int
 name|status
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* list items being traced */
