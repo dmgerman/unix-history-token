@@ -12,10 +12,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
+name|optab_sccsid
 index|[]
 init|=
-literal|"@(#)optab.c	4.6 (Berkeley) %G%"
+literal|"@(#)optab.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
