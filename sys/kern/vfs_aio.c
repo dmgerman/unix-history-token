@@ -5243,7 +5243,7 @@ name|bp
 expr_stmt|;
 name|bp
 operator|->
-name|b_spc
+name|b_caller2
 operator|=
 operator|(
 name|void
@@ -10488,7 +10488,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_spc
+name|b_caller2
 expr_stmt|;
 if|if
 condition|(

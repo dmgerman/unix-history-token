@@ -218,6 +218,10 @@ name|b_caller1
 value|b_io.bio_caller1
 define|#
 directive|define
+name|b_caller2
+value|b_io.bio_caller2
+define|#
+directive|define
 name|b_data
 value|b_io.bio_data
 define|#
@@ -391,10 +395,6 @@ comment|/* Original b_addr for physio. */
 union|union
 name|pager_info
 block|{
-name|void
-modifier|*
-name|pg_spc
-decl_stmt|;
 name|int
 name|pg_reqpage
 decl_stmt|;
@@ -443,13 +443,6 @@ comment|/* (D) List of filesystem dependencies. */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|b_spc
-value|b_pager.pg_spc
-end_define
 
 begin_comment
 comment|/*  * These flags are kept in b_flags.  *  * Notes:  *  *	B_ASYNC		VOP calls on bp's are usually async whether or not  *			B_ASYNC is set, but some subsystems, such as NFS, like   *			to know what is best for the caller so they can  *			optimize the I/O.  *  *	B_PAGING	Indicates that bp is being used by the paging system or  *			some paging system and that the bp is not linked into  *			the b_vp's clean/dirty linked lists or ref counts.  *			Buffer vp reassignments are illegal in this case.  *  *	B_CACHE		This may only be set if the buffer is entirely valid.  *			The situation where B_DELWRI is set and B_CACHE is  *			clear MUST be committed to disk by getblk() so   *			B_DELWRI can also be cleared.  See the comments for  *			getblk() in kern/vfs_bio.c.  If B_CACHE is clear,  *			the caller is expected to clear BIO_ERROR and B_INVAL,  *			set BIO_READ, and initiate an I/O.  *  *			The 'entire buffer' is defined to be the range from  *			0 through b_bcount.  *  *	B_MALLOC	Request that the buffer be allocated from the malloc  *			pool, DEV_BSIZE aligned instead of PAGE_SIZE aligned.  *  *	B_CLUSTEROK	This flag is typically set for B_DELWRI buffers  *			by filesystems that allow clustering when the buffer  *			is fully dirty and indicates that it may be clustered  *			with other adjacent dirty buffers.  Note the clustering  *			may not be used with the stage 1 data write under NFS  *			but may be used for the commit rpc portion.  *  *	B_VMIO		Indicates that the buffer is tied into an VM object.  *			The buffer's data is always PAGE_SIZE aligned even  *			if b_bufsize and b_bcount are not.  ( b_bufsize is   *			always at least DEV_BSIZE aligned, though ).  *  *	B_DIRECT	Hint that we should attempt to completely free  *			the pages underlying the buffer.  B_DIRECT is  *			sticky until the buffer is released and typically  *			only has an effect when B_RELBUF is also set.  *  */
