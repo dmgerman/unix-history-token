@@ -2911,7 +2911,7 @@ expr_stmt|;
 while|while
 condition|(
 name|i
-operator|>
+operator|>=
 literal|3
 operator|&&
 name|j
