@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_synch.c	7.18 (Berkeley) 6/27/91  *	$Id: kern_synch.c,v 1.2 1993/10/16 15:24:32 rgrimes Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)kern_synch.c	7.18 (Berkeley) 6/27/91  *	$Id: kern_synch.c,v 1.3 1993/11/25 01:33:13 wollman Exp $  */
 end_comment
 
 begin_include
@@ -2079,7 +2079,7 @@ name|DDBFUNC
 parameter_list|(
 name|s
 parameter_list|)
-value|ddb_##s
+value|db_##s
 end_define
 
 begin_function
@@ -2092,6 +2092,11 @@ parameter_list|()
 block|{
 name|int
 name|np
+decl_stmt|;
+name|int
+name|nl
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|proc
@@ -2114,7 +2119,7 @@ name|ap
 operator|=
 name|allproc
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"  pid  proc    addr     uid     ppid  pgrp   flag stat comm         wchan\n"
 argument_list|)
@@ -2127,6 +2132,33 @@ operator|>=
 literal|0
 condition|)
 block|{
+comment|/* 	 * XXX just take 20 for now... 	 */
+if|if
+condition|(
+name|nl
+operator|++
+operator|==
+literal|20
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"--More--"
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"\b\b\b\b\b\b\b\b"
+argument_list|)
+expr_stmt|;
+name|nl
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|pp
 operator|=
 name|p
@@ -2150,7 +2182,7 @@ operator|->
 name|p_stat
 condition|)
 block|{
-name|printf
+name|db_printf
 argument_list|(
 literal|"%5d %06x %06x %3d %5d %5d  %06x  %d  %s   "
 argument_list|,
@@ -2206,7 +2238,7 @@ name|p
 operator|->
 name|p_wmesg
 condition|)
-name|printf
+name|db_printf
 argument_list|(
 literal|"%s "
 argument_list|,
@@ -2215,7 +2247,7 @@ operator|->
 name|p_wmesg
 argument_list|)
 expr_stmt|;
-name|printf
+name|db_printf
 argument_list|(
 literal|"%x"
 argument_list|,
@@ -2225,7 +2257,7 @@ name|p_wchan
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|db_printf
 argument_list|(
 literal|"\n"
 argument_list|)
