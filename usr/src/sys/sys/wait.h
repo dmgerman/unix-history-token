@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)wait.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)wait.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * This file holds definitions relevent to the wait system call.  * Some of the options here are available only through the ``wait3''  * entry point; the old entry point with one argument has more fixed  * semantics, never returning status of unstopped children, hanging until  * a process terminates if any are outstanding, and never returns  * detailed information about process resource utilization (<vtimes.h>).  */
+comment|/*  * This file holds definitions relevent to the wait4 system call  * and the alternate interfaces that use it (wait, wait3, waitpid).  */
 end_comment
 
 begin_ifndef
@@ -25,7 +25,33 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Structure of the information in the first word returned by both  * wait and wait3.  If w_stopval==WSTOPPED, then the second structure  * describes the information returned, else the first.  See WUNTRACED below.  */
+comment|/*  * Tokens for special values of the "pid" parameter to wait4.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_ANY
+value|(-1)
+end_define
+
+begin_comment
+comment|/* any process */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAIT_MYPGRP
+value|0
+end_define
+
+begin_comment
+comment|/* any process in my process group */
+end_comment
+
+begin_comment
+comment|/*  * Structure of the information in the status word returned by wait4.  * If w_stopval==WSTOPPED, then the second structure describes  * the information returned, else the first.  See WUNTRACED below.  */
 end_comment
 
 begin_union
@@ -196,7 +222,7 @@ comment|/* value of s.stopval if process is stopped */
 end_comment
 
 begin_comment
-comment|/*  * Option bits for the second argument of wait3.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.  */
+comment|/*  * Option bits for the second argument of wait4.  WNOHANG causes the  * wait to not hang if there are no stopped or terminated processes, rather  * returning an error indication in this case (pid==0).  WUNTRACED  * indicates that the caller should receive status about untraced children  * which stop due to signals.  If children are stopped and a wait without  * this option is done, it is as though they were still running... nothing  * about them is returned.   By default, a blocking wait call will be  * aborted by receipt of a signal that is caught (POSIX); the option  * WSIGRESTART causes the call to restart instead of failing with error EINTR.  */
 end_comment
 
 begin_define
@@ -224,11 +250,36 @@ end_comment
 begin_define
 define|#
 directive|define
+name|WSIGRESTART
+value|4
+end_define
+
+begin_comment
+comment|/* restart wait if signal is received */
+end_comment
+
+begin_comment
+comment|/*  * Macros to test the exit status returned by wait  * and extract the relevant values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|WIFSTOPPED
 parameter_list|(
 name|x
 parameter_list|)
 value|((x).w_stopval == WSTOPPED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WSTOPSIG
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).w_stopsig)
 end_define
 
 begin_define
@@ -244,11 +295,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|WTERMSIG
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).w_termsig)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WCOREDUMP
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).w_coredump)
+end_define
+
+begin_define
+define|#
+directive|define
 name|WIFEXITED
 parameter_list|(
 name|x
 parameter_list|)
 value|((x).w_stopval != WSTOPPED&& (x).w_termsig == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).w_retcode)
 end_define
 
 end_unit
