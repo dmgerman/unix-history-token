@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.122 (Berkeley) %G%"
+literal|"@(#)conf.c	8.123 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7585,6 +7585,11 @@ operator|||
 name|defined
 argument_list|(
 name|apollo
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ALTOS_SYS_V
 argument_list|)
 define|#
 directive|define
