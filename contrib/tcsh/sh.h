@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /src/pub/tcsh/sh.h,v 3.96 2001/03/18 19:06:29 christos Exp $ */
+comment|/* $Header: /src/pub/tcsh/sh.h,v 3.108 2002/07/23 16:13:22 christos Exp $ */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * sh.h: Catch it all globals and includes file!  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -28,6 +28,35 @@ include|#
 directive|include
 file|"config.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_QUAD
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HAVE_QUAD
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -430,11 +459,38 @@ begin_comment
 comment|/*  * Return true if the path is absolute  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|WINNT_NATIVE
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__CYGWIN__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ABSOLUTEP
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)[0] == '/' || \     (Isalpha((p)[0])&& (p)[1] == ':'))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !WINNT_NATIVE&& !__CYGWIN__ */
+end_comment
 
 begin_define
 define|#
@@ -446,32 +502,13 @@ parameter_list|)
 value|(*(p) == '/')
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* WINNT_NATIVE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ABSOLUTEP
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)[0] == '/' || \ 			 (Isalpha((p)[0])&& (p)[1] == ':'&& (p)[2] == '/'))
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* WINNT_NATIVE */
+comment|/* WINNT_NATIVE || __CYGWIN__ */
 end_comment
 
 begin_comment
@@ -1418,6 +1455,16 @@ begin_comment
 comment|/*  * We should be using setpgid and setpgid  * by now, but in some systems we use the  * old routines...  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1431,6 +1478,11 @@ directive|define
 name|setpgrp
 value|__setpgrp
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1457,6 +1509,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|SYSMALLOC
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|linux
@@ -2302,6 +2359,7 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|_SS_SIZE
@@ -2311,6 +2369,37 @@ name|defined
 argument_list|(
 name|_SS_MAXSIZE
 argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|NO_SS_FAMILY
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
+
+begin_comment
+comment|/* Damnit, where is getnameinfo() folks? */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sgi
+argument_list|)
 end_if
 
 begin_define
@@ -2318,6 +2407,24 @@ define|#
 directive|define
 name|INET6
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sgi */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __APPLE__ */
+end_comment
 
 begin_endif
 endif|#
@@ -3705,6 +3812,18 @@ begin_comment
 comment|/* Currently parsing a heredoc */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|windowchg
+name|IZERO
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* We received a window change event */
+end_comment
+
 begin_comment
 comment|/*  * Global i/o info  */
 end_comment
@@ -3757,6 +3876,36 @@ begin_comment
 comment|/* if $?0 should return true... */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|FILEC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TIOCSTI
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|filec
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FILEC&& TIOCSTI */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -3769,11 +3918,21 @@ begin_comment
 comment|/* Error message from scanner/parser */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|BSD4_4
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
