@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000, 2001 Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2000, 2001 Boris Popov  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    This product includes software developed by Boris Popov.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -19,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
 end_include
 
 begin_include
@@ -77,7 +97,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format, __FUNCTION__ , \ 				    __LINE__ ,## args)
+value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ , ## args)
 end_define
 
 begin_define
@@ -90,7 +110,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s(%d): "format, __FUNCTION__ , \ 				    __LINE__ ,## args)
+value|printf("%s(%d): "format, __func__ , \ 				    __LINE__ , ## args)
 end_define
 
 begin_function
@@ -490,7 +510,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htobes
+name|htobe16
 argument_list|(
 name|x
 argument_list|)
@@ -532,7 +552,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htoles
+name|htole16
 argument_list|(
 name|x
 argument_list|)
@@ -574,7 +594,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htobel
+name|htobe32
 argument_list|(
 name|x
 argument_list|)
@@ -616,7 +636,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htolel
+name|htole32
 argument_list|(
 name|x
 argument_list|)
@@ -656,6 +676,18 @@ name|int64_t
 name|x
 parameter_list|)
 block|{
+if|#
+directive|if
+name|xxx
+name|x
+operator|=
+name|htobe64
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|x
 operator|=
 name|htobeq
@@ -663,6 +695,8 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|mb_put_mem
 argument_list|(
@@ -700,7 +734,7 @@ parameter_list|)
 block|{
 name|x
 operator|=
-name|htoleq
+name|htole64
 argument_list|(
 name|x
 argument_list|)
@@ -1634,10 +1668,16 @@ operator|&
 name|v
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|x
 operator|=
-name|letohs
+name|le16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1676,10 +1716,16 @@ operator|&
 name|v
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|x
 operator|=
-name|betohs
+name|be16toh
 argument_list|(
 name|v
 argument_list|)
@@ -1752,10 +1798,16 @@ operator|&
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|x
 operator|=
-name|betohl
+name|be32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1796,10 +1848,16 @@ operator|&
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|x
 operator|=
-name|letohl
+name|le32toh
 argument_list|(
 name|v
 argument_list|)
@@ -1872,6 +1930,25 @@ operator|&
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
+if|#
+directive|if
+name|xxx
+operator|*
+name|x
+operator|=
+name|be64toh
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|x
 operator|=
@@ -1880,6 +1957,8 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|error
 return|;
@@ -1916,10 +1995,16 @@ operator|&
 name|v
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|x
+operator|!=
+name|NULL
+condition|)
 operator|*
 name|x
 operator|=
-name|letohq
+name|le64toh
 argument_list|(
 name|v
 argument_list|)
