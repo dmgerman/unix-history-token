@@ -1,12 +1,34 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
+comment|/*  * Copyright (c) 2003 Hidetoshi Shimokawa  * Copyright (c) 1998-2002 Katsushi Kobayashi and Hidetoshi Shimokawa  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the acknowledgement as bellow:  *  *    This product includes software developed by K. Kobayashi and H. Shimokawa  *  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * $FreeBSD$  *  */
 end_comment
 
 begin_struct
 struct|struct
 name|ciphdr
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|eoh0
+range|:
+literal|1
+decl_stmt|,
+comment|/* 0 */
+name|form0
+range|:
+literal|1
+decl_stmt|,
+comment|/* 0 */
+name|src
+range|:
+literal|6
+decl_stmt|;
+else|#
+directive|else
 name|u_int8_t
 name|src
 range|:
@@ -22,9 +44,34 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* 0 */
+endif|#
+directive|endif
 name|u_int8_t
 name|len
 decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|fn
+range|:
+literal|2
+decl_stmt|,
+name|qpc
+range|:
+literal|3
+decl_stmt|,
+name|sph
+range|:
+literal|1
+decl_stmt|,
+range|:
+literal|2
+decl_stmt|;
+else|#
+directive|else
 name|u_int8_t
 label|:
 literal|2
@@ -41,22 +88,38 @@ name|fn
 operator|:
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 name|u_int8_t
 name|dbc
 decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|eoh1
+range|:
+literal|1
+decl_stmt|,
+comment|/* 1 */
+name|form1
+range|:
+literal|1
+decl_stmt|,
+comment|/* 0 */
+name|fmt
+range|:
+literal|6
+decl_stmt|;
+else|#
+directive|else
 name|u_int8_t
 name|fmt
 range|:
 literal|6
 decl_stmt|,
-define|#
-directive|define
-name|CIP_FMT_DVCR
-value|0
-define|#
-directive|define
-name|CIP_FMT_MPEG
-value|(1<<5)
 name|form1
 range|:
 literal|1
@@ -67,10 +130,40 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* 1 */
+endif|#
+directive|endif
+define|#
+directive|define
+name|CIP_FMT_DVCR
+value|0
+define|#
+directive|define
+name|CIP_FMT_MPEG
+value|(1<<5)
 union|union
 block|{
 struct|struct
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|fs
+range|:
+literal|1
+decl_stmt|,
+comment|/* 50/60 field system 								NTSC/PAL */
+name|stype
+range|:
+literal|5
+decl_stmt|,
+range|:
+literal|2
+decl_stmt|;
+else|#
+directive|else
 name|u_int8_t
 label|:
 literal|2
@@ -79,6 +172,13 @@ name|stype
 operator|:
 literal|5
 operator|,
+name|fs
+operator|:
+literal|1
+expr_stmt|;
+comment|/* 50/60 field system 								NTSC/PAL */
+endif|#
+directive|endif
 define|#
 directive|define
 name|CIP_STYPE_SD
@@ -91,11 +191,6 @@ define|#
 directive|define
 name|CIP_STYPE_HD
 value|2
-name|fs
-operator|:
-literal|1
-expr_stmt|;
-comment|/* 50/60 field system 								NTSC/PAL */
 name|u_int16_t
 name|cyc
 range|:
@@ -128,6 +223,28 @@ begin_struct
 struct|struct
 name|dvdbc
 block|{
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|sct
+range|:
+literal|3
+decl_stmt|,
+comment|/* Section type */
+range|:
+literal|1
+decl_stmt|,
+comment|/* Reserved */
+name|arb
+range|:
+literal|4
+decl_stmt|;
+comment|/* Arbitrary bit */
+else|#
+directive|else
 name|u_int8_t
 name|arb
 range|:
@@ -143,6 +260,8 @@ range|:
 literal|3
 decl_stmt|;
 comment|/* Section type */
+endif|#
+directive|endif
 define|#
 directive|define
 name|DV_SCT_HEADER
@@ -163,6 +282,27 @@ define|#
 directive|define
 name|DV_SCT_VIDEO
 value|4
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+name|u_int8_t
+name|dseq
+range|:
+literal|4
+decl_stmt|,
+comment|/* DIF sequence number */
+name|fsc
+range|:
+literal|1
+decl_stmt|,
+comment|/* ID of a DIF block in each channel */
+range|:
+literal|3
+decl_stmt|;
+else|#
+directive|else
 name|u_int8_t
 label|:
 literal|3
@@ -177,6 +317,8 @@ operator|:
 literal|4
 expr_stmt|;
 comment|/* DIF sequence number */
+endif|#
+directive|endif
 name|u_int8_t
 name|dbn
 decl_stmt|;
