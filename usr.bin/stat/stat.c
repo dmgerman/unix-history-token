@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (c) 2002 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Andrew Brown.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the NetBSD  *      Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -16,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.9 2002/10/19 20:33:19 provos Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.10 2003/05/08 13:05:38 atatat Exp $");
 endif|#
 directive|endif
 end_endif
@@ -25,12 +31,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_expr_stmt
 name|__FBSDID
@@ -117,14 +117,14 @@ define|#
 directive|define
 name|DEF_FORMAT
 define|\
-value|"%d %i %Sp %l %Su %Sg %r %z \"%Sa\" \"%Sm\" \"%Sc\" %k %b %N"
+value|"%d %i %Sp %l %Su %Sg %r %z \"%Sa\" \"%Sm\" \"%Sc\" \"%SB\" %k %b %N"
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAW_FORMAT
-value|"%d %i %#p %l %u %g %r %z %a %m %c %k %b %N"
+value|"%d %i %#p %l %u %g %r %z %a %m %c %B %k %b %N"
 end_define
 
 begin_define
@@ -146,7 +146,7 @@ define|#
 directive|define
 name|SHELL_FORMAT
 define|\
-value|"st_dev=%d st_ino=%i st_mode=%#p st_nlink=%l " \ 	"st_uid=%u st_gid=%g st_rdev=%r st_size=%z " \ 	"st_atimespec=%a st_mtimespec=%m st_ctimespec=%c " \ 	"st_blksize=%k st_blocks=%b"
+value|"st_dev=%d st_ino=%i st_mode=%#p st_nlink=%l " \ 	"st_uid=%u st_gid=%g st_rdev=%r st_size=%z " \ 	"st_atime=%a st_mtime=%m st_ctime=%c st_birthtime=%B " \ 	"st_blksize=%k st_blocks=%b"
 end_define
 
 begin_define
@@ -453,6 +453,13 @@ define|#
 directive|define
 name|SHOW_st_ctime
 value|'c'
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHOW_st_btime
+value|'B'
 end_define
 
 begin_define
@@ -1809,6 +1816,13 @@ name|fmtcase
 argument_list|(
 name|what
 argument_list|,
+name|SHOW_st_btime
+argument_list|)
+expr_stmt|;
+name|fmtcase
+argument_list|(
+name|what
+argument_list|,
 name|SHOW_st_size
 argument_list|)
 expr_stmt|;
@@ -2785,6 +2799,23 @@ operator|&
 name|st
 operator|->
 name|st_ctimespec
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|SHOW_st_btime
+case|:
+if|if
+condition|(
+name|tsp
+operator|==
+name|NULL
+condition|)
+name|tsp
+operator|=
+operator|&
+name|st
+operator|->
+name|st_birthtimespec
 expr_stmt|;
 name|ts
 operator|=
