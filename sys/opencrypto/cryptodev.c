@@ -3959,17 +3959,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|CRYPTO_MAJOR
-value|70
-end_define
-
-begin_comment
-comment|/* from openbsd */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4011,11 +4000,6 @@ operator|.
 name|d_name
 operator|=
 literal|"crypto"
-block|,
-operator|.
-name|d_maj
-operator|=
-name|CRYPTO_MAJOR
 block|, }
 decl_stmt|;
 end_decl_stmt

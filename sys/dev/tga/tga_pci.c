@@ -387,12 +387,6 @@ operator|.
 name|d_name
 operator|=
 literal|"tga"
-block|,
-operator|.
-name|d_maj
-operator|=
-operator|-
-literal|1
 block|, }
 decl_stmt|;
 end_decl_stmt
