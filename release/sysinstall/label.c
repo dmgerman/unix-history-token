@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.46 1996/04/28 22:54:18 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.47 1996/04/29 05:09:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -294,27 +294,12 @@ operator|!
 name|enabled
 condition|)
 block|{
-name|devs
-index|[
-literal|0
-index|]
-operator|->
-name|enabled
-operator|=
-name|TRUE
+name|msgConfirm
+argument_list|(
+literal|"No disks have been selected.  Please visit the Partition\n"
+literal|"editor first to specify which disks you wish to operate on."
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|DITEM_STATUS
-argument_list|(
-name|diskPartitionEditor
-argument_list|(
-name|self
-argument_list|)
-argument_list|)
-operator|==
-name|DITEM_FAILURE
-condition|)
 return|return
 name|DITEM_FAILURE
 return|;
@@ -1878,7 +1863,7 @@ name|here
 condition|)
 name|attrset
 argument_list|(
-name|A_REVERSE
+name|item_selected_attr
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -2276,7 +2261,7 @@ name|wattrset
 argument_list|(
 name|ChunkWin
 argument_list|,
-name|A_REVERSE
+name|item_selected_attr
 argument_list|)
 expr_stmt|;
 name|mvwaddstr
@@ -2350,7 +2335,7 @@ name|mvprintw
 argument_list|(
 literal|18
 argument_list|,
-literal|48
+literal|47
 argument_list|,
 literal|"W = Write"
 argument_list|)
@@ -2379,36 +2364,7 @@ literal|22
 argument_list|,
 literal|0
 argument_list|,
-literal|"The default target will be displayed in "
-argument_list|)
-expr_stmt|;
-name|attrset
-argument_list|(
-name|A_REVERSE
-argument_list|)
-expr_stmt|;
-name|addstr
-argument_list|(
-literal|"reverse"
-argument_list|)
-expr_stmt|;
-name|attrset
-argument_list|(
-name|A_NORMAL
-argument_list|)
-expr_stmt|;
-name|addstr
-argument_list|(
-literal|" video."
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|23
-argument_list|,
-literal|0
-argument_list|,
-literal|"Use F1 or ? to get more help, arrow keys to move."
+literal|"Use F1 or ? to get more help, arrow keys to select."
 argument_list|)
 expr_stmt|;
 name|move
@@ -2549,7 +2505,7 @@ condition|)
 block|{
 name|attrset
 argument_list|(
-name|A_REVERSE
+name|title_attr
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -4236,6 +4192,13 @@ literal|"Are you absolutely SURE you want to do this now?"
 argument_list|)
 condition|)
 block|{
+name|WINDOW
+modifier|*
+name|save
+init|=
+name|savescr
+argument_list|()
+decl_stmt|;
 name|variable_set2
 argument_list|(
 name|DISK_LABELLED
@@ -4246,6 +4209,11 @@ expr_stmt|;
 name|diskLabelCommit
 argument_list|(
 name|NULL
+argument_list|)
+expr_stmt|;
+name|restorescr
+argument_list|(
+name|save
 argument_list|)
 expr_stmt|;
 block|}
