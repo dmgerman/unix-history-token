@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 4.2 %G%"
+literal|"@(#)seekdir.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,6 +95,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|dirp
+operator|->
+name|dd_loc
+operator|!=
+literal|0
+operator|&&
 operator|(
 name|curloc
 operator|&
