@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c	5.1 (Berkeley) %G%"
+literal|"@(#)put.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2523,10 +2523,7 @@ for|for
 control|(
 name|i
 operator|=
-name|even
-argument_list|(
 name|n
-argument_list|)
 init|;
 name|i
 operator|>
