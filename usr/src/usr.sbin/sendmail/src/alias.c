@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.17 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.18 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.17 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.18 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,6 +356,18 @@ name|p
 decl_stmt|;
 name|int
 name|naliases
+decl_stmt|;
+name|char
+modifier|*
+name|owner
+decl_stmt|;
+name|char
+name|obuf
+index|[
+name|MAXNAME
+operator|+
+literal|6
+index|]
 decl_stmt|;
 specifier|extern
 name|ADDRESS
@@ -593,6 +605,113 @@ operator|->
 name|q_flags
 operator||=
 name|QDONTSEND
+expr_stmt|;
+block|}
+comment|/* 	**  Look for owner of alias 	*/
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|obuf
+argument_list|,
+literal|"owner-"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|a
+operator|->
+name|q_user
+argument_list|,
+literal|"owner-"
+argument_list|,
+literal|6
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|obuf
+argument_list|,
+literal|"owner"
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|obuf
+argument_list|,
+name|a
+operator|->
+name|q_user
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitnset
+argument_list|(
+name|M_USR_UPPER
+argument_list|,
+name|a
+operator|->
+name|q_mailer
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|makelower
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
+name|owner
+operator|=
+name|aliaslookup
+argument_list|(
+name|obuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|owner
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|owner
+argument_list|,
+literal|','
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|owner
+operator|=
+name|obuf
+expr_stmt|;
+name|a
+operator|->
+name|q_owner
+operator|=
+name|newstr
+argument_list|(
+name|owner
+argument_list|)
 expr_stmt|;
 block|}
 block|}
