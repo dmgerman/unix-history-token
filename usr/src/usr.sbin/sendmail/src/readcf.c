@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.22 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2966,6 +2966,18 @@ literal|'v'
 case|:
 comment|/* run in verbose mode */
 name|Verbose
+operator|=
+name|atobool
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'w'
+case|:
+comment|/* we have wildcard MX records */
+name|WildcardMX
 operator|=
 name|atobool
 argument_list|(

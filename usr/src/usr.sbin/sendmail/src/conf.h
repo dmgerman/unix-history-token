@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -258,15 +258,30 @@ comment|/* use Berkeley Internet Domain Server */
 end_comment
 
 begin_comment
-comment|/* 	 * Use query type of ANY if possible (NO_WILDCARD_MX), which will 	 * find types CNAME, A, and MX, and will cause all existing records 	 * to be cached by our local server.  If there is (might be) a 	 * wildcard MX record in the local domain or its parents that are 	 * searched, we can't use ANY; it would cause fully-qualified names 	 * to match as names in a local domain. 	 */
+comment|/* **  Older systems don't have this error code -- it should be in **  /usr/include/sysexits.h. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|EX_CONFIG
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NO_WILDCARD_MX
-value|1
+name|EX_CONFIG
+value|78
 end_define
+
+begin_comment
+comment|/* configuration error */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
