@@ -14710,7 +14710,7 @@ name|unpause
 operator||
 name|PAUSE
 expr_stmt|;
-comment|/* XXX The shared scb data stuff should be depricated */
+comment|/* XXX The shared scb data stuff should be deprecated */
 if|if
 condition|(
 name|ahc
