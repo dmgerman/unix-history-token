@@ -1094,7 +1094,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: quotacheck -a [-guv]"
 argument_list|,
-literal|"       quotacheck [-guv] filesys ..."
+literal|"       quotacheck [-guv] filesystem ..."
 argument_list|)
 expr_stmt|;
 name|exit
