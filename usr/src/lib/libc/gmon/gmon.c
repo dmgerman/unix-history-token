@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.2 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -311,6 +311,16 @@ specifier|static
 name|unsigned
 name|long
 name|s_textsize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|minsbrk
 init|=
 literal|0
 decl_stmt|;
@@ -1369,8 +1379,20 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This is a stub for the "brk" system call, which we want to  * catch and ignore, so that it will not deallocate our data  * space. (of which the program is not aware)  */
+comment|/*  * This is a stub for the "brk" system call, which we want to  * catch so that it will not deallocate our data space.  * (of which the program is not aware)  */
 end_comment
+
+begin_asm
+asm|asm("#define _curbrk curbrk");
+end_asm
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|curbrk
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|brk
@@ -1380,7 +1402,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|char
 modifier|*
 name|addr
 decl_stmt|;
@@ -1388,7 +1410,27 @@ end_decl_stmt
 
 begin_block
 block|{
-empty_stmt|;
+if|if
+condition|(
+name|addr
+operator|<
+name|minsbrk
+condition|)
+name|addr
+operator|=
+name|minsbrk
+expr_stmt|;
+asm|asm("	chmk	$17");
+asm|asm("	jcs	cerror");
+name|curbrk
+operator|=
+name|addr
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
