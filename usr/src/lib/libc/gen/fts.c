@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.35 (Berkeley) %G%"
+literal|"@(#)fts.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1839,24 +1839,6 @@ name|fts_rfd
 argument_list|)
 condition|)
 block|{
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|sp
-operator|->
-name|fts_rfd
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|saved_errno
-expr_stmt|;
 name|SET
 argument_list|(
 name|FTS_STOP
