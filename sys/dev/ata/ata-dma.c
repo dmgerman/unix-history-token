@@ -3119,7 +3119,7 @@ literal|0x53
 operator|-
 name|devno
 argument_list|,
-literal|0x82
+literal|0x0b
 argument_list|,
 literal|1
 argument_list|)
@@ -4606,6 +4606,10 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 controllers */
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 controllers */
 comment|/* the Promise can only do DMA on ATA disks not on ATAPI devices */
 if|if
 condition|(
@@ -4652,6 +4656,12 @@ operator|->
 name|chiptype
 operator|==
 literal|0x0d30105a
+operator|||
+name|scp
+operator|->
+name|chiptype
+operator|==
+literal|0x4d68105a
 operator|)
 operator|&&
 operator|!
@@ -4779,6 +4789,12 @@ operator|->
 name|chiptype
 operator|==
 literal|0x0d30105a
+operator|||
+name|scp
+operator|->
+name|chiptype
+operator|==
+literal|0x4d68105a
 operator|)
 operator|&&
 operator|!
@@ -6840,6 +6856,10 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA 100 */
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA 100 */
 switch|switch
 condition|(
 name|mode

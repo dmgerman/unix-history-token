@@ -569,6 +569,9 @@ case|:
 case|case
 literal|0x4d30105a
 case|:
+case|case
+literal|0x4d68105a
+case|:
 return|return
 literal|"Promise ATA100 controller"
 return|;
@@ -975,6 +978,9 @@ case|:
 case|case
 literal|0x0d30105a
 case|:
+case|case
+literal|0x4d68105a
+case|:
 name|ATA_OUTB
 argument_list|(
 name|sc
@@ -1299,16 +1305,7 @@ name|dev
 argument_list|,
 literal|0x50
 argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x50
-argument_list|,
-literal|4
-argument_list|)
-operator||
-literal|0x070f070f
+literal|0x030b030b
 argument_list|,
 literal|4
 argument_list|)
@@ -1572,6 +1569,10 @@ case|case
 literal|0x0d30105a
 case|:
 comment|/* Promise OEM ATA100 */
+case|case
+literal|0x4d68105a
+case|:
+comment|/* Promise TX2 ATA100 */
 if|if
 condition|(
 operator|!
