@@ -2195,7 +2195,7 @@ name|KES_THREAD
 operator|)
 argument_list|,
 operator|(
-literal|"mi_switch: kse state?"
+literal|"sched_switch: kse state?"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2399,7 +2399,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"runq_add: No thread on KSE"
+literal|"sched_add: No thread on KSE"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2416,7 +2416,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"runq_add: No KSE on thread"
+literal|"sched_add: No KSE on thread"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2429,7 +2429,7 @@ operator|!=
 name|KES_ONRUNQ
 argument_list|,
 operator|(
-literal|"runq_add: kse %p (%s) already in run queue"
+literal|"sched_add: kse %p (%s) already in run queue"
 operator|,
 name|ke
 operator|,
@@ -2452,7 +2452,7 @@ operator|&
 name|PS_INMEM
 argument_list|,
 operator|(
-literal|"runq_add: process swapped out"
+literal|"sched_add: process swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2585,7 +2585,7 @@ operator|&
 name|PS_INMEM
 argument_list|,
 operator|(
-literal|"runq_remove: process swapped out"
+literal|"sched_rem: process swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2600,7 +2600,7 @@ name|KES_ONRUNQ
 operator|)
 argument_list|,
 operator|(
-literal|"KSE not on run queue"
+literal|"sched_rem: KSE not on run queue"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2808,7 +2808,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"runq_choose: No thread on KSE"
+literal|"sched_choose: No thread on KSE"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2825,7 +2825,7 @@ name|NULL
 operator|)
 argument_list|,
 operator|(
-literal|"runq_choose: No KSE on thread"
+literal|"sched_choose: No KSE on thread"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2840,7 +2840,7 @@ operator|&
 name|PS_INMEM
 argument_list|,
 operator|(
-literal|"runq_choose: process swapped out"
+literal|"sched_choose: process swapped out"
 operator|)
 argument_list|)
 expr_stmt|;
