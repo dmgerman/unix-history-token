@@ -453,7 +453,7 @@ name|rbuf
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|<=
 literal|0
 condition|)
 block|{
@@ -1734,6 +1734,9 @@ do|do
 block|{
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|NgRecvMsg
 argument_list|(
 name|cs
@@ -1747,6 +1750,7 @@ name|NULL
 argument_list|)
 operator|<
 literal|0
+operator|)
 condition|)
 block|{
 name|syslog
@@ -1761,6 +1765,29 @@ expr_stmt|;
 name|_exit
 argument_list|(
 name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* The socket has been closed */
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: Client timed out"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+name|EX_TEMPFAIL
 argument_list|)
 expr_stmt|;
 block|}
