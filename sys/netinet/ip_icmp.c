@@ -177,7 +177,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|log_redirect
+name|drop_redirect
 init|=
 literal|0
 decl_stmt|;
@@ -190,12 +190,12 @@ name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|log_redirect
+name|drop_redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|log_redirect
+name|drop_redirect
 argument_list|,
 literal|0
 argument_list|,
@@ -207,7 +207,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|drop_redirect
+name|log_redirect
 init|=
 literal|0
 decl_stmt|;
@@ -220,12 +220,12 @@ name|_net_inet_icmp
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|drop_redirect
+name|log_redirect
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|drop_redirect
+name|log_redirect
 argument_list|,
 literal|0
 argument_list|,
