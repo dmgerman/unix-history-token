@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termout.c	3.8 (Berkeley) %G%"
+literal|"@(#)termout.c	3.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1738,8 +1738,18 @@ name|p
 operator|-
 name|Host
 argument_list|)
+operator|-
+literal|1
 expr_stmt|;
 block|}
+name|standend
+argument_list|()
+expr_stmt|;
+name|addch
+argument_list|(
+literal|' '
+argument_list|)
+expr_stmt|;
 name|fieldattr
 operator|=
 name|FieldAttributesPointer
@@ -1754,12 +1764,6 @@ name|fieldattr
 argument_list|)
 expr_stmt|;
 comment|/* Set standout, non-display */
-operator|*
-name|tmp
-operator|++
-operator|=
-literal|' '
-expr_stmt|;
 block|}
 else|else
 block|{
