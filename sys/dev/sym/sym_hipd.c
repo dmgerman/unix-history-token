@@ -25729,6 +25729,7 @@ expr_stmt|;
 return|return;
 name|out_stuck
 label|:
+return|return;
 block|}
 end_function
 
@@ -27452,6 +27453,7 @@ expr_stmt|;
 return|return;
 name|fail
 label|:
+return|return;
 block|}
 end_function
 

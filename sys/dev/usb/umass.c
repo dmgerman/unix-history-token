@@ -9466,6 +9466,7 @@ block|}
 break|break;
 default|default:
 comment|/* XXX Hm, we should check the input parameters */
+break|break;
 block|}
 comment|/* Perform the requested action */
 switch|switch
@@ -11073,7 +11074,8 @@ argument_list|(
 name|UDMASS_SCSI
 argument_list|,
 operator|(
-literal|"%s: Doing a sneaky 					     TEST_UNIT_READY\n"
+literal|"%s: Doing a sneaky"
+literal|"TEST_UNIT_READY\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
