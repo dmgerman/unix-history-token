@@ -116,18 +116,6 @@ begin_comment
 comment|/* variables defined on the command-line */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|Lst
-modifier|*
-name|allVars
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* List of all variables */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -997,13 +985,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|Lst_AtEnd
-argument_list|(
-name|allVars
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
 name|DEBUGF
 argument_list|(
 name|VAR
@@ -1124,15 +1105,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|Var
-modifier|*
-name|v
-decl_stmt|;
-name|v
-operator|=
+name|VarDelete
+argument_list|(
 name|Lst_Datum
 argument_list|(
 name|ln
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|Lst_Remove
@@ -1142,27 +1120,6 @@ operator|->
 name|context
 argument_list|,
 name|ln
-argument_list|)
-expr_stmt|;
-name|ln
-operator|=
-name|Lst_Member
-argument_list|(
-name|allVars
-argument_list|,
-name|v
-argument_list|)
-expr_stmt|;
-name|Lst_Remove
-argument_list|(
-name|allVars
-argument_list|,
-name|ln
-argument_list|)
-expr_stmt|;
-name|VarDelete
-argument_list|(
-name|v
 argument_list|)
 expr_stmt|;
 block|}
@@ -7161,11 +7118,6 @@ argument_list|(
 literal|"Command"
 argument_list|)
 expr_stmt|;
-name|allVars
-operator|=
-name|Lst_Init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -7175,15 +7127,7 @@ name|Var_End
 parameter_list|(
 name|void
 parameter_list|)
-block|{
-name|Lst_Destroy
-argument_list|(
-name|allVars
-argument_list|,
-name|VarDelete
-argument_list|)
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment
