@@ -1118,6 +1118,8 @@ operator|=
 name|IFF_BROADCAST
 operator||
 name|IFF_SIMPLEX
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
 name|arc_ifattach
 argument_list|(
