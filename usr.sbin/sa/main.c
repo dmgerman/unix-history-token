@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.6 1997/10/15 06:41:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,6 +438,8 @@ name|ch
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 while|while
 condition|(
