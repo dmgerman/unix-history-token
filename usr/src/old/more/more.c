@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.26 (Berkeley) %G%"
+literal|"@(#)more.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6949,12 +6949,14 @@ operator|!
 operator|(
 name|no_tty
 operator|=
-name|gtty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|stdout
 argument_list|)
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|otty
@@ -7570,23 +7572,30 @@ expr_stmt|;
 block|}
 name|no_intty
 operator|=
-name|gtty
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|stdin
 argument_list|)
 argument_list|,
+name|TIOCGETP
+argument_list|,
 operator|&
 name|otty
 argument_list|)
 expr_stmt|;
-name|gtty
+operator|(
+name|void
+operator|)
+name|ioctl
 argument_list|(
 name|fileno
 argument_list|(
 name|stderr
 argument_list|)
+argument_list|,
+name|TIOCGETP
 argument_list|,
 operator|&
 name|otty
