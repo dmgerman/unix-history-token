@@ -598,10 +598,7 @@ name|ifp
 operator|->
 name|if_name
 operator|=
-name|device_get_name
-argument_list|(
-name|dev
-argument_list|)
+literal|"awi"
 expr_stmt|;
 name|ifp
 operator|->
