@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.28 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_usrreq.c	7.29 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -773,13 +773,24 @@ name|n
 operator|->
 name|m_act
 expr_stmt|;
+for|for
+control|(
+init|;
+name|n
+condition|;
+name|n
+operator|=
+name|m_free
+argument_list|(
+name|n
+argument_list|)
+control|)
+name|sbfree
+argument_list|(
 name|sb
-operator|->
-name|sb_cc
-operator|-=
-name|m
-operator|->
-name|m_len
+argument_list|,
+name|n
+argument_list|)
 expr_stmt|;
 block|}
 name|release
