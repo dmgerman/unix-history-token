@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.60 1997/10/26 01:03:24 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.61 1997/10/29 01:19:44 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1899,10 +1899,7 @@ end_decl_stmt
 begin_function
 name|int
 name|OpenModem
-parameter_list|(
-name|int
-name|mode
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|termios
@@ -2628,10 +2625,7 @@ end_comment
 begin_function
 name|int
 name|RawModem
-parameter_list|(
-name|int
-name|modem
-parameter_list|)
+parameter_list|()
 block|{
 name|struct
 name|termios
@@ -2795,10 +2789,7 @@ begin_function
 specifier|static
 name|void
 name|UnrawModem
-parameter_list|(
-name|int
-name|modem
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|oldflag
@@ -3143,9 +3134,7 @@ name|TCIOFLUSH
 argument_list|)
 expr_stmt|;
 name|UnrawModem
-argument_list|(
-name|modem
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|CloseLogicalModem
 argument_list|()

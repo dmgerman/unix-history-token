@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.28 1997/10/26 01:03:26 brian Exp $  *  */
+comment|/*  *	      PPP OS Layer Interface Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: os.c,v 1.29 1997/10/29 01:19:47 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -259,7 +259,7 @@ block|{
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sock_in
 decl_stmt|;
 name|int
 name|s
@@ -512,7 +512,7 @@ literal|1
 expr_stmt|;
 block|}
 comment|/*      * Set interface address      */
-name|sin
+name|sock_in
 operator|=
 operator|(
 expr|struct
@@ -526,13 +526,13 @@ operator|.
 name|ifra_addr
 operator|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_addr
 operator|=
@@ -540,18 +540,18 @@ name|oldmine
 operator|=
 name|myaddr
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sock_in
 argument_list|)
 expr_stmt|;
 comment|/*      * Set destination address      */
-name|sin
+name|sock_in
 operator|=
 operator|(
 expr|struct
@@ -565,13 +565,13 @@ operator|.
 name|ifra_broadaddr
 operator|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_addr
 operator|=
@@ -579,14 +579,14 @@ name|oldhis
 operator|=
 name|hisaddr
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sock_in
 argument_list|)
 expr_stmt|;
 comment|/*      * */
@@ -656,7 +656,7 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|=
 operator|(
 expr|struct
@@ -670,13 +670,13 @@ operator|.
 name|ifra_mask
 operator|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_addr
 operator|.
@@ -687,14 +687,14 @@ argument_list|(
 name|mask
 argument_list|)
 expr_stmt|;
-name|sin
+name|sock_in
 operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
 argument_list|(
 operator|*
-name|sin
+name|sock_in
 argument_list|)
 expr_stmt|;
 if|if

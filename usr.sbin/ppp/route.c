@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.19 1997/08/31 22:59:47 brian Exp $  *  */
+comment|/*  *	      PPP Routing related Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1994, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: route.c,v 1.20 1997/10/26 01:03:37 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -642,7 +642,7 @@ specifier|register
 name|struct
 name|sockaddr_in
 modifier|*
-name|sin
+name|sock_in
 init|=
 operator|(
 expr|struct
@@ -654,7 +654,7 @@ decl_stmt|;
 name|cp
 operator|=
 operator|(
-name|sin
+name|sock_in
 operator|->
 name|sin_addr
 operator|.
@@ -667,7 +667,7 @@ literal|"default"
 else|:
 name|inet_ntoa
 argument_list|(
-name|sin
+name|sock_in
 operator|->
 name|sin_addr
 argument_list|)
@@ -1972,7 +1972,7 @@ name|len
 decl_stmt|,
 name|elen
 decl_stmt|,
-name|index
+name|newIfIndex
 decl_stmt|;
 name|struct
 name|ifconf
@@ -2156,7 +2156,7 @@ name|ifconfs
 operator|.
 name|ifc_req
 expr_stmt|;
-name|index
+name|newIfIndex
 operator|=
 literal|1
 expr_stmt|;
@@ -2212,7 +2212,7 @@ name|LogDEBUG
 argument_list|,
 literal|"GetIfIndex: %d: %-*.*s, %d, %d\n"
 argument_list|,
-name|index
+name|newIfIndex
 argument_list|,
 name|IFNAMSIZ
 argument_list|,
@@ -2247,7 +2247,7 @@ condition|)
 block|{
 name|IfIndex
 operator|=
-name|index
+name|newIfIndex
 expr_stmt|;
 name|close
 argument_list|(
@@ -2261,11 +2261,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|index
+name|newIfIndex
 operator|)
 return|;
 block|}
-name|index
+name|newIfIndex
 operator|++
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.32 1997/10/26 12:42:11 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
+comment|/*  *	PPP IP Control Protocol (IPCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: ipcp.c,v 1.33 1997/10/29 01:19:40 brian Exp $  *  *	TODO:  *		o More RFC1772 backwoard compatibility  */
 end_comment
 
 begin_include
@@ -1778,7 +1778,7 @@ name|int
 name|plen
 parameter_list|,
 name|int
-name|mode
+name|mode_type
 parameter_list|)
 block|{
 name|int
@@ -1936,7 +1936,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|mode
+name|mode_type
 condition|)
 block|{
 case|case
@@ -2116,7 +2116,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|mode
+name|mode_type
 condition|)
 block|{
 case|case
@@ -2497,7 +2497,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|mode
+name|mode_type
 condition|)
 block|{
 case|case
@@ -2650,7 +2650,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|mode
+name|mode_type
 condition|)
 block|{
 case|case
@@ -2864,7 +2864,7 @@ break|break;
 block|}
 switch|switch
 condition|(
-name|mode
+name|mode_type
 condition|)
 block|{
 case|case
