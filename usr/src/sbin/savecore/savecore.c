@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.30 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,7 +461,7 @@ name|find_dev
 name|__P
 argument_list|(
 operator|(
-name|int
+name|dev_t
 operator|,
 name|int
 operator|)
@@ -977,9 +977,11 @@ parameter_list|,
 name|type
 parameter_list|)
 specifier|register
-name|int
+name|dev_t
 name|dev
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|type
 decl_stmt|;
 block|{
