@@ -717,7 +717,7 @@ specifier|static
 name|u_int
 name|npx0_imask
 init|=
-name|SWI_LOW_MASK
+literal|0
 decl_stmt|;
 end_decl_stmt
 
