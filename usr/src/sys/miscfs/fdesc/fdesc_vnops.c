@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.1 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.2 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.7 1992/05/30 10:05:34 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -417,7 +417,6 @@ name|f_fd
 operator|=
 name|fd
 expr_stmt|;
-comment|/*VTOFDESC(fvp)->f_isroot = 0;*/
 operator|*
 name|vpp
 operator|=
@@ -1777,119 +1776,113 @@ begin_define
 define|#
 directive|define
 name|fdesc_readlink
+define|\
+value|((int (*) __P((struct  vop_readlink_args *)))fdesc_enotsupp)
 end_define
 
-begin_expr_stmt
-operator|(
-operator|(
-name|int
-argument_list|(
-argument|*
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_readlink_args
-operator|*
-operator|)
-argument_list|)
-operator|)
-name|fdesc_enotsupp
-operator|)
+begin_define
 define|#
 directive|define
 name|fdesc_abortop
 value|((int (*) __P((struct  vop_abortop_args *)))nullop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_lock
 value|((int (*) __P((struct  vop_lock_args *)))nullop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_unlock
 value|((int (*) __P((struct  vop_unlock_args *)))nullop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_bmap
 value|((int (*) __P((struct  vop_bmap_args *)))fdesc_badop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_strategy
 value|((int (*) __P((struct  vop_strategy_args *)))fdesc_badop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_islocked
 value|((int (*) __P((struct  vop_islocked_args *)))nullop)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_advlock
 value|((int (*) __P((struct vop_advlock_args *)))fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_blkatoff
-operator|(
-operator|(
-name|int
-argument_list|(
-argument|*
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_blkatoff_args
-operator|*
-operator|)
-argument_list|)
-operator|)
-name|fdesc_enotsupp
-operator|)
+define|\
+value|((int (*) __P((struct  vop_blkatoff_args *)))fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_vget
 value|((int (*) __P((struct  vop_vget_args *)))fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_valloc
 value|((int(*) __P(( \ 		struct vnode *pvp, \ 		int mode, \ 		struct ucred *cred, \ 		struct vnode **vpp))) fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_truncate
-operator|(
-operator|(
-name|int
-argument_list|(
-argument|*
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_truncate_args
-operator|*
-operator|)
-argument_list|)
-operator|)
-name|fdesc_enotsupp
-operator|)
+define|\
+value|((int (*) __P((struct  vop_truncate_args *)))fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_update
 value|((int (*) __P((struct  vop_update_args *)))fdesc_enotsupp)
+end_define
+
+begin_define
 define|#
 directive|define
 name|fdesc_bwrite
 value|((int (*) __P((struct  vop_bwrite_args *)))fdesc_enotsupp)
+end_define
+
+begin_function_decl
 name|int
-argument_list|(
-operator|*
-operator|*
+function_decl|(
+modifier|*
+modifier|*
 name|fdesc_vnodeop_p
-argument_list|)
-argument_list|()
-expr_stmt|;
-end_expr_stmt
+function_decl|)
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
