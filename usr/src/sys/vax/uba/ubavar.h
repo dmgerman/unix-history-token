@@ -1,11 +1,36 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.5	%G%	*/
+comment|/*	ubavar.h	4.6	%G%	*/
 end_comment
 
 begin_comment
 comment|/*  * unibus adapter  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX750
+end_if
+
+begin_define
+define|#
+directive|define
+name|UBA750
+value|((struct uba_regs *)0xf30000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMEM750
+value|((u_short *)0xfc0000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -591,15 +616,20 @@ comment|/* shift to data path designator */
 end_comment
 
 begin_comment
-comment|/*  * each UNIBUS mass storage controller has uba_minfo structure.  */
+comment|/*  * Each UNIBUS mass storage controller has uba_minfo structure,  * and a uba_dinfo structure (as below) for each attached drive.  */
 end_comment
 
 begin_struct
 struct|struct
 name|uba_minfo
 block|{
+name|struct
+name|uba_driver
+modifier|*
+name|um_driver
+decl_stmt|;
 name|short
-name|um_num
+name|um_ctlr
 decl_stmt|;
 comment|/* controller index in driver */
 name|short
@@ -610,26 +640,40 @@ name|short
 name|um_alive
 decl_stmt|;
 comment|/* controller exists */
+name|int
+function_decl|(
+modifier|*
+modifier|*
+name|um_intr
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* interrupt handler(s) */
 name|caddr_t
 name|um_addr
 decl_stmt|;
 comment|/* address of device in i/o space */
 name|struct
-name|buf
-name|um_tab
-decl_stmt|;
-comment|/* queue for this controller */
-name|struct
 name|uba_info
 modifier|*
 name|um_forw
 decl_stmt|;
+name|struct
+name|uba_hd
+modifier|*
+name|um_hd
+decl_stmt|;
+name|struct
+name|buf
+name|um_tab
+decl_stmt|;
+comment|/* queue for this controller */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * each UNIBUS device has a uba_dinfo structure.  * controllers which are not for mass storage often have ONLY  * a uba_dinfo structure, and no uba_minfo structure.  * if a controller has many drives attached, then there will  * be several uba_dinfo structures pointing at the same uba_minfo  * structure.  */
+comment|/*  * Each UNIBUS device has a uba_dinfo structure.  * If a controller has many drives attached, then there will  * be several uba_dinfo structures associated with a single uba_minfo  * structure.  */
 end_comment
 
 begin_struct
@@ -642,12 +686,13 @@ modifier|*
 name|ui_driver
 decl_stmt|;
 name|short
-name|ui_name
-decl_stmt|;
-name|short
 name|ui_unit
 decl_stmt|;
 comment|/* unit number on the system */
+name|short
+name|ui_ctlr
+decl_stmt|;
+comment|/* mass ctlr number; -1 if none */
 name|short
 name|ui_ubanum
 decl_stmt|;
@@ -745,7 +790,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * header per uba.		CAUTION: size& offsets known in uba.m  */
+comment|/*  * This structure exists per-uba.  *  * N.B.: THE SIZE AND SHAPE OF THIS STRUCTURE IS KNOWN IN uba.m.  */
 end_comment
 
 begin_struct
@@ -815,10 +860,8 @@ name|UAMSIZ
 value|50
 name|struct
 name|map
+modifier|*
 name|uh_map
-index|[
-name|UAMSIZ
-index|]
 decl_stmt|;
 block|}
 name|uba_hd
@@ -864,7 +907,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * each unibus driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
+comment|/*  * Each UNIBUS driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
 end_comment
 
 begin_struct
@@ -897,10 +940,6 @@ function_decl|;
 comment|/* routine to stuff driver regs */
 comment|/* dgo is called back by the unibus (usu ubaalloc), when the bus is ready */
 name|short
-name|ud_maxslave
-decl_stmt|;
-comment|/* max number of slaves */
-name|short
 name|ud_needexcl
 decl_stmt|;
 comment|/* need exclusive use of uba (rk07) */
@@ -917,9 +956,16 @@ name|struct
 name|uba_dinfo
 modifier|*
 modifier|*
-name|ud_info
+name|ud_dinfo
 decl_stmt|;
-comment|/* backpointers to ubinit structs */
+comment|/* backpointers to ubdinit structs */
+name|struct
+name|uba_minfo
+modifier|*
+modifier|*
+name|ud_minfo
+decl_stmt|;
+comment|/* backpointers to ubminit structs */
 block|}
 struct|;
 end_struct
