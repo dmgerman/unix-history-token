@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.2	(Berkeley)	83/02/27"
+literal|"@(#)dirs.c	3.3	(Berkeley)	83/02/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -105,6 +105,16 @@ name|struct
 name|inotab
 modifier|*
 name|inotablookup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|struct
+name|inotab
+modifier|*
+name|allocinotab
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -234,6 +244,11 @@ modifier|*
 name|ip
 decl_stmt|;
 name|struct
+name|inotab
+modifier|*
+name|itp
+decl_stmt|;
+name|struct
 name|direct
 name|nulldir
 decl_stmt|;
@@ -340,7 +355,7 @@ name|nulldir
 operator|.
 name|d_ino
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|nulldir
 operator|.
@@ -446,6 +461,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|itp
+operator|=
 name|allocinotab
 argument_list|(
 name|curfile
@@ -471,6 +488,49 @@ name|nulldir
 argument_list|)
 expr_stmt|;
 name|flushent
+argument_list|()
+expr_stmt|;
+name|itp
+operator|->
+name|t_size
+operator|=
+name|seekpt
+operator|-
+name|itp
+operator|->
+name|t_seekpt
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * skip over all the directories on the tape  */
+end_comment
+
+begin_macro
+name|skipdirs
+argument_list|()
+end_macro
+
+begin_block
+block|{
+while|while
+condition|(
+operator|(
+name|curfile
+operator|.
+name|dip
+operator|->
+name|di_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFDIR
+condition|)
+block|{
+name|skipfile
 argument_list|()
 expr_stmt|;
 block|}
@@ -1309,15 +1369,15 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
 name|dp
 operator|->
-name|d_ino
-operator|==
-literal|0
-condition|)
-return|return;
+name|d_reclen
+operator|=
+name|DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dirloc
@@ -1883,15 +1943,6 @@ name|dp
 operator|->
 name|d_reclen
 expr_stmt|;
-if|if
-condition|(
-name|dp
-operator|->
-name|d_ino
-operator|==
-literal|0
-condition|)
-continue|continue;
 return|return
 operator|(
 name|dp
@@ -2174,7 +2225,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"cannot find directory inode %d named %s\n"
+literal|"Cannot find directory inode %d named %s\n"
 argument_list|,
 name|ino
 argument_list|,
@@ -2373,17 +2424,13 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allocate and initialize a directory inode entry.  * If requested, save its pertinent mode, owner, and time info.  */
+comment|/*  * Determine the type of an inode  */
 end_comment
 
 begin_macro
-name|allocinotab
+name|inodetype
 argument_list|(
 argument|ino
-argument_list|,
-argument|dip
-argument_list|,
-argument|seekpt
 argument_list|)
 end_macro
 
@@ -2393,21 +2440,66 @@ name|ino
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_block
+block|{
+name|struct
+name|inotab
+modifier|*
+name|itp
+decl_stmt|;
+name|itp
+operator|=
+name|inotablookup
+argument_list|(
+name|ino
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|LEAF
+operator|)
+return|;
+return|return
+operator|(
+name|NODE
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Allocate and initialize a directory inode entry.  * If requested, save its pertinent mode, owner, and time info.  */
+end_comment
+
+begin_function
+name|struct
+name|inotab
+modifier|*
+name|allocinotab
+parameter_list|(
+name|ino
+parameter_list|,
+name|dip
+parameter_list|,
+name|seekpt
+parameter_list|)
+name|ino_t
+name|ino
+decl_stmt|;
 name|struct
 name|dinode
 modifier|*
 name|dip
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|daddr_t
 name|seekpt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2418,12 +2510,6 @@ decl_stmt|;
 name|struct
 name|modeinfo
 name|node
-decl_stmt|;
-specifier|static
-name|int
-name|prevseekpt
-init|=
-literal|0
 decl_stmt|;
 name|itp
 operator|=
@@ -2477,25 +2563,17 @@ name|t_seekpt
 operator|=
 name|seekpt
 expr_stmt|;
-name|itp
-operator|->
-name|t_size
-operator|=
-name|seekpt
-operator|-
-name|prevseekpt
-expr_stmt|;
-name|prevseekpt
-operator|=
-name|seekpt
-expr_stmt|;
 if|if
 condition|(
 name|mf
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|itp
+operator|)
+return|;
 name|node
 operator|.
 name|ino
@@ -2568,8 +2646,13 @@ argument_list|,
 name|mf
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|itp
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up an inode in the table of directories  */
