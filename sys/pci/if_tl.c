@@ -4435,13 +4435,11 @@ argument_list|,
 literal|"unknown device!?\n"
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
+operator|)
+return|;
 block|}
 name|mtx_init
 argument_list|(
