@@ -6836,6 +6836,37 @@ name|bottom
 operator|=
 name|tr
 expr_stmt|;
+if|if
+condition|(
+name|dbch
+operator|->
+name|bottom
+operator|==
+name|dbch
+operator|->
+name|top
+condition|)
+block|{
+comment|/* we reaches the end of context program */
+if|if
+condition|(
+name|firewire_debug
+operator|&&
+name|dbch
+operator|->
+name|xferq
+operator|.
+name|queued
+operator|>
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"queued> 0\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|out
 label|:
