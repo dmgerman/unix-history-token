@@ -157,7 +157,7 @@ operator|==
 name|y
 condition|)
 return|return
-name|x
+name|y
 return|;
 comment|/* x=y, return x */
 if|if
