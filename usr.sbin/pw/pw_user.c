@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.4 1996/12/17 01:43:30 davidn Exp $  */
+comment|/*-  * Copyright (C) 1996  *	David L. Nugent.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY DAVID L. NUGENT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DAVID L. NUGENT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: pw_user.c,v 1.5 1996/12/17 14:15:35 davidn Exp $  */
 end_comment
 
 begin_include
@@ -249,22 +249,6 @@ name|char
 specifier|const
 modifier|*
 name|user
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|pw_checkname
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|gecos
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -671,6 +655,10 @@ name|default_class
 operator|=
 name|pw_checkname
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|arg
 operator|->
 name|val
@@ -1255,6 +1243,10 @@ name|getpwnam
 argument_list|(
 name|pw_checkname
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|a_name
 operator|->
 name|val
@@ -1846,6 +1838,10 @@ name|pw_name
 operator|=
 name|pw_checkname
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|arg
 operator|->
 name|val
@@ -2479,6 +2475,10 @@ name|pw_gecos
 operator|=
 name|pw_checkname
 argument_list|(
+operator|(
+name|u_char
+operator|*
+operator|)
 name|arg
 operator|->
 name|val
@@ -5782,12 +5782,11 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|char
 modifier|*
 name|pw_checkname
 parameter_list|(
-name|char
+name|u_char
 modifier|*
 name|name
 parameter_list|,
@@ -5844,9 +5843,22 @@ name|name
 index|[
 name|l
 index|]
-operator|>
-literal|126
+operator|==
+literal|127
+operator|||
+operator|(
+operator|!
+name|gecos
+operator|&&
+name|name
+index|[
+name|l
+index|]
+operator|&
+literal|0x80
+operator|)
 condition|)
+comment|/* 8-bit */
 name|cmderr
 argument_list|(
 name|EX_DATAERR
@@ -5859,10 +5871,6 @@ index|]
 operator|<
 literal|' '
 operator|||
-operator|(
-name|unsigned
-name|char
-operator|)
 name|name
 index|[
 name|l
@@ -5904,6 +5912,10 @@ name|name
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|char
+operator|*
+operator|)
 name|name
 return|;
 block|}
