@@ -1479,7 +1479,7 @@ operator|->
 name|pid
 condition|)
 continue|continue;
-comment|/* This special case handles a kthread spawned by linux_clone  		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid functions 		 * need to be able to distinguish between waiting on a process and 		 * waiting on a thread.  It is a thread if p_sigparent is not SIGCHLD, 		 * and the WLINUXCLONE option signifies we want to wait for threads 		 * and not processes. 		 */
+comment|/* 		 * This special case handles a kthread spawned by linux_clone  		 * (see linux_misc.c).  The linux_wait4 and linux_waitpid 		 * functions need to be able to distinguish between waiting 		 * on a process and waiting on a thread.  It is a thread if 		 * p_sigparent is not SIGCHLD, and the WLINUXCLONE option 		 * signifies we want to wait for threads and not processes. 		 */
 if|if
 condition|(
 operator|(
