@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1064,7 +1064,7 @@ name|newblock
 operator|||
 name|daddr
 operator|==
-name|LFS_UNUSED_DADDR
+name|UNASSIGNED
 operator|||
 name|iosize
 operator|==
@@ -1095,7 +1095,7 @@ name|newblock
 operator|||
 name|daddr
 operator|==
-name|LFS_UNUSED_DADDR
+name|UNASSIGNED
 operator|&&
 operator|!
 operator|(
