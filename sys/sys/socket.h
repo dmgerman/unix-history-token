@@ -847,7 +847,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * bsd-api-new-02a: protocol-independent placeholder for socket addresses  */
+comment|/*  * RFC 2553: protocol-independent placeholder for socket addresses  */
 end_comment
 
 begin_define
