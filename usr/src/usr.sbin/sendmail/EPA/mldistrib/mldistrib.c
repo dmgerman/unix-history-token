@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/* @(#)mldistrib.c	5.5 (Berkeley) %G% */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -1835,9 +1839,6 @@ name|pstat
 decl_stmt|;
 name|pid_t
 name|wpid
-decl_stmt|,
-name|waitpid
-argument_list|()
 decl_stmt|;
 operator|(
 name|void
