@@ -548,6 +548,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|rtrlist
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|rtr_flush
 name|__P
 argument_list|(
