@@ -1346,6 +1346,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"snc"
+block|,
+literal|"SONIC Ethernet adapters"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"xe"
 block|,
 literal|"Xircom PC Card Ethernet adapter"

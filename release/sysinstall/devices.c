@@ -731,6 +731,14 @@ ifdef|#
 directive|ifdef
 name|PC98
 block|{
+name|DEVICE_TYPE_NETWORK
+block|,
+literal|"snc"
+block|,
+literal|"SONIC ethernet card"
+block|}
+block|,
+block|{
 name|DEVICE_TYPE_DISK
 block|,
 literal|"wd%d"
