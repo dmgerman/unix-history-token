@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/callout.h>
 end_include
 
@@ -173,6 +167,7 @@ decl_stmt|;
 comment|/* for BPF timeouts with select */
 name|struct
 name|label
+modifier|*
 name|bd_label
 decl_stmt|;
 comment|/* MAC label for descriptor */

@@ -21,23 +21,6 @@ directive|include
 file|<sys/queue.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/_label.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Overlay for ip header used by other protocols (tcp, udp).  */
 end_comment
@@ -134,6 +117,7 @@ decl_stmt|;
 comment|/* ipfw divert cookie */
 name|struct
 name|label
+modifier|*
 name|ipq_label
 decl_stmt|;
 comment|/* MAC label */

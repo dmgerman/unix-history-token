@@ -33,12 +33,6 @@ name|_WANT_UCRED
 argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|<sys/_label.h>
-end_include
-
 begin_struct
 struct|struct
 name|ucred
@@ -106,6 +100,7 @@ name|cr_endcopy
 value|cr_label
 name|struct
 name|label
+modifier|*
 name|cr_label
 decl_stmt|;
 comment|/* MAC label */

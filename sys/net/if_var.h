@@ -73,16 +73,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_comment
-comment|/* struct label */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -549,6 +539,7 @@ decl_stmt|;
 comment|/* linklevel broadcast bytestring */
 name|struct
 name|label
+modifier|*
 name|if_label
 decl_stmt|;
 comment|/* interface MAC label */

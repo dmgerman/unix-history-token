@@ -3092,7 +3092,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3159,7 +3158,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3211,7 +3209,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3258,7 +3255,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3305,7 +3301,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3352,7 +3347,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3486,7 +3480,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3523,7 +3516,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3604,7 +3596,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3646,7 +3637,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -3770,7 +3760,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4294,7 +4283,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4374,7 +4362,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred_parent
 operator|->
 name|cr_label
@@ -4382,7 +4369,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred_child
 operator|->
 name|cr_label
@@ -4434,7 +4420,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|old
 operator|->
 name|cr_label
@@ -4442,7 +4427,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|new
 operator|->
 name|cr_label
@@ -4512,7 +4496,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|old
 operator|->
 name|cr_label
@@ -4570,7 +4553,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4592,7 +4574,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4619,7 +4600,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4724,7 +4704,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4761,7 +4740,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|u1
 operator|->
 name|cr_label
@@ -4769,7 +4747,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|u2
 operator|->
 name|cr_label
@@ -4811,7 +4788,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4923,7 +4899,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4958,7 +4933,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4989,7 +4963,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5026,7 +4999,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5058,7 +5030,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5085,7 +5056,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5122,7 +5092,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5173,7 +5142,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5215,7 +5183,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5257,7 +5224,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5304,7 +5270,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5351,7 +5316,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5393,7 +5357,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5430,7 +5393,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5438,7 +5400,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -5472,7 +5433,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5480,7 +5440,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -5517,7 +5476,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5525,7 +5483,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -5569,7 +5526,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5616,7 +5572,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5702,7 +5657,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5744,7 +5698,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5791,7 +5744,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5828,7 +5780,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5865,7 +5816,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5895,7 +5845,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5922,7 +5871,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5959,7 +5907,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6001,7 +5948,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6058,7 +6004,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6098,7 +6043,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6140,7 +6084,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6182,7 +6125,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6234,7 +6176,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6291,7 +6232,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6341,7 +6281,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6391,7 +6330,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6443,7 +6381,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6501,7 +6438,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6556,7 +6492,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6613,7 +6548,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6663,7 +6597,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6710,7 +6643,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6755,7 +6687,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6800,7 +6731,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6845,7 +6775,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6892,7 +6821,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -6900,7 +6828,6 @@ argument_list|)
 expr_stmt|;
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|file_cred
 operator|->
 name|cr_label
@@ -6947,7 +6874,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -6962,7 +6888,6 @@ condition|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|file_cred
 operator|->
 name|cr_label
@@ -7005,7 +6930,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7047,7 +6971,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7094,7 +7017,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7156,7 +7078,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7221,7 +7142,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7276,7 +7196,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7326,7 +7245,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7381,7 +7299,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7426,7 +7343,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7471,7 +7387,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7519,7 +7434,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7569,7 +7483,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7616,7 +7529,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -7631,7 +7543,6 @@ condition|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|file_cred
 operator|->
 name|cr_label
@@ -7679,7 +7590,6 @@ parameter_list|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -7694,7 +7604,6 @@ condition|)
 block|{
 name|ASSERT_CRED_LABEL
 argument_list|(
-operator|&
 name|file_cred
 operator|->
 name|cr_label

@@ -388,6 +388,7 @@ name|de_gid
 decl_stmt|;
 name|struct
 name|label
+modifier|*
 name|de_label
 decl_stmt|;
 name|struct

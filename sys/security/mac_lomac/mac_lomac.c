@@ -2199,7 +2199,6 @@ name|subj
 operator|=
 name|PSLOT
 argument_list|(
-operator|&
 name|curthread
 operator|->
 name|td_proc
@@ -4363,7 +4362,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -4424,7 +4422,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5139,7 +5136,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5465,7 +5461,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5521,7 +5516,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -5871,7 +5865,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -6918,7 +6911,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred_parent
 operator|->
 name|cr_label
@@ -6928,7 +6920,6 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred_child
 operator|->
 name|cr_label
@@ -7010,7 +7001,6 @@ name|source
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|old
 operator|->
 name|cr_label
@@ -7020,7 +7010,6 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|new
 operator|->
 name|cr_label
@@ -7198,7 +7187,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|old
 operator|->
 name|cr_label
@@ -7287,7 +7275,6 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7338,7 +7325,6 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7404,7 +7390,6 @@ name|dest
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7535,7 +7520,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -7722,7 +7706,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|u1
 operator|->
 name|cr_label
@@ -7732,7 +7715,6 @@ name|obj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|u2
 operator|->
 name|cr_label
@@ -7803,7 +7785,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8048,7 +8029,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8124,7 +8104,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8242,7 +8221,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8342,7 +8320,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8494,7 +8471,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8570,7 +8546,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8580,7 +8555,6 @@ name|obj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -8665,7 +8639,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8675,7 +8648,6 @@ name|obj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -8763,7 +8735,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -8773,7 +8744,6 @@ name|obj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -8946,7 +8916,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9098,7 +9067,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9177,7 +9145,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9278,7 +9245,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9402,7 +9368,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9523,7 +9488,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9627,7 +9591,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9721,7 +9684,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9826,7 +9788,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -9958,7 +9919,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10077,7 +10037,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10155,7 +10114,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10257,7 +10215,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -10362,7 +10319,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10596,7 +10552,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10715,7 +10670,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10824,7 +10778,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -10911,7 +10864,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11003,7 +10955,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11086,7 +11037,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11168,7 +11118,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11253,7 +11202,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11340,7 +11288,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -11427,7 +11374,6 @@ name|subj
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|active_cred
 operator|->
 name|cr_label
@@ -11490,7 +11436,6 @@ name|subj
 init|=
 name|PSLOT
 argument_list|(
-operator|&
 name|p
 operator|->
 name|p_label
@@ -11615,7 +11560,6 @@ name|mac_lomac
 argument_list|,
 name|SLOT
 argument_list|(
-operator|&
 name|newcred
 operator|->
 name|cr_label

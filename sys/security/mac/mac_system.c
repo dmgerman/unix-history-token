@@ -390,7 +390,6 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-operator|&
 name|vp
 operator|->
 name|v_label
@@ -573,7 +572,6 @@ name|vp
 operator|!=
 name|NULL
 condition|?
-operator|&
 name|vp
 operator|->
 name|v_label
@@ -751,7 +749,6 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-operator|&
 name|vp
 operator|->
 name|v_label
@@ -808,7 +805,6 @@ name|cred
 argument_list|,
 name|vp
 argument_list|,
-operator|&
 name|vp
 operator|->
 name|v_label

@@ -441,7 +441,6 @@ parameter_list|)
 block|{
 name|SLOT
 argument_list|(
-operator|&
 name|cred_child
 operator|->
 name|cr_label
@@ -449,7 +448,6 @@ argument_list|)
 operator|=
 name|SLOT
 argument_list|(
-operator|&
 name|cred_parent
 operator|->
 name|cr_label
@@ -471,7 +469,6 @@ parameter_list|)
 block|{
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -495,7 +492,6 @@ parameter_list|)
 block|{
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -533,7 +529,6 @@ literal|0
 condition|)
 name|SLOT
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
@@ -689,12 +684,10 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-operator|&
 name|u1
 operator|->
 name|cr_label
 argument_list|,
-operator|&
 name|u2
 operator|->
 name|cr_label
@@ -737,12 +730,10 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
 argument_list|,
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -785,12 +776,10 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
 argument_list|,
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -836,12 +825,10 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label
 argument_list|,
-operator|&
 name|proc
 operator|->
 name|p_ucred
@@ -889,7 +876,6 @@ name|error
 operator|=
 name|label_on_label
 argument_list|(
-operator|&
 name|cred
 operator|->
 name|cr_label

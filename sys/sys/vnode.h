@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -409,6 +403,7 @@ decl_stmt|;
 comment|/* p Poll events */
 name|struct
 name|label
+modifier|*
 name|v_label
 decl_stmt|;
 comment|/* MAC label for vnode */

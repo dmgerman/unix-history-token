@@ -54,16 +54,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_comment
-comment|/* for struct label */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/param.h>
 end_include
 

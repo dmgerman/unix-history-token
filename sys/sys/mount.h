@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/_label.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -439,11 +433,13 @@ decl_stmt|;
 comment|/* export list */
 name|struct
 name|label
+modifier|*
 name|mnt_mntlabel
 decl_stmt|;
 comment|/* MAC label for the mount */
 name|struct
 name|label
+modifier|*
 name|mnt_fslabel
 decl_stmt|;
 comment|/* MAC label for the fs */
