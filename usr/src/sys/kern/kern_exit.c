@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_exit.c	6.6	85/03/12	*/
+comment|/*	kern_exit.c	6.7	85/04/14	*/
 end_comment
 
 begin_include
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"syslog.h"
 end_include
 
 begin_comment
@@ -653,14 +659,8 @@ expr_stmt|;
 if|if
 condition|(
 name|m
-operator|==
-literal|0
 condition|)
-name|panic
-argument_list|(
-literal|"exit: m_getclr"
-argument_list|)
-expr_stmt|;
+block|{
 name|p
 operator|->
 name|p_ru
@@ -693,6 +693,19 @@ operator|&
 name|u
 operator|.
 name|u_cru
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|log
+argument_list|(
+name|KERN_ALERT
+argument_list|,
+literal|"exit: pid %d: no mbuf"
+argument_list|,
+name|p
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1138,6 +1151,10 @@ expr_stmt|;
 if|if
 condition|(
 name|ru
+operator|&&
+name|p
+operator|->
+name|p_ru
 condition|)
 operator|*
 name|ru
@@ -1147,6 +1164,13 @@ name|p
 operator|->
 name|p_ru
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|->
+name|p_ru
+condition|)
+block|{
 name|ruadd
 argument_list|(
 operator|&
@@ -1178,6 +1202,7 @@ name|p_ru
 operator|=
 literal|0
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_stat
