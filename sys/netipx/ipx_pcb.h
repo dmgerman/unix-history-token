@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $Id: ipx_pcb.h,v 1.3 1995/10/31 23:36:35 julian Exp $  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.h  *  * $Id: ipx_pcb.h,v 1.4 1995/11/04 09:03:16 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -203,14 +203,7 @@ begin_comment
 comment|/* head of list */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_decl_stmt
-name|__BEGIN_DECLS
 name|int
 name|ipx_pcballoc
 name|__P
@@ -272,21 +265,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ipx_pcbdisconnect
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ipxpcb
-operator|*
-name|ipxp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
 name|ipx_pcbdetach
 name|__P
 argument_list|(
@@ -302,7 +280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|ipx_setsockaddr
+name|ipx_pcbdisconnect
 name|__P
 argument_list|(
 operator|(
@@ -310,31 +288,29 @@ expr|struct
 name|ipxpcb
 operator|*
 name|ipxp
-operator|,
-expr|struct
-name|mbuf
-operator|*
-name|nam
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|ipx_setpeeraddr
+name|struct
+name|ipxpcb
+modifier|*
+name|ipx_pcblookup
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ipxpcb
+name|ipx_addr
 operator|*
-name|ipxp
+name|faddr
 operator|,
-expr|struct
-name|mbuf
-operator|*
-name|nam
+name|int
+name|lport
+operator|,
+name|int
+name|wildp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -373,31 +349,44 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|ipxpcb
-modifier|*
-name|ipx_pcblookup
+name|void
+name|ipx_setpeeraddr
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ipx_addr
+name|ipxpcb
 operator|*
-name|faddr
+name|ipxp
 operator|,
-name|int
-name|lport
-operator|,
-name|int
-name|wildp
+expr|struct
+name|mbuf
+operator|*
+name|nam
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_decl_stmt
+name|void
+name|ipx_setsockaddr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ipxpcb
+operator|*
+name|ipxp
+operator|,
+expr|struct
+name|mbuf
+operator|*
+name|nam
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -408,6 +397,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* !_NETIPX_IPX_PCB_H_ */
+end_comment
 
 end_unit
 
