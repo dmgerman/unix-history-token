@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)gomoku.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)gomoku.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -342,16 +342,9 @@ name|MAXCOMBO
 value|0x600
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAXDEPTH
-value|5
-end_define
-
 begin_union
 union|union
-name|combo
+name|comboval
 block|{
 struct|struct
 block|{
@@ -396,7 +389,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * This structure is used to record combinations of two more frames.  * This is so we can do it incrementally in makemove() and because  * we don't want to combine frames with<1,x> combos.  */
+comment|/*  * This structure is used to record information about single frames (F) and  * combinations of two more frames (C).  * For combinations of two or more frames, there is an additional  * array of pointers to the frames of the combination which is sorted  * by the index into the frames[] array. This is used to prevent duplication  * since frame A combined with B is the same as B with A.  *	struct combostr *c_sort[size c_nframes];  * The leaves of the tree (frames) are numbered 0 (bottom, leftmost)  * to c_nframes - 1 (top, right). This is stored in c_frameindex and  * c_dir if C_LOOP is set.  */
 end_comment
 
 begin_struct
@@ -423,16 +416,24 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* previous level or NULL if level 1 */
+comment|/* C:previous level or F:NULL */
 name|union
-name|combo
+name|comboval
+name|c_linkv
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* C:combo value for link[0,1] */
+name|union
+name|comboval
 name|c_combo
 decl_stmt|;
-comment|/* combo value for this level */
+comment|/* C:combo value for this level */
 name|u_short
 name|c_vertex
 decl_stmt|;
-comment|/* intersection or frame head */
+comment|/* C:intersection or F:frame head */
 name|u_char
 name|c_nframes
 decl_stmt|;
@@ -440,32 +441,90 @@ comment|/* number of frames in the combo */
 name|u_char
 name|c_dir
 decl_stmt|;
-comment|/* which direction */
+comment|/* C:loop frame or F:frame direction */
 name|u_char
 name|c_flg
 decl_stmt|;
-comment|/* combo flags */
+comment|/* C:combo flags */
 name|u_char
-name|c_refcnt
+name|c_frameindex
 decl_stmt|;
-comment|/* # higher levels that point to us */
+comment|/* C:intersection frame index */
+name|u_char
+name|c_framecnt
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* number of frames left to attach */
+name|u_char
+name|c_emask
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* C:bit mask of completion spots for 					 * link[0] and link[1] */
+name|u_char
+name|c_voff
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* C:vertex offset within frame */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* flag values for s_flg */
+comment|/* flag values for c_flg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_OPEN_0
+value|0x01
+end_define
+
+begin_comment
+comment|/* link[0] is an open ended frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_OPEN_1
+value|0x02
+end_define
+
+begin_comment
+comment|/* link[1] is an open ended frame */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|C_LOOP
-value|0x01
+value|0x04
 end_define
 
 begin_comment
 comment|/* link[1] intersects previous frame */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C_MARK
+value|0x08
+end_define
+
+begin_comment
+comment|/* indicates combo processed */
+end_comment
+
+begin_comment
+comment|/*  * This structure is used for recording the completion points of  * multi frame combos.  */
 end_comment
 
 begin_struct
@@ -477,19 +536,34 @@ name|elist
 modifier|*
 name|e_next
 decl_stmt|;
-comment|/* list of combos */
+comment|/* list of completion points */
 name|struct
 name|combostr
 modifier|*
 name|e_combo
 decl_stmt|;
-comment|/* the combo */
-name|struct
-name|combostr
-modifier|*
-name|e_frame
+comment|/* the whole combo */
+name|u_char
+name|e_off
 decl_stmt|;
-comment|/* the 1st level combo that connects */
+comment|/* offset in frame of this empty spot */
+name|u_char
+name|e_frameindex
+decl_stmt|;
+comment|/* intersection frame index */
+name|u_char
+name|e_framecnt
+decl_stmt|;
+comment|/* number of frames left to attach */
+name|u_char
+name|e_emask
+decl_stmt|;
+comment|/* real value of the frame's emask */
+name|union
+name|comboval
+name|e_fval
+decl_stmt|;
+comment|/* frame combo value */
 block|}
 struct|;
 end_struct
@@ -514,8 +588,17 @@ name|int
 name|s_flg
 decl_stmt|;
 comment|/* flags for graph walks */
+name|struct
+name|combostr
+modifier|*
+name|s_frame
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* level 1 combo for frame[dir] */
 name|union
-name|combo
+name|comboval
 name|s_fval
 index|[
 literal|2
@@ -526,7 +609,7 @@ index|]
 decl_stmt|;
 comment|/* combo value for [color][frame] */
 name|union
-name|combo
+name|comboval
 name|s_combo
 index|[
 literal|2
@@ -548,23 +631,24 @@ index|]
 decl_stmt|;
 comment|/* number of<1,x> combos */
 name|struct
-name|combostr
-modifier|*
-name|s_frame
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* level 1 combo for frame[dir] */
-name|struct
 name|elist
 modifier|*
 name|s_empty
+decl_stmt|;
+comment|/* level n combo completion spots */
+name|struct
+name|elist
+modifier|*
+name|s_nempty
+decl_stmt|;
+comment|/* level n+1 combo completion spots */
+name|int
+name|dummy
 index|[
 literal|2
 index|]
 decl_stmt|;
-comment|/* level n combo for [color] */
+comment|/* XXX */
 block|}
 struct|;
 end_struct
@@ -683,6 +767,40 @@ begin_comment
 comment|/* all frames dead */
 end_comment
 
+begin_comment
+comment|/*  * This structure is used to store overlap information between frames.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ovlp_info
+block|{
+name|int
+name|o_intersect
+decl_stmt|;
+comment|/* intersection spot */
+name|struct
+name|combostr
+modifier|*
+name|o_fcombo
+decl_stmt|;
+comment|/* the connecting combo */
+name|u_char
+name|o_link
+decl_stmt|;
+comment|/* which link to update (0 or 1) */
+name|u_char
+name|o_off
+decl_stmt|;
+comment|/* offset in frame of intersection */
+name|u_char
+name|o_frameindex
+decl_stmt|;
+comment|/* intersection frame index */
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -694,8 +812,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-modifier|*
-name|color
+name|fmtbuf
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -703,7 +820,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|char
-name|fmtbuf
+name|pdir
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -745,7 +862,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* storage for all frames */
+comment|/* storage for single frames */
 end_comment
 
 begin_decl_stmt
@@ -766,7 +883,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|char
+name|u_char
 name|overlap
 index|[
 name|FAREA

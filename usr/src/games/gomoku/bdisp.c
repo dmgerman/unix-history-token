@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bdisp.c	8.1 (Berkeley) %G%"
+literal|"@(#)bdisp.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,16 @@ begin_decl_stmt
 specifier|static
 name|int
 name|lastline
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|pcolor
+index|[]
+init|=
+literal|"*O.?"
 decl_stmt|;
 end_decl_stmt
 
@@ -559,7 +569,7 @@ block|}
 else|else
 name|c
 operator|=
-literal|"*O.?"
+name|pcolor
 index|[
 name|sp
 operator|->
@@ -723,7 +733,7 @@ block|}
 else|else
 name|c
 operator|=
-literal|"*O.?"
+name|pcolor
 index|[
 name|sp
 operator|->
@@ -1061,6 +1071,20 @@ case|case
 literal|0x7f
 case|:
 comment|/* DEL */
+if|if
+condition|(
+name|cp
+operator|==
+name|buf
+operator|+
+literal|1
+condition|)
+block|{
+name|cp
+operator|--
+expr_stmt|;
+continue|continue;
+block|}
 name|cp
 operator|-=
 literal|2
