@@ -299,6 +299,14 @@ name|pccard_product
 modifier|*
 name|pp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|uint32_t
+name|fcn
+init|=
+name|PCCARD_FUNCTION_UNSPEC
+decl_stmt|;
 comment|/* Make sure we're a network function */
 name|error
 operator|=
