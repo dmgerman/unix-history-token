@@ -78,7 +78,7 @@ condition|)
 block|{
 name|errno
 operator|=
-name|erro
+name|error
 expr_stmt|;
 name|cap_free
 argument_list|(
