@@ -99,6 +99,27 @@ name|pcb_pmap
 decl_stmt|;
 comment|/* current pmap */
 name|u_int64_t
+name|pcb_fsr
+decl_stmt|;
+name|u_int64_t
+name|pcb_fcr
+decl_stmt|;
+name|u_int64_t
+name|pcb_fir
+decl_stmt|;
+name|u_int64_t
+name|pcb_fdr
+decl_stmt|;
+name|u_int64_t
+name|pcb_eflag
+decl_stmt|;
+name|u_int64_t
+name|pcb_csd
+decl_stmt|;
+name|u_int64_t
+name|pcb_ssd
+decl_stmt|;
+name|u_int64_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
