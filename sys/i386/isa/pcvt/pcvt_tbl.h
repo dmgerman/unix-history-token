@@ -4292,7 +4292,7 @@ name|CSL
 block|,
 literal|0x69
 operator||
-name|CSL
+name|CSH
 block|,
 literal|0x6A
 operator||
