@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)names.c	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)names.c	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -164,10 +164,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+name|kd
+argument_list|,
 name|hp
 argument_list|,
 operator|&
@@ -212,6 +210,11 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|hdev
 operator|.
 name|hp_driver
@@ -228,6 +231,11 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|hdrv
 operator|.
 name|d_name
@@ -397,6 +405,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|up
 argument_list|,
 operator|&
@@ -435,6 +445,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|udev
 operator|.
 name|ui_driver
@@ -451,6 +463,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|udrv
 operator|.
 name|ud_dname
@@ -647,6 +661,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|mp
 argument_list|,
 operator|&
@@ -685,6 +701,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|mdev
 operator|.
 name|mi_driver
@@ -699,8 +717,10 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|kvm_read
+name|kvm_rea
 argument_list|(
+name|kd
+argument_list|,
 name|mdrv
 operator|.
 name|md_dname
@@ -755,6 +775,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|up
 argument_list|,
 operator|&
@@ -793,6 +815,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|udev
 operator|.
 name|ui_driver
@@ -809,6 +833,8 @@ name|void
 operator|)
 name|kvm_read
 argument_list|(
+name|kd
+argument_list|,
 name|udrv
 operator|.
 name|ud_dname
