@@ -317,6 +317,20 @@ define|\
 value|(((x)& (OPTION_HASH_PTWO - 1)) + \ 	 (((x)>> OPTION_HASH_EXP)& \ 	  (OPTION_HASH_PTWO - 1))) % OPTION_HASH_SIZE;
 end_define
 
+begin_define
+define|#
+directive|define
+name|NOLINK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVELINK
+value|1
+end_define
+
 begin_enum
 enum|enum
 name|dhcp_shutdown_state
@@ -2828,13 +2842,21 @@ index|]
 decl_stmt|;
 comment|/* Its name... */
 name|int
-name|linkstatus
-decl_stmt|;
-comment|/* Link status */
-name|int
 name|ieee80211
 decl_stmt|;
-comment|/* True if media is ieee80211 */
+comment|/* True if media is ieee802.11 */
+name|int
+name|havemedia
+decl_stmt|;
+comment|/* True if we have a media table */
+name|int
+name|linkstate
+decl_stmt|;
+comment|/* True if we have link */
+name|int
+name|forcediscover
+decl_stmt|;
+comment|/* True if a discover is needed */
 name|int
 name|index
 decl_stmt|;
@@ -12643,6 +12665,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|state_background
+name|PROTO
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -12720,6 +12755,45 @@ name|PROTO
 argument_list|(
 operator|(
 name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|set_ieee80211
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|interface_info
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|interface_active
+name|PROTO
+argument_list|(
+operator|(
+expr|struct
+name|interface_info
 operator|*
 operator|)
 argument_list|)
