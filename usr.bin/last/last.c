@@ -358,6 +358,19 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|int
+name|snapfound
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* found snapshot entry? */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|time_t
 name|snaptime
 decl_stmt|;
@@ -1170,12 +1183,6 @@ modifier|*
 name|ttx
 decl_stmt|;
 comment|/* ttylist entry */
-name|int
-name|snapfound
-init|=
-literal|0
-decl_stmt|;
-comment|/* found snapshot entry? */
 comment|/* 	 * if the terminal line is '~', the machine stopped. 	 * see utmp(5) for more info. 	 */
 if|if
 condition|(
@@ -1285,7 +1292,6 @@ argument_list|(
 name|bp
 argument_list|)
 condition|)
-block|{
 name|printentry
 argument_list|(
 name|bp
@@ -1293,23 +1299,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|maxrec
-operator|!=
-operator|-
-literal|1
-operator|&&
-operator|!
-operator|--
-name|maxrec
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 return|return;
 block|}
 comment|/* 	 * if the line is '{' or '|', date got set; see 	 * utmp(5) for more info. 	 */
@@ -1354,7 +1343,6 @@ operator|&&
 operator|!
 name|snaptime
 condition|)
-block|{
 name|printentry
 argument_list|(
 name|bp
@@ -1362,20 +1350,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|maxrec
-operator|&&
-operator|!
-operator|--
-name|maxrec
-condition|)
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 return|return;
 block|}
 comment|/* find associated tty */
@@ -1575,18 +1549,6 @@ argument_list|,
 name|tt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|maxrec
-operator|!=
-operator|-
-literal|1
-operator|&&
-operator|!
-operator|--
-name|maxrec
-condition|)
-return|return;
 block|}
 name|tt
 operator|->
@@ -1640,6 +1602,22 @@ comment|/* time difference */
 name|time_t
 name|t
 decl_stmt|;
+if|if
+condition|(
+name|maxrec
+operator|!=
+operator|-
+literal|1
+operator|&&
+operator|!
+name|maxrec
+operator|--
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|_int_to_time
