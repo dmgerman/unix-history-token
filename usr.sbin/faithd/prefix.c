@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: prefix.c,v 1.9 2001/07/02 14:36:49 itojun Exp $	*/
+comment|/*	$KAME: prefix.c,v 1.13 2003/09/02 22:50:17 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -174,29 +174,25 @@ specifier|static
 name|int
 name|prefix_set
 parameter_list|(
-name|s
-parameter_list|,
-name|prefix
-parameter_list|,
-name|slash
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|,
 name|struct
 name|prefix
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|,
 name|int
 name|slash
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 modifier|*
 name|p
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|q
@@ -227,6 +223,14 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p
+condition|)
+goto|goto
+name|fail
+goto|;
 name|q
 operator|=
 name|strchr
@@ -538,14 +542,12 @@ name|char
 modifier|*
 name|prefix_string
 parameter_list|(
-name|prefix
-parameter_list|)
 specifier|const
 name|struct
 name|prefix
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char
@@ -628,22 +630,18 @@ begin_function
 name|int
 name|prefix_match
 parameter_list|(
-name|prefix
-parameter_list|,
-name|sa
-parameter_list|)
 specifier|const
 name|struct
 name|prefix
 modifier|*
 name|prefix
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|struct
 name|sockaddr
 modifier|*
 name|sa
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|sockaddr_storage
@@ -950,13 +948,11 @@ name|config
 modifier|*
 name|config_load1
 parameter_list|(
-name|line
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|line
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|config
@@ -1349,13 +1345,11 @@ begin_function
 name|int
 name|config_load
 parameter_list|(
-name|configfile
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|configfile
-decl_stmt|;
+parameter_list|)
 block|{
 name|FILE
 modifier|*
@@ -1415,6 +1409,12 @@ name|p
 operator|=
 operator|&
 name|sentinel
+expr_stmt|;
+name|sentinel
+operator|.
+name|next
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -1483,7 +1483,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void config_show1(conf) 	const struct config *conf; { 	const char *p;  	p = prefix_string(&conf->match); 	printf("%s", p ? p : "?");  	if (conf->permit) 		printf(" permit"); 	else 		printf(" deny");  	p = prefix_string(&conf->dest); 	printf(" %s", p ? p : "?");  	printf("\n"); }  static void config_show() { 	struct config *conf;  	for (conf = config_list; conf; conf = conf->next) 		config_show1(conf); }
+unit|static void config_show1(const struct config *conf) { 	const char *p;  	p = prefix_string(&conf->match); 	printf("%s", p ? p : "?");  	if (conf->permit) 		printf(" permit"); 	else 		printf(" deny");  	p = prefix_string(&conf->dest); 	printf(" %s", p ? p : "?");  	printf("\n"); }  static void config_show() { 	struct config *conf;  	for (conf = config_list; conf; conf = conf->next) 		config_show1(conf); }
 endif|#
 directive|endif
 end_endif
@@ -1495,21 +1495,16 @@ name|config
 modifier|*
 name|config_match
 parameter_list|(
-name|sa1
-parameter_list|,
-name|sa2
-parameter_list|)
 name|struct
 name|sockaddr
 modifier|*
 name|sa1
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
 name|sa2
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|static
 name|struct
@@ -1658,7 +1653,7 @@ return|return
 name|NULL
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

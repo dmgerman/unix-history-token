@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: faithd.h,v 1.8 2001/09/05 03:04:21 itojun Exp $	*/
+comment|/*	$KAME: faithd.h,v 1.9 2002/05/09 09:41:24 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -93,36 +93,6 @@ operator|*
 operator|,
 name|int
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|rsh_relay
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|rsh_dual_relay
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: tcp.c,v 1.8 2001/11/21 07:40:22 itojun Exp $	*/
+comment|/*	$KAME: tcp.c,v 1.13 2003/09/02 22:49:21 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -379,6 +379,8 @@ expr_stmt|;
 if|if
 condition|(
 name|pid
+operator|>
+literal|0
 operator|&&
 name|WEXITSTATUS
 argument_list|(
@@ -389,8 +391,11 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"child %d exit status 0x%x"
+literal|"child %ld exit status 0x%x"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|pid
 argument_list|,
 name|status
@@ -636,6 +641,17 @@ name|oob_exists
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|s_rcv
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_SET
 argument_list|(
 name|s_rcv
@@ -746,12 +762,34 @@ name|tboff
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|s_snd
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_CLR
 argument_list|(
 name|s_snd
 argument_list|,
 operator|&
 name|writefds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s_rcv
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -779,6 +817,17 @@ name|strerror
 argument_list|(
 name|errno
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s_snd
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -868,6 +917,17 @@ expr_stmt|;
 name|oexceptfds
 operator|=
 name|exceptfds
+expr_stmt|;
+if|if
+condition|(
+name|s_rcv
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
+argument_list|)
 expr_stmt|;
 name|FD_SET
 argument_list|(
@@ -1067,12 +1127,34 @@ operator|==
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|s_rcv
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_CLR
 argument_list|(
 name|s_rcv
 argument_list|,
 operator|&
 name|exceptfds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s_snd
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
 argument_list|)
 expr_stmt|;
 name|FD_SET
@@ -1210,12 +1292,34 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 default|default:
+if|if
+condition|(
+name|s_rcv
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
+argument_list|)
+expr_stmt|;
 name|FD_CLR
 argument_list|(
 name|s_rcv
 argument_list|,
 operator|&
 name|readfds
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s_snd
+operator|>=
+name|FD_SETSIZE
+condition|)
+name|exit_failure
+argument_list|(
+literal|"descriptor too big"
 argument_list|)
 expr_stmt|;
 name|FD_SET
