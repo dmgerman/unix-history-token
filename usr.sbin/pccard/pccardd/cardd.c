@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.22 1997/11/25 19:15:59 nate Exp $"
+literal|"$Id: cardd.c,v 1.23 1997/12/08 06:35:07 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -978,18 +978,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sp
-operator|->
-name|state
-operator|=
-name|state
-operator|.
-name|state
-expr_stmt|;
 switch|switch
 condition|(
-name|sp
-operator|->
+name|state
+operator|.
 name|state
 condition|)
 block|{
@@ -1008,6 +1000,22 @@ break|break;
 case|case
 name|filled
 case|:
+comment|/* 		 * If state was already filled, fake a removal first to get 		 * our state in sync with the kernel. This happens when the 		 * systems resumes and we only get to process the state  		 * change from suspend to empty after inserted() has run. 		 * In that case the kernel state is perfectly normal. 		 * 		 * The reason for not doing nothing is that the kernel 		 * has to be informed again about IRQ and IO window. 		 */
+if|if
+condition|(
+name|state
+operator|.
+name|state
+operator|==
+name|sp
+operator|->
+name|state
+condition|)
+name|card_removed
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 name|card_inserted
 argument_list|(
 name|sp
@@ -1020,6 +1028,14 @@ case|:
 comment|/* ignored */
 break|break;
 block|}
+name|sp
+operator|->
+name|state
+operator|=
+name|state
+operator|.
+name|state
+expr_stmt|;
 block|}
 end_function
 
