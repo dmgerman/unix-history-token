@@ -49,7 +49,7 @@ operator|)
 name|prs
 operator|.
 name|c
-literal|1.3
+literal|1.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -269,7 +269,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|time
+name|tm
 modifier|*
 name|Dtime
 decl_stmt|;
@@ -1083,7 +1083,7 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|int
+name|short
 name|istr
 decl_stmt|;
 block|}
@@ -1503,7 +1503,7 @@ name|u
 operator|.
 name|str
 index|[
-literal|0
+literal|1
 index|]
 operator|=
 operator|*
@@ -1514,7 +1514,7 @@ name|u
 operator|.
 name|str
 index|[
-literal|1
+literal|0
 index|]
 operator|=
 operator|*
@@ -1636,7 +1636,7 @@ literal|"%02d"
 argument_list|,
 name|Dtime
 operator|->
-name|t_year
+name|tm_year
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1651,7 +1651,7 @@ argument_list|,
 operator|(
 name|Dtime
 operator|->
-name|t_month
+name|tm_mon
 operator|+
 literal|1
 operator|)
@@ -1668,7 +1668,7 @@ literal|"%02d"
 argument_list|,
 name|Dtime
 operator|->
-name|t_day_month
+name|tm_mday
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1682,7 +1682,7 @@ literal|"%02d"
 argument_list|,
 name|Dtime
 operator|->
-name|t_hours
+name|tm_hour
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1696,7 +1696,7 @@ literal|"%02d"
 argument_list|,
 name|Dtime
 operator|->
-name|t_minutes
+name|tm_min
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1710,7 +1710,7 @@ literal|"%02d"
 argument_list|,
 name|Dtime
 operator|->
-name|t_seconds
+name|tm_sec
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2283,6 +2283,19 @@ expr_stmt|;
 name|unlink
 argument_list|(
 name|bdtmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gpkt
+operator|.
+name|p_iop
+condition|)
+name|fclose
+argument_list|(
+name|gpkt
+operator|.
+name|p_iop
 argument_list|)
 expr_stmt|;
 block|}
@@ -3485,7 +3498,7 @@ name|p
 decl_stmt|;
 specifier|extern
 name|struct
-name|time
+name|tm
 modifier|*
 name|localtime
 parameter_list|()
