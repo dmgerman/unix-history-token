@@ -21,18 +21,19 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_pthread_main_np
+argument_list|,
+name|pthread_main_np
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Provide the equivelant to Solaris thr_main() function  */
 end_comment
-
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|pthread_main_np
-name|=
-name|_pthread_main_np
-end_pragma
 
 begin_function
 name|int

@@ -27,14 +27,15 @@ directive|include
 file|"pthread_private.h"
 end_include
 
-begin_pragma
-pragma|#
-directive|pragma
-name|weak
-name|__cap_get_fd
-name|=
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
 name|___cap_get_fd
-end_pragma
+argument_list|,
+name|__cap_get_fd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
