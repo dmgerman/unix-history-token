@@ -5112,6 +5112,12 @@ name|pdutype
 operator|=
 name|type
 expr_stmt|;
+name|hdr
+operator|->
+name|pdulen
+operator|=
+name|pdulen
+expr_stmt|;
 return|return;
 block|}
 end_function
