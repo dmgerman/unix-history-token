@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.8	%G%	*/
+comment|/*	up.c	4.9	%G%	*/
 end_comment
 
 begin_include
@@ -1823,14 +1823,10 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* A funny place to do this ... */
-name|ubafree
+name|UBAFREECLR
 argument_list|(
 name|up_ubinfo
 argument_list|)
-operator|,
-name|up_ubinfo
-operator|=
-literal|0
 expr_stmt|;
 goto|goto
 name|loop
@@ -2594,14 +2590,10 @@ operator|<<
 name|unit
 operator|)
 expr_stmt|;
-name|ubafree
+name|UBAFREECLR
 argument_list|(
 name|up_ubinfo
 argument_list|)
-operator|,
-name|up_ubinfo
-operator|=
-literal|0
 expr_stmt|;
 block|}
 else|else
@@ -3281,14 +3273,10 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|ubafree
+name|UBAFREECLR
 argument_list|(
 name|up_ubinfo
 argument_list|)
-operator|,
-name|up_ubinfo
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|UPADDR

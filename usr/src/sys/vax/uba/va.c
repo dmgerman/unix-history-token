@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	va.c	4.3	%G%	*/
+comment|/*	va.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -601,14 +601,10 @@ argument_list|()
 expr_stmt|;
 name|brkout
 label|:
-name|ubafree
+name|UBAFREECLR
 argument_list|(
 name|va_ubinfo
 argument_list|)
-operator|,
-name|va_ubinfo
-operator|=
-literal|0
 expr_stmt|;
 name|va11
 operator|.
@@ -1266,14 +1262,10 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|ubafree
+name|UBAFREECLR
 argument_list|(
 name|va_ubinfo
 argument_list|)
-operator|,
-name|va_ubinfo
-operator|=
-literal|0
 expr_stmt|;
 block|}
 comment|/* This code belongs in vastart() */
