@@ -110,6 +110,7 @@ end_comment
 begin_decl_stmt
 name|void
 modifier|*
+specifier|const
 modifier|*
 name|vrootp
 decl_stmt|;
