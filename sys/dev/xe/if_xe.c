@@ -626,7 +626,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 name|void
 name|xe_reg_dump
 parameter_list|(
@@ -7340,7 +7339,6 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-specifier|static
 name|void
 name|xe_reg_dump
 parameter_list|(
