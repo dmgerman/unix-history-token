@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* sccs id:	@(#)ex.h	7.4	%G%  */
+comment|/* sccs id:	@(#)ex.h	7.5	%G%  */
 end_comment
 
 begin_ifdef
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -432,6 +432,12 @@ directive|define
 name|TRIM
 value|0177
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|CTRL
+end_undef
 
 begin_define
 define|#

@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_tty.c	7.5	%G%"
+literal|"@(#)ex_tty.c	7.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -966,6 +966,13 @@ operator|++
 control|)
 if|if
 condition|(
+name|arrows
+index|[
+name|i
+index|]
+operator|.
+name|cap
+operator|&&
 name|arrows
 index|[
 name|i
