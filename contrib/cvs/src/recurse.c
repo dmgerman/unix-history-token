@@ -2441,41 +2441,25 @@ operator|=
 name|srepository
 expr_stmt|;
 block|}
-comment|/* Put back update_dir.  I think this is the same as just setting        update_dir back to saved_update_dir, but there are a few cases I'm        not sure about (in particular, if DIR is "." and update_dir is        not ""), so for conservatism I'm leaving this here.  */
-name|cp
-operator|=
-name|last_component
-argument_list|(
-name|update_dir
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|>
-name|update_dir
-condition|)
-name|cp
-index|[
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-else|else
-name|update_dir
-index|[
+if|#
+directive|if
 literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
+comment|/* Put back update_dir.  I think this is the same as just setting        update_dir back to saved_update_dir, but there are a few cases I'm        not sure about (in particular, if DIR is "." and update_dir is        not ""), so for conservatism I'm leaving this here.  */
+block|cp = last_component (update_dir);     if (cp> update_dir) 	cp[-1] = '\0';     else 	update_dir[0] = '\0';     free (saved_update_dir);
+else|#
+directive|else
+comment|/* The above code is cactus!!! - it doesn't handle descending        multiple directories at once!  ie: it recurses down several        dirs and then back up one. This breaks 'diff', 'update',        'commit', etc.  */
 name|free
 argument_list|(
-name|saved_update_dir
+name|update_dir
 argument_list|)
 expr_stmt|;
+name|update_dir
+operator|=
+name|saved_update_dir
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|err
