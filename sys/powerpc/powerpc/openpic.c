@@ -834,6 +834,18 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+comment|/* 	 * PSIM seems to report 1 too many IRQs 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_psim
+condition|)
+name|sc
+operator|->
+name|sc_nirq
+operator|--
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|dev
