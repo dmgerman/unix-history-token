@@ -251,11 +251,11 @@ decl_stmt|;
 name|uintfptr_t
 name|tmp_addr
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|intrstate
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Round lowpc and highpc to multiples of the density we're using 	 * so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|p
 operator|->
