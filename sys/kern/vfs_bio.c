@@ -3198,6 +3198,13 @@ operator|&
 name|B_ASYNC
 condition|)
 block|{
+name|VI_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -5799,6 +5806,13 @@ block|}
 else|else
 block|{
 comment|/* 			 * We are too low on memory, we have to try to free 			 * the buffer (most importantly: the wired pages 			 * making up its backing store) *now*. 			 */
+name|VI_UNLOCK
+argument_list|(
+name|bp
+operator|->
+name|b_vp
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
