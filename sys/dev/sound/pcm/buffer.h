@@ -778,27 +778,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sndbuf_uiomove
-parameter_list|(
-name|struct
-name|snd_dbuf
-modifier|*
-name|b
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|unsigned
-name|int
-name|count
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|sndbuf_feed
 parameter_list|(
 name|struct
