@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<malloc.h>
+file|<stdlib.h>
 end_include
 
 begin_ifdef

@@ -91,6 +91,14 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
+name|OPENSSL_NO_HW_PADLOCK
+name|ENGINE_load_padlock
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
 name|OPENSSL_NO_HW_AEP
 name|ENGINE_load_aep
 argument_list|()
