@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.13 (Berkeley) %G%"
+literal|"@(#)input.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -503,6 +503,12 @@ operator|)
 operator|)
 operator|==
 literal|0
+operator|||
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_PASSIVE
 condition|)
 block|{
 name|syslog
@@ -735,6 +741,12 @@ operator|)
 operator|)
 operator|==
 literal|0
+operator|||
+name|ifp
+operator|->
+name|int_flags
+operator|&
+name|IFF_PASSIVE
 condition|)
 block|{
 if|if
