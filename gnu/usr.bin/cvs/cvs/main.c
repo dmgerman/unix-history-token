@@ -1440,7 +1440,13 @@ name|path
 argument_list|,
 name|R_OK
 operator||
+operator|(
+name|logoff
+condition|?
+literal|0
+else|:
 name|W_OK
+operator|)
 argument_list|)
 condition|)
 block|{
