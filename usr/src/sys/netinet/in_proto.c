@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_proto.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in_proto.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -49,12 +49,15 @@ begin_comment
 comment|/*  * TCP/IP protocol family: IP, ICMP, UDP, TCP.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|ip_output
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|ip_ctloutput
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -110,12 +113,15 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|tcp_usrreq
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|()
+decl_stmt|,
+name|tcp_ctloutput
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -264,7 +270,7 @@ literal|0
 block|,
 name|udp_ctlinput
 block|,
-literal|0
+name|ip_ctloutput
 block|,
 name|udp_usrreq
 block|,
@@ -295,7 +301,7 @@ literal|0
 block|,
 name|tcp_ctlinput
 block|,
-literal|0
+name|tcp_ctloutput
 block|,
 name|tcp_usrreq
 block|,
@@ -605,6 +611,14 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|domain
+name|hydomain
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|protosw
 name|hysw
@@ -614,7 +628,8 @@ block|{
 block|{
 name|SOCK_RAW
 block|,
-name|PF_HYLINK
+operator|&
+name|hydomain
 block|,
 literal|0
 block|,
