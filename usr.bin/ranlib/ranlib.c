@@ -84,6 +84,44 @@ file|<archive.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|build
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|touch
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|CHDR
 name|chdr
 decl_stmt|;
@@ -107,6 +145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -198,11 +237,13 @@ name|eval
 operator|=
 literal|0
 init|;
+operator|(
 name|archive
 operator|=
 operator|*
 name|argv
 operator|++
+operator|)
 condition|;
 control|)
 name|eval
@@ -223,12 +264,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -246,7 +287,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

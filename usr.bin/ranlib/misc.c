@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -101,12 +107,25 @@ begin_comment
 comment|/* temporary file "name" */
 end_comment
 
-begin_macro
-name|tmp
-argument_list|()
-end_macro
+begin_decl_stmt
+name|void
+name|error
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_function
+name|int
+name|tmp
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|sigset_t
 name|set
@@ -236,7 +255,7 @@ name|fd
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -322,12 +341,12 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|badfmt
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|errno
 operator|=
@@ -339,23 +358,18 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 operator|(
 name|void
@@ -380,7 +394,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

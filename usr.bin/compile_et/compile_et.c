@@ -12,6 +12,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -80,7 +92,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /afs/rel-eng.athena.mit.edu/project/release/current/source/athena/athena.lib/et/RCS/compile_et.c,v 1.3 91/02/28 15:15:23 epeisach Exp $"
+literal|"$Header: /home/ncvs/src/usr.bin/compile_et/compile_et.c,v 1.2 1995/01/14 22:29:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -144,26 +156,6 @@ name|hfile
 decl_stmt|,
 modifier|*
 name|cfile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* C library */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,7 +1194,7 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"static const struct error_table et = { text, %ldL, %d };\n\n"
+literal|"static const struct error_table et = { text, %dL, %d };\n\n"
 argument_list|,
 name|table_number
 argument_list|,
@@ -1295,7 +1287,7 @@ name|fprintf
 argument_list|(
 name|hfile
 argument_list|,
-literal|"#define ERROR_TABLE_BASE_%s (%ldL)\n"
+literal|"#define ERROR_TABLE_BASE_%s (%dL)\n"
 argument_list|,
 name|table_name
 argument_list|,
@@ -1373,6 +1365,9 @@ argument_list|,
 name|current_token
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

@@ -310,6 +310,7 @@ expr_stmt|;
 for|for
 control|(
 init|;
+operator|(
 name|list
 index|[
 literal|0
@@ -319,6 +320,7 @@ name|list
 index|[
 literal|1
 index|]
+operator|)
 condition|;
 operator|++
 name|list

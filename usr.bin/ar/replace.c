@@ -491,11 +491,13 @@ name|append
 label|:
 while|while
 condition|(
+operator|(
 name|file
 operator|=
 operator|*
 name|argv
 operator|++
+operator|)
 condition|)
 block|{
 if|if

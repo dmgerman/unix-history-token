@@ -251,6 +251,7 @@ operator|(
 name|kvm_t
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|proc
 operator|*

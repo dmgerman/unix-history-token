@@ -98,6 +98,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -411,21 +412,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|yyerror
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fputs
 argument_list|(
@@ -445,8 +441,11 @@ argument_list|,
 name|last_token
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 

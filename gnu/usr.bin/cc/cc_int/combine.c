@@ -12173,6 +12173,8 @@ operator|)
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -12753,6 +12755,8 @@ name|tem
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 comment|/* Otherwise, select our actions depending on our rtx class.  */
@@ -19638,6 +19642,8 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 name|x
@@ -20429,6 +20435,8 @@ name|true
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 comment|/* Look for MIN or MAX.  */
 if|if
@@ -20552,6 +20560,8 @@ argument_list|,
 name|false
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 if|#
 directive|if
@@ -25135,6 +25145,8 @@ argument_list|)
 argument_list|)
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 name|x
@@ -27797,6 +27809,8 @@ argument_list|)
 argument_list|)
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 literal|0
@@ -29288,6 +29302,8 @@ return|return
 name|newer
 return|;
 block|}
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -32293,6 +32309,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 comment|/* Ensure we return a value of the proper mode.  */
 return|return
@@ -33629,6 +33647,8 @@ literal|0
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 comment|/* The only other cases we handle are MIN, MAX, and comparisons if the      operands are the same as REG and VAL.  */
 elseif|else
@@ -33873,6 +33893,8 @@ argument_list|)
 else|:
 name|x
 return|;
+default|default:
+break|break;
 block|}
 block|}
 block|}
@@ -37277,6 +37299,8 @@ name|low1
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -37820,6 +37844,8 @@ name|mode
 argument_list|)
 operator|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
@@ -39358,6 +39384,8 @@ name|bitwidth
 return|;
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 comment|/* If we haven't been able to figure it out by one of the above rules,      see if some of the high-order bits are known to be zero.  If so,      count those bits and return one less than that amount.  If we can't      safely compute the mask for this mode, always return BITWIDTH.  */
 if|if
@@ -39661,6 +39689,8 @@ operator|=
 name|NIL
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* Otherwise, if either is a PLUS or NEG, we can't do anything.  */
@@ -39777,6 +39807,8 @@ name|pcomp_p
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 comment|/* Check for NO-OP cases.  */
@@ -42451,6 +42483,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 break|break;
@@ -46398,6 +46432,8 @@ name|LT
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 comment|/* Compute some predicates to simplify code below.  */
 name|equality_comparison_p
@@ -49172,6 +49208,8 @@ expr_stmt|;
 continue|continue;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 block|}
@@ -49861,6 +49899,8 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 literal|0
@@ -52246,6 +52286,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+default|default:
+break|break;
 block|}
 comment|/* Recursively scan the operands of this expression.  */
 block|{

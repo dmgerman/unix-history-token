@@ -238,11 +238,86 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|process_file
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|show_archive
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|show_objfile
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|print_symbol
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|nlist
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * main()  *	parse command line, execute process_file() for each file  *	specified on the command line.  */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -442,21 +517,16 @@ begin_comment
 comment|/*  * process_file()  *	show symbols in the file given as an argument.  Accepts archive and  *	object files as input.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|process_file
-argument_list|(
-argument|fname
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fname
+parameter_list|)
 name|char
 modifier|*
 name|fname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|exec
@@ -686,7 +756,7 @@ name|retval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* scat: concatenate strings, returning new concatenation point  * and permitting overlap.  */
@@ -760,30 +830,22 @@ begin_comment
 comment|/*  * show_archive()  *	show symbols in the given archive file  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|show_archive
-argument_list|(
-argument|fname
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fname
+parameter_list|,
+name|fp
+parameter_list|)
 name|char
 modifier|*
 name|fname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ar_hdr
@@ -1368,36 +1430,28 @@ name|rval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * show_objfile()  *	show symbols from the object file pointed to by fp.  The current  *	file pointer for fp is expected to be at the beginning of an a.out  *	header.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|show_objfile
-argument_list|(
-argument|objname
-argument_list|,
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|objname
+parameter_list|,
+name|fp
+parameter_list|)
 name|char
 modifier|*
 name|objname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2046,38 +2100,30 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * print_symbol()  *	show one symbol  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|print_symbol
-argument_list|(
-argument|objname
-argument_list|,
-argument|sym
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|objname
+parameter_list|,
+name|sym
+parameter_list|)
 name|char
 modifier|*
 name|objname
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|nlist
 modifier|*
 name|sym
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2329,7 +2375,7 @@ name|n_name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * typestring()  *	return the a description string for an STAB entry  */
@@ -2657,24 +2703,22 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|fname
-argument_list|(
-argument|a0
-argument_list|,
-argument|b0
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a0
+parameter_list|,
+name|b0
+parameter_list|)
 name|void
 modifier|*
 name|a0
 decl_stmt|,
-modifier|*
+decl|*
 name|b0
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2711,24 +2755,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|rname
-argument_list|(
-argument|a0
-argument_list|,
-argument|b0
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a0
+parameter_list|,
+name|b0
+parameter_list|)
 name|void
 modifier|*
 name|a0
 decl_stmt|,
-modifier|*
+decl|*
 name|b0
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2765,24 +2807,22 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|int
 name|value
-argument_list|(
-argument|a0
-argument_list|,
-argument|b0
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a0
+parameter_list|,
+name|b0
+parameter_list|)
 name|void
 modifier|*
 name|a0
 decl_stmt|,
-modifier|*
+decl|*
 name|b0
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -2952,12 +2992,14 @@ decl_stmt|;
 comment|/* NOSTRICT */
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|malloc
 argument_list|(
 name|size
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -2987,12 +3029,12 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
@@ -3010,7 +3052,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

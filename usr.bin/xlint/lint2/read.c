@@ -2957,6 +2957,7 @@ break|break;
 block|}
 break|break;
 comment|/* LINTED (enumeration value(s) not handled in switch) */
+default|default:
 block|}
 operator|*
 name|epp
@@ -3666,6 +3667,7 @@ expr_stmt|;
 block|}
 break|break;
 comment|/* LINTED (enumeration value(s) not handled in switch) */
+default|default:
 block|}
 operator|*
 name|epp

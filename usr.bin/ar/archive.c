@@ -1480,6 +1480,7 @@ operator|.
 name|size
 operator|+
 operator|(
+operator|(
 name|chdr
 operator|.
 name|size
@@ -1487,6 +1488,7 @@ operator|+
 name|chdr
 operator|.
 name|lname
+operator|)
 operator|&
 literal|1
 operator|)

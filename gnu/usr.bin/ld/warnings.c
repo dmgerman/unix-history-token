@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.9 1994/12/23 22:30:57 nate Exp $  */
+comment|/*  * $Id: warnings.c,v 1.10 1995/03/04 17:46:10 nate Exp $  */
 end_comment
 
 begin_include
@@ -562,7 +562,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"type %d, value %#x, size %#x"
+literal|"type %d, value %#lx, size %#x"
 argument_list|,
 name|sp
 operator|->
@@ -677,7 +677,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|" text %x(%x), data %x(%x), bss %x(%x) hex\n"
+literal|" text %x(%lx), data %x(%lx), bss %x(%lx) hex\n"
 argument_list|,
 name|entry
 operator|->
@@ -845,7 +845,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"  %s: 0x%x\n"
+literal|"  %s: 0x%lx\n"
 argument_list|,
 name|entry
 operator|->

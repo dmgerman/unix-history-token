@@ -20,6 +20,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -6505,6 +6511,8 @@ name|decl
 argument_list|)
 argument_list|)
 expr_stmt|;
+default|default:
+break|break;
 block|}
 block|}
 end_function

@@ -111,12 +111,50 @@ begin_comment
 comment|/* archive name */
 end_comment
 
-begin_macro
-name|touch
-argument_list|()
-end_macro
+begin_decl_stmt
+specifier|extern
+name|void
+name|error
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_block
+begin_decl_stmt
+name|void
+name|settime
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|touch
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|int
+name|touch
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|afd
@@ -187,22 +225,17 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|settime
-argument_list|(
-argument|afd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|afd
+parameter_list|)
 name|int
 name|afd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|ar_hdr
@@ -301,7 +334,7 @@ name|archive
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

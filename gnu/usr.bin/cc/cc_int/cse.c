@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"rtl.h"
 end_include
 
@@ -1909,6 +1915,8 @@ argument_list|,
 name|outer_code
 argument_list|)
 expr_stmt|;
+default|default:
+break|break;
 block|}
 comment|/* Sum the costs of the sub-rtx's, plus cost of this operation,      which is already in total.  */
 name|fmt
@@ -6818,6 +6826,8 @@ return|return
 literal|0
 return|;
 block|}
+default|default:
+break|break;
 block|}
 name|i
 operator|=
@@ -7628,6 +7638,8 @@ argument_list|)
 operator|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 comment|/* Compare the elements.  If any pair of corresponding elements      fail to match, return 0 for the whole things.  */
 name|fmt
@@ -8524,6 +8536,8 @@ name|pbase
 expr_stmt|;
 block|}
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 block|}
@@ -9260,6 +9274,8 @@ argument_list|)
 operator|)
 return|;
 block|}
+default|default:
+break|break;
 block|}
 name|fmt
 operator|=
@@ -12721,6 +12737,8 @@ argument_list|,
 literal|0
 argument_list|)
 return|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return
@@ -17200,6 +17218,8 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* If we only have two operands, we can't do anything.  */
@@ -19045,6 +19065,8 @@ return|return
 name|const0_rtx
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 return|return
 literal|0
@@ -19165,6 +19187,8 @@ name|const_true_rtx
 else|:
 name|const0_rtx
 return|;
+default|default:
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -21408,6 +21432,8 @@ return|return
 name|x
 return|;
 block|}
+default|default:
+break|break;
 block|}
 name|const_arg0
 operator|=
@@ -22867,6 +22893,8 @@ return|return
 name|false
 return|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 block|}
@@ -23828,6 +23856,8 @@ name|new_const
 argument_list|)
 return|;
 block|}
+default|default:
+break|break;
 block|}
 name|new
 operator|=
@@ -33013,6 +33043,8 @@ argument_list|,
 name|NULL_RTX
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 for|for
 control|(
@@ -36941,6 +36973,8 @@ name|incr
 argument_list|)
 expr_stmt|;
 return|return;
+default|default:
+break|break;
 block|}
 name|fmt
 operator|=

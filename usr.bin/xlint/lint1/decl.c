@@ -2527,6 +2527,7 @@ return|;
 block|}
 break|break;
 comment|/* LINTED (enumeration values not handled in switch) */
+default|default:
 block|}
 comment|/* Anything other is not accepted. */
 name|dcs

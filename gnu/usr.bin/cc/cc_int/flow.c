@@ -19,6 +19,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"config.h"
 end_include
 
@@ -10166,6 +10172,8 @@ operator|%
 name|REGSET_ELT_BITS
 operator|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 comment|/* Recursively scan the operands of this expression.  */

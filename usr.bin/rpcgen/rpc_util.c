@@ -41,7 +41,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -180,7 +192,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|printwhere
 name|__P
 argument_list|(
@@ -195,12 +207,10 @@ begin_comment
 comment|/*  * Reinitialize the world  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|reinitialize
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|memset
 argument_list|(
@@ -224,36 +234,28 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * string equality  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|streq
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|char
 modifier|*
 name|a
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -268,7 +270,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * find a value in a list  */
@@ -441,28 +443,23 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|findit
-argument_list|(
-argument|def
-argument_list|,
-argument|type
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|type
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -477,7 +474,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -792,28 +789,23 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|typedefed
-argument_list|(
-argument|def
-argument_list|,
-argument|type
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|type
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -856,31 +848,23 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|isvectordef
-argument_list|(
-argument|type
-argument_list|,
-argument|rel
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|type
+parameter_list|,
+name|rel
+parameter_list|)
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|relation
 name|rel
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|definition
 modifier|*
@@ -980,8 +964,13 @@ name|rel
 expr_stmt|;
 block|}
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -1013,11 +1002,13 @@ name|buf
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|str
 operator|++
+operator|)
 condition|)
 block|{
 operator|*
@@ -1174,12 +1165,10 @@ begin_comment
 comment|/*  * Something went wrong, unlink any files that we may have created and then  * die.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|crash
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1216,7 +1205,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1707,20 +1696,21 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|printbuf
-argument_list|()
+parameter_list|()
 block|{
 name|char
 name|c
-block|;
+decl_stmt|;
 name|int
 name|i
-block|;
+decl_stmt|;
 name|int
 name|cnt
-block|;
+decl_stmt|;
 define|#
 directive|define
 name|TABSIZE
@@ -1731,12 +1721,14 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
 name|c
 operator|=
 name|curline
 index|[
 name|i
 index|]
+operator|)
 condition|;
 name|i
 operator|++
@@ -1764,9 +1756,6 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|cnt
@@ -1774,9 +1763,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_else
-
-begin_while
 while|while
 condition|(
 name|cnt
@@ -1794,26 +1780,28 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_while
+block|}
+block|}
+end_function
 
-begin_expr_stmt
-unit|} }
+begin_function
 specifier|static
+name|void
 name|printwhere
-argument_list|()
+parameter_list|()
 block|{
 name|int
 name|i
-block|;
+decl_stmt|;
 name|char
 name|c
-block|;
+decl_stmt|;
 name|int
 name|cnt
-block|;
+decl_stmt|;
 name|printbuf
 argument_list|()
-block|;
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1855,9 +1843,6 @@ name|TABSIZE
 operator|)
 expr_stmt|;
 block|}
-end_expr_stmt
-
-begin_else
 else|else
 block|{
 name|cnt
@@ -1865,9 +1850,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-end_else
-
-begin_while
 while|while
 condition|(
 name|cnt
@@ -1885,15 +1867,10 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
-end_while
-
-begin_expr_stmt
-unit|} 	(
+block|}
+operator|(
 name|void
-end_expr_stmt
-
-begin_expr_stmt
-unit|)
+operator|)
 name|fputc
 argument_list|(
 literal|'\n'
@@ -1901,31 +1878,26 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-begin_expr_stmt
-unit|}  char
-operator|*
-name|make_argname
-argument_list|(
-argument|pname
-argument_list|,
-argument|vname
-argument_list|)
+begin_function
 name|char
-operator|*
+modifier|*
+name|make_argname
+parameter_list|(
 name|pname
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|vname
+parameter_list|)
+name|char
+modifier|*
+name|pname
+decl_stmt|;
 name|char
 modifier|*
 name|vname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -1994,7 +1966,7 @@ name|name
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|bas_type
@@ -2010,29 +1982,21 @@ name|typ_list_t
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|add_type
-argument_list|(
-argument|len
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|len
+parameter_list|,
+name|type
+parameter_list|)
 name|int
 name|len
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|bas_type
 modifier|*
@@ -2125,7 +2089,7 @@ expr_stmt|;
 block|}
 empty_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|bas_type

@@ -1459,6 +1459,8 @@ argument_list|)
 return|;
 block|}
 block|}
+default|default:
+break|break;
 block|}
 return|return
 name|build1

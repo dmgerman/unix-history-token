@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -7284,6 +7290,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+default|default:
+break|break;
 block|}
 block|}
 endif|#
@@ -8302,6 +8310,8 @@ argument_list|(
 name|x
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 name|x
@@ -8466,6 +8476,8 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -8540,6 +8552,8 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -8602,6 +8616,8 @@ return|return
 operator|-
 literal|1
 return|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -8696,6 +8712,8 @@ operator|=
 literal|2
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -8773,6 +8791,8 @@ name|value
 operator|=
 literal|2
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 return|return

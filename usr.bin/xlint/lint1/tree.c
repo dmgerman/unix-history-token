@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lint1.h"
 end_include
 
@@ -7438,6 +7444,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|/* LINTED (enumeration values not handled in switch) */
+default|default:
 block|}
 if|if
 condition|(
@@ -19728,6 +19735,7 @@ name|STRING
 case|:
 return|return;
 comment|/* LINTED (enumeration values not handled in switch) */
+default|default:
 block|}
 name|cvctx
 operator|=
@@ -21516,6 +21524,7 @@ block|}
 block|}
 break|break;
 comment|/* LINTED (enumeration values not handled in switch) */
+default|default:
 block|}
 if|if
 condition|(

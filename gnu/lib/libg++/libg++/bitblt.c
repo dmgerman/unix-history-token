@@ -227,8 +227,9 @@ operator|=
 name|ONES
 expr_stmt|;
 break|break;
-name|case_BS_alu_equiv
-label|:
+case|case
+name|_BS_alu_equiv
+case|:
 name|ca1
 operator|=
 literal|0
@@ -362,7 +363,7 @@ name|dst
 parameter_list|,
 name|src
 parameter_list|)
-value|((dst)& ((src)& ca1 ^ cx1) ^ ((src)& ca2 ^ cx2))
+value|( ((dst)& ( ((src)& ca1) ^ cx1)) ^ ( ((src)& ca2) ^ cx2))
 include|#
 directive|include
 file|"bitdo2.h"

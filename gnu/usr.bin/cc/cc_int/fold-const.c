@@ -8176,6 +8176,8 @@ literal|0
 argument_list|)
 operator|)
 return|;
+default|default:
+break|break;
 block|}
 break|break;
 block|}
@@ -9079,6 +9081,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 case|case
 literal|'<'
@@ -9780,6 +9784,8 @@ argument_list|,
 name|arg
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -21103,6 +21109,8 @@ argument_list|)
 operator|=
 name|arg1
 expr_stmt|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* If this is an EQ or NE comparison with zero and ARG0 is 	 (1<< foo)& bar, convert it to (bar>> foo)& 1.  Both require 	 two operations, but the latter can be done in one less insn 	 one machine that have only two-operand insns or on which a 	 constant cannot be the first operand.  */
@@ -21871,6 +21879,8 @@ expr_stmt|;
 return|return
 name|t
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* An unsigned comparison against 0 can be simplified.  */
@@ -21984,6 +21994,8 @@ argument_list|,
 name|arg0
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* If we are comparing an expression that just has comparisons 	 of two integer values, arithmetic expressions of those comparisons, 	 and constants, we can simplify it.  There are only three cases 	 to check: the two values can either be equal, the first can be 	 greater, or the second can be greater.  Fold the expression for 	 those three values.  Since each value must be 0 or 1, we have 	 eight possibilities, each of which corresponds to the constant 0 	 or 1 or one of the six possible comparisons.  	 This handles common cases like (a> b) == 0 but also handles 	 expressions like  ((x> y) - (y> x))> 0, which supposedly 	 occur in macroized code.  */
@@ -23312,6 +23324,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 comment|/* If this is A != 0 ? A : 0, this is simply A.  For ==, it is 	     always zero.  */
 if|if
@@ -23471,6 +23485,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 comment|/* If this is A op C1 ? A : C2 with C1 and C2 constant integers, 	     we might still be able to simplify this.  For example, 	     if C1 is one less or one more than C2, this might have started 	     out as a MIN or MAX and been transformed by this function. 	     Only good for INTEGER_TYPEs, because we need TYPE_MAX_VALUE.  */
 if|if
@@ -23773,6 +23789,8 @@ argument_list|)
 argument_list|)
 argument_list|)
 return|;
+break|break;
+default|default:
 break|break;
 block|}
 block|}

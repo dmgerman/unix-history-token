@@ -123,6 +123,12 @@ directive|include
 file|"bc-emit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2505,6 +2511,8 @@ literal|1
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 return|return
 literal|0
@@ -2527,9 +2535,11 @@ name|p
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|pending_chain
+operator|)
 condition|)
 block|{
 name|QUEUED_INSN
@@ -3763,6 +3773,8 @@ operator|=
 name|extendsftf2_libfunc
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 case|case
@@ -3797,6 +3809,8 @@ operator|=
 name|extenddftf2_libfunc
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 break|break;
 case|case
@@ -3822,6 +3836,8 @@ name|libcall
 operator|=
 name|truncxfdf2_libfunc
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 break|break;
@@ -3849,7 +3865,11 @@ operator|=
 name|trunctfdf2_libfunc
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
+break|break;
+default|default:
 break|break;
 block|}
 if|if
@@ -16429,6 +16449,8 @@ comment|/* This takes a rtx argument, but shouldn't appear here. */
 name|abort
 argument_list|()
 expr_stmt|;
+default|default:
+break|break;
 block|}
 comment|/* If we have an rtx, we do not need to scan our operands.  */
 if|if
@@ -20847,6 +20869,7 @@ comment|/* If domain is empty, answer is no.  Likewise if index is constant 	   
 if|if
 condition|(
 operator|(
+operator|(
 name|TREE_CODE
 argument_list|(
 name|set_high_bound
@@ -20867,6 +20890,7 @@ name|set_high_bound
 argument_list|,
 name|set_low_bound
 argument_list|)
+operator|)
 operator|||
 operator|(
 name|TREE_CODE
@@ -29814,6 +29838,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+default|default:
+break|break;
 block|}
 name|abort
 argument_list|()
@@ -36845,6 +36871,8 @@ operator|!=
 literal|0
 condition|)
 return|return;
+default|default:
+break|break;
 block|}
 name|nops
 operator|=
@@ -43398,11 +43426,13 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|SIval
 operator|=
 name|bitpos
 operator|/
 name|BITS_PER_UNIT
+operator|)
 condition|)
 name|bc_emit_instruction
 argument_list|(

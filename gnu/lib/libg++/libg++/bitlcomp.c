@@ -206,13 +206,17 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|len0
 operator|==
 literal|0
+operator|)
 operator|-
+operator|(
 name|len1
 operator|==
 literal|0
+operator|)
 return|;
 name|len0
 operator|&=

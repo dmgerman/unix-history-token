@@ -132,8 +132,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
+specifier|extern
 name|int
+name|nullproc
+name|__P
+argument_list|(
+operator|(
+name|proc_list
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|write_table
 name|__P
 argument_list|(
@@ -147,7 +161,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|printit
 name|__P
 argument_list|(
@@ -228,19 +242,17 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_table
-argument_list|(
-argument|def
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 block|{
 name|version_list
 modifier|*
@@ -568,30 +580,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|printit
-argument_list|(
-argument|prefix
-argument_list|,
-argument|type
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|prefix
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|type
+parameter_list|)
+name|char
+modifier|*
+name|prefix
+decl_stmt|;
 name|char
 modifier|*
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|len
@@ -703,7 +710,7 @@ literal|",\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -176,11 +176,13 @@ name|eval
 operator|=
 literal|0
 init|;
+operator|(
 name|file
 operator|=
 operator|*
 name|argv
 operator|++
+operator|)
 condition|;
 control|)
 block|{

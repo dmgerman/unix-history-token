@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.33 1996/05/28 16:17:48 phk Exp $  */
+comment|/*  *	$Id: ld.c,v 1.34 1996/06/08 04:52:57 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -3680,6 +3680,7 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
 name|return_val
 operator|=
 call|(
@@ -3691,6 +3692,7 @@ name|subentry
 argument_list|,
 name|arg
 argument_list|)
+operator|)
 condition|)
 return|return
 name|return_val
@@ -3700,6 +3702,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|return_val
 operator|=
 call|(
@@ -3711,6 +3714,7 @@ name|entry
 argument_list|,
 name|arg
 argument_list|)
+operator|)
 condition|)
 return|return
 name|return_val
@@ -9645,7 +9649,7 @@ name|GS_TRACE
 condition|)
 name|printf
 argument_list|(
-literal|"symbol %s assigned to location %#x\n"
+literal|"symbol %s assigned to location %#lx\n"
 argument_list|,
 name|sp
 operator|->
@@ -9875,7 +9879,7 @@ name|write_map
 condition|)
 name|printf
 argument_list|(
-literal|"Allocating %s %s: %x at %x\n"
+literal|"Allocating %s %s: %x at %lx\n"
 argument_list|,
 name|sp
 operator|->
@@ -14384,15 +14388,19 @@ name|discard_locals
 operator|==
 name|DISCARD_ALL
 operator|||
+operator|(
 name|discard_locals
 operator|==
 name|DISCARD_L
 operator|&&
+operator|(
 name|lsp
 operator|->
 name|flags
 operator|&
 name|LS_L_SYMBOL
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* 			 * The user wants to discard this symbol, but it 			 * is referenced by a relocation.  We can still 			 * save some file space by suppressing the unique 			 * renaming of the symbol. 			 */

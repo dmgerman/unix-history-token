@@ -2696,6 +2696,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+return|return
+literal|0
+return|;
 block|}
 end_function
 

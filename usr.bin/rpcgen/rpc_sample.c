@@ -73,7 +73,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_sample_client
 name|__P
 argument_list|(
@@ -90,7 +90,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_sample_server
 name|__P
 argument_list|(
@@ -104,7 +104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|return_type
 name|__P
 argument_list|(
@@ -222,28 +222,23 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_sample_client
-argument_list|(
-argument|program_name
-argument_list|,
-argument|vp
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|program_name
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|vp
+parameter_list|)
+name|char
+modifier|*
+name|program_name
+decl_stmt|;
 name|version_list
 modifier|*
 name|vp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|proc_list
 modifier|*
@@ -1011,21 +1006,19 @@ literal|"}\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_sample_server
-argument_list|(
-argument|def
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 block|{
 name|version_list
 modifier|*
@@ -1363,21 +1356,19 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|return_type
-argument_list|(
-argument|plist
-argument_list|)
-name|proc_list
-operator|*
+parameter_list|(
 name|plist
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|proc_list
+modifier|*
+name|plist
+decl_stmt|;
 block|{
 name|ptype
 argument_list|(
@@ -1393,14 +1384,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|add_sample_msg
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|f_print
 argument_list|(
@@ -1438,7 +1427,7 @@ literal|" */\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

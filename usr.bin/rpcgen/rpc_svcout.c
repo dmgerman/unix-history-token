@@ -144,7 +144,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_real_program
 name|__P
 argument_list|(
@@ -158,7 +158,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_program
 name|__P
 argument_list|(
@@ -175,7 +175,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|printerr
 name|__P
 argument_list|(
@@ -192,7 +192,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|printif
 name|__P
 argument_list|(
@@ -215,7 +215,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_inetmost
 name|__P
 argument_list|(
@@ -229,7 +229,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|print_return
 name|__P
 argument_list|(
@@ -243,7 +243,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|print_pmapunset
 name|__P
 argument_list|(
@@ -257,7 +257,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|print_err_message
 name|__P
 argument_list|(
@@ -271,7 +271,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_timeout_func
 name|__P
 argument_list|(
@@ -284,7 +284,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_pm_most
 name|__P
 argument_list|(
@@ -300,7 +300,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_rpc_svc_fg
 name|__P
 argument_list|(
@@ -317,7 +317,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|open_log_file
 name|__P
 argument_list|(
@@ -332,28 +332,49 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
-name|p_xdrfunc
+name|void
+name|write_msg_out
+name|__P
 argument_list|(
-argument|rname
-argument_list|,
-argument|typename
+operator|(
+name|void
+operator|)
 argument_list|)
-name|char
-operator|*
-name|rname
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nullproc
+name|__P
+argument_list|(
+operator|(
+name|proc_list
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|p_xdrfunc
+parameter_list|(
+name|rname
+parameter_list|,
+name|typename
+parameter_list|)
+name|char
+modifier|*
+name|rname
+decl_stmt|;
 name|char
 modifier|*
 name|typename
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -389,7 +410,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void
@@ -1545,19 +1566,17 @@ begin_comment
 comment|/*  * write out definition of internal function (e.g. _printmsg_1(...))  *  which calls server's defintion of actual function (e.g. printmsg_1(...)).  *  Unpacks single user argument of printmsg_1 to call-by-value format  *  expected by printmsg_1.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_real_program
-argument_list|(
-argument|def
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 block|{
 name|version_list
 modifier|*
@@ -2012,30 +2031,25 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_program
-argument_list|(
-argument|def
-argument_list|,
-argument|storage
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|storage
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 name|char
 modifier|*
 name|storage
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|version_list
 modifier|*
@@ -3167,30 +3181,25 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|printerr
-argument_list|(
-argument|err
-argument_list|,
-argument|transp
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|err
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|transp
+parameter_list|)
+name|char
+modifier|*
+name|err
+decl_stmt|;
 name|char
 modifier|*
 name|transp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|f_print
 argument_list|(
@@ -3204,48 +3213,37 @@ name|transp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|printif
-argument_list|(
-argument|proc
-argument_list|,
-argument|transp
-argument_list|,
-argument|prefix
-argument_list|,
-argument|arg
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|proc
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|transp
+parameter_list|,
+name|prefix
+parameter_list|,
+name|arg
+parameter_list|)
+name|char
+modifier|*
+name|proc
+decl_stmt|;
 name|char
 modifier|*
 name|transp
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|prefix
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|f_print
 argument_list|(
@@ -3265,23 +3263,18 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|nullproc
-argument_list|(
-argument|proc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|proc
+parameter_list|)
 name|proc_list
 modifier|*
 name|proc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 for|for
 control|(
@@ -3322,21 +3315,19 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_inetmost
-argument_list|(
-argument|infile
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|infile
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|infile
+decl_stmt|;
 block|{
 name|f_print
 argument_list|(
@@ -3493,21 +3484,19 @@ literal|"\t}\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|print_return
-argument_list|(
-argument|space
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|space
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|space
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3576,21 +3565,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|print_pmapunset
-argument_list|(
-argument|space
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|space
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|space
+decl_stmt|;
 block|{
 name|list
 modifier|*
@@ -3684,21 +3671,19 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|print_err_message
-argument_list|(
-argument|space
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|space
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|char
+modifier|*
+name|space
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -3746,7 +3731,7 @@ name|_errbuf
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write the server auxiliary function (_msgout, timeout)  */
@@ -3785,12 +3770,13 @@ begin_comment
 comment|/*  * Write the _msgout function  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|write_msg_out
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|f_print
 argument_list|(
@@ -3915,16 +3901,19 @@ literal|"}\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Write the timeout function  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_timeout_func
-argument_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -3939,9 +3928,6 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -3949,9 +3935,6 @@ argument_list|,
 literal|"static void\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -3981,9 +3964,6 @@ argument_list|,
 literal|"closedown(int sig)\n"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -3991,9 +3971,6 @@ argument_list|,
 literal|"{\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|mtflag
@@ -4005,9 +3982,6 @@ argument_list|,
 literal|"\tmutex_lock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4015,9 +3989,6 @@ argument_list|,
 literal|"\tif (_rpcsvcstate == _IDLE) {\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4025,9 +3996,6 @@ argument_list|,
 literal|"\t\textern fd_set svc_fdset;\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4035,9 +4003,6 @@ argument_list|,
 literal|"\t\tstatic int size;\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4045,9 +4010,6 @@ argument_list|,
 literal|"\t\tint i, openfd;\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tirpcflag
@@ -4080,9 +4042,6 @@ literal|"\n\t\tif (_rpcfdtype == SOCK_DGRAM)\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4090,9 +4049,6 @@ argument_list|,
 literal|"\t\t\texit(0);\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4100,9 +4056,6 @@ argument_list|,
 literal|"\t\tif (size == 0) {\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|tirpcflag
@@ -4165,9 +4118,6 @@ literal|"\t\t\tsize = getdtablesize();\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4175,9 +4125,6 @@ argument_list|,
 literal|"\t\t}\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4185,9 +4132,6 @@ argument_list|,
 literal|"\t\tfor (i = 0, openfd = 0; i< size&& openfd< 2; i++)\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4195,9 +4139,6 @@ argument_list|,
 literal|"\t\t\tif (FD_ISSET(i,&svc_fdset))\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4205,9 +4146,6 @@ argument_list|,
 literal|"\t\t\t\topenfd++;\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4215,9 +4153,6 @@ argument_list|,
 literal|"\t\tif (openfd<= 1)\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4225,9 +4160,6 @@ argument_list|,
 literal|"\t\t\texit(0);\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4235,9 +4167,6 @@ argument_list|,
 literal|"\t}\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4245,9 +4174,6 @@ argument_list|,
 literal|"\tif (_rpcsvcstate == _SERVED)\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4255,9 +4181,6 @@ argument_list|,
 literal|"\t\t_rpcsvcstate = _IDLE;\n\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|mtflag
@@ -4269,9 +4192,6 @@ argument_list|,
 literal|"\tmutex_unlock(&_svcstate_lock);\n"
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4285,9 +4205,6 @@ else|:
 literal|"(void(*)())"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4295,9 +4212,6 @@ argument_list|,
 literal|"\t(void) alarm(_RPCSVC_CLOSEDOWN/2);\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|f_print
 argument_list|(
 name|fout
@@ -4305,37 +4219,29 @@ argument_list|,
 literal|"}\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Write the most of port monitor support  */
 end_comment
 
-begin_macro
-unit|static
+begin_function
+specifier|static
+name|void
 name|write_pm_most
-argument_list|(
-argument|infile
-argument_list|,
-argument|netflag
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|infile
+parameter_list|,
+name|netflag
+parameter_list|)
 name|char
 modifier|*
 name|infile
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|netflag
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|list
 modifier|*
@@ -4806,34 +4712,29 @@ literal|"\t}"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Support for backgrounding the server if self started.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_rpc_svc_fg
-argument_list|(
-argument|infile
-argument_list|,
-argument|sp
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|infile
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|sp
+parameter_list|)
+name|char
+modifier|*
+name|infile
+decl_stmt|;
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|f_print
 argument_list|(
@@ -5134,30 +5035,25 @@ name|sp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|open_log_file
-argument_list|(
-argument|infile
-argument_list|,
-argument|sp
-argument_list|)
-name|char
-operator|*
+parameter_list|(
 name|infile
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|sp
+parameter_list|)
+name|char
+modifier|*
+name|infile
+decl_stmt|;
 name|char
 modifier|*
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -5202,7 +5098,7 @@ operator|=
 literal|'.'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * write a registration for the given transport for Inetd  */

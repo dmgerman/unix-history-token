@@ -1378,6 +1378,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|he
 operator|=
 name|Hash_FindEntry
@@ -1389,6 +1390,7 @@ name|members
 argument_list|,
 name|copy
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(

@@ -28,7 +28,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: malloc.c,v 1.3 1995/03/04 17:46:24 nate Exp $"
+literal|"$Id: malloc.c,v 1.4 1995/05/30 05:01:48 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,22 @@ directive|define
 name|NULL
 value|0
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|xprintf
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -1553,28 +1569,23 @@ begin_comment
 comment|/*  * Search ``srchlen'' elements of each free list for a block whose  * header starts at ``freep''.  If srchlen is -1 search the whole list.  * Return bucket number, or -1 if not found.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|findbucket
-argument_list|(
-argument|freep
-argument_list|,
-argument|srchlen
-argument_list|)
-expr|union
-name|overhead
-operator|*
+parameter_list|(
 name|freep
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+parameter_list|,
+name|srchlen
+parameter_list|)
+name|union
+name|overhead
+modifier|*
+name|freep
+decl_stmt|;
 name|int
 name|srchlen
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|union
@@ -1651,7 +1662,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifdef
 ifdef|#

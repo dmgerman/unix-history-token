@@ -48,6 +48,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -6661,6 +6673,8 @@ operator|=
 literal|"rotate"
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 name|error
 argument_list|(
@@ -6969,6 +6983,8 @@ name|code
 operator|=
 name|LE_EXPR
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 operator|*
@@ -7411,6 +7427,8 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 name|type
 operator|=
@@ -7802,6 +7820,8 @@ name|value
 operator|=
 name|integer_zero_node
 expr_stmt|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -8427,6 +8447,8 @@ argument_list|(
 literal|"suggest parentheses around assignment used as truth value"
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.15 1995/05/30 05:01:46 rgrimes Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.16 1995/09/28 19:43:22 bde Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -3718,6 +3718,7 @@ name|E_SEARCH_DYNAMIC
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strrchr
@@ -3728,6 +3729,7 @@ name|filename
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*

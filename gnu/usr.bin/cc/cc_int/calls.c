@@ -67,6 +67,12 @@ directive|include
 file|"insn-flags.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_comment
 comment|/* Decide whether a function's arguments should be processed    from first to last or from last to first.     They should if the stack and args grow in opposite directions, but    only if we have push insns.  */
 end_comment
@@ -771,6 +777,8 @@ case|:
 return|return
 literal|0
 return|;
+default|default:
+break|break;
 block|}
 for|for
 control|(

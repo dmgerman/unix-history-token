@@ -64,7 +64,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|pdeclaration
 name|__P
 argument_list|(
@@ -108,7 +108,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|write_program
 name|__P
 argument_list|(
@@ -122,7 +122,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|printbody
 name|__P
 argument_list|(
@@ -230,19 +230,17 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|write_program
-argument_list|(
-argument|def
-argument_list|)
-name|definition
-operator|*
+parameter_list|(
 name|def
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|definition
+modifier|*
+name|def
+decl_stmt|;
 block|{
 name|version_list
 modifier|*
@@ -405,7 +403,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Writes out declarations of procedure's argument list.  * In either ANSI C style, in one of old rpcgen style (pass by reference),  * or new rpcgen style (multiple arguments, pass by value);  */
@@ -1051,19 +1049,17 @@ block|}
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|printbody
-argument_list|(
-argument|proc
-argument_list|)
-name|proc_list
-operator|*
+parameter_list|(
 name|proc
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+parameter_list|)
+name|proc_list
+modifier|*
+name|proc
+decl_stmt|;
 block|{
 name|decl_list
 modifier|*
@@ -1079,9 +1075,6 @@ name|arg_num
 operator|>
 literal|1
 operator|)
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* 	 * For new style with multiple arguments, need a structure in which 	 *  to stuff the arguments. 	 */
 if|if
@@ -1639,7 +1632,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15691,6 +15691,8 @@ else|:
 name|quotient
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -17078,6 +17080,8 @@ name|code
 operator|=
 name|EQ
 expr_stmt|;
+break|break;
+default|default:
 break|break;
 block|}
 comment|/* From now on, we won't change CODE, so set ICODE now.  */

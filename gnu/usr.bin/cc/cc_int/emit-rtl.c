@@ -6105,6 +6105,8 @@ return|return
 name|x
 return|;
 block|}
+default|default:
+break|break;
 block|}
 comment|/* This rtx may not be shared.  If it has already been seen,      replace it with a copy of itself.  */
 if|if
@@ -6436,6 +6438,8 @@ name|BARRIER
 case|:
 comment|/* The chain of insns is not being copied.  */
 return|return;
+default|default:
+break|break;
 block|}
 name|x
 operator|->
@@ -11755,6 +11759,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+break|break;
 block|}
 block|}
 comment|/* Don't duplicate the uids already in use.  */
@@ -12078,6 +12084,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
+default|default:
+break|break;
 block|}
 comment|/* Now scan the subexpressions recursively.  */
 name|format_ptr

@@ -444,6 +444,8 @@ name|c
 argument_list|)
 argument_list|)
 return|;
+default|default:
+break|break;
 block|}
 if|if
 condition|(
@@ -2671,6 +2673,8 @@ case|case
 name|POINTER_TYPE
 case|:
 break|break;
+default|default:
+break|break;
 block|}
 operator|*
 name|punsignedp
@@ -3142,6 +3146,8 @@ block|}
 break|break;
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 comment|/* If there is no save area and we have to allocate one, do so.  Otherwise      verify the save area is the proper mode.  */
 if|if
@@ -3385,6 +3391,8 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 if|if
 condition|(
