@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.168 1998/10/22 02:32:48 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.169 1998/10/24 01:08:45 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -679,7 +679,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/10/22 02:32:48 $"
+literal|"$Date: 1998/10/24 01:08:45 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -15655,6 +15655,61 @@ name|arg
 operator|->
 name|argn
 operator|+
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ParseAddr
+argument_list|(
+name|NULL
+argument_list|,
+literal|1
+argument_list|,
+name|arg
+operator|->
+name|argv
+operator|+
+name|arg
+operator|->
+name|argn
+argument_list|,
+operator|&
+name|ifa
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|mask
+operator|.
+name|s_addr
+operator|=
+name|brd
+operator|.
+name|s_addr
+operator|=
+name|INADDR_BROADCAST
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|arg
+operator|->
+name|argc
+operator|==
+name|arg
+operator|->
+name|argn
+operator|+
 literal|2
 condition|)
 block|{
@@ -15809,6 +15864,7 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
 name|how
 operator|=
 name|IFACE_ADD_LAST
