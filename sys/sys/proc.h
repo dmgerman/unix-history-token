@@ -140,30 +140,30 @@ block|{
 name|int
 name|s_count
 decl_stmt|;
-comment|/* (m)		Ref cnt; pgrps in session. */
+comment|/* (m) Ref cnt; pgrps in session. */
 name|struct
 name|proc
 modifier|*
 name|s_leader
 decl_stmt|;
-comment|/* (m + e)	Session leader. */
+comment|/* (m + e) Session leader. */
 name|struct
 name|vnode
 modifier|*
 name|s_ttyvp
 decl_stmt|;
-comment|/* (m)		Vnode of controlling terminal. */
+comment|/* (m) Vnode of controlling tty. */
 name|struct
 name|tty
 modifier|*
 name|s_ttyp
 decl_stmt|;
-comment|/* (m)		Controlling terminal. */
+comment|/* (m) Controlling tty. */
 name|pid_t
 name|s_sid
 decl_stmt|;
-comment|/* (c)		Session ID. */
-comment|/* (m)		Setlogin() name: */
+comment|/* (c) Session ID. */
+comment|/* (m) Setlogin() name: */
 name|char
 name|s_login
 index|[
@@ -182,7 +182,7 @@ name|struct
 name|mtx
 name|s_mtx
 decl_stmt|;
-comment|/* 		Mutex to protect members */
+comment|/* Mutex to protect members */
 block|}
 struct|;
 end_struct
@@ -201,7 +201,7 @@ argument|pgrp
 argument_list|)
 name|pg_hash
 expr_stmt|;
-comment|/* (e)		Hash chain. */
+comment|/* (e) Hash chain. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -209,31 +209,31 @@ argument|proc
 argument_list|)
 name|pg_members
 expr_stmt|;
-comment|/* (m + e)	Pointer to pgrp members. */
+comment|/* (m + e) Pointer to pgrp members. */
 name|struct
 name|session
 modifier|*
 name|pg_session
 decl_stmt|;
-comment|/* (c)		Pointer to session. */
+comment|/* (c) Pointer to session. */
 name|struct
 name|sigiolst
 name|pg_sigiolst
 decl_stmt|;
-comment|/* (m)		List of sigio sources. */
+comment|/* (m) List of sigio sources. */
 name|pid_t
 name|pg_id
 decl_stmt|;
-comment|/* (c)		Pgrp id. */
+comment|/* (c) Pgrp id. */
 name|int
 name|pg_jobc
 decl_stmt|;
-comment|/* (m)		# procs qualifying pgrp for job control */
+comment|/* (m) job cntl proc count */
 name|struct
 name|mtx
 name|pg_mtx
 decl_stmt|;
-comment|/* 		Mutex to protect members */
+comment|/*  Mutex to protect members */
 block|}
 struct|;
 end_struct
@@ -347,7 +347,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be though of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of   * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE  when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *   * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should threfore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the uer boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) A process  * might keep a cache of threads available to allow it to quickly  * get one when it needs a new one. There would probably also be a system  * cache of free threads.  */
+comment|/*  * Here we define the four structures used for process information.  *  * The first is the thread. It might be though of as a "Kernel  * Schedulable Entity Context".  * This structure contains all the information as to where a thread of   * execution is now, or was when it was suspended, why it was suspended,  * and anything else that will be needed to restart it when it is  * rescheduled. Always associated with a KSE when running, but can be  * reassigned to an equivalent KSE  when being restarted for  * load balancing. Each of these is associated with a kernel stack  * and a pcb.  *   * It is important to remember that a particular thread structure only  * exists as long as the system call or kernel entrance (e.g. by pagefault)  * which it is currently executing. It should threfore NEVER be referenced  * by pointers in long lived structures that live longer than a single  * request. If several threads complete their work at the same time,  * they will all rewind their stacks to the user boundary, report their  * completion state, and all but one will be freed. That last one will  * be kept to provide a kernel stack and pcb for the NEXT syscall or kernel  * entrance. (basically to save freeing and then re-allocating it) The KSE  * keeps a cached thread available to allow it to quickly  * get one when it needs a new one. There is also a system  * cache of free threads. Threads have priority and partake in priority  * inherritance schemes.  */
 end_comment
 
 begin_struct_decl
@@ -357,7 +357,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*   * The second structure is the Kernel Schedulable Entity. (KSE)  * As long as this is scheduled, it will continue to run any threads that  * are assigned to it or the KSEGRP (see later) until either it runs out  * of runnable threads or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * threads are associated with a KSE for cache reasons, but a sheduled KSE with  * no runnable thread will try take a thread from a sibling KSE before  * surrendering its quantum. In some schemes it gets it's quantum from the KSEG  * and contributes to draining that quantum, along withthe other KSEs in  * the group. (undecided)  */
+comment|/*   * The second structure is the Kernel Schedulable Entity. (KSE)  * It represents the ability to take a slot in th scheduler queue.  * As long as this is scheduled, it cound continue to run any threads that  * are assigned to the KSEGRP (see later) until either it runs out  * of runnable threads of high enough priority, or CPU.  * It runs on one CPU and is assigned a quantum of time. When a thread is  * blocked, The KSE continues to run and will search for another thread  * in a runnable state amongst those it has. It May decide to return to user  * mode with a new 'empty' thread if there are no runnable threads.  * Threads are temporarily associated with a KSE for scheduling reasons.  */
 end_comment
 
 begin_struct_decl
@@ -367,7 +367,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * Its KSEs, each of which should be running in a different CPU.  * Priority and total available sheduled quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
+comment|/*  * The KSEGRP is allocated resources across a number of CPUs.  * (Including a number of CPUxQUANTA. It parcels these QUANTA up among  * Its KSEs, each of which should be running in a different CPU.  * BASE priority and total available quanta are properties of a KSEGRP.  * Multiple KSEGRPs in a single process compete against each other  * for total quanta in the same way that a forked child competes against  * it's parent process.  */
 end_comment
 
 begin_struct_decl
