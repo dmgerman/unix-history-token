@@ -1231,6 +1231,12 @@ argument_list|)
 expr_stmt|;
 name|pp
 operator|->
+name|flags
+operator||=
+name|G_PF_CANDELETE
+expr_stmt|;
+name|pp
+operator|->
 name|mediasize
 operator|=
 name|sc
