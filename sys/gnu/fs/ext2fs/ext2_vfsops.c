@@ -4502,6 +4502,16 @@ name|vp
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VNON
+condition|)
+comment|/* XXX why is this needed? (it is) */
+continue|continue;
 name|ip
 operator|=
 name|VTOI
