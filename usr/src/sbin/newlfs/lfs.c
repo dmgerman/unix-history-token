@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.11 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,6 +355,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_DIR
+block|,
 literal|1
 block|,
 literal|"."
@@ -368,6 +370,8 @@ argument_list|(
 expr|struct
 name|direct
 argument_list|)
+block|,
+name|DT_DIR
 block|,
 literal|2
 block|,
@@ -383,6 +387,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_REG
+block|,
 literal|5
 block|,
 literal|"ifile"
@@ -396,6 +402,8 @@ argument_list|(
 expr|struct
 name|direct
 argument_list|)
+block|,
+name|DT_DIR
 block|,
 literal|10
 block|,
@@ -421,6 +429,8 @@ expr|struct
 name|direct
 argument_list|)
 block|,
+name|DT_DIR
+block|,
 literal|1
 block|,
 literal|"."
@@ -434,6 +444,8 @@ argument_list|(
 expr|struct
 name|direct
 argument_list|)
+block|,
+name|DT_DIR
 block|,
 literal|2
 block|,
@@ -3030,18 +3042,44 @@ expr_stmt|;
 name|dip
 operator|->
 name|di_atime
+operator|.
+name|ts_sec
 operator|=
 name|dip
 operator|->
 name|di_mtime
+operator|.
+name|ts_sec
 operator|=
 name|dip
 operator|->
 name|di_ctime
+operator|.
+name|ts_sec
 operator|=
 name|lfsp
 operator|->
 name|lfs_tstamp
+expr_stmt|;
+name|dip
+operator|->
+name|di_atime
+operator|.
+name|ts_nsec
+operator|=
+name|dip
+operator|->
+name|di_mtime
+operator|.
+name|ts_nsec
+operator|=
+name|dip
+operator|->
+name|di_ctime
+operator|.
+name|ts_nsec
+operator|=
+literal|0
 expr_stmt|;
 name|dip
 operator|->
@@ -3183,7 +3221,7 @@ name|d_reclen
 operator|=
 name|DIRSIZ
 argument_list|(
-literal|0
+name|NEWDIRFMT
 argument_list|,
 operator|&
 name|protodir
@@ -3265,7 +3303,7 @@ name|cp
 argument_list|,
 name|DIRSIZ
 argument_list|(
-literal|0
+name|NEWDIRFMT
 argument_list|,
 operator|&
 name|protodir
