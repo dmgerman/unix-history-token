@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_inline.h#39 $  *  * $FreeBSD$  */
+comment|/*  * Inline routines shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx_inline.h#43 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -2229,6 +2229,32 @@ operator|->
 name|next
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Setup data "oddness". 	 */
+name|scb
+operator|->
+name|hscb
+operator|->
+name|lun
+operator|&=
+name|LID
+expr_stmt|;
+if|if
+condition|(
+name|ahc_get_transfer_length
+argument_list|(
+name|scb
+argument_list|)
+operator|&
+literal|0x1
+condition|)
+name|scb
+operator|->
+name|hscb
+operator|->
+name|lun
+operator||=
+name|SCB_XFERLEN_ODD
+expr_stmt|;
 comment|/* 	 * Keep a history of SCBs we've downloaded in the qinfifo. 	 */
 name|ahc
 operator|->
@@ -2246,7 +2272,7 @@ name|hscb
 operator|->
 name|tag
 expr_stmt|;
-comment|/* 	 * Make sure our data is consistant from the 	 * perspective of the adapter. 	 */
+comment|/* 	 * Make sure our data is consistent from the 	 * perspective of the adapter. 	 */
 name|ahc_sync_scb
 argument_list|(
 name|ahc
@@ -2484,7 +2510,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|__inline
-name|void
+name|int
 name|ahc_intr
 parameter_list|(
 name|struct
@@ -2772,7 +2798,7 @@ end_comment
 begin_function
 specifier|static
 name|__inline
-name|void
+name|int
 name|ahc_intr
 parameter_list|(
 name|struct
@@ -2798,7 +2824,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Our interrupt is not enabled on the chip 		 * and may be disabled for re-entrancy reasons, 		 * so just return.  This is likely just a shared 		 * interrupt. 		 */
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Instead of directly reading the interrupt status register, 	 * infer the cause of the interrupt by checking our in-core 	 * completion queues.  This avoids a costly PCI bus read in 	 * most cases. 	 */
 if|if
@@ -2842,77 +2872,6 @@ name|INTSTAT
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|intstat
-operator|&
-name|CMDCMPLT
-condition|)
-block|{
-name|ahc_outb
-argument_list|(
-name|ahc
-argument_list|,
-name|CLRINT
-argument_list|,
-name|CLRCMDINT
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Ensure that the chip sees that we've cleared 		 * this interrupt before we walk the output fifo. 		 * Otherwise, we may, due to posted bus writes, 		 * clear the interrupt after we finish the scan, 		 * and after the sequencer has added new entries 		 * and asserted the interrupt again. 		 */
-name|ahc_flush_device_writes
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
-name|ahc_run_qoutfifo
-argument_list|(
-name|ahc
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AHC_TARGET_MODE
-if|if
-condition|(
-operator|(
-name|ahc
-operator|->
-name|flags
-operator|&
-name|AHC_TARGETROLE
-operator|)
-operator|!=
-literal|0
-condition|)
-name|ahc_run_tqinfifo
-argument_list|(
-name|ahc
-argument_list|,
-comment|/*paused*/
-name|FALSE
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-if|if
-condition|(
-name|intstat
-operator|==
-literal|0xFF
-operator|&&
-operator|(
-name|ahc
-operator|->
-name|features
-operator|&
-name|AHC_REMOVABLE
-operator|)
-operator|!=
-literal|0
-condition|)
-comment|/* Hot eject */
-return|return;
 if|if
 condition|(
 operator|(
@@ -2984,7 +2943,11 @@ operator|->
 name|unsolicited_ints
 operator|++
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|ahc
 operator|->
@@ -2992,6 +2955,80 @@ name|unsolicited_ints
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|intstat
+operator|&
+name|CMDCMPLT
+condition|)
+block|{
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|CLRINT
+argument_list|,
+name|CLRCMDINT
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Ensure that the chip sees that we've cleared 		 * this interrupt before we walk the output fifo. 		 * Otherwise, we may, due to posted bus writes, 		 * clear the interrupt after we finish the scan, 		 * and after the sequencer has added new entries 		 * and asserted the interrupt again. 		 */
+name|ahc_flush_device_writes
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+name|ahc_run_qoutfifo
+argument_list|(
+name|ahc
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AHC_TARGET_MODE
+if|if
+condition|(
+operator|(
+name|ahc
+operator|->
+name|flags
+operator|&
+name|AHC_TARGETROLE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|ahc_run_tqinfifo
+argument_list|(
+name|ahc
+argument_list|,
+comment|/*paused*/
+name|FALSE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+comment|/* 	 * Handle statuses that may invalidate our cached 	 * copy of INTSTAT separately. 	 */
+if|if
+condition|(
+name|intstat
+operator|==
+literal|0xFF
+operator|&&
+operator|(
+name|ahc
+operator|->
+name|features
+operator|&
+name|AHC_REMOVABLE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Hot eject.  Do nothing */
+block|}
+elseif|else
 if|if
 condition|(
 name|intstat
@@ -3004,9 +3041,8 @@ argument_list|(
 name|ahc
 argument_list|)
 expr_stmt|;
-comment|/* Fatal error, no more interrupts to handle. */
-return|return;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -3021,6 +3057,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|ahc_pause_bug_fix
 argument_list|(
 name|ahc
@@ -3060,6 +3097,12 @@ argument_list|,
 name|intstat
 argument_list|)
 expr_stmt|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

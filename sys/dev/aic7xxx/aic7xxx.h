@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#70 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#79 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -259,7 +259,7 @@ parameter_list|(
 name|scb
 parameter_list|)
 define|\
-value|((scb)->hscb->lun)
+value|((scb)->hscb->lun& LID)
 end_define
 
 begin_define
@@ -970,6 +970,10 @@ comment|/* No BIOS left over settings. */
 name|AHC_DISABLE_PCI_PERR
 init|=
 literal|0x10000000
+block|,
+name|AHC_HAS_TERM_LOGIC
+init|=
+literal|0x20000000
 block|}
 name|ahc_flag
 typedef|;
@@ -980,7 +984,7 @@ comment|/************************* Hardware  SCB Definition ********************
 end_comment
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  The SCB  * consists of a "hardware SCB" mirroring the fields availible on the card  * and additional information the kernel stores for each transaction.  *  * To minimize space utilization, a portion of the hardware scb stores  * different data during different portions of a SCSI transaction.  * As initialized by the host driver for the initiator role, this area  * contains the SCSI cdb (or a pointer to the  cdb) to be executed.  After  * the cdb has been presented to the target, this area serves to store  * residual transfer information and the SCSI status byte.  * For the target role, the contents of this area do not change, but  * still serve a different purpose than for the initiator role.  See  * struct target_data for details.  */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  The SCB  * consists of a "hardware SCB" mirroring the fields available on the card  * and additional information the kernel stores for each transaction.  *  * To minimize space utilization, a portion of the hardware scb stores  * different data during different portions of a SCSI transaction.  * As initialized by the host driver for the initiator role, this area  * contains the SCSI cdb (or a pointer to the  cdb) to be executed.  After  * the cdb has been presented to the target, this area serves to store  * residual transfer information and the SCSI status byte.  * For the target role, the contents of this area do not change, but  * still serve a different purpose than for the initiator role.  See  * struct target_data for details.  */
 end_comment
 
 begin_comment
@@ -1641,7 +1645,7 @@ begin_define
 define|#
 directive|define
 name|AHC_OFFSET_UNKNOWN
-value|0x0
+value|0xFF
 end_define
 
 begin_define
@@ -2265,28 +2269,14 @@ end_expr_stmt
 
 begin_struct
 struct|struct
-name|ahc_suspend_channel_state
+name|ahc_aic7770_softc
 block|{
+comment|/* 	 * Saved register state used for chip_init(). 	 */
 name|uint8_t
-name|scsiseq
+name|busspd
 decl_stmt|;
 name|uint8_t
-name|sxfrctl0
-decl_stmt|;
-name|uint8_t
-name|sxfrctl1
-decl_stmt|;
-name|uint8_t
-name|simode0
-decl_stmt|;
-name|uint8_t
-name|simode1
-decl_stmt|;
-name|uint8_t
-name|seltimer
-decl_stmt|;
-name|uint8_t
-name|seqctl
+name|bustime
 decl_stmt|;
 block|}
 struct|;
@@ -2294,17 +2284,26 @@ end_struct
 
 begin_struct
 struct|struct
-name|ahc_suspend_state
+name|ahc_pci_softc
 block|{
-name|struct
-name|ahc_suspend_channel_state
-name|channel
-index|[
-literal|2
-index|]
+comment|/* 	 * Saved register state used for chip_init(). 	 */
+name|uint32_t
+name|devconfig
+decl_stmt|;
+name|uint16_t
+name|targcrccnt
+decl_stmt|;
+name|uint8_t
+name|command
+decl_stmt|;
+name|uint8_t
+name|csize_lattime
 decl_stmt|;
 name|uint8_t
 name|optionmode
+decl_stmt|;
+name|uint8_t
+name|crccontrol1
 decl_stmt|;
 name|uint8_t
 name|dscommand0
@@ -2312,28 +2311,31 @@ decl_stmt|;
 name|uint8_t
 name|dspcistatus
 decl_stmt|;
-comment|/* hsmailbox */
-name|uint8_t
-name|crccontrol1
-decl_stmt|;
 name|uint8_t
 name|scbbaddr
 decl_stmt|;
-comment|/* Host and sequencer SCB counts */
 name|uint8_t
 name|dff_thrsh
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|scratch_ram
-decl_stmt|;
-name|uint8_t
-modifier|*
-name|btt
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_union
+union|union
+name|ahc_bus_softc
+block|{
+name|struct
+name|ahc_aic7770_softc
+name|aic7770_softc
+decl_stmt|;
+name|struct
+name|ahc_pci_softc
+name|pci_softc
+decl_stmt|;
+block|}
+union|;
+end_union
 
 begin_typedef
 typedef|typedef
@@ -2341,6 +2343,51 @@ name|void
 function_decl|(
 modifier|*
 name|ahc_bus_intr_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|ahc_bus_chip_init_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|ahc_bus_suspend_t
+function_decl|)
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|ahc_bus_resume_t
 function_decl|)
 parameter_list|(
 name|struct
@@ -2410,6 +2457,11 @@ index|[
 name|AHC_NUM_TARGETS
 index|]
 decl_stmt|;
+comment|/* 	 * Bus attachment specific data. 	 */
+name|union
+name|ahc_bus_softc
+name|bus_softc
+decl_stmt|;
 comment|/* 	 * Platform specific data. 	 */
 name|struct
 name|ahc_platform_data
@@ -2423,6 +2475,18 @@ decl_stmt|;
 comment|/* 	 * Bus specific device information. 	 */
 name|ahc_bus_intr_t
 name|bus_intr
+decl_stmt|;
+comment|/* 	 * Bus specific initialization required 	 * after a chip reset. 	 */
+name|ahc_bus_chip_init_t
+name|bus_chip_init
+decl_stmt|;
+comment|/* 	 * Bus specific suspend routine. 	 */
+name|ahc_bus_suspend_t
+name|bus_suspend
+decl_stmt|;
+comment|/* 	 * Bus specific resume routine. 	 */
+name|ahc_bus_resume_t
+name|bus_resume
 decl_stmt|;
 comment|/* 	 * Target mode related state kept on a per enabled lun basis. 	 * Targets that are not enabled will have null entries. 	 * As an initiator, we keep one target entry for our initiator 	 * ID to store our sync/wide transfer settings. 	 */
 name|struct
@@ -2528,6 +2592,10 @@ decl_stmt|;
 name|uint8_t
 name|tqinfifonext
 decl_stmt|;
+comment|/* 	 * Cached copy of the sequencer control register. 	 */
+name|uint8_t
+name|seqctl
+decl_stmt|;
 comment|/* 	 * Incoming and outgoing message handling. 	 */
 name|uint8_t
 name|send_msg_perror
@@ -2578,11 +2646,6 @@ comment|/* 	 * Bus address of the one byte buffer used to 	 * work-around a DMA 
 name|bus_addr_t
 name|dma_bug_buf
 decl_stmt|;
-comment|/* Information saved through suspend/resume cycles */
-name|struct
-name|ahc_suspend_state
-name|suspend_state
-decl_stmt|;
 comment|/* Number of enabled target mode device on this card */
 name|u_int
 name|enabled_luns
@@ -2595,8 +2658,17 @@ comment|/* PCI cacheline size. */
 name|u_int
 name|pci_cachesize
 decl_stmt|;
+comment|/* 	 * Count of parity errors we have seen as a target. 	 * We auto-disable parity error checking after seeing 	 * AHC_PCI_TARGET_PERR_THRESH number of errors. 	 */
 name|u_int
-name|stack_size
+name|pci_target_perr_count
+decl_stmt|;
+define|#
+directive|define
+name|AHC_PCI_TARGET_PERR_THRESH
+value|10
+comment|/* Maximum number of sequencer instructions supported. */
+name|u_int
+name|instruction_ram_size
 decl_stmt|;
 comment|/* Per-Unit descriptive information */
 specifier|const
@@ -2767,6 +2839,7 @@ decl_stmt|;
 name|uint32_t
 name|id_mask
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3084,6 +3157,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ahc_chip_init
+parameter_list|(
+name|struct
+name|ahc_softc
+modifier|*
+name|ahc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|ahc_init
 parameter_list|(
 name|struct
@@ -3229,6 +3314,9 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+parameter_list|,
+name|int
+name|reinit
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3247,18 +3335,6 @@ end_function_decl
 begin_comment
 comment|/*************************** Interrupt Services *******************************/
 end_comment
-
-begin_function_decl
-name|void
-name|ahc_pci_intr
-parameter_list|(
-name|struct
-name|ahc_softc
-modifier|*
-name|ahc
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
