@@ -1417,10 +1417,7 @@ operator|~
 name|IFM_MMASK
 operator|)
 operator||
-name|IFM_MAKEMODE
-argument_list|(
 name|mode
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
