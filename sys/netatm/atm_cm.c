@@ -8103,15 +8103,9 @@ modifier|*
 name|n
 decl_stmt|;
 comment|/* 			 * We have to allocate another buffer and tack it 			 * onto the front of the packet 			 */
-name|KB_ALLOCPKT
+name|MGETHDR
 argument_list|(
 name|n
-argument_list|,
-name|llcp
-operator|->
-name|v
-operator|.
-name|llc_len
 argument_list|,
 name|KB_F_NOWAIT
 argument_list|,
