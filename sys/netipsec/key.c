@@ -18487,7 +18487,7 @@ if|if
 condition|(
 name|spidx0
 operator|->
-name|src
+name|dst
 operator|.
 name|sin6
 operator|.
@@ -18495,7 +18495,7 @@ name|sin6_scope_id
 operator|&&
 name|spidx1
 operator|->
-name|src
+name|dst
 operator|.
 name|sin6
 operator|.
