@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	8.7 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)portal_vnops.c	8.8 (Berkeley) %G%  *  * $Id: portal_vnops.c,v 1.4 1992/05/30 10:05:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
