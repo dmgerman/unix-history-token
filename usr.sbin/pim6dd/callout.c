@@ -376,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sets the timer  */
+comment|/*   * sets the timer  */
 end_comment
 
 begin_function

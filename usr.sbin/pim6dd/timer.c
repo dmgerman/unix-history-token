@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or  *  promote products derived from this software without specific prior  *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or   *  promote products derived from this software without specific prior   *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: timer.c,v 1.3 1999/09/15 07:45:12 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: timer.c,v 1.5 2000/05/18 16:09:39 itojun Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
+comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *    * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *   * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -214,7 +214,7 @@ decl_stmt|,
 modifier|*
 name|curr_nbr
 decl_stmt|;
-comment|/* XXX: TODO: currently, sending to qe* interface which is DOWN  * doesn't return error (ENETDOWN) on my Solaris machine,  * so have to check periodically the  * interfaces status. If this is fixed, just remove the defs around  * the "if (vifs_down)" line.  */
+comment|/* XXX: TODO: currently, sending to qe* interface which is DOWN  * doesn't return error (ENETDOWN) on my Solaris machine,  * so have to check periodically the   * interfaces status. If this is fixed, just remove the defs around  * the "if (vifs_down)" line.  */
 if|#
 directive|if
 operator|(
@@ -277,6 +277,75 @@ name|VIFF_DOWN
 operator|)
 condition|)
 continue|continue;
+comment|/* Timeout the MLD querier (unless we re the querier) */
+if|if
+condition|(
+operator|(
+name|v
+operator|->
+name|uv_flags
+operator|&
+name|VIFF_QUERIER
+operator|)
+operator|==
+literal|0
+operator|&&
+name|v
+operator|->
+name|uv_querier
+condition|)
+block|{
+comment|/* this must be non-NULL, but check for safety. */
+name|IF_TIMEOUT
+argument_list|(
+argument|v->uv_querier->al_timer
+argument_list|)
+block|{
+comment|/* act as a querier by myself */
+name|v
+operator|->
+name|uv_flags
+operator||=
+name|VIFF_QUERIER
+expr_stmt|;
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_addr
+operator|=
+name|v
+operator|->
+name|uv_linklocal
+operator|->
+name|pa_addr
+expr_stmt|;
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_timer
+operator|=
+name|MLD6_OTHER_QUERIER_PRESENT_INTERVAL
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_ctime
+argument_list|)
+expr_stmt|;
+comment|/* reset timestamp */
+name|query_groups
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Timeout neighbors */
 for|for
 control|(
@@ -423,7 +492,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
-comment|/* Walk the the (S,G) entries */
+comment|/* Walk the (S,G) entries */
 if|if
 condition|(
 name|grplist
@@ -553,7 +622,7 @@ operator|.
 name|bytecnt
 condition|)
 block|{
-comment|/* Packets have been forwarded - refresh timer 		 * Note that these counters count packets received, 		 * not packets forwarded.  So only refresh if packets 		 * received and non-null oiflist. 		 */
+comment|/* Packets have been forwarded - refresh timer 		 * Note that these counters count packets received,  		 * not packets forwarded.  So only refresh if packets 		 * received and non-null oiflist. 		 */
 name|IF_DEBUG
 argument_list|(
 argument|DEBUG_MFC

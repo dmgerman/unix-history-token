@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or  *  promote products derived from this software without specific prior  *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or   *  promote products derived from this software without specific prior   *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: defs.h,v 1.6 1999/12/10 06:09:13 itojun Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: defs.h,v 1.7 2000/04/30 13:01:36 itojun Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
+comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *    * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *   * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -149,11 +149,33 @@ directive|include
 file|<net/if.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD__
+operator|>=
+literal|3
+end_if
+
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__>= 3 */
+end_comment
 
 begin_include
 include|#
@@ -197,11 +219,54 @@ directive|include
 file|<arpa/inet.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_comment
+comment|/* sigh */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<osreldate.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|__bsdi__
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|220000
+operator|)
+operator|)
+end_if
 
 begin_define
 define|#
@@ -221,6 +286,15 @@ undef|#
 directive|undef
 name|rtentry
 end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __bsdi__ or __FreeBSD_version>= 220000 */
+end_comment
 
 begin_include
 include|#
@@ -1541,6 +1615,20 @@ name|char
 operator|*
 operator|,
 operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dump_mldqueriers
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3182,7 +3270,7 @@ comment|/* pim_proto.c */
 end_comment
 
 begin_endif
-unit|extern int receive_pim_hello         __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_hello            __P((struct uvif *v, u_int16 holdtime)); extern void delete_pim_nbr           __P((pim_nbr_entry_t *nbr_delete)); extern int receive_pim_join_prune    __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_jp               __P((mrtentry_t *mrtentry_ptr, int action, 					  vifi_t vifi, u_int32 target_addr, 					  u_int16 holdtime)); extern int receive_pim_assert        __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_assert           __P((u_int32 source, u_int32 group, 					  vifi_t vifi, 					  mrtentry_t *mrtentry_ptr)); extern void delete_pim_graft_entry   __P((mrtentry_t *mrtentry_ptr)); extern int receive_pim_graft         __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen, 					  int pimtype));
+unit|extern int receive_pim_hello         __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_hello            __P((struct uvif *v, u_int16 holdtime)); extern void delete_pim_nbr           __P((pim_nbr_entry_t *nbr_delete)); extern int receive_pim_join_prune    __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_jp               __P((mrtentry_t *mrtentry_ptr, int action, 					  vifi_t vifi, u_int32 target_addr,  					  u_int16 holdtime)); extern int receive_pim_assert        __P((u_int32 src, u_int32 dst, 					  char *pim_message, int datalen)); extern int send_pim_assert           __P((u_int32 source, u_int32 group, 					  vifi_t vifi, 					  mrtentry_t *mrtentry_ptr)); extern void delete_pim_graft_entry   __P((mrtentry_t *mrtentry_ptr)); extern int receive_pim_graft         __P((u_int32 src, u_int32 dst,  					  char *pim_message, int datalen, 					  int pimtype));
 endif|#
 directive|endif
 end_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -8,15 +8,15 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -455,7 +455,7 @@ value|al_alu.alu_reporter
 end_define
 
 begin_comment
-comment|/*  * User level Virtual Interface structure  *  * A "virtual interface" is either a physical, multicast-capable interface  * (called a "phyint"), a virtual point-to-point link (called a "tunnel")  * or a "register vif" used by PIM. The register vif is used by the  * Designated Router (DR) to send encapsulated data packets to the  * Rendevous Point (RP) for a particular group. The data packets are  * encapsulated in PIM messages (IPPROTO_PIM = 103) and then unicast to  * the RP.  * (Note: all addresses, subnet numbers and masks are kept in NETWORK order.)  */
+comment|/*  * User level Virtual Interface structure   *  * A "virtual interface" is either a physical, multicast-capable interface  * (called a "phyint"), a virtual point-to-point link (called a "tunnel")  * or a "register vif" used by PIM. The register vif is used by the       * Designated Router (DR) to send encapsulated data packets to the  * Rendevous Point (RP) for a particular group. The data packets are  * encapsulated in PIM messages (IPPROTO_PIM = 103) and then unicast to  * the RP.  * (Note: all addresses, subnet numbers and masks are kept in NETWORK order.)  */
 end_comment
 
 begin_struct
@@ -658,6 +658,9 @@ name|u_quad_t
 name|uv_listener_timo
 decl_stmt|;
 name|u_quad_t
+name|uv_querier_timo
+decl_stmt|;
+name|u_quad_t
 name|uv_outif_timo
 decl_stmt|;
 comment|/* outgoing interfaces timers */
@@ -727,7 +730,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Used to get the RPF neighbor and IIF info  * for a given source from the unicast routing table.  */
+comment|/*    * Used to get the RPF neighbor and IIF info  * for a given source from the unicast routing table.  */
 end_comment
 
 begin_struct
@@ -759,6 +762,7 @@ name|init_vifs
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -771,6 +775,7 @@ name|stop_all_vifs
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -783,19 +788,25 @@ name|check_vif_state
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|sockaddr_in6
 modifier|*
 name|max_global_address
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -805,6 +816,7 @@ name|uv_global
 name|__P
 argument_list|(
 operator|(
+name|vifi_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -826,18 +838,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|struct
 name|sockaddr_in6
 modifier|*
 name|local_iface
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
+operator|*
 name|ifname
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

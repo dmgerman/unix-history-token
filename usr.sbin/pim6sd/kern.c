@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -8,11 +8,11 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -141,8 +141,14 @@ directive|include
 file|"debug.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"kern.h"
+end_include
+
 begin_comment
-comment|/*  * Open/init the multicast routing in the kernel and sets the MRT_ASSERT  * flag in the kernel.  *  */
+comment|/*    * Open/init the multicast routing in the kernel and sets the MRT_ASSERT  * flag in the kernel.  *  */
 end_comment
 
 begin_function
@@ -316,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the socket receiving buffer. `bufsize` is the preferred size,  * `minsize` is the smallest acceptable size.  */
+comment|/*   * Set the socket receiving buffer. `bufsize` is the preferred size,  * `minsize` is the smallest acceptable size.  */
 end_comment
 
 begin_function
@@ -345,7 +351,7 @@ name|iter
 init|=
 literal|0
 decl_stmt|;
-comment|/*      * Set the socket buffer.  If we can't set it as large as we      * want, search around to try to find the highest acceptable      * value.  The highest acceptable value being smaller than      * minsize is a fatal error.      */
+comment|/*      * Set the socket buffer.  If we can't set it as large as we      * want, search around to try to find the highest acceptable      * value.  The highest acceptable value being smaller than      * minsize is a fatal error.       */
 if|if
 condition|(
 name|setsockopt
@@ -482,7 +488,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the default Hop Limit for the multicast packets outgoing from this  * socket.  */
+comment|/*    * Set the default Hop Limit for the multicast packets outgoing from this  * socket.  */
 end_comment
 
 begin_function
@@ -819,7 +825,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a virtual interface in the kernel.  */
+comment|/*   * Add a virtual interface in the kernel.  */
 end_comment
 
 begin_function

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1999 LSIIT Laboratory.  * All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -12,11 +12,11 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -221,39 +221,39 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|u_char
+modifier|*
 name|sndcmsgbufpim
-index|[
-name|CMSG_SPACE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_pktinfo
-argument_list|)
-argument_list|)
-index|]
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|sndcmsglen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|u_char
+modifier|*
 name|rcvcmsgbufpim
-index|[
-name|CMSG_SPACE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_pktinfo
-argument_list|)
-argument_list|)
-index|]
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rcvcmsglen
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Local function definitions.  */
+comment|/*      * Local function definitions.  */
 end_comment
 
 begin_decl_stmt
@@ -661,6 +661,43 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+name|rcvcmsglen
+operator|=
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_pktinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rcvcmsgbufpim
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|rcvcmsgbufpim
+operator|=
+name|malloc
+argument_list|(
+name|rcvcmsglen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|rcvmhpim
 operator|.
 name|msg_control
@@ -674,10 +711,7 @@ name|rcvmhpim
 operator|.
 name|msg_controllen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|rcvcmsgbufpim
-argument_list|)
+name|rcvcmsglen
 expr_stmt|;
 name|sndmhpim
 operator|.
@@ -701,6 +735,43 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+name|sndcmsglen
+operator|=
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_pktinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sndcmsgbufpim
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|sndcmsgbufpim
+operator|=
+name|malloc
+argument_list|(
+name|sndcmsglen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|sndmhpim
 operator|.
 name|msg_control
@@ -714,10 +785,7 @@ name|sndmhpim
 operator|.
 name|msg_controllen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|sndcmsgbufpim
-argument_list|)
+name|sndcmsglen
 expr_stmt|;
 name|cmsgp
 operator|=
@@ -732,7 +800,7 @@ name|cmsgp
 operator|->
 name|cmsg_len
 operator|=
-name|CMSG_SPACE
+name|CMSG_LEN
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1864,10 +1932,7 @@ name|sndmhpim
 operator|.
 name|msg_controllen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|sndcmsgbufpim
-argument_list|)
+name|sndcmsglen
 expr_stmt|;
 name|sndpktinfo
 operator|->
@@ -1912,6 +1977,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|errno
@@ -1922,6 +1988,7 @@ name|check_vif_state
 argument_list|()
 expr_stmt|;
 else|else
+block|{
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -1947,6 +2014,8 @@ name|sin6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|setloop
@@ -2020,7 +2089,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*  * Our algorithm is simple, using a 32 bit accumulator (sum), we add  * sequential 16 bit words to it, and at the end, fold back all the  * carry bits from the top 16 bits into the lower 16 bits.  */
+comment|/*    * Our algorithm is simple, using a 32 bit accumulator (sum), we add  * sequential 16 bit words to it, and at the end, fold back all the   * carry bits from the top 16 bits into the lower 16 bits.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -8,15 +8,15 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  */
+comment|/*  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -183,7 +183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* TODO: not used static char 		genidfilename[] = _PATH_PIM6D_GENID; */
+comment|/* TODO: not used  static char 		genidfilename[] = _PATH_PIM6D_GENID; */
 end_comment
 
 begin_decl_stmt
@@ -2462,7 +2462,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 	 * Handle timeout queue. 	 * 	 * If select + packet processing took more than 1 second, or if there is 	 * a timeout pending, age the timeout queue. 	 * 	 * If not, collect usec in difftime to make sure that the time doesn't 	 * drift too badly. 	 * 	 * If the timeout handlers took more than 1 second, age the timeout 	 * queue again.  XXX This introduces the potential for infinite 	 * loops! 	 */
+comment|/* 	 * Handle timeout queue. 	 *  	 * If select + packet processing took more than 1 second, or if there is 	 * a timeout pending, age the timeout queue. 	 *  	 * If not, collect usec in difftime to make sure that the time doesn't 	 * drift too badly. 	 *  	 * If the timeout handlers took more than 1 second, age the timeout 	 * queue again.  XXX This introduces the potential for infinite 	 * loops! 	 */
 do|do
 block|{
 comment|/* 	     * If the select timed out, then there's no other activity to 	     * account for and we don't need to call gettimeofday. 	     */
@@ -2768,7 +2768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The 'virtual_time' variable is initialized to a value that will cause the  * first invocation of timer() to send a probe or route report to all vifs  * and send group membership queries to all subnets for which this router is  * querier.  This first invocation occurs approximately timer_interval  * seconds after the router starts up.   Note that probes for neighbors and  * queries for group memberships are also sent at start-up time, as part of  * initial- ization.  This repetition after a short interval is desirable for  * quickly building up topology and membership information in the presence of  * possible packet loss.  *  * 'virtual_time' advances at a rate that is only a crude approximation of real  * time, because it does not take into account any time spent processing, and  * because the timer intervals are sometimes shrunk by a random amount to  * avoid unwanted synchronization with other routers.  */
+comment|/*  * The 'virtual_time' variable is initialized to a value that will cause the  * first invocation of timer() to send a probe or route report to all vifs  * and send group membership queries to all subnets for which this router is  * querier.  This first invocation occurs approximately timer_interval  * seconds after the router starts up.   Note that probes for neighbors and  * queries for group memberships are also sent at start-up time, as part of  * initial- ization.  This repetition after a short interval is desirable for  * quickly building up topology and membership information in the presence of  * possible packet loss.  *   * 'virtual_time' advances at a rate that is only a crude approximation of real  * time, because it does not take into account any time spent processing, and  * because the timer intervals are sometimes shrunk by a random amount to  * avoid unwanted synchronization with other routers.  */
 end_comment
 
 begin_decl_stmt
@@ -2837,7 +2837,7 @@ name|void
 name|cleanup
 parameter_list|()
 block|{
-comment|/*      * TODO: XXX (not in the spec): if I am the BSR, somehow inform the other      * routers I am going down and need to elect another BSR? (probably by      * sending a the Cand-RP-set with my_priority=LOWEST?)      *      */
+comment|/*      * TODO: XXX (not in the spec): if I am the BSR, somehow inform the other      * routers I am going down and need to elect another BSR? (probably by      * sending a the Cand-RP-set with my_priority=LOWEST?)      *       */
 name|k_stop_pim
 argument_list|(
 name|mld6_socket
@@ -2951,7 +2951,7 @@ name|versionstring
 argument_list|)
 expr_stmt|;
 comment|/*      * reset all the entries      */
-comment|/*      * TODO: delete?     free_all_routes();      */
+comment|/*      * TODO: delete?      free_all_routes();      */
 name|free_all_callouts
 argument_list|()
 expr_stmt|;

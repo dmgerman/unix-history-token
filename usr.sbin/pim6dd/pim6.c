@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: pim6.c,v 1.3 1999/10/26 08:39:19 itojun Exp $  *  $FreeBSD$  */
+comment|/*  *  Questions concerning this software should be directed to   *  Pavlin Ivanov Radoslavov (pavlin@catarina.usc.edu)  *  *  $Id: pim6.c,v 1.6 2000/03/07 02:23:50 jinmei Exp $  *  $FreeBSD$  */
 end_comment
 
 begin_include
@@ -71,7 +71,7 @@ comment|/* socket for PIM control msgs */
 end_comment
 
 begin_comment
-comment|/*  * Local variables.  */
+comment|/*  * Local variables.   */
 end_comment
 
 begin_decl_stmt
@@ -107,6 +107,16 @@ name|struct
 name|in6_pktinfo
 modifier|*
 name|sndpktinfo
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_char
+modifier|*
+name|sndcmsgbuf
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -176,18 +186,8 @@ name|init_pim6
 parameter_list|()
 block|{
 specifier|static
-name|u_char
-name|sndcmsgbuf
-index|[
-name|CMSG_SPACE
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in6_pktinfo
-argument_list|)
-argument_list|)
-index|]
+name|int
+name|sndcmsglen
 decl_stmt|;
 name|struct
 name|cmsghdr
@@ -201,6 +201,17 @@ operator|*
 operator|)
 name|sndcmsgbuf
 decl_stmt|;
+name|sndcmsglen
+operator|=
+name|CMSG_SPACE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in6_pktinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -355,6 +366,32 @@ name|msg_iovlen
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|sndcmsgbuf
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|sndcmsgbuf
+operator|=
+name|malloc
+argument_list|(
+name|sndcmsglen
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|0
+argument_list|,
+literal|"malloc failed"
+argument_list|)
+expr_stmt|;
 name|sndmh
 operator|.
 name|msg_control
@@ -368,23 +405,17 @@ name|sndmh
 operator|.
 name|msg_controllen
 operator|=
-sizeof|sizeof
-argument_list|(
-name|sndcmsgbuf
-argument_list|)
+name|sndcmsglen
 expr_stmt|;
 comment|/* initilization cmsg for specifing outgoing interfaces and source */
-name|sndpktinfo
+name|cmsgp
 operator|=
 operator|(
 expr|struct
-name|in6_pktinfo
+name|cmsghdr
 operator|*
 operator|)
-name|CMSG_DATA
-argument_list|(
-name|cmsgp
-argument_list|)
+name|sndcmsgbuf
 expr_stmt|;
 name|cmsgp
 operator|->
@@ -410,6 +441,18 @@ operator|->
 name|cmsg_type
 operator|=
 name|IPV6_PKTINFO
+expr_stmt|;
+name|sndpktinfo
+operator|=
+operator|(
+expr|struct
+name|in6_pktinfo
+operator|*
+operator|)
+name|CMSG_DATA
+argument_list|(
+name|cmsgp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

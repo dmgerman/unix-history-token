@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or  *  promote products derived from this software without specific prior  *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or   *  promote products derived from this software without specific prior   *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: pim6_proto.c,v 1.4 1999/10/27 11:40:30 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: pim6_proto.c,v 1.5 2000/04/30 10:50:31 jinmei Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
+comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *    * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *   * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -648,13 +648,6 @@ operator|&=
 operator|~
 name|VIFF_DR
 expr_stmt|;
-name|v
-operator|->
-name|uv_flags
-operator|&=
-operator|~
-name|VIFF_QUERIER
-expr_stmt|;
 block|}
 comment|/* 	 * Since a new neighbour has come up, let it know your existence ASAP; 	 * compute a random value, and reset the value to the hello timer 	 * if it's smaller than the rest of the timer. 	 * XXX: not in the spec... 	 */
 name|random_delay
@@ -989,12 +982,6 @@ name|uv_flags
 operator||=
 name|VIFF_DR
 expr_stmt|;
-name|v
-operator|->
-name|uv_flags
-operator||=
-name|VIFF_QUERIER
-expr_stmt|;
 block|}
 block|}
 comment|/* Update the source entries: 	 * If the deleted nbr was my upstream, then reset incoming and 	 * update all (S,G) entries for sources reachable through it. 	 * If the deleted nbr was the last on a non-iif vif, then recalcuate 	 * outgoing interfaces. 	 */
@@ -1023,7 +1010,7 @@ name|srcentry_ptr
 operator|->
 name|next
 expr_stmt|;
-comment|/* The only time we don't need to scan all mrtentries is 		 * when the nbr was on the iif, but not the upstream nbr! 		 */
+comment|/* The only time we don't need to scan all mrtentries is 		 * when the nbr was on the iif, but not the upstream nbr!  		 */
 if|if
 condition|(
 name|nbr_delete
@@ -2554,7 +2541,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* if I am not the target of the join or prune message */
-comment|/* 		 * Join Suppression: when receiving a join not addressed to me, 		 * if I am delaying a join for this (S,G) then cancel the delayed 		 * join. 		 * Prune Soliticiting Joins: when receiving a prune not 		 * addressed to me on a LAN, schedule delayed join if I have 		 * downstream receivers. 		 */
+comment|/* 		 * Join Suppression: when receiving a join not addressed to me, 		 * if I am delaying a join for this (S,G) then cancel the delayed  		 * join. 		 * Prune Soliticiting Joins: when receiving a prune not 		 * addressed to me on a LAN, schedule delayed join if I have 		 * downstream receivers. 		 */
 name|upstream_router
 operator|=
 name|find_pim6_nbr
@@ -2936,7 +2923,7 @@ name|encod_src
 operator|.
 name|flags
 expr_stmt|;
-comment|/* if P2P link (not addressed to me) ignore 				 */
+comment|/* if P2P link (not addressed to me) ignore  				 */
 if|if
 condition|(
 name|uvifs
@@ -3039,7 +3026,7 @@ operator|)
 return|;
 block|}
 comment|/* if not unicast target */
-comment|/* I am the target of this join/prune: 	 * For joins, cancel delayed prunes that I have scheduled. 	 * For prunes, echo the prune and schedule delayed prunes on LAN or 	 * prune immediately on point-to-point links. 	 */
+comment|/* I am the target of this join/prune: 	 * For joins, cancel delayed prunes that I have scheduled. 	 * For prunes, echo the prune and schedule delayed prunes on LAN or  	 * prune immediately on point-to-point links. 	 */
 else|else
 block|{
 while|while
@@ -4329,7 +4316,7 @@ operator|&
 name|MRTF_NEW
 condition|)
 block|{
-comment|/* For some reason, it's possible for asserts to be processed 		 * before the data alerts a cache miss.  Therefore, when an 		 * assert is received, create (S,G) state and continue, since 		 * we know by the assert that there are upstream forwarders. 		 */
+comment|/* For some reason, it's possible for asserts to be processed 		 * before the data alerts a cache miss.  Therefore, when an 		 * assert is received, create (S,G) state and continue, since 		 * we know by the assert that there are upstream forwarders.  		 */
 name|IF_DEBUG
 argument_list|(
 argument|DEBUG_PIM_ASSERT
@@ -4469,7 +4456,7 @@ name|assert_metric
 operator|==
 name|local_metric
 condition|)
-comment|/* if assert from previous winner w/ same pref/metric, 			 * then assert sender wins again */
+comment|/* if assert from previous winner w/ same pref/metric,  			 * then assert sender wins again */
 name|local_wins
 operator|=
 name|FALSE
@@ -4498,7 +4485,7 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This is between the assert sender and previous winner or rpf 		 * (who is the "local" in this case). 		 */
+comment|/* 		 * This is between the assert sender and previous winner or rpf  		 * (who is the "local" in this case). 		 */
 if|if
 condition|(
 name|local_wins

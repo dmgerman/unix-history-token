@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1998 WIDE Project.  * All rights reserved.  *  * Red
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -16,11 +16,11 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -219,6 +219,7 @@ name|get_jp6_working_buff
 name|__P
 argument_list|(
 operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -997,13 +998,6 @@ operator|&=
 operator|~
 name|VIFF_DR
 expr_stmt|;
-name|v
-operator|->
-name|uv_flags
-operator|&=
-operator|~
-name|VIFF_QUERIER
-expr_stmt|;
 block|}
 block|}
 comment|/*      * TODO: XXX: does a new neighbor change any routing entries info? Need      * to trigger joins?      */
@@ -1220,12 +1214,6 @@ operator|->
 name|uv_flags
 operator||=
 name|VIFF_DR
-expr_stmt|;
-name|v
-operator|->
-name|uv_flags
-operator||=
-name|VIFF_QUERIER
 expr_stmt|;
 block|}
 comment|/* Update the source entries */
@@ -6989,7 +6977,7 @@ return|;
 block|}
 comment|/* End of Join/Prune suppression code */
 comment|/* I am the target of this join, so process the message */
-comment|/*      * The spec says that if there is (*,G) Join, it has priority over old      * existing ~(S,G) prunes in the routing table. However, if the (*,G)      * Join and the ~(S,G) prune are in the same message, ~(S,G) has the      * priority. The spec doesn't say it, but I think the same is true for      * (*,*,RP) and ~(S,G) prunes.      *      * The code below do: (1) Check the whole message for (*,*,RP) Joins. (1.1)      * If found, clean all pruned_oifs for all (*,G) and all (S,G) for each      * RP in the list, but do not update the kernel cache. Then go back to      * the beginning of the message and start processing for each group: (2)      * Check for Prunes. If no prunes, process the Joins. (3) If there are      * Prunes: (3.1) Scan the Join part for existing (*,G) Join. (3.1.1) If      * there is (*,G) Join, clear join interface from the pruned_oifs for all      * (S,G), but DO NOT flush the change to the kernel (by using      * change_interfaces() for example) (3.2) After the pruned_oifs are      * eventually cleared in (3.1.1), process the Prune part of the message      * normally (setting the prune_oifs and flashing the changes to the      * (kernel). (3.3) After the Prune part is processed, process the Join      * part normally (by applying any changes to the kernel) (4) If there      * were (*,*,RP) Join/Prune, process them.      *      * If the Join/Prune list is too long, it may result in long processing      * overhead. The idea above is not to place any wrong info in the kernel,      * because it may result in short-time existing traffic forwarding on      * wrong interface. Hopefully, in the future will find a better way to      * implement it.      */
+comment|/*      * The spec says that if there is (*,G) Join, it has priority over old      * existing ~(S,G) prunes in the routing table. However, if the (*,G)      * Join and the ~(S,G) prune are in the same message, ~(S,G) has the      * priority. The spec doesn't say it, but I think the same is true for      * (*,*,RP) and ~(S,G) prunes.      *       * The code below do: (1) Check the whole message for (*,*,RP) Joins. (1.1)      * If found, clean all pruned_oifs for all (*,G) and all (S,G) for each      * RP in the list, but do not update the kernel cache. Then go back to      * the beginning of the message and start processing for each group: (2)      * Check for Prunes. If no prunes, process the Joins. (3) If there are      * Prunes: (3.1) Scan the Join part for existing (*,G) Join. (3.1.1) If      * there is (*,G) Join, clear join interface from the pruned_oifs for all      * (S,G), but DO NOT flush the change to the kernel (by using      * change_interfaces() for example) (3.2) After the pruned_oifs are      * eventually cleared in (3.1.1), process the Prune part of the message      * normally (setting the prune_oifs and flashing the changes to the      * (kernel). (3.3) After the Prune part is processed, process the Join      * part normally (by applying any changes to the kernel) (4) If there      * were (*,*,RP) Join/Prune, process them.      *       * If the Join/Prune list is too long, it may result in long processing      * overhead. The idea above is not to place any wrong info in the kernel,      * because it may result in short-time existing traffic forwarding on      * wrong interface. Hopefully, in the future will find a better way to      * implement it.      */
 name|IF_DEBUG
 argument_list|(
 argument|DEBUG_PIM_JOIN_PRUNE
@@ -9749,7 +9737,7 @@ comment|/*  * TODO: create two functions: periodic which timeout the timers and 
 end_comment
 
 begin_comment
-comment|/*  * Create and send Join/Prune messages per interface. Only the entries which  * have the Join/Prune timer expired are included. In the special case when  * we have ~(S,G)RPbit Prune entry, we must include any (*,G) or (*,*,RP)  * Currently the whole table is scanned. In the future will have all routing  * entries linked in a chain with the corresponding upstream pim_nbr_entry.  *  * If pim_nbr is not NULL, then send to only this particular PIM neighbor,  */
+comment|/*  * Create and send Join/Prune messages per interface. Only the entries which  * have the Join/Prune timer expired are included. In the special case when  * we have ~(S,G)RPbit Prune entry, we must include any (*,G) or (*,*,RP)  * Currently the whole table is scanned. In the future will have all routing  * entries linked in a chain with the corresponding upstream pim_nbr_entry.  *   * If pim_nbr is not NULL, then send to only this particular PIM neighbor,  */
 end_comment
 
 begin_function
@@ -13940,7 +13928,7 @@ argument_list|,
 name|data_ptr
 argument_list|)
 expr_stmt|;
-comment|/*      * BSR address must be a global unicast address.      * [draft-ietf-pim-ipv6-01.txt sec 4.5]      */
+comment|/*       * BSR address must be a global unicast address.      * [draft-ietf-pim-ipv6-01.txt sec 4.5]      */
 if|if
 condition|(
 name|IN6_IS_ADDR_MULTICAST
@@ -14801,6 +14789,45 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|IN6_IS_ADDR_MC_NODELOCAL
+argument_list|(
+operator|&
+name|curr_group_addr
+operator|.
+name|mcast_addr
+argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_LINKLOCAL
+argument_list|(
+operator|&
+name|curr_group_addr
+operator|.
+name|mcast_addr
+argument_list|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|0
+argument_list|,
+literal|"receive_pim6_bootstrap: "
+literal|"group prefix has a narraw scope: %s (ignored)"
+argument_list|,
+name|inet6_fmt
+argument_list|(
+operator|&
+name|curr_group_addr
+operator|.
+name|mcast_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|curr_rp_count
 operator|==
 literal|0
@@ -15171,7 +15198,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|inet6_lessthan
+name|inet6_greaterthan
 argument_list|(
 operator|&
 name|prefix_h2

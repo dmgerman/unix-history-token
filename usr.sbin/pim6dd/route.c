@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or  *  promote products derived from this software without specific prior  *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
+comment|/*  *  Copyright (c) 1998 by the University of Oregon.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Oregon.  *  The name of the University of Oregon may not be used to endorse or   *  promote products derived from this software without specific prior   *  written permission.  *  *  THE UNIVERSITY OF OREGON DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND   *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL UO, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
-comment|/*  *  Questions concerning this software should be directed to  *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: route.c,v 1.3 1999/10/27 11:40:30 jinmei Exp $  */
+comment|/*  *  Questions concerning this software should be directed to   *  Kurt Windisch (kurtw@antc.uoregon.edu)  *  *  $Id: route.c,v 1.3 1999/10/27 11:40:30 jinmei Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *  * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
+comment|/*  * Part of this program has been derived from PIM sparse-mode pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *    * The pimd program is COPYRIGHT 1998 by University of Southern California.  *  * Part of this program has been derived from mrouted.  * The mrouted program is covered by the license in the accompanying file  * named "LICENSE.mrouted".  *   * The mrouted program is COPYRIGHT 1989 by The Board of Trustees of  * Leland Stanford Junior University.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -295,7 +295,7 @@ comment|/* PIMDM TODO - If possible, this would be the place to correct set the 
 end_comment
 
 begin_comment
-comment|/*  * Set the iif, upstream router, preference and metric for the route  * toward the source. Return TRUE is the route was found, othewise FALSE.  * If srctype==PIM_IIF_SOURCE and if the source is directly connected  * then the "upstream" is set to NULL.  * Note that srctype is a hold-over from the PIM-SM daemon and is unused.  */
+comment|/*  * Set the iif, upstream router, preference and metric for the route  * toward the source. Return TRUE is the route was found, othewise FALSE.  * If srctype==PIM_IIF_SOURCE and if the source is directly connected  * then the "upstream" is set to NULL.   * Note that srctype is a hold-over from the PIM-SM daemon and is unused.  */
 end_comment
 
 begin_function
@@ -484,7 +484,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* The source is directly connected. 	 */
+comment|/* The source is directly connected.  	 */
 name|srcentry_ptr
 operator|->
 name|upstream
@@ -1173,7 +1173,7 @@ block|{
 name|if_set
 name|oifs
 decl_stmt|;
-comment|/*      * oifs =      * ((nbr_ifs - my_prune) + my_leaves) - my_filters - incoming_interface,      * i.e.`leaves` have higher priority than `prunes`, but lower than `filters'.      * Asserted oifs (those that lost assert) are handled as pruned oifs.      * The incoming interface is always deleted from the oifs      */
+comment|/*      * oifs =      * ((nbr_ifs - my_prune) + my_leaves) - my_filters - incoming_interface,      * i.e.`leaves` have higher priority than `prunes`, but lower than `filters'.       * Asserted oifs (those that lost assert) are handled as pruned oifs.      * The incoming interface is always deleted from the oifs      */
 if|if
 condition|(
 name|mrtentry_ptr
@@ -1270,7 +1270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set the iif, join/prune/leaves/asserted interfaces. Calculate and  * set the oifs.  * Return 1 if oifs change from NULL to not-NULL.  * Return -1 if oifs change from non-NULL to NULL  *  else return 0  * If the iif change or if the oifs change from NULL to non-NULL  * or vice-versa, then schedule that mrtentry join/prune timer to  * timeout immediately.  */
+comment|/*  * Set the iif, join/prune/leaves/asserted interfaces. Calculate and  * set the oifs.  * Return 1 if oifs change from NULL to not-NULL.  * Return -1 if oifs change from non-NULL to NULL  *  else return 0  * If the iif change or if the oifs change from NULL to non-NULL  * or vice-versa, then schedule that mrtentry join/prune timer to  * timeout immediately.   */
 end_comment
 
 begin_function
@@ -2035,7 +2035,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A multicast packet has been received on wrong iif by the kernel.  * If the packet was received on a point-to-point interface, rate-limit  * prunes.  if the packet was received on a LAN interface, rate-limit  * asserts.  */
+comment|/*  * A multicast packet has been received on wrong iif by the kernel.  * If the packet was received on a point-to-point interface, rate-limit  * prunes.  if the packet was received on a LAN interface, rate-limit   * asserts.  */
 end_comment
 
 begin_function

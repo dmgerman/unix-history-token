@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  *  * $FreeBSD$  */
+comment|/*  *  Copyright (c) 1998 by the University of Southern California.  *  All rights reserved.  *  *  Permission to use, copy, modify, and distribute this software and  *  its documentation in source and binary forms for lawful  *  purposes and without fee is hereby granted, provided  *  that the above copyright notice appear in all copies and that both  *  the copyright notice and this permission notice appear in supporting  *  documentation, and that any documentation, advertising materials,  *  and other materials related to such distribution and use acknowledge  *  that the software was developed by the University of Southern  *  California and/or Information Sciences Institute.  *  The name of the University of Southern California may not  *  be used to endorse or promote products derived from this software  *  without specific prior written permission.  *  *  THE UNIVERSITY OF SOUTHERN CALIFORNIA DOES NOT MAKE ANY REPRESENTATIONS  *  ABOUT THE SUITABILITY OF THIS SOFTWARE FOR ANY PURPOSE.  THIS SOFTWARE IS  *  PROVIDED "AS IS" AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES,  *  INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND  *  NON-INFRINGEMENT.  *  *  IN NO EVENT SHALL USC, OR ANY OTHER CONTRIBUTOR BE LIABLE FOR ANY  *  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES, WHETHER IN CONTRACT,  *  TORT, OR OTHER FORM OF ACTION, ARISING OUT OF OR IN CONNECTION WITH,  *  THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  *  Other copyrights might apply to parts of this software and are so  *  noted when applicable.  */
 end_comment
 
 begin_comment
@@ -8,11 +8,11 @@ comment|/*  *  Questions concerning this software should be directed to  *  Mick
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pim6dd.  * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
+comment|/*  * This program has been derived from pim6dd.          * The pim6dd program is covered by the license in the accompanying file  * named "LICENSE.pim6dd".  */
 end_comment
 
 begin_comment
-comment|/*  * This program has been derived from pimd.  * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  */
+comment|/*  * This program has been derived from pimd.          * The pimd program is covered by the license in the accompanying file  * named "LICENSE.pimd".  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -73,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"pim6_proto.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"mld6.h"
 end_include
 
 begin_include
@@ -716,6 +722,81 @@ name|MIFF_REGISTER
 operator|)
 condition|)
 continue|continue;
+comment|/* Timeout the MLD querier (unless we re the querier) */
+if|if
+condition|(
+operator|(
+name|v
+operator|->
+name|uv_flags
+operator|&
+name|VIFF_QUERIER
+operator|)
+operator|==
+literal|0
+operator|&&
+name|v
+operator|->
+name|uv_querier
+condition|)
+block|{
+comment|/* this must be non-NULL, but check for safety. */
+name|IF_TIMEOUT
+argument_list|(
+argument|v->uv_querier->al_timer
+argument_list|)
+block|{
+name|v
+operator|->
+name|uv_querier_timo
+operator|++
+expr_stmt|;
+comment|/* count statistics */
+comment|/* act as a querier by myself */
+name|v
+operator|->
+name|uv_flags
+operator||=
+name|VIFF_QUERIER
+expr_stmt|;
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_addr
+operator|=
+name|v
+operator|->
+name|uv_linklocal
+operator|->
+name|pa_addr
+expr_stmt|;
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_timer
+operator|=
+name|MLD6_OTHER_QUERIER_PRESENT_INTERVAL
+expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|v
+operator|->
+name|uv_querier
+operator|->
+name|al_ctime
+argument_list|)
+expr_stmt|;
+comment|/* reset timestamp */
+name|query_groups
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Timeout neighbors */
 for|for
 control|(
@@ -1286,7 +1367,7 @@ name|TRUE
 condition|)
 block|{
 comment|/* Check the activity for this entry */
-comment|/* 		 * XXX: the spec says to start monitoring first the total 		 * traffic for all senders for particular (*,*,RP) or (*,G) 		 * and if the total traffic exceeds some predefined 		 * threshold, then start monitoring the data traffic for each 		 * particular sender for this group: (*,G) or (*,*,RP). 		 * However, because the kernel cache/traffic info is of the 		 * form (S,G), it is easier if we are simply collecting (S,G) 		 * traffic all the time. 		 * 		 * For (*,*,RP) if the number of bytes received between the last 		 * check and now exceeds some precalculated value (based on 		 * interchecking period and datarate threshold AND if there 		 * are directly connected members (i.e. we are their last 		 * hop(e) router), then create (S,G) and start initiating 		 * (S,G) Join toward the source. The same applies for (*,G). 		 * The spec does not say that if the datarate goes below a 		 * given threshold, then will switch back to the shared tree, 		 * hence after a switch to the source-specific tree occurs, a 		 * source with low datarate, but periodically sending will 		 * keep the (S,G) states. 		 * 		 * If a source with kernel cache entry has been idle after the 		 * last time a check of the datarate for the whole routing 		 * table, then delete its kernel cache entry. 		 */
+comment|/* 		 * XXX: the spec says to start monitoring first the total 		 * traffic for all senders for particular (*,*,RP) or (*,G) 		 * and if the total traffic exceeds some predefined 		 * threshold, then start monitoring the data traffic for each 		 * particular sender for this group: (*,G) or (*,*,RP). 		 * However, because the kernel cache/traffic info is of the 		 * form (S,G), it is easier if we are simply collecting (S,G) 		 * traffic all the time. 		 *  		 * For (*,*,RP) if the number of bytes received between the last 		 * check and now exceeds some precalculated value (based on 		 * interchecking period and datarate threshold AND if there 		 * are directly connected members (i.e. we are their last 		 * hop(e) router), then create (S,G) and start initiating 		 * (S,G) Join toward the source. The same applies for (*,G). 		 * The spec does not say that if the datarate goes below a 		 * given threshold, then will switch back to the shared tree, 		 * hence after a switch to the source-specific tree occurs, a 		 * source with low datarate, but periodically sending will 		 * keep the (S,G) states. 		 *  		 * If a source with kernel cache entry has been idle after the 		 * last time a check of the datarate for the whole routing 		 * table, then delete its kernel cache entry. 		 */
 for|for
 control|(
 name|kernel_cache_ptr
