@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)find.c	4.19 (Berkeley) %G%"
+literal|"@(#)find.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5672,8 +5672,8 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|globflag
+operator|=
 name|index
 argument_list|(
 name|pathpart
@@ -5694,10 +5694,6 @@ name|pathpart
 argument_list|,
 literal|'['
 argument_list|)
-condition|)
-name|globflag
-operator|=
-name|YES
 expr_stmt|;
 name|patend
 operator|=
