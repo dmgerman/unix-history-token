@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t9.c	4.2 %G%"
+literal|"@(#)t9.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ name|MAXLIN
 condition|)
 name|error
 argument_list|(
-literal|"Wierd.  No data in table."
+literal|"Weird.  No data in table."
 argument_list|)
 expr_stmt|;
 name|table
@@ -121,7 +121,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Wierd.  No real lines in table."
+literal|"Weird.  No real lines in table."
 argument_list|)
 expr_stmt|;
 name|domore
