@@ -4230,11 +4230,9 @@ name|filedesc
 modifier|*
 name|fdp
 init|=
-name|td
+name|kq
 operator|->
-name|td_proc
-operator|->
-name|p_fd
+name|kq_fdp
 decl_stmt|;
 name|struct
 name|knote
