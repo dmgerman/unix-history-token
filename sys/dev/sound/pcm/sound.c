@@ -3279,6 +3279,11 @@ operator|->
 name|fakechan
 argument_list|)
 expr_stmt|;
+name|sndstat_unregister
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|snd_mtxfree
 argument_list|(
 name|d
