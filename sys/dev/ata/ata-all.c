@@ -1558,25 +1558,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|0x00041103
-case|:
-comment|/* HPT366 controller defaults */
-name|printf
-argument_list|(
-literal|"ata: HPT config %08x\n"
-argument_list|,
-name|pci_read_config
-argument_list|(
-name|dev
-argument_list|,
-literal|0x50
-argument_list|,
-literal|4
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|0x05711106
 case|:
 case|case
@@ -3038,6 +3019,11 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
 comment|/* check if this interrupt is for us (shared PCI interrupts) */
 switch|switch
 condition|(
@@ -3143,6 +3129,8 @@ operator|)
 condition|)
 return|return;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
