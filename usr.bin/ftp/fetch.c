@@ -1,15 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: fetch.c,v 1.1 1997/06/25 08:56:39 msmith Exp $ */
+comment|/*	$NetBSD: fetch.c,v 1.16.2.1 1997/11/18 01:00:22 mellon Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: fetch.c,v 1.10 1997/05/23 18:54:18 lukem Exp $	*/
+comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason Thorpe and Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_comment
-comment|/*-  * Copyright (c) 1997 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Jason Thorpe and Luke Mewburn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -17,15 +19,21 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: fetch.c,v 1.1 1997/06/25 08:56:39 msmith Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Id$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__RCSID_SOURCE
+argument_list|(
+literal|"$NetBSD: fetch.c,v 1.16.2.1 1997/11/18 01:00:22 mellon Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -136,6 +144,37 @@ directive|include
 file|"ftp_var.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|url_get
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|aborthttp
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -201,6 +240,7 @@ comment|/*  * Retrieve URL, via the proxy in $proxyvar if necessary.  * Modifies
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|url_get
 parameter_list|(
@@ -228,13 +268,16 @@ name|i
 decl_stmt|,
 name|out
 decl_stmt|,
+name|isftpurl
+decl_stmt|;
+name|u_int16_t
 name|port
-decl_stmt|,
+decl_stmt|;
+specifier|volatile
+name|int
 name|s
 decl_stmt|;
 name|size_t
-name|buflen
-decl_stmt|,
 name|len
 decl_stmt|;
 name|char
@@ -244,10 +287,7 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
-name|cp2
-decl_stmt|,
-modifier|*
-name|savefile
+name|ep
 decl_stmt|,
 modifier|*
 name|portnum
@@ -260,6 +300,11 @@ index|[
 literal|4096
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|savefile
+decl_stmt|;
 name|char
 modifier|*
 name|line
@@ -270,6 +315,7 @@ decl_stmt|,
 modifier|*
 name|host
 decl_stmt|;
+specifier|volatile
 name|sig_t
 name|oldintr
 decl_stmt|;
@@ -285,6 +331,28 @@ name|proxy
 operator|=
 name|NULL
 expr_stmt|;
+name|isftpurl
+operator|=
+literal|0
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__GNUC__
+comment|/* XXX: to shut up gcc warnings */
+operator|(
+name|void
+operator|)
+operator|&
+name|savefile
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|proxy
+expr_stmt|;
+endif|#
+directive|endif
 name|line
 operator|=
 name|strdup
@@ -353,6 +421,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|host
 operator|=
 name|line
@@ -364,6 +433,11 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+name|isftpurl
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|errx
 argument_list|(
@@ -392,9 +466,16 @@ name|path
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|isftpurl
+condition|)
+goto|goto
+name|noftpautologin
+goto|;
 name|warnx
 argument_list|(
-literal|"Invalid URL: %s"
+literal|"Invalid URL (no `/' after host): %s"
 argument_list|,
 name|origline
 argument_list|)
@@ -417,9 +498,16 @@ name|path
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|isftpurl
+condition|)
+goto|goto
+name|noftpautologin
+goto|;
 name|warnx
 argument_list|(
-literal|"Invalid URL: %s"
+literal|"Invalid URL (no file after host): %s"
 argument_list|,
 name|origline
 argument_list|)
@@ -460,9 +548,16 @@ name|savefile
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|isftpurl
+condition|)
+goto|goto
+name|noftpautologin
+goto|;
 name|warnx
 argument_list|(
-literal|"Invalid URL: %s"
+literal|"Invalid URL (no file after directory): %s"
 argument_list|,
 name|origline
 argument_list|)
@@ -688,10 +783,6 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 name|host
 index|[
 literal|0
@@ -809,26 +900,39 @@ name|portnum
 argument_list|)
 condition|)
 block|{
-name|port
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|long
+name|nport
+decl_stmt|;
+name|nport
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|portnum
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|port
+name|nport
 operator|<
 literal|1
 operator|||
-operator|(
-name|port
-operator|&
+name|nport
+operator|>
 literal|0xffff
-operator|)
+operator|||
+operator|*
+name|ep
 operator|!=
-name|port
+literal|'\0'
 condition|)
 block|{
 name|warnx
@@ -846,7 +950,7 @@ name|port
 operator|=
 name|htons
 argument_list|(
-name|port
+name|nport
 argument_list|)
 expr_stmt|;
 block|}
@@ -947,6 +1051,8 @@ argument_list|,
 name|proxyenv
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
 name|snprintf
 argument_list|(
 name|buf
@@ -956,7 +1062,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"GET %s%s HTTP/1.0\n\n"
+literal|"GET %s%s HTTP/1.0\r\n\r\n"
 argument_list|,
 name|proxy
 condition|?
@@ -967,13 +1073,6 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-name|buflen
-operator|=
-name|strlen
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|write
@@ -982,10 +1081,10 @@ name|s
 argument_list|,
 name|buf
 argument_list|,
-name|buflen
+name|len
 argument_list|)
 operator|<
-name|buflen
+name|len
 condition|)
 block|{
 name|warn
@@ -1011,30 +1110,19 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|buflen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|,
 name|cp
 operator|=
 name|buf
 init|;
-name|i
-operator|<
-name|buflen
-condition|;
 name|cp
-operator|++
-operator|,
-name|i
-operator|++
+operator|<
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|;
 control|)
 block|{
 if|if
@@ -1069,10 +1157,16 @@ operator|==
 literal|'\n'
 condition|)
 break|break;
+name|cp
+operator|++
+expr_stmt|;
 block|}
 name|buf
 index|[
-name|buflen
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -1144,30 +1238,19 @@ literal|'\0'
 expr_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|buflen
-operator|=
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-operator|,
 name|cp
 operator|=
 name|buf
 init|;
-name|i
-operator|<
-name|buflen
-condition|;
 name|cp
-operator|++
-operator|,
-name|i
-operator|++
+operator|<
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|;
 control|)
 block|{
 if|if
@@ -1211,10 +1294,16 @@ operator|=
 operator|*
 name|cp
 expr_stmt|;
+name|cp
+operator|++
+expr_stmt|;
 block|}
 name|buf
 index|[
-name|buflen
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 operator|-
 literal|1
 index|]
@@ -1246,10 +1335,6 @@ if|if
 condition|(
 name|tolower
 argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|cp
 argument_list|)
@@ -1278,12 +1363,10 @@ if|if
 condition|(
 operator|*
 name|cp
-operator|==
+operator|!=
 literal|'\0'
 condition|)
-goto|goto
-name|improper
-goto|;
+block|{
 name|cp
 operator|+=
 sizeof|sizeof
@@ -1293,7 +1376,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|cp2
+name|ep
 operator|=
 name|strchr
 argument_list|(
@@ -1304,7 +1387,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cp2
+name|ep
 operator|==
 name|NULL
 condition|)
@@ -1313,15 +1396,20 @@ name|improper
 goto|;
 else|else
 operator|*
-name|cp2
+name|ep
 operator|=
 literal|'\0'
 expr_stmt|;
 name|filesize
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|cp
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -1329,10 +1417,22 @@ condition|(
 name|filesize
 operator|<
 literal|1
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
 condition|)
 goto|goto
 name|improper
 goto|;
+block|}
+else|else
+name|filesize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Open the output file. */
 name|out
 operator|=
@@ -1659,6 +1759,16 @@ operator|(
 literal|0
 operator|)
 return|;
+name|noftpautologin
+label|:
+name|warnx
+argument_list|(
+literal|"Auto-login using ftp URLs isn't supported when using $ftp_proxy"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup_url_get
+goto|;
 name|improper
 label|:
 name|warnx
@@ -1819,7 +1929,9 @@ name|int
 name|rval
 decl_stmt|,
 name|xargc
-decl_stmt|,
+decl_stmt|;
+specifier|volatile
+name|int
 name|argpos
 decl_stmt|;
 name|int
@@ -2253,8 +2365,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-name|parsed_url
-label|:
 block|}
 else|else
 block|{
@@ -2269,6 +2379,8 @@ literal|':'
 argument_list|)
 expr_stmt|;
 block|}
+name|parsed_url
+label|:
 if|if
 condition|(
 name|EMPTYSTRING
@@ -2285,7 +2397,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * If cp is NULL, the file wasn't specified 		 * (URL looked something like ftp://host) 		 */
+comment|/* 		 * If dir is NULL, the file wasn't specified 		 * (URL looked something like ftp://host) 		 */
 if|if
 condition|(
 name|dir

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ftp_var.h,v 1.4 1997/06/25 08:56:41 msmith Exp $ */
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: ftp_var.h,v 1.16 1997/04/14 09:09:23 lukem Exp $	*/
+comment|/*	$NetBSD: ftp_var.h,v 1.20.2.1 1997/11/18 01:01:37 mellon Exp $	*/
 end_comment
 
 begin_comment
@@ -93,7 +93,7 @@ value|21
 end_define
 
 begin_comment
-comment|/* default if getservbyname("ftp/tcp") fails */
+comment|/* default if ! getservbyname("ftp/tcp") */
 end_comment
 
 begin_define
@@ -104,8 +104,52 @@ value|80
 end_define
 
 begin_comment
-comment|/* default if getservbyname("http/tcp") fails */
+comment|/* default if ! getservbyname("http/tcp") */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GATE_PORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GATE_PORT
+value|21
+end_define
+
+begin_comment
+comment|/* default if ! getservbyname("ftpgate/tcp") */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GATE_SERVER
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GATE_SERVER
+value|""
+end_define
+
+begin_comment
+comment|/* default server */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -274,6 +318,27 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|gatemode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use gate-ftp */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|gateserver
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* server to use for gate-ftp */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sunique
 decl_stmt|;
 end_decl_stmt
@@ -392,7 +457,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* restrict data port range */
+comment|/* enable quarantine FTP area */
 end_comment
 
 begin_decl_stmt
@@ -613,6 +678,17 @@ begin_comment
 comment|/* width of tty */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|tmpdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* temporary directory */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -663,7 +739,7 @@ comment|/* cursor position we're looking for */
 end_comment
 
 begin_decl_stmt
-name|int
+name|size_t
 name|cursor_argc
 decl_stmt|;
 end_decl_stmt
@@ -673,7 +749,7 @@ comment|/* location of cursor in margv */
 end_comment
 
 begin_decl_stmt
-name|int
+name|size_t
 name|cursor_argo
 decl_stmt|;
 end_decl_stmt
@@ -723,6 +799,16 @@ comment|/* direction transfer is occurring */
 end_comment
 
 begin_decl_stmt
+name|off_t
+name|restart_point
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* offset to restart transfer */
+end_comment
+
+begin_decl_stmt
 name|char
 modifier|*
 name|hostname
@@ -754,7 +840,7 @@ comment|/* proxy is unix, can use binary for ascii */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int16_t
 name|ftpport
 decl_stmt|;
 end_decl_stmt
@@ -764,13 +850,23 @@ comment|/* port number to use for ftp connections */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int16_t
 name|httpport
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* port number to use for http connections */
+end_comment
+
+begin_decl_stmt
+name|u_int16_t
+name|gateport
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* port number to use for gateftp connections */
 end_comment
 
 begin_decl_stmt

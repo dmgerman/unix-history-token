@@ -1,15 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cmds.c,v 1.10 1997/11/17 19:29:16 guido Exp $ */
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: cmds.c,v 1.24 1997/05/17 19:44:36 pk Exp $	*/
+comment|/*	$NetBSD: cmds.c,v 1.30.2.1 1997/11/18 00:58:26 mellon Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1985, 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -29,15 +35,21 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: cmds.c,v 1.10 1997/11/17 19:29:16 guido Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Id$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__RCSID_SOURCE
+argument_list|(
+literal|"$NetBSD: cmds.c,v 1.30.2.1 1997/11/18 00:58:26 mellon Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -1205,6 +1217,24 @@ operator|!=
 name|oldargv2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|oldargv1
+operator|!=
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2037,12 +2067,20 @@ name|loc
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|rval
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|oldargv1
 decl_stmt|,
 modifier|*
 name|oldargv2
+decl_stmt|,
+modifier|*
+name|globargv2
 decl_stmt|;
 if|if
 condition|(
@@ -2064,40 +2102,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-if|if
-condition|(
-operator|*
-name|argv
-index|[
-literal|1
-index|]
-operator|==
-literal|'|'
-operator|&&
-operator|!
-name|another
-argument_list|(
-operator|&
-name|argc
-argument_list|,
-operator|&
-name|argv
-argument_list|,
-literal|"(warning: remote file starts with '|') local-file"
-argument_list|)
-condition|)
-block|{
-name|code
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 name|loc
 operator|++
 expr_stmt|;
@@ -2209,6 +2213,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|globargv2
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|loc
@@ -2297,6 +2308,7 @@ operator|*
 name|tp2
 argument_list|)
 condition|)
+block|{
 operator|*
 name|tp2
 operator|=
@@ -2310,6 +2322,7 @@ operator|*
 name|tp2
 argument_list|)
 expr_stmt|;
+block|}
 name|tp
 operator|++
 expr_stmt|;
@@ -2413,11 +2426,9 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|freegetit
+goto|;
 block|}
 name|restart_point
 operator|=
@@ -2457,11 +2468,9 @@ operator|==
 operator|-
 literal|1
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|freegetit
+goto|;
 if|if
 condition|(
 name|stbuf
@@ -2470,11 +2479,15 @@ name|st_mtime
 operator|>=
 name|mtime
 condition|)
-return|return
-operator|(
+block|{
+name|rval
+operator|=
 literal|1
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|freegetit
+goto|;
+block|}
 block|}
 block|}
 block|}
@@ -2507,15 +2520,31 @@ literal|2
 index|]
 operator|!=
 name|oldargv2
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 name|restart_point
 operator|=
 literal|0
 expr_stmt|;
+name|freegetit
+label|:
+if|if
+condition|(
+name|oldargv2
+operator|!=
+name|globargv2
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|globargv2
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|rval
 operator|)
 return|;
 block|}
@@ -2772,43 +2801,6 @@ continue|continue;
 block|}
 if|if
 condition|(
-operator|!
-name|interactive
-operator|&&
-operator|*
-name|cp
-operator|==
-literal|'|'
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"skipping %s for security reasons\n"
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-operator|*
-name|cp
-operator|==
-literal|'|'
-condition|)
-name|printf
-argument_list|(
-literal|"note: next file starts with '|', which runs it through a pipe\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|mflag
 operator|&&
 name|confirm
@@ -2840,10 +2832,6 @@ init|;
 operator|(
 name|ch
 operator|=
-operator|(
-name|unsigned
-name|char
-operator|)
 operator|*
 name|tp
 operator|++
@@ -2858,11 +2846,19 @@ operator|++
 operator|=
 name|isupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 condition|?
 name|tolower
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|ch
 argument_list|)
 else|:
@@ -2920,6 +2916,8 @@ name|cp
 operator|||
 operator|!
 name|interactive
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3091,6 +3089,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"Gate ftp: %s, server %s, port %d.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|gatemode
+argument_list|)
+argument_list|,
+operator|*
+name|gateserver
+condition|?
+name|gateserver
+else|:
+literal|"(none)"
+argument_list|,
+name|ntohs
+argument_list|(
+name|gateport
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Passive mode: %s.\n"
@@ -3708,25 +3728,41 @@ else|else
 block|{
 name|int
 name|nmark
-init|=
-name|atol
+decl_stmt|;
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|nmark
+operator|=
+name|strtol
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|nmark
 operator|<
 literal|1
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: bad bytecount value.\n"
+literal|"mark: bad bytecount value `%s'.\n"
 argument_list|,
 name|argv
 index|[
@@ -3910,7 +3946,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Turn on interactive prompting  * during mget, mput, and mdelete.  */
+comment|/*  * Turn on interactive prompting during mget, mput, and mdelete.  */
 end_comment
 
 begin_comment
@@ -3952,7 +3988,293 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Toggle metacharacter interpretation  * on local file names.  */
+comment|/*  * Toggle gate-ftp mode, or set gate-ftp server  */
+end_comment
+
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
+begin_function
+name|void
+name|setgate
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+name|argv
+index|[]
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|gsbuf
+index|[
+name|MAXHOSTNAMELEN
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|>
+literal|3
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usage: %s [ on | off | gateserver [ port ] ]\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|<
+literal|2
+condition|)
+block|{
+name|gatemode
+operator|=
+operator|!
+name|gatemode
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+name|strcasecmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"on"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|gatemode
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+operator|&&
+name|strcasecmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"off"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|gatemode
+operator|=
+literal|0
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|3
+condition|)
+block|{
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|long
+name|port
+decl_stmt|;
+name|port
+operator|=
+name|strtol
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|port
+operator|<
+literal|0
+operator|||
+name|port
+operator|>
+literal|0xffff
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: bad gateport value.\n"
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|code
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+name|gateport
+operator|=
+name|htons
+argument_list|(
+name|port
+argument_list|)
+expr_stmt|;
+block|}
+name|strncpy
+argument_list|(
+name|gsbuf
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gsbuf
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|gsbuf
+index|[
+sizeof|sizeof
+argument_list|(
+name|gsbuf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|gateserver
+operator|=
+name|gsbuf
+expr_stmt|;
+name|gatemode
+operator|=
+literal|1
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|gatemode
+operator|&&
+operator|(
+name|gateserver
+operator|==
+name|NULL
+operator|||
+operator|*
+name|gateserver
+operator|==
+literal|'\0'
+operator|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Disabling gate-ftp mode - no gate-ftp server defined.\n"
+argument_list|)
+expr_stmt|;
+name|gatemode
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"Gate ftp: %s, server %s, port %d.\n"
+argument_list|,
+name|onoff
+argument_list|(
+name|gatemode
+argument_list|)
+argument_list|,
+operator|*
+name|gateserver
+condition|?
+name|gateserver
+else|:
+literal|"(none)"
+argument_list|,
+name|ntohs
+argument_list|(
+name|gateport
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+name|code
+operator|=
+name|gatemode
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Toggle metacharacter interpretation on local file names.  */
 end_comment
 
 begin_comment
@@ -4036,7 +4358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set debugging mode on/off and/or  * set level of debugging.  */
+comment|/*  * Set debugging mode on/off and/or set level of debugging.  */
 end_comment
 
 begin_comment
@@ -4060,9 +4382,6 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|int
-name|val
-decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -4134,14 +4453,26 @@ literal|0
 expr_stmt|;
 else|else
 block|{
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|long
+name|val
+decl_stmt|;
 name|val
 operator|=
-name|atoi
+name|strtol
 argument_list|(
 name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 if|if
@@ -4149,6 +4480,15 @@ condition|(
 name|val
 operator|<
 literal|0
+operator|||
+name|val
+operator|>
+name|INT_MAX
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
 condition|)
 block|{
 name|printf
@@ -4170,6 +4510,9 @@ return|return;
 block|}
 name|debug
 operator|=
+operator|(
+name|int
+operator|)
 name|val
 expr_stmt|;
 block|}
@@ -4216,7 +4559,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set current working directory  * on remote machine.  */
+comment|/*  * Set current working directory on remote machine.  */
 end_comment
 
 begin_function
@@ -4340,7 +4683,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set current working directory  * on local machine.  */
+comment|/*  * Set current working directory on local machine.  */
 end_comment
 
 begin_function
@@ -4365,6 +4708,10 @@ name|buf
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|oldargv1
 decl_stmt|;
 if|if
 condition|(
@@ -4406,6 +4753,13 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+name|oldargv1
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4454,8 +4808,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|getcwd
@@ -4491,6 +4846,25 @@ expr_stmt|;
 name|code
 operator|=
 literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|oldargv1
+operator|!=
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4897,7 +5271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a directory listing  * of remote files.  */
+comment|/*  * Get a directory listing of remote files.  */
 end_comment
 
 begin_function
@@ -4921,6 +5295,13 @@ specifier|const
 name|char
 modifier|*
 name|cmd
+decl_stmt|;
+name|char
+modifier|*
+name|oldargv2
+decl_stmt|,
+modifier|*
+name|globargv2
 decl_stmt|;
 if|if
 condition|(
@@ -4996,6 +5377,13 @@ literal|"LIST"
 else|:
 literal|"NLST"
 expr_stmt|;
+name|oldargv2
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -5026,6 +5414,13 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+name|globargv2
+operator|=
+name|argv
+index|[
+literal|2
+index|]
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -5075,7 +5470,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-return|return;
+goto|goto
+name|freels
+goto|;
 block|}
 name|recvrequest
 argument_list|(
@@ -5094,6 +5491,8 @@ argument_list|,
 literal|"w"
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* flush results in case commands are coming from a pipe */
@@ -5102,11 +5501,42 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+name|freels
+label|:
+if|if
+condition|(
+name|argv
+index|[
+literal|2
+index|]
+operator|!=
+name|globargv2
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|globargv2
+operator|!=
+name|oldargv2
+condition|)
+name|free
+argument_list|(
+name|globargv2
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Get a directory listing  * of multiple remote files.  */
+comment|/*  * Get a directory listing of multiple remote files.  */
 end_comment
 
 begin_function
@@ -5134,10 +5564,8 @@ name|ointer
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|cmd
+name|int
+name|dolist
 decl_stmt|;
 name|char
 name|mode
@@ -5147,6 +5575,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|dest
+decl_stmt|,
+modifier|*
+name|odest
 decl_stmt|;
 if|if
 condition|(
@@ -5207,6 +5638,8 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+name|odest
+operator|=
 name|dest
 operator|=
 name|argv
@@ -5264,7 +5697,7 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-name|cmd
+name|dolist
 operator|=
 name|strcmp
 argument_list|(
@@ -5275,12 +5708,6 @@ index|]
 argument_list|,
 literal|"mls"
 argument_list|)
-operator|==
-literal|0
-condition|?
-literal|"NLST"
-else|:
-literal|"LIST"
 expr_stmt|;
 name|mname
 operator|=
@@ -5343,7 +5770,11 @@ literal|'a'
 expr_stmt|;
 name|recvrequest
 argument_list|(
-name|cmd
+name|dolist
+condition|?
+literal|"LIST"
+else|:
+literal|"NLST"
 argument_list|,
 name|dest
 argument_list|,
@@ -5353,6 +5784,8 @@ name|i
 index|]
 argument_list|,
 name|mode
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -5410,6 +5843,18 @@ name|mflag
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|dest
+operator|!=
+name|odest
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|dest
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5458,9 +5903,8 @@ decl_stmt|,
 modifier|*
 name|namep
 decl_stmt|;
-name|union
-name|wait
-name|status
+name|int
+name|wait_status
 decl_stmt|;
 name|old1
 operator|=
@@ -5714,12 +6158,8 @@ while|while
 condition|(
 name|wait
 argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
-name|status
+name|wait_status
 argument_list|)
 operator|!=
 name|pid
@@ -9118,7 +9558,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* restart transfer at specific point */
+comment|/*  * Restart transfer at specific point  */
 end_comment
 
 begin_function
@@ -9141,40 +9581,111 @@ block|{
 if|if
 condition|(
 name|argc
-operator|!=
+operator|>
 literal|2
 condition|)
-name|puts
+block|{
+name|printf
 argument_list|(
-literal|"restart: offset not specified."
+literal|"usage: %s [restart_point]\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
-else|else
-block|{
-name|restart_point
+name|code
 operator|=
-name|atol
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+condition|)
+block|{
+name|quad_t
+name|rp
+decl_stmt|;
+name|char
+modifier|*
+name|ep
+decl_stmt|;
+name|rp
+operator|=
+name|strtoq
 argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+operator|&
+name|ep
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rp
+operator|<
+literal|0
+operator|||
+operator|*
+name|ep
+operator|!=
+literal|'\0'
+condition|)
+name|printf
+argument_list|(
+literal|"restart: Invalid offset `%s'\n"
+argument_list|,
 name|argv
 index|[
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
+else|else
+name|restart_point
+operator|=
+name|rp
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|restart_point
+operator|==
+literal|0
+condition|)
+name|puts
+argument_list|(
+literal|"No restart point defined"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
-literal|"Restarting at %qd. Execute get, put or append to"
-literal|"initiate transfer\n"
+literal|"Restarting at %qd for next get, put or append\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|restart_point
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/* show remote system type */
+comment|/*   * Show remote system type  */
 end_comment
 
 begin_function
@@ -9600,7 +10111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get size of file on remote machine  */
+comment|/*  * Get size of file on remote machine  */
 end_comment
 
 begin_function
@@ -9693,6 +10204,10 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|size
 argument_list|)
 expr_stmt|;
@@ -9704,7 +10219,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get last modification time of file on remote machine  */
+comment|/*  * Get last modification time of file on remote machine  */
 end_comment
 
 begin_function
@@ -9815,7 +10330,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * show status on remote machine  */
+comment|/*  * Show status on remote machine  */
 end_comment
 
 begin_function
@@ -9858,7 +10373,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * get file if modtime is more recent than current file  */
+comment|/*  * Get file if modtime is more recent than current file  */
 end_comment
 
 begin_function
@@ -9932,8 +10447,6 @@ index|[]
 decl_stmt|;
 block|{
 name|int
-name|orestart_point
-decl_stmt|,
 name|ohash
 decl_stmt|,
 name|overbose
@@ -9944,6 +10457,9 @@ name|p
 decl_stmt|,
 modifier|*
 name|pager
+decl_stmt|,
+modifier|*
+name|oldargv1
 decl_stmt|;
 if|if
 condition|(
@@ -9987,6 +10503,13 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
+name|oldargv1
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -10061,10 +10584,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|orestart_point
-operator|=
-name|restart_point
-expr_stmt|;
 name|ohash
 operator|=
 name|hash
@@ -10073,8 +10592,6 @@ name|overbose
 operator|=
 name|verbose
 expr_stmt|;
-name|restart_point
-operator|=
 name|hash
 operator|=
 name|verbose
@@ -10095,6 +10612,8 @@ argument_list|,
 literal|"r+w"
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|(
@@ -10105,10 +10624,6 @@ argument_list|(
 name|pager
 argument_list|)
 expr_stmt|;
-name|restart_point
-operator|=
-name|orestart_point
-expr_stmt|;
 name|hash
 operator|=
 name|ohash
@@ -10116,6 +10631,24 @@ expr_stmt|;
 name|verbose
 operator|=
 name|overbose
+expr_stmt|;
+if|if
+condition|(
+name|oldargv1
+operator|!=
+name|argv
+index|[
+literal|1
+index|]
+condition|)
+comment|/* free up after globulize() */
+name|free
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
 expr_stmt|;
 block|}
 end_function

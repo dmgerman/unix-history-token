@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: extern.h,v 1.15 1997/04/14 09:09:17 lukem Exp $	*/
+comment|/*	$NetBSD: extern.h,v 1.17.2.1 1997/11/18 00:59:50 mellon Exp $	*/
 end_comment
 
 begin_comment
@@ -57,18 +57,6 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|abortsend
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|aborthttp
 name|__P
 argument_list|(
 operator|(
@@ -1116,6 +1104,8 @@ name|char
 operator|*
 operator|,
 name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1467,6 +1457,22 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|setftmode
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setgate
 name|__P
 argument_list|(
 operator|(
@@ -1926,20 +1932,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|jmp_buf
-name|abortprox
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|abrtflag
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|struct
 name|cmd
 name|cmdtab
@@ -1972,13 +1964,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|jmp_buf
-name|jabort
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|proxy
 decl_stmt|;
@@ -1989,13 +1974,6 @@ specifier|extern
 name|char
 name|reply_string
 index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|off_t
-name|restart_point
 decl_stmt|;
 end_decl_stmt
 

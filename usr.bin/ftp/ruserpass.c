@@ -1,15 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ruserpass.c,v 1.5 1997/06/25 08:56:45 msmith Exp $ */
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: ruserpass.c,v 1.13 1997/04/01 14:20:34 mrg Exp $	*/
+comment|/*	$NetBSD: ruserpass.c,v 1.14.2.1 1997/11/18 01:02:05 mellon Exp $	*/
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1985, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -29,15 +35,21 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id: ruserpass.c,v 1.5 1997/06/25 08:56:45 msmith Exp $"
-decl_stmt|;
-end_decl_stmt
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$Id$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__RCSID_SOURCE
+argument_list|(
+literal|"$NetBSD: ruserpass.c,v 1.14.2.1 1997/11/18 01:02:05 mellon Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -684,34 +696,29 @@ condition|(
 operator|*
 name|aname
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|aname
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|aname
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *aname"
 argument_list|)
 expr_stmt|;
 block|}
@@ -798,34 +805,29 @@ operator|&&
 operator|*
 name|apass
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|apass
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|apass
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *apass"
 argument_list|)
 expr_stmt|;
 block|}
@@ -881,34 +883,29 @@ operator|&&
 operator|*
 name|aacct
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 operator|*
 name|aacct
 operator|=
-name|malloc
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|strlen
+name|strdup
 argument_list|(
 name|tokval
-argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
+if|if
+condition|(
 operator|*
 name|aacct
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+literal|1
 argument_list|,
-name|tokval
+literal|"can't strdup *aacct"
 argument_list|)
 expr_stmt|;
 block|}
