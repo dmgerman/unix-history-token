@@ -174,7 +174,7 @@ begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
-value|920
+value|912
 end_define
 
 begin_comment
