@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.85 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.86 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3940,6 +3940,20 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|ip
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|inode
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_data
@@ -3951,36 +3965,6 @@ operator|->
 name|i_vnode
 operator|=
 name|vp
-expr_stmt|;
-name|ip
-operator|->
-name|i_flag
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|i_devvp
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|i_mode
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|i_diroff
-operator|=
-literal|0
-expr_stmt|;
-name|ip
-operator|->
-name|i_lockf
-operator|=
-literal|0
 expr_stmt|;
 name|ip
 operator|->
@@ -4074,13 +4058,7 @@ name|bp
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain. It will be 		 * returned to the free list by vput(). 		 */
-name|ufs_ihashrem
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
-comment|/* Unlock and discard unneeded inode. */
+comment|/* 		 * The inode does not contain anything useful, so it would 		 * be misleading to leave it on its hash chain. With mode 		 * still zero, it will be unlinked and returned to the free 		 * list by vput(). 		 */
 name|vput
 argument_list|(
 name|vp
