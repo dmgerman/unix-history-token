@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -240,9 +240,6 @@ argument_list|(
 literal|"\nBoot\n"
 argument_list|)
 expr_stmt|;
-name|loadpcs
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|JUSTASK
@@ -469,6 +466,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|loadpcs
+argument_list|()
+expr_stmt|;
 name|copyunix
 argument_list|(
 name|howto
@@ -799,6 +799,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMALL
+end_ifndef
+
 begin_comment
 comment|/* 750 Patchable Control Store magic */
 end_comment
@@ -909,6 +915,12 @@ specifier|register
 name|int
 name|j
 decl_stmt|;
+specifier|static
+name|int
+name|pcsdone
+init|=
+literal|0
+decl_stmt|;
 name|union
 name|cpusid
 name|sid
@@ -954,6 +966,8 @@ operator|.
 name|cp_urev
 operator|<
 literal|95
+operator|||
+name|pcsdone
 condition|)
 return|return;
 name|printf
@@ -1208,8 +1222,18 @@ operator|.
 name|cp_urev
 argument_list|)
 expr_stmt|;
+name|pcsdone
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|SMALL
+end_endif
 
 end_unit
 
