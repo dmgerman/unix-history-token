@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.8 (Berkeley) %G%"
+literal|"@(#)fts.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,13 +365,6 @@ operator|=
 name|ROOTPARENTLEVEL
 expr_stmt|;
 comment|/* allocate/initialize root(s) */
-if|if
-condition|(
-name|options
-operator|&
-name|FTS_MULTIPLE
-condition|)
-block|{
 name|maxlen
 operator|=
 operator|-
@@ -427,7 +420,7 @@ name|p
 operator|->
 name|fts_namelen
 expr_stmt|;
-comment|/* 			 * if comparison routine supplied, traverse in sorted 			 * order; otherwise traverse in the order specified. 			 */
+comment|/* 		 * if comparison routine supplied, traverse in sorted 		 * order; otherwise traverse in the order specified. 		 */
 if|if
 condition|(
 name|compar
@@ -526,53 +519,6 @@ argument_list|,
 name|nitems
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|root
-operator|=
-name|fts_root
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|argv
-argument_list|)
-operator|)
-condition|)
-goto|goto
-name|mem2
-goto|;
-name|maxlen
-operator|=
-name|root
-operator|->
-name|fts_namelen
-expr_stmt|;
-name|root
-operator|->
-name|fts_link
-operator|=
-name|NULL
-expr_stmt|;
-name|root
-operator|->
-name|fts_level
-operator|=
-name|ROOTLEVEL
-expr_stmt|;
-name|root
-operator|->
-name|fts_parent
-operator|=
-name|parent
-expr_stmt|;
-block|}
 comment|/* 	 * allocate a dummy pointer and make ftsread think that we've just 	 * finished the node before the root(s); set p->fts_info to FTS_NS 	 * so that everything about the "current" node is ignored. 	 */
 if|if
 condition|(
