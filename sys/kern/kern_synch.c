@@ -1065,9 +1065,9 @@ operator|&&
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|&&
 operator|(
@@ -1707,9 +1707,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 name|mtx_exit
 argument_list|(
@@ -1774,7 +1774,7 @@ name|p
 operator|->
 name|p_wchan
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|catch
@@ -1849,26 +1849,26 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_TIMEOUT
+name|PS_TIMEOUT
 condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 if|if
 condition|(
@@ -2395,9 +2395,9 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 name|mtx_exit
 argument_list|(
@@ -2507,26 +2507,26 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_SINTR
+name|PS_SINTR
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_TIMEOUT
+name|PS_TIMEOUT
 condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&=
 operator|~
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 if|if
 condition|(
@@ -2880,9 +2880,9 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_TIMEOUT
+name|PS_TIMEOUT
 expr_stmt|;
 block|}
 name|mtx_exit
@@ -2963,7 +2963,7 @@ name|p
 operator|->
 name|p_wchan
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 name|mtx_exit
@@ -3070,7 +3070,7 @@ name|p
 operator|->
 name|p_wchan
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3136,9 +3136,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 condition|)
 block|{
 name|setrunqueue
@@ -3156,9 +3156,9 @@ else|else
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SWAPINREQ
+name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -3279,7 +3279,7 @@ name|p
 operator|->
 name|p_wchan
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3345,9 +3345,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 condition|)
 block|{
 name|setrunqueue
@@ -3366,9 +3366,9 @@ else|else
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SWAPINREQ
+name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -3425,7 +3425,7 @@ comment|/* XXX */
 if|#
 directive|if
 literal|0
-block|struct rlimit *rlim;
+block|register struct rlimit *rlim;
 endif|#
 directive|endif
 name|int
@@ -3443,6 +3443,8 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MA_OWNED
+operator||
+name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3541,7 +3543,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 * If over max, kill it. 	 * 	 * XXX drop sched_lock, pickup Giant 	 */
-block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			killproc(p, "exceeded maximum CPU limit"); 		} else { 			psignal(p, SIGXCPU); 			if (rlim->rlim_cur< rlim->rlim_max) {
+block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			mtx_exit(&sched_lock, MTX_SPIN); 			killproc(p, "exceeded maximum CPU limit"); 			mtx_enter(&sched_lock, MTX_SPIN); 		} else { 			mtx_exit(&sched_lock, MTX_SPIN); 			psignal(p, SIGXCPU); 			mtx_enter(&sched_lock, MTX_SPIN); 			if (rlim->rlim_cur< rlim->rlim_max) {
 comment|/* XXX: we should make a private copy */
 block|rlim->rlim_cur += 5; 			} 		} 	}
 endif|#
@@ -3716,9 +3718,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_CVWAITQ
+name|PS_CVWAITQ
 condition|)
 name|cv_waitq_remove
 argument_list|(
@@ -3747,9 +3749,9 @@ if|if
 condition|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 condition|)
 name|setrunqueue
 argument_list|(
@@ -3785,9 +3787,9 @@ condition|(
 operator|(
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|==
 literal|0
@@ -3795,9 +3797,9 @@ condition|)
 block|{
 name|p
 operator|->
-name|p_flag
+name|p_sflag
 operator||=
-name|P_SWAPINREQ
+name|PS_SWAPINREQ
 expr_stmt|;
 name|wakeup
 argument_list|(
