@@ -2469,10 +2469,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * i8254_restore is called from apm_default_resume() to reload  * the countdown register.  * this should not be necessary but there are broken laptops that  * do not restore the countdown register on resume.  * when it happnes, it messes up the hardclock interval and system clock,  * which leads to the infamous "calcru: negative time" problem.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -2533,22 +2529,20 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Reenable RTC updates and interrupts. */
-comment|/* XXX locking is needed for RTC access? */
+comment|/* Restore all of the RTC's "status" (actually, control) registers. */
+comment|/* XXX locking is needed for RTC access. */
+name|writertc
+argument_list|(
+name|RTC_STATUSB
+argument_list|,
+name|RTCSB_24HR
+argument_list|)
+expr_stmt|;
 name|writertc
 argument_list|(
 name|RTC_STATUSA
 argument_list|,
 name|rtc_statusa
-argument_list|)
-expr_stmt|;
-name|writertc
-argument_list|(
-name|RTC_STATUSB
-argument_list|,
-name|RTCSB_HALT
-operator||
-name|RTCSB_24HR
 argument_list|)
 expr_stmt|;
 name|writertc
@@ -2562,7 +2556,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Restore all the timers atomically.  */
+comment|/*  * Restore all the timers non-atomically (XXX: should be atomically).  *  * This function is called from pmtimer_resume() to restore all the timers.  * This should not be necessary, but there are broken laptops that do not  * restore all the timers on resume.  */
 end_comment
 
 begin_function
