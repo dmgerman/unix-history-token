@@ -612,13 +612,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCHED_PRI_NTHRESH
-value|(SCHED_PRI_NHALF - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SCHED_PRI_BASE
 value|(PRI_MIN_TIMESHARE)
 end_define
@@ -674,7 +667,7 @@ value|(30)
 end_define
 
 begin_comment
-comment|/*  * These parameters and macros determine the size of the time slice that is  * granted to each thread.  *  * SLICE_MIN:	Minimum time slice granted, in units of ticks.  * SLICE_MAX:	Maximum time slice granted.  * SLICE_RANGE:	Range of available time slices scaled by hz.  * SLICE_SCALE:	The number slices granted per val in the range of [0, max].  * SLICE_NICE:  Determine the amount of slice granted to a scaled nice.  */
+comment|/*  * These parameters and macros determine the size of the time slice that is  * granted to each thread.  *  * SLICE_MIN:	Minimum time slice granted, in units of ticks.  * SLICE_MAX:	Maximum time slice granted.  * SLICE_RANGE:	Range of available time slices scaled by hz.  * SLICE_SCALE:	The number slices granted per val in the range of [0, max].  * SLICE_NICE:  Determine the amount of slice granted to a scaled nice.  * SLICE_NTHRESH:	The nice cutoff point for slice assignment.  */
 end_comment
 
 begin_define
@@ -689,6 +682,13 @@ define|#
 directive|define
 name|SCHED_SLICE_MAX
 value|(slice_max)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_SLICE_NTHRESH
+value|(SCHED_PRI_NHALF - 1)
 end_define
 
 begin_define
@@ -718,11 +718,11 @@ parameter_list|(
 name|nice
 parameter_list|)
 define|\
-value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((nice), SCHED_PRI_NTHRESH))
+value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((nice), SCHED_SLICE_NTHRESH))
 end_define
 
 begin_comment
-comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  *   * XXX nice value should effect how interactive a kg is.  */
+comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  */
 end_comment
 
 begin_define
@@ -3469,7 +3469,7 @@ operator|->
 name|ke_cpu
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Rationale: 	 * KSEs in interactive ksegs get the minimum slice so that we 	 * quickly notice if it abuses its advantage. 	 * 	 * KSEs in non-interactive ksegs are assigned a slice that is 	 * based on the ksegs nice value relative to the least nice kseg 	 * on the run queue for this cpu. 	 * 	 * If the KSE is less nice than all others it gets the maximum 	 * slice and other KSEs will adjust their slice relative to 	 * this when they first expire. 	 * 	 * There is 20 point window that starts relative to the least 	 * nice kse on the run queue.  Slice size is determined by 	 * the kse distance from the last nice ksegrp. 	 * 	 * If you are outside of the window you will get no slice and 	 * you will be reevaluated each time you are selected on the 	 * run queue. 	 *	 	 */
+comment|/* 	 * Rationale: 	 * KSEs in interactive ksegs get the minimum slice so that we 	 * quickly notice if it abuses its advantage. 	 * 	 * KSEs in non-interactive ksegs are assigned a slice that is 	 * based on the ksegs nice value relative to the least nice kseg 	 * on the run queue for this cpu. 	 * 	 * If the KSE is less nice than all others it gets the maximum 	 * slice and other KSEs will adjust their slice relative to 	 * this when they first expire. 	 * 	 * There is 20 point window that starts relative to the least 	 * nice kse on the run queue.  Slice size is determined by 	 * the kse distance from the last nice ksegrp. 	 * 	 * If the kse is outside of the window it will get no slice 	 * and will be reevaluated each time it is selected on the 	 * run queue.  The exception to this is nice 0 ksegs when 	 * a nice -20 is running.  They are always granted a minimum 	 * slice. 	 */
 if|if
 condition|(
 operator|!
@@ -3526,7 +3526,7 @@ if|if
 condition|(
 name|nice
 operator|<=
-name|SCHED_PRI_NTHRESH
+name|SCHED_SLICE_NTHRESH
 condition|)
 name|ke
 operator|->
@@ -3536,6 +3536,21 @@ name|SCHED_SLICE_NICE
 argument_list|(
 name|nice
 argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|kg
+operator|->
+name|kg_nice
+operator|==
+literal|0
+condition|)
+name|ke
+operator|->
+name|ke_slice
+operator|=
+name|SCHED_SLICE_MIN
 expr_stmt|;
 else|else
 name|ke
