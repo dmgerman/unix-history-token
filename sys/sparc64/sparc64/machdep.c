@@ -78,6 +78,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ptrace.h>
 end_include
 
@@ -644,6 +656,9 @@ name|globaldata_register
 argument_list|(
 name|globalp
 argument_list|)
+expr_stmt|;
+name|intr_init
+argument_list|()
 expr_stmt|;
 name|tick_start
 argument_list|(
