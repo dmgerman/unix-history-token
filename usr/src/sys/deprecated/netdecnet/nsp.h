@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	nsp.h	1.2	82/05/15	*/
+end_comment
+
+begin_comment
 comment|/*  * DECnet Network Services Protocol definitions,  * per Network Services Protocol Functional Specification,  * Version 3.2.0, October 1980.  */
 end_comment
 

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	nsp_seq.h	1.2	82/05/15	*/
+end_comment
+
+begin_comment
 comment|/*  * NSP sequence numbers are 12 bit integers operated  * on with modular arithmetic.  These macros can be  * used to compare and perform arithmetic on such integers.  */
 end_comment
 

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	tp_var.h	1.2	82/05/15	*/
+end_comment
+
+begin_comment
 comment|/*  * Kernel data structures for DECnet Transport layer.  */
 end_comment
 
