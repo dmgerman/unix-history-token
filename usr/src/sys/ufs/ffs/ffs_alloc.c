@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_alloc.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ffs_alloc.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -460,6 +460,10 @@ label|:
 name|fserr
 argument_list|(
 name|fs
+argument_list|,
+name|cred
+operator|->
+name|cr_uid
 argument_list|,
 literal|"file system full"
 argument_list|)
@@ -1275,6 +1279,10 @@ name|fserr
 argument_list|(
 name|fs
 argument_list|,
+name|cred
+operator|->
+name|cr_uid
+argument_list|,
 literal|"file system full"
 argument_list|)
 expr_stmt|;
@@ -1587,6 +1595,10 @@ label|:
 name|fserr
 argument_list|(
 name|fs
+argument_list|,
+name|cred
+operator|->
+name|cr_uid
 argument_list|,
 literal|"out of inodes"
 argument_list|)
@@ -4567,6 +4579,16 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|ucred
+modifier|*
+name|cred
+init|=
+name|u
+operator|.
+name|u_cred
+decl_stmt|;
+comment|/* XXX */
 name|fs
 operator|=
 name|ip
@@ -4630,12 +4652,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|badblock
-argument_list|(
-name|fs
-argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bno
-argument_list|)
+operator|>=
+name|fs
+operator|->
+name|fs_size
 condition|)
 block|{
 name|printf
@@ -4647,6 +4671,17 @@ argument_list|,
 name|ip
 operator|->
 name|i_number
+argument_list|)
+expr_stmt|;
+name|fserr
+argument_list|(
+name|fs
+argument_list|,
+name|cred
+operator|->
+name|cr_uid
+argument_list|,
+literal|"bad block"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5978,73 +6013,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check that a specified block number is in range.  */
-end_comment
-
-begin_expr_stmt
-name|badblock
-argument_list|(
-name|fs
-argument_list|,
-name|bn
-argument_list|)
-specifier|register
-expr|struct
-name|fs
-operator|*
-name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|daddr_t
-name|bn
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|bn
-operator|>=
-name|fs
-operator|->
-name|fs_size
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"bad block %d, "
-argument_list|,
-name|bn
-argument_list|)
-expr_stmt|;
-name|fserr
-argument_list|(
-name|fs
-argument_list|,
-literal|"bad block"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
 comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
 end_comment
 
@@ -6052,6 +6020,8 @@ begin_macro
 name|fserr
 argument_list|(
 argument|fs
+argument_list|,
+argument|uid
 argument_list|,
 argument|cp
 argument_list|)
@@ -6062,6 +6032,12 @@ name|struct
 name|fs
 modifier|*
 name|fs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|uid
 decl_stmt|;
 end_decl_stmt
 
@@ -6078,7 +6054,9 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %s\n"
+literal|"uid %d on %s: %s\n"
+argument_list|,
+name|uid
 argument_list|,
 name|fs
 operator|->
