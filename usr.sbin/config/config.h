@@ -209,10 +209,6 @@ name|UNKNOWN
 value|-2
 comment|/* -2 means not set yet */
 name|int
-name|d_dk
-decl_stmt|;
-comment|/* if init 1 set to number for iostat */
-name|int
 name|d_flags
 decl_stmt|;
 comment|/* flags for device init */
