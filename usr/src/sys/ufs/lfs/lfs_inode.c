@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -288,8 +288,6 @@ condition|)
 name|ip
 operator|->
 name|i_atime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -309,8 +307,6 @@ block|{
 name|ip
 operator|->
 name|i_mtime
-operator|.
-name|ts_sec
 operator|=
 name|ap
 operator|->
@@ -337,8 +333,6 @@ condition|)
 name|ip
 operator|->
 name|i_ctime
-operator|.
-name|ts_sec
 operator|=
 name|time
 operator|.

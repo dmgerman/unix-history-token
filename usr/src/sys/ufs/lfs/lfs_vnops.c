@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vnops.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2112,6 +2112,8 @@ expr_stmt|;
 name|vap
 operator|->
 name|va_atime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
@@ -2119,7 +2121,19 @@ name|i_atime
 expr_stmt|;
 name|vap
 operator|->
+name|va_atime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_atimensec
+expr_stmt|;
+name|vap
+operator|->
 name|va_mtime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
@@ -2127,11 +2141,33 @@ name|i_mtime
 expr_stmt|;
 name|vap
 operator|->
+name|va_mtime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_mtimensec
+expr_stmt|;
+name|vap
+operator|->
 name|va_ctime
+operator|.
+name|ts_sec
 operator|=
 name|ip
 operator|->
 name|i_ctime
+expr_stmt|;
+name|vap
+operator|->
+name|va_ctime
+operator|.
+name|ts_nsec
+operator|=
+name|ip
+operator|->
+name|i_ctimensec
 expr_stmt|;
 name|vap
 operator|->
