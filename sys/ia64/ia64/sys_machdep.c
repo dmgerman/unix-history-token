@@ -150,12 +150,9 @@ literal|0
 decl_stmt|;
 switch|switch
 condition|(
-name|SCARG
-argument_list|(
 name|uap
-argument_list|,
+operator|->
 name|op
-argument_list|)
 condition|)
 block|{
 default|default:
