@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.6 (Berkeley) %G%"
+literal|"@(#)misc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -396,22 +396,22 @@ begin_comment
 comment|/*  * bad_arg --  *	print out a bad argument message.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|void
 name|bad_arg
-argument_list|(
+parameter_list|(
 name|option
-argument_list|,
-name|error
-argument_list|)
+parameter_list|,
+name|err
+parameter_list|)
 name|char
 modifier|*
 name|option
 decl_stmt|,
-modifier|*
-name|error
+decl|*
+name|err
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -426,7 +426,7 @@ literal|"find: %s: %s.\n"
 argument_list|,
 name|option
 argument_list|,
-name|error
+name|err
 argument_list|)
 expr_stmt|;
 name|exit
