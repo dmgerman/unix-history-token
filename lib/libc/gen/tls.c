@@ -365,6 +365,16 @@ name|size
 operator|=
 name|tls_static_space
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+name|tcbsize
+condition|)
+name|size
+operator|=
+name|tcbsize
+expr_stmt|;
 name|tls
 operator|=
 name|malloc
