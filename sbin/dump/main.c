@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: main.c,v 1.16 1998/06/15 06:58:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -674,7 +674,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -821,7 +821,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -863,7 +863,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|X_FINOK
 argument_list|)
 expr_stmt|;
 comment|/* do nothing else */
@@ -899,7 +899,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -960,7 +960,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -983,7 +983,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1115,7 +1115,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -1130,7 +1130,7 @@ literal|0
 condition|)
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 else|#
@@ -1147,7 +1147,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1568,7 +1568,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -2426,7 +2426,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}

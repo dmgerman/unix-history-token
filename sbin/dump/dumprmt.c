@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dumprmt.c,v 1.11 1998/06/15 06:58:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -697,7 +697,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -723,7 +723,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 block|}
@@ -763,7 +763,7 @@ argument_list|)
 condition|)
 name|exit
 argument_list|(
-name|X_ABORT
+name|X_STARTUP
 argument_list|)
 expr_stmt|;
 name|rmtpeer

@@ -984,6 +984,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|X_STARTUP
+value|1
+end_define
+
+begin_comment
+comment|/* startup error */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|X_REWRITE
 value|2
 end_define
