@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<locale.h>
 end_include
 
@@ -853,7 +859,24 @@ operator|)
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EBUSY
+condition|)
 continue|continue;
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"open %s"
+argument_list|,
+name|snp
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 name|f
 return|;
@@ -1564,12 +1587,12 @@ argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
-name|setup_scr
-argument_list|()
-expr_stmt|;
 name|snp_io
 operator|=
 name|open_snp
+argument_list|()
+expr_stmt|;
+name|setup_scr
 argument_list|()
 expr_stmt|;
 if|if
