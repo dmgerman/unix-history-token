@@ -250,7 +250,7 @@ end_comment
 
 begin_function
 name|void
-name|regerror
+name|regerr
 parameter_list|(
 name|txt
 parameter_list|)

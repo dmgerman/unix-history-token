@@ -29,11 +29,37 @@ directive|include
 file|"vi.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGEX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"regexp.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* REGEX */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -1501,11 +1527,26 @@ name|long
 name|nchanged
 decl_stmt|;
 comment|/* number of lines changed */
+ifdef|#
+directive|ifdef
+name|REGEX
+name|regex_t
+modifier|*
+name|re
+decl_stmt|,
+modifier|*
+name|optpat
+argument_list|()
+decl_stmt|;
+else|#
+directive|else
 name|regexp
 modifier|*
 name|re
 decl_stmt|;
 comment|/* the compiled search expression */
+endif|#
+directive|endif
 comment|/* can't nest global commands */
 if|if
 condition|(
@@ -1596,6 +1637,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|REGEX
+name|re
+operator|=
+name|optpat
+argument_list|(
+name|extra
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|re
 operator|=
 name|regcomp
@@ -1605,6 +1660,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -1683,6 +1740,35 @@ name|l
 argument_list|)
 expr_stmt|;
 comment|/* if it contains the search pattern... */
+ifdef|#
+directive|ifdef
+name|REGEX
+if|if
+condition|(
+operator|(
+operator|!
+name|regexec
+argument_list|(
+name|re
+argument_list|,
+name|line
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|==
+operator|(
+name|cmd
+operator|==
+name|CMD_GLOBAL
+operator|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -1703,6 +1789,8 @@ operator|!=
 name|CMD_GLOBAL
 operator|)
 condition|)
+endif|#
+directive|endif
 block|{
 comment|/* move the cursor to that line */
 name|cursor
@@ -1742,12 +1830,17 @@ name|doingglobal
 operator|=
 name|FALSE
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|REGEX
 comment|/* free the regexp */
 name|_free_
 argument_list|(
 name|re
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Reporting...*/
 name|rptlines
 operator|=

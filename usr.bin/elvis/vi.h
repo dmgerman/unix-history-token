@@ -342,6 +342,28 @@ begin_comment
 comment|/* Miscellaneous constants.						  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|REGEX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SE_MAX
+value|30
+end_define
+
+begin_comment
+comment|/* max number of subexpressions */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
