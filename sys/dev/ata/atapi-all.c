@@ -595,9 +595,7 @@ name|dev_softc
 index|[
 name|ATA_DEV
 argument_list|(
-name|atp
-operator|->
-name|unit
+name|device
 argument_list|)
 index|]
 operator|=
