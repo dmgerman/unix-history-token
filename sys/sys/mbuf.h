@@ -1055,7 +1055,7 @@ name|mext_refcnt
 modifier|*
 name|next_ref
 decl_stmt|;
-name|u_long
+name|u_int
 name|refcnt
 decl_stmt|;
 block|}
@@ -1152,7 +1152,7 @@ name|MEXT_REM_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	KASSERT((m)->m_ext.ref_cnt->refcnt> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_long(&((m)->m_ext.ref_cnt->refcnt), 1);		\ } while(0)
+value|do {						\ 	KASSERT((m)->m_ext.ref_cnt->refcnt> 0, ("m_ext refcnt< 0"));	\ 	atomic_subtract_int(&((m)->m_ext.ref_cnt->refcnt), 1);		\ } while(0)
 end_define
 
 begin_define
@@ -1162,7 +1162,7 @@ name|MEXT_ADD_REF
 parameter_list|(
 name|m
 parameter_list|)
-value|atomic_add_long(&((m)->m_ext.ref_cnt->refcnt), 1)
+value|atomic_add_int(&((m)->m_ext.ref_cnt->refcnt), 1)
 end_define
 
 begin_define
@@ -1331,6 +1331,10 @@ parameter_list|)
 value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_mp->mcl_next = mclfree.m_head;					\ 	mclfree.m_head = _mp;						\ 	mbstat.m_clfree++;						\ 	MBWAKEUP(m_clalloc_wid);					\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF); 				\ } while (0)
 end_define
 
+begin_comment
+comment|/* MEXTFREE:  * If the atomic_cmpset_int() returns 0, then we effectively do nothing  * in terms of "cleaning up" (freeing the ext buf and ref. counter) as  * this means that either there are still references, or another thread  * is taking care of the clean-up.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1338,7 +1342,7 @@ name|MEXTFREE
 parameter_list|(
 name|m
 parameter_list|)
-value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	if (MEXT_IS_REF(_mmm))						\ 		MEXT_REM_REF(_mmm);					\ 	else if (_mmm->m_ext.ext_type != EXT_CLUSTER) {			\ 		(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,		\ 		    _mmm->m_ext.ext_args);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	} else {							\ 		_MCLFREE(_mmm->m_ext.ext_buf);				\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
+value|do {						\ 	struct mbuf *_mmm = (m);					\ 									\ 	MEXT_REM_REF(_mmm);						\ 	if (atomic_cmpset_int(&_mmm->m_ext.ref_cnt->refcnt, 0, 1)) {	\ 		if (_mmm->m_ext.ext_type != EXT_CLUSTER) {		\ 			(*(_mmm->m_ext.ext_free))(_mmm->m_ext.ext_buf,	\ 			    _mmm->m_ext.ext_args);			\ 		} else							\ 			_MCLFREE(_mmm->m_ext.ext_buf);			\ 		_MEXT_DEALLOC_CNT(_mmm->m_ext.ref_cnt);			\ 	}								\ 	_mmm->m_flags&= ~M_EXT;					\ } while (0)
 end_define
 
 begin_comment
