@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)table.h	5.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)table.h	5.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -68,6 +68,7 @@ name|rtentry
 name|rtu_rt
 decl_stmt|;
 struct|struct
+name|rtuentry
 block|{
 name|u_long
 name|rtu_hash
@@ -81,9 +82,19 @@ name|sockaddr
 name|rtu_router
 decl_stmt|;
 name|short
+name|rtu_rtflags
+decl_stmt|;
+comment|/* used by rtioctl */
+name|short
+name|rtu_wasted
+index|[
+literal|5
+index|]
+decl_stmt|;
+name|int
 name|rtu_flags
 decl_stmt|;
-name|short
+name|int
 name|rtu_state
 decl_stmt|;
 name|int
@@ -114,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|rt_rt
-value|rt_rtu.rtu_rt
+value|rt_rtu.rtu_entry
 end_define
 
 begin_comment
@@ -327,7 +338,7 @@ begin_define
 define|#
 directive|define
 name|RTF_SUBNET
-value|0x8000
+value|0x80000
 end_define
 
 begin_comment
