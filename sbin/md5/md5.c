@@ -654,11 +654,14 @@ operator|)
 operator|!=
 literal|0
 condition|?
-operator|(
+call|(
+name|long
+call|)
+argument_list|(
 name|endTime
 operator|-
 name|startTime
-operator|)
+argument_list|)
 else|:
 literal|1
 operator|)
