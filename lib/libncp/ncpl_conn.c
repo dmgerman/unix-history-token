@@ -1626,7 +1626,7 @@ block|}
 else|else
 name|ncp_error
 argument_list|(
-literal|"Invalid group name %s, ignored"
+literal|"invalid group name %s, ignored"
 argument_list|,
 literal|0
 argument_list|,
@@ -1665,7 +1665,7 @@ block|}
 else|else
 name|ncp_error
 argument_list|(
-literal|"Invalid user name %s, ignored"
+literal|"invalid user name %s, ignored"
 argument_list|,
 literal|0
 argument_list|,
