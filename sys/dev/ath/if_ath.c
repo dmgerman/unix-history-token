@@ -5242,6 +5242,11 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: ieee80211_find_txnode does stat+msg */
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -5303,6 +5308,11 @@ argument_list|,
 literal|"%s: discard, classification failure\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 goto|goto
