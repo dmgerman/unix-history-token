@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.17 1995/07/20 22:32:59 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.18 1995/12/15 03:39:25 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -668,7 +668,7 @@ begin_define
 define|#
 directive|define
 name|FAIL_THRESHOLD
-value|10
+value|20
 end_define
 
 begin_endif
@@ -978,12 +978,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
 name|res
@@ -2425,12 +2420,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"select: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"select: %m"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2561,8 +2551,36 @@ name|struct
 name|sockaddr_in
 name|addr
 decl_stmt|;
+name|int
+name|d
+init|=
+literal|0
+decl_stmt|,
+name|a
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|_dom_binding
+modifier|*
+name|y
+decl_stmt|,
+modifier|*
+name|prev
+init|=
+name|NULL
+decl_stmt|;
+name|char
+name|path
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|d
+operator|=
 name|read
 argument_list|(
 name|READFD
@@ -2575,23 +2593,22 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|)
-operator|<
+operator|)
+operator|<=
 literal|0
 condition|)
 name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"could not read from child: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"could not read from child: %m"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|a
+operator|=
 name|read
 argument_list|(
 name|READFD
@@ -2605,6 +2622,7 @@ expr|struct
 name|sockaddr_in
 argument_list|)
 argument_list|)
+operator|)
 operator|<
 literal|0
 condition|)
@@ -2612,12 +2630,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"could not read from child: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"could not read from child: %m"
 argument_list|)
 expr_stmt|;
 name|close
@@ -2648,6 +2661,16 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|>
+literal|0
+operator|&&
+name|a
+operator|>
+literal|0
+condition|)
 name|rpc_received
 argument_list|(
 operator|(
@@ -2663,6 +2686,128 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+for|for
+control|(
+name|y
+operator|=
+name|ypbindlist
+init|;
+name|y
+condition|;
+name|y
+operator|=
+name|y
+operator|->
+name|dom_pnext
+control|)
+block|{
+if|if
+condition|(
+name|y
+operator|==
+name|ypdb
+condition|)
+break|break;
+name|prev
+operator|=
+name|y
+expr_stmt|;
+block|}
+switch|switch
+condition|(
+name|ypdb
+operator|->
+name|dom_default
+condition|)
+block|{
+case|case
+literal|0
+case|:
+if|if
+condition|(
+name|prev
+operator|==
+name|NULL
+condition|)
+name|ypbindlist
+operator|=
+name|y
+operator|->
+name|dom_pnext
+expr_stmt|;
+else|else
+name|prev
+operator|->
+name|dom_pnext
+operator|=
+name|y
+operator|->
+name|dom_pnext
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|path
+argument_list|,
+literal|"%s/%s.%ld"
+argument_list|,
+name|BINDINGDIR
+argument_list|,
+name|ypdb
+operator|->
+name|dom_domain
+argument_list|,
+name|YPVERS
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|ypdb
+operator|->
+name|dom_lockfd
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|path
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ypdb
+argument_list|)
+expr_stmt|;
+name|domains
+operator|--
+expr_stmt|;
+return|return;
+case|case
+literal|1
+case|:
+name|ypdb
+operator|->
+name|dom_broadcast_pid
+operator|=
+literal|0
+expr_stmt|;
+name|ypdb
+operator|->
+name|dom_alive
+operator|=
+literal|0
+expr_stmt|;
+name|broadcast
+argument_list|(
+name|ypdb
+argument_list|)
+expr_stmt|;
+return|return;
+default|default:
+break|break;
+block|}
+block|}
+return|return;
 block|}
 end_function
 
@@ -3017,12 +3162,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"pipe: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"pipe: %m"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3100,6 +3240,20 @@ argument_list|(
 name|READFD
 argument_list|)
 expr_stmt|;
+name|signal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+name|signal
+argument_list|(
+name|SIGTERM
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 operator|-
@@ -3109,12 +3263,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"fork: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"fork: %m"
 argument_list|)
 expr_stmt|;
 name|close
@@ -3870,12 +4019,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"malloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"malloc: %m"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4317,12 +4461,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"write: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"write: %m"
 argument_list|)
 expr_stmt|;
 name|close
