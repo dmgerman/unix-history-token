@@ -387,11 +387,11 @@ operator|!=
 operator|&
 name|g_dev_cdevsw
 condition|)
-name|cp
-operator|=
+return|return
+operator|(
 name|NULL
-expr_stmt|;
-else|else
+operator|)
+return|;
 name|cp
 operator|=
 name|dev
