@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|G_LIB_VERSION
-value|0
+value|1
 end_define
 
 begin_define
@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|G_CMD_SENTINEL
-value|{ NULL, 0, NULL, G_NULL_OPTS }
+value|{ NULL, 0, NULL, G_NULL_OPTS, NULL }
 end_define
 
 begin_struct
@@ -166,6 +166,11 @@ name|gc_options
 index|[
 name|G_OPT_MAX
 index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|gc_usage
 decl_stmt|;
 block|}
 struct|;
