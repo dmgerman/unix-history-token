@@ -198,6 +198,7 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+comment|/*      * First pull off all the phase 2 packets.      */
 for|for
 control|(
 init|;
@@ -240,56 +241,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-for|for
-control|(
-name|aa
-operator|=
-name|at_ifaddr
-init|;
-name|aa
-condition|;
-name|aa
-operator|=
-name|aa
-operator|->
-name|aa_next
-control|)
-block|{
-if|if
-condition|(
-name|aa
-operator|->
-name|aa_ifp
-operator|==
-name|ifp
-operator|&&
-operator|(
-name|aa
-operator|->
-name|aa_flags
-operator|&
-name|AFA_PHASE2
-operator|)
-condition|)
-block|{
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|aa
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* ifp not an appletalk interface */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 name|ddp_input
 argument_list|(
 name|m
@@ -307,6 +258,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Then pull off all the phase 1 packets.      */
 for|for
 control|(
 init|;
@@ -349,58 +301,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-for|for
-control|(
-name|aa
-operator|=
-name|at_ifaddr
-init|;
-name|aa
-condition|;
-name|aa
-operator|=
-name|aa
-operator|->
-name|aa_next
-control|)
-block|{
-if|if
-condition|(
-name|aa
-operator|->
-name|aa_ifp
-operator|==
-name|ifp
-operator|&&
-operator|(
-name|aa
-operator|->
-name|aa_flags
-operator|&
-name|AFA_PHASE2
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|aa
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* ifp not an appletalk interface */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|m
@@ -432,6 +332,7 @@ operator|++
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 	 * this seems a little dubios, but I don't know phase 1 so leave it. 	 */
 name|elhp
 operator|=
 name|mtod
@@ -617,11 +518,27 @@ name|sockaddr_at
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|to
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_at
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|elh
 condition|)
 block|{
+comment|/* 	 * Extract the information in the short header. 	 * netowrk information is defaulted to ATADDR_ANYNET 	 * and node information comes from the elh info. 	 * We must be phase 1. 	 */
 name|ddpstat
 operator|.
 name|ddps_short
@@ -766,6 +683,7 @@ name|ddps
 operator|.
 name|dsh_sport
 expr_stmt|;
+comment|/*  	 * Make sure that we point to the phase1 ifaddr info  	 * and that it's valid for this packet. 	 */
 for|for
 control|(
 name|aa
@@ -783,12 +701,15 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|aa
 operator|->
 name|aa_ifp
 operator|==
 name|ifp
+operator|)
 operator|&&
+operator|(
 operator|(
 name|aa
 operator|->
@@ -798,8 +719,16 @@ name|AFA_PHASE2
 operator|)
 operator|==
 literal|0
+operator|)
 operator|&&
 operator|(
+operator|(
+name|to
+operator|.
+name|sat_addr
+operator|.
+name|s_node
+operator|==
 name|AA_SAT
 argument_list|(
 name|aa
@@ -808,13 +737,9 @@ operator|->
 name|sat_addr
 operator|.
 name|s_node
-operator|==
-name|to
-operator|.
-name|sat_addr
-operator|.
-name|s_node
+operator|)
 operator|||
+operator|(
 name|to
 operator|.
 name|sat_addr
@@ -823,11 +748,13 @@ name|s_node
 operator|==
 name|ATADDR_BCAST
 operator|)
+operator|)
 condition|)
 block|{
 break|break;
 block|}
 block|}
+comment|/*  	 * maybe we got a broadcast not meant for us.. ditch it. 	 */
 if|if
 condition|(
 name|aa
@@ -845,6 +772,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* 	 * There was no 'elh' passed on. This could still be 	 * either phase1 or phase2. 	 * We have a long header, but we may be running on a pahse 1 net. 	 * Extract out all the info regarding this packet's src& dst. 	 */
 name|ddpstat
 operator|.
 name|ddps_long
@@ -1023,6 +951,7 @@ operator|==
 name|ATADDR_ANYNET
 condition|)
 block|{
+comment|/* 	     * The TO address doesn't specify a net, 	     * So by definition it's for this net. 	     * Try find ifaddr info with the right phase,  	     * the right interface, and either to our node, a bradcast, 	     * or looped back (though that SHOULD be covered in the other 	     * cases). 	     * 	     * XXX If we have multiple interfaces, then the first with 	     * this node number will match (which may NOT be what we want, 	     * but it's probably safe in 99.999% of cases. 	     */
 for|for
 control|(
 name|aa
@@ -1076,13 +1005,22 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|(
 name|aa
 operator|->
 name|aa_ifp
 operator|==
 name|ifp
+operator|)
 operator|&&
 operator|(
+operator|(
+name|to
+operator|.
+name|sat_addr
+operator|.
+name|s_node
+operator|==
 name|AA_SAT
 argument_list|(
 name|aa
@@ -1091,13 +1029,9 @@ operator|->
 name|sat_addr
 operator|.
 name|s_node
-operator|==
-name|to
-operator|.
-name|sat_addr
-operator|.
-name|s_node
+operator|)
 operator|||
+operator|(
 name|to
 operator|.
 name|sat_addr
@@ -1105,6 +1039,7 @@ operator|.
 name|s_node
 operator|==
 name|ATADDR_BCAST
+operator|)
 operator|||
 operator|(
 name|ifp
@@ -1122,6 +1057,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/*  	     * A destination network was given. We just try to find  	     * which ifaddr info matches it. 	     */
 for|for
 control|(
 name|aa
@@ -1137,6 +1073,7 @@ operator|->
 name|aa_next
 control|)
 block|{
+comment|/* 		 * This is a kludge. Accept packets that are 		 * for any router on a local netrange. 		 */
 if|if
 condition|(
 name|to
@@ -1160,8 +1097,10 @@ condition|)
 block|{
 break|break;
 block|}
+comment|/* 		 * Don't use ifaddr info for which we are totally outside the 		 * netrange, and it's not a startup packet. 		 * Startup packets are always implicitly allowed on to 		 * the next test. 		 */
 if|if
 condition|(
+operator|(
 operator|(
 name|ntohs
 argument_list|(
@@ -1178,7 +1117,9 @@ name|aa
 operator|->
 name|aa_firstnet
 argument_list|)
+operator|)
 operator|||
+operator|(
 name|ntohs
 argument_list|(
 name|to
@@ -1195,7 +1136,9 @@ operator|->
 name|aa_lastnet
 argument_list|)
 operator|)
+operator|)
 operator|&&
+operator|(
 operator|(
 name|ntohs
 argument_list|(
@@ -1210,7 +1153,9 @@ name|ntohs
 argument_list|(
 literal|0xff00
 argument_list|)
+operator|)
 operator|||
+operator|(
 name|ntohs
 argument_list|(
 name|to
@@ -1225,12 +1170,15 @@ argument_list|(
 literal|0xfffe
 argument_list|)
 operator|)
+operator|)
 condition|)
 block|{
 continue|continue;
 block|}
+comment|/* 		 * Don't record a match either if we just don't have a match 		 * in the node address. This can have if the interface 		 * is in promiscuous mode for example. 		 */
 if|if
 condition|(
+operator|(
 name|to
 operator|.
 name|sat_addr
@@ -1245,7 +1193,9 @@ operator|->
 name|sat_addr
 operator|.
 name|s_node
+operator|)
 operator|&&
+operator|(
 name|to
 operator|.
 name|sat_addr
@@ -1253,6 +1203,7 @@ operator|.
 name|s_node
 operator|!=
 name|ATADDR_BCAST
+operator|)
 condition|)
 block|{
 continue|continue;
@@ -1306,13 +1257,16 @@ name|mlen
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * XXX Should we deliver broadcasts locally, also, or rely on the      * link layer to give us a copy?  For the moment, the latter.      */
+comment|/*      * If it aint for a net on any of our interfaces,      * or it IS for a net on a different interface than it came in on,      * (and it is not looped back) then consider if we shoulf forward it.      * As we a re not really a router this is a bit cheaky, but it may be      * useful some day.      */
 if|if
 condition|(
+operator|(
 name|aa
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 operator|(
 name|to
 operator|.
@@ -1321,13 +1275,17 @@ operator|.
 name|s_node
 operator|==
 name|ATADDR_BCAST
+operator|)
 operator|&&
+operator|(
 name|aa
 operator|->
 name|aa_ifp
 operator|!=
 name|ifp
+operator|)
 operator|&&
+operator|(
 operator|(
 name|ifp
 operator|->
@@ -1338,8 +1296,10 @@ operator|)
 operator|==
 literal|0
 operator|)
+operator|)
 condition|)
 block|{
+comment|/*  	 * If we've explicitly disabled it, don't route anything 	 */
 if|if
 condition|(
 name|ddp_forward
@@ -1354,6 +1314,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*  	 * If the cached forwarding route is still valid, use it. 	 */
 if|if
 condition|(
 name|forwro
@@ -1418,6 +1379,7 @@ operator|)
 literal|0
 expr_stmt|;
 block|}
+comment|/* 	 * If we don't have a cached one (any more) or it's useless, 	 * Then get a new route. 	 * XXX this could cause a 'route leak'. check this! 	 */
 if|if
 condition|(
 name|forwro
@@ -1508,8 +1470,10 @@ name|forwro
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*  	 * If it's not going to get there on this hop, and it's 	 * already done too many hops, then throw it away. 	 */
 if|if
 condition|(
+operator|(
 name|to
 operator|.
 name|sat_addr
@@ -1527,39 +1491,14 @@ operator|->
 name|sat_addr
 operator|.
 name|s_net
+operator|)
 operator|&&
+operator|(
 name|ddpe
 operator|.
 name|deh_hops
 operator|==
 name|DDP_MAXHOPS
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|ddp_firewall
-operator|&&
-operator|(
-name|forwro
-operator|.
-name|ro_rt
-operator|==
-name|NULL
-operator|||
-name|forwro
-operator|.
-name|ro_rt
-operator|->
-name|rt_ifp
-operator|!=
-name|ifp
 operator|)
 condition|)
 block|{
@@ -1570,6 +1509,40 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * A ddp router might use the same interface 	 * to forward the packet, which this would not effect. 	 * Don't allow packets to cross from one interface to another however. 	 */
+if|if
+condition|(
+name|ddp_firewall
+operator|&&
+operator|(
+operator|(
+name|forwro
+operator|.
+name|ro_rt
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|forwro
+operator|.
+name|ro_rt
+operator|->
+name|rt_ifp
+operator|!=
+name|ifp
+operator|)
+operator|)
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Adjust the header. 	 * If it was a short header then it would have not gotten here, 	 * so we can assume there is room to drop the header in. 	 * XXX what about promiscuous mode, etc... 	 */
 name|ddpe
 operator|.
 name|deh_hops
@@ -1633,6 +1606,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+comment|/*      * It was for us, and we have an ifaddr to use with it.      */
 name|from
 operator|.
 name|sat_len
@@ -1649,6 +1623,7 @@ name|sat_family
 operator|=
 name|AF_APPLETALK
 expr_stmt|;
+comment|/*       * We are no longer interested in the link layer.      * so cut it off.      */
 if|if
 condition|(
 name|elh
@@ -1711,6 +1686,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*       * Search for ddp protocol control blocks that match these      * addresses.       */
 if|if
 condition|(
 operator|(
@@ -1738,6 +1714,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*       * If we found one, deliver th epacket to the socket      */
 if|if
 condition|(
 name|sbappendaddr
@@ -1770,6 +1747,7 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/*  	 * If the socket is full (or similar error) dump the packet. 	 */
 name|ddpstat
 operator|.
 name|ddps_nosockspace
@@ -1782,6 +1760,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*      * And wake up whatever might be waiting for it      */
 name|sorwakeup
 argument_list|(
 name|ddp
@@ -1797,6 +1776,10 @@ if|#
 directive|if
 literal|0
 end_if
+
+begin_comment
+comment|/* As if we haven't got enough of this sort of think floating around the kernel :) */
+end_comment
 
 begin_define
 define|#
