@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -934,7 +934,9 @@ name|tpcb
 operator|->
 name|tp_cong_win
 operator|=
-literal|1
+name|tpcb
+operator|->
+name|tp_l_tpdusize
 expr_stmt|;
 name|IncStat
 argument_list|(
@@ -949,7 +951,9 @@ name|tpcb
 operator|->
 name|tp_cong_win
 operator|=
-literal|1
+name|tpcb
+operator|->
+name|tp_l_tpdusize
 expr_stmt|;
 comment|/* might as well quench source also */
 name|tpcb

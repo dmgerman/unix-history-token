@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|N_CTIMERS
+name|TM_NTIMERS
 value|6
 end_define
 
@@ -123,20 +123,10 @@ struct|struct
 name|tp_ref
 block|{
 comment|/*	u_char	 			tpr_state; /* values REF_FROZEN, etc. above */
-comment|/*	struct Ccallout 	tpr_callout[N_CTIMERS]; /* C timers */
-comment|/*	struct Ecallout		tpr_calltodo;			/* list of active E timers */
 define|#
 directive|define
 name|tpr_state
 value|tpr_pcb->tp_refstate
-define|#
-directive|define
-name|tpr_callout
-value|tpr_pcb->tp_refcallout
-define|#
-directive|define
-name|tpr_calltodo
-value|tpr_pcb->tp_refcalltodo
 name|struct
 name|tp_pcb
 modifier|*
@@ -402,46 +392,52 @@ name|tp_fcredit
 decl_stmt|;
 comment|/* current remote credit in # packets */
 name|u_short
+name|tp_maxfcredit
+decl_stmt|;
+comment|/* max remote credit in # packets */
+name|u_short
+name|tp_dupacks
+decl_stmt|;
+comment|/* intuit packet loss before rxt timo */
+name|u_long
+name|tp_cong_win
+decl_stmt|;
+comment|/* congestion window in bytes. 										 * see profuse comments in TCP code 										 */
+name|u_long
 name|tp_ssthresh
 decl_stmt|;
 comment|/* cong_win threshold for slow start 										 * exponential to linear switch 										 */
-name|u_short
-name|tp_cong_win
-decl_stmt|;
-comment|/* congestion window : set to 1 on 										 * source quench 										 * Minimizes the amount of retrans- 										 * missions (independently of the 										 * retrans strategy).  Increased 										 * by one for each good ack received. 										 * Minimizes the amount sent in a 										 * regular tp_send() also. 										 */
-name|u_int
-name|tp_ackrcvd
-decl_stmt|;
-comment|/* ACKs received since the send window was updated */
-name|SeqNum
-name|tp_last_retrans
-decl_stmt|;
-name|SeqNum
-name|tp_retrans_hiwat
-decl_stmt|;
 name|SeqNum
 name|tp_snduna
 decl_stmt|;
 comment|/* seq # of lowest unacked DT */
 name|SeqNum
-name|tp_sndhiwat
+name|tp_sndnew
 decl_stmt|;
-comment|/* highest seq # sent so far */
+comment|/* seq # of lowest unsent DT  */
 name|SeqNum
 name|tp_sndnum
 decl_stmt|;
 comment|/* next seq # to be assigned */
+name|SeqNum
+name|tp_sndnxt
+decl_stmt|;
+comment|/* what to do next; poss. rxt */
 name|struct
 name|mbuf
 modifier|*
-name|tp_sndhiwat_m
+name|tp_sndnxt_m
 decl_stmt|;
-comment|/* packet corres. to sndhiwat*/
+comment|/* packet corres. to sndnxt*/
 name|int
 name|tp_Nwindow
 decl_stmt|;
 comment|/* for perf. measurement */
 comment|/* credit& sequencing info for RECEIVING */
+name|SeqNum
+name|tp_rcvnxt
+decl_stmt|;
+comment|/* next DT seq # expect to recv */
 name|SeqNum
 name|tp_sent_lcdt
 decl_stmt|;
@@ -450,10 +446,6 @@ name|SeqNum
 name|tp_sent_uwe
 decl_stmt|;
 comment|/* uwe according to last ack sent */
-name|SeqNum
-name|tp_rcvnxt
-decl_stmt|;
-comment|/* next DT seq # expect to recv */
 name|SeqNum
 name|tp_sent_rcvnxt
 decl_stmt|;
@@ -476,7 +468,7 @@ comment|/* unacked stuff recvd out of order */
 name|int
 name|tp_rsycnt
 decl_stmt|;
-comment|/* number of packets */
+comment|/* number of packets "" "" "" ""    */
 comment|/* receiver congestion state stuff ...  */
 name|u_int
 name|tp_win_recv
@@ -797,11 +789,10 @@ modifier|*
 name|tp_fasttimeo
 decl_stmt|;
 comment|/* limit pcbs to examine */
-name|struct
-name|Ccallout
-name|tp_refcallout
+name|u_int
+name|tp_timer
 index|[
-name|N_CTIMERS
+name|TM_NTIMERS
 index|]
 decl_stmt|;
 comment|/* C timers */
@@ -891,19 +882,6 @@ comment|/* multiply by .875 */
 value|\             pcb->tp_win_recv = MAX(1<< 8, pcb->tp_win_recv); \         } \         else { \             pcb->tp_win_recv += (1<< 8);
 comment|/* add one to the scaled int */
 value|\         } \         pcb->tp_lcredit = ROUND(pcb->tp_win_recv); \         CONG_INIT_SAMPLE(pcb); \     }
-end_define
-
-begin_define
-define|#
-directive|define
-name|CONG_ACK
-parameter_list|(
-name|pcb
-parameter_list|,
-name|seq
-parameter_list|)
-define|\
-value|{ int   newacks = SEQ_SUB(pcb, seq, pcb->tp_snduna); \ 	if (newacks> 0) { \ 		pcb->tp_ackrcvd += newacks; \ 		if (pcb->tp_ackrcvd>= MIN(pcb->tp_fcredit, pcb->tp_cong_win)) { \ 			++pcb->tp_cong_win; \ 			pcb->tp_ackrcvd = 0; \ 		} \ 	} \ }
 end_define
 
 begin_ifdef

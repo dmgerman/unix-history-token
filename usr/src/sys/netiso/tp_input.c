@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.22 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_input.c	7.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3388,15 +3388,6 @@ expr_stmt|;
 block|}
 end_if
 
-begin_expr_stmt
-name|tpcb
-operator|->
-name|tp_ackrcvd
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
 begin_if
 unit|} else
 if|if
@@ -3440,7 +3431,7 @@ argument|((int)dref<=
 literal|0
 argument||| dref>= tp_refinfo.tpr_size ||  			(tpcb = tp_ref[dref].tpr_pcb ) == (struct tp_pcb *)
 literal|0
-argument||| 			tpcb->tp_refp->tpr_state == REF_FREE || 			tpcb->tp_refp->tpr_state == REF_FROZEN)
+argument||| 			tpcb->tp_refstate == REF_FREE || 			tpcb->tp_refstate == REF_FROZEN)
 argument_list|,
 argument|E_TP_MISM_REFS
 argument_list|,
@@ -3549,7 +3540,7 @@ name|tp_fref
 expr_stmt|;
 name|CHECK
 argument_list|(
-argument|(tpcb->tp_refp->tpr_state == REF_FREE)
+argument|(tpcb->tp_refstate == REF_FREE)
 argument_list|,
 argument|E_TP_MISM_REFS
 argument_list|,
@@ -3609,7 +3600,7 @@ argument|+ (caddr_t)&hdr->_tpduf - (caddr_t)hdr)
 argument_list|)
 name|CHECK
 argument_list|(
-argument|(tpcb->tp_refp->tpr_state == REF_FREE)
+argument|(tpcb->tp_refstate == REF_FREE)
 argument_list|,
 argument|E_TP_MISM_REFS
 argument_list|,
@@ -3642,9 +3633,7 @@ argument_list|(
 operator|(
 name|tpcb
 operator|->
-name|tp_refp
-operator|->
-name|tpr_state
+name|tp_refstate
 operator|==
 name|REF_FROZEN
 operator|)
@@ -4092,7 +4081,9 @@ argument|D_ACKRECV
 argument_list|)
 name|printf
 argument_list|(
-literal|"AK Subsequence # 0x%x\n"
+literal|"AK dref 0x%x Subseq 0x%x\n"
+argument_list|,
+name|dref
 argument_list|,
 name|subseq
 argument_list|)
@@ -4173,13 +4164,17 @@ argument|D_ACKRECV
 argument_list|)
 name|printf
 argument_list|(
-literal|"AK FCC lwe 0x%x, subseq 0x%x, cdt 0x%x\n"
+literal|"%s%x, subseq 0x%x, cdt 0x%x dref 0x%x\n"
+argument_list|,
+literal|"AK FCC lwe 0x"
 argument_list|,
 name|ylwe
 argument_list|,
 name|ysubseq
 argument_list|,
 name|ycredit
+argument_list|,
+name|dref
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG

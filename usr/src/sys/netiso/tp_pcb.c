@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1432,16 +1432,8 @@ expr_stmt|;
 name|tp_etimeout
 argument_list|(
 name|tpcb
-operator|->
-name|tp_refp
 argument_list|,
 name|TM_reference
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
 argument_list|,
 operator|(
 name|int
@@ -1623,7 +1615,7 @@ comment|/*  * NAME:  tp_getref()  *  * CALLED FROM:  *  tp_attach()  *  * FUNCTI
 end_comment
 
 begin_function
-name|RefNum
+name|u_long
 name|tp_getref
 parameter_list|(
 name|tpcb
@@ -2041,6 +2033,9 @@ name|pr_domain
 operator|->
 name|dom_family
 decl_stmt|;
+name|u_long
+name|lref
+decl_stmt|;
 specifier|extern
 name|struct
 name|tp_conn_param
@@ -2218,9 +2213,7 @@ if|if
 condition|(
 operator|(
 operator|(
-name|tpcb
-operator|->
-name|tp_lref
+name|lref
 operator|=
 name|tp_getref
 argument_list|(
@@ -2243,6 +2236,15 @@ name|bad3
 goto|;
 block|}
 end_if
+
+begin_expr_stmt
+name|tpcb
+operator|->
+name|tp_lref
+operator|=
+name|lref
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|tpcb
@@ -2331,15 +2333,6 @@ end_expr_stmt
 begin_expr_stmt
 name|tpcb
 operator|->
-name|tp_cong_win
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|tpcb
-operator|->
 name|tp_state
 operator|=
 name|TP_CLOSED
@@ -2369,6 +2362,10 @@ comment|/* Spec says default is 128 octets, 			* that is, if the tpdusize argume
 end_comment
 
 begin_expr_stmt
+name|tpcb
+operator|->
+name|tp_cong_win
+operator|=
 name|tpcb
 operator|->
 name|tp_l_tpdusize
@@ -2409,32 +2406,6 @@ operator|->
 name|tp_seqbit
 operator|>>
 literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|tpcb
-operator|->
-name|tp_sndhiwat
-operator|=
-operator|(
-name|SeqNum
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* a kludge but it works */
-end_comment
-
-begin_expr_stmt
-name|tpcb
-operator|->
-name|tp_s_subseq
-operator|=
-literal|0
 expr_stmt|;
 end_expr_stmt
 
