@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.13 1997/11/19 11:35:52 kato Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.14 1997/12/09 11:57:59 kato Exp $  */
 end_comment
 
 begin_comment
@@ -1177,9 +1177,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* and get mouse status */
-ifndef|#
-directive|ifndef
-name|PC98
 name|mousehw_t
 name|m_hw
 decl_stmt|;
@@ -1188,8 +1185,6 @@ name|mousemode_t
 name|m_mode
 decl_stmt|;
 comment|/* proto rate res accel level size mask */
-endif|#
-directive|endif
 block|}
 name|mse_types
 index|[]
@@ -1208,7 +1203,41 @@ block|,
 name|mse_disable98m
 block|,
 name|mse_get98m
-block|}
+block|,
+block|{
+literal|2
+block|,
+name|MOUSE_IF_BUS
+block|,
+name|MOUSE_MOUSE
+block|,
+name|MOUSE_MODEL_GENERIC
+block|,
+literal|0
+block|, }
+block|,
+block|{
+name|MOUSE_PROTO_BUS
+block|,
+operator|-
+literal|1
+block|,
+operator|-
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|MOUSE_MSC_PACKETSIZE
+block|,
+block|{
+name|MOUSE_MSC_SYNCMASK
+block|,
+name|MOUSE_MSC_SYNC
+block|, }
+block|, }
+block|, }
 block|,
 else|#
 directive|else
@@ -1419,9 +1448,6 @@ index|]
 operator|.
 name|m_get
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PC98
 name|sc
 operator|->
 name|hw
@@ -1444,8 +1470,6 @@ index|]
 operator|.
 name|m_mode
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -4452,12 +4476,12 @@ literal|7
 expr_stmt|;
 operator|*
 name|dx
-operator|+=
+operator|=
 name|x
 expr_stmt|;
 operator|*
 name|dy
-operator|+=
+operator|=
 name|y
 expr_stmt|;
 name|outb
