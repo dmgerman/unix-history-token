@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994 by Chris Provenzano, proven@mit.edu  * Copyright (c) 1995-1998 by John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  This product includes software developed by Chris Provenzano.  * 4. The name of Chris Provenzano may not be used to endorse or promote   *	  products derived from this software without specific prior written  *	  permission.  *  * THIS SOFTWARE IS PROVIDED BY CHRIS PROVENZANO ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CHRIS PROVENZANO BE LIABLE FOR ANY   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * Copyright (c) 1993, 1994 by Chris Provenzano, proven@mit.edu  * Copyright (c) 1995-1998 by John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *  This product includes software developed by Chris Provenzano.  * 4. The name of Chris Provenzano may not be used to endorse or promote   *	  products derived from this software without specific prior written  *	  permission.  *  * THIS SOFTWARE IS PROVIDED BY CHRIS PROVENZANO ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL CHRIS PROVENZANO BE LIABLE FOR ANY   * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.  *  * $Id: pthread.h,v 1.12 1999/07/27 03:29:01 deischen Exp $  */
 end_comment
 
 begin_ifndef
@@ -716,7 +716,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|execute
 operator|)
 argument_list|)
 decl_stmt|;
@@ -731,7 +730,6 @@ operator|(
 name|void
 argument_list|(
 operator|*
-name|routine
 argument_list|)
 argument_list|(
 name|void
@@ -754,7 +752,6 @@ argument_list|(
 operator|(
 name|pthread_condattr_t
 operator|*
-name|attr
 operator|)
 argument_list|)
 decl_stmt|;
@@ -768,7 +765,6 @@ argument_list|(
 operator|(
 name|pthread_condattr_t
 operator|*
-name|attr
 operator|)
 argument_list|)
 decl_stmt|;
@@ -791,11 +787,9 @@ argument_list|(
 operator|(
 name|pthread_condattr_t
 operator|*
-name|attr
 operator|,
 name|int
 operator|*
-name|pshared
 operator|)
 argument_list|)
 decl_stmt|;
@@ -809,10 +803,8 @@ argument_list|(
 operator|(
 name|pthread_condattr_t
 operator|*
-name|attr
 operator|,
 name|int
-name|pshared
 operator|)
 argument_list|)
 decl_stmt|;
@@ -895,7 +887,6 @@ specifier|const
 expr|struct
 name|timespec
 operator|*
-name|abstime
 operator|)
 argument_list|)
 decl_stmt|;
@@ -934,7 +925,6 @@ name|void
 operator|*
 call|(
 modifier|*
-name|start_routine
 call|)
 argument_list|(
 name|void
@@ -1028,7 +1018,6 @@ operator|,
 name|void
 argument_list|(
 operator|*
-name|routine
 argument_list|)
 argument_list|(
 name|void
@@ -1189,7 +1178,6 @@ operator|,
 name|void
 argument_list|(
 operator|*
-name|init_routine
 argument_list|)
 argument_list|(
 name|void
@@ -1570,7 +1558,6 @@ operator|*
 operator|,
 name|int
 operator|*
-name|prioceiling
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1586,7 +1573,6 @@ name|pthread_mutexattr_t
 operator|*
 operator|,
 name|int
-name|prioceiling
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1656,7 +1642,6 @@ operator|*
 operator|,
 name|int
 operator|*
-name|protocol
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1672,7 +1657,6 @@ name|pthread_mutexattr_t
 operator|*
 operator|,
 name|int
-name|protocol
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1830,12 +1814,10 @@ name|pthread
 operator|,
 name|int
 operator|*
-name|policy
 operator|,
 expr|struct
 name|sched_param
 operator|*
-name|param
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1848,15 +1830,12 @@ name|__P
 argument_list|(
 operator|(
 name|pthread_t
-name|pthread
 operator|,
 name|int
-name|policy
 operator|,
 expr|struct
 name|sched_param
 operator|*
-name|param
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1910,7 +1889,6 @@ operator|,
 name|void
 argument_list|(
 operator|*
-name|routine
 argument_list|)
 argument_list|(
 name|void

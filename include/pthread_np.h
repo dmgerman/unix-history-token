@@ -109,7 +109,6 @@ name|__P
 argument_list|(
 operator|(
 name|pthread_mutexattr_t
-name|attr
 operator|)
 argument_list|)
 decl_stmt|;
@@ -123,10 +122,8 @@ argument_list|(
 operator|(
 name|pthread_mutexattr_t
 operator|*
-name|attr
 operator|,
 name|int
-name|kind
 operator|)
 argument_list|)
 decl_stmt|;
@@ -147,25 +144,29 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|pthread_switch_add_np
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|pthread_switch_routine_t
-name|routine
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|int
 name|pthread_switch_delete_np
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|pthread_switch_routine_t
-name|routine
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|__END_DECLS
