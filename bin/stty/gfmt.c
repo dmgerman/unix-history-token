@@ -149,9 +149,11 @@ name|struct
 name|winsize
 modifier|*
 name|wp
+name|__unused
 decl_stmt|;
 name|int
 name|ldisc
+name|__unused
 decl_stmt|;
 block|{
 name|struct
