@@ -144,10 +144,10 @@ typedef|typedef
 struct|struct
 name|_SGentry
 block|{
-name|u_long
+name|u_int32_t
 name|address
 decl_stmt|;
-name|u_long
+name|u_int32_t
 name|length
 decl_stmt|;
 block|}
@@ -165,36 +165,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_ADAPTER_NUM
+name|TRM_MAX_ADAPTER_NUM
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_DEVICES
+name|TRM_MAX_DEVICES
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_SG_LISTENTRY
+name|TRM_MAX_SG_LISTENTRY
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_TARGETS
+name|TRM_MAX_TARGETS
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_TAGS_CMD_QUEUE
-value|32
+name|TRM_MAX_TAGS_CMD_QUEUE
+value|256
 end_define
 
 begin_comment
@@ -204,22 +204,22 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_CMD_PER_LUN
+name|TRM_MAX_CMD_PER_LUN
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_SRB_CNT
-value|MAX_CMD_PER_LUN*4
+name|TRM_MAX_SRB_CNT
+value|256
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_START_JOB
-value|MAX_CMD_PER_LUN*4
+name|TRM_MAX_START_JOB
+value|256
 end_define
 
 begin_define
@@ -288,9 +288,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_long
-name|PhysSRB
-decl_stmt|;
 name|struct
 name|_SRB
 modifier|*
@@ -302,13 +299,18 @@ modifier|*
 name|pSRBDCB
 decl_stmt|;
 name|SGentry
-name|SegmentX
-index|[
-name|MAX_SG_LISTENTRY
-index|]
-decl_stmt|;
-name|SGentry
 name|SgSenseTemp
+decl_stmt|;
+name|PSEG
+name|pSRBSGL
+decl_stmt|;
+comment|/* scatter gather list */
+name|u_int32_t
+name|SRBSGPhyAddr
+decl_stmt|;
+comment|/* a segment starting address */
+name|u_int32_t
+name|SRBTotalXferLength
 decl_stmt|;
 comment|/* 	 *	          CAM ccb 	 */
 name|union
@@ -317,19 +319,11 @@ modifier|*
 name|pccb
 decl_stmt|;
 name|bus_dmamap_t
+name|sg_dmamap
+decl_stmt|;
+name|bus_dmamap_t
 name|dmamap
 decl_stmt|;
-name|PSEG
-name|SRBSGListPointer
-decl_stmt|;
-comment|/* scatter gather list */
-name|u_long
-name|SRBTotalXferLength
-decl_stmt|;
-name|u_long
-name|SRBSGPhyAddr
-decl_stmt|;
-comment|/* a segment starting address */
 name|u_int16_t
 name|SRBState
 decl_stmt|;
@@ -373,8 +367,6 @@ decl_stmt|;
 name|u_int8_t
 name|RetryCnt
 decl_stmt|;
-comment|/* b0-AutoReqSense,b6-Read,b7-write */
-comment|/* b4-settimeout,b5-Residual valid  */
 name|u_int8_t
 name|SRBFlag
 decl_stmt|;
@@ -414,21 +406,11 @@ begin_struct
 struct|struct
 name|_DCB
 block|{
-name|struct
-name|_DCB
-modifier|*
-name|pNextDCB
-decl_stmt|;
-name|struct
-name|_ACB
-modifier|*
-name|pDCBACB
-decl_stmt|;
 name|PSRB
 name|pWaitingSRB
 decl_stmt|;
 name|PSRB
-name|pWaitLastSRB
+name|pWaitingLastSRB
 decl_stmt|;
 name|PSRB
 name|pGoingSRB
@@ -439,17 +421,11 @@ decl_stmt|;
 name|PSRB
 name|pActiveSRB
 decl_stmt|;
-name|PSRB
-name|RevSRB
-decl_stmt|;
-name|u_long
-name|TagMask
-decl_stmt|;
 name|u_int16_t
 name|GoingSRBCnt
 decl_stmt|;
 name|u_int16_t
-name|WaitSRBCnt
+name|MaxActiveCommandCnt
 decl_stmt|;
 name|u_int8_t
 name|TargetID
@@ -481,14 +457,6 @@ name|u_int8_t
 name|SyncOffset
 decl_stmt|;
 comment|/* for reg. and nego.(low nibble) */
-name|struct
-name|trm_target_info
-name|tinfo
-decl_stmt|;
-comment|/* 10 bytes */
-name|u_int16_t
-name|MaxCommand
-decl_stmt|;
 name|u_int8_t
 name|DevMode
 decl_stmt|;
@@ -499,12 +467,20 @@ name|u_int8_t
 name|IdentifyMsg
 decl_stmt|;
 name|u_int8_t
-name|Reserved
-index|[
-literal|3
-index|]
+name|DCBstatus
 decl_stmt|;
-comment|/*for dword alignment */
+comment|/* DCB status */
+comment|/*u_int8_t	Reserved[3];	for dword alignment */
+name|struct
+name|trm_target_info
+name|tinfo
+decl_stmt|;
+comment|/* 10 bytes */
+name|struct
+name|_DCB
+modifier|*
+name|pNextDCB
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -528,6 +504,9 @@ begin_struct
 struct|struct
 name|_ACB
 block|{
+name|device_t
+name|dev
+decl_stmt|;
 name|bus_space_tag_t
 name|tag
 decl_stmt|;
@@ -535,13 +514,35 @@ name|bus_space_handle_t
 name|bsh
 decl_stmt|;
 name|bus_dma_tag_t
+name|parent_dmat
+decl_stmt|;
+name|bus_dma_tag_t
 name|buffer_dmat
 decl_stmt|;
 comment|/* dmat for buffer I/O */
+name|bus_dma_tag_t
+name|srb_dmat
+decl_stmt|;
+name|bus_dma_tag_t
+name|sense_dmat
+decl_stmt|;
+comment|/* dmat for sense buffer */
+name|bus_dma_tag_t
+name|sg_dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|sense_dmamap
+decl_stmt|;
+name|bus_dmamap_t
+name|srb_dmamap
+decl_stmt|;
+name|bus_addr_t
+name|sense_busaddr
+decl_stmt|;
 name|struct
-name|_ACB
+name|scsi_sense_data
 modifier|*
-name|pNextACB
+name|sense_buffers
 decl_stmt|;
 name|struct
 name|resource
@@ -567,20 +568,19 @@ modifier|*
 name|ppath
 decl_stmt|;
 name|TRM_SRB
-name|SRB_array
-index|[
-name|MAX_SRB_CNT
-index|]
-decl_stmt|;
-comment|/* */
-name|TRM_SRB
 name|TmpSRB
 decl_stmt|;
-name|PSRB
-name|pTmpSRB
+name|TRM_DCB
+name|DCBarray
+index|[
+literal|16
+index|]
+index|[
+literal|8
+index|]
 decl_stmt|;
-name|PSRB
-name|RevSRB
+name|u_int32_t
+name|srb_physbase
 decl_stmt|;
 name|PSRB
 name|pFreeSRB
@@ -594,28 +594,12 @@ decl_stmt|;
 name|PDCB
 name|pDCBRunRobin
 decl_stmt|;
-name|PDCB
-name|pDCB
-index|[
-literal|16
-index|]
-index|[
-literal|8
-index|]
-decl_stmt|;
 name|u_int16_t
 name|max_id
 decl_stmt|;
 name|u_int16_t
 name|max_lun
 decl_stmt|;
-name|u_int16_t
-name|IOPortBase
-decl_stmt|;
-name|u_int16_t
-name|AdapterUnit
-decl_stmt|;
-comment|/*; nth Adapter this driver */
 name|u_int8_t
 name|msgin123
 index|[
@@ -652,12 +636,12 @@ name|u_int8_t
 name|Config
 decl_stmt|;
 name|u_int8_t
-name|Reserved
-index|[
-literal|2
-index|]
+name|AdaptType
 decl_stmt|;
-comment|/* for dword alignment     */
+name|u_int8_t
+name|AdapterUnit
+decl_stmt|;
+comment|/* nth Adapter this driver */
 block|}
 struct|;
 end_struct
@@ -883,6 +867,17 @@ begin_define
 define|#
 directive|define
 name|ABORT_DEV_
+value|0x00000001
+end_define
+
+begin_comment
+comment|/*  *   ---DCB status  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DS_IN_QUEUE
 value|0x00000001
 end_define
 
@@ -1417,12 +1412,9 @@ name|MSG_BUS_RESET
 value|0x0C
 end_define
 
-begin_define
-define|#
-directive|define
-name|MSG_ABORT_TAG
-value|0x0D
-end_define
+begin_comment
+comment|/* #define MSG_ABORT_TAG	    	0x0D */
+end_comment
 
 begin_define
 define|#
@@ -1452,12 +1444,9 @@ name|MSG_IGNOREWIDE
 value|0x23
 end_define
 
-begin_define
-define|#
-directive|define
-name|MSG_IDENTIFY
-value|0x80
-end_define
+begin_comment
+comment|/* #define MSG_IDENTIFY	    		0x80 */
+end_comment
 
 begin_define
 define|#
@@ -2867,6 +2856,17 @@ begin_comment
 comment|/* Enable active negation      	*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACTIVE_HISLEW
+value|0x01
+end_define
+
+begin_comment
+comment|/* Enable high slew rate (3/6 ns) */
+end_comment
+
 begin_comment
 comment|/*  ***************************************  */
 end_comment
@@ -3041,7 +3041,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRMREG_SCSI_TCR0
+name|TRMREG_SCSI_TCR00
 value|0x9C
 end_define
 
@@ -3056,111 +3056,90 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TCR0_WIDE_NEGO_DONE
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Wide       nego done */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCR0_SYNC_NEGO_DONE
-value|0x4000
-end_define
-
-begin_comment
-comment|/* Synchronous nego done*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCR0_ENABLE_LVDS
-value|0x2000
-end_define
-
-begin_comment
-comment|/* Enable LVDS synchronous*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCR0_ENABLE_WIDE
-value|0x1000
-end_define
-
-begin_comment
-comment|/* Enable WIDE synchronous*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCR0_ENABLE_ALT
-value|0x0800
-end_define
-
-begin_comment
-comment|/* Enable alternate synchronous	*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TCR0_PERIOD_MASK
-value|0x0700
-end_define
-
-begin_comment
-comment|/* Transfer rate  	*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|TCR0_DO_WIDE_NEGO
-value|0x0080
+value|0x80
 end_define
 
 begin_comment
-comment|/* Do wide NEGO	       	*/
+comment|/* Do wide NEGO		      	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCR0_DO_SYNC_NEGO
-value|0x0040
+value|0x40
 end_define
 
 begin_comment
-comment|/* Do sync NEGO		*/
+comment|/* Do sync NEGO	             	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCR0_DISCONNECT_EN
-value|0x0020
+value|0x20
 end_define
 
 begin_comment
-comment|/* Disconnection enable */
+comment|/* Disconnection enable     	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TCR0_OFFSET_MASK
-value|0x001F
+value|0x1F
 end_define
 
 begin_comment
-comment|/* Offset number       	*/
+comment|/* Offset number	       	*/
+end_comment
+
+begin_comment
+comment|/*  ***************************************  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRMREG_SCSI_TCR01
+value|0x9D
+end_define
+
+begin_comment
+comment|/* SCSI Target Control 0 (R/W)  */
+end_comment
+
+begin_comment
+comment|/* ######### */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCR0_ENABLE_LVDS
+value|0xF8
+end_define
+
+begin_comment
+comment|/* LVD   		   	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCR0_ENABLE_WIDE
+value|0xF9
+end_define
+
+begin_comment
+comment|/* SE       			*/
+end_comment
+
+begin_comment
+comment|/* **************************************** */
 end_comment
 
 begin_comment
@@ -3899,7 +3878,7 @@ comment|/*9    Reserved   	*/
 name|NVRAMTARGETTYPE
 name|NvramTarget
 index|[
-name|MAX_TARGETS
+name|TRM_MAX_TARGETS
 index|]
 decl_stmt|;
 comment|/*										  *10,11,12,13 	                                          *14,15,16,17									  * .... 						  * .... 						  *70,71,72,73 	                                          */
@@ -4001,7 +3980,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* Nvram Adapter Cfg bits definition */
+comment|/* Nvram Adapter NvramChannelCfg bits definition */
 end_comment
 
 begin_define
