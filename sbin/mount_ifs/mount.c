@@ -1246,7 +1246,6 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-operator|(
 name|realpath
 argument_list|(
 name|name
@@ -1255,9 +1254,7 @@ name|mntpath
 argument_list|)
 operator|!=
 name|NULL
-operator|)
 operator|&&
-operator|(
 name|stat
 argument_list|(
 name|mntpath
@@ -1266,8 +1263,7 @@ operator|&
 name|sb
 argument_list|)
 operator|==
-name|NULL
-operator|)
+literal|0
 condition|)
 block|{
 if|if
