@@ -4971,7 +4971,7 @@ literal|0
 condition|;
 control|)
 block|{
-comment|/* 		 * Should comparison be case insensitive? 		 */
+comment|/* 		 * Comparison must be case insensitive, because FAT disallows 		 * to look up or create files in case sensitive even when 		 * it's a long file name. 		 */
 name|c1
 operator|=
 name|unix2winchr
@@ -4992,7 +4992,7 @@ operator|)
 operator|&
 name|len
 argument_list|,
-literal|0
+name|LCASE_BASE
 argument_list|,
 name|pmp
 argument_list|)
@@ -5011,7 +5011,7 @@ operator|)
 operator|&
 name|unlen
 argument_list|,
-literal|0
+name|LCASE_BASE
 argument_list|,
 name|pmp
 argument_list|)
