@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)rtc.h	1.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)rtc.h	7.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|RTCDG_BITS
-value|"\020\010clock battery\007ROM cksum\006config unit\005memory size\004fixed disk\003invalid time"
+value|"\020\010clock_battery\007ROM_cksum\006config_unit\005memory_size\004fixed_disk\003invalid_time"
 end_define
 
 begin_define

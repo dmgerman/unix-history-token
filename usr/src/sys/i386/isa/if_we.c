@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.redist.c%  *  *	@(#)if_we.c	7.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Tim L. Tucker  *  * %sccs.include.redist.c%  *  *	@(#)if_we.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1017,19 +1017,9 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"we: reset!\n"
-argument_list|)
-expr_stmt|;
 name|westop
 argument_list|(
 name|unit
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|100000
 argument_list|)
 expr_stmt|;
 name|weinit
@@ -1113,7 +1103,6 @@ literal|0
 condition|)
 return|return;
 comment|/* already running */
-comment|/*	if (sc->we_flags& WDF_RUNNING)*/
 comment|/*if (ifp->if_flags& IFF_RUNNING) return; */
 comment|/* 	 * Initialize DS8390 in order given in NSC NIC manual. 	 * this is stock code...please see the National manual for details. 	 */
 name|s
@@ -1595,7 +1584,6 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
-comment|/*printf("\nT   "); */
 for|for
 control|(
 name|m0
@@ -1613,7 +1601,6 @@ operator|->
 name|m_next
 control|)
 block|{
-comment|/*int j;*/
 name|bcopy
 argument_list|(
 name|mtod
@@ -1630,7 +1617,6 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-comment|/*for(j=0; j< m->m_len;j++) {  	puthex(buffer[j]); 	if (j == sizeof(struct ether_header)-1) 		printf("|"); }*/
 name|buffer
 operator|+=
 name|m
@@ -1644,7 +1630,6 @@ operator|->
 name|m_len
 expr_stmt|;
 block|}
-comment|/*printf("|%d ", len);*/
 name|m_freem
 argument_list|(
 name|m0
@@ -1665,7 +1650,6 @@ argument_list|,
 name|ETHER_MIN_LEN
 argument_list|)
 expr_stmt|;
-comment|/*printf("L %d ", len); 	if (len< 70) len=70;*/
 name|wecmd
 operator|.
 name|cs_byte
@@ -1830,7 +1814,6 @@ operator|.
 name|cs_byte
 argument_list|)
 expr_stmt|;
-comment|/*outb(sc->we_io_nic_addr + WD_P0_IMR, 0);*/
 name|weisr
 operator|.
 name|is_byte
@@ -2257,7 +2240,6 @@ name|bnry
 operator|=
 name|Bdry
 expr_stmt|;
-comment|/*printf("B %d c %d ", bnry, curr);*/
 while|while
 condition|(
 name|bnry
@@ -2511,7 +2493,6 @@ operator|+
 name|WD_P1_CURR
 argument_list|)
 expr_stmt|;
-comment|/*printf("b %d c %d ", bnry, curr); */
 block|}
 name|Bdry
 operator|=
@@ -3636,7 +3617,6 @@ name|tc
 init|=
 name|totlen
 decl_stmt|;
-comment|/* printf("\nR"); { int j; for(j=0; j< sizeof(struct ether_header);j++) puthex(buf[j]); printf("|"); }*/
 name|buf
 operator|+=
 sizeof|sizeof
@@ -3789,33 +3769,6 @@ operator|-
 name|cp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|nope
-comment|/* only do up to end of buffer */
-if|if
-condition|(
-name|epkt
-operator|>
-name|sc
-operator|->
-name|we_vmem_end
-condition|)
-name|len
-operator|=
-name|min
-argument_list|(
-name|len
-argument_list|,
-name|sc
-operator|->
-name|we_vmem_end
-operator|-
-name|cp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|len
@@ -4006,7 +3959,6 @@ operator|+=
 name|len
 expr_stmt|;
 block|}
-comment|/*{ int j; for(j=0; j< m->m_len;j++) puthex(mtod(m, char *)[j]); printf("|"); }*/
 operator|*
 name|mp
 operator|=
@@ -4038,7 +3990,6 @@ name|tc
 expr_stmt|;
 block|}
 block|}
-comment|/*printf("%d ",tc); */
 return|return
 operator|(
 name|top
@@ -4046,40 +3997,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_macro
-name|puthex
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"%x"
-argument_list|,
-operator|(
-name|c
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xf
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%x"
-argument_list|,
-name|c
-operator|&
-literal|0xf
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_endif
 endif|#
