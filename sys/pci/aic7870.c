@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.25 1996/01/29 03:18:20 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7870, and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7870.c,v 1.26 1996/03/10 07:12:48 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -1447,6 +1447,9 @@ decl_stmt|;
 name|u_char
 name|scsi_conf
 decl_stmt|;
+name|u_char
+name|host_id
+decl_stmt|;
 name|int
 name|have_seeprom
 decl_stmt|,
@@ -1645,10 +1648,13 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
+name|host_id
+operator|=
+literal|0x7
+expr_stmt|;
 name|scsi_conf
 operator|=
-comment|/*host_id*/
-literal|0x7
+name|host_id
 operator||
 name|ENSPCHK
 expr_stmt|;
@@ -1810,13 +1816,21 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
-name|scsi_conf
+name|host_id
 operator|=
 name|sc
 operator|.
 name|brtime_id
 operator|&
 name|CFSCSIID
+expr_stmt|;
+name|scsi_conf
+operator|=
+operator|(
+name|host_id
+operator|&
+literal|0x7
+operator|)
 expr_stmt|;
 if|if
 condition|(
