@@ -163,7 +163,6 @@ name|s2
 parameter_list|,
 name|flags
 parameter_list|)
-specifier|const
 name|char
 modifier|*
 name|s1
@@ -297,10 +296,6 @@ name|void
 operator|)
 name|efree
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|s1
 argument_list|)
 expr_stmt|;
@@ -309,10 +304,6 @@ name|void
 operator|)
 name|efree
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|s2
 argument_list|)
 expr_stmt|;
