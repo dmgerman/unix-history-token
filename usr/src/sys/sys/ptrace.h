@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ptrace.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1984 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ptrace.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -168,11 +168,40 @@ begin_comment
 comment|/* machine-specific requests, if any */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-end_ifndef
+end_ifdef
+
+begin_decl_stmt
+name|void
+name|proc_reparent
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+name|child
+operator|,
+expr|struct
+name|proc
+operator|*
+name|newparent
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !KERNEL */
+end_comment
 
 begin_include
 include|#
