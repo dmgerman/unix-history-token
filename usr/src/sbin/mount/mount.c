@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.18 (Berkeley) %G%"
+literal|"@(#)mount.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,6 +1095,13 @@ name|pid
 argument_list|,
 name|SIGHUP
 argument_list|)
+operator|==
+operator|-
+literal|1
+operator|&&
+name|errno
+operator|!=
+name|ESRCH
 condition|)
 name|err
 argument_list|(
