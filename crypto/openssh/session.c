@@ -2992,7 +2992,9 @@ name|command
 operator|!=
 name|NULL
 condition|)
-return|return;
+return|return
+name|newcommand
+return|;
 name|snprintf
 argument_list|(
 name|buf
