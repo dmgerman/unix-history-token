@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 3. The party using or redistributing the source code and binary forms  *    agrees to the above disclaimer and the terms and conditions set forth  *    herein.  *  * Additional Copyright (c) 2002 by Eric Moore under same license.  * Additional Copyright (c) 2002 LSI Logic Corporation  *  *      $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -551,12 +551,7 @@ name|u_int8_t
 name|res1
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -596,12 +591,7 @@ name|AMR_8LD_MAXDRIVES
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -624,12 +614,7 @@ name|u_int8_t
 name|ap_predictivefailure
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -726,12 +711,7 @@ index|]
 decl_stmt|;
 comment|/*			X */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -842,12 +822,7 @@ name|ap_numnotifyctr
 decl_stmt|;
 comment|/* number of notify counters */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1039,12 +1014,7 @@ name|u_int8_t
 name|res4
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1157,12 +1127,7 @@ index|]
 decl_stmt|;
 comment|/* pad to 1024 bytes */
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1237,12 +1202,7 @@ literal|16
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1259,12 +1219,7 @@ name|amr_mailbox
 name|mb
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1327,12 +1282,7 @@ literal|16
 index|]
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1347,12 +1297,7 @@ name|u_int32_t
 name|sg_count
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -1426,12 +1371,7 @@ name|u_int32_t
 name|ap_data_transfer_length
 decl_stmt|;
 block|}
-name|__attribute__
-argument_list|(
-operator|(
-name|packed
-operator|)
-argument_list|)
+name|__packed
 struct|;
 end_struct
 
@@ -2116,8 +2056,11 @@ end_endif
 begin_endif
 endif|#
 directive|endif
-endif|_KERNEL
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 end_unit
 

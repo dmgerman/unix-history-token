@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 3. The party using or redistributing the source code and binary forms  *    agrees to the above disclaimer and the terms and conditions set forth  *    herein.  *  * Additional Copyright (c) 2002 by Eric Moore under same license.  * Additional Copyright (c) 2002 LSI Logic Corporation  *  *	$FreeBSD$  */
 end_comment
 
 begin_comment
@@ -212,11 +212,7 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|,
-comment|/* bmaj */
-literal|254
-comment|/* XXX magic no-bdev */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -815,12 +811,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AMR_SCSI_PASSTHROUGH
-end_ifdef
-
 begin_comment
 comment|/*      * Attach our 'real' SCSI channels to CAM.      */
 end_comment
@@ -849,11 +839,6 @@ literal|"CAM attach done"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*      * Create the control device.      */
@@ -1297,17 +1282,12 @@ name|amr_command_cluster
 modifier|*
 name|acc
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|AMR_SCSI_PASSTHROUGH
 comment|/* detach from CAM */
 name|amr_cam_detach
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* cancel status timeout */
 name|untimeout
 argument_list|(
@@ -1408,6 +1388,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_open
 parameter_list|(
@@ -1420,10 +1401,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1441,7 +1421,10 @@ name|sc
 init|=
 name|devclass_get_softc
 argument_list|(
-name|amr_devclass
+name|devclass_find
+argument_list|(
+literal|"amr"
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)
@@ -1470,6 +1453,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_close
 parameter_list|(
@@ -1482,10 +1466,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|int
@@ -1503,7 +1486,10 @@ name|sc
 init|=
 name|devclass_get_softc
 argument_list|(
-name|amr_devclass
+name|devclass_find
+argument_list|(
+literal|"amr"
+argument_list|)
 argument_list|,
 name|unit
 argument_list|)
@@ -1533,6 +1519,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|amr_ioctl
 parameter_list|(
@@ -1548,10 +1535,9 @@ parameter_list|,
 name|int32_t
 name|flag
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -1796,6 +1782,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -1808,17 +1796,6 @@ name|ENOMEM
 expr_stmt|;
 break|break;
 block|}
-name|bzero
-argument_list|(
-name|ap
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|ap
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* copy cdb */
 name|ap
 operator|->
@@ -1968,6 +1945,14 @@ operator|->
 name|ap_request_sense_length
 operator|=
 literal|14
+expr_stmt|;
+name|ap
+operator|->
+name|ap_data_transfer_length
+operator|=
+name|au
+operator|->
+name|au_length
 expr_stmt|;
 comment|/* XXX what about the request-sense area? does the caller want it? */
 comment|/* build command */
@@ -3256,9 +3241,6 @@ operator|&
 name|ac
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AMR_SCSI_PASSTHROUGH
 comment|/* if that failed, build a command from a ccb */
 if|if
 condition|(
@@ -3277,8 +3259,6 @@ operator|&
 name|ac
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* if we don't have anything to do, give up */
 if|if
 condition|(
@@ -3653,14 +3633,21 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"I/O beyond end of unit (%u,%d> %u)\n"
+literal|"I/O beyond end of unit (%lld,%d> %lu)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|bio
 operator|->
 name|bio_pblkno
 argument_list|,
 name|blkcount
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|sc
 operator|->
 name|amr_drive
@@ -4268,6 +4255,14 @@ name|ac
 operator|->
 name|ac_mailbox
 operator|.
+name|mb_nsgelem
+operator|=
+literal|0
+expr_stmt|;
+name|ac
+operator|->
+name|ac_mailbox
+operator|.
 name|mb_physaddr
 operator|=
 name|ac
@@ -4277,6 +4272,14 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|ac
+operator|->
+name|ac_mailbox
+operator|.
+name|mb_nsgelem
+operator|=
+name|nsegments
+expr_stmt|;
 operator|*
 name|sgc
 operator|=
@@ -4428,6 +4431,34 @@ operator|*
 name|AMR_NSEG
 operator|)
 expr_stmt|;
+comment|/* decide whether we need to populate the s/g table */
+if|if
+condition|(
+name|nsegments
+operator|<
+literal|2
+condition|)
+block|{
+name|ap
+operator|->
+name|ap_no_sg_elements
+operator|=
+literal|0
+expr_stmt|;
+name|ap
+operator|->
+name|ap_data_transfer_address
+operator|=
+name|segs
+index|[
+literal|0
+index|]
+operator|.
+name|ds_addr
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* save s/g table information in passthrough */
 name|ap
 operator|->
@@ -4456,40 +4487,6 @@ expr|struct
 name|amr_sgentry
 argument_list|)
 operator|)
-expr_stmt|;
-comment|/* save pointer to passthrough in command   XXX is this already done above? */
-name|ac
-operator|->
-name|ac_mailbox
-operator|.
-name|mb_physaddr
-operator|=
-name|ac
-operator|->
-name|ac_dataphys
-expr_stmt|;
-name|debug
-argument_list|(
-literal|3
-argument_list|,
-literal|"slot %d  %d segments at 0x%x, passthrough at 0x%x"
-argument_list|,
-name|ac
-operator|->
-name|ac_slot
-argument_list|,
-name|ap
-operator|->
-name|ap_no_sg_elements
-argument_list|,
-name|ap
-operator|->
-name|ap_data_transfer_address
-argument_list|,
-name|ac
-operator|->
-name|ac_dataphys
-argument_list|)
 expr_stmt|;
 comment|/* populate s/g table (overwrites previous call which mapped the passthrough) */
 for|for
@@ -4549,6 +4546,30 @@ name|sg_count
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|debug
+argument_list|(
+literal|3
+argument_list|,
+literal|"slot %d  %d segments at 0x%x, passthrough at 0x%x"
+argument_list|,
+name|ac
+operator|->
+name|ac_slot
+argument_list|,
+name|ap
+operator|->
+name|ap_no_sg_elements
+argument_list|,
+name|ap
+operator|->
+name|ap_data_transfer_address
+argument_list|,
+name|ac
+operator|->
+name|ac_dataphys
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5709,6 +5730,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|amr_alloccmd_cluster
 parameter_list|(
@@ -5861,6 +5883,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|amr_freecmd_cluster
 parameter_list|(
@@ -6686,7 +6709,7 @@ name|sc
 operator|->
 name|amr_dev
 argument_list|,
-literal|"<%.80s> Firmware %.16s, BIOS %.16s, %dMB RAM\n"
+literal|"<LSILogic %.80s> Firmware %.16s, BIOS %.16s, %dMB RAM\n"
 argument_list|,
 name|ap
 operator|->

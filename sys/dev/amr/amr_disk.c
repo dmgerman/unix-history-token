@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999 Jonathan Lemon  * Copyright (c) 1999, 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999 Jonathan Lemon  * Copyright (c) 1999, 2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 3. The party using or redistributing the source code and binary forms  *    agrees to the above disclaimer and the terms and conditions set forth  *    herein.  *  * Additional Copyright (c) 2002 by Eric Moore under same license.  * Additional Copyright (c) 2002 LSI Logic Corporation  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -208,10 +208,7 @@ name|nopsize
 block|,
 comment|/* flags */
 name|D_DISK
-block|,
-comment|/* bmaj */
-literal|254
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -338,10 +335,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -358,11 +354,19 @@ name|dev
 operator|->
 name|si_drv1
 decl_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+comment|/* old buf style */
 name|struct
 name|disklabel
 modifier|*
 name|label
 decl_stmt|;
+endif|#
+directive|endif
 name|debug_called
 argument_list|(
 literal|1
@@ -395,6 +399,12 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|500000
+comment|/* old buf style */
 name|label
 operator|=
 operator|&
@@ -483,6 +493,59 @@ name|amrd_drive
 operator|->
 name|al_size
 expr_stmt|;
+else|#
+directive|else
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_sectorsize
+operator|=
+name|AMR_BLKSIZE
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_mediasize
+operator|=
+operator|(
+name|off_t
+operator|)
+name|sc
+operator|->
+name|amrd_drive
+operator|->
+name|al_size
+operator|*
+name|AMR_BLKSIZE
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_fwsectors
+operator|=
+name|sc
+operator|->
+name|amrd_drive
+operator|->
+name|al_sectors
+expr_stmt|;
+name|sc
+operator|->
+name|amrd_disk
+operator|.
+name|d_fwheads
+operator|=
+name|sc
+operator|->
+name|amrd_drive
+operator|->
+name|al_heads
+expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|amrd_flags
@@ -511,10 +574,9 @@ parameter_list|,
 name|int
 name|fmt
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|struct
@@ -579,10 +641,9 @@ parameter_list|,
 name|int32_t
 name|flag
 parameter_list|,
-name|struct
-name|proc
+name|d_thread_t
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 return|return
@@ -642,18 +703,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* do-nothing operation */
-if|if
-condition|(
-name|bio
-operator|->
-name|bio_bcount
-operator|==
-literal|0
-condition|)
-goto|goto
-name|done
-goto|;
 name|devstat_start_transaction
 argument_list|(
 operator|&
@@ -680,8 +729,6 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
-name|done
-label|:
 comment|/*      * Correctly set the buf to indicate a completed transfer      */
 name|bio
 operator|->
@@ -774,17 +821,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|devstat_end_transaction_bio
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|amrd_stats
-argument_list|,
-name|bio
-argument_list|)
-expr_stmt|;
-name|biodone
+name|AMR_BIO_FINISH
 argument_list|(
 name|bio
 argument_list|)
@@ -810,7 +847,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"MegaRAID logical drive"
+literal|"LSILogic MegaRAID logical drive"
 argument_list|)
 expr_stmt|;
 return|return

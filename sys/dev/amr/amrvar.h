@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $FreeBSD$  */
+comment|/*-  * Copyright (c) 1999,2000 Michael Smith  * Copyright (c) 2000 BSDi  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * 3. The party using or redistributing the source code and binary forms  *    agrees to the above disclaimer and the terms and conditions set forth  *    herein.  *  * Additional Copyright (c) 2002 by Eric Moore under same license.  * Additional Copyright (c) 2002 LSI Logic Corporation  *  *      $FreeBSD$  */
 end_comment
 
 begin_if
@@ -40,7 +40,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|do {if (level<= AMR_DEBUG) printf("%s: " fmt "\n", __FUNCTION__ , ##args);} while(0)
+value|do {if (level<= AMR_DEBUG) printf("%s: " fmt "\n", __func__ , ##args);} while(0)
 end_define
 
 begin_define
@@ -50,7 +50,7 @@ name|debug_called
 parameter_list|(
 name|level
 parameter_list|)
-value|do {if (level<= AMR_DEBUG) printf("%s: called\n", __FUNCTION__);} while(0)
+value|do {if (level<= AMR_DEBUG) printf("%s: called\n", __func__);} while(0)
 end_define
 
 begin_else
@@ -96,7 +96,7 @@ parameter_list|,
 name|args
 modifier|...
 parameter_list|)
-value|printf("%s: " fmt "\n", __FUNCTION__ , ##args)
+value|printf("%s: " fmt "\n", __func__ , ##args)
 end_define
 
 begin_comment
@@ -253,6 +253,10 @@ modifier|*
 name|ac
 parameter_list|)
 function_decl|;
+name|void
+modifier|*
+name|ac_private
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -626,13 +630,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|devclass_t
-name|amr_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Command buffer allocation.  */
 end_comment
@@ -745,10 +742,6 @@ decl_stmt|;
 name|struct
 name|devstat
 name|amrd_stats
-decl_stmt|;
-name|struct
-name|disklabel
-name|amrd_label
 decl_stmt|;
 name|int
 name|amrd_unit
