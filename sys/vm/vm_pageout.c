@@ -5061,12 +5061,6 @@ name|vm_pageout_stats_free_max
 operator|=
 literal|5
 expr_stmt|;
-name|curproc
-operator|->
-name|p_flag
-operator||=
-name|P_BUFEXHAUST
-expr_stmt|;
 name|swap_pager_swap_init
 argument_list|()
 expr_stmt|;

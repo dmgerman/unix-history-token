@@ -6781,12 +6781,6 @@ name|SHUTDOWN_PRI_LAST
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This process is allowed to take the buffer cache to the limit 	 */
-name|curproc
-operator|->
-name|p_flag
-operator||=
-name|P_BUFEXHAUST
-expr_stmt|;
 name|s
 operator|=
 name|splbio

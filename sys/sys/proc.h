@@ -1043,13 +1043,9 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_BUFEXHAUST
+name|P_UNUSED100000
 value|0x100000
 end_define
-
-begin_comment
-comment|/* dirty buffers flush is in progress */
-end_comment
 
 begin_define
 define|#
