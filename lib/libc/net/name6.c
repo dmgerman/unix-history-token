@@ -4649,6 +4649,8 @@ name|struct
 name|hostent
 modifier|*
 name|hp
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
