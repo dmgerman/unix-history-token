@@ -669,8 +669,12 @@ decl_stmt|;
 comment|/* amount to back off of rcfirst */
 name|int
 name|firstmsg
+init|=
+literal|0
 decl_stmt|,
 name|nextmsg
+init|=
+literal|0
 decl_stmt|,
 name|lastmsg
 init|=
