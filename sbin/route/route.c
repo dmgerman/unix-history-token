@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.16.2.5 1997/07/18 09:14:10 julian Exp $"
+literal|"$Id: route.c,v 1.16.2.6 1997/12/04 07:36:18 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -534,7 +534,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: route [ -nqv ] cmd [[ -<qualifers> ] args ]\n"
+literal|"usage: route [ -dnqtv ] cmd [[ -<qualifers> ] args ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1067,11 +1067,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"malloc"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4161,7 +4161,7 @@ break|break;
 default|default:
 name|usage
 argument_list|(
-literal|"Internal Error"
+literal|"internal Error"
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -5240,11 +5240,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"malloc"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6426,7 +6426,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"message length mismatch, in packet %d, returned %d\n"
+literal|"message length mismatch, in packet %d, returned %d"
 argument_list|,
 name|rtm
 operator|->
