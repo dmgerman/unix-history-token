@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)timezone.c	4.3 (Berkeley) %G% */
+comment|/* @(#)timezone.c	4.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -28,6 +28,7 @@ name|zonetab
 index|[]
 init|=
 block|{
+operator|-
 literal|1
 operator|*
 literal|60
@@ -37,6 +38,7 @@ block|,
 literal|"MET DST"
 block|,
 comment|/* Middle European */
+operator|-
 literal|2
 operator|*
 literal|60
