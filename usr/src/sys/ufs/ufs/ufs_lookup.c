@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.31	82/11/17	*/
+comment|/*	ufs_lookup.c	4.32	82/12/21	*/
 end_comment
 
 begin_include
@@ -2601,6 +2601,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * Collapse new free space into previous entry. 		 */
+name|u
+operator|.
+name|u_error
+operator|=
+literal|0
+expr_stmt|;
+comment|/* XXX */
 name|bp
 operator|=
 name|blkatoff
@@ -2928,20 +2935,18 @@ begin_comment
 comment|/*  * Check if a directory is empty or not.  * Inode supplied must be locked.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|dirempty
 argument_list|(
-argument|ip
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|inode
-modifier|*
 name|ip
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+specifier|register
+expr|struct
+name|inode
+operator|*
+name|ip
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -2964,6 +2969,8 @@ name|dbuf
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|count
 decl_stmt|;
 for|for
 control|(
@@ -3007,16 +3014,38 @@ name|off
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
+operator|&
+name|count
 argument_list|)
 expr_stmt|;
+name|count
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|direct
+argument_list|)
+operator|-
+name|count
+expr_stmt|;
+define|#
+directive|define
+name|MINDIRSIZ
+value|(sizeof (struct direct) - (MAXNAMLEN + 1))
 if|if
 condition|(
 name|error
+operator|||
+name|count
+operator|<
+name|MINDIRSIZ
+operator|||
+name|count
+operator|<
+name|DIRSIZ
+argument_list|(
+name|dp
+argument_list|)
 condition|)
 return|return
 operator|(
