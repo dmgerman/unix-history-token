@@ -1687,16 +1687,13 @@ name|trtime
 decl_stmt|;
 name|int
 name|remspace
-decl_stmt|;
-name|int
+decl_stmt|,
 name|statfile
 decl_stmt|;
 name|char
 name|thishost
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|,
 name|statline
@@ -1704,13 +1701,9 @@ index|[
 name|STATLINE_SIZE
 index|]
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
-name|rectype
-decl_stmt|,
-modifier|*
-name|statfname
+name|eostat
 decl_stmt|;
 specifier|const
 name|char
@@ -1718,17 +1711,21 @@ modifier|*
 name|lprhost
 decl_stmt|,
 modifier|*
-name|sendhost
+name|recvdev
 decl_stmt|,
 modifier|*
 name|recvhost
 decl_stmt|,
 modifier|*
-name|recvdev
+name|rectype
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|eostat
+name|sendhost
+decl_stmt|,
+modifier|*
+name|statfname
 decl_stmt|;
 define|#
 directive|define
@@ -1834,7 +1831,7 @@ break|break;
 case|case
 name|TR_PRINTING
 case|:
-comment|/* copying to a device (presumably local, though things 		 * like 'net/CAP' can confuse this assumption...) */
+comment|/* 		 * This case is for copying to a device (presumably local, 		 * though filters using things like 'net/CAP' can confuse 		 * this assumption...). 		 */
 name|rectype
 operator|=
 literal|"prnt"
@@ -1877,7 +1874,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * the original-host and userid are found out by reading thru the 	 * cf (control-file) for the job.  Unfortunately, on incoming jobs 	 * the df's (data-files) are sent before the matching cf, so the 	 * orighost& userid are generally not-available for incoming jobs. 	 * 	 * (it would be nice to create a work-around for that..) 	*/
+comment|/* 	 * the original-host and userid are found out by reading thru the 	 * cf (control-file) for the job.  Unfortunately, on incoming jobs 	 * the df's (data-files) are sent before the matching cf, so the 	 * orighost& userid are generally not-available for incoming jobs. 	 * 	 * (it would be nice to create a work-around for that..) 	 */
 if|if
 condition|(
 name|orighost
@@ -1986,7 +1983,7 @@ argument_list|(
 name|statline
 argument_list|)
 expr_stmt|;
-comment|/* the bps field duplicates info from bytes and secs, so do not 	 * bother to include it for very small files */
+comment|/* 	 * The bps field duplicates info from bytes and secs, so do 	 * not bother to include it for very small files. 	 */
 if|if
 condition|(
 operator|(
