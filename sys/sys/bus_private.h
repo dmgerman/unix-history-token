@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.1 1998/06/10 10:57:23 dfr Exp $  */
+comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bus_private.h,v 1.2 1998/06/14 13:46:10 dfr Exp $  */
 end_comment
 
 begin_ifndef
@@ -92,6 +92,78 @@ name|int
 name|nextunit
 decl_stmt|;
 comment|/* next unused unit number */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Resources from config(8).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|RES_INT
+block|,
+name|RES_STRING
+block|,
+name|RES_LONG
+block|}
+name|resource_type
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|resource
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|resource_type
+name|type
+decl_stmt|;
+union|union
+block|{
+name|long
+name|longval
+decl_stmt|;
+name|int
+name|intval
+decl_stmt|;
+name|char
+modifier|*
+name|stringval
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|config_device
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* e.g. "lpt", "wdc" etc */
+name|int
+name|unit
+decl_stmt|;
+name|int
+name|resource_count
+decl_stmt|;
+name|struct
+name|resource
+modifier|*
+name|resources
+decl_stmt|;
 block|}
 struct|;
 end_struct
