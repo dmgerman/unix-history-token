@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
@@ -67,6 +61,18 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -206,6 +212,27 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_harp_spans
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|spanscls_print
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|spanscls_print
+argument_list|,
+literal|0
+argument_list|,
+literal|"dump SPANS packets"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|struct
@@ -412,34 +439,26 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
 begin_function_decl
 specifier|static
 name|void
 name|spanscls_pdu_print
 parameter_list|(
+specifier|const
 name|struct
 name|spanscls
 modifier|*
 parameter_list|,
+specifier|const
 name|KBuffer
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Local variables  */
@@ -1776,9 +1795,6 @@ argument_list|(
 name|ETHERTYPE_IP
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|spanscls_print
@@ -1792,8 +1808,6 @@ argument_list|,
 literal|"output"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Finally, send the pdu via the CLS service 	 */
 name|err
 operator|=
@@ -1905,9 +1919,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 if|if
 condition|(
 name|spanscls_print
@@ -1921,8 +1932,6 @@ argument_list|,
 literal|"input"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Get CLS header into buffer 	 */
 if|if
 condition|(
@@ -2080,9 +2089,6 @@ argument_list|,
 literal|"spanscls_input: bad format\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|spanscls_pdu_print
 argument_list|(
 name|clp
@@ -2092,8 +2098,6 @@ argument_list|,
 literal|"input error"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|KB_FREEALL
 argument_list|(
@@ -2424,12 +2428,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-end_ifdef
-
 begin_comment
 comment|/*  * Print a SPANS CLS PDU  *   * Arguments:  *	clp	pointer to cls instance  *	m	pointer to pdu buffer chain  *	msg	pointer to message string  *  * Returns:  *	none  *  */
 end_comment
@@ -2439,25 +2437,22 @@ specifier|static
 name|void
 name|spanscls_pdu_print
 parameter_list|(
-name|clp
-parameter_list|,
-name|m
-parameter_list|,
-name|msg
-parameter_list|)
+specifier|const
 name|struct
 name|spanscls
 modifier|*
 name|clp
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|KBuffer
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|msg
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2488,11 +2483,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
