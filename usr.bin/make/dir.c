@@ -3174,6 +3174,9 @@ name|LstNode
 modifier|*
 name|ln
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|ln
 operator|=
 name|Lst_Member
@@ -3182,7 +3185,10 @@ name|openDirectories
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
 name|Lst_Remove
 argument_list|(
 name|openDirectories
