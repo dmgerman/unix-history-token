@@ -33,7 +33,6 @@ init|=
 literal|1024
 block|,
 comment|/* maximum size of a single config line */
-comment|/* XXX Do we still need this? */
 name|MINVINUMSLICE
 init|=
 literal|1048576
@@ -209,6 +208,20 @@ parameter_list|)
 value|makedev (CDEV_MAJOR, VINUMMINOR (v, p, s, t))
 define|#
 directive|define
+name|VINUM_BLOCK_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (BDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+define|#
+directive|define
+name|VINUM_CHAR_PLEX
+parameter_list|(
+name|p
+parameter_list|)
+value|makedev (CDEV_MAJOR,				\ 					 (VINUM_RAWPLEX_TYPE<< VINUM_TYPE_SHIFT) \ 					 | (p& 0xff)				\ 					 | ((p& ~0xff)<< 8) )
+define|#
+directive|define
 name|VINUM_BLOCK_SD
 parameter_list|(
 name|s
@@ -328,9 +341,9 @@ block|,
 comment|/* number of entries in plex region tables */
 name|INITIAL_LOCKS
 init|=
-literal|8
+literal|64
 block|,
-comment|/* number of locks to allocate to a volume */
+comment|/* number of locks to allocate to a plex */
 name|DEFAULT_REVIVE_BLOCKSIZE
 init|=
 literal|65536
@@ -813,10 +826,10 @@ name|timeval
 name|last_update
 decl_stmt|;
 comment|/* and the time of last update */
+comment|/*      * total size in bytes of the drive.  This value      * includes the headers.      */
 name|off_t
 name|drive_size
 decl_stmt|;
-comment|/* total size in bytes of the drive. 							    * This value includes the headers */
 block|}
 struct|;
 end_struct
@@ -830,7 +843,6 @@ name|long
 name|magic
 decl_stmt|;
 comment|/* we're long on magic numbers */
-comment|/* XXX Get these right for big-endian */
 define|#
 directive|define
 name|VINUM_MAGIC
@@ -841,10 +853,10 @@ directive|define
 name|VINUM_NOMAGIC
 value|22322600044678990LL
 comment|/* becomes this after obliteration */
+comment|/*      * Size in bytes of each copy of the      * configuration info.  This must be a multiple      * of the sector size.      */
 name|int
 name|config_length
 decl_stmt|;
-comment|/* size in bytes of each copy of the 							    * configuration info. 							    * This must be a multiple of the sector size. */
 name|struct
 name|vinum_label
 name|label
@@ -1073,7 +1085,8 @@ comment|/* our index in vinum_conf */
 name|int
 name|plexsdno
 decl_stmt|;
-comment|/* and our number in our plex 							    * (undefined if no plex) */
+comment|/* and our number in our plex */
+comment|/* (undefined if no plex) */
 name|u_int64_t
 name|reads
 decl_stmt|;
@@ -1164,7 +1177,7 @@ comment|/* and current state */
 name|u_int64_t
 name|length
 decl_stmt|;
-comment|/* total length of plex (max offset, in blocks) */
+comment|/* total length of plex (sectors) */
 name|int
 name|flags
 decl_stmt|;
@@ -1199,13 +1212,17 @@ decl_stmt|;
 comment|/* number of plex in volume */
 comment|/* Lock information */
 name|int
-name|locks
-decl_stmt|;
-comment|/* number of locks used */
-name|int
 name|alloclocks
 decl_stmt|;
 comment|/* number of locks allocated */
+name|int
+name|usedlocks
+decl_stmt|;
+comment|/* number currently in use */
+name|int
+name|lockwaits
+decl_stmt|;
+comment|/* and number of waits for locks */
 name|struct
 name|rangelock
 modifier|*
@@ -1276,12 +1293,20 @@ begin_struct
 struct|struct
 name|rangelock
 block|{
-name|u_int64_t
-name|first
+name|daddr_t
+name|stripe
 decl_stmt|;
-name|u_int64_t
-name|last
+comment|/* address + 1 of the range being locked  */
+name|struct
+name|buf
+modifier|*
+name|bp
 decl_stmt|;
+comment|/* user's buffer pointer */
+name|int
+name|plexno
+decl_stmt|;
+comment|/* and number of plex it affects */
 block|}
 struct|;
 end_struct
@@ -1303,10 +1328,10 @@ name|int
 name|preferred_plex
 decl_stmt|;
 comment|/* plex to read from, -1 for round-robin */
+comment|/*      * index of plex used for last read, for      * round-robin.      */
 name|int
 name|last_plex_read
 decl_stmt|;
-comment|/* index of plex used for last read, 							    * for round-robin */
 name|int
 name|volno
 decl_stmt|;
@@ -1356,7 +1381,7 @@ name|u_int64_t
 name|recovered_reads
 decl_stmt|;
 comment|/* reads recovered from another plex */
-comment|/* Unlike subdisks in the plex, space for the plex pointers is static */
+comment|/*      * Unlike subdisks in the plex, space for the      * plex pointers is static.      */
 name|int
 name|plex
 index|[
@@ -1674,6 +1699,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
