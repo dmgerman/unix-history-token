@@ -2753,6 +2753,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|REV_ID_VT6102_APOLLO
+value|0x74
+end_define
+
+begin_define
+define|#
+directive|define
 name|REV_ID_VT3106
 value|0x80
 end_define
@@ -2900,6 +2907,20 @@ define|#
 directive|define
 name|VR_PCI_EEPROM_DATA
 value|0x4C
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_PCI_MODE
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|VR_MODE3_MIION
+value|0x04
 end_define
 
 begin_comment
