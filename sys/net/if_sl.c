@@ -576,8 +576,6 @@ block|,
 name|slstart
 block|,
 name|ttymodem
-block|,
-name|FRAME_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1296,19 +1294,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|tp
-operator|->
-name|t_line
-operator|==
-name|SLIPDISC
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
 operator|(
 name|sc
 operator|=
@@ -1323,6 +1308,12 @@ operator|(
 name|ENOBUFS
 operator|)
 return|;
+name|tp
+operator|->
+name|t_hotchar
+operator|=
+name|FRAME_END
+expr_stmt|;
 name|tp
 operator|->
 name|t_sc
@@ -1356,12 +1347,6 @@ name|FREAD
 operator||
 name|FWRITE
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_line
-operator|=
-name|SLIPDISC
 expr_stmt|;
 comment|/* 	 * We don't use t_canq or t_rawq, so reduce their 	 * cblock resources to 0.  Reserve enough cblocks 	 * for t_outq to guarantee that we can fit a full 	 * packet if the SLIP_HIWAT check allows slstart() 	 * to loop.  Use the same value for the cblock 	 * limit since the reserved blocks should always 	 * be enough.  Reserving cblocks probably makes 	 * the CLISTRESERVE check unnecessary and wasteful. 	 */
 name|clist_alloc_cblocks
@@ -1576,12 +1561,6 @@ name|tp
 operator|->
 name|t_outq
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_line
-operator|=
-literal|0
 expr_stmt|;
 name|sc
 operator|=

@@ -512,9 +512,6 @@ block|,
 name|ngt_start
 block|,
 name|ttymodem
-block|,
-name|NG_TTY_DFL_HOTCHAR
-comment|/* XXX can't change this in serial driver */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -700,41 +697,12 @@ name|spltty
 argument_list|()
 expr_stmt|;
 comment|/* XXX is this necessary? */
-comment|/* Already installed? */
-if|if
-condition|(
 name|tp
 operator|->
-name|t_line
-operator|==
-name|NETGRAPHDISC
-condition|)
-block|{
-name|sc
+name|t_hotchar
 operator|=
-operator|(
-name|sc_p
-operator|)
-name|tp
-operator|->
-name|t_sc
+name|NG_TTY_DFL_HOTCHAR
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|!=
-name|NULL
-operator|&&
-name|sc
-operator|->
-name|tp
-operator|==
-name|tp
-condition|)
-goto|goto
-name|done
-goto|;
-block|}
 comment|/* Initialize private struct */
 name|MALLOC
 argument_list|(
@@ -1044,12 +1012,6 @@ name|tp
 operator|->
 name|t_outq
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_line
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(

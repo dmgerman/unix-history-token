@@ -311,6 +311,10 @@ decl_stmt|;
 name|int
 name|t_refcnt
 decl_stmt|;
+name|int
+name|t_hotchar
+decl_stmt|;
+comment|/* linedisc preferred hot char */
 block|}
 struct|;
 end_struct

@@ -215,9 +215,6 @@ name|l_modem_t
 modifier|*
 name|l_modem
 decl_stmt|;
-name|u_char
-name|l_hotchar
-decl_stmt|;
 block|}
 struct|;
 end_struct

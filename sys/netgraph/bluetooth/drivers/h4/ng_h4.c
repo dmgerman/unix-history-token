@@ -338,10 +338,7 @@ name|ng_h4_start
 block|,
 comment|/* start */
 name|ttymodem
-block|,
 comment|/* modem */
-literal|0
-comment|/* hotchar (don't really care which one) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -635,41 +632,6 @@ name|spltty
 argument_list|()
 expr_stmt|;
 comment|/* XXX */
-comment|/* Already installed? */
-if|if
-condition|(
-name|tp
-operator|->
-name|t_line
-operator|==
-name|H4DISC
-condition|)
-block|{
-name|sc
-operator|=
-operator|(
-name|ng_h4_info_p
-operator|)
-name|tp
-operator|->
-name|t_sc
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|!=
-name|NULL
-operator|&&
-name|sc
-operator|->
-name|tp
-operator|==
-name|tp
-condition|)
-goto|goto
-name|out
-goto|;
-block|}
 comment|/* Initialize private struct */
 name|MALLOC
 argument_list|(
@@ -1022,12 +984,6 @@ name|tp
 operator|->
 name|t_outq
 argument_list|)
-expr_stmt|;
-name|tp
-operator|->
-name|t_line
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
