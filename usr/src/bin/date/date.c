@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.2 (Berkeley) %G%"
+literal|"@(#)date.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,7 +182,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"d:nut:"
+literal|"d:nr:ut:"
 argument_list|)
 operator|)
 operator|!=
@@ -221,6 +221,17 @@ comment|/* don't set network */
 name|nflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|tval
+operator|=
+name|atol
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -319,6 +330,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+name|tval
+operator|&&
 name|time
 argument_list|(
 operator|&
@@ -894,7 +908,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: date [-nu] [-d dst] [-t west] [+format] [yy[mm[dd[hh]]]]mm[.ss]]\n"
+literal|"usage: date [-nu] [-d dst] [-r seconds] [-t west] [+format]\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"            [yy[mm[dd[hh]]]]mm[.ss]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
