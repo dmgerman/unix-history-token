@@ -3119,11 +3119,18 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|VI_UNLOCK
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EWOULDBLOCK
 operator|)
 return|;
+block|}
 comment|/* 	 * Don't recycle if we still have cached pages. 	 */
 if|if
 condition|(
@@ -3148,15 +3155,6 @@ name|ref_count
 operator|)
 condition|)
 block|{
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EBUSY
