@@ -388,9 +388,11 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_comment
-comment|/* #include<i386/isa/pnp.h> */
-end_comment
+begin_include
+include|#
+directive|include
+file|<i386/isa/pnp.h>
+end_include
 
 begin_function_decl
 specifier|extern
