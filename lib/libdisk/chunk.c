@@ -2059,11 +2059,21 @@ argument_list|(
 literal|' '
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__ia64__
 name|printf
 argument_list|(
-literal|"%p %8ld %8lu %8lu %-8s %-16s %-8s 0x%02x %s"
+literal|"%p "
 argument_list|,
 name|c1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|printf
+argument_list|(
+literal|"%8ld %8lu %8lu %-8s %-16s %-8s 0x%02x %s"
 argument_list|,
 name|c1
 operator|->
@@ -2277,6 +2287,36 @@ argument_list|,
 name|freebsd
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__ia64__
+if|if
+condition|(
+name|c1
+operator|==
+name|NULL
+condition|)
+name|c1
+operator|=
+name|Find_Mother_Chunk
+argument_list|(
+name|d
+operator|->
+name|chunks
+argument_list|,
+name|c
+operator|->
+name|offset
+argument_list|,
+name|c
+operator|->
+name|end
+argument_list|,
+name|whole
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 default|default:
 name|c1
