@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.12	(Berkeley)	83/04/19"
+literal|"@(#)tape.c	3.13	(Berkeley)	83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -588,7 +588,16 @@ operator|-
 name|i
 expr_stmt|;
 block|}
-name|vprintf
+if|if
+condition|(
+name|vflag
+operator|||
+name|command
+operator|==
+literal|'t'
+condition|)
+block|{
+name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
@@ -603,7 +612,7 @@ name|c_date
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|vprintf
+name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
@@ -618,6 +627,7 @@ name|c_ddate
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|dumptime
 operator|=
 name|spcl
@@ -1292,7 +1302,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Wrong dump date (%s)\n"
+literal|"Wrong dump date got: %swanted %s"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1300,6 +1310,11 @@ operator|&
 name|tmpbuf
 operator|.
 name|c_date
+argument_list|)
+argument_list|,
+name|ctime
+argument_list|(
+name|dumpdate
 argument_list|)
 argument_list|)
 expr_stmt|;
