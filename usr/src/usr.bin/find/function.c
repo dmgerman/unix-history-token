@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)function.c	5.20 (Berkeley) %G%"
+literal|"@(#)function.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,6 +2320,7 @@ begin_block
 block|{
 return|return
 operator|(
+operator|!
 name|fnmatch
 argument_list|(
 name|plan
@@ -2330,7 +2331,7 @@ name|entry
 operator|->
 name|fts_name
 argument_list|,
-name|FNM_QUOTE
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -2690,6 +2691,7 @@ begin_block
 block|{
 return|return
 operator|(
+operator|!
 name|fnmatch
 argument_list|(
 name|plan
@@ -2700,7 +2702,7 @@ name|entry
 operator|->
 name|fts_path
 argument_list|,
-name|FNM_QUOTE
+literal|0
 argument_list|)
 operator|)
 return|;
