@@ -966,6 +966,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -989,6 +997,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
