@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|4.1
+literal|4.2
 operator|%
 name|G
 operator|%
@@ -1562,13 +1562,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-specifier|extern
-name|struct
-name|passwd
-modifier|*
-name|getpwent
-parameter_list|()
-function_decl|;
 specifier|register
 name|struct
 name|passwd
@@ -1580,6 +1573,20 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwent
+parameter_list|()
+function_decl|;
+specifier|extern
+name|struct
+name|passwd
+modifier|*
+name|getpwnam
+parameter_list|()
+function_decl|;
 comment|/* 	**  Make name canonical. 	*/
 for|for
 control|(
