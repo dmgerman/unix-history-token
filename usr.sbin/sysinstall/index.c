@@ -192,6 +192,10 @@ literal|"applications"
 block|,
 literal|"User application software."
 block|,
+literal|"arabic"
+block|,
+literal|"Ported software for Arab countries."
+block|,
 literal|"archivers"
 block|,
 literal|"Utilities for archiving and unarchiving data."
@@ -239,6 +243,10 @@ block|,
 literal|"devel"
 block|,
 literal|"Software development utilities and libraries."
+block|,
+literal|"dns"
+block|,
+literal|"Domain Name Service tools."
 block|,
 literal|"documentation"
 block|,
@@ -360,6 +368,10 @@ literal|"net"
 block|,
 literal|"Networking utilities."
 block|,
+literal|"net-mgmt"
+block|,
+literal|"Network Management"
+block|,
 literal|"news"
 block|,
 literal|"USENET News support software."
@@ -400,6 +412,10 @@ literal|"plan9"
 block|,
 literal|"Software from the Plan9 operating system."
 block|,
+literal|"polish"
+block|,
+literal|"Ported software for the Polish market."
+block|,
 literal|"portuguese"
 block|,
 literal|"Ported software for the Portuguese market."
@@ -431,6 +447,10 @@ block|,
 literal|"science"
 block|,
 literal|"Scientific software."
+block|,
+literal|"scheme"
+block|,
+literal|"Software related to the Scheme language."
 block|,
 literal|"security"
 block|,
@@ -467,6 +487,10 @@ block|,
 literal|"tcl83"
 block|,
 literal|"TCL v8.3 and packages that depend on it."
+block|,
+literal|"tcl84"
+block|,
+literal|"TCL v8.4 and packages that depend on it."
 block|,
 literal|"textproc"
 block|,
@@ -539,6 +563,10 @@ block|,
 literal|"x11-servers"
 block|,
 literal|"X Window System servers."
+block|,
+literal|"x11-themes"
+block|,
+literal|"X Window System themes."
 block|,
 literal|"x11-toolkits"
 block|,
