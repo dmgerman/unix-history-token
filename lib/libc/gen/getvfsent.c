@@ -3,12 +3,6 @@ begin_comment
 comment|/*  * getvfsent.c - get a listing of installed filesystems  * Written September 1994 by Garrett A. Wollman  * This file is in the public domain.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|_OLD_VFSCONF
-end_define
-
 begin_include
 include|#
 directive|include
@@ -80,6 +74,23 @@ include|#
 directive|include
 file|<paths.h>
 end_include
+
+begin_comment
+comment|/* XXX hide some compatibility problems. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|getvfsbyname
+end_undef
+
+begin_define
+define|#
+directive|define
+name|vfsconf
+value|ovfsconf
+end_define
 
 begin_define
 define|#
