@@ -154,11 +154,14 @@ define|\
 value|(((sizeof(type) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GNUCLIKE_BUILTIN_VAALIST
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#

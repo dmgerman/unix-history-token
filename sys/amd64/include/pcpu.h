@@ -113,18 +113,18 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|__GNUCLIKE___TYPEOF
+name|__GNUCLIKE_ASM
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|__GNUCLIKE___OFFSETOF
+name|__GNUCLIKE___TYPEOF
 argument_list|)
 expr|\
 operator|&&
 name|defined
 argument_list|(
-name|__GNUCLIKE_ASM
+name|__GNUCLIKE___OFFSETOF
 argument_list|)
 end_elif
 

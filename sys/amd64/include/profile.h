@@ -185,7 +185,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM */
+comment|/* !__GNUCLIKE_ASM */
 end_comment
 
 begin_else

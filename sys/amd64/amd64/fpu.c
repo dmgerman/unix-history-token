@@ -278,7 +278,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !__GNUCLIKE_ASM */
+comment|/* !(__GNUCLIKE_ASM&& !lint) */
 end_comment
 
 begin_function_decl
@@ -373,7 +373,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_ASM */
+comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
 
 begin_define

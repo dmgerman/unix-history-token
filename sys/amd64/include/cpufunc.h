@@ -610,7 +610,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P */
+comment|/* __GNUCLIKE_BUILTIN_CONSTANT_P&& __GNUCLIKE_ASM>= 3*/
 end_comment
 
 begin_function

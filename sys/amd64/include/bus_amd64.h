@@ -27,6 +27,23 @@ directive|define
 name|_AMD64_BUS_AMD64_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SYS_CDEFS_H_
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|this file needs sys/cdefs.h as a prerequisite
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
