@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.121 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.122 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3064,7 +3064,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[03/02/94 @ 05:34 PM (Wednesday)] **	sendmail 8.6.6.b9	named 4.9.2-931205-p1	db-1.73 **	gcc 2.5.8		libc.so.4.5.19 **	slackware 1.1.2		linux 0.99.15 */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	Andrew Pam<avatar@aus.xanadu.com> **	John Kennedy<warlock@csuchico.edu> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[03/02/94 @ 05:34 PM (Wednesday)] **	sendmail 8.6.6.b9	named 4.9.2-931205-p1	db-1.73 **	gcc 2.5.8		libc.so.4.5.19 **	slackware 1.1.2		linux 0.99.15 */
 end_comment
 
 begin_ifdef
@@ -3136,6 +3136,17 @@ end_define
 
 begin_comment
 comment|/* from<linux/types.h> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* getusershell(3) broken in Slackware 2.0 */
 end_comment
 
 begin_ifndef
