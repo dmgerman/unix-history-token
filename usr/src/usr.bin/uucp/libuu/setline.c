@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setline.c	5.2 (Berkeley) %G%"
+literal|"@(#)setline.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,19 @@ value|'X'
 end_define
 
 begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
 comment|/*  *	optimize line setting for sending or receiving files  *  *	return code - none  */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
-name|setline
+name|setupline
 argument_list|(
 argument|type
 argument_list|)
