@@ -4,6 +4,10 @@ comment|/* Process declarations and variables for C compiler.    Copyright (C) 1
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Process declarations and symbol lookup for C front end.    Also constructs types; the standard scalar types at initialization,    and structure, union, array and enum types when they are declared.  */
 end_comment
 
@@ -896,6 +900,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Nonzero means allow the BSD kernel printf enhancments.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|flag_bsd_format
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero means that we have builtin functions, and main is an int */
 end_comment
 
@@ -1467,7 +1483,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-comment|/* Select the appropriate language standard.  We currently 	 recognize: 	 -std=iso9899:1990	same as -ansi 	 -std=iso9899:199409	ISO C as modified in amend. 1 	 -std=iso9899:1999	ISO C 99 	 -std=c89		same as -std=iso9899:1990 	 -std=c99		same as -std=iso9899:1999 	 -std=gnu89		default, iso9899:1990 + gnu extensions 	 -std=gnu99		iso9899:1999 + gnu extensions       */
+comment|/* Select the appropriate language standard.  We currently 	 recognize: 	 -std=iso9899:1990	same as -ansi 	 -std=iso9899:199409	ISO C as modified in amend. 1 	 -std=iso9899:1999	ISO C 99 	 -std=c89		same as -std=iso9899:1990 	 -std=c99		same as -std=iso9899:1999 	 -std=gnu89		default, iso9899:1990 + gnu extensions 	 -std=gnu99		iso9899:1999 + gnu extensions 	 -std=bsd		iso9899:1999 + BSD kernel printf extensions       */
 specifier|const
 name|char
 modifier|*
@@ -1528,6 +1544,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|flag_isoc99
+operator|=
+literal|0
+expr_stmt|;
+name|flag_bsd_format
 operator|=
 literal|0
 expr_stmt|;
@@ -1616,6 +1636,10 @@ name|flag_isoc94
 operator|=
 literal|1
 expr_stmt|;
+name|flag_bsd_format
+operator|=
+literal|0
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1654,6 +1678,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|flag_isoc94
+operator|=
+literal|0
+expr_stmt|;
+name|flag_bsd_format
 operator|=
 literal|0
 expr_stmt|;
@@ -1703,6 +1731,59 @@ operator|=
 literal|1
 expr_stmt|;
 name|flag_isoc94
+operator|=
+literal|1
+expr_stmt|;
+name|flag_bsd_format
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argstart
+argument_list|,
+literal|"bsd"
+argument_list|)
+condition|)
+block|{
+name|flag_traditional
+operator|=
+literal|0
+expr_stmt|;
+name|flag_writable_strings
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_asm
+operator|=
+literal|0
+expr_stmt|;
+name|flag_no_nonansi_builtin
+operator|=
+literal|0
+expr_stmt|;
+name|flag_noniso_default_format_attributes
+operator|=
+literal|1
+expr_stmt|;
+name|flag_isoc99
+operator|=
+literal|0
+expr_stmt|;
+name|flag_isoc94
+operator|=
+literal|0
+expr_stmt|;
+name|flag_isoc94
+operator|=
+literal|0
+expr_stmt|;
+name|flag_bsd_format
 operator|=
 literal|1
 expr_stmt|;
