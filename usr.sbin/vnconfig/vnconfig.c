@@ -44,6 +44,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
@@ -87,6 +93,12 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/linker.h>
 end_include
 
 begin_include
@@ -1022,6 +1034,48 @@ decl_stmt|;
 name|u_long
 name|l
 decl_stmt|;
+name|rv
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 	 * Prepend "/dev/" to the specified device name, if necessary. 	 * Operate on vnp->dev because it is used later. 	 */
+if|if
+condition|(
+name|vnp
+operator|->
+name|dev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
+operator|&&
+name|vnp
+operator|->
+name|dev
+index|[
+literal|0
+index|]
+operator|!=
+literal|'.'
+condition|)
+operator|(
+name|void
+operator|)
+name|asprintf
+argument_list|(
+operator|&
+name|vnp
+operator|->
+name|dev
+argument_list|,
+literal|"/dev/%s"
+argument_list|,
+name|vnp
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|dev
 operator|=
 name|vnp
@@ -1398,7 +1452,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: flags now=%08x\n"
+literal|"%s: flags now=%08lx\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -1471,7 +1525,7 @@ name|verbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s: flags now=%08x\n"
+literal|"%s: flags now=%08lx\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -2355,7 +2409,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: vnconfig [-acdefguv] [-s option] [-r option] [special-device file]\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: vnconfig [-cdeguv] [-s option] [-r option] [-S value] special_file"
+argument_list|,
+literal|"                [regular_file] [feature]"
+argument_list|,
+literal|"       vnconfig -a [-cdeguv] [-s option] [-r option] [-f config_file]"
 argument_list|)
 expr_stmt|;
 name|exit
