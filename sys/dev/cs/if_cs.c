@@ -2880,6 +2880,8 @@ operator||
 name|IFF_SIMPLEX
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 operator|)
 expr_stmt|;
 comment|/* 	 * this code still in progress (DMA support) 	 *  	sc->recv_ring=malloc(CS_DMA_BUFFER_SIZE<<1, M_DEVBUF, M_NOWAIT); 	if (sc->recv_ring == NULL) { 		log(LOG_ERR, 		"%s: Couldn't allocate memory for NIC\n", ifp->if_xname); 		return(0); 	} 	if ((sc->recv_ring-(sc->recv_ring& 0x1FFFF))< (128*1024-CS_DMA_BUFFER_SIZE)) 	    sc->recv_ring+=16*1024;  	*/
