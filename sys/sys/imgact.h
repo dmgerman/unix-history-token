@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|MAXSHELLCMDLEN
-value|128
+value|PAGE_SIZE
 end_define
 
 begin_struct
@@ -127,10 +127,8 @@ name|interpreted
 decl_stmt|;
 comment|/* flag - this executable is interpreted */
 name|char
+modifier|*
 name|interpreter_name
-index|[
-name|MAXSHELLCMDLEN
-index|]
 decl_stmt|;
 comment|/* name of the interpreter */
 name|void

@@ -1339,11 +1339,14 @@ expr_stmt|;
 name|imgp
 operator|->
 name|interpreter_name
-index|[
-literal|0
-index|]
 operator|=
-literal|'\0'
+name|args
+operator|->
+name|buf
+operator|+
+name|PATH_MAX
+operator|+
+name|ARG_MAX
 expr_stmt|;
 name|imgp
 operator|->
@@ -3730,7 +3733,7 @@ operator|(
 name|EFAULT
 operator|)
 return|;
-comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings 	 */
+comment|/* 	 * Allocate temporary demand zeroed space for argument and 	 *	environment strings: 	 * 	 * o ARG_MAX for argument and environment; 	 * o MAXSHELLCMDLEN for the name of interpreters. 	 */
 name|args
 operator|->
 name|buf
@@ -3746,6 +3749,8 @@ argument_list|,
 name|PATH_MAX
 operator|+
 name|ARG_MAX
+operator|+
+name|MAXSHELLCMDLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -4080,6 +4085,8 @@ argument_list|,
 name|PATH_MAX
 operator|+
 name|ARG_MAX
+operator|+
+name|MAXSHELLCMDLEN
 argument_list|)
 expr_stmt|;
 name|args
