@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lesskey.c	5.1 (Berkeley) %G%"
+literal|"@(#)lesskey.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -316,8 +316,16 @@ specifier|extern
 name|char
 modifier|*
 name|getenv
-parameter_list|()
-function_decl|;
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcat
+argument_list|()
+decl_stmt|,
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
 comment|/* 	 * Process command line arguments. 	 */
 name|outfile
 operator|=
