@@ -1287,6 +1287,18 @@ typedef|typedef
 name|int
 name|seek_dir
 typedef|;
+typedef|typedef
+name|std
+operator|::
+name|streampos
+name|streampos
+expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|streamoff
+name|streamoff
+expr_stmt|;
 endif|#
 directive|endif
 comment|// Callbacks;

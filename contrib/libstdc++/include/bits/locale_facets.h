@@ -2476,7 +2476,7 @@ parameter_list|(
 name|__c_locale
 name|__cloc
 init|=
-name|_S_c_locale
+name|NULL
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4571,48 +4571,26 @@ operator|~
 name|collate
 argument_list|()
 block|{
-if|if
-condition|(
-name|_M_c_locale_collate
-operator|!=
-name|_S_c_locale
-condition|)
 name|_S_destroy_c_locale
 argument_list|(
 name|_M_c_locale_collate
 argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
+block|; }
 name|virtual
 name|int
 name|do_compare
 argument_list|(
-specifier|const
-name|_CharT
-operator|*
-name|__lo1
+argument|const _CharT* __lo1
 argument_list|,
-specifier|const
-name|_CharT
-operator|*
-name|__hi1
+argument|const _CharT* __hi1
 argument_list|,
-specifier|const
-name|_CharT
-operator|*
-name|__lo2
+argument|const _CharT* __lo2
 argument_list|,
-specifier|const
-name|_CharT
-operator|*
-name|__hi2
+argument|const _CharT* __hi2
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|virtual
@@ -4827,28 +4805,20 @@ operator|(
 name|__refs
 operator|)
 block|{
-if|if
-condition|(
-name|_M_c_locale_collate
-operator|!=
-name|_S_c_locale
-condition|)
 name|_S_destroy_c_locale
 argument_list|(
 name|_M_c_locale_collate
 argument_list|)
-expr_stmt|;
+block|;
 name|_S_create_c_locale
 argument_list|(
 name|_M_c_locale_collate
 argument_list|,
 name|__s
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}      protected:
+block|;        }
+name|protected
+operator|:
 name|virtual
 operator|~
 name|collate_byname
@@ -4954,7 +4924,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|_M_name_timepunct
@@ -5376,17 +5345,27 @@ name|locale
 operator|::
 name|facet
 argument_list|(
-name|__refs
-argument_list|)
-operator|,
-name|_M_name_timepunct
-argument_list|(
-literal|"C"
+argument|__refs
 argument_list|)
 block|{
+name|_M_name_timepunct
+operator|=
+name|new
+name|char
+index|[
+literal|2
+index|]
+block|;
+name|strcpy
+argument_list|(
+name|_M_name_timepunct
+argument_list|,
+literal|"C"
+argument_list|)
+block|;
 name|_M_initialize_timepunct
 argument_list|()
-block|; }
+block|;        }
 name|explicit
 name|__timepunct
 argument_list|(
@@ -5402,19 +5381,34 @@ name|locale
 operator|::
 name|facet
 argument_list|(
-name|__refs
-argument_list|)
-operator|,
-name|_M_name_timepunct
-argument_list|(
-argument|__s
+argument|__refs
 argument_list|)
 block|{
+name|_M_name_timepunct
+operator|=
+name|new
+name|char
+index|[
+name|strlen
+argument_list|(
+name|__s
+argument_list|)
+operator|+
+literal|1
+index|]
+block|;
+name|strcpy
+argument_list|(
+name|_M_name_timepunct
+argument_list|,
+name|__s
+argument_list|)
+block|;
 name|_M_initialize_timepunct
 argument_list|(
 name|__cloc
 argument_list|)
-block|; }
+block|;        }
 name|void
 name|_M_put
 argument_list|(
@@ -5885,24 +5879,24 @@ name|virtual
 operator|~
 name|__timepunct
 argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
+block|{
+name|delete
+index|[]
+name|_M_name_timepunct
+block|;
+name|_S_destroy_c_locale
+argument_list|(
+name|_M_c_locale_timepunct
+argument_list|)
+block|;        }
 comment|// For use at construction time only.
-end_comment
-
-begin_function_decl
 name|void
 name|_M_initialize_timepunct
-parameter_list|(
-name|__c_locale
-name|__cloc
-init|=
-name|_S_c_locale
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|__c_locale __cloc = NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 unit|};
@@ -5926,21 +5920,6 @@ end_expr_stmt
 begin_comment
 comment|// Specializations.
 end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-name|__timepunct
-operator|<
-name|char
-operator|>
-operator|::
-operator|~
-name|__timepunct
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|template
@@ -6007,21 +5986,6 @@ ifdef|#
 directive|ifdef
 name|_GLIBCPP_USE_WCHAR_T
 end_ifdef
-
-begin_expr_stmt
-name|template
-operator|<
-operator|>
-name|__timepunct
-operator|<
-name|wchar_t
-operator|>
-operator|::
-operator|~
-name|__timepunct
-argument_list|()
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|template
@@ -7598,7 +7562,7 @@ parameter_list|(
 name|__c_locale
 name|__cloc
 init|=
-name|_S_c_locale
+name|NULL
 parameter_list|,
 specifier|const
 name|char
@@ -8508,7 +8472,6 @@ comment|// Only needed if glibc< 2.3
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|char
 modifier|*
 name|_M_name_messages
@@ -8552,25 +8515,35 @@ name|locale
 operator|::
 name|facet
 argument_list|(
-name|__refs
-argument_list|)
-operator|,
-name|_M_name_messages
-argument_list|(
-literal|"C"
+argument|__refs
 argument_list|)
 block|{
+name|_M_name_messages
+operator|=
+name|new
+name|char
+index|[
+literal|2
+index|]
+block|;
+name|strcpy
+argument_list|(
+name|_M_name_messages
+argument_list|,
+literal|"C"
+argument_list|)
+block|;
 name|_M_c_locale_messages
 operator|=
 name|_S_c_locale
-block|; }
+block|;        }
 comment|// Non-standard.
 name|explicit
 name|messages
 argument_list|(
 argument|__c_locale __cloc
 argument_list|,
-argument|const char* __name
+argument|const char* __s
 argument_list|,
 argument|size_t __refs =
 literal|0
@@ -8585,7 +8558,23 @@ argument_list|)
 block|{
 name|_M_name_messages
 operator|=
-name|__name
+name|new
+name|char
+index|[
+name|strlen
+argument_list|(
+name|__s
+argument_list|)
+operator|+
+literal|1
+index|]
+block|;
+name|strcpy
+argument_list|(
+name|_M_name_messages
+argument_list|,
+name|__s
+argument_list|)
 block|;
 name|_M_c_locale_messages
 operator|=
@@ -8711,39 +8700,26 @@ operator|~
 name|messages
 argument_list|()
 block|{
-if|if
-condition|(
-name|_M_c_locale_messages
-operator|!=
-name|_S_c_locale
-condition|)
+name|delete
+index|[]
+name|_M_name_messages
+block|;
 name|_S_destroy_c_locale
 argument_list|(
 name|_M_c_locale_messages
 argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
+block|;         }
 name|virtual
 name|catalog
 name|do_open
 argument_list|(
-specifier|const
-name|basic_string
-operator|<
-name|char
-operator|>
-operator|&
+argument|const basic_string<char>&
 argument_list|,
-specifier|const
-name|locale
-operator|&
+argument|const locale&
 argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|virtual
@@ -9029,32 +9005,44 @@ operator|(
 name|__refs
 operator|)
 block|{
+name|delete
+index|[]
+name|_M_name_messages
+block|;
 name|_M_name_messages
 operator|=
+name|new
+name|char
+index|[
+name|strlen
+argument_list|(
 name|__s
+argument_list|)
+operator|+
+literal|1
+index|]
 block|;
-if|if
-condition|(
-name|_M_c_locale_messages
-operator|!=
-name|_S_c_locale
-condition|)
+name|strcpy
+argument_list|(
+name|_M_name_messages
+argument_list|,
+name|__s
+argument_list|)
+block|;
 name|_S_destroy_c_locale
 argument_list|(
 name|_M_c_locale_messages
 argument_list|)
-expr_stmt|;
+block|;
 name|_S_create_c_locale
 argument_list|(
 name|_M_c_locale_messages
 argument_list|,
 name|__s
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|}      protected:
+block|;        }
+name|protected
+operator|:
 name|virtual
 operator|~
 name|messages_byname

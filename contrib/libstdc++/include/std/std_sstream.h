@@ -393,9 +393,21 @@ modifier|&
 name|__s
 parameter_list|)
 block|{
+comment|// Cannot use _M_string = __s, since v3 strings are COW.
 name|_M_string
-operator|=
+operator|.
+name|assign
+argument_list|(
 name|__s
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|__s
+operator|.
+name|size
+argument_list|()
+argument_list|)
 expr_stmt|;
 name|_M_stringbuf_init
 argument_list|(

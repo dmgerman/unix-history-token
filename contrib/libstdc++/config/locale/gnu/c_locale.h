@@ -154,6 +154,13 @@ name|_GLIBCPP_C_LOCALE_GNU
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|_GLIBCPP_NUM_CATEGORIES
+value|6
+end_define
+
 begin_if
 if|#
 directive|if
