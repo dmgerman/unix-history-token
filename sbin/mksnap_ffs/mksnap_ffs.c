@@ -91,26 +91,6 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
-name|usage
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: mksnap_ffs mountpoint snapshot_name\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_USAGE
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|main
 parameter_list|(
@@ -346,6 +326,26 @@ expr_stmt|;
 name|exit
 argument_list|(
 name|EXIT_SUCCESS
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: mksnap_ffs mountpoint snapshot_name\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
