@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.36	82/04/11	*/
+comment|/*	autoconf.c	4.37	82/05/06	*/
 end_comment
 
 begin_comment
@@ -1965,6 +1965,13 @@ parameter_list|(
 name|off
 parameter_list|)
 value|(u_short *)((int)vumem + ((off)&0x3ffff))
+define|#
+directive|define
+name|ubdevreg
+parameter_list|(
+name|addr
+parameter_list|)
+value|(addr&0x1fff|0760000)
 comment|/* 	 * Check each unibus mass storage controller. 	 * For each one which is potentially on this uba, 	 * see if it is really there, and if it is record it and 	 * then go looking for slaves. 	 */
 for|for
 control|(
@@ -2347,11 +2354,10 @@ name|ui_physaddr
 operator|=
 name|pumem
 operator|+
-operator|(
+name|ubdevreg
+argument_list|(
 name|addr
-operator|&
-literal|0x1fff
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2715,11 +2721,10 @@ name|ui_physaddr
 operator|=
 name|pumem
 operator|+
-operator|(
+name|ubdevreg
+argument_list|(
 name|addr
-operator|&
-literal|0x1fff
-operator|)
+argument_list|)
 expr_stmt|;
 name|ui
 operator|->
