@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.49	83/04/04	*/
+comment|/*	init_main.c	4.50	83/05/18	*/
 end_comment
 
 begin_include
@@ -877,9 +877,9 @@ name|r_context
 operator|=
 name|u
 operator|.
-name|u_pcb
-operator|.
-name|pcb_ctx
+name|u_procp
+operator|->
+name|p_ctx
 operator|->
 name|ctx_context
 expr_stmt|;
@@ -1271,6 +1271,10 @@ name|nswdev
 operator|=
 literal|0
 expr_stmt|;
+name|nswap
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|swp
@@ -1284,9 +1288,25 @@ condition|;
 name|swp
 operator|++
 control|)
+block|{
 name|nswdev
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|swp
+operator|->
+name|sw_nblks
+operator|>
+name|nswap
+condition|)
+name|nswap
+operator|=
+name|swp
+operator|->
+name|sw_nblks
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|nswdev
@@ -1307,12 +1327,18 @@ condition|)
 name|nswap
 operator|=
 operator|(
+operator|(
 name|nswap
+operator|+
+name|dmmax
+operator|-
+literal|1
+operator|)
 operator|/
-name|DMMAX
+name|dmmax
 operator|)
 operator|*
-name|DMMAX
+name|dmmax
 expr_stmt|;
 name|nswap
 operator|*=

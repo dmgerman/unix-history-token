@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_rmap.c	4.8	82/10/21	*/
+comment|/*	subr_rmap.c	4.9	83/05/18	*/
 end_comment
 
 begin_include
@@ -225,7 +225,7 @@ name|swapmap
 operator|&&
 name|size
 operator|>
-name|DMMAX
+name|dmmax
 condition|)
 name|panic
 argument_list|(
@@ -263,16 +263,20 @@ name|mp
 operator|==
 name|swapmap
 operator|&&
+name|nswdev
+operator|>
+literal|1
+operator|&&
 operator|(
 name|first
 operator|=
-name|DMMAX
+name|dmmax
 operator|-
 name|bp
 operator|->
 name|m_addr
 operator|%
-name|DMMAX
+name|dmmax
 operator|)
 operator|<
 name|bp
