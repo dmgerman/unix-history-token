@@ -252,6 +252,13 @@ name|jail_sysvipc_allowed
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|jail_getfsstat_jailrootonly
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|LIST_HEAD
 argument_list|(
@@ -277,6 +284,12 @@ end_comment
 begin_struct_decl
 struct_decl|struct
 name|ucred
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mount
 struct_decl|;
 end_struct_decl
 
@@ -328,6 +341,23 @@ name|struct
 name|ucred
 modifier|*
 name|cred2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|prison_check_mount
+parameter_list|(
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|struct
+name|mount
+modifier|*
+name|mp
 parameter_list|)
 function_decl|;
 end_function_decl
