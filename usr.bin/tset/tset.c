@@ -315,9 +315,6 @@ operator|&
 name|mode
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 switch|switch
 condition|(
 name|Ospeed
@@ -488,9 +485,6 @@ break|break;
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
-comment|/* __FreeBSD__ */
 if|if
 condition|(
 name|p

@@ -1145,9 +1145,6 @@ name|bp
 operator|=
 name|buf
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
 if|if
 condition|(
 name|tgetstr
@@ -1168,8 +1165,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|TAB3

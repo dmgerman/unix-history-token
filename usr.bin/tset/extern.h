@@ -7,12 +7,6 @@ begin_comment
 comment|/* This should be in<termcap.h> instead. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|char
@@ -26,11 +20,6 @@ name|short
 name|ospeed
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
