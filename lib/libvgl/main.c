@@ -697,6 +697,12 @@ name|Type
 operator|=
 name|VIDBUF8
 expr_stmt|;
+name|VGLDisplay
+operator|->
+name|PixelBytes
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 name|V_INFO_MM_VGAX
@@ -706,6 +712,12 @@ operator|->
 name|Type
 operator|=
 name|VIDBUF8X
+expr_stmt|;
+name|VGLDisplay
+operator|->
+name|PixelBytes
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
