@@ -6292,9 +6292,6 @@ case|:
 case|case
 name|SIGUSR2
 case|:
-case|case
-name|SIGTHR
-case|:
 comment|/* 			 * Generally, permit job and terminal control 			 * signals. 			 */
 break|break;
 default|default:
