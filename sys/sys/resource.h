@@ -73,7 +73,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Resource utilization information.  */
+comment|/*  * Resource utilization information.  *  * Locking key:  *      c - locked by proc mtx  *      j - locked by sched_lock mtx  *      n - not locked, lazy  */
 end_comment
 
 begin_define
@@ -98,16 +98,16 @@ name|struct
 name|timeval
 name|ru_utime
 decl_stmt|;
-comment|/* user time used */
+comment|/* (n) user time used */
 name|struct
 name|timeval
 name|ru_stime
 decl_stmt|;
-comment|/* system time used */
+comment|/* (n) system time used */
 name|long
 name|ru_maxrss
 decl_stmt|;
-comment|/* max resident set size */
+comment|/* (j) max resident set size */
 define|#
 directive|define
 name|ru_first
@@ -115,55 +115,55 @@ value|ru_ixrss
 name|long
 name|ru_ixrss
 decl_stmt|;
-comment|/* integral shared memory size */
+comment|/* (j) integral shared memory size */
 name|long
 name|ru_idrss
 decl_stmt|;
-comment|/* integral unshared data " */
+comment|/* (j) integral unshared data " */
 name|long
 name|ru_isrss
 decl_stmt|;
-comment|/* integral unshared stack " */
+comment|/* (j) integral unshared stack " */
 name|long
 name|ru_minflt
 decl_stmt|;
-comment|/* page reclaims */
+comment|/* (c) page reclaims */
 name|long
 name|ru_majflt
 decl_stmt|;
-comment|/* page faults */
+comment|/* (c) page faults */
 name|long
 name|ru_nswap
 decl_stmt|;
-comment|/* swaps */
+comment|/* (c + j) swaps */
 name|long
 name|ru_inblock
 decl_stmt|;
-comment|/* block input operations */
+comment|/* (n) block input operations */
 name|long
 name|ru_oublock
 decl_stmt|;
-comment|/* block output operations */
+comment|/* (n) block output operations */
 name|long
 name|ru_msgsnd
 decl_stmt|;
-comment|/* messages sent */
+comment|/* (n) messages sent */
 name|long
 name|ru_msgrcv
 decl_stmt|;
-comment|/* messages received */
+comment|/* (n) messages received */
 name|long
 name|ru_nsignals
 decl_stmt|;
-comment|/* signals received */
+comment|/* (c) signals received */
 name|long
 name|ru_nvcsw
 decl_stmt|;
-comment|/* voluntary context switches */
+comment|/* (j) voluntary context switches */
 name|long
 name|ru_nivcsw
 decl_stmt|;
-comment|/* involuntary " */
+comment|/* (j) involuntary " */
 define|#
 directive|define
 name|ru_last
