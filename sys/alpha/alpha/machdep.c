@@ -4030,6 +4030,8 @@ argument_list|,
 literal|"clk"
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
 name|mtx_lock
