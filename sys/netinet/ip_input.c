@@ -3068,6 +3068,14 @@ operator||=
 name|M_FRAG
 expr_stmt|;
 block|}
+else|else
+name|m
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_FRAG
+expr_stmt|;
 name|ip
 operator|->
 name|ip_off
