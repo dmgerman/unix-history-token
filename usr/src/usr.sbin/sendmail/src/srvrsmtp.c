@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.45 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.46 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.45 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.46 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1542,6 +1542,26 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+block|}
+if|if
+condition|(
+name|MaxMessageSize
+operator|>
+literal|0
+operator|&&
+name|msize
+operator|>
+name|MaxMessageSize
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"552 Message size exceeds fixed maximum message size (%ld)"
+argument_list|,
+name|MaxMessageSize
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
