@@ -5533,9 +5533,21 @@ name|sc
 operator|->
 name|suspended
 condition|)
+block|{
+comment|/* 		 * Forcibly disable interrupts. 		 * XXX: Mobile VIA based platforms may need 		 * interrupt re-enable on resume. 		 */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|VR_IMR
+argument_list|,
+literal|0x0000
+argument_list|)
+expr_stmt|;
 goto|goto
 name|done_locked
 goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
