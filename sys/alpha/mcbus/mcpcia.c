@@ -213,6 +213,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|extern
+name|void
+name|dec_kn300_cons_init
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|int
 name|mcpcia_probe
@@ -1562,11 +1572,6 @@ decl_stmt|;
 name|u_int64_t
 name|paddr
 decl_stmt|;
-name|int
-name|secondary
-init|=
-literal|0
-decl_stmt|;
 name|rvp
 operator|=
 name|data
@@ -1615,10 +1620,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 * 	 * XXX: How do we generate knowledge of secondary bus accesses? 	 */
+comment|/* 	 * The bus number being passed is the pci instance number- not 	 * the actual pci bus number. FreeBSD farts bad on this one. 	 */
+name|bus
+operator|=
+literal|0
+expr_stmt|;
+comment|/* No secondaries for the moment */
+comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 */
 if|if
 condition|(
-name|secondary
+name|bus
 operator|==
 literal|0
 operator|&&
@@ -1639,7 +1650,7 @@ operator|)
 return|;
 name|paddr
 operator|=
-name|secondary
+name|bus
 operator|<<
 literal|21
 expr_stmt|;
@@ -1709,7 +1720,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("CFGREAD MID %d %d.%d.%d sz %d off %d -> paddr 0x%x", mcbus_get_mid(dev), secondary, slot, func, sz, off, paddr);
+block|printf("CFGREAD MID %d %d.%d.%d sz %d off %d -> paddr 0x%x", mcbus_get_mid(dev), bus , slot, func, sz, off, paddr);
 endif|#
 directive|endif
 if|if
@@ -1734,11 +1745,6 @@ operator|*
 name|dp
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|secondary
-condition|)
-block|{ 	}
 if|if
 condition|(
 name|data
@@ -1853,11 +1859,6 @@ decl_stmt|;
 name|u_int64_t
 name|paddr
 decl_stmt|;
-name|int
-name|secondary
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 name|bh
@@ -1891,11 +1892,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 * 	 * XXX: How do we generate knowledge of secondary bus accesses? 	 */
+name|bus
+operator|=
+literal|0
+expr_stmt|;
+comment|/* No secondaries for the moment */
+comment|/* 	 * There's nothing in slot 0 on a primary bus. 	 */
 if|if
 condition|(
-name|secondary
-operator|==
+name|bus
+operator|!=
 literal|0
 operator|&&
 operator|(
@@ -1911,7 +1917,7 @@ condition|)
 return|return;
 name|paddr
 operator|=
-name|secondary
+name|bus
 operator|<<
 literal|21
 expr_stmt|;
@@ -2042,7 +2048,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|printf("CFGWRITE MID%d %d.%d.%d sz %d off %d paddr %lx, data %x new_data %x\n", mcbus_get_mid(dev), secondary, slot, func, sz, off, paddr, data, new_data);
+block|printf("CFGWRITE MID%d %d.%d.%d sz %d off %d paddr %lx, data %x new_data %x\n", mcbus_get_mid(dev), bus , slot, func, sz, off, paddr, data, new_data);
 endif|#
 directive|endif
 operator|*
@@ -2051,11 +2057,6 @@ operator|=
 name|new_data
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|secondary
-condition|)
-block|{ 	}
 block|}
 end_function
 
@@ -2750,6 +2751,22 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|==
+name|mcpcia_eisa
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Attaching Real Console\n"
+argument_list|)
+expr_stmt|;
+name|dec_kn300_cons_init
+argument_list|()
+expr_stmt|;
+block|}
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -3145,7 +3162,7 @@ name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"interrupting at IRQ 0x%x INT%c (vec 0x%x)\n"
+literal|"interrupting at IRQ 0x%x int%c (vec 0x%x)\n"
 argument_list|,
 name|irq
 argument_list|,
