@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.39	82/10/10	*/
+comment|/*	init_main.c	4.40	82/10/17	*/
 end_comment
 
 begin_include
@@ -929,21 +929,13 @@ name|struct
 name|buf
 modifier|*
 name|bp
-decl_stmt|;
-specifier|register
-name|struct
-name|buf
+decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
 specifier|register
 name|int
 name|i
-decl_stmt|;
-name|struct
-name|bdevsw
-modifier|*
-name|bdp
 decl_stmt|;
 name|struct
 name|swdevt
@@ -1085,22 +1077,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-for|for
-control|(
-name|bdp
-operator|=
-name|bdevsw
-init|;
-name|bdp
-operator|->
-name|d_open
-condition|;
-name|bdp
-operator|++
-control|)
-name|nblkdev
-operator|++
-expr_stmt|;
 comment|/* 	 * Count swap devices, and adjust total swap space available. 	 * Some of this space will not be available until a vswapon() 	 * system is issued, usually when the system goes multi-user. 	 */
 name|nswdev
 operator|=
@@ -1250,12 +1226,6 @@ name|cblock
 modifier|*
 name|cp
 decl_stmt|;
-specifier|register
-name|struct
-name|cdevsw
-modifier|*
-name|cdp
-decl_stmt|;
 name|ccp
 operator|=
 operator|(
@@ -1314,30 +1284,6 @@ operator|+=
 name|CBSIZE
 expr_stmt|;
 block|}
-name|ccp
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|cdp
-operator|=
-name|cdevsw
-init|;
-name|cdp
-operator|->
-name|d_open
-condition|;
-name|cdp
-operator|++
-control|)
-name|ccp
-operator|++
-expr_stmt|;
-name|nchrdev
-operator|=
-name|ccp
-expr_stmt|;
 block|}
 end_block
 
