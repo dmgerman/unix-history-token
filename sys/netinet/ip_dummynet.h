@@ -15,6 +15,25 @@ directive|define
 name|_IP_DUMMYNET_H
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+name|ip_dn_ctl_t
+name|__P
+typedef|((struct
+name|sockopt
+modifier|*
+typedef|)) ;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|ip_dn_ctl_t
+modifier|*
+name|ip_dn_ctl_ptr
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Definition of dummynet data structures.  * Dummynet handles a list of pipes, each one identified by a unique  * number (hopefully the list is short so we use a linked list).  *  * Each list contains a set of parameters identifying the pipe, and  * a set of packets queued on the pipe itself.  *  * I could have used queue macros, but the management i have  * is pretty simple and this makes the code more portable.  */
 end_comment
@@ -190,6 +209,17 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The following is used to define a new mbuf type that is  * prepended to the packet when it comes out of a pipe. The definition  * ought to go in /sys/sys/mbuf.h but here it is less intrusive.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MT_DUMMYNET
+value|MT_CONTROL
+end_define
+
+begin_comment
 comment|/*  * what to do of a packet when it comes out of a pipe  */
 end_comment
 
@@ -219,6 +249,14 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 name|void
