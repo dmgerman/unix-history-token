@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.2	%G%	*/
+comment|/*	conf.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -236,7 +236,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|tmstragety
+name|tmstrategy
 argument_list|()
 decl_stmt|,
 name|tmopen
@@ -280,7 +280,7 @@ name|nullsys
 block|,
 literal|"tm"
 block|,
-name|tmstragety
+name|tmstrategy
 block|,
 name|tmopen
 block|,
