@@ -4315,9 +4315,6 @@ name|i_number
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
 name|ipref
 operator|>=
 name|fs
@@ -8975,8 +8972,7 @@ name|fs
 modifier|*
 name|fs
 parameter_list|,
-name|unsigned
-name|char
+name|u_char
 modifier|*
 name|cp
 parameter_list|,
@@ -10508,13 +10504,16 @@ name|fs_ncg
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_vfree: range: dev = %s, ino = %d, fs = %s"
+literal|"ffs_freefile: range: dev = %s, ino = %lu, fs = %s"
 argument_list|,
 name|devtoname
 argument_list|(
 name|dev
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ino
 argument_list|,
 name|fs
@@ -10664,7 +10663,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"ffs_vfree: freeing free inode"
+literal|"ffs_freefile: freeing free inode"
 argument_list|)
 expr_stmt|;
 block|}
