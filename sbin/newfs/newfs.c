@@ -1472,7 +1472,8 @@ expr_stmt|;
 else|else
 name|fatal
 argument_list|(
-literal|"%s: unknown optimization preference: use `space' or `time'"
+literal|"%s: unknown optimization preference: "
+literal|"use `space' or `time'"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1717,13 +1718,11 @@ if|if
 condition|(
 name|Nflag
 condition|)
-block|{
 name|fso
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-block|}
 else|else
 block|{
 name|fso
@@ -2152,7 +2151,8 @@ name|p_size
 condition|)
 name|fatal
 argument_list|(
-literal|"%s: maximum file system size on the `%c' partition is %d"
+literal|"%s: maximum file system size on the "
+literal|"`%c' partition is %d"
 argument_list|,
 name|argv
 index|[
@@ -3120,7 +3120,6 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-block|{
 name|vwarnx
 argument_list|(
 name|fmt
@@ -3128,7 +3127,6 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-block|}
 name|va_end
 argument_list|(
 name|ap
