@@ -1264,12 +1264,22 @@ decl_stmt|;
 name|u_int16_t
 name|ct_seg_count
 decl_stmt|;
+comment|/* 	 * This is so we can share tag name space with 	 * CTIO{2,3,4} with the minimum of pain. 	 */
+union|union
+block|{
 name|ispds_t
-name|ct_dataseg
+name|ct_a
 index|[
 name|ISP_RQDSEG
 index|]
 decl_stmt|;
+block|}
+name|_u
+union|;
+define|#
+directive|define
+name|ct_dataseg
+value|_u.ct_a
 block|}
 name|ct_entry_t
 typedef|;
@@ -1776,7 +1786,7 @@ decl_stmt|;
 comment|/* residual length */
 union|union
 block|{
-comment|/* 		 * The three different modes that the target driver 		 * can set the CTIO2 up as. 		 * 		 * The first is for sending FCP_DATA_IUs as well as 		 * (optionally) sending a terminal SCSI status FCP_RSP_IU. 		 * 		 * The second is for sending SCSI sense data in an FCP_RSP_IU. 		 * Note that no FCP_DATA_IUs will be sent. 		 * 		 * The third is for sending FCP_RSP_IUs as built specifically 		 * in system memory as located by the isp_dataseg. 		 */
+comment|/* 		 * The three different modes that the target driver 		 * can set the CTIO{2,3,4} up as. 		 * 		 * The first is for sending FCP_DATA_IUs as well as 		 * (optionally) sending a terminal SCSI status FCP_RSP_IU. 		 * 		 * The second is for sending SCSI sense data in an FCP_RSP_IU. 		 * Note that no FCP_DATA_IUs will be sent. 		 * 		 * The third is for sending FCP_RSP_IUs as built specifically 		 * in system memory as located by the isp_dataseg. 		 */
 struct|struct
 block|{
 name|u_int32_t
@@ -1791,14 +1801,41 @@ decl_stmt|;
 name|u_int32_t
 name|ct_xfrlen
 decl_stmt|;
+union|union
+block|{
 name|ispds_t
-name|ct_dataseg
+name|ct_a
 index|[
 name|ISP_RQDSEG_T2
 index|]
 decl_stmt|;
-comment|/* 			 * For CTIO3, an ispds64_t would go here, padded 			 * to the end of the request. 			 */
-comment|/* 			 * For CTIO4, an ispdlist_t would go here, padded 			 * to the end of the request. 			 */
+comment|/* CTIO2 */
+name|ispds64_t
+name|ct_b
+index|[
+name|ISP_RQDSEG_T3
+index|]
+decl_stmt|;
+comment|/* CTIO3 */
+name|ispdslist_t
+name|ct_c
+decl_stmt|;
+comment|/* CTIO4 */
+block|}
+name|_u
+union|;
+define|#
+directive|define
+name|ct_dataseg
+value|_u.ct_a
+define|#
+directive|define
+name|ct_dataseg64
+value|_u.ct_b
+define|#
+directive|define
+name|ct_dslist
+value|_u.ct_c
 block|}
 name|m0
 struct|;
@@ -1995,385 +2032,6 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/*  * Macros for packing/unpacking the above structures  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUS_SWOZZLE
-parameter_list|(
-name|isp
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|taga
-parameter_list|,
-name|tagb
-parameter_list|)
-define|\
-value|if (isp->isp_bustype == ISP_BT_SBUS) {	\ 		u_int8_t tmp = src -> taga;	\ 		dst -> taga =  dst -> tagb;	\ 		src -> tagb =  tmp;		\ 	} else { \ 		dst -> taga =  src -> taga;	\ 		dst -> tagb =  src -> taga;	\ 	}
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUS_SWOZZLE
-parameter_list|(
-name|isp
-parameter_list|,
-name|src
-parameter_list|,
-name|dst
-parameter_list|,
-name|taga
-parameter_list|,
-name|tagb
-parameter_list|)
-define|\
-value|dst -> taga =  src -> taga;	\ 		dst -> tagb =  src -> taga
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|MCIDF
-parameter_list|(
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|if ((void *) d != (void *)s) MEMCPY(d, s, QENTRY_LEN)
-end_define
-
-begin_comment
-comment|/* This is really only for SBus cards on a sparc */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ATIO
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	at_entry_t *src = (at_entry_t *) vsrc;				\ 	at_entry_t *dst = (at_entry_t *) vdst;				\ 	dst->at_header = src->at_header;				\ 	dst->at_reserved = src->at_reserved;				\ 	dst->at_handle = src->at_handle;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_lun, at_iid);		\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_cdblen, at_tgt);		\ 	dst->at_flags = src->at_flags;					\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_status, at_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_tag_val, at_tag_type);	\ 	MEMCPY(dst->at_cdb, src->at_cdb, ATIO_CDBLEN);			\ 	MEMCPY(dst->at_sense, src->at_sense, QLTM_SENSELEN);		\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ATIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	at2_entry_t *src = (at2_entry_t *) vsrc;			\ 	at2_entry_t *dst = (at2_entry_t *) vdst;			\ 	dst->at_reserved = src->at_reserved;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_lun, at_iid);		\ 	dst->at_rxid = src->at_rxid;					\ 	dst->at_flags = src->at_flags;					\ 	dst->at_status = src->at_status;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_reserved1, at_taskcodes);	\ 	ISP_SBUS_SWOZZLE(isp, src, dst, at_taskflags, at_execodes);	\ 	MEMCPY(dst->at_cdb, src->at_cdb, ATIO2_CDBLEN);			\ 	dst->at_datalen = src->at_datalen;				\ 	dst->at_scclun = src->at_scclun;				\ 	MEMCPY(dst->at_reserved2, src->at_reserved2, sizeof dst->at_reserved2);\ 	dst->at_oxid = src->at_oxid;					\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_CTIO
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	ct_entry_t *src = (ct_entry_t *) vsrc;				\ 	ct_entry_t *dst = (ct_entry_t *) vdst;				\ 	dst->ct_header = src->ct_header;				\ 	dst->ct_syshandle = src->ct_syshandle;				\ 	dst->ct_fwhandle = src->ct_fwhandle;				\ 	dst->ct_fwhandle = src->ct_fwhandle;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, ct_lun, ct_iid);		\ 	ISP_SBUS_SWOZZLE(isp, src, dst, ct_reserved2, ct_tgt);		\ 	dst->ct_flags = src->ct_flags;					\ 	ISP_SBUS_SWOZZLE(isp, src, dst, ct_status, ct_scsi_status);	\ 	ISP_SBUS_SWOZZLE(isp, src, dst, ct_tag_val, ct_tag_type);	\ 	dst->ct_xfrlen = src->ct_xfrlen;				\ 	dst->ct_resid = src->ct_resid;					\ 	dst->ct_timeout = src->ct_timeout;				\ 	dst->ct_seg_count = src->ct_seg_count;				\ 	MEMCPY(dst->ct_dataseg, src->ct_dataseg, sizeof (dst->ct_dataseg)); \ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_CTIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	ct2_entry_t *src = (ct2_entry_t *) vsrc;			\ 	ct2_entry_t *dst = (ct2_entry_t *) vdst;			\ 	dst->ct_header = src->ct_header;				\ 	dst->ct_syshandle = src->ct_syshandle;				\ 	dst->ct_fwhandle = src->ct_fwhandle;				\ 	dst->ct_fwhandle = src->ct_fwhandle;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, ct_lun, ct_iid);		\ 	dst->ct_rxid = src->ct_rxid;					\ 	dst->ct_flags = src->ct_flags;					\ 	dst->ct_status = src->ct_status;				\ 	dst->ct_timeout = src->ct_timeout;				\ 	dst->ct_seg_count = src->ct_seg_count;				\ 	dst->ct_reloff = src->ct_reloff;				\ 	dst->ct_resid = src->ct_resid;					\ 	dst->rsp = src->rsp;						\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ENABLE_LUN
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	lun_entry_t *src = (lun_entry_t *)vsrc;				\ 	lun_entry_t *dst = (lun_entry_t *)vdst;				\ 	dst->le_header = src->le_header;				\ 	dst->le_reserved2 = src->le_reserved2;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, le_lun, le_rsvd);		\ 	ISP_SBUS_SWOZZLE(isp, src, dst, le_ops, le_tgt);		\ 	dst->le_flags = src->le_flags;					\ 	ISP_SBUS_SWOZZLE(isp, src, dst, le_status, le_reserved2);	\ 	ISP_SBUS_SWOZZLE(isp, src, dst, le_cmd_count, le_in_count);	\ 	ISP_SBUS_SWOZZLE(isp, src, dst, le_cdb6len, le_cdb7len);	\ 	dst->le_timeout = src->le_timeout;				\ 	dst->le_reserved = src->le_reserved;				\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOTIFY
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	in_entry_type *src = (in_entry_t *)vsrc;			\ 	in_entry_type *dst = (in_entry_t *)vdst;			\ 	dst->in_header = src->in_header;				\ 	dst->in_reserved2 = src->in_reserved2;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, in_lun, in_iid);		\ 	ISP_SBUS_SWOZZLE(isp, src, dst, in_reserved2, in_tgt);		\ 	dst->in_flags = src->in_flags;					\ 	ISP_SBUS_SWOZZLE(isp, src, dst, in_status, in_rsvd2);		\ 	ISP_SBUS_SWOZZLE(isp, src, dst, in_tag_val, in_tag_type);	\ 	dst->in_seqid = src->in_seqid;					\ 	MEMCPY(dst->in_msg, src->in_msg, IN_MSGLEN);			\ 	MEMCPY(dst->in_reserved, src->in_reserved, IN_RESERVED);	\ 	MEMCPY(dst->in_sense, src->in_sense, QLTM_SENSELEN);		\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOTIFY_FC
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	in_fcentry_type *src = (in_fcentry_t *)vsrc;			\ 	in_fcentry_type *dst = (in_fcentry_t *)vdst;			\ 	dst->in_header = src->in_header;				\ 	dst->in_reserved2 = src->in_reserved2;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, in_lun, in_iid);		\ 	dst->in_scclun = src->in_scclun;				\ 	dst->in_reserved2 = src->in_reserved2;				\ 	dst->in_status = src->in_status;				\ 	dst->in_task_flags = src->in_task_flags;			\ 	dst->in_seqid = src->in_seqid;					\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOT_ACK
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	na_entry_t *src = (na_entry_t *)vsrc;				\ 	na_entry_t *dst = (na_entry_t *)vdst;				\ 	dst->na_header = src->na_header;				\ 	dst->na_reserved = src->na_reserved;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, na_lun, na_iid);		\ 	dst->na_reserved2 = src->na_reserved2;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, na_reserved, na_tgt);		\ 	dst->na_flags = src->na_flags;					\ 	ISP_SBUS_SWOZZLE(isp, src, dst, na_status, na_event);		\ 	dst->na_seqid = src->na_seqid;					\ 	MEMCPY(dst->na_reserved3, src->na_reserved3, NA_RSVDLEN);	\ }
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOT_ACK_FC
-parameter_list|(
-name|isp
-parameter_list|,
-name|vdst
-parameter_list|,
-name|vsrc
-parameter_list|)
-define|\
-value|{									\ 	na_fcentry_t *src = (na_fcentry_t *)vsrc;			\ 	na_fcentry_t *dst = (na_fcentry_t *)vdst;			\ 	dst->na_header = src->na_header;				\ 	dst->na_reserved = src->na_reserved;				\ 	ISP_SBUS_SWOZZLE(isp, src, dst, na_lun, na_iid);		\ 	dst->na_scclun = src->na_scclun;				\ 	dst->na_flags = src->na_flags;					\ 	dst->na_reserved2 = src->na_reserved2;				\ 	dst->na_status = src->na_status;				\ 	dst->na_task_flags = src->na_task_flags;			\ 	dst->na_seqid = src->na_seqid;					\ 	MEMCPY(dst->na_reserved3, src->na_reserved3, NA2_RSVDLEN);	\ }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ATIO
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ATIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_CTIO
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_CTIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ENABLE_LUN
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_ATIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_CTIO2
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOTIFY
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOTIFY_FC
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOT_ACK
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP_SWIZ_NOT_ACK_FC
-parameter_list|(
-name|isp
-parameter_list|,
-name|d
-parameter_list|,
-name|s
-parameter_list|)
-value|MCIDF(d, s)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/*  * Debug macros  */
 end_comment
 
@@ -2394,8 +2052,14 @@ define|\
 value|if (isp->isp_dblev& ISP_LOGTDEBUG2) isp_print_qentry(isp, msg, idx, arg)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP_TARGET_FUNCTIONS
+end_ifdef
+
 begin_comment
-comment|/*  * The functions below are target mode functions that  * are generally internal to the Qlogic driver.  */
+comment|/*  * The functions below are for the publicly available  * target mode functions that are internal to the Qlogic driver.  */
 end_comment
 
 begin_comment
@@ -2546,6 +2210,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

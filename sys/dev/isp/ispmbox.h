@@ -1258,6 +1258,20 @@ name|ispds64_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|DSTYPE_32BIT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSTYPE_64BIT
+value|1
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1286,13 +1300,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_ISP_SWAP8
+name|ISP_SWAP8
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|{	\ 	u_int8_t tmp;			\ 	tmp = a;			\ 	a = b;				\ 	b = tmp;			\ }
+value|{		\ 	u_int8_t tmp;			\ 	tmp = a;			\ 	a = b;				\ 	b = tmp;			\ }
 end_define
 
 begin_typedef
@@ -1315,50 +1329,6 @@ block|}
 name|isphdr_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/*  * There are no (for all intents and purposes) non-sparc SBus machines  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUSIFY_ISPHDR
-parameter_list|(
-name|isp
-parameter_list|,
-name|hdrp
-parameter_list|)
-define|\
-value|if ((isp)->isp_bustype == ISP_BT_SBUS) {				\ 	_ISP_SWAP8((hdrp)->rqs_entry_count, (hdrp)->rqs_entry_type);	\ 	_ISP_SWAP8((hdrp)->rqs_flags, (hdrp)->rqs_seqno);		\     }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUSIFY_ISPHDR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* RQS Flag definitions */
@@ -1735,50 +1705,6 @@ name|SYNC_ALL
 value|2
 end_define
 
-begin_comment
-comment|/*  * There are no (for all intents and purposes) non-sparc SBus machines  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUSIFY_ISPREQ
-parameter_list|(
-name|isp
-parameter_list|,
-name|rqp
-parameter_list|)
-define|\
-value|if ((isp)->isp_bustype == ISP_BT_SBUS) {				\ 	_ISP_SWAP8((rqp)->req_target, (rqp)->req_lun_trn);		\     }
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ISP_SBUSIFY_ISPREQ
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1817,10 +1743,10 @@ decl_stmt|;
 name|u_int16_t
 name|req_seg_count
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|req_cdb
 index|[
-literal|4
+literal|16
 index|]
 decl_stmt|;
 name|u_int32_t
@@ -1875,10 +1801,10 @@ decl_stmt|;
 name|u_int16_t
 name|req_seg_count
 decl_stmt|;
-name|u_int32_t
+name|u_int8_t
 name|req_cdb
 index|[
-literal|4
+literal|16
 index|]
 decl_stmt|;
 name|u_int32_t
@@ -2164,6 +2090,24 @@ index|]
 decl_stmt|;
 block|}
 name|ispstatusreq_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|isphdr_t
+name|req_header
+decl_stmt|;
+name|u_int8_t
+name|req_sense_data
+index|[
+literal|60
+index|]
+decl_stmt|;
+block|}
+name|ispstatus_cont_t
 typedef|;
 end_typedef
 
