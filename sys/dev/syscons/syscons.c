@@ -3184,9 +3184,7 @@ return|return
 name|ENXIO
 return|;
 block|}
-return|return
-operator|(
-operator|(
+comment|/* syscons will be attached even when there is no keyboard */
 name|sckbdprobe
 argument_list|(
 name|unit
@@ -3195,12 +3193,9 @@ name|flags
 argument_list|,
 name|FALSE
 argument_list|)
-operator|)
-condition|?
+expr_stmt|;
+return|return
 literal|0
-else|:
-name|ENXIO
-operator|)
 return|;
 block|}
 end_function
