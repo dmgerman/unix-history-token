@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.72 1996/02/27 18:53:50 ache Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.73 1996/02/27 19:08:39 ache Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -238,19 +238,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MCDOPEN
-value|0x0001
-end_define
-
-begin_comment
-comment|/* device opened */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MCDVALID
-value|0x0002
+value|0x0001
 end_define
 
 begin_comment
@@ -261,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|MCDINIT
-value|0x0004
+value|0x0002
 end_define
 
 begin_comment
@@ -272,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|MCDNEWMODEL
-value|0x0008
+value|0x0004
 end_define
 
 begin_comment
@@ -283,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|MCDLABEL
-value|0x0010
+value|0x0008
 end_define
 
 begin_comment
@@ -294,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|MCDPROBING
-value|0x0020
+value|0x0010
 end_define
 
 begin_comment
@@ -305,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|MCDREADRAW
-value|0x0040
+value|0x0020
 end_define
 
 begin_comment
@@ -316,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|MCDVOLINFO
-value|0x0080
+value|0x0040
 end_define
 
 begin_comment
@@ -327,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|MCDTOC
-value|0x0100
+value|0x0080
 end_define
 
 begin_comment
@@ -338,7 +327,7 @@ begin_define
 define|#
 directive|define
 name|MCDMBXBSY
-value|0x0200
+value|0x0100
 end_define
 
 begin_comment
@@ -2030,6 +2019,19 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|phys
+condition|)
+name|cd
+operator|->
+name|partflags
+index|[
+name|part
+index|]
+operator||=
+name|MCDREADRAW
+expr_stmt|;
 name|kdc_mcd
 index|[
 name|unit
@@ -2140,6 +2142,19 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|phys
+condition|)
+name|cd
+operator|->
+name|partflags
+index|[
+name|part
+index|]
+operator||=
+name|MCDREADRAW
+expr_stmt|;
 name|kdc_mcd
 index|[
 name|unit
@@ -2224,15 +2239,6 @@ condition|)
 block|{
 name|cd
 operator|->
-name|partflags
-index|[
-name|part
-index|]
-operator||=
-name|MCDOPEN
-expr_stmt|;
-name|cd
-operator|->
 name|openflags
 operator||=
 operator|(
@@ -2248,8 +2254,6 @@ operator|==
 name|RAW_PART
 operator|&&
 name|phys
-operator|!=
-literal|0
 condition|)
 name|cd
 operator|->
@@ -2371,18 +2375,29 @@ name|flags
 operator|&
 name|MCDINIT
 operator|)
+operator|||
+operator|!
+operator|(
+name|cd
+operator|->
+name|openflags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|part
+operator|)
+operator|)
 condition|)
 return|return
 name|ENXIO
 return|;
-name|kdc_mcd
-index|[
-name|unit
-index|]
-operator|.
-name|kdc_state
-operator|=
-name|DC_IDLE
+name|MCD_TRACE
+argument_list|(
+literal|"close: partition=%d\n"
+argument_list|,
+name|part
+argument_list|)
 expr_stmt|;
 operator|(
 name|void
@@ -2393,35 +2408,6 @@ name|unit
 argument_list|,
 name|MCD_LK_UNLOCK
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|cd
-operator|->
-name|flags
-operator|&
-name|MCDVALID
-operator|)
-condition|)
-return|return
-literal|0
-return|;
-comment|/* close channel */
-name|cd
-operator|->
-name|partflags
-index|[
-name|part
-index|]
-operator|&=
-operator|~
-operator|(
-name|MCDOPEN
-operator||
-name|MCDREADRAW
-operator|)
 expr_stmt|;
 name|cd
 operator|->
@@ -2434,12 +2420,24 @@ operator|<<
 name|part
 operator|)
 expr_stmt|;
-name|MCD_TRACE
-argument_list|(
-literal|"close: partition=%d\n"
-argument_list|,
+name|cd
+operator|->
+name|partflags
+index|[
 name|part
-argument_list|)
+index|]
+operator|&=
+operator|~
+name|MCDREADRAW
+expr_stmt|;
+name|kdc_mcd
+index|[
+name|unit
+index|]
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 return|return
 literal|0
@@ -3314,15 +3312,6 @@ name|mcd_getdisklabel
 argument_list|(
 name|unit
 argument_list|)
-expr_stmt|;
-name|cd
-operator|->
-name|partflags
-index|[
-name|part
-index|]
-operator||=
-name|MCDOPEN
 expr_stmt|;
 if|if
 condition|(
