@@ -3359,6 +3359,8 @@ name|ktriov
 argument_list|,
 operator|*
 name|retsize
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|FREE
@@ -4832,6 +4834,8 @@ operator|-
 name|auio
 operator|.
 name|uio_resid
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 name|FREE
