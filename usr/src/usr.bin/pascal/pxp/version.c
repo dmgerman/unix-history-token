@@ -5,14 +5,14 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)version.c	2.1 (Berkeley) 84/02/08"
+literal|"@(#)version.c	2.2 (Berkeley) 84/04/02"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<sys/time.h>
 end_include
 
 begin_include
