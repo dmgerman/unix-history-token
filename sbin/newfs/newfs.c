@@ -2331,12 +2331,7 @@ name|MAX
 argument_list|(
 literal|1
 argument_list|,
-name|MIN
-argument_list|(
 name|MAXPHYS
-argument_list|,
-name|MAXBSIZE
-argument_list|)
 operator|/
 name|bsize
 operator|-
