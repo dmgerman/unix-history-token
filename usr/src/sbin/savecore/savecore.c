@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.27 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,12 +138,6 @@ parameter_list|)
 value|(!strcmp(a,b))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -151,80 +145,8 @@ name|ok
 parameter_list|(
 name|number
 parameter_list|)
-value|((number)&0x7fffffff)
+value|((number) - KERNBASE)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|tahoe
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ok
-parameter_list|(
-name|number
-parameter_list|)
-value|((number)&~0xc0000000)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|i386
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ok
-parameter_list|(
-name|number
-parameter_list|)
-value|((number)&~0xfe000000)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ok
-parameter_list|(
-name|number
-parameter_list|)
-value|(number)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -1476,6 +1398,9 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2073,6 +1998,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2084,6 +2012,9 @@ literal|0
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2503,6 +2434,9 @@ condition|(
 name|fp
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|fp
@@ -2514,6 +2448,9 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|fp
@@ -2928,6 +2865,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
