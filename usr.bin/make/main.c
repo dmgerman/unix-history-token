@@ -348,6 +348,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* pathname of dir where make ran */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|obj_is_elsewhere
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* if chdir'd for an architecture */
 end_comment
 
@@ -1161,33 +1172,6 @@ name|path
 operator|=
 name|_PATH_OBJDIR
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|lstat
-argument_list|(
-name|path
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|S_ISDIR
-argument_list|(
-name|sb
-operator|.
-name|st_mode
-argument_list|)
-condition|)
-name|curdir
-operator|=
-literal|".."
-expr_stmt|;
-else|else
-block|{
 name|curdir
 operator|=
 name|emalloc
@@ -1227,7 +1211,22 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+operator|!
+name|lstat
+argument_list|(
+name|path
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+block|{
+name|obj_is_elsewhere
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|chdir
@@ -1353,9 +1352,8 @@ expr_stmt|;
 comment|/* As well as the lists of variables for 				 * parsing arguments */
 if|if
 condition|(
-name|curdir
+name|obj_is_elsewhere
 condition|)
-block|{
 name|Dir_AddDir
 argument_list|(
 name|dirSearchPath
@@ -1368,17 +1366,6 @@ argument_list|(
 literal|".CURDIR"
 argument_list|,
 name|curdir
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|Var_Set
-argument_list|(
-literal|".CURDIR"
-argument_list|,
-literal|"."
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
@@ -2021,7 +2008,7 @@ goto|;
 comment|/* if we've chdir'd, rebuild the path name */
 if|if
 condition|(
-name|curdir
+name|obj_is_elsewhere
 operator|&&
 operator|*
 name|fname
