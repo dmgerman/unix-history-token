@@ -163,6 +163,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/serial.h>
 end_include
 
@@ -9664,7 +9670,22 @@ block|}
 undef|#
 directive|undef
 name|diff
-comment|/* 		 * Rounding down may make us wake up just short 		 * of the target, so we round up. 		 * The formula is ceiling(slp * hz/1000000). 		 * 32-bit arithmetic is enough for hz< 169. 		 * XXX see tvtohz() for how to avoid overflow if hz 		 * is large (divide by `tick' and/or arrange to 		 * use tvtohz() if hz is large). 		 */
+comment|/* 		 * Rounding down may make us wake up just short 		 * of the target, so we round up.  The 32 bit arithmetic is 		 * sufficient for the first calculation for hz< 169. 		 */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|u_long
+argument_list|)
+operator|>
+literal|4
+operator|||
+name|slp
+operator|<=
+name|ULONG_MAX
+operator|/
+name|hz
+condition|)
 name|slp
 operator|=
 call|(
@@ -9684,6 +9705,21 @@ literal|999999
 argument_list|)
 operator|/
 literal|1000000
+expr_stmt|;
+else|else
+name|slp
+operator|=
+operator|(
+name|slp
+operator|+
+operator|(
+name|tick
+operator|-
+literal|1
+operator|)
+operator|)
+operator|/
+name|tick
 expr_stmt|;
 goto|goto
 name|sleep
