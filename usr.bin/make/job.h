@@ -404,7 +404,8 @@ begin_function_decl
 name|void
 name|Job_CatchOutput
 parameter_list|(
-name|void
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl

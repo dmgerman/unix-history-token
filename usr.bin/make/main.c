@@ -2521,6 +2521,19 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"MAKE_JOBS_FIFO"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|forceJobs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* 	 * Be compatible if user did not specify -j and did not explicitly 	 * turned compatibility on 	 */
 if|if
 condition|(
