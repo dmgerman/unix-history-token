@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	8.3 (Berkeley) %G%"
+literal|"@(#)fts.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -447,9 +447,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|bzero
+name|memset
 argument_list|(
 name|sp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -859,15 +861,15 @@ name|p
 operator|->
 name|fts_namelen
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-operator|->
-name|fts_name
-argument_list|,
 name|sp
 operator|->
 name|fts_path
+argument_list|,
+name|p
+operator|->
+name|fts_name
 argument_list|,
 name|len
 operator|+
@@ -879,7 +881,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|p
 operator|->
@@ -911,13 +913,13 @@ operator|++
 name|cp
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|cp
-argument_list|,
 name|p
 operator|->
 name|fts_name
+argument_list|,
+name|cp
 argument_list|,
 name|len
 operator|+
@@ -1767,13 +1769,13 @@ operator|++
 operator|=
 literal|'/'
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|t
+argument_list|,
 name|p
 operator|->
 name|fts_name
-argument_list|,
-name|t
 argument_list|,
 name|p
 operator|->
@@ -2950,13 +2952,13 @@ name|p
 operator|->
 name|fts_path
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
+name|cp
+argument_list|,
 name|p
 operator|->
 name|fts_name
-argument_list|,
-name|cp
 argument_list|,
 name|p
 operator|->
@@ -3359,9 +3361,11 @@ name|errno
 expr_stmt|;
 name|err
 label|:
-name|bzero
+name|memset
 argument_list|(
 name|sbp
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3794,13 +3798,13 @@ name|NULL
 operator|)
 return|;
 comment|/* Copy the name plus the trailing NULL. */
-name|bcopy
+name|memmove
 argument_list|(
-name|name
-argument_list|,
 name|p
 operator|->
 name|fts_name
+argument_list|,
+name|name
 argument_list|,
 name|namelen
 operator|+
