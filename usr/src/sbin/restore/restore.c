@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.9	(Berkeley)	83/04/11"
+literal|"@(#)restore.c	3.10	(Berkeley)	83/04/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -1830,8 +1830,11 @@ name|curfile
 operator|.
 name|ino
 condition|)
-name|panic
+block|{
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"expected next file %d, got %d\n"
 argument_list|,
 name|first
@@ -1841,6 +1844,13 @@ operator|.
 name|ino
 argument_list|)
 expr_stmt|;
+name|skipfile
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
 name|ep
 operator|=
 name|lookupino
@@ -1934,6 +1944,8 @@ name|EXTRACT
 operator|)
 expr_stmt|;
 comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work re quired by the 		 * 'R' command. 		 */
+name|next
+label|:
 if|if
 condition|(
 name|curvol
