@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.17 (Berkeley) %G%"
+literal|"@(#)table.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1260,7 +1260,7 @@ name|SAREG
 operator||
 name|AWD
 block|,
-name|TWORD
+name|TANY
 block|,
 name|SCON
 operator||
@@ -1282,7 +1282,7 @@ name|SAREG
 operator||
 name|AWD
 block|,
-name|TWORD
+name|TANY
 block|,
 name|SCON
 operator||
