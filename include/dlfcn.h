@@ -77,7 +77,7 @@ comment|/* Opposite of RTLD_GLOBAL, and the default */
 end_comment
 
 begin_comment
-comment|/*  * Special handle argument for dlsym().  It causes the search for the  * symbol to begin in the next shared object after the one containing  * the caller.  */
+comment|/*  * Special handle arguments for dlsym().  */
 end_comment
 
 begin_define
@@ -86,6 +86,21 @@ directive|define
 name|RTLD_NEXT
 value|((void *) -1)
 end_define
+
+begin_comment
+comment|/* Search subsequent objects */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_DEFAULT
+value|((void *) -2)
+end_define
+
+begin_comment
+comment|/* Use default search algorithm */
+end_comment
 
 begin_comment
 comment|/*  * Structure filled in by dladdr().  */
