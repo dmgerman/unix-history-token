@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ypbind.c,v 1.18 1995/12/15 03:39:25 wpaul Exp $"
+literal|"$Id: ypbind.c,v 1.21 1997/01/12 02:48:09 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,6 +581,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|ppid
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Special restricted mode variables: when in restricted mode, only the  * specified restricted_domain will be bound, and only the servers listed  * in restricted_addrs will be used for binding.  */
 end_comment
@@ -866,6 +872,34 @@ name|ypbind_error
 operator|=
 name|YPBIND_ERR_NOSERV
 expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+operator|*
+name|argp
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Domain name '%s' has embedded slash -- \ rejecting."
+argument_list|,
+operator|*
+name|argp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|res
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|ypdb
@@ -1192,6 +1226,31 @@ name|fromsin
 decl_stmt|,
 name|bindsin
 decl_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|argp
+operator|->
+name|ypsetdom_domain
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"Domain name '%s' has embedded slash -- \ rejecting."
+argument_list|,
+name|argp
+operator|->
+name|ypsetdom_domain
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|fromsin
 operator|=
 name|svc_getcaller
@@ -1571,6 +1630,9 @@ name|transp
 argument_list|,
 name|xdr_argument
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|argument
 argument_list|)
@@ -1683,6 +1745,18 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|ppid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ypdb
@@ -1769,7 +1843,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -2341,6 +2415,12 @@ argument_list|,
 name|terminate
 argument_list|)
 expr_stmt|;
+name|ppid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+comment|/* Remember who we are. */
 name|openlog
 argument_list|(
 name|argv
@@ -2484,6 +2564,12 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+comment|/* NOTREACHED */
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
