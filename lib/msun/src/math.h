@@ -1360,7 +1360,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_REENTRANT
+name|__BSD_VISIBLE
 end_ifdef
 
 begin_function_decl
@@ -1393,7 +1393,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _REENTRANT */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_comment
@@ -1917,7 +1917,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_REENTRANT
+name|__BSD_VISIBLE
 end_ifdef
 
 begin_function_decl
@@ -1950,7 +1950,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _REENTRANT */
+comment|/* __BSD_VISIBLE */
 end_comment
 
 begin_endif
