@@ -51,6 +51,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 specifier|const
@@ -63,6 +64,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 specifier|const
