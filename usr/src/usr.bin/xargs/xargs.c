@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xargs.c	5.7 (Berkeley) %G%"
+literal|"@(#)xargs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,22 +106,11 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEF_ARGC
-value|255
-end_define
-
-begin_decl_stmt
-name|int
-name|tflag
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|fflag
+decl_stmt|,
+name|tflag
 decl_stmt|;
 end_decl_stmt
 
@@ -143,8 +132,6 @@ decl_stmt|;
 block|{
 specifier|extern
 name|int
-name|errno
-decl_stmt|,
 name|optind
 decl_stmt|;
 specifier|extern
@@ -192,10 +179,7 @@ name|nline
 decl_stmt|;
 name|char
 modifier|*
-name|mark
-decl_stmt|,
-modifier|*
-name|prog
+name|start
 decl_stmt|,
 modifier|*
 modifier|*
@@ -203,12 +187,16 @@ name|xargs
 decl_stmt|;
 name|nargs
 operator|=
-name|DEF_ARGC
+literal|1024
 expr_stmt|;
+comment|/* random value */
 name|nline
 operator|=
-name|_POSIX2_LINE_MAX
+name|ARG_MAX
+operator|-
+literal|2048
 expr_stmt|;
+comment|/* max POSIX.2 value */
 while|while
 condition|(
 operator|(
@@ -220,7 +208,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"n:s:tf"
+literal|"fn:s:t"
 argument_list|)
 operator|)
 operator|!=
@@ -231,6 +219,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|fflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'n'
 case|:
@@ -255,7 +251,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: bad argument count.\n"
+literal|"xargs: illegal argument count.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -289,7 +285,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: bad command length.\n"
+literal|"xargs: illegal command length.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -303,14 +299,6 @@ case|case
 literal|'t'
 case|:
 name|tflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'f'
-case|:
-name|fflag
 operator|=
 literal|1
 expr_stmt|;
@@ -331,18 +319,13 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-comment|/* room for the command, leftover arguments and trailing NULL */
+comment|/* 	 * Allocate for the utility and arguments passed to xarg, the pointers 	 * to the arguments read from stdin and the trailing NULL.  Allocate 	 * for the arguments read from stdin. 	 */
 if|if
 condition|(
 operator|!
 operator|(
 name|xargs
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|malloc
 argument_list|(
 call|(
@@ -364,12 +347,7 @@ operator|*
 argument_list|)
 argument_list|)
 operator|)
-condition|)
-name|enomem
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
+operator|||
 operator|!
 operator|(
 name|bp
@@ -385,9 +363,29 @@ literal|1
 argument_list|)
 operator|)
 condition|)
-name|enomem
-argument_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"xargs: %s.\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Use the user's name for the utility as argv[0], just like the 	 * shell.  Echo is the default.  Set up pointers for the user's 	 * arguments. 	 */
 name|xp
 operator|=
 name|xargs
@@ -400,13 +398,17 @@ operator|!
 operator|*
 name|argv
 condition|)
-name|prog
+operator|*
+name|xp
+operator|++
 operator|=
 name|_PATH_ECHO
 expr_stmt|;
 else|else
 block|{
-name|prog
+operator|*
+name|xp
+operator|++
 operator|=
 operator|*
 name|argv
@@ -425,35 +427,7 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|xargs
-index|[
-literal|0
-index|]
-operator|=
-name|rindex
-argument_list|(
-name|prog
-argument_list|,
-literal|'/'
-argument_list|)
-condition|)
-operator|++
-name|xargs
-index|[
-literal|0
-index|]
-expr_stmt|;
-else|else
-name|xargs
-index|[
-literal|0
-index|]
-operator|=
-name|prog
-expr_stmt|;
-comment|/* set up the pointers into the buffer and the arguments */
+comment|/* Set up the pointers into the buffer and the arguments */
 operator|*
 operator|(
 name|endxp
@@ -472,7 +446,7 @@ expr_stmt|;
 name|endbp
 operator|=
 operator|(
-name|mark
+name|start
 operator|=
 name|p
 operator|=
@@ -503,26 +477,26 @@ block|{
 case|case
 name|EOF
 case|:
+comment|/* Nothing to display. */
 if|if
 condition|(
 name|p
 operator|==
 name|bp
 condition|)
-comment|/* nothing to display */
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* Nothing since last arg end. */
 if|if
 condition|(
-name|mark
+name|start
 operator|==
 name|p
 condition|)
 block|{
-comment|/* nothing since last arg end */
 operator|*
 name|xp
 operator|=
@@ -530,7 +504,10 @@ name|NULL
 expr_stmt|;
 name|run
 argument_list|(
-name|prog
+name|xargs
+index|[
+literal|0
+index|]
 argument_list|,
 name|xargs
 argument_list|)
@@ -567,41 +544,14 @@ literal|'\n'
 case|:
 if|if
 condition|(
-name|mark
+name|start
 operator|==
 name|p
 condition|)
-comment|/* empty line */
+comment|/* Empty line. */
 continue|continue;
 name|addarg
 label|:
-operator|*
-name|xp
-operator|++
-operator|=
-name|mark
-expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-name|xp
-operator|==
-name|endxp
-operator|||
-name|p
-operator|>=
-name|endbp
-operator|||
-name|ch
-operator|==
-name|EOF
-condition|)
-block|{
 if|if
 condition|(
 name|insingle
@@ -616,7 +566,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: unterminated quote.\n"
+literal|"xargs: unterminated quote\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -627,12 +577,42 @@ expr_stmt|;
 block|}
 operator|*
 name|xp
+operator|++
+operator|=
+name|start
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+if|if
+condition|(
+name|xp
+operator|==
+name|endxp
+operator|||
+name|p
+operator|==
+name|endbp
+operator|||
+name|ch
+operator|==
+name|EOF
+condition|)
+block|{
+operator|*
+name|xp
 operator|=
 name|NULL
 expr_stmt|;
 name|run
 argument_list|(
-name|prog
+name|xargs
+index|[
+literal|0
+index|]
 argument_list|,
 name|xargs
 argument_list|)
@@ -657,7 +637,7 @@ operator|=
 name|bxp
 expr_stmt|;
 block|}
-name|mark
+name|start
 operator|=
 name|p
 expr_stmt|;
@@ -708,16 +688,6 @@ operator|)
 operator|==
 name|EOF
 condition|)
-name|ch
-operator|=
-literal|'\\'
-expr_stmt|;
-if|if
-condition|(
-name|ch
-operator|==
-literal|'\n'
-condition|)
 block|{
 operator|(
 name|void
@@ -726,7 +696,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: newline may not be escaped.\n"
+literal|"xargs: backslash at EOF\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -756,9 +726,9 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|xp
-operator|==
 name|bxp
+operator|==
+name|xp
 condition|)
 block|{
 operator|(
@@ -784,7 +754,10 @@ name|NULL
 expr_stmt|;
 name|run
 argument_list|(
-name|prog
+name|xargs
+index|[
+literal|0
+index|]
 argument_list|,
 name|xargs
 argument_list|)
@@ -793,11 +766,11 @@ name|cnt
 operator|=
 name|endbp
 operator|-
-name|mark
+name|start
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|mark
+name|start
 argument_list|,
 name|bp
 argument_list|,
@@ -807,7 +780,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|mark
+name|start
 operator|=
 name|bp
 operator|)
@@ -852,9 +825,10 @@ end_decl_stmt
 
 begin_block
 block|{
-name|union
-name|wait
-name|pstat
+name|int
+name|noinvoke
+decl_stmt|,
+name|status
 decl_stmt|;
 name|pid_t
 name|pid
@@ -928,6 +902,10 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
+name|noinvoke
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|pid
@@ -987,6 +965,10 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|noinvoke
+operator|=
+literal|1
+expr_stmt|;
 name|_exit
 argument_list|(
 literal|1
@@ -999,12 +981,8 @@ name|waitpid
 argument_list|(
 name|pid
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 operator|&
-name|pstat
+name|status
 argument_list|,
 literal|0
 argument_list|)
@@ -1038,48 +1016,43 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If we couldn't invoke the utility or the utility didn't exit 	 * properly, quit with 127. 	 * Otherwise, if not specified otherwise, and the utility exits 	 * non-zero, exit with that value. 	 */
+if|if
+condition|(
+name|noinvoke
+operator|||
+operator|!
+name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+operator|||
+name|WIFSIGNALED
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+literal|127
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|fflag
 operator|&&
-name|pstat
-operator|.
-name|w_status
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
 condition|)
 name|exit
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|enomem
-argument_list|()
-end_macro
-
-begin_block
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|WEXITSTATUS
 argument_list|(
-name|stderr
-argument_list|,
-literal|"xargs: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|ENOMEM
+name|status
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1099,7 +1072,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"xargs: [-t] [-f] [-n number] [-s size] [utility [argument ...]]\n"
+literal|"xargs: [-ft] [-n number] [-s size] [utility [argument ...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
