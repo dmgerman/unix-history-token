@@ -15,32 +15,22 @@ directive|define
 name|SYS_EVENTHANDLER_H
 end_define
 
-begin_comment
-comment|/*  * XXX - compatability until lockmgr() goes away or all the #includes are  * updated.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/lockmgr.h>
+file|<sys/sx.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
 end_include
 
 begin_struct
@@ -80,7 +70,7 @@ directive|define
 name|EHE_INITTED
 value|(1<<0)
 name|struct
-name|lock
+name|sx
 name|el_lock
 decl_stmt|;
 name|TAILQ_ENTRY
@@ -108,6 +98,26 @@ modifier|*
 name|eventhandler_tag
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|EHE_LOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_xlock(&(p)->el_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EHE_UNLOCK
+parameter_list|(
+name|p
+parameter_list|)
+value|sx_xunlock(&(p)->el_lock)
+end_define
 
 begin_comment
 comment|/*   * Fast handler lists require the eventhandler list be present  * at link time.  They don't allow addition of entries to  * unknown eventhandler lists, ie. each list must have an   * "owner".  *  * Fast handler lists must be defined once by the owner   * of the eventhandler list, and the declaration must be in   * scope at any point the list is manipulated.  */
@@ -150,7 +160,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;		\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (_el->el_flags& EHE_INITTED) {						\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, curthread);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, curthread);			\     }										\ } while (0)
+value|do {										\     struct eventhandler_list *_el =&Xeventhandler_list_ ## name ;		\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (_el->el_flags& EHE_INITTED) {						\ 	EHE_LOCK(_el);								\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	EHE_UNLOCK(_el);							\     }										\ } while (0)
 end_define
 
 begin_define
@@ -211,7 +221,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\     struct eventhandler_list *_el;						\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (((_el = eventhandler_find_list(#name)) != NULL)&& 			\ 	(_el->el_flags& EHE_INITTED)) {					\ 	lockmgr(&_el->el_lock, LK_EXCLUSIVE, NULL, curthread);			\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	lockmgr(&_el->el_lock, LK_RELEASE, NULL, curthread);			\     }										\ } while (0)
+value|do {										\     struct eventhandler_list *_el;						\     struct eventhandler_entry *_ep, *_en;					\ 										\     if (((_el = eventhandler_find_list(#name)) != NULL)&& 			\ 	(_el->el_flags& EHE_INITTED)) {					\ 	EHE_LOCK(_el);								\ 	_ep = TAILQ_FIRST(&(_el->el_entries));					\ 	while (_ep != NULL) {							\ 	    _en = TAILQ_NEXT(_ep, ee_link);					\ 	    ((struct eventhandler_entry_ ## name *)_ep)->eh_func(_ep->ee_arg , 	\ 								 ## args); 	\ 	    _ep = _en;								\ 	}									\ 	EHE_UNLOCK(_el);							\     }										\ } while (0)
 end_define
 
 begin_define
