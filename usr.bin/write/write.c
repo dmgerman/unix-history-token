@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: write.c,v 1.6.2.1 1997/08/27 06:23:09 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -151,7 +157,7 @@ name|done
 name|__P
 argument_list|(
 operator|(
-name|void
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -303,6 +309,16 @@ decl_stmt|,
 modifier|*
 name|mytty
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_CTYPE
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 comment|/* check that sender has write enabled */
 if|if
 condition|(
@@ -602,7 +618,9 @@ argument_list|()
 expr_stmt|;
 block|}
 name|done
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1483,7 +1501,13 @@ end_comment
 begin_function
 name|void
 name|done
-parameter_list|()
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+comment|/* signal number */
 block|{
 operator|(
 name|void
@@ -1554,6 +1578,22 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+operator|(
+operator|*
+name|s
+operator|&
+literal|0x80
+operator|)
+operator|&&
+operator|*
+name|s
+operator|<
+literal|0xA0
+operator|)
+operator|||
+comment|/* disable upper controls */
+operator|(
 operator|!
 name|isprint
 argument_list|(
@@ -1571,7 +1611,13 @@ operator|&&
 operator|*
 name|s
 operator|!=
-literal|'\007'
+literal|'\a'
+operator|&&
+operator|*
+name|s
+operator|!=
+literal|'\b'
+operator|)
 condition|)
 block|{
 if|if
