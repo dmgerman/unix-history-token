@@ -174,7 +174,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCNET_IDP
+name|PCNET_BDP
 value|0x16
 end_define
 
@@ -371,8 +371,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCnet_32
+name|PCnet_ISA_II
 value|5
+end_define
+
+begin_comment
+comment|/* Am79C961A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCnet_32
+value|6
 end_define
 
 begin_comment
@@ -383,11 +394,44 @@ begin_define
 define|#
 directive|define
 name|PCnet_PCI
-value|6
+value|7
 end_define
 
 begin_comment
 comment|/* Am79C970 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCnet_PCI_II
+value|8
+end_define
+
+begin_comment
+comment|/* Am79C970A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCnet_FAST
+value|9
+end_define
+
+begin_comment
+comment|/* Am79C971 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCnet_FASTplus
+value|10
+end_define
+
+begin_comment
+comment|/* Am79C972 */
 end_comment
 
 begin_comment
@@ -425,6 +469,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Am79C961A
+value|0x2261
+end_define
+
+begin_define
+define|#
+directive|define
 name|Am79C965
 value|0x2430
 end_define
@@ -439,8 +490,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|HITACHI_Am79C970
+name|Am79C970A
 value|0x2621
+end_define
+
+begin_define
+define|#
+directive|define
+name|Am79C971
+value|0x2623
+end_define
+
+begin_define
+define|#
+directive|define
+name|Am79C972
+value|0x2624
 end_define
 
 begin_comment
