@@ -9037,6 +9037,10 @@ name|q_to_b
 argument_list|(
 name|qp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|rp
 operator|->
 name|TxBuf
