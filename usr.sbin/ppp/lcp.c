@@ -1183,6 +1183,25 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
+literal|"           LCP ECHO =  %s\n"
+argument_list|,
+name|lcp
+operator|->
+name|cfg
+operator|.
+name|echo
+condition|?
+literal|"enabled"
+else|:
+literal|"disabled"
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
 literal|"           PAP =       %s\n"
 argument_list|,
 name|command_ShowNegval
@@ -1504,6 +1523,14 @@ operator|.
 name|lqr
 operator|=
 name|NEG_ACCEPTED
+expr_stmt|;
+name|lcp
+operator|->
+name|cfg
+operator|.
+name|echo
+operator|=
+literal|0
 expr_stmt|;
 name|lcp
 operator|->

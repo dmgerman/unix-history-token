@@ -327,6 +327,12 @@ literal|2
 decl_stmt|;
 comment|/* Link Quality Report */
 name|unsigned
+name|echo
+range|:
+literal|1
+decl_stmt|;
+comment|/* Send echo Requests */
+name|unsigned
 name|pap
 range|:
 literal|2
