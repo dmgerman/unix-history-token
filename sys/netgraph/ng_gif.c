@@ -896,7 +896,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * An Ethernet interface is being detached.  * REALLY Destroy its node.  */
+comment|/*  * An interface is being detached.  * REALLY Destroy its node.  */
 end_comment
 
 begin_function
@@ -967,7 +967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Optimization for gluing the Ethernet header back onto  * the front of an incoming packet.  */
+comment|/*  * Optimization for gluing the address family onto  * the front of an incoming packet.  */
 end_comment
 
 begin_function
