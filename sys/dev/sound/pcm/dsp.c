@@ -701,26 +701,13 @@ decl_stmt|,
 modifier|*
 name|wrch
 decl_stmt|;
-name|d
-operator|->
-name|ref
-index|[
-name|chan
-index|]
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|d
-operator|->
-name|ref
-index|[
-name|chan
-index|]
-condition|)
-return|return
+if|#
+directive|if
 literal|0
-return|;
+comment|/* enable this if/when every close() is propagated here */
+block|d->ref[chan]--; 	if (d->ref[chan]) return 0;
+endif|#
+directive|endif
 name|d
 operator|->
 name|flags
