@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ file|"fs.h"
 end_include
 
 begin_comment
-comment|/*  * Bmap defines the structure of file system storage  * by returning the physical block number on a device  * given the inode and the logical block number in a file.  */
+comment|/*  * Bmap converts a the logical block number of a file  * to its physical block number on the disk. The conversion  * is done by using the logical block number to index into  * the array of block pointers described by the dinode.  */
 end_comment
 
 begin_expr_stmt

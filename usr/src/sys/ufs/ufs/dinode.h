@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dinode.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
-comment|/*  * This structure defines the on-disk format of an inode.  */
+comment|/*  * A dinode contains all the meta-data associated with a UFS file.  * This structure defines the on-disk format of a dinode.  */
 end_comment
 
 begin_define
@@ -175,7 +175,7 @@ value|0170000
 end_define
 
 begin_comment
-comment|/* type of file */
+comment|/* mask of file type */
 end_comment
 
 begin_define
@@ -197,7 +197,7 @@ value|0020000
 end_define
 
 begin_comment
-comment|/* character special */
+comment|/* character special device */
 end_comment
 
 begin_define
@@ -219,7 +219,7 @@ value|0060000
 end_define
 
 begin_comment
-comment|/* block special */
+comment|/* block special device */
 end_comment
 
 begin_define
@@ -230,7 +230,7 @@ value|0100000
 end_define
 
 begin_comment
-comment|/* regular */
+comment|/* regular file */
 end_comment
 
 begin_define
@@ -252,7 +252,7 @@ value|0140000
 end_define
 
 begin_comment
-comment|/* socket */
+comment|/* UNIX domain socket */
 end_comment
 
 begin_define
@@ -263,7 +263,7 @@ value|04000
 end_define
 
 begin_comment
-comment|/* set user id on execution */
+comment|/* set user identifier when exec'ing */
 end_comment
 
 begin_define
@@ -274,7 +274,7 @@ value|02000
 end_define
 
 begin_comment
-comment|/* set group id on execution */
+comment|/* set group identifier when exec'ing */
 end_comment
 
 begin_define
@@ -285,7 +285,7 @@ value|01000
 end_define
 
 begin_comment
-comment|/* save swapped text even after use */
+comment|/* save execution information on exit */
 end_comment
 
 begin_define
@@ -296,7 +296,7 @@ value|0400
 end_define
 
 begin_comment
-comment|/* read, write, execute permissions */
+comment|/* read permission */
 end_comment
 
 begin_define
@@ -306,12 +306,20 @@ name|IWRITE
 value|0200
 end_define
 
+begin_comment
+comment|/* write permission */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IEXEC
 value|0100
 end_define
+
+begin_comment
+comment|/* execute permission */
+end_comment
 
 end_unit
 
