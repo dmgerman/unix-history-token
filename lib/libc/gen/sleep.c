@@ -78,6 +78,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|ITIMERMAX
+value|100000000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -118,6 +125,12 @@ block|{
 ifdef|#
 directive|ifdef
 name|_THREAD_SAFE
+name|unsigned
+name|int
+name|rest
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|timespec
 name|time_to_sleep
@@ -133,17 +146,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= 100000000. 		 */
+comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= ITIMERMAX. 		 */
 if|if
 condition|(
 name|seconds
 operator|>
-literal|100000000
+name|ITIMERMAX
 condition|)
+block|{
+name|rest
+operator|=
+name|seconds
+operator|-
+name|ITIMERMAX
+expr_stmt|;
 name|seconds
 operator|=
-literal|100000000
+name|ITIMERMAX
 expr_stmt|;
+block|}
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -165,8 +186,8 @@ operator|&
 name|time_remaining
 argument_list|)
 expr_stmt|;
-name|seconds
-operator|=
+name|rest
+operator|+=
 name|time_remaining
 operator|.
 name|tv_sec
@@ -179,18 +200,24 @@ name|tv_nsec
 operator|>
 literal|0
 condition|)
-name|seconds
+name|rest
 operator|++
 expr_stmt|;
 comment|/* round up */
 block|}
 return|return
 operator|(
-name|seconds
+name|rest
 operator|)
 return|;
 else|#
 directive|else
+name|unsigned
+name|int
+name|rest
+init|=
+literal|0
+decl_stmt|;
 name|struct
 name|timespec
 name|time_to_sleep
@@ -217,17 +244,25 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= 100000000. 		 */
+comment|/* 		 * XXX 		 * Hack to work around itimerfix(9) gratuitously limiting 		 * the acceptable range for a struct timeval.tv_sec to 		 *<= ITIMERMAX 		 */
 if|if
 condition|(
 name|seconds
 operator|>
-literal|100000000
+name|ITIMERMAX
 condition|)
+block|{
+name|rest
+operator|=
+name|seconds
+operator|-
+name|ITIMERMAX
+expr_stmt|;
 name|seconds
 operator|=
-literal|100000000
+name|ITIMERMAX
 expr_stmt|;
+block|}
 name|time_to_sleep
 operator|.
 name|tv_sec
@@ -352,8 +387,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* return how long is left */
-name|seconds
-operator|=
+name|rest
+operator|+=
 name|time_remaining
 operator|.
 name|tv_sec
@@ -366,14 +401,14 @@ name|tv_nsec
 operator|>
 literal|0
 condition|)
-name|seconds
+name|rest
 operator|++
 expr_stmt|;
 comment|/* round up */
 block|}
 return|return
 operator|(
-name|seconds
+name|rest
 operator|)
 return|;
 endif|#
