@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.18 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,6 +929,15 @@ name|AF_INET
 expr_stmt|;
 name|sin
 operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+expr_stmt|;
+name|sin
+operator|.
 name|sin_addr
 operator|.
 name|s_addr
@@ -1063,6 +1072,14 @@ block|}
 block|}
 block|}
 end_block
+
+begin_decl_stmt
+name|int
+name|_check_rhosts_file
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|ruserok
@@ -1274,6 +1291,12 @@ condition|(
 name|first
 operator|==
 literal|1
+operator|&&
+operator|(
+name|_check_rhosts_file
+operator|||
+name|superuser
+operator|)
 condition|)
 block|{
 name|struct
@@ -1357,9 +1380,9 @@ operator|-
 literal|1
 operator|)
 return|;
-operator|(
-name|void
-operator|)
+comment|/* 		 * if owned by someone other than user or root or if 		 * writeable by anyone but the owner, quit 		 */
+if|if
+condition|(
 name|fstat
 argument_list|(
 name|fileno
@@ -1370,9 +1393,7 @@ argument_list|,
 operator|&
 name|sbuf
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|sbuf
 operator|.
 name|st_uid
@@ -1384,6 +1405,12 @@ operator|!=
 name|pwd
 operator|->
 name|pw_uid
+operator|||
+name|sbuf
+operator|.
+name|st_mode
+operator|&
+literal|022
 condition|)
 block|{
 name|fclose
@@ -1411,7 +1438,8 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|_validuser
 argument_list|(
 argument|hostf
@@ -1424,20 +1452,17 @@ argument|ruser
 argument_list|,
 argument|baselen
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|rhost
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|luser
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|ruser
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|FILE
@@ -1648,7 +1673,8 @@ return|;
 block|}
 end_block
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|_checkhost
 argument_list|(
 argument|rhost
@@ -1657,17 +1683,14 @@ argument|lhost
 argument_list|,
 argument|len
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
-modifier|*
+operator|*
 name|rhost
-decl_stmt|,
-modifier|*
+operator|,
+operator|*
 name|lhost
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
