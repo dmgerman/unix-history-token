@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_domain.c	6.3	84/08/29	*/
+comment|/*	uipc_domain.c	6.4	85/04/27	*/
 end_comment
 
 begin_include
@@ -88,6 +88,16 @@ name|INET
 name|ADDDOMAIN
 argument_list|(
 name|inet
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NS
+name|ADDDOMAIN
+argument_list|(
+name|ns
 argument_list|)
 expr_stmt|;
 endif|#
