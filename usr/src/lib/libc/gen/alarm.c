@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	alarm.c	4.1	83/06/10	*/
+comment|/*	alarm.c	4.2	84/03/22	*/
 end_comment
 
 begin_comment
@@ -87,6 +87,21 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|oitv
+operator|.
+name|it_value
+operator|.
+name|tv_usec
+condition|)
+name|oitv
+operator|.
+name|it_value
+operator|.
+name|tv_sec
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|oitv
