@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.23	81/07/25	*/
+comment|/*	kern_physio.c	4.24	82/01/17	*/
 end_comment
 
 begin_include
@@ -1416,7 +1416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Assign a buffer for the given block.  If the appropriate  * block is already associated, return it; otherwise search  * for the oldest non-busy buffer and reassign it.  */
+comment|/*  * Assign a buffer for the given block.  If the appropriate  * block is already associated, return it; otherwise search  * for the oldest non-busy buffer and reassign it.  *  * We use splx here because this routine may be called  * on the interrupt stack during a dump, and we don't  * want to lower the ipl back to 0.  */
 end_comment
 
 begin_function
@@ -1466,6 +1466,9 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|s
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1523,12 +1526,6 @@ argument_list|)
 expr_stmt|;
 name|loop
 label|:
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
 for|for
 control|(
 name|bp
@@ -1569,9 +1566,8 @@ operator|&
 name|B_INVAL
 condition|)
 continue|continue;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -1602,15 +1598,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1695,9 +1695,8 @@ argument_list|(
 literal|"blkdev"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|s
+operator|=
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -1755,15 +1754,19 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 goto|goto
 name|loop
 goto|;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 name|bp
 operator|=
