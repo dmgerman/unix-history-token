@@ -957,11 +957,6 @@ argument_list|(
 literal|"vm_waitproc: Survivor thread!"
 argument_list|)
 expr_stmt|;
-name|pmap_dispose_thread
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
 block|}
 name|vmspace_exitfree
 argument_list|(
