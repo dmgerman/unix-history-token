@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ncheck.c	5.2 (Berkeley) %G%"
+literal|"@(#)ncheck.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,6 @@ define|#
 directive|define
 name|NB
 value|500
-end_define
-
-begin_define
-define|#
-directive|define
-name|HSIZE
-value|20011
 end_define
 
 begin_define
@@ -165,21 +158,21 @@ modifier|*
 name|h_name
 decl_stmt|;
 block|}
+modifier|*
 name|htab
-index|[
-name|HSIZE
-index|]
 struct|;
 end_struct
 
 begin_decl_stmt
 name|char
+modifier|*
 name|strngtab
-index|[
-literal|30
-operator|*
-name|HSIZE
-index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|hsize
 decl_stmt|;
 end_decl_stmt
 
@@ -559,6 +552,76 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+name|hsize
+operator|=
+name|sblock
+operator|.
+name|fs_ipg
+operator|*
+name|sblock
+operator|.
+name|fs_ncg
+operator|-
+name|sblock
+operator|.
+name|fs_cstotal
+operator|.
+name|cs_nifree
+operator|+
+literal|1
+expr_stmt|;
+name|htab
+operator|=
+operator|(
+expr|struct
+name|htab
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|hsize
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|htab
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|strngtab
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|malloc
+argument_list|(
+literal|30
+operator|*
+name|hsize
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|htab
+operator|==
+literal|0
+operator|||
+name|strngtab
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"not enough memory to allocate tables\n"
+argument_list|)
+expr_stmt|;
+name|nerror
+operator|++
+expr_stmt|;
+return|return;
+block|}
 name|ino
 operator|=
 literal|0
@@ -865,7 +928,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|HSIZE
+name|hsize
 condition|;
 name|i
 operator|++
@@ -1852,7 +1915,7 @@ name|htab
 index|[
 name|i
 operator|%
-name|HSIZE
+name|hsize
 index|]
 init|;
 name|hp
@@ -1882,7 +1945,7 @@ operator|>=
 operator|&
 name|htab
 index|[
-name|HSIZE
+name|hsize
 index|]
 condition|)
 name|hp
@@ -1906,14 +1969,16 @@ condition|(
 operator|++
 name|nhent
 operator|>=
-name|HSIZE
+name|hsize
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ncheck: out of core-- increase HSIZE\n"
+literal|"ncheck: hsize of %d is too small\n"
+argument_list|,
+name|hsize
 argument_list|)
 expr_stmt|;
 name|exit
