@@ -1630,7 +1630,7 @@ name|optarg
 operator|||
 name|ultmp
 operator|>
-literal|255
+name|MAXTTL
 condition|)
 name|errx
 argument_list|(
@@ -1890,7 +1890,7 @@ name|optarg
 operator|||
 name|ultmp
 operator|>
-literal|255
+name|MAXTTL
 condition|)
 name|errx
 argument_list|(
