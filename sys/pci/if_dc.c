@@ -5532,7 +5532,7 @@ condition|(
 name|isr
 operator|&
 name|DC_ISR_TX_IDLE
-operator|&&
+operator|||
 operator|(
 name|isr
 operator|&
