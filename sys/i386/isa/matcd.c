@@ -1034,7 +1034,7 @@ name|matcd_probe
 block|,
 name|matcd_attach
 block|,
-literal|"matcd interface "
+literal|"matcd"
 block|}
 decl_stmt|;
 end_decl_stmt
