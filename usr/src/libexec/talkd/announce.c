@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)announce.c	5.11 (Berkeley) %G%"
+literal|"@(#)announce.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,7 +495,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|"talk: connection requested by %s@%s."
+literal|"talk: connection requested by %s@%s"
 argument_list|,
 name|request
 operator|->
