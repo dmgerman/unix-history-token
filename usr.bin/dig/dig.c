@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 4.9.1.17 1994/07/19 22:51:24 vixie Exp $"
+literal|"$Id: dig.c,v 1.1.1.1 1994/09/22 21:33:31 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,13 +147,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nslookup/res.h"
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../conf/portability.h"
+file|"../../usr.sbin/nslookup/res.h"
 end_include
 
 begin_define
