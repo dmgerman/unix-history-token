@@ -344,7 +344,7 @@ operator|==
 literal|0xffffffff
 condition|)
 block|{
-comment|/* 		 * Disable the watcdog. 		 */
+comment|/* 		 * Disable the watchdog. 		 */
 name|watchdog_cpu
 operator|=
 operator|-
