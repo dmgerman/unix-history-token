@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mx.c,v 1.8.2.5 1999/05/06 15:39:32 wpaul Exp $  */
+comment|/*  * Copyright (c) 1997, 1998  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR THE VOICES IN HIS HEAD  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_mx.c,v 1.44 1999/06/16 16:17:22 wpaul Exp $  */
 end_comment
 
 begin_comment
@@ -197,7 +197,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: if_mx.c,v 1.8.2.5 1999/05/06 15:39:32 wpaul Exp $"
+literal|"$Id: if_mx.c,v 1.44 1999/06/16 16:17:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -393,6 +393,23 @@ operator|(
 name|pcici_t
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mx_type
+modifier|*
+name|mx_devtype
+name|__P
+argument_list|(
+operator|(
+name|pcici_t
+operator|,
+name|pcidi_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1000,6 +1017,10 @@ name|mx_calchash
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|mx_softc
+operator|*
+operator|,
 name|caddr_t
 operator|)
 argument_list|)
@@ -2586,13 +2607,27 @@ name|MX_BITS
 value|9
 end_define
 
+begin_define
+define|#
+directive|define
+name|MX_BITS_PNIC_II
+value|7
+end_define
+
 begin_function
 specifier|static
 name|u_int32_t
 name|mx_calchash
 parameter_list|(
+name|sc
+parameter_list|,
 name|addr
 parameter_list|)
+name|struct
+name|mx_softc
+modifier|*
+name|sc
+decl_stmt|;
 name|caddr_t
 name|addr
 decl_stmt|;
@@ -2674,6 +2709,32 @@ literal|0
 operator|)
 expr_stmt|;
 block|}
+comment|/* The hash table on the PNIC II is only 128 bits wide. */
+if|if
+condition|(
+name|sc
+operator|->
+name|mx_info
+operator|->
+name|mx_vid
+operator|==
+name|PN_VENDORID
+condition|)
+return|return
+operator|(
+name|crc
+operator|&
+operator|(
+operator|(
+literal|1
+operator|<<
+name|MX_BITS_PNIC_II
+operator|)
+operator|-
+literal|1
+operator|)
+operator|)
+return|;
 return|return
 operator|(
 name|crc
@@ -5103,6 +5164,8 @@ name|h
 operator|=
 name|mx_calchash
 argument_list|(
+name|sc
+argument_list|,
 name|LLADDR
 argument_list|(
 operator|(
@@ -5145,6 +5208,8 @@ name|h
 operator|=
 name|mx_calchash
 argument_list|(
+name|sc
+argument_list|,
 operator|(
 name|caddr_t
 operator|)
@@ -5615,16 +5680,12 @@ return|return;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Probe for a Macronix PMAC chip. Check the PCI vendor and device  * IDs against our list and return a device name if we find a match.  * We do a little bit of extra work to identify the exact type of  * chip. The MX98713 and MX98713A have the same PCI vendor/device ID,  * but different revision IDs. The same is true for 98715/98715A  * chips and the 98725. This doesn't affect a whole lot, but it  * lets us tell the user exactly what type of device they have  * in the probe output.  */
-end_comment
-
 begin_function
 specifier|static
-specifier|const
-name|char
+name|struct
+name|mx_type
 modifier|*
-name|mx_probe
+name|mx_devtype
 parameter_list|(
 name|config_id
 parameter_list|,
@@ -5745,8 +5806,6 @@ expr_stmt|;
 return|return
 operator|(
 name|t
-operator|->
-name|mx_name
 operator|)
 return|;
 block|}
@@ -5754,6 +5813,63 @@ name|t
 operator|++
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Probe for a Macronix PMAC chip. Check the PCI vendor and device  * IDs against our list and return a device name if we find a match.  * We do a little bit of extra work to identify the exact type of  * chip. The MX98713 and MX98713A have the same PCI vendor/device ID,  * but different revision IDs. The same is true for 98715/98715A  * chips and the 98725. This doesn't affect a whole lot, but it  * lets us tell the user exactly what type of device they have  * in the probe output.  */
+end_comment
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mx_probe
+parameter_list|(
+name|config_id
+parameter_list|,
+name|device_id
+parameter_list|)
+name|pcici_t
+name|config_id
+decl_stmt|;
+name|pcidi_t
+name|device_id
+decl_stmt|;
+block|{
+name|struct
+name|mx_type
+modifier|*
+name|t
+decl_stmt|;
+name|t
+operator|=
+name|mx_devtype
+argument_list|(
+name|config_id
+argument_list|,
+name|device_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+name|NULL
+condition|)
+return|return
+operator|(
+name|t
+operator|->
+name|mx_name
+operator|)
+return|;
 return|return
 operator|(
 name|NULL
@@ -6358,6 +6474,27 @@ name|MX_PCI_CACHELEN
 argument_list|)
 operator|&
 literal|0xFF
+expr_stmt|;
+comment|/* Save the device info; the PNIC II requires special handling. */
+name|pci_id
+operator|=
+name|pci_conf_read
+argument_list|(
+name|config_id
+argument_list|,
+name|MX_PCI_VENDOR_ID
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|mx_info
+operator|=
+name|mx_devtype
+argument_list|(
+name|config_id
+argument_list|,
+name|pci_id
+argument_list|)
 expr_stmt|;
 comment|/* Reset the adapter. */
 name|mx_reset
