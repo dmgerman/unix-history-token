@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cardd.c,v 1.21 1997/11/19 02:31:37 nate Exp $"
+literal|"$Id: cardd.c,v 1.22 1997/11/25 19:15:59 nate Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1210,7 +1210,7 @@ name|next
 control|)
 if|if
 condition|(
-name|strcmp
+name|strncmp
 argument_list|(
 name|cp
 operator|->
@@ -1221,11 +1221,13 @@ operator|->
 name|cis
 operator|->
 name|manuf
+argument_list|,
+name|CIS_MAXSTR
 argument_list|)
 operator|==
 literal|0
 operator|&&
-name|strcmp
+name|strncmp
 argument_list|(
 name|cp
 operator|->
@@ -1236,6 +1238,8 @@ operator|->
 name|cis
 operator|->
 name|vers
+argument_list|,
+name|CIS_MAXSTR
 argument_list|)
 operator|==
 literal|0
