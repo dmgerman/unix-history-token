@@ -1350,6 +1350,22 @@ continue|continue;
 block|}
 if|if
 condition|(
+operator|!
+name|strlen
+argument_list|(
+name|keybuf
+argument_list|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"no key -- check source file for blank lines"
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|strlen
 argument_list|(
 name|datbuf
