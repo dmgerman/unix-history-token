@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.31	83/05/18	*/
+comment|/*	mba.c	4.32	83/05/27	*/
 end_comment
 
 begin_include
@@ -870,10 +870,6 @@ modifier|*
 name|mbaconfig
 parameter_list|()
 function_decl|;
-specifier|static
-name|mbaddtape
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Read out the massbus status register 	 * and attention status register and clear 	 * the bits in same by writing them back. 	 */
 name|mbasr
 operator|=
@@ -1356,20 +1352,22 @@ begin_comment
 comment|/*  * For autoconfig'ng tape drives on the fly.  */
 end_comment
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|mbaddtape
 argument_list|(
 argument|mi
 argument_list|,
 argument|drive
 argument_list|)
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|mba_device
-operator|*
+modifier|*
 name|mi
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
