@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strlen.c	5.3 (Berkeley) %G%"
+literal|"@(#)strlen.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,47 +37,58 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_expr_stmt
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-specifier|register
-name|char
-operator|*
-name|str
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<sys/stdc.h>
+end_include
 
-begin_block
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_function
+name|size_t
+name|strlen
+parameter_list|(
+name|str
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
 block|{
 specifier|register
-name|int
-name|cnt
+specifier|const
+name|char
+modifier|*
+name|s
 decl_stmt|;
 for|for
 control|(
-name|cnt
+name|s
 operator|=
-literal|0
+name|str
 init|;
 operator|*
-name|str
+name|s
 condition|;
 operator|++
-name|cnt
-operator|,
-operator|++
-name|str
+name|s
 control|)
 empty_stmt|;
 return|return
 operator|(
-name|cnt
+name|s
+operator|-
+name|str
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
