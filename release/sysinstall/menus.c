@@ -9223,9 +9223,9 @@ literal|"keymap=swissgerman.cp850"
 block|}
 block|,
 block|{
-literal|"U.K. CP850"
+literal|"UK CP850"
 block|,
-literal|"United Kingdom Code Page 850 keymap"
+literal|"UK Code Page 850 keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9237,9 +9237,9 @@ literal|"keymap=uk.cp850"
 block|}
 block|,
 block|{
-literal|" U.K. ISO"
+literal|" UK ISO"
 block|,
-literal|"United Kingdom ISO keymap"
+literal|"UK ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9251,9 +9251,9 @@ literal|"keymap=uk.iso"
 block|}
 block|,
 block|{
-literal|" U.S. CapsLock->Ctrl"
+literal|" USA CapsLock->Ctrl"
 block|,
-literal|"United States standard with Caps Lock acting as left Control"
+literal|"US standard with Caps Lock acting as left Control"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9265,9 +9265,9 @@ literal|"keymap=us.pc-ctrl"
 block|}
 block|,
 block|{
-literal|" U.S. Dvorak"
+literal|" USA Dvorak"
 block|,
-literal|"United States Dvorak keymap"
+literal|"US Dvorak keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9279,9 +9279,9 @@ literal|"keymap=us.dvorak"
 block|}
 block|,
 block|{
-literal|" U.S. Dvorak (left)"
+literal|" USA Dvorak (left)"
 block|,
-literal|"United States left handed Dvorak keymap"
+literal|"US left handed Dvorak keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9293,9 +9293,9 @@ literal|"keymap=us.dvorakl"
 block|}
 block|,
 block|{
-literal|" U.S. Dvorak (right)"
+literal|" USA Dvorak (right)"
 block|,
-literal|"United States right handed Dvorak keymap"
+literal|"US right handed Dvorak keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9307,9 +9307,9 @@ literal|"keymap=us.dvorakr"
 block|}
 block|,
 block|{
-literal|" U.S. Emacs"
+literal|" USA Emacs"
 block|,
-literal|"United States standard optimized for EMACS use"
+literal|"US standard optimized for EMACS use"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9321,9 +9321,9 @@ literal|"keymap=us.emacs"
 block|}
 block|,
 block|{
-literal|" U.S. ISO"
+literal|" USA ISO"
 block|,
-literal|"United States ISO keymap"
+literal|"US ISO keymap"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9335,9 +9335,9 @@ literal|"keymap=us.iso"
 block|}
 block|,
 block|{
-literal|" U.S. UNIX"
+literal|" USA UNIX"
 block|,
-literal|"United States traditional UNIX-workstation keymap"
+literal|"US traditional UNIX-workstation keymap"
 block|,
 name|dmenuVarCheck
 block|,
