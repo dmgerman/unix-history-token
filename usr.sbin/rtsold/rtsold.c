@@ -3092,18 +3092,6 @@ modifier|*
 name|autoifprobe
 parameter_list|()
 block|{
-ifndef|#
-directive|ifndef
-name|HAVE_GETIFADDRS
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"-a is not available with the configuration"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 specifier|static
 name|char
 name|ifname
@@ -3361,8 +3349,6 @@ operator|*
 operator|)
 name|NULL
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
