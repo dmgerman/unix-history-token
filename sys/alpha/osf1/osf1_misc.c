@@ -7935,6 +7935,8 @@ literal|0
 argument_list|,
 operator|&
 name|bytes
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_unlock
