@@ -8803,7 +8803,7 @@ literal|"keymap=estonian.cp850"
 block|}
 block|,
 block|{
-literal|" Finnish CP850"
+literal|"Finnish CP850"
 block|,
 literal|"Finnish Code Page 850 keymap"
 block|,
@@ -8957,20 +8957,6 @@ literal|"keymap=it.iso"
 block|}
 block|,
 block|{
-literal|"Latin American"
-block|,
-literal|"Latin American ISO keymap"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetKmapVariable
-block|,
-name|NULL
-block|,
-literal|"keymap=lat-amer"
-block|}
-block|,
-block|{
 literal|"Japanese 106"
 block|,
 literal|"Japanese 106 keymap"
@@ -8982,6 +8968,20 @@ block|,
 name|NULL
 block|,
 literal|"keymap=jp.106"
+block|}
+block|,
+block|{
+literal|"Latin American"
+block|,
+literal|"Latin American ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=lat-amer"
 block|}
 block|,
 block|{
@@ -9253,7 +9253,7 @@ block|,
 block|{
 literal|" USA CapsLock->Ctrl"
 block|,
-literal|"US standard with Caps Lock acting as left Ctrl"
+literal|"US standard (Caps as L-Control)"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9309,7 +9309,7 @@ block|,
 block|{
 literal|" USA Emacs"
 block|,
-literal|"US standard optimized for EMACS use"
+literal|"US standard optimized for EMACS"
 block|,
 name|dmenuVarCheck
 block|,
@@ -9337,7 +9337,7 @@ block|,
 block|{
 literal|" USA UNIX"
 block|,
-literal|"US traditional UNIX-workstation keymap"
+literal|"US traditional UNIX-workstation"
 block|,
 name|dmenuVarCheck
 block|,
