@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
 begin_ifndef
@@ -14,15 +14,18 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.3 (Berkeley) %G%"
+literal|"@(#)tail.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* tail command   *  *	tail where [file]  *	where is +/-n[type]  *	- means n lines before end  *	+ means nth line from beginning  *	type 'b' means tail n blocks, not lines  *	type 'c' means tail n characters  *	Type 'r' means in lines in reverse order from end  *	 (for -r, default is entire buffer )  *	option 'f' means loop endlessly trying to read more  *		characters after the end of file, on the  assumption  *		that the file is growing */

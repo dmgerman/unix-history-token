@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * %sccs.include.proprietary.c%  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -8,18 +12,21 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|mkfont1sccsid
+name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfont1.c	4.3 %G%"
+literal|"@(#)mkfont1.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_define
 define|#
