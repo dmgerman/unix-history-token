@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.23 1999/04/26 08:54:32 brian Exp $  */
+comment|/*-  * The code in this file was written by Eivind Eklund<perhaps@yes.no>,  * who places it in the public domain without restriction.  *  *	$Id: alias_cmd.c,v 1.24 1999/05/08 11:05:59 brian Exp $  */
 end_comment
 
 begin_include
@@ -1702,6 +1702,13 @@ condition|)
 return|return
 name|bp
 return|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"alias_LayerPush: PROTO_IP -> PROTO_IP\n"
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Contiguous
@@ -1816,6 +1823,13 @@ condition|)
 return|return
 name|bp
 return|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"alias_LayerPull: PROTO_IP -> PROTO_IP\n"
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Contiguous

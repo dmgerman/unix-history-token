@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.8 1999/04/27 00:23:57 brian Exp $  *  */
+comment|/*  * Written by Eivind Eklund<eivind@yes.no>  *    for Yes Interactive  *  * Copyright (C) 1998, Yes Interactive.  All rights reserved.  *  * Redistribution and use in any form is permitted.  Redistribution in  * source form should include the above copyright and this set of  * conditions, because large sections american law seems to have been  * created by a bunch of jerks on drugs that are now illegal, forcing  * me to include this copyright-stuff instead of placing this in the  * public domain.  The name of of 'Yes Interactive' or 'Eivind Eklund'  * may not be used to endorse or promote products derived from this  * software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *  $Id: physical.h,v 1.9 1999/05/08 11:07:24 brian Exp $  *  */
 end_comment
 
 begin_struct_decl
@@ -62,8 +62,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXEC_DEVICE
+name|UDP_DEVICE
 value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXEC_DEVICE
+value|4
 end_define
 
 begin_struct
@@ -78,17 +85,6 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|open
-function_decl|)
-parameter_list|(
-name|struct
-name|physical
-modifier|*
-parameter_list|)
-function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -125,7 +121,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|postclose
+name|stoptimer
 function_decl|)
 parameter_list|(
 name|struct
@@ -136,12 +132,67 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|restored
+name|destroy
 function_decl|)
 parameter_list|(
 name|struct
 name|physical
 modifier|*
+parameter_list|)
+function_decl|;
+name|ssize_t
+function_decl|(
+modifier|*
+name|read
+function_decl|)
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|ssize_t
+function_decl|(
+modifier|*
+name|write
+function_decl|)
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|device2iov
+function_decl|)
+parameter_list|(
+name|struct
+name|physical
+modifier|*
+parameter_list|,
+name|struct
+name|iovec
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|pid_t
 parameter_list|)
 function_decl|;
 name|int
@@ -202,10 +253,6 @@ name|int
 name|fd
 decl_stmt|;
 comment|/* File descriptor for this device */
-name|int
-name|mbits
-decl_stmt|;
-comment|/* Current DCD status */
 name|struct
 name|mbuf
 modifier|*
@@ -257,11 +304,17 @@ name|Utmp
 range|:
 literal|1
 decl_stmt|;
-comment|/* Are we in utmp ? */
+comment|/* Are we in utmp ? (move to ttydevice ?) */
 name|pid_t
 name|session_owner
 decl_stmt|;
 comment|/* HUP this when closing the link */
+name|struct
+name|device
+modifier|*
+name|handler
+decl_stmt|;
+comment|/* device specific handler */
 struct|struct
 block|{
 name|unsigned
@@ -307,23 +360,6 @@ struct|;
 block|}
 name|cfg
 struct|;
-name|struct
-name|termios
-name|ios
-decl_stmt|;
-comment|/* To be able to reset from raw mode */
-name|struct
-name|pppTimer
-name|Timer
-decl_stmt|;
-comment|/* CD checks */
-specifier|const
-name|struct
-name|device
-modifier|*
-name|handler
-decl_stmt|;
-comment|/* device specific handlers */
 block|}
 struct|;
 end_struct
@@ -361,6 +397,27 @@ name|d
 parameter_list|)
 define|\
 value|((d)->type == PHYSICAL_DESCRIPTOR ? field2phys(d, desc) : NULL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSICAL_NOFORCE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSICAL_FORCE_ASYNC
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHYSICAL_FORCE_SYNC
+value|3
 end_define
 
 begin_function_decl
@@ -798,6 +855,18 @@ name|physical
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|physical_StopDeviceTimer
+parameter_list|(
+name|struct
+name|physical
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

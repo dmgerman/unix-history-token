@@ -9,12 +9,18 @@ name|physical
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|device
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|struct
 name|device
 modifier|*
-name|tcp_Create
+name|udp_Create
 parameter_list|(
 name|struct
 name|physical
@@ -28,7 +34,7 @@ specifier|extern
 name|struct
 name|device
 modifier|*
-name|tcp_iov2device
+name|udp_iov2device
 parameter_list|(
 name|int
 parameter_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.28 1999/05/08 11:07:55 brian Exp $  *  *  TODO:  */
+comment|/*  *	       Input/Output VJ Compressed packets  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: vjcomp.c,v 1.29 1999/05/09 20:02:29 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -256,21 +256,6 @@ name|peer_compproto
 operator|>>
 literal|16
 decl_stmt|;
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"vj_LayerWrite: COMPPROTO = %x\n"
-argument_list|,
-name|bundle
-operator|->
-name|ncp
-operator|.
-name|ipcp
-operator|.
-name|peer_compproto
-argument_list|)
-expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Contiguous
@@ -375,6 +360,13 @@ name|proto
 operator|=
 name|PROTO_VJUNCOMP
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|TYPE_COMPRESSED_TCP
@@ -384,13 +376,20 @@ name|proto
 operator|=
 name|PROTO_VJCOMP
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"vj_LayerPush: PROTO_IP -> PROTO_VJUNCOMP\n"
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Unknown frame type %x\n"
+literal|"vj_LayerPush: Unknown frame type %x\n"
 argument_list|,
 name|type
 argument_list|)
@@ -700,25 +699,6 @@ block|{
 name|u_char
 name|type
 decl_stmt|;
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"vj_LayerPull: proto %02x\n"
-argument_list|,
-operator|*
-name|proto
-argument_list|)
-expr_stmt|;
-name|log_DumpBp
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"Raw packet info:"
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 operator|*
@@ -732,6 +712,13 @@ name|type
 operator|=
 name|TYPE_COMPRESSED_TCP
 expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"vj_LayerPull: PROTO_VJCOMP -> PROTO_IP\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|PROTO_VJUNCOMP
@@ -739,6 +726,13 @@ case|:
 name|type
 operator|=
 name|TYPE_UNCOMPRESSED_TCP
+expr_stmt|;
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"vj_LayerPull: PROTO_VJUNCOMP -> PROTO_IP\n"
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
