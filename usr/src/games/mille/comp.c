@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comp.c	5.4 (Berkeley) %G%"
+literal|"@(#)comp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2301,6 +2301,10 @@ operator|!=
 literal|0
 operator|)
 operator|||
+name|bat
+operator|>=
+literal|0
+operator|&&
 name|Numseen
 index|[
 name|safety
