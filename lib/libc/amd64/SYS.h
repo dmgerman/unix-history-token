@@ -84,7 +84,7 @@ name|PSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror));	\ 			ENTRY(__CONCAT(_thread_sys_,x));		\ 			.weak CNAME(__CONCAT(_,x));			\ 			.set CNAME(__CONCAT(_,x)),CNAME(__CONCAT(_thread_sys_,x));\ 			.weak CNAME(x);					\ 			.set CNAME(x),CNAME(__CONCAT(_,x));		\ 			lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
+value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror));	\ 			ENTRY(__CONCAT(_thread_sys_,x));		\ 			lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
 end_define
 
 begin_define
