@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_ETHER_COOKIE
-value|917786906
+value|1108206947
 end_define
 
 begin_comment
@@ -118,6 +118,12 @@ comment|/* get source address override */
 name|NGM_ETHER_SET_AUTOSRC
 block|,
 comment|/* enable/disable src addr override */
+name|NGM_ETHER_ADD_MULTI
+block|,
+comment|/* add multicast membership */
+name|NGM_ETHER_DEL_MULTI
+block|,
+comment|/* delete multicast membership */
 block|}
 enum|;
 end_enum
