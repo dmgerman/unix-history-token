@@ -417,7 +417,7 @@ operator|+=
 literal|2
 control|)
 block|{
-name|int
+name|vm_size_t
 name|size
 init|=
 name|phys_avail
