@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.3 (Berkeley) 83/04/04"
+literal|"@(#)sa.c	4.4 (Berkeley) 83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -2938,7 +2938,10 @@ argument_list|)
 condition|)
 return|return
 operator|(
+call|(
+modifier|*
 name|cmp
+call|)
 argument_list|(
 name|p1
 argument_list|,
