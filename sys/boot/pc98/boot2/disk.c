@@ -29,6 +29,12 @@ directive|include
 file|<sys/diskslice.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/diskpc98.h>
+end_include
+
 begin_define
 define|#
 directive|define

@@ -12,31 +12,39 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|int32_t
+name|ufs_daddr_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MAXFRAG
+value|8
+end_define
+
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/quota.h>
+file|"quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs/inode.h>
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ffs/fs.h>
+file|"fs.h"
 end_include
 
 begin_define
