@@ -232,21 +232,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCCBB_START_MEM
+name|CBB_START_MEM
 value|0x88000000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_START_32_IO
+name|CBB_START_32_IO
 value|0x1000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCBB_START_16_IO
+name|CBB_START_16_IO
 value|0x100
 end_define
 
@@ -660,9 +660,9 @@ end_comment
 
 begin_decl_stmt
 name|u_long
-name|pccbb_start_mem
+name|cbb_start_mem
 init|=
-name|PCCBB_START_MEM
+name|CBB_START_MEM
 decl_stmt|;
 end_decl_stmt
 
@@ -676,7 +676,7 @@ name|int
 operator|*
 operator|)
 operator|&
-name|pccbb_start_mem
+name|cbb_start_mem
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -693,9 +693,9 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pccbb_start_mem
+name|cbb_start_mem
 argument_list|,
-name|PCCBB_START_MEM
+name|CBB_START_MEM
 argument_list|,
 literal|"Starting address for memory allocations"
 argument_list|)
@@ -704,9 +704,9 @@ end_expr_stmt
 
 begin_decl_stmt
 name|u_long
-name|pccbb_start_16_io
+name|cbb_start_16_io
 init|=
-name|PCCBB_START_16_IO
+name|CBB_START_16_IO
 decl_stmt|;
 end_decl_stmt
 
@@ -720,7 +720,7 @@ name|int
 operator|*
 operator|)
 operator|&
-name|pccbb_start_16_io
+name|cbb_start_16_io
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -737,9 +737,9 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pccbb_start_16_io
+name|cbb_start_16_io
 argument_list|,
-name|PCCBB_START_16_IO
+name|CBB_START_16_IO
 argument_list|,
 literal|"Starting ioport for 16-bit cards"
 argument_list|)
@@ -748,9 +748,9 @@ end_expr_stmt
 
 begin_decl_stmt
 name|u_long
-name|pccbb_start_32_io
+name|cbb_start_32_io
 init|=
-name|PCCBB_START_32_IO
+name|CBB_START_32_IO
 decl_stmt|;
 end_decl_stmt
 
@@ -764,7 +764,7 @@ name|int
 operator|*
 operator|)
 operator|&
-name|pccbb_start_32_io
+name|cbb_start_32_io
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -781,9 +781,9 @@ argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 operator|&
-name|pccbb_start_32_io
+name|cbb_start_32_io
 argument_list|,
-name|PCCBB_START_32_IO
+name|CBB_START_32_IO
 argument_list|,
 literal|"Starting ioport for 32-bit cards"
 argument_list|)
@@ -833,7 +833,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_chipset
+name|cbb_chipset
 parameter_list|(
 name|uint32_t
 name|pci_id
@@ -850,7 +850,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_probe
+name|cbb_probe
 parameter_list|(
 name|device_t
 name|brdev
@@ -861,10 +861,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_chipinit
+name|cbb_chipinit
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -874,7 +874,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_attach
+name|cbb_attach
 parameter_list|(
 name|device_t
 name|brdev
@@ -885,7 +885,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_detach
+name|cbb_detach
 parameter_list|(
 name|device_t
 name|brdev
@@ -896,7 +896,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_shutdown
+name|cbb_shutdown
 parameter_list|(
 name|device_t
 name|brdev
@@ -907,7 +907,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_driver_added
+name|cbb_driver_added
 parameter_list|(
 name|device_t
 name|brdev
@@ -922,7 +922,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_child_detached
+name|cbb_child_detached
 parameter_list|(
 name|device_t
 name|brdev
@@ -936,7 +936,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_card_reprobe
+name|cbb_card_reprobe
 parameter_list|(
 name|device_t
 name|brdev
@@ -950,7 +950,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_event_thread
+name|cbb_event_thread
 parameter_list|(
 name|void
 modifier|*
@@ -962,10 +962,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_insert
+name|cbb_insert
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -975,10 +975,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_removal
+name|cbb_removal
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -988,7 +988,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_intr
+name|cbb_intr
 parameter_list|(
 name|void
 modifier|*
@@ -1000,7 +1000,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_detect_voltage
+name|cbb_detect_voltage
 parameter_list|(
 name|device_t
 name|brdev
@@ -1011,7 +1011,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_power
+name|cbb_power
 parameter_list|(
 name|device_t
 name|brdev
@@ -1025,7 +1025,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_cardbus_reset
+name|cbb_cardbus_reset
 parameter_list|(
 name|device_t
 name|brdev
@@ -1036,7 +1036,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_power_enable_socket
+name|cbb_cardbus_power_enable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -1050,7 +1050,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_cardbus_power_disable_socket
+name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -1064,7 +1064,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_io_open
+name|cbb_cardbus_io_open
 parameter_list|(
 name|device_t
 name|brdev
@@ -1084,7 +1084,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_mem_open
+name|cbb_cardbus_mem_open
 parameter_list|(
 name|device_t
 name|brdev
@@ -1104,10 +1104,10 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_cardbus_auto_open
+name|cbb_cardbus_auto_open
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1120,7 +1120,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_activate_resource
+name|cbb_cardbus_activate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1145,7 +1145,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_deactivate_resource
+name|cbb_cardbus_deactivate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1172,7 +1172,7 @@ specifier|static
 name|struct
 name|resource
 modifier|*
-name|pccbb_cardbus_alloc_resource
+name|cbb_cardbus_alloc_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1205,7 +1205,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_cardbus_release_resource
+name|cbb_cardbus_release_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1230,7 +1230,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_power_enable_socket
+name|cbb_power_enable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -1244,7 +1244,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_power_disable_socket
+name|cbb_power_disable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -1258,32 +1258,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_activate_resource
-parameter_list|(
-name|device_t
-name|brdev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|rid
-parameter_list|,
-name|struct
-name|resource
-modifier|*
-name|r
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pccbb_deactivate_resource
+name|cbb_activate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1307,10 +1282,35 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|cbb_deactivate_resource
+parameter_list|(
+name|device_t
+name|brdev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+name|rid
+parameter_list|,
 name|struct
 name|resource
 modifier|*
-name|pccbb_alloc_resource
+name|r
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|struct
+name|resource
+modifier|*
+name|cbb_alloc_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1343,7 +1343,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_release_resource
+name|cbb_release_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -1368,7 +1368,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_read_ivar
+name|cbb_read_ivar
 parameter_list|(
 name|device_t
 name|brdev
@@ -1389,7 +1389,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_write_ivar
+name|cbb_write_ivar
 parameter_list|(
 name|device_t
 name|brdev
@@ -1409,7 +1409,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|pccbb_maxslots
+name|cbb_maxslots
 parameter_list|(
 name|device_t
 name|brdev
@@ -1420,7 +1420,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|uint32_t
-name|pccbb_read_config
+name|cbb_read_config
 parameter_list|(
 name|device_t
 name|brdev
@@ -1446,7 +1446,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|pccbb_write_config
+name|cbb_write_config
 parameter_list|(
 name|device_t
 name|brdev
@@ -1480,10 +1480,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pccbb_set
+name|cbb_set
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1516,10 +1516,10 @@ begin_function
 specifier|static
 name|__inline
 name|uint32_t
-name|pccbb_get
+name|cbb_get
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1550,10 +1550,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pccbb_setb
+name|cbb_setb
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1564,13 +1564,13 @@ name|uint32_t
 name|bits
 parameter_list|)
 block|{
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
 name|reg
 argument_list|,
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -1587,10 +1587,10 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|pccbb_clrb
+name|cbb_clrb
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1601,13 +1601,13 @@ name|uint32_t
 name|bits
 parameter_list|)
 block|{
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
 name|reg
 argument_list|,
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -1624,10 +1624,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_remove_res
+name|cbb_remove_res
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1638,7 +1638,7 @@ name|res
 parameter_list|)
 block|{
 name|struct
-name|pccbb_reslist
+name|cbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
@@ -1669,7 +1669,7 @@ name|rl
 argument_list|,
 name|rle
 argument_list|,
-name|pccbb_reslist
+name|cbb_reslist
 argument_list|,
 name|link
 argument_list|)
@@ -1692,10 +1692,10 @@ specifier|static
 name|struct
 name|resource
 modifier|*
-name|pccbb_find_res
+name|cbb_find_res
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1707,7 +1707,7 @@ name|rid
 parameter_list|)
 block|{
 name|struct
-name|pccbb_reslist
+name|cbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
@@ -1751,10 +1751,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_insert_res
+name|cbb_insert_res
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -1771,7 +1771,7 @@ name|rid
 parameter_list|)
 block|{
 name|struct
-name|pccbb_reslist
+name|cbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
@@ -1783,7 +1783,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|pccbb_reslist
+name|cbb_reslist
 argument_list|)
 argument_list|,
 name|M_DEVBUF
@@ -1798,7 +1798,7 @@ name|res
 condition|)
 name|panic
 argument_list|(
-literal|"pccbb_cardbus_alloc_resource: can't record entry!"
+literal|"cbb_cardbus_alloc_resource: can't record entry!"
 argument_list|)
 expr_stmt|;
 name|rle
@@ -1837,16 +1837,16 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_destroy_res
+name|cbb_destroy_res
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
 block|{
 name|struct
-name|pccbb_reslist
+name|cbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
@@ -1929,7 +1929,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_chipset
+name|cbb_chipset
 parameter_list|(
 name|uint32_t
 name|pci_id
@@ -1994,7 +1994,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_probe
+name|cbb_probe
 parameter_list|(
 name|device_t
 name|brdev
@@ -2014,7 +2014,7 @@ decl_stmt|;
 comment|/* 	 * Do we know that we support the chipset?  If so, then we 	 * accept the device. 	 */
 if|if
 condition|(
-name|pccbb_chipset
+name|cbb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
@@ -2091,10 +2091,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_chipinit
+name|cbb_chipinit
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -2636,29 +2636,26 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_attach
+name|cbb_attach
 parameter_list|(
 name|device_t
 name|brdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
 operator|(
 expr|struct
-name|pccbb_softc
+name|cbb_softc
 operator|*
 operator|)
 name|device_get_softc
 argument_list|(
 name|brdev
 argument_list|)
-decl_stmt|;
-name|uint32_t
-name|sockbase
 decl_stmt|;
 name|int
 name|rid
@@ -2675,7 +2672,7 @@ argument_list|(
 name|brdev
 argument_list|)
 argument_list|,
-literal|"pccbb"
+literal|"cbb"
 argument_list|,
 name|MTX_DEF
 argument_list|)
@@ -2687,14 +2684,14 @@ name|sc
 operator|->
 name|cv
 argument_list|,
-literal|"pccbb cv"
+literal|"cbb cv"
 argument_list|)
 expr_stmt|;
 name|sc
 operator|->
 name|chipset
 operator|=
-name|pccbb_chipset
+name|cbb_chipset
 argument_list|(
 name|pci_get_devid
 argument_list|(
@@ -2756,7 +2753,12 @@ operator|->
 name|rl
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BURN_THE_BOATS
 comment|/* 	 * The PCI bus code should assign us memory in the absense 	 * of the BIOS doing so.  However, 'should' isn't 'is,' so we kludge 	 * up something here until the PCI/acpi code properly assigns the 	 * resource. 	 */
+endif|#
+directive|endif
 name|rid
 operator|=
 name|CBBR_SOCKBASE
@@ -2792,6 +2794,42 @@ operator|->
 name|base_res
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BURN_THE_BOATS
+name|device_printf
+argument_list|(
+name|brdev
+argument_list|,
+literal|"Could not map register memory\n"
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
+name|cv_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cv
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+else|#
+directive|else
+name|uint32_t
+name|sockbase
+decl_stmt|;
 comment|/* 		 * Generally, the BIOS will assign this memory for us. 		 * However, newer BIOSes do not because the MS design 		 * documents have mandated that this is for the OS 		 * to assign rather than the BIOS.  This driver shouldn't 		 * be doing this, but until the pci bus code (or acpi) 		 * does this, we allow CardBus bridges to work on more 		 * machines. 		 */
 name|sockbase
 operator|=
@@ -2870,7 +2908,7 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|pccbb_start_mem
+name|cbb_start_mem
 argument_list|,
 operator|~
 literal|0
@@ -2926,7 +2964,7 @@ name|sc
 operator|->
 name|flags
 operator||=
-name|PCCBB_KLUDGE_ALLOC
+name|CBB_KLUDGE_ALLOC
 expr_stmt|;
 name|pci_write_config
 argument_list|(
@@ -2974,6 +3012,8 @@ goto|goto
 name|err
 goto|;
 block|}
+endif|#
+directive|endif
 block|}
 name|sc
 operator|->
@@ -3025,7 +3065,7 @@ name|flags
 operator||=
 name|EXCA_HAS_MEMREG_WIN
 expr_stmt|;
-name|pccbb_chipinit
+name|cbb_chipinit
 argument_list|(
 name|sc
 argument_list|)
@@ -3192,7 +3232,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pccbb: Unable to map IRQ...\n"
+literal|"cbb: Unable to map IRQ...\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3216,7 +3256,7 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_AV
 argument_list|,
-name|pccbb_intr
+name|cbb_intr
 argument_list|,
 name|sc
 argument_list|,
@@ -3252,7 +3292,7 @@ name|EXCA_INTR_RESET
 argument_list|)
 expr_stmt|;
 comment|/* turn off power */
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -3262,7 +3302,7 @@ name|CARD_VPP_0V
 argument_list|)
 expr_stmt|;
 comment|/* CSC Interrupt: Card detect interrupt on */
-name|pccbb_setb
+name|cbb_setb
 argument_list|(
 name|sc
 argument_list|,
@@ -3272,13 +3312,13 @@ name|CBB_SOCKET_MASK_CD
 argument_list|)
 expr_stmt|;
 comment|/* reset interrupt */
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
 name|CBB_SOCKET_EVENT
 argument_list|,
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -3291,7 +3331,7 @@ if|if
 condition|(
 name|kthread_create
 argument_list|(
-name|pccbb_event_thread
+name|cbb_event_thread
 argument_list|,
 name|sc
 argument_list|,
@@ -3331,7 +3371,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"pccbb_create_event_thread"
+literal|"cbb_create_event_thread"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3374,7 +3414,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_KLUDGE_ALLOC
+name|CBB_KLUDGE_ALLOC
 condition|)
 name|bus_generic_release_resource
 argument_list|(
@@ -3436,14 +3476,14 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_detach
+name|cbb_detach
 parameter_list|(
 name|device_t
 name|brdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -3564,7 +3604,7 @@ name|sc
 operator|->
 name|flags
 operator||=
-name|PCCBB_KTHREAD_DONE
+name|CBB_KTHREAD_DONE
 expr_stmt|;
 if|if
 condition|(
@@ -3572,7 +3612,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_KTHREAD_RUNNING
+name|CBB_KTHREAD_RUNNING
 condition|)
 block|{
 name|wakeup
@@ -3605,7 +3645,7 @@ name|sc
 argument_list|,
 name|PWAIT
 argument_list|,
-literal|"pccbb-detach-wait"
+literal|"cbb-detach-wait"
 argument_list|,
 literal|60
 operator|*
@@ -3696,20 +3736,20 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_shutdown
+name|cbb_shutdown
 parameter_list|(
 name|device_t
 name|brdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
 operator|(
 expr|struct
-name|pccbb_softc
+name|cbb_softc
 operator|*
 operator|)
 name|device_get_softc
@@ -3742,7 +3782,7 @@ argument_list|,
 name|EXCA_INTR_RESET
 argument_list|)
 expr_stmt|;
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
@@ -3751,7 +3791,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -3882,7 +3922,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_setup_intr
+name|cbb_setup_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -3962,7 +4002,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_teardown_intr
+name|cbb_teardown_intr
 parameter_list|(
 name|device_t
 name|dev
@@ -4001,7 +4041,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_driver_added
+name|cbb_driver_added
 parameter_list|(
 name|device_t
 name|brdev
@@ -4012,7 +4052,7 @@ name|driver
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -4061,7 +4101,7 @@ literal|0
 expr_stmt|;
 name|sockstate
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4239,7 +4279,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4281,7 +4321,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_child_detached
+name|cbb_child_detached
 parameter_list|(
 name|device_t
 name|brdev
@@ -4291,7 +4331,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -4356,7 +4396,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_card_reprobe
+name|cbb_card_reprobe
 parameter_list|(
 name|device_t
 name|brdev
@@ -4366,7 +4406,7 @@ name|busdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -4385,7 +4425,7 @@ name|sockstate
 decl_stmt|;
 name|sockstate
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4501,7 +4541,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccbb_event_thread
+name|cbb_event_thread
 parameter_list|(
 name|void
 modifier|*
@@ -4509,7 +4549,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -4532,7 +4572,7 @@ name|sc
 operator|->
 name|flags
 operator||=
-name|PCCBB_KTHREAD_RUNNING
+name|CBB_KTHREAD_RUNNING
 expr_stmt|;
 while|while
 condition|(
@@ -4546,12 +4586,12 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_KTHREAD_DONE
+name|CBB_KTHREAD_DONE
 condition|)
 break|break;
 name|status
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4568,13 +4608,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|pccbb_insert
+name|cbb_insert
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 else|else
-name|pccbb_removal
+name|cbb_removal
 argument_list|(
 name|sc
 argument_list|)
@@ -4634,7 +4674,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_KTHREAD_DONE
+name|CBB_KTHREAD_DONE
 operator|)
 operator|==
 literal|0
@@ -4654,7 +4694,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|PCCBB_KTHREAD_RUNNING
+name|CBB_KTHREAD_RUNNING
 expr_stmt|;
 comment|/* 	 * XXX I think there's a race here.  If we wakeup in the other 	 * thread before kthread_exit is called and this routine returns, 	 * and that thread causes us to be unmapped, then we are setting 	 * ourselves up for a panic.  Make sure that I check out 	 * jhb's crash.c for a fix. 	 */
 name|wakeup
@@ -4685,10 +4725,10 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccbb_insert
+name|cbb_insert
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -4708,7 +4748,7 @@ do|do
 block|{
 name|sockevent
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4717,7 +4757,7 @@ argument_list|)
 expr_stmt|;
 name|sockstate
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -4790,7 +4830,7 @@ name|sc
 operator|->
 name|flags
 operator||=
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 expr_stmt|;
 if|if
 condition|(
@@ -4848,7 +4888,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 expr_stmt|;
 if|if
 condition|(
@@ -4903,10 +4943,10 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_removal
+name|cbb_removal
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -4917,7 +4957,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 operator|&&
 name|sc
 operator|->
@@ -4944,7 +4984,7 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 operator|)
 operator|)
 operator|&&
@@ -4963,7 +5003,7 @@ argument_list|,
 name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
-name|pccbb_destroy_res
+name|cbb_destroy_res
 argument_list|(
 name|sc
 argument_list|)
@@ -4986,7 +5026,7 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccbb_intr
+name|cbb_intr
 parameter_list|(
 name|void
 modifier|*
@@ -4994,7 +5034,7 @@ name|arg
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -5006,7 +5046,7 @@ decl_stmt|;
 comment|/* 	 * This ISR needs work XXX 	 */
 name|sockevent
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5019,7 +5059,7 @@ name|sockevent
 condition|)
 block|{
 comment|/* ack the interrupt */
-name|pccbb_setb
+name|cbb_setb
 argument_list|(
 name|sc
 argument_list|,
@@ -5072,7 +5112,7 @@ argument_list|(
 operator|(
 literal|" cstsevent occured: 0x%08x\n"
 operator|,
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5094,7 +5134,7 @@ argument_list|(
 operator|(
 literal|" pwrevent occured: 0x%08x\n"
 operator|,
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5125,14 +5165,14 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_detect_voltage
+name|cbb_detect_voltage
 parameter_list|(
 name|device_t
 name|brdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -5151,7 +5191,7 @@ name|CARD_UKN_CARD
 decl_stmt|;
 name|psr
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5209,7 +5249,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_power
+name|cbb_power
 parameter_list|(
 name|device_t
 name|brdev
@@ -5224,7 +5264,7 @@ decl_stmt|,
 name|sock_ctrl
 decl_stmt|;
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -5246,7 +5286,7 @@ name|sc
 operator|->
 name|dev
 operator|,
-literal|"pccbb_power: %s and %s [%x]\n"
+literal|"cbb_power: %s and %s [%x]\n"
 operator|,
 operator|(
 name|volts
@@ -5358,7 +5398,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5367,7 +5407,7 @@ argument_list|)
 expr_stmt|;
 name|sock_ctrl
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5527,7 +5567,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5542,7 +5582,7 @@ literal|1
 operator|)
 return|;
 comment|/* no change necessary */
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
@@ -5553,7 +5593,7 @@ argument_list|)
 expr_stmt|;
 name|status
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5576,7 +5616,7 @@ argument_list|)
 expr_stmt|;
 name|sockevent
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -5601,7 +5641,7 @@ condition|)
 do|;
 comment|/* reset event status */
 comment|/* XXX should only reset EVENT_POWER */
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
@@ -5658,7 +5698,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"pccbb_power: %s and %s [%x]\n"
+literal|"cbb_power: %s and %s [%x]\n"
 argument_list|,
 operator|(
 name|volts
@@ -5789,7 +5829,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_do_power
+name|cbb_do_power
 parameter_list|(
 name|device_t
 name|brdev
@@ -5801,12 +5841,12 @@ decl_stmt|;
 comment|/* Prefer lowest voltage supported */
 name|voltage
 operator|=
-name|pccbb_detect_voltage
+name|cbb_detect_voltage
 argument_list|(
 name|brdev
 argument_list|)
 expr_stmt|;
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -5821,7 +5861,7 @@ name|voltage
 operator|&
 name|CARD_YV_CARD
 condition|)
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -5837,7 +5877,7 @@ name|voltage
 operator|&
 name|CARD_XV_CARD
 condition|)
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -5853,7 +5893,7 @@ name|voltage
 operator|&
 name|CARD_3V_CARD
 condition|)
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -5869,7 +5909,7 @@ name|voltage
 operator|&
 name|CARD_5V_CARD
 condition|)
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -5916,14 +5956,14 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccbb_cardbus_reset
+name|cbb_cardbus_reset
 parameter_list|(
 name|device_t
 name|brdev
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -5972,7 +6012,7 @@ comment|/* If a card exists, unreset it! */
 if|if
 condition|(
 operator|(
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -6010,7 +6050,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_power_enable_socket
+name|cbb_cardbus_power_enable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -6020,7 +6060,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -6035,7 +6075,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
@@ -6054,7 +6094,7 @@ operator|)
 return|;
 name|err
 operator|=
-name|pccbb_do_power
+name|cbb_do_power
 argument_list|(
 name|brdev
 argument_list|)
@@ -6068,7 +6108,7 @@ operator|(
 name|err
 operator|)
 return|;
-name|pccbb_cardbus_reset
+name|cbb_cardbus_reset
 argument_list|(
 name|brdev
 argument_list|)
@@ -6084,7 +6124,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_cardbus_power_disable_socket
+name|cbb_cardbus_power_disable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -6093,7 +6133,7 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -6102,7 +6142,7 @@ operator||
 name|CARD_VPP_0V
 argument_list|)
 expr_stmt|;
-name|pccbb_cardbus_reset
+name|cbb_cardbus_reset
 argument_list|(
 name|brdev
 argument_list|)
@@ -6125,7 +6165,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_io_open
+name|cbb_cardbus_io_open
 parameter_list|(
 name|device_t
 name|brdev
@@ -6166,7 +6206,7 @@ argument_list|(
 operator|(
 name|brdev
 operator|,
-literal|"pccbb_cardbus_io_open: window out of range %d\n"
+literal|"cbb_cardbus_io_open: window out of range %d\n"
 operator|,
 name|win
 operator|)
@@ -6227,7 +6267,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_mem_open
+name|cbb_cardbus_mem_open
 parameter_list|(
 name|device_t
 name|brdev
@@ -6268,7 +6308,7 @@ argument_list|(
 operator|(
 name|brdev
 operator|,
-literal|"pccbb_cardbus_mem_open: window out of range %d\n"
+literal|"cbb_cardbus_mem_open: window out of range %d\n"
 operator|,
 name|win
 operator|)
@@ -6333,10 +6373,10 @@ end_comment
 begin_function
 specifier|static
 name|void
-name|pccbb_cardbus_auto_open
+name|cbb_cardbus_auto_open
 parameter_list|(
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -6357,7 +6397,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|pccbb_reslist
+name|cbb_reslist
 modifier|*
 name|rle
 decl_stmt|;
@@ -6568,7 +6608,7 @@ index|[
 literal|0
 index|]
 operator|<
-name|PCCBB_AUTO_OPEN_SMALLHOLE
+name|CBB_AUTO_OPEN_SMALLHOLE
 operator|&&
 name|prefetchable
 index|[
@@ -6627,7 +6667,7 @@ operator|->
 name|res
 argument_list|)
 operator|<
-name|PCCBB_AUTO_OPEN_SMALLHOLE
+name|CBB_AUTO_OPEN_SMALLHOLE
 operator|&&
 name|prefetchable
 index|[
@@ -6736,7 +6776,7 @@ index|[
 literal|1
 index|]
 operator|<
-name|PCCBB_AUTO_OPEN_SMALLHOLE
+name|CBB_AUTO_OPEN_SMALLHOLE
 operator|&&
 name|prefetchable
 index|[
@@ -6795,7 +6835,7 @@ operator|->
 name|res
 argument_list|)
 operator|<
-name|PCCBB_AUTO_OPEN_SMALLHOLE
+name|CBB_AUTO_OPEN_SMALLHOLE
 operator|&&
 name|prefetchable
 index|[
@@ -7173,7 +7213,7 @@ operator|==
 name|SYS_RES_MEMORY
 condition|)
 block|{
-name|pccbb_cardbus_mem_open
+name|cbb_cardbus_mem_open
 argument_list|(
 name|sc
 operator|->
@@ -7192,7 +7232,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|pccbb_cardbus_mem_open
+name|cbb_cardbus_mem_open
 argument_list|(
 name|sc
 operator|->
@@ -7279,7 +7319,7 @@ operator|==
 name|SYS_RES_IOPORT
 condition|)
 block|{
-name|pccbb_cardbus_io_open
+name|cbb_cardbus_io_open
 argument_list|(
 name|sc
 operator|->
@@ -7298,7 +7338,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|pccbb_cardbus_io_open
+name|cbb_cardbus_io_open
 argument_list|(
 name|sc
 operator|->
@@ -7324,7 +7364,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_activate_resource
+name|cbb_cardbus_activate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -7376,7 +7416,7 @@ operator|(
 name|ret
 operator|)
 return|;
-name|pccbb_cardbus_auto_open
+name|cbb_cardbus_auto_open
 argument_list|(
 name|device_get_softc
 argument_list|(
@@ -7397,7 +7437,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_deactivate_resource
+name|cbb_cardbus_deactivate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -7449,7 +7489,7 @@ operator|(
 name|ret
 operator|)
 return|;
-name|pccbb_cardbus_auto_open
+name|cbb_cardbus_auto_open
 argument_list|(
 name|device_get_softc
 argument_list|(
@@ -7472,7 +7512,7 @@ specifier|static
 name|struct
 name|resource
 modifier|*
-name|pccbb_cardbus_alloc_resource
+name|cbb_cardbus_alloc_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -7501,7 +7541,7 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -7555,7 +7595,7 @@ argument_list|(
 name|child
 argument_list|,
 literal|"requested interrupt %ld-%ld,"
-literal|"count = %ld not supported by pccbb\n"
+literal|"count = %ld not supported by cbb\n"
 argument_list|,
 name|start
 argument_list|,
@@ -7584,11 +7624,11 @@ if|if
 condition|(
 name|start
 operator|<=
-name|pccbb_start_32_io
+name|cbb_start_32_io
 condition|)
 name|start
 operator|=
-name|pccbb_start_32_io
+name|cbb_start_32_io
 expr_stmt|;
 if|if
 condition|(
@@ -7608,11 +7648,11 @@ if|if
 condition|(
 name|start
 operator|<=
-name|pccbb_start_mem
+name|cbb_start_mem
 condition|)
 name|start
 operator|=
-name|pccbb_start_mem
+name|cbb_start_mem
 expr_stmt|;
 if|if
 condition|(
@@ -7662,7 +7702,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pccbb alloc res fail\n"
+literal|"cbb alloc res fail\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7671,7 +7711,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|pccbb_insert_res
+name|cbb_insert_res
 argument_list|(
 name|sc
 argument_list|,
@@ -7735,7 +7775,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_cardbus_release_resource
+name|cbb_cardbus_release_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -7756,7 +7796,7 @@ name|res
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -7803,7 +7843,7 @@ name|error
 operator|)
 return|;
 block|}
-name|pccbb_remove_res
+name|cbb_remove_res
 argument_list|(
 name|sc
 argument_list|,
@@ -7847,7 +7887,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_power_enable_socket
+name|cbb_pcic_power_enable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -7857,7 +7897,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -7872,14 +7912,14 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pccbb_pcic_socket_enable:\n"
+literal|"cbb_pcic_socket_enable:\n"
 operator|)
 argument_list|)
 expr_stmt|;
 comment|/* power down/up the socket to reset */
 name|err
 operator|=
-name|pccbb_do_power
+name|cbb_do_power
 argument_list|(
 name|brdev
 argument_list|)
@@ -7914,7 +7954,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_pcic_power_disable_socket
+name|cbb_pcic_power_disable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -7924,7 +7964,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -7936,7 +7976,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"pccbb_pcic_socket_disable\n"
+literal|"cbb_pcic_socket_disable\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -7961,7 +8001,7 @@ literal|1000
 argument_list|)
 expr_stmt|;
 comment|/* power down the socket */
-name|pccbb_power
+name|cbb_power
 argument_list|(
 name|brdev
 argument_list|,
@@ -8008,7 +8048,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_power_enable_socket
+name|cbb_power_enable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -8018,7 +8058,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8033,11 +8073,11 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
 return|return
 operator|(
-name|pccbb_pcic_power_enable_socket
+name|cbb_pcic_power_enable_socket
 argument_list|(
 name|brdev
 argument_list|,
@@ -8048,7 +8088,7 @@ return|;
 else|else
 return|return
 operator|(
-name|pccbb_cardbus_power_enable_socket
+name|cbb_cardbus_power_enable_socket
 argument_list|(
 name|brdev
 argument_list|,
@@ -8062,7 +8102,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_power_disable_socket
+name|cbb_power_disable_socket
 parameter_list|(
 name|device_t
 name|brdev
@@ -8072,7 +8112,7 @@ name|child
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8087,9 +8127,9 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
-name|pccbb_pcic_power_disable_socket
+name|cbb_pcic_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
@@ -8097,7 +8137,7 @@ name|child
 argument_list|)
 expr_stmt|;
 else|else
-name|pccbb_cardbus_power_disable_socket
+name|cbb_cardbus_power_disable_socket
 argument_list|(
 name|brdev
 argument_list|,
@@ -8110,7 +8150,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_activate_resource
+name|cbb_pcic_activate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -8134,7 +8174,7 @@ name|int
 name|err
 decl_stmt|;
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8240,7 +8280,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_deactivate_resource
+name|cbb_pcic_deactivate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -8261,7 +8301,7 @@ name|res
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8357,7 +8397,7 @@ specifier|static
 name|struct
 name|resource
 modifier|*
-name|pccbb_pcic_alloc_resource
+name|cbb_pcic_alloc_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -8393,7 +8433,7 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8417,11 +8457,11 @@ if|if
 condition|(
 name|start
 operator|<
-name|pccbb_start_mem
+name|cbb_start_mem
 condition|)
 name|start
 operator|=
-name|pccbb_start_mem
+name|cbb_start_mem
 expr_stmt|;
 if|if
 condition|(
@@ -8455,11 +8495,11 @@ if|if
 condition|(
 name|start
 operator|<
-name|pccbb_start_16_io
+name|cbb_start_16_io
 condition|)
 name|start
 operator|=
-name|pccbb_start_16_io
+name|cbb_start_16_io
 expr_stmt|;
 if|if
 condition|(
@@ -8504,7 +8544,7 @@ argument_list|(
 name|child
 argument_list|,
 literal|"requested interrupt %ld-%ld,"
-literal|"count = %ld not supported by pccbb\n"
+literal|"count = %ld not supported by cbb\n"
 argument_list|,
 name|start
 argument_list|,
@@ -8574,7 +8614,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|pccbb_insert_res
+name|cbb_insert_res
 argument_list|(
 name|sc
 argument_list|,
@@ -8640,7 +8680,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_release_resource
+name|cbb_pcic_release_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -8661,7 +8701,7 @@ name|res
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8708,7 +8748,7 @@ name|error
 operator|)
 return|;
 block|}
-name|pccbb_remove_res
+name|cbb_remove_res
 argument_list|(
 name|sc
 argument_list|,
@@ -8752,7 +8792,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_set_res_flags
+name|cbb_pcic_set_res_flags
 parameter_list|(
 name|device_t
 name|brdev
@@ -8771,7 +8811,7 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8798,7 +8838,7 @@ operator|)
 return|;
 name|res
 operator|=
-name|pccbb_find_res
+name|cbb_find_res
 argument_list|(
 name|sc
 argument_list|,
@@ -8848,7 +8888,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_pcic_set_memory_offset
+name|cbb_pcic_set_memory_offset
 parameter_list|(
 name|device_t
 name|brdev
@@ -8868,7 +8908,7 @@ name|deltap
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8884,7 +8924,7 @@ name|res
 decl_stmt|;
 name|res
 operator|=
-name|pccbb_find_res
+name|cbb_find_res
 argument_list|(
 name|sc
 argument_list|,
@@ -8948,7 +8988,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_activate_resource
+name|cbb_activate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -8969,7 +9009,7 @@ name|r
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -8984,11 +9024,11 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
 return|return
 operator|(
-name|pccbb_pcic_activate_resource
+name|cbb_pcic_activate_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9005,7 +9045,7 @@ return|;
 else|else
 return|return
 operator|(
-name|pccbb_cardbus_activate_resource
+name|cbb_cardbus_activate_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9025,7 +9065,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_deactivate_resource
+name|cbb_deactivate_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -9046,7 +9086,7 @@ name|r
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9061,11 +9101,11 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
 return|return
 operator|(
-name|pccbb_pcic_deactivate_resource
+name|cbb_pcic_deactivate_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9082,7 +9122,7 @@ return|;
 else|else
 return|return
 operator|(
-name|pccbb_cardbus_deactivate_resource
+name|cbb_cardbus_deactivate_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9104,7 +9144,7 @@ specifier|static
 name|struct
 name|resource
 modifier|*
-name|pccbb_alloc_resource
+name|cbb_alloc_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -9133,7 +9173,7 @@ name|flags
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9148,11 +9188,11 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
 return|return
 operator|(
-name|pccbb_pcic_alloc_resource
+name|cbb_pcic_alloc_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9175,7 +9215,7 @@ return|;
 else|else
 return|return
 operator|(
-name|pccbb_cardbus_alloc_resource
+name|cbb_cardbus_alloc_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9201,7 +9241,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_release_resource
+name|cbb_release_resource
 parameter_list|(
 name|device_t
 name|brdev
@@ -9222,7 +9262,7 @@ name|r
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9237,11 +9277,11 @@ name|sc
 operator|->
 name|flags
 operator|&
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 condition|)
 return|return
 operator|(
-name|pccbb_pcic_release_resource
+name|cbb_pcic_release_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9258,7 +9298,7 @@ return|;
 else|else
 return|return
 operator|(
-name|pccbb_cardbus_release_resource
+name|cbb_cardbus_release_resource
 argument_list|(
 name|brdev
 argument_list|,
@@ -9278,7 +9318,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_read_ivar
+name|cbb_read_ivar
 parameter_list|(
 name|device_t
 name|brdev
@@ -9295,7 +9335,7 @@ name|result
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9336,7 +9376,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_write_ivar
+name|cbb_write_ivar
 parameter_list|(
 name|device_t
 name|brdev
@@ -9352,7 +9392,7 @@ name|value
 parameter_list|)
 block|{
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9400,7 +9440,7 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|pccbb_maxslots
+name|cbb_maxslots
 parameter_list|(
 name|device_t
 name|brdev
@@ -9417,7 +9457,7 @@ end_function
 begin_function
 specifier|static
 name|uint32_t
-name|pccbb_read_config
+name|cbb_read_config
 parameter_list|(
 name|device_t
 name|brdev
@@ -9469,7 +9509,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|pccbb_write_config
+name|cbb_write_config
 parameter_list|(
 name|device_t
 name|brdev
@@ -9523,7 +9563,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_suspend
+name|cbb_suspend
 parameter_list|(
 name|device_t
 name|self
@@ -9535,7 +9575,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
@@ -9575,7 +9615,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pccbb_resume
+name|cbb_resume
 parameter_list|(
 name|device_t
 name|self
@@ -9587,13 +9627,13 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|pccbb_softc
+name|cbb_softc
 modifier|*
 name|sc
 init|=
 operator|(
 expr|struct
-name|pccbb_softc
+name|cbb_softc
 operator|*
 operator|)
 name|device_get_softc
@@ -9636,7 +9676,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|pccbb_chipinit
+name|cbb_chipinit
 argument_list|(
 name|sc
 argument_list|)
@@ -9654,7 +9694,7 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_AV
 argument_list|,
-name|pccbb_intr
+name|cbb_intr
 argument_list|,
 name|sc
 argument_list|,
@@ -9717,7 +9757,7 @@ operator|)
 return|;
 block|}
 comment|/* CSC Interrupt: Card detect interrupt on */
-name|pccbb_setb
+name|cbb_setb
 argument_list|(
 name|sc
 argument_list|,
@@ -9729,14 +9769,14 @@ expr_stmt|;
 comment|/* reset interrupt */
 name|tmp
 operator|=
-name|pccbb_get
+name|cbb_get
 argument_list|(
 name|sc
 argument_list|,
 name|CBB_SOCKET_EVENT
 argument_list|)
 expr_stmt|;
-name|pccbb_set
+name|cbb_set
 argument_list|(
 name|sc
 argument_list|,
@@ -9793,7 +9833,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|pccbb_methods
+name|cbb_methods
 index|[]
 init|=
 block|{
@@ -9802,42 +9842,42 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|pccbb_probe
+name|cbb_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|pccbb_attach
+name|cbb_attach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_detach
 argument_list|,
-name|pccbb_detach
+name|cbb_detach
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_shutdown
 argument_list|,
-name|pccbb_shutdown
+name|cbb_shutdown
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|pccbb_suspend
+name|cbb_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|pccbb_resume
+name|cbb_resume
 argument_list|)
 block|,
 comment|/* bus methods */
@@ -9852,70 +9892,70 @@ name|DEVMETHOD
 argument_list|(
 name|bus_read_ivar
 argument_list|,
-name|pccbb_read_ivar
+name|cbb_read_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_write_ivar
 argument_list|,
-name|pccbb_write_ivar
+name|cbb_write_ivar
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_alloc_resource
 argument_list|,
-name|pccbb_alloc_resource
+name|cbb_alloc_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_release_resource
 argument_list|,
-name|pccbb_release_resource
+name|cbb_release_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_activate_resource
 argument_list|,
-name|pccbb_activate_resource
+name|cbb_activate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_deactivate_resource
 argument_list|,
-name|pccbb_deactivate_resource
+name|cbb_deactivate_resource
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_driver_added
 argument_list|,
-name|pccbb_driver_added
+name|cbb_driver_added
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_child_detached
 argument_list|,
-name|pccbb_child_detached
+name|cbb_child_detached
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_setup_intr
 argument_list|,
-name|pccbb_setup_intr
+name|cbb_setup_intr
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_teardown_intr
 argument_list|,
-name|pccbb_teardown_intr
+name|cbb_teardown_intr
 argument_list|)
 block|,
 comment|/* 16-bit card interface */
@@ -9923,21 +9963,21 @@ name|DEVMETHOD
 argument_list|(
 name|card_set_res_flags
 argument_list|,
-name|pccbb_pcic_set_res_flags
+name|cbb_pcic_set_res_flags
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|card_set_memory_offset
 argument_list|,
-name|pccbb_pcic_set_memory_offset
+name|cbb_pcic_set_memory_offset
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|card_reprobe_card
 argument_list|,
-name|pccbb_card_reprobe
+name|cbb_card_reprobe
 argument_list|)
 block|,
 comment|/* power interface */
@@ -9945,14 +9985,14 @@ name|DEVMETHOD
 argument_list|(
 name|power_enable_socket
 argument_list|,
-name|pccbb_power_enable_socket
+name|cbb_power_enable_socket
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|power_disable_socket
 argument_list|,
-name|pccbb_power_disable_socket
+name|cbb_power_disable_socket
 argument_list|)
 block|,
 comment|/* pcib compatibility interface */
@@ -9960,21 +10000,21 @@ name|DEVMETHOD
 argument_list|(
 name|pcib_maxslots
 argument_list|,
-name|pccbb_maxslots
+name|cbb_maxslots
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|pcib_read_config
 argument_list|,
-name|pccbb_read_config
+name|cbb_read_config
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|pcib_write_config
 argument_list|,
-name|pccbb_write_config
+name|cbb_write_config
 argument_list|)
 block|,
 block|{
@@ -9989,17 +10029,17 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|pccbb_driver
+name|cbb_driver
 init|=
 block|{
-literal|"pccbb"
+literal|"cbb"
 block|,
-name|pccbb_methods
+name|cbb_methods
 block|,
 expr|sizeof
 operator|(
 expr|struct
-name|pccbb_softc
+name|cbb_softc
 operator|)
 block|}
 decl_stmt|;
@@ -10008,20 +10048,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|pccbb_devclass
+name|cbb_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|pccbb
+name|cbb
 argument_list|,
 name|pci
 argument_list|,
-name|pccbb_driver
+name|cbb_driver
 argument_list|,
-name|pccbb_devclass
+name|cbb_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -10033,7 +10073,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|pccbb
+name|cbb
 argument_list|,
 literal|1
 argument_list|)
@@ -10043,41 +10083,9 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|pccbb
+name|cbb
 argument_list|,
 name|exca
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|pccbb
-argument_list|,
-name|pccard
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|pccbb
-argument_list|,
-name|cardbus
 argument_list|,
 literal|1
 argument_list|,

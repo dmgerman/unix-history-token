@@ -38,11 +38,11 @@ end_struct
 
 begin_struct
 struct|struct
-name|pccbb_reslist
+name|cbb_reslist
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|pccbb_reslist
+argument|cbb_reslist
 argument_list|)
 name|link
 expr_stmt|;
@@ -69,13 +69,13 @@ end_struct
 begin_define
 define|#
 directive|define
-name|PCCBB_AUTO_OPEN_SMALLHOLE
+name|CBB_AUTO_OPEN_SMALLHOLE
 value|0x100
 end_define
 
 begin_struct
 struct|struct
-name|pccbb_softc
+name|cbb_softc
 block|{
 name|device_t
 name|dev
@@ -123,19 +123,19 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|PCCBB_KLUDGE_ALLOC
+name|CBB_KLUDGE_ALLOC
 value|0x10000000
 define|#
 directive|define
-name|PCCBB_16BIT_CARD
+name|CBB_16BIT_CARD
 value|0x20000000
 define|#
 directive|define
-name|PCCBB_KTHREAD_RUNNING
+name|CBB_KTHREAD_RUNNING
 value|0x40000000
 define|#
 directive|define
-name|PCCBB_KTHREAD_DONE
+name|CBB_KTHREAD_DONE
 value|0x80000000
 name|int
 name|chipset
@@ -189,7 +189,7 @@ comment|/* Toshiba ToPIC97/100 */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
-argument|pccbb_reslist
+argument|cbb_reslist
 argument_list|)
 name|rl
 expr_stmt|;
