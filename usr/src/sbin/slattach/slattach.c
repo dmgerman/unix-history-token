@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slattach.c	4.3 (Berkeley) %G%"
+literal|"@(#)slattach.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -98,6 +92,18 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -250,11 +256,16 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|,
 name|dev
 argument_list|,
-literal|5
+sizeof|sizeof
+argument_list|(
+name|_PATH_DEV
+argument_list|)
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -265,7 +276,9 @@ name|sprintf
 argument_list|(
 name|devname
 argument_list|,
-literal|"/dev/%s"
+literal|"%s/%s"
+argument_list|,
+name|_PATH_DEV
 argument_list|,
 name|dev
 argument_list|)
