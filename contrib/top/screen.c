@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  */
+comment|/*  *  Top users/processes display for Unix  *  Version 3  *  *  This program may be freely redistributed,  *  but this entire comment MUST remain intact.  *  *  Copyright (c) 1984, 1989, William LeFebvre, Rice University  *  Copyright (c) 1989, 1990, 1992, William LeFebvre, Northwestern University  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -327,12 +327,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|terminal_end
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|short
-name|ospeed
 decl_stmt|;
 end_decl_stmt
 
