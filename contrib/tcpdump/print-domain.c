@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.64 2001/01/02 23:24:51 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.64.2.1 2001/02/21 09:01:20 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3054,6 +3054,12 @@ name|HEADER
 operator|*
 operator|)
 name|bp
+expr_stmt|;
+name|TCHECK
+argument_list|(
+operator|*
+name|np
+argument_list|)
 expr_stmt|;
 comment|/* get the byte-order right */
 name|qdcount
