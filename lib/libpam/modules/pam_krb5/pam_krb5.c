@@ -3477,6 +3477,10 @@ begin_comment
 comment|/*  * This routine with some modification is from the MIT V5B6 appl/bsd/login.c  * Modified by Sam Hartman<hartmans@mit.edu> to support PAM services  * for Debian.  *  * Verify the Kerberos ticket-granting ticket just retrieved for the  * user.  If the Kerberos server doesn't respond, assume the user is  * trying to fake us out (since we DID just get a TGT from what is  * supposedly our KDC).  If the host/<host> service is unknown (i.e.,  * the local keytab doesn't have it), and we cannot find another  * service we do have, let her in.  *  * Returns 1 for confirmation, -1 for failure, 0 for uncertainty.  */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3909,6 +3913,10 @@ begin_comment
 comment|/* Free the memory for cache_name. Called by pam_end() */
 end_comment
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -4046,6 +4054,10 @@ directive|ifdef
 name|COMPAT_HEIMDAL
 end_ifdef
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_function
 specifier|static
 specifier|const
@@ -4078,6 +4090,10 @@ index|]
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
 
 begin_function
 specifier|static
