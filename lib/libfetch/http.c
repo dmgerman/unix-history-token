@@ -295,7 +295,9 @@ if|if
 condition|(
 name|c
 operator|->
-name|b_len
+name|conn
+operator|->
+name|buflen
 operator|<
 literal|2
 operator|||
