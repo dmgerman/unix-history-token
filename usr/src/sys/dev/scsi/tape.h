@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)tape.h	5.2 (Berkeley) %G%  *  * from: $Header: tape.h,v 1.2 92/05/15 11:24:06 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)tape.h	5.3 (Berkeley) %G%  *  * from: $Header: tape.h,v 1.3 92/12/02 03:53:14 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
-comment|/*  * SCSI definitions for Sequential Access Devices (tapes).  */
+comment|/*  * SCSI definitions for Sequential Access Devices (tapes).  *  * Commands defined in common headers (scsi.h or disktape.h) are omitted.  */
 end_comment
 
 begin_define
@@ -120,17 +120,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMD_MODE_SELECT
-value|0x15
-end_define
-
-begin_comment
-comment|/* mode select */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CMD_RESERVE_UNIT
 value|0x16
 end_define
@@ -168,17 +157,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMD_MODE_SENSE
-value|0x1a
-end_define
-
-begin_comment
-comment|/* mode sense */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CMD_LOAD_UNLOAD
 value|0x1b
 end_define
@@ -210,26 +188,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x08 or 0x0a or 0x0f or 0x13 or 0x14 */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_bf
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx
-range|:
-literal|3
-decl_stmt|,
-comment|/* reserved */
-name|cdb_bytecmp
-range|:
-literal|1
-decl_stmt|,
-comment|/* byte-by-byte comparison (VERIFY only) */
-name|cdb_fixed
-range|:
-literal|1
-decl_stmt|,
-comment|/* fixed length blocks */
+comment|/* LUN + reserved + bytecmp + fixed */
 name|cdb_lenh
 decl_stmt|,
 comment|/* transfer length (MSB) */
@@ -246,6 +207,28 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|SCSI_RW_BYTECMP
+value|0x02
+end_define
+
+begin_comment
+comment|/* byte compare flag if verify */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RW_FIXEDBLK
+value|0x01
+end_define
+
+begin_comment
+comment|/* fixed block size for read/write */
+end_comment
+
 begin_comment
 comment|/*  * Structure of a TRACK SELECT command.  */
 end_comment
@@ -258,16 +241,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x0b */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_xxx
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx0
-range|:
-literal|5
-decl_stmt|,
-comment|/* reserved */
+comment|/* logical unit number + reserved */
 name|cdb_xxx1
 decl_stmt|,
 comment|/* reserved */
@@ -296,16 +272,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x0b */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_xxx
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx0
-range|:
-literal|5
-decl_stmt|,
-comment|/* reserved */
+comment|/* logical unit number + reserved */
 name|cdb_nfh
 decl_stmt|,
 comment|/* number of filemarks (MSB) */
@@ -334,21 +303,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x0b */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_code
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx0
-range|:
-literal|3
-decl_stmt|,
-comment|/* reserved */
-name|cdb_code
-range|:
-literal|2
-decl_stmt|,
-comment|/* code (see below) */
+comment|/* LUN + reserved + 2-bit code */
 name|cdb_counth
 decl_stmt|,
 comment|/* count (MSB) */
@@ -410,283 +367,6 @@ comment|/* skip to physical end of data */
 end_comment
 
 begin_comment
-comment|/*  * Mode Select parameters (data).  */
-end_comment
-
-begin_struct
-struct|struct
-name|scsi_msel
-block|{
-name|u_short
-name|msel_xxx0
-decl_stmt|;
-comment|/* reserved */
-name|u_char
-name|msel_xxx1
-range|:
-literal|1
-decl_stmt|,
-comment|/* reserved */
-name|msel_bm
-range|:
-literal|3
-decl_stmt|,
-comment|/* buffered mode */
-name|msel_speed
-range|:
-literal|4
-decl_stmt|,
-comment|/* speed */
-name|msel_bdl
-decl_stmt|;
-comment|/* block descriptor length */
-struct|struct
-name|scsi_msel_bdesc
-block|{
-name|u_char
-name|dc
-decl_stmt|,
-comment|/* density code */
-name|nbh
-decl_stmt|,
-comment|/* number of blocks (MSB) */
-name|nbm
-decl_stmt|,
-comment|/* number of blocks */
-name|nbl
-decl_stmt|,
-comment|/* number of blocks (LSB) */
-name|xxx
-decl_stmt|,
-comment|/* reserved */
-name|blh
-decl_stmt|,
-comment|/* block length (MSB) */
-name|blm
-decl_stmt|,
-comment|/* block length */
-name|bll
-decl_stmt|;
-comment|/* block length (LSB) */
-block|}
-name|msel_bd
-index|[
-literal|1
-index|]
-struct|;
-comment|/* actually longer */
-comment|/* followed by Vendor Unique bytes */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* buffered mode and speed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_BM_UNBUFFERED
-value|0
-end_define
-
-begin_comment
-comment|/* unbuffered writes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_BM_BUFFERED
-value|1
-end_define
-
-begin_comment
-comment|/* buffered writes allowed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_SPEED_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* use device default speed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_SPEED_LOW
-value|1
-end_define
-
-begin_comment
-comment|/* use lowest speed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_SPEED_HIGH
-value|15
-end_define
-
-begin_comment
-comment|/* use highest speed */
-end_comment
-
-begin_comment
-comment|/* density codes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_DEFAULT
-value|0
-end_define
-
-begin_comment
-comment|/* use device default density */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_9T_800BPI
-value|1
-end_define
-
-begin_comment
-comment|/* 9 track, 800 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_9T_1600BPI
-value|2
-end_define
-
-begin_comment
-comment|/* 9 track, 1600 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_9T_6250BPI
-value|3
-end_define
-
-begin_comment
-comment|/* 9 track, 6250 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_QIC_XX1
-value|4
-end_define
-
-begin_comment
-comment|/* QIC-11? 4 or 9 track, 8000 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_QIC_XX2
-value|5
-end_define
-
-begin_comment
-comment|/* QIC-11? 4 or 9 track, 8000 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_9T_3200BPI
-value|6
-end_define
-
-begin_comment
-comment|/* 9 track, 3200 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_QIC_XX3
-value|7
-end_define
-
-begin_comment
-comment|/* QIC, 4 track, 6400 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_CS_XX4
-value|8
-end_define
-
-begin_comment
-comment|/* cassette 4 track, 8000 bpi 8/ #define	SCSI_MSEL_DC_HIC_XX5	9	/* half inch cartridge, 18 track */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_HIC_XX6
-value|10
-end_define
-
-begin_comment
-comment|/* HIC, 22 track, 6667 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_QIC_XX7
-value|11
-end_define
-
-begin_comment
-comment|/* QIC, 4 track, 1600 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_HIC_XX8
-value|12
-end_define
-
-begin_comment
-comment|/* HIC, 24 track, 12690 bpi */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_MSEL_DC_HIC_XX9
-value|13
-end_define
-
-begin_comment
-comment|/* HIC, 24 track, 25380 bpi */
-end_comment
-
-begin_comment
 comment|/*  * Structure of an ERASE command.  */
 end_comment
 
@@ -698,21 +378,9 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x0b */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_long
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx0
-range|:
-literal|4
-decl_stmt|,
-comment|/* reserved */
-name|cdb_long
-range|:
-literal|1
-decl_stmt|,
-comment|/* long erase */
+comment|/* LUN + reserved + long-erase flag */
 name|cdb_xxx1
 decl_stmt|,
 comment|/* reserved */
@@ -741,48 +409,57 @@ name|u_char
 name|cdb_cmd
 decl_stmt|,
 comment|/* 0x1b */
-name|cdb_lun
-range|:
-literal|3
+name|cdb_lun_immed
 decl_stmt|,
-comment|/* logical unit number */
-name|cdb_xxx0
-range|:
-literal|4
-decl_stmt|,
-comment|/* reserved */
-name|cdb_immed
-range|:
-literal|1
-decl_stmt|,
-comment|/* return status immediately */
+comment|/* LUN + reserved + immediate flag */
 name|cdb_xxx1
 decl_stmt|,
 comment|/* reserved */
 name|cdb_xxx2
 decl_stmt|,
 comment|/* reserved */
-name|cdb_xxx3
-range|:
-literal|6
+name|cdb_rl
 decl_stmt|,
-comment|/* reserved */
-name|cdb_reten
-range|:
-literal|1
-decl_stmt|,
-comment|/* retension tape */
-name|cdb_load
-range|:
-literal|1
-decl_stmt|,
-comment|/* load (else unload) */
+comment|/* reserved + retension flag + load flag */
 name|cdb_ctrl
 decl_stmt|;
 comment|/* control byte */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SCSI_LU_RL_RETEN
+value|0x02
+end_define
+
+begin_comment
+comment|/* retension */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_LU_RL_LOAD
+value|0x01
+end_define
+
+begin_comment
+comment|/* load */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_LU_RL_UNLOAD
+value|0x00
+end_define
+
+begin_comment
+comment|/* unload (pseudo flag) */
+end_comment
 
 end_unit
 
