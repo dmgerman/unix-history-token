@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)seekdir.c 1.1 %G%"
+literal|"@(#)seekdir.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,18 +26,24 @@ file|<ndir.h>
 end_include
 
 begin_comment
-comment|/*  * reset a directory.  */
+comment|/*  * seek to an entry in a directory.  * Only values returned by ``telldir'' should be passed to seekdir.  */
 end_comment
 
 begin_function
 name|void
-name|resetdir
+name|seekdir
 parameter_list|(
 name|dirp
+parameter_list|,
+name|loc
 parameter_list|)
+specifier|register
 name|DIR
 modifier|*
 name|dirp
+decl_stmt|;
+name|long
+name|loc
 decl_stmt|;
 block|{
 name|lseek
@@ -46,10 +52,14 @@ name|dirp
 operator|->
 name|dd_fd
 argument_list|,
+name|loc
+operator|&
+operator|~
 operator|(
-name|long
+name|DIRBLKSIZ
+operator|-
+literal|1
 operator|)
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -58,7 +68,34 @@ name|dirp
 operator|->
 name|dd_loc
 operator|=
+name|loc
+operator|%
+name|DIRBLKSIZ
+expr_stmt|;
+if|if
+condition|(
+name|dirp
+operator|->
+name|dd_loc
+operator|!=
 literal|0
+condition|)
+name|dirp
+operator|->
+name|dd_size
+operator|=
+name|read
+argument_list|(
+name|dirp
+operator|->
+name|dd_fd
+argument_list|,
+name|dirp
+operator|->
+name|dd_buf
+argument_list|,
+name|DIRBLKSIZ
+argument_list|)
 expr_stmt|;
 block|}
 end_function
