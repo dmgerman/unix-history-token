@@ -104,12 +104,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -179,24 +173,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2369,11 +2350,6 @@ name|mau
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -2387,8 +2363,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|NAPM
@@ -3202,11 +3176,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Initialize multicast address hashing registers to accept 	 *	 all multicasts (only used when in promiscuous mode) 	 */
 for|for
 control|(
@@ -3234,8 +3203,6 @@ argument_list|,
 literal|0xff
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Set Current Page pointer to next_packet (initialized above) 	 */
 name|outb
 argument_list|(
@@ -3686,11 +3653,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there is BPF support in the configuration, tap off here. 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -3706,8 +3668,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m0
@@ -4651,11 +4611,6 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -4697,8 +4652,6 @@ name|ED_RCR_AB
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 break|break;
 default|default:
 name|error
@@ -4928,11 +4881,6 @@ condition|)
 goto|goto
 name|bad
 goto|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -5021,8 +4969,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Fix up data start offset in mbuf to point past ether header 	 */
 name|m_adj
 argument_list|(

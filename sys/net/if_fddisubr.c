@@ -356,12 +356,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -1620,11 +1614,6 @@ name|ether_type
 expr_stmt|;
 break|break;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 case|case
 name|AF_IMPLINK
 case|:
@@ -1758,8 +1747,6 @@ goto|goto
 name|queue_it
 goto|;
 block|}
-endif|#
-directive|endif
 default|default:
 name|printf
 argument_list|(

@@ -62,12 +62,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -119,24 +113,11 @@ directive|include
 file|<net/if_arp.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -913,11 +894,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -931,8 +907,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|tx_start_thresh
@@ -2192,11 +2166,6 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2221,8 +2190,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/*      * Do the output at splhigh() so that an interrupt from another device      * won't cause a FIFO underrun.      */
 name|sh
 operator|=
@@ -3284,11 +3251,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/*      * Check if there's a BPF listener on this interface.      * If so, hand off the raw packet to BPF.      */
 if|if
 condition|(
@@ -3314,8 +3276,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/*      * XXX: Some cards seem to be in promiscous mode all the time.      * we need to make sure we only get our own stuff always.      * bleah!      */
 if|if
 condition|(

@@ -221,31 +221,6 @@ directive|endif
 endif|NETATALK
 end_endif
 
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -481,11 +456,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -498,8 +468,6 @@ name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -755,11 +723,6 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* BPF write needs to be handled specially */
 if|if
 condition|(
@@ -838,18 +801,7 @@ name|dst
 operator|->
 name|sa_family
 decl_stmt|;
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-operator|->
-name|bif_dlt
-operator|==
-name|DLT_NULL
-condition|)
-block|{
-comment|/* 			 * We need to prepend the address family as 			 * a four byte field.  Cons up a dummy header 			 * to pacify bpf.  This is safe because bpf 			 * will only read from the mbuf (i.e., it won't 			 * try to free it or keep a pointer a to it). 			 */
+comment|/* 		 * We need to prepend the address family as 		 * a four byte field.  Cons up a dummy header 		 * to pacify bpf.  This is safe because bpf 		 * will only read from the mbuf (i.e., it won't 		 * try to free it or keep a pointer a to it). 		 */
 name|m0
 operator|.
 name|m_next
@@ -878,7 +830,6 @@ operator|=
 operator|&
 name|m0
 expr_stmt|;
-block|}
 name|bpf_mtap
 argument_list|(
 name|ifp
@@ -887,8 +838,6 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* Strip away media header */
 if|if
 condition|(

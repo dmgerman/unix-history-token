@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_tun.c,v 1.14 1994/06/29 06:36:25 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have its wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/poll mode of  * operation though.  */
+comment|/*  * Copyright (c) 1988, Julian Onions<jpo@cs.nott.ac.uk>  * Nottingham University 1987.  *  * This source may be freely distributed, however I would be interested  * in any changes that are made.  *  * This driver takes packets off the IP i/f and hands them up to a  * user process to have its wicked way with. This driver has it's  * roots in a similar driver written by Phil Cockcroft (formerly) at  * UCL. This driver is based much more on read/write/poll mode of  * operation though.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -188,27 +188,8 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -658,11 +639,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -675,8 +651,6 @@ name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|dev
 operator|->
 name|si_drv1
@@ -1553,11 +1527,6 @@ return|return
 name|EHOSTDOWN
 return|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* BPF write needs to be handled specially */
 if|if
 condition|(
@@ -1664,9 +1633,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 comment|/* prepend sockaddr? this may abort if the mbuf allocation fails */
 if|if
 condition|(
@@ -3010,11 +2976,6 @@ name|rcvif
 operator|=
 name|ifp
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -3064,8 +3025,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|INET

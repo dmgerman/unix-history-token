@@ -71,27 +71,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -765,11 +746,6 @@ operator|.
 name|if_ipackets
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -809,8 +785,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_data
@@ -965,11 +939,6 @@ name|pdq
 operator|->
 name|pdq_os_ctx
 decl_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -985,8 +954,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -1684,11 +1651,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|PDQ_BPFATTACH
 argument_list|(
 name|sc
@@ -1702,8 +1664,6 @@ name|fddi_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

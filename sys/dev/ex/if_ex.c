@@ -24,12 +24,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -99,24 +93,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1530,11 +1511,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -1548,8 +1524,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|DODEBUG
 argument_list|(
 argument|Start_End
@@ -2817,11 +2791,6 @@ name|tx_tail
 operator|=
 name|next
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -2837,8 +2806,6 @@ argument_list|,
 name|opkt
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_timer
@@ -3825,11 +3792,6 @@ comment|/* QQQ */
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -3921,8 +3883,6 @@ name|rx_another
 goto|;
 block|}
 block|}
-endif|#
-directive|endif
 name|m_adj
 argument_list|(
 name|ipkt

@@ -32,12 +32,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -147,24 +141,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -3097,11 +3078,6 @@ name|mcur
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 operator|!
@@ -3122,8 +3098,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -4169,11 +4143,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Padding */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -4189,8 +4158,6 @@ name|top
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|ifp
 operator|->
 name|if_timer
@@ -5392,11 +5359,6 @@ name|sc
 operator|->
 name|cur_len
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -5549,8 +5511,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
 name|eh
 operator|=
 name|mtod

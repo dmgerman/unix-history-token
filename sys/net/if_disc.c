@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -283,11 +277,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -300,8 +289,6 @@ name|u_int
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -358,11 +345,6 @@ argument_list|(
 literal|"discoutput no HDR"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* BPF write needs to be handled specially */
 if|if
 condition|(
@@ -470,8 +452,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr

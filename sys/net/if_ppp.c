@@ -212,24 +212,11 @@ directive|include
 file|"bpf.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -800,11 +787,6 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -817,8 +799,6 @@ argument_list|,
 name|PPP_HDRLEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|register_netisr
 argument_list|(
@@ -3786,11 +3766,6 @@ endif|#
 directive|endif
 comment|/* PPP_FILTER */
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/*      * See if bpf wants to look at the packet.      */
 if|if
 condition|(
@@ -3805,8 +3780,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/*      * Put the packet on the appropriate queue.      */
 name|s
 operator|=
@@ -6774,11 +6747,6 @@ endif|#
 directive|endif
 comment|/* PPP_FILTER */
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* See if bpf wants to look at the packet. */
 if|if
 condition|(
@@ -6798,8 +6766,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|rv
 operator|=
 literal|0

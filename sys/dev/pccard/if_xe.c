@@ -51,12 +51,6 @@ directive|include
 file|"apm.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -181,28 +175,11 @@ directive|include
 file|<net/if_mib.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NBPF> 0 */
-end_comment
 
 begin_include
 include|#
@@ -3594,11 +3571,6 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* If BPF is in the kernel, call the attach for it */
 if|#
 directive|if
@@ -3631,8 +3603,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Done */
 return|return
 literal|1
@@ -4020,11 +3990,6 @@ name|IFF_OACTIVE
 expr_stmt|;
 return|return;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* Tap off here if there is a bpf listener */
 if|if
 condition|(
@@ -4057,9 +4022,6 @@ name|mbp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 name|ifp
 operator|->
 name|if_timer
@@ -5126,11 +5088,6 @@ operator|>>
 literal|1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	   * Check if there's a BPF listener on this interface. If so, hand 	   * off the raw packet to bpf. 	   */
 if|if
 condition|(
@@ -5213,9 +5170,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 if|if
 condition|(
 name|mbp

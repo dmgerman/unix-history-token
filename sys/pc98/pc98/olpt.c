@@ -219,27 +219,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -3908,11 +3889,6 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -3922,8 +3898,6 @@ argument_list|,
 name|LPIPHDRLEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -5329,11 +5303,6 @@ goto|goto
 name|done
 goto|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -5358,8 +5327,6 @@ name|len
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|len
 operator|-=
 name|LPIPHDRLEN
@@ -6293,11 +6260,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -6347,8 +6309,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 name|m_freem
 argument_list|(

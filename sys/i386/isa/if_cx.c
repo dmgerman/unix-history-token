@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Cronyx-Sigma adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  */
+comment|/*  * Cronyx-Sigma adapter driver for FreeBSD.  * Supports PPP/HDLC and Cisco/HDLC protocol in synchronous mode,  * and asyncronous channels with full modem control.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $FreeBSD$  *  */
 end_comment
 
 begin_undef
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"cx.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bpf.h"
 end_include
 
 begin_include
@@ -100,24 +94,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1543,11 +1524,6 @@ name|c
 operator|->
 name|ifp
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* If BPF is in the kernel, call the attach for it. */
 name|bpfattach
 argument_list|(
@@ -1560,8 +1536,6 @@ argument_list|,
 name|PPP_HEADER_LEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 comment|/* Reset the adapter. */
@@ -2446,11 +2420,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|c
@@ -2468,8 +2437,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -4241,11 +4208,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -4266,8 +4228,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Count the received bytes to the subchannel, not the master. */
 name|c
 operator|->

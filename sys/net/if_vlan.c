@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -87,24 +81,11 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -747,11 +728,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -765,8 +741,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Now undo some of the damage... */
 name|ifp
 operator|->
@@ -890,11 +864,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -908,9 +877,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 comment|/* 		 * If the LINK0 flag is set, it means the underlying interface 		 * can do VLAN tag insertion itself and doesn't require us to 	 	 * create a special header for it. In this case, we just pass 		 * the packet along. However, we need some way to tell the 		 * interface where the packet came from so that it knows how 		 * to find the VLAN tag to use, so we set the rcvif in the 		 * mbuf header to our ifnet. 		 * 		 * Note: we also set the M_PROTO1 flag in the mbuf to let 		 * the parent driver know that the rcvif pointer is really 		 * valid. We need to do this because sometimes mbufs will 		 * be allocated by other parts of the system that contain 		 * garbage in the rcvif pointer. Using the M_PROTO1 flag 		 * lets the driver perform a proper sanity check and avoid 		 * following potentially bogus rcvif pointers off into 		 * never-never land. 		 */
 if|if
 condition|(
@@ -1231,11 +1197,6 @@ name|ifv
 operator|->
 name|ifv_if
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifv
@@ -1288,8 +1249,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|ifv
 operator|->
 name|ifv_if
@@ -1470,11 +1429,6 @@ name|len
 operator|-=
 name|EVL_ENCAPLEN
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifv
@@ -1527,8 +1481,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|ifv
 operator|->
 name|ifv_if

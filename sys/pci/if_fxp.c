@@ -10,12 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -90,24 +84,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -1873,11 +1854,6 @@ argument_list|,
 name|enaddr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -1900,8 +1876,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Add shutdown hook so that DMA is disabled prior to reboot. Not 	 * doing do could allow DMA to corrupt kernel memory during the 	 * reboot before the driver initializes. 	 */
 name|shutdownhook_establish
 argument_list|(
@@ -2644,11 +2618,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -2662,8 +2631,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|splx
 argument_list|(
 name|s
@@ -4212,11 +4179,6 @@ operator|->
 name|tx_queued
 operator|++
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * Pass packet to bpf if there is a listener. 		 */
 if|if
 condition|(
@@ -4234,8 +4196,6 @@ argument_list|,
 name|mb_head
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * We're finished. If we added to the list, issue a RESUME to get DMA 	 * going again if suspended. 	 */
 if|if
@@ -4626,11 +4586,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -4654,9 +4609,6 @@ argument_list|,
 name|total_len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 ifdef|#
 directive|ifdef
 name|BRIDGE

@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pnp.h"
 end_include
 
@@ -151,24 +145,11 @@ directive|include
 file|<net/if_mib.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -10144,11 +10125,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -10162,8 +10138,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -11679,11 +11653,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Tap off here if there is a bpf listener. 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -11699,8 +11668,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m0
@@ -13040,19 +13007,12 @@ name|IFF_RUNNING
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * Promiscuous flag may have changed, so reprogram the RCR. 		 */
 name|ed_setrcr
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * An unfortunate hack to provide the (required) software 		 * control of the tranceiver for 3Com boards. The ALTPHYS flag 		 * disables the tranceiver if set. 		 */
 if|if
 condition|(
@@ -13463,11 +13423,6 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* in case not bpf */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -13512,8 +13467,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-endif|#
-directive|endif
 name|ed_ring_copy
 argument_list|(
 name|sc
@@ -13644,11 +13597,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. If so, hand off 	 * the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -13672,8 +13620,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * If we are in promiscuous mode, we have to check whether 	 * this packet is really for us. 	 */
 if|if
 condition|(

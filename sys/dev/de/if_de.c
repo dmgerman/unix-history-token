@@ -125,27 +125,8 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -18562,11 +18543,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -18613,8 +18589,6 @@ name|ms
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|tulip_flags
@@ -20014,11 +19988,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TULIP_BUS_DMA */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -20039,8 +20008,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -25438,11 +25405,6 @@ operator|->
 name|tulip_if
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -25459,8 +25421,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

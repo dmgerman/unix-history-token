@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -143,24 +137,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2241,11 +2222,6 @@ literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If BPF is in the kernel, call the attach for it 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -2259,8 +2235,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -2865,11 +2839,6 @@ name|len
 expr_stmt|;
 block|}
 comment|/* 	 * Tap off here if there is a bpf listener. 	 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -2885,8 +2854,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -3023,11 +2990,6 @@ name|IFF_RUNNING
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * Promiscuous flag may have changed, propagage this 		 * to the NIC. 		 */
 if|if
 condition|(
@@ -3061,8 +3023,6 @@ name|CMR2_AM_PB
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|SIOCADDMULTI
@@ -4233,11 +4193,6 @@ argument_list|,
 name|CMR1_RDPAC
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. If so, hand off 	 * the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -4308,8 +4263,6 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Remove link layer address. 	 */
 name|m
 operator|->

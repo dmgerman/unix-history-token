@@ -49,12 +49,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -165,24 +159,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -1798,11 +1779,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -1816,8 +1792,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 operator|&
@@ -3794,11 +3768,6 @@ operator|)
 literal|0
 condition|)
 block|{
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* let BPF see it before we commit it */
 if|if
 condition|(
@@ -3815,8 +3784,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|sc
 operator|->
 name|tbusy
@@ -4686,11 +4653,6 @@ name|len
 operator|=
 name|clen
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/*      * Check if there's a BPF listener on this interface. If so, hand off      * the raw packet to bpf.      */
 if|if
 condition|(
@@ -4736,8 +4698,6 @@ name|m0
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/*      * If hw is in promiscuous mode (note that I said hardware, not if      * IFF_PROMISC is set in ifnet flags), then if this is a unicast      * packet and the MAC dst is not us, drop it.  This check was formerly      * inside the bpf if, above, but IFF_MULTI causes hw promisc without      * a bpf listener, so this is wrong.      *		Greg Troxel<gdt@ir.bbn.com>, 1998-08-07      */
 comment|/*      * TBD: also discard packets where NWID does not match.      * However, there does not appear to be a way to read the nwid      * for a received packet.  -gdt 1998-08-07      */
 if|if

@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -197,24 +191,11 @@ directive|include
 file|<i386/isa/elink.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -3750,11 +3731,6 @@ argument_list|,
 name|SHUTDOWN_PRI_DEFAULT
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -3768,8 +3744,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|if_attach
 argument_list|(
 name|ifp
@@ -5007,11 +4981,6 @@ case|case
 name|IFF_ALLMULTI
 case|:
 comment|/* 		 * Receiving all multicasts, but no unicasts except those 		 * destined for us. 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* BPF gets this packet if anybody cares */
 operator|*
 name|to_bpf
@@ -5028,8 +4997,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|eh
@@ -5077,11 +5044,6 @@ case|case
 name|IFF_PROMISC
 case|:
 comment|/* 		 * Receiving all packets.  These need to be passed on to 		 * BPF. 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 operator|*
 name|to_bpf
 operator|=
@@ -5097,8 +5059,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* If for us, accept and hand up to BPF */
 if|if
 condition|(
@@ -5120,11 +5080,6 @@ operator|(
 literal|1
 operator|)
 return|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 operator|*
@@ -5136,8 +5091,6 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* we don't need to see it */
-endif|#
-directive|endif
 comment|/* 		 * Not a multicast, so BPF wants to see it but we don't. 		 */
 if|if
 condition|(
@@ -5197,11 +5150,6 @@ index|]
 argument_list|)
 condition|)
 block|{
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 operator|*
@@ -5212,8 +5160,6 @@ name|to_bpf
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -5232,11 +5178,6 @@ operator||
 name|IFF_PROMISC
 case|:
 comment|/* 		 * Acting as a multicast router, and BPF running at the same 		 * time. Whew!	(Hope this is a fast machine...) 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 operator|*
 name|to_bpf
 operator|=
@@ -5252,8 +5193,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* We want to see multicasts. */
 if|if
 condition|(
@@ -5293,11 +5232,6 @@ literal|1
 operator|)
 return|;
 comment|/* Anything else goes to BPF but nothing else. */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 operator|*
@@ -5308,8 +5242,6 @@ name|to_bpf
 operator|=
 literal|2
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -5317,11 +5249,6 @@ operator|)
 return|;
 default|default:
 comment|/* 		 * Only accept unicast packets destined for us, or 		 * multicasts for groups that we belong to.  For now, we 		 * assume that the '586 will only return packets that we 		 * asked it for.  This isn't strictly true (it uses hashing 		 * for the multicast filter), but it will do in this case, 		 * and we want to get out of here as quickly as possible. 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 operator|*
 name|to_bpf
 operator|=
@@ -5337,8 +5264,6 @@ operator|!=
 literal|0
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -6266,18 +6191,11 @@ name|struct
 name|ether_header
 name|eh
 decl_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|int
 name|bpf_gets_it
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 name|bcopy
 argument_list|(
 call|(
@@ -6380,11 +6298,6 @@ operator|&
 name|IE_FD_OK
 condition|)
 block|{
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ieget
@@ -6404,32 +6317,6 @@ name|bpf_gets_it
 argument_list|)
 condition|)
 block|{
-else|#
-directive|else
-if|if
-condition|(
-name|ieget
-argument_list|(
-name|unit
-argument_list|,
-name|ie
-argument_list|,
-operator|&
-name|m
-argument_list|,
-operator|&
-name|eh
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-literal|0
-argument_list|)
-condition|)
-block|{
-endif|#
-directive|endif
 name|ie
 operator|->
 name|arpcom
@@ -6526,11 +6413,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check for a BPF filter; if so, hand it up. Note that we have to 	 * stick an extra mbuf up front, because bpf_mtap expects to have 	 * the ether header at the front. It doesn't matter that this 	 * results in an ill-formatted mbuf chain, since BPF just looks at 	 * the data.  (It doesn't try to free the mbuf, tho' it will make a 	 * copy for tcpdump.) 	 */
 if|if
 condition|(
@@ -6593,9 +6475,6 @@ name|m
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-comment|/* NBPF> 0 */
 comment|/* 	 * In here there used to be code to check destination addresses upon 	 * receipt of a packet.	 We have deleted that code, and replaced it 	 * with code to check the address much earlier in the cycle, before 	 * copying the data in; this saves us valuable cycles when operating 	 * as a multicast router or when using BPF. 	 */
 comment|/* 	 * Finally pass this packet up to higher layers. 	 */
 name|ether_input
@@ -6614,6 +6493,9 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ie_drop_packet_buffer
@@ -6784,7 +6666,13 @@ name|i
 condition|)
 do|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Start transmission on an interface.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|iestart
@@ -6954,11 +6842,6 @@ argument_list|,
 name|ETHER_MIN_LEN
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * See if bpf is listening on this interface, let it see the 		 * packet before we commit it to the wire. 		 */
 if|if
 condition|(
@@ -6995,8 +6878,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ie
 operator|->
 name|xmit_buffs
@@ -7209,7 +7090,13 @@ expr_stmt|;
 block|}
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Check to see if there's an 82586 out there.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|check_ie_present
@@ -7666,7 +7553,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Divine the memory size of ie board UNIT.  * Better hope there's nothing important hiding just below the ie card...  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|find_ie_mem_size
@@ -7724,6 +7617,9 @@ block|}
 block|}
 return|return;
 block|}
+end_function
+
+begin_function
 name|void
 name|el_reset_586
 parameter_list|(
@@ -7760,6 +7656,9 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|sl_reset_586
 parameter_list|(
@@ -7777,6 +7676,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ee16_reset_586
 parameter_list|(
@@ -7813,6 +7715,9 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|el_chan_attn
 parameter_list|(
@@ -7830,6 +7735,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|sl_chan_attn
 parameter_list|(
@@ -7847,6 +7755,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ee16_chan_attn
 parameter_list|(
@@ -7864,6 +7775,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|u_short
 name|ee16_read_eeprom
 parameter_list|(
@@ -7987,6 +7901,9 @@ return|return
 name|edata
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ee16_eeprom_outbits
 parameter_list|(
@@ -8115,6 +8032,9 @@ argument_list|)
 expr_stmt|;
 comment|/* eeprom data must be held for 0.4 uSec */
 block|}
+end_function
+
+begin_function
 name|int
 name|ee16_eeprom_inbits
 parameter_list|(
@@ -8215,6 +8135,9 @@ name|edata
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|ee16_eeprom_clock
 parameter_list|(
@@ -8278,6 +8201,9 @@ argument_list|)
 expr_stmt|;
 comment|/* EESK must be stable for 8.38 uSec */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|__inline
 name|void
@@ -8315,6 +8241,9 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|sl_read_ether
 parameter_list|(
@@ -8358,6 +8287,9 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|iereset
@@ -8538,7 +8470,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This is called if we time out.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|chan_attn_timeout
@@ -8558,7 +8496,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Send a command to the controller and wait for it to either  * complete or be accepted, depending on the command.  If the  * command pointer is null, then pretend that the command is  * not an action command.  If the command pointer is not null,  * and the command is an action command, wait for  * ((volatile struct ie_cmd_common *)pcmd)->ie_cmd_status& MASK  * to become true.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|command_and_wait
@@ -8730,7 +8674,13 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Run the time-domain reflectometer...  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|run_tdr
@@ -8922,6 +8872,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|start_receiver
@@ -8998,7 +8951,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Here is a helper routine for iernr() and ieinit().  This sets up  * the RFA.  */
+end_comment
+
+begin_function
 specifier|static
 name|v_caddr_t
 name|setup_rfa
@@ -9414,7 +9373,13 @@ name|ptr
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Run the multicast setup command.  * Call at splimp().  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|mc_setup
@@ -9576,7 +9541,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * This routine takes the environment generated by check_ie_present()  * and adds to it all the other structures we need to operate the adapter.  * This includes executing the CONFIGURE, IA-SETUP, and MC-SETUP commands,  * starting the receiver unit, and clearing interrupts.  *  * THIS ROUTINE MUST BE CALLED AT splimp() OR HIGHER.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|ieinit
@@ -10184,6 +10155,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ie_stop
@@ -10204,6 +10178,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|ieioctl
@@ -10437,6 +10414,9 @@ name|error
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ie_mc_reset
@@ -10590,9 +10570,15 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DEBUG
+end_ifdef
+
+begin_function
 specifier|static
 name|void
 name|print_rbd

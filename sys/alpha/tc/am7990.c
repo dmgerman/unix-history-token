@@ -21,30 +21,11 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpfdesc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -868,11 +849,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -891,8 +867,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|sc
@@ -1271,11 +1245,6 @@ name|u_int8_t
 modifier|*
 name|myaddr
 decl_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -1293,8 +1262,6 @@ operator||
 name|LE_MODE_PROM
 expr_stmt|;
 else|else
-endif|#
-directive|endif
 name|init
 operator|.
 name|init_mode
@@ -2584,11 +2551,6 @@ name|ether_header
 operator|*
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to BPF. 	 */
 if|if
 condition|(
@@ -2658,8 +2620,6 @@ block|}
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|LANCE_REVC_BUG
@@ -4141,11 +4101,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 		 * If BPF is listening on this interface, let it see the packet 		 * before we commit it to the wire. 		 */
 if|if
 condition|(
@@ -4162,8 +4117,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 		 * Copy the mbuf chain into the transmit buffer. 		 */
 name|len
 operator|=

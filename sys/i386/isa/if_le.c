@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
@@ -147,24 +141,11 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Forward declarations */
@@ -1506,11 +1487,6 @@ name|if_hdrlen
 operator|=
 literal|14
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -1524,8 +1500,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|if_attach
 argument_list|(
 name|ifp
@@ -1670,11 +1644,6 @@ name|eh
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -1795,8 +1764,6 @@ return|return;
 block|}
 block|}
 block|}
-endif|#
-directive|endif
 name|seg1
 operator|+=
 sizeof|sizeof
@@ -2072,11 +2039,6 @@ operator|-
 name|len1
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2210,8 +2172,6 @@ return|return;
 block|}
 block|}
 block|}
-endif|#
-directive|endif
 name|ether_input
 argument_list|(
 operator|&
@@ -4965,11 +4925,6 @@ name|tx_pg
 argument_list|)
 expr_stmt|;
 comment|/* tell chip to transmit this packet */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -4988,8 +4943,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m

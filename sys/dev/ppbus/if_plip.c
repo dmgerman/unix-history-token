@@ -86,27 +86,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -894,11 +875,6 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 name|ifp
@@ -911,8 +887,6 @@ name|u_int32_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -1803,14 +1777,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_function
 specifier|static
 name|void
@@ -1873,11 +1839,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -2181,11 +2142,6 @@ condition|(
 name|top
 condition|)
 block|{
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2204,8 +2160,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|IF_ENQUEUE
 argument_list|(
 operator|&
@@ -2507,11 +2461,6 @@ condition|(
 name|top
 condition|)
 block|{
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2530,8 +2479,6 @@ argument_list|,
 name|top
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|IF_ENQUEUE
 argument_list|(
 operator|&
@@ -3188,11 +3135,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -3206,8 +3148,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|m_freem
 argument_list|(
@@ -3433,11 +3373,6 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|ifp
@@ -3451,8 +3386,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|m_freem
 argument_list|(

@@ -28,12 +28,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -103,24 +97,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -947,11 +928,6 @@ literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* Finally, attach to bpf filter if it is present. */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|dprintf
 argument_list|(
 operator|(
@@ -972,8 +948,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|dprintf
 argument_list|(
 operator|(
@@ -1519,11 +1493,6 @@ name|ETHER_MIN_LEN
 argument_list|)
 expr_stmt|;
 comment|/* Give the packet to the bpf, if any */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -1550,8 +1519,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Transfer datagram to board */
 name|dprintf
 argument_list|(
@@ -2014,11 +1981,6 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a bpf filter listening on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -2108,8 +2070,6 @@ literal|0
 condition|)
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Pull packet off interface. 	 */
 name|m
 operator|=

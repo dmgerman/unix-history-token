@@ -24,12 +24,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -226,24 +220,11 @@ directive|include
 file|<net/slip.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -273,37 +254,12 @@ begin_comment
 comment|/*  * SLRMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLRMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is the default transmit MTU. The transmit MTU should be kept  * small enough so that interactive use doesn't suffer, but large  * enough to provide good performance. 552 is a good choice for SLMTU  * because it is high enough to not fragment TCP packets being routed  * through this host. Packet fragmentation is bad with SLIP because  * fragment headers aren't compressed. The previous assumptions about  * the best MTU value don't really hold when using modern modems with  * BTLZ data compression because the modem buffers play a much larger  * role in interactive performance than the MTU. The MTU can be changed  * at any time to suit the specific environment with ifconfig(8), and  * its maximum value is defined as SLTMAX. SLTMAX must not be so large  * that it would overflow the stack if BPF is configured (XXX; if_ppp.c  * handles this better).  *  * SLIP_HIWAT is the amount of data that will be queued 'downstream'  * of us (i.e., in clists waiting to be picked up by the tty output  * interrupt).  If we queue a lot of data downstream, it's immune to  * our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
 name|BUFOFFSET
 value|(128+sizeof(struct ifnet **)+SLIP_HDRLEN)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BUFOFFSET
-value|(128+sizeof(struct ifnet **))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -849,11 +805,6 @@ operator|->
 name|sc_if
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -866,8 +817,6 @@ argument_list|,
 name|SLIP_HDRLEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -2371,11 +2320,6 @@ name|mbuf
 modifier|*
 name|m2
 decl_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|u_char
 name|bpfbuf
 index|[
@@ -2390,8 +2334,6 @@ name|len
 init|=
 literal|0
 decl_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 init|;
@@ -2513,11 +2455,6 @@ return|return
 literal|0
 return|;
 comment|/* 		 * We do the header compression here rather than in sloutput 		 * because the packets will be out of order if we are using TOS 		 * queueing, and the connection id compression will get 		 * munged when this happens. 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2596,8 +2533,6 @@ name|NULL
 condition|)
 do|;
 block|}
-endif|#
-directive|endif
 name|ip
 operator|=
 name|mtod
@@ -2658,11 +2593,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2713,8 +2643,6 @@ name|SLIP_HDRLEN
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 		 * If system is getting low on clists, just flush our 		 * output queue (if the stuff was important, it'll get 		 * retransmitted). Note that SLTMAX is used instead of 		 * the current if_mtu setting because connections that 		 * have already been established still use the original 		 * (possibly larger) mss. 		 */
 if|if
 condition|(
@@ -3277,19 +3205,12 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|u_char
 name|chdr
 index|[
 name|CHDR_LEN
 index|]
 decl_stmt|;
-endif|#
-directive|endif
 name|tk_nin
 operator|++
 expr_stmt|;
@@ -3548,11 +3469,6 @@ comment|/* less than min length packet - ignore */
 goto|goto
 name|newpack
 goto|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -3575,8 +3491,6 @@ name|CHDR_LEN
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|(
@@ -3735,11 +3649,6 @@ goto|goto
 name|error
 goto|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -3796,8 +3705,6 @@ name|SLIP_HDRLEN
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|=
 name|sl_btom

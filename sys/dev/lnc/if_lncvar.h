@@ -13,37 +13,12 @@ begin_comment
 comment|/*  * Initialize multicast address hashing registers to accept  * all multicasts (only used when in promiscuous mode)  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
 name|MULTI_INIT_ADDR
 value|0xff
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|MULTI_INIT_ADDR
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

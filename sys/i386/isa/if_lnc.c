@@ -30,12 +30,6 @@ end_if
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet.h"
 end_include
 
@@ -141,24 +135,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2859,11 +2840,6 @@ name|head
 operator|->
 name|m_data
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -2886,8 +2862,6 @@ argument_list|,
 name|head
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|BRIDGE
@@ -5953,11 +5927,6 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 name|bpfattach
 argument_list|(
 operator|&
@@ -5976,8 +5945,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -8448,11 +8415,6 @@ name|if_timer
 operator|=
 literal|2
 expr_stmt|;
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -8475,8 +8437,6 @@ argument_list|,
 name|head
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc

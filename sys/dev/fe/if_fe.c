@@ -20,12 +20,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_fe.h"
 end_include
 
@@ -119,24 +113,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/bpf.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -11352,11 +11333,6 @@ name|sc_unit
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* If BPF is in the kernel, call the attach for it.  */
 name|bpfattach
 argument_list|(
@@ -11374,8 +11350,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|1
 return|;
@@ -12569,11 +12543,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Tap off here if there is a bpf listener, 		 * and the device is *not* in promiscuous mode. 		 * (86960 receives self-generated packets if  		 * and only if it is in "receive everything" 		 * mode.) 		 */
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 if|if
 condition|(
 name|sc
@@ -12605,8 +12574,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m_freem
 argument_list|(
 name|m
@@ -14436,11 +14403,6 @@ parameter_list|(
 name|A
 parameter_list|)
 value|(*(char *)(A)& 1)
-if|#
-directive|if
-name|NBPF
-operator|>
-literal|0
 comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If it is, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
@@ -14462,8 +14424,6 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|BRIDGE
