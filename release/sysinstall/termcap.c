@@ -217,7 +217,7 @@ literal|0
 operator|&&
 name|i
 operator|<
-literal|5
+literal|6
 condition|)
 block|{
 operator|*
