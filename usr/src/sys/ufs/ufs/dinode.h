@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dinode.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)dinode.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -349,6 +349,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|i_flags
+value|i_ic.ic_flags
+end_define
+
+begin_define
+define|#
+directive|define
 name|i_gen
 value|i_ic.ic_gen
 end_define
@@ -508,6 +515,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|di_flags
+value|di_ic.ic_flags
+end_define
+
+begin_define
+define|#
+directive|define
 name|di_gen
 value|di_ic.ic_gen
 end_define
@@ -550,6 +564,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of slots in the table */
+end_comment
+
+begin_decl_stmt
+name|u_long
+name|nextgennumber
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* next generation number to assign */
 end_comment
 
 begin_decl_stmt
@@ -869,7 +893,7 @@ name|ITOV
 parameter_list|(
 name|ip
 parameter_list|)
-value|((struct vnode *)&(ip)->i_vnode)
+value|(&(ip)->i_vnode)
 end_define
 
 begin_comment
