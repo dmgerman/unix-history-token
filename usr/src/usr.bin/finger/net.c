@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)net.c	5.3 (Berkeley) %G%"
+literal|"@(#)net.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,7 +437,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* 	 * read back what we get from the remote system. 	 * 	 * Note: once we connected to the remote site, we assume some data. 	 * If it can't/won't send any data, we hang here until Mr. User 	 * gets sufficiently bored to hit ^C. 	 * 	 * Some systems use the return key as a line terminator.  These 	 * systems tend to also set the parity bit on every byte.  If we 	 * see a<CR> with the 8th bit set, treat it as a newline character. 	 * 0x8d ==<CR> with high bit set. 	 * 	 * Otherwise, all high bits are stripped; if it isn't printable and 	 * it isn't a space, we can simply set the 7th bit.  Every ASCII 	 * character with bit 7 set is printable. 	 */
+comment|/* 	 * Read from the remote system; once we're connected, we assume some 	 * data.  If none arrives, we hang until the user interrupts. 	 * 	 * If we see a<CR> or a<CR> with the high bit set, treat it as 	 * a newline; if followed by a newline character, only output one 	 * newline. 	 * 	 * Otherwise, all high bits are stripped; if it isn't printable and 	 * it isn't a space, we can simply set the 7th bit.  Every ASCII 	 * character with bit 7 set is printable. 	 */
 if|if
 condition|(
 name|fp
@@ -463,20 +463,28 @@ operator|!=
 name|EOF
 condition|)
 block|{
-if|if
-condition|(
-name|c
-operator|==
-literal|0x8d
-condition|)
-name|c
-operator|=
-literal|'\n'
-expr_stmt|;
 name|c
 operator|&=
 literal|0x7f
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0x0d
+condition|)
+block|{
+name|c
+operator|=
+literal|'\n'
+expr_stmt|;
+name|lastc
+operator|=
+literal|'\r'
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 operator|!
@@ -495,10 +503,29 @@ name|c
 operator||=
 literal|0x40
 expr_stmt|;
+if|if
+condition|(
+name|lastc
+operator|!=
+literal|'\r'
+operator|||
+name|c
+operator|!=
+literal|'\n'
+condition|)
 name|lastc
 operator|=
 name|c
 expr_stmt|;
+else|else
+block|{
+name|lastc
+operator|=
+literal|'\n'
+expr_stmt|;
+continue|continue;
+block|}
+block|}
 name|putchar
 argument_list|(
 name|c
