@@ -68,16 +68,49 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+comment|/* This is REALLY gross, but we need to do the init later in get due to the fact      * that media is initialized BEFORE a filesystem is mounted now.      */
+return|return
+name|TRUE
+return|;
+block|}
+end_function
+
+begin_function
+name|FILE
+modifier|*
+name|mediaGetTape
+parameter_list|(
+name|Device
+modifier|*
+name|dev
+parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|Boolean
+name|probe
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+name|FILE
+modifier|*
+name|fp
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|tapeInitted
 condition|)
-return|return
-name|TRUE
-return|;
+block|{
 name|msgDebug
 argument_list|(
 literal|"Tape init routine called for %s (private dir is %s)\n"
@@ -111,7 +144,7 @@ block|{
 name|msgConfirm
 argument_list|(
 literal|"Unable to CD to %s before extracting tape!\n"
-literal|"Tape media not selected."
+literal|"Tape media is not selected and thus cannot be installed from."
 argument_list|,
 name|dev
 operator|->
@@ -119,13 +152,17 @@ name|private
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+name|FILE
+operator|*
+operator|)
+name|IO_ERROR
 return|;
 block|}
 comment|/* We know the tape is already in the drive, so go for it */
 name|msgNotify
 argument_list|(
-literal|"Extracting distributions from %s..."
+literal|"First extracting distributions from %s..."
 argument_list|,
 name|dev
 operator|->
@@ -190,11 +227,9 @@ argument_list|(
 literal|"Tape initialized successfully.\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|TRUE
-return|;
 block|}
 else|else
+block|{
 name|msgConfirm
 argument_list|(
 literal|"Tape extract command failed with status %d!\n"
@@ -204,38 +239,14 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+operator|(
+name|FILE
+operator|*
+operator|)
+name|IO_ERROR
 return|;
 block|}
-end_function
-
-begin_function
-name|FILE
-modifier|*
-name|mediaGetTape
-parameter_list|(
-name|Device
-modifier|*
-name|dev
-parameter_list|,
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|Boolean
-name|probe
-parameter_list|)
-block|{
-name|char
-name|buf
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
+block|}
 name|sprintf
 argument_list|(
 name|buf
@@ -343,15 +354,6 @@ operator|!
 name|tapeInitted
 condition|)
 return|return;
-name|msgDebug
-argument_list|(
-literal|"Shutdown of tape device - %s will be cleaned\n"
-argument_list|,
-name|dev
-operator|->
-name|private
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|file_readable
@@ -364,7 +366,11 @@ condition|)
 block|{
 name|msgNotify
 argument_list|(
-literal|"Cleaning up results of tape extract.."
+literal|"Cleaning up results of tape extract in %s.."
+argument_list|,
+name|dev
+operator|->
+name|private
 argument_list|)
 expr_stmt|;
 operator|(
