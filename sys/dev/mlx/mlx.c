@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -101,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mlx/mlx_compat.h>
 end_include
 
 begin_include
@@ -173,11 +173,7 @@ name|nopsize
 block|,
 comment|/* flags */
 literal|0
-block|,
-comment|/* bmaj */
-operator|-
-literal|1
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1084,19 +1080,13 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-name|SYS_RES_MEMORY
-argument_list|,
-operator|(
 name|sc
 operator|->
-name|mlx_iftype
-operator|==
-name|MLX_IFTYPE_3
-operator|)
-condition|?
-name|MLX_CFG_BASE1
-else|:
-name|MLX_CFG_BASE0
+name|mlx_mem_type
+argument_list|,
+name|sc
+operator|->
+name|mlx_mem_rid
 argument_list|,
 name|sc
 operator|->
@@ -1212,6 +1202,8 @@ name|segsize
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|ncmd
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -1253,7 +1245,32 @@ operator|->
 name|mlx_sg_dmat
 argument_list|)
 expr_stmt|;
-comment|/*      * Create a single tag describing a region large enough to hold all of      * the s/g lists we will need.      */
+comment|/*      * Create a single tag describing a region large enough to hold all of      * the s/g lists we will need.  If we're called early on, we don't know how      * many commands we're going to be asked to support, so only allocate enough      * for a couple.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_enq2
+operator|==
+name|NULL
+condition|)
+block|{
+name|ncmd
+operator|=
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ncmd
+operator|=
+name|sc
+operator|->
+name|mlx_enq2
+operator|->
+name|me_max_commands
+expr_stmt|;
+block|}
 name|segsize
 operator|=
 sizeof|sizeof
@@ -1262,13 +1279,9 @@ expr|struct
 name|mlx_sgentry
 argument_list|)
 operator|*
-name|sc
-operator|->
-name|mlx_sg_nseg
+name|MLX_NSEG
 operator|*
-name|sc
-operator|->
-name|mlx_maxiop
+name|ncmd
 expr_stmt|;
 name|error
 operator|=
@@ -1470,12 +1483,11 @@ operator|->
 name|mlx_freecmds
 argument_list|)
 expr_stmt|;
-name|bufq_init
+name|MLX_BIO_QINIT
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|mlx_bufq
+name|mlx_bioq
 argument_list|)
 expr_stmt|;
 comment|/*       * Select accessor methods based on controller interface type.      */
@@ -1516,12 +1528,6 @@ name|mlx_fw_handshake
 operator|=
 name|mlx_v3_fw_handshake
 expr_stmt|;
-name|sc
-operator|->
-name|mlx_sg_nseg
-operator|=
-name|MLX_NSEG_OLD
-expr_stmt|;
 break|break;
 case|case
 name|MLX_IFTYPE_4
@@ -1550,12 +1556,6 @@ name|mlx_fw_handshake
 operator|=
 name|mlx_v4_fw_handshake
 expr_stmt|;
-name|sc
-operator|->
-name|mlx_sg_nseg
-operator|=
-name|MLX_NSEG_NEW
-expr_stmt|;
 break|break;
 case|case
 name|MLX_IFTYPE_5
@@ -1583,12 +1583,6 @@ operator|->
 name|mlx_fw_handshake
 operator|=
 name|mlx_v5_fw_handshake
-expr_stmt|;
-name|sc
-operator|->
-name|mlx_sg_nseg
-operator|=
-name|MLX_NSEG_NEW
 expr_stmt|;
 break|break;
 default|default:
@@ -1802,6 +1796,8 @@ operator|->
 name|mlx_irq
 argument_list|,
 name|INTR_TYPE_BIO
+operator||
+name|INTR_ENTROPY
 argument_list|,
 name|mlx_intr
 argument_list|,
@@ -1866,9 +1862,7 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
-name|sc
-operator|->
-name|mlx_sg_nseg
+name|MLX_NSEG
 argument_list|,
 comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
@@ -1910,13 +1904,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/*      * Create an initial set of s/g mappings.      */
-name|sc
-operator|->
-name|mlx_maxiop
-operator|=
-literal|8
-expr_stmt|;
+comment|/*      * Create some initial scatter/gather mappings so we can run the probe commands.      */
 name|error
 operator|=
 name|mlx_sglist_map
@@ -1951,7 +1939,15 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* send an ENQUIRY2 to the controller */
+comment|/*      * We don't (yet) know where the event log is up to.      */
+name|sc
+operator|->
+name|mlx_currevent
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/*       * Obtain controller feature information      */
 if|if
 condition|(
 operator|(
@@ -1998,14 +1994,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-comment|/*      * We don't (yet) know where the event log is up to.      */
-name|sc
-operator|->
-name|mlx_currevent
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/*      * Do quirk/feature related things.      */
 name|fwminor
 operator|=
@@ -2248,17 +2236,7 @@ operator|)
 return|;
 comment|/* should never happen */
 block|}
-comment|/*      * Create the final set of s/g mappings now that we know how many commands      * the controller actually supports.      */
-name|sc
-operator|->
-name|mlx_maxiop
-operator|=
-name|sc
-operator|->
-name|mlx_enq2
-operator|->
-name|me_max_commands
-expr_stmt|;
+comment|/*      * Create the final scatter/gather mappings now that we have characterised the controller.      */
 name|error
 operator|=
 name|mlx_sglist_map
@@ -2279,7 +2257,7 @@ name|sc
 operator|->
 name|mlx_dev
 argument_list|,
-literal|"can't make permanent s/g list mapping\n"
+literal|"can't make final s/g list mapping\n"
 argument_list|)
 expr_stmt|;
 name|mlx_free
@@ -2866,7 +2844,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call mlx_startup to  * resume normal operation.)  *  * Note that we can assume that the bufq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
+comment|/********************************************************************************  * Bring the controller down to a dormant state and detach all child devices.  *  * This function is called before detach, system shutdown, or before performing  * an operation which may add or delete system disks.  (Call mlx_startup to  * resume normal operation.)  *  * Note that we can assume that the bioq on the controller is empty, as we won't  * allow shutdown if any device is open.  */
 end_comment
 
 begin_function
@@ -3233,8 +3211,7 @@ name|mlx_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|buf
+name|mlx_bio
 modifier|*
 name|bp
 parameter_list|)
@@ -3252,12 +3229,11 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|bufq_insert_tail
+name|MLX_BIO_QINSERT
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|mlx_bufq
+name|mlx_bioq
 argument_list|,
 name|bp
 argument_list|)
@@ -7262,7 +7238,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* build a rebuildasync command, set the "fix it" flag */
+comment|/* build a checkasync command, set the "fix it" flag */
 name|mlx_make_type2
 argument_list|(
 name|mc
@@ -7665,7 +7641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  *  * Must be called at splbio or in an equivalent fashion that prevents   * reentry or activity on the bufq.  */
+comment|/********************************************************************************  * Pull as much work off the softc's work queue as possible and give it to the  * controller.  Leave a couple of slots free for emergencies.  *  * Must be called at splbio or in an equivalent fashion that prevents   * reentry or activity on the bioq.  */
 end_comment
 
 begin_function
@@ -7689,8 +7665,7 @@ name|mlxd_softc
 modifier|*
 name|mlxd
 decl_stmt|;
-name|struct
-name|buf
+name|mlx_bio
 modifier|*
 name|bp
 decl_stmt|;
@@ -7735,12 +7710,11 @@ condition|(
 operator|(
 name|bp
 operator|=
-name|bufq_first
+name|MLX_BIO_QFIRST
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|mlx_bufq
+name|mlx_bioq
 argument_list|)
 operator|)
 operator|==
@@ -7781,12 +7755,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* get the buf containing our work */
-name|bufq_remove
+name|MLX_BIO_QREMOVE
 argument_list|(
-operator|&
 name|sc
 operator|->
-name|mlx_bufq
+name|mlx_bioq
 argument_list|,
 name|bp
 argument_list|)
@@ -7818,25 +7791,26 @@ name|mc
 operator|->
 name|mc_data
 operator|=
+name|MLX_BIO_DATA
+argument_list|(
 name|bp
-operator|->
-name|b_data
+argument_list|)
 expr_stmt|;
 name|mc
 operator|->
 name|mc_length
 operator|=
+name|MLX_BIO_LENGTH
+argument_list|(
 name|bp
-operator|->
-name|b_bcount
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|MLX_BIO_IS_READ
+argument_list|(
 name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
+argument_list|)
 condition|)
 block|{
 name|mc
@@ -7877,11 +7851,10 @@ expr|struct
 name|mlxd_softc
 operator|*
 operator|)
+name|MLX_BIO_SOFTC
+argument_list|(
 name|bp
-operator|->
-name|b_dev
-operator|->
-name|si_drv1
+argument_list|)
 expr_stmt|;
 name|driveno
 operator|=
@@ -7896,9 +7869,10 @@ expr_stmt|;
 name|blkcount
 operator|=
 operator|(
+name|MLX_BIO_LENGTH
+argument_list|(
 name|bp
-operator|->
-name|b_bcount
+argument_list|)
 operator|+
 name|MLX_BLKSIZE
 operator|-
@@ -7910,9 +7884,10 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|MLX_BIO_LBA
+argument_list|(
 name|bp
-operator|->
-name|b_pblkno
+argument_list|)
 operator|+
 name|blkcount
 operator|)
@@ -7934,9 +7909,10 @@ name|mlx_dev
 argument_list|,
 literal|"I/O beyond end of unit (%u,%d> %u)\n"
 argument_list|,
+name|MLX_BIO_LBA
+argument_list|(
 name|bp
-operator|->
-name|b_pblkno
+argument_list|)
 argument_list|,
 name|blkcount
 argument_list|,
@@ -7979,9 +7955,10 @@ operator|&
 literal|0xff
 argument_list|,
 comment|/* xfer length low byte */
+name|MLX_BIO_LBA
+argument_list|(
 name|bp
-operator|->
-name|b_pblkno
+argument_list|)
 argument_list|,
 comment|/* physical block number */
 name|driveno
@@ -8031,9 +8008,10 @@ literal|0x07
 operator|)
 argument_list|,
 comment|/* target and length high 3 bits */
+name|MLX_BIO_LBA
+argument_list|(
 name|bp
-operator|->
-name|b_pblkno
+argument_list|)
 argument_list|,
 comment|/* physical block number */
 name|mc
@@ -8119,14 +8097,12 @@ name|mc
 operator|->
 name|mc_sc
 decl_stmt|;
-name|struct
-name|buf
+name|mlx_bio
 modifier|*
 name|bp
 init|=
 operator|(
-expr|struct
-name|buf
+name|mlx_bio
 operator|*
 operator|)
 name|mc
@@ -8143,11 +8119,10 @@ expr|struct
 name|mlxd_softc
 operator|*
 operator|)
+name|MLX_BIO_SOFTC
+argument_list|(
 name|bp
-operator|->
-name|b_dev
-operator|->
-name|si_drv1
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -8159,17 +8134,12 @@ name|MLX_STATUS_OK
 condition|)
 block|{
 comment|/* could be more verbose here? */
+name|MLX_BIO_SET_ERROR
+argument_list|(
 name|bp
-operator|->
-name|b_error
-operator|=
+argument_list|,
 name|EIO
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -8220,7 +8190,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_pblkno %d\n",  			  bp->b_bcount, bp->b_bcount / MLX_BLKSIZE, bp->b_pblkno); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
+block|device_printf(sc->mlx_dev, "  b_bcount %ld  blkcount %ld  b_pblkno %d\n",  			  MLX_BIO_LENGTH(bp), MLX_BIO_LENGTH(bp) / MLX_BLKSIZE, MLX_BIO_LBA(bp)); 	    device_printf(sc->mlx_dev, "  %13D\n", mc->mc_mailbox, " ");
 endif|#
 directive|endif
 break|break;
@@ -8744,13 +8714,40 @@ name|int
 name|s
 decl_stmt|,
 name|slot
+decl_stmt|,
+name|limit
 decl_stmt|;
 name|debug_called
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* enforce slot-usage limit */
+comment|/*       * Enforce slot-usage limit, if we have the required information.      */
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_enq2
+operator|!=
+name|NULL
+condition|)
+block|{
+name|limit
+operator|=
+name|sc
+operator|->
+name|mlx_enq2
+operator|->
+name|me_max_commands
+expr_stmt|;
+block|}
+else|else
+block|{
+name|limit
+operator|=
+literal|2
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
@@ -8766,13 +8763,9 @@ operator|&
 name|MLX_CMD_PRIORITY
 operator|)
 condition|?
-name|sc
-operator|->
-name|mlx_maxiop
+name|limit
 else|:
-name|sc
-operator|->
-name|mlx_maxiop
+name|limit
 operator|-
 literal|4
 operator|)
@@ -8796,9 +8789,7 @@ literal|0
 init|;
 name|slot
 operator|<
-name|sc
-operator|->
-name|mlx_maxiop
+name|limit
 condition|;
 name|slot
 operator|++
@@ -8830,9 +8821,7 @@ if|if
 condition|(
 name|slot
 operator|<
-name|sc
-operator|->
-name|mlx_maxiop
+name|limit
 condition|)
 block|{
 name|sc
@@ -8860,9 +8849,7 @@ if|if
 condition|(
 name|slot
 operator|>=
-name|sc
-operator|->
-name|mlx_maxiop
+name|limit
 condition|)
 return|return
 operator|(
@@ -8950,6 +8937,36 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* XXX should be unnecessary */
+if|if
+condition|(
+name|sc
+operator|->
+name|mlx_enq2
+operator|&&
+operator|(
+name|nsegments
+operator|>
+name|sc
+operator|->
+name|mlx_enq2
+operator|->
+name|me_max_sg
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"MLX: too many s/g segments (%d, max %d)"
+argument_list|,
+name|nsegments
+argument_list|,
+name|sc
+operator|->
+name|mlx_enq2
+operator|->
+name|me_max_sg
+argument_list|)
+expr_stmt|;
 comment|/* get base address of s/g table */
 name|sg
 operator|=
@@ -8962,9 +8979,7 @@ name|mc
 operator|->
 name|mc_slot
 operator|*
-name|sc
-operator|->
-name|mlx_sg_nseg
+name|MLX_NSEG
 operator|)
 expr_stmt|;
 comment|/* save s/g table information in command */
@@ -8987,9 +9002,7 @@ name|mc
 operator|->
 name|mc_slot
 operator|*
-name|sc
-operator|->
-name|mlx_sg_nseg
+name|MLX_NSEG
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -9590,6 +9603,11 @@ block|{
 break|break;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 comment|/* if we've completed any commands, try posting some more */
 if|if
 condition|(
@@ -9899,6 +9917,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -9908,17 +9928,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|bzero
-argument_list|(
-name|mc
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|mc
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mc
 operator|->
 name|mc_sc

@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -91,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mlx/mlx_compat.h>
 end_include
 
 begin_include
@@ -481,8 +481,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|rid
-decl_stmt|,
 name|error
 decl_stmt|;
 name|u_int32_t
@@ -670,7 +668,15 @@ case|:
 case|case
 name|MLX_IFTYPE_3
 case|:
-name|rid
+name|sc
+operator|->
+name|mlx_mem_type
+operator|=
+name|SYS_RES_MEMORY
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_mem_rid
 operator|=
 name|MLX_CFG_BASE1
 expr_stmt|;
@@ -682,10 +688,14 @@ name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_MEMORY
+name|sc
+operator|->
+name|mlx_mem_type
 argument_list|,
 operator|&
-name|rid
+name|sc
+operator|->
+name|mlx_mem_rid
 argument_list|,
 literal|0
 argument_list|,
@@ -706,7 +716,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|rid
+name|sc
+operator|->
+name|mlx_mem_type
+operator|=
+name|SYS_RES_IOPORT
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_mem_rid
 operator|=
 name|MLX_CFG_BASE0
 expr_stmt|;
@@ -718,10 +736,14 @@ name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_IOPORT
+name|sc
+operator|->
+name|mlx_mem_type
 argument_list|,
 operator|&
-name|rid
+name|sc
+operator|->
+name|mlx_mem_rid
 argument_list|,
 literal|0
 argument_list|,
@@ -741,7 +763,15 @@ case|:
 case|case
 name|MLX_IFTYPE_5
 case|:
-name|rid
+name|sc
+operator|->
+name|mlx_mem_type
+operator|=
+name|SYS_RES_MEMORY
+expr_stmt|;
+name|sc
+operator|->
+name|mlx_mem_rid
 operator|=
 name|MLX_CFG_BASE0
 expr_stmt|;
@@ -753,10 +783,14 @@ name|bus_alloc_resource
 argument_list|(
 name|dev
 argument_list|,
-name|SYS_RES_MEMORY
+name|sc
+operator|->
+name|mlx_mem_type
 argument_list|,
 operator|&
-name|rid
+name|sc
+operator|->
+name|mlx_mem_rid
 argument_list|,
 literal|0
 argument_list|,
@@ -847,7 +881,7 @@ argument_list|,
 comment|/* filter, filterarg */
 name|MAXBSIZE
 argument_list|,
-name|MLX_NSEG_NEW
+name|MLX_NSEG
 argument_list|,
 comment|/* maxsize, nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT

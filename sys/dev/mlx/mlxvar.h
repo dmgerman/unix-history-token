@@ -72,30 +72,15 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * We could actually use all 17/33 segments, but using only 16/32 means that  * each scatter/gather map is 128/256 bytes in size, and thus we don't have to worry about  * maps crossing page boundaries.  */
+comment|/*  * Regardless of the actual capacity of the controller, we will allocate space  * for 64 s/g entries.  Typically controllers support 17 or 33 entries (64k or  * 128k maximum transfer assuming 4k page size and non-optimal alignment), but  * making that fit cleanly without crossing page boundaries requires rounding up  * to the next power of two.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MLX_NSEG_OLD
-value|16
+name|MLX_NSEG
+value|64
 end_define
-
-begin_comment
-comment|/* max scatter/gather segments we use 3.x and earlier */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MLX_NSEG_NEW
-value|32
-end_define
-
-begin_comment
-comment|/* max scatter/gather segments we use 4.x and later */
-end_comment
 
 begin_define
 define|#
@@ -278,6 +263,12 @@ modifier|*
 name|mlx_mem
 decl_stmt|;
 comment|/* mailbox interface window */
+name|int
+name|mlx_mem_rid
+decl_stmt|;
+name|int
+name|mlx_mem_type
+decl_stmt|;
 name|bus_space_handle_t
 name|mlx_bhandle
 decl_stmt|;
@@ -324,20 +315,12 @@ name|bus_dmamap_t
 name|mlx_sg_dmamap
 decl_stmt|;
 comment|/* map for s/g buffers */
-name|int
-name|mlx_sg_nseg
-decl_stmt|;
-comment|/* max number of s/g entries */
 comment|/* controller limits and features */
 name|struct
 name|mlx_enquiry2
 modifier|*
 name|mlx_enq2
 decl_stmt|;
-name|int
-name|mlx_maxiop
-decl_stmt|;
-comment|/* hard maximum number of commands */
 name|int
 name|mlx_feature
 decl_stmt|;
@@ -385,9 +368,8 @@ name|MLX_MAXDRIVES
 index|]
 decl_stmt|;
 comment|/* system drives */
-name|struct
-name|buf_queue_head
-name|mlx_bufq
+name|mlx_bioq
+name|mlx_bioq
 decl_stmt|;
 comment|/* outstanding I/O operations */
 name|int
@@ -897,8 +879,7 @@ name|mlx_softc
 modifier|*
 name|sc
 parameter_list|,
-name|struct
-name|buf
+name|mlx_bio
 modifier|*
 name|bp
 parameter_list|)
