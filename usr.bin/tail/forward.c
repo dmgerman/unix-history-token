@@ -1123,7 +1123,11 @@ block|{
 name|ierr
 argument_list|()
 expr_stmt|;
-return|return;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Last char is special, ignore whether newline or not. */
 for|for
