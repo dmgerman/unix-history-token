@@ -53,12 +53,10 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|cp
 operator|,
 expr|struct
-name|_n_addr
+name|in_addr
 operator|*
-name|addr
 operator|)
 argument_list|)
 decl_stmt|;
