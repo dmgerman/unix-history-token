@@ -1027,6 +1027,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 continue|continue;

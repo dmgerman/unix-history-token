@@ -3650,6 +3650,8 @@ argument_list|(
 name|bp
 argument_list|,
 name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */
@@ -4329,6 +4331,8 @@ operator|->
 name|b
 argument_list|,
 name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* and lock it */

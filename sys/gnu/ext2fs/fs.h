@@ -363,7 +363,7 @@ name|ULCK_BUF
 parameter_list|(
 name|bp
 parameter_list|)
-value|{ \ 	long flags; \ 	int s; \ 	s = splbio(); \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY | B_LOCKED); \ 	BUF_LOCK(bp, LK_EXCLUSIVE); \ 	bremfree(bp); \ 	splx(s); \ 	if (flags& B_DIRTY) \ 		bwrite(bp); \ 	else \ 		brelse(bp); \ }
+value|{ \ 	long flags; \ 	int s; \ 	s = splbio(); \ 	flags = (bp)->b_flags; \ 	(bp)->b_flags&= ~(B_DIRTY | B_LOCKED); \ 	BUF_LOCK(bp, LK_EXCLUSIVE, NULL); \ 	bremfree(bp); \ 	splx(s); \ 	if (flags& B_DIRTY) \ 		bwrite(bp); \ 	else \ 		brelse(bp); \ }
 end_define
 
 end_unit

@@ -397,6 +397,17 @@ begin_comment
 comment|/* vn_lock: lock/unlock only current layer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LK_INTERNAL
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* The internal lock is already held */
+end_comment
+
 begin_comment
 comment|/*  * Internal state flags corresponding to lk_sharecount, and lk_waitcount  */
 end_comment

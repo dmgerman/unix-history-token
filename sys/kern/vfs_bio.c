@@ -216,17 +216,6 @@ begin_comment
 comment|/* buffer header pool */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|mtx
-name|buftimelock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Interlock on setting prio and timo */
-end_comment
-
 begin_function_decl
 specifier|static
 name|void
@@ -2081,18 +2070,6 @@ directive|endif
 name|mtx_init
 argument_list|(
 operator|&
-name|buftimelock
-argument_list|,
-literal|"buftime lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
 name|bqlock
 argument_list|,
 literal|"buf queue lock"
@@ -3839,6 +3816,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
@@ -6274,6 +6253,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -6616,6 +6597,8 @@ argument_list|(
 name|bp
 argument_list|,
 name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|bremfree
@@ -6985,6 +6968,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -7963,6 +7948,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -8132,6 +8119,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -8921,6 +8910,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|USE_BUFHASH
@@ -9016,26 +9008,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Buffer is in-core.  If the buffer is not busy, it must 		 * be on a queue. 		 */
-if|if
-condition|(
-name|BUF_LOCK
-argument_list|(
-name|bp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_NOWAIT
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+name|error
+operator|=
 name|BUF_TIMELOCK
 argument_list|(
 name|bp
@@ -9043,6 +9018,13 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_SLEEPFAIL
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
 argument_list|,
 literal|"getblk"
 argument_list|,
@@ -9050,26 +9032,28 @@ name|slpflag
 argument_list|,
 name|slptimeo
 argument_list|)
+expr_stmt|;
+comment|/* 		 * If we slept and got the lock we have to restart in case 		 * the buffer changed identities. 		 */
+if|if
+condition|(
+name|error
 operator|==
 name|ENOLCK
 condition|)
 goto|goto
 name|loop
 goto|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+comment|/* We timed out or were interrupted. */
+elseif|else
+if|if
+condition|(
+name|error
+condition|)
 return|return
 operator|(
-expr|struct
-name|buf
-operator|*
-operator|)
 name|NULL
+operator|)
 return|;
-block|}
 comment|/* 		 * The buffer is locked.  B_CACHE is cleared if the buffer is  		 * invalid.  Otherwise, for a non-VMIO buffer, B_CACHE is set 		 * and for a VMIO buffer B_CACHE is adjusted according to the 		 * backing VM cache. 		 */
 if|if
 condition|(

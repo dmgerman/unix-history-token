@@ -1803,6 +1803,8 @@ operator|)
 name|ident
 argument_list|,
 name|flags
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -22498,11 +22500,6 @@ argument_list|,
 name|b_vnbufs
 argument_list|)
 expr_stmt|;
-name|VI_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 comment|/*  		 * If it is already scheduled, skip to the next buffer. 		 */
 if|if
 condition|(
@@ -22513,6 +22510,13 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+operator||
+name|LK_INTERLOCK
+argument_list|,
+name|VI_MTX
+argument_list|(
+name|vp
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -26035,6 +26039,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* XXX Probably needs interlock */
 if|if
 condition|(
 name|BUF_LOCK
@@ -26044,6 +26049,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_NOWAIT
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 literal|0
