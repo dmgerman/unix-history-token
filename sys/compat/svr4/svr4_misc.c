@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -362,22 +362,6 @@ name|cp
 parameter_list|)
 value|((struct dirent *)(cp))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|M_ZOMBIE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-modifier|*
-name|M_SUBPROC
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
