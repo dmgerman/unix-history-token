@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_de.c	6.3	84/03/20	*/
+comment|/*	if_de.c	6.4	84/03/27	*/
 end_comment
 
 begin_include
@@ -204,7 +204,7 @@ begin_decl_stmt
 name|int
 name|dedebug
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1067,6 +1067,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
+operator|&
 name|ds
 operator|->
 name|ds_addr
@@ -1096,20 +1097,6 @@ operator|->
 name|sin_family
 operator|=
 name|AF_INET
-expr_stmt|;
-name|sin
-operator|->
-name|sin_addr
-operator|=
-name|arpmyaddr
-argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
-literal|0
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -2053,14 +2040,6 @@ operator|->
 name|ds_if
 argument_list|,
 name|RTF_UP
-argument_list|)
-expr_stmt|;
-name|arpattach
-argument_list|(
-operator|&
-name|ds
-operator|->
-name|ds_ac
 argument_list|)
 expr_stmt|;
 name|arpwhohas
@@ -3391,11 +3370,9 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
-name|u_char
+name|struct
+name|ether_addr
 name|edst
-index|[
-literal|6
-index|]
 decl_stmt|;
 name|struct
 name|in_addr
@@ -3474,6 +3451,7 @@ argument_list|,
 operator|&
 name|idst
 argument_list|,
+operator|&
 name|edst
 argument_list|)
 condition|)
@@ -3650,25 +3628,11 @@ name|dst
 operator|->
 name|sa_data
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
+name|edst
+operator|=
 name|eh
 operator|->
 name|ether_dhost
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-name|edst
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|edst
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|type
 operator|=
@@ -3855,25 +3819,11 @@ operator|)
 name|type
 argument_list|)
 expr_stmt|;
-name|bcopy
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|edst
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
 name|eh
 operator|->
 name|ether_dhost
-argument_list|,
-sizeof|sizeof
-argument_list|(
+operator|=
 name|edst
-argument_list|)
-argument_list|)
 expr_stmt|;
 comment|/* DEUNA fills in source address */
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
