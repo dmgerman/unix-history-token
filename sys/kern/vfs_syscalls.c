@@ -18875,6 +18875,23 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX namei called with LOCKPARENT but not LOCKLEAF has 		 * the strange behaviour of leaving the vnode unlocked 		 * if the target is the same vnode as the parent. 		 */
+if|if
+condition|(
+name|vp
+operator|==
+name|nd
+operator|.
+name|ni_dvp
+condition|)
+name|vrele
+argument_list|(
+name|nd
+operator|.
+name|ni_dvp
+argument_list|)
+expr_stmt|;
+else|else
 name|vput
 argument_list|(
 name|nd
