@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.20 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3544,9 +3544,11 @@ argument|;  	for( i=
 literal|0
 argument|; i<=(SZINT-BTSHIFT-
 literal|1
-argument|); i+=TSHIFT ){ 		switch( (ty>>i)&TMASK ){  		case FTN: 			cerror(
-literal|"compiler takes size of function"
-argument|); 		case PTR: 			return( SZPOINT * mult ); 		case ARY: 			mult *= (unsigned int) dimtab[ d++ ]; 			continue; 		case
+argument|); i+=TSHIFT ){ 		switch( (ty>>i)&TMASK ){  		case FTN:
+comment|/* cerror( "compiler takes size of function"); */
+argument|uerror(
+literal|"can't take size of function"
+argument|); 			return( SZCHAR ); 		case PTR: 			return( SZPOINT * mult ); 		case ARY: 			mult *= (unsigned int) dimtab[ d++ ]; 			continue; 		case
 literal|0
 argument|: 			break;  			} 		}  	if( dimtab[s]==
 literal|0
