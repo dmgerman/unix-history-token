@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.20
+literal|3.21
 operator|%
 name|G
 operator|%
@@ -797,7 +797,8 @@ name|h
 operator|->
 name|h_link
 operator|=
-name|NULL
+operator|*
+name|hp
 expr_stmt|;
 name|h
 operator|->
