@@ -23,15 +23,43 @@ directive|include
 file|"sendmail.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DBM
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.11	%G%"
+literal|"@(#)alias.c	3.12	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+else|DBM
+end_else
+
+begin_decl_stmt
+specifier|static
+name|char
+name|SccsId
+index|[]
+init|=
+literal|"@(#)alias.c	3.12	%G%	(without DBM)"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|DBM
+end_endif
 
 begin_comment
 comment|/* **  ALIAS -- Compute aliases. ** **	Scans the file /usr/lib/aliases for a set of aliases. **	If found, it arranges to deliver to them.  Uses libdbm **	database if -DDBM. ** **	Parameters: **		a -- address to alias. ** **	Returns: **		none ** **	Side Effects: **		Aliases found are expanded. ** **	Files: **		/usr/lib/aliases -- the mail aliases.  The format is **			a series of lines of the form: **				alias:name1,name2,name3,... **			where 'alias' expands to all of **			'name[i]'.  Continuations begin with **			space or tab. **		/usr/lib/aliases.pag, /usr/lib/aliases.dir: libdbm version **			of alias file.  Keys are aliases, datums **			(data?) are name1,name2, ... ** **	Notes: **		If NoAlias (the "-n" flag) is set, no aliasing is **			done. ** **	Deficiencies: **		It should complain about names that are aliased to **			nothing. **		It is unsophisticated about line overflows. */
@@ -356,14 +384,17 @@ name|al
 decl_stmt|,
 name|bl
 decl_stmt|;
-specifier|extern
-name|char
+name|FILE
 modifier|*
-name|prescan
-parameter_list|()
-function_decl|;
-name|bool
-name|contin
+name|af
+decl_stmt|;
+name|int
+name|lineno
+decl_stmt|;
+specifier|register
+name|STAB
+modifier|*
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -392,7 +423,7 @@ name|printf
 argument_list|(
 literal|"Can't open %s\n"
 argument_list|,
-name|AliasFile
+name|aliasfile
 argument_list|)
 expr_stmt|;
 endif|#
@@ -570,10 +601,6 @@ name|rhs
 operator|=
 name|p
 expr_stmt|;
-name|contin
-operator|=
-name|FALSE
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -584,6 +611,9 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SECURE
 comment|/* do parsing& compression of addresses */
 name|c
 operator|=
@@ -661,14 +691,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|contin
-operator|=
-operator|(
-name|c
-operator|==
-literal|','
-operator|)
-expr_stmt|;
 name|p
 index|[
 operator|-
@@ -689,11 +711,55 @@ name|p
 operator|++
 expr_stmt|;
 block|}
+else|#
+directive|else
+else|SECURE
+name|p
+operator|=
+operator|&
+name|p
+index|[
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+endif|SECURE
 comment|/* see if there should be a continuation line */
+name|c
+operator|=
+name|fgetc
+argument_list|(
+name|af
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|contin
+name|feof
+argument_list|(
+name|af
+argument_list|)
+condition|)
+name|ungetc
+argument_list|(
+name|c
+argument_list|,
+name|af
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+literal|' '
+operator|&&
+name|c
+operator|!=
+literal|'\t'
 condition|)
 break|break;
 comment|/* read continuation line */
@@ -724,22 +790,6 @@ break|break;
 name|lineno
 operator|++
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-condition|)
-name|syserr
-argument_list|(
-literal|"aliases: %d: continuation line missing"
-argument_list|,
-name|lineno
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -769,6 +819,15 @@ name|q_user
 argument_list|,
 name|ST_ALIAS
 argument_list|,
+name|ST_ENTER
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_alias
+operator|=
+name|newstr
+argument_list|(
 name|rhs
 argument_list|)
 expr_stmt|;

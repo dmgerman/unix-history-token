@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stab.c	3.5	%G%"
+literal|"@(#)stab.c	3.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,6 +97,7 @@ name|s
 operator|!=
 name|NULL
 operator|&&
+operator|(
 operator|!
 name|sameword
 argument_list|(
@@ -106,12 +107,13 @@ name|s
 operator|->
 name|s_name
 argument_list|)
-operator|&&
+operator|||
 name|s
 operator|->
 name|s_type
 operator|!=
 name|type
+operator|)
 condition|)
 block|{
 name|ps
