@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -215,8 +215,6 @@ decl_stmt|,
 name|blkoffset
 decl_stmt|;
 name|int
-name|nextsize
-decl_stmt|,
 name|error
 decl_stmt|;
 name|u_short
@@ -506,7 +504,6 @@ name|ip
 operator|->
 name|i_size
 condition|)
-block|{
 name|error
 operator|=
 name|bread
@@ -523,14 +520,11 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|doclusterread
 condition|)
-block|{
 name|error
 operator|=
 name|cluster_read
@@ -551,7 +545,6 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -564,8 +557,9 @@ operator|->
 name|v_lastr
 condition|)
 block|{
+name|int
 name|nextsize
-operator|=
+init|=
 name|BLKSIZE
 argument_list|(
 name|fs
@@ -574,7 +568,7 @@ name|ip
 argument_list|,
 name|nextlbn
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|error
 operator|=
 name|breadn
@@ -601,7 +595,6 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|error
 operator|=
 name|bread
@@ -618,8 +611,6 @@ operator|&
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 endif|#
 directive|endif
 if|if
