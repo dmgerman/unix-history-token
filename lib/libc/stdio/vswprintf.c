@@ -92,9 +92,6 @@ name|struct
 name|__sFILEX
 name|ext
 decl_stmt|;
-name|mbstate_t
-name|mbs
-decl_stmt|;
 name|char
 modifier|*
 name|mbp
@@ -265,19 +262,6 @@ name|_bf
 operator|.
 name|_base
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|mbs
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbs
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * XXX Undo the conversion from wide characters to multibyte that 	 * fputwc() did in __vfwprintf(). 	 */
 if|if
 condition|(
@@ -296,8 +280,7 @@ name|mbp
 argument_list|,
 name|n
 argument_list|,
-operator|&
-name|mbs
+name|NULL
 argument_list|)
 operator|==
 operator|(
