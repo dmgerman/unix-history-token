@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.3 (Berkeley) %G%"
+literal|"@(#)headers.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,7 +634,10 @@ name|h
 operator|->
 name|h_value
 operator|=
-name|NULL
+name|newstr
+argument_list|(
+name|fvalue
+argument_list|)
 expr_stmt|;
 name|h
 operator|->
@@ -694,25 +697,6 @@ operator|->
 name|h_flags
 operator||=
 name|H_CHECK
-expr_stmt|;
-if|if
-condition|(
-name|h
-operator|->
-name|h_value
-operator|!=
-name|NULL
-condition|)
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|h
-operator|->
-name|h_value
-argument_list|)
 expr_stmt|;
 operator|(
 name|void
