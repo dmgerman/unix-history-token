@@ -2717,6 +2717,8 @@ decl_stmt|,
 name|limit
 decl_stmt|;
 name|uint8_t
+name|lsr
+decl_stmt|,
 name|mcr
 decl_stmt|;
 name|bas
@@ -2795,7 +2797,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Set loopback mode. This avoids having garbage on the wire and 	 * also allows us send and receive data. We set DTR and RTS to 	 * avoid the possibility that automatic flow-control prevents 	 * any data from being sent. We clear IE to avoid raising interrupts. 	 */
+comment|/* 	 * Set loopback mode. This avoids having garbage on the wire and 	 * also allows us send and receive data. We set DTR and RTS to 	 * avoid the possibility that automatic flow-control prevents 	 * any data from being sent. 	 */
 name|uart_setreg
 argument_list|(
 name|bas
@@ -2803,6 +2805,8 @@ argument_list|,
 name|REG_MCR
 argument_list|,
 name|MCR_LOOPBACK
+operator||
+name|MCR_IE
 operator||
 name|MCR_DTR
 operator||
@@ -2814,7 +2818,7 @@ argument_list|(
 name|bas
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable FIFOs. And check that the UART has them. If not, we're 	 * done. Otherwise we set DMA mode with the highest trigger level 	 * so that we can determine the FIFO size. Since this is the first 	 * time we enable the FIFOs, we reset them. 	 */
+comment|/* 	 * Enable FIFOs. And check that the UART has them. If not, we're 	 * done. Since this is the first time we enable the FIFOs, we reset 	 * them. 	 */
 name|uart_setreg
 argument_list|(
 name|bas
@@ -2894,10 +2898,6 @@ name|REG_FCR
 argument_list|,
 name|FCR_ENABLE
 operator||
-name|FCR_DMA
-operator||
-name|FCR_RX_HIGH
-operator||
 name|FCR_XMT_RST
 operator||
 name|FCR_RCV_RST
@@ -2963,40 +2963,8 @@ goto|goto
 name|describe
 goto|;
 block|}
-name|uart_setreg
-argument_list|(
-name|bas
-argument_list|,
-name|REG_IER
-argument_list|,
-name|IER_ERXRDY
-argument_list|)
-expr_stmt|;
-name|uart_barrier
-argument_list|(
-name|bas
-argument_list|)
-expr_stmt|;
-comment|/* 	 * We should have a sufficiently clean "pipe" to determine the 	 * size of the FIFOs. We send as much characters as is reasonable 	 * and wait for the the RX interrupt to be asserted, counting the 	 * characters as we send them. Based on that count we know the 	 * FIFO size. 	 */
-while|while
-condition|(
-operator|(
-name|uart_getreg
-argument_list|(
-name|bas
-argument_list|,
-name|REG_IIR
-argument_list|)
-operator|&
-name|IIR_RXRDY
-operator|)
-operator|==
-literal|0
-operator|&&
-name|count
-operator|<
-literal|1030
-condition|)
+comment|/* 	 * We should have a sufficiently clean "pipe" to determine the 	 * size of the FIFOs. We send as much characters as is reasonable 	 * and wait for the the overflow bit in the LSR register to be 	 * asserted, counting the characters as we send them. Based on 	 * that count we know the FIFO size. 	 */
+do|do
 block|{
 name|uart_setreg
 argument_list|(
@@ -3019,15 +2987,24 @@ name|limit
 operator|=
 literal|30
 expr_stmt|;
+name|lsr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * LSR bits are cleared upon read, so we must accumulate 		 * them to be able to test LSR_OE below. 		 */
 while|while
 condition|(
 operator|(
+operator|(
+name|lsr
+operator||=
 name|uart_getreg
 argument_list|(
 name|bas
 argument_list|,
 name|REG_LSR
 argument_list|)
+operator|)
 operator|&
 name|LSR_TEMT
 operator|)
@@ -3090,14 +3067,23 @@ name|describe
 goto|;
 block|}
 block|}
-name|uart_setreg
-argument_list|(
-name|bas
-argument_list|,
-name|REG_IER
-argument_list|,
+do|while
+condition|(
+operator|(
+name|lsr
+operator|&
+name|LSR_OE
+operator|)
+operator|==
 literal|0
-argument_list|)
+operator|&&
+name|count
+operator|<
+literal|1030
+condition|)
+do|;
+name|count
+operator|--
 expr_stmt|;
 name|uart_setreg
 argument_list|(
@@ -3127,7 +3113,7 @@ operator|>=
 literal|14
 operator|&&
 name|count
-operator|<
+operator|<=
 literal|16
 condition|)
 block|{
@@ -3155,7 +3141,7 @@ operator|>=
 literal|28
 operator|&&
 name|count
-operator|<
+operator|<=
 literal|32
 condition|)
 block|{
@@ -3183,7 +3169,7 @@ operator|>=
 literal|56
 operator|&&
 name|count
-operator|<
+operator|<=
 literal|64
 condition|)
 block|{
@@ -3211,7 +3197,7 @@ operator|>=
 literal|112
 operator|&&
 name|count
-operator|<
+operator|<=
 literal|128
 condition|)
 block|{
