@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)repquota.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)repquota.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,13 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fstab.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pwd.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
 end_include
 
 begin_include
@@ -96,13 +116,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_decl_stmt
@@ -227,7 +265,92 @@ begin_comment
 comment|/* all file systems */
 end_comment
 
+begin_decl_stmt
+name|int
+name|hasquota
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|oneof
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+index|[]
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|repquota
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|fstab
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|timeprt
+name|__P
+argument_list|(
+operator|(
+name|time_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -282,15 +405,6 @@ decl_stmt|,
 name|done
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|char
 name|ch
@@ -689,11 +803,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s not found in fstab\n"
+literal|"%s not found in fstab"
 argument_list|,
 name|argv
 index|[
@@ -709,22 +821,21 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n\t%s\n\t%s\n"
+literal|"%s\n%s\n"
 argument_list|,
-literal|"repquota [-v] [-g] [-u] -a"
+literal|"usage: repquota [-v] [-g] [-u] -a"
 argument_list|,
-literal|"repquota [-v] [-g] [-u] filesys ..."
+literal|"       repquota [-v] [-g] [-u] filesystem ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -733,39 +844,31 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|repquota
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|qfpathname
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|qfpathname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -784,11 +887,6 @@ name|struct
 name|dqblk
 name|dqbuf
 decl_stmt|;
-name|char
-modifier|*
-name|timeprt
-parameter_list|()
-function_decl|;
 specifier|static
 name|struct
 name|dqblk
@@ -805,10 +903,6 @@ name|int
 name|multiple
 init|=
 literal|0
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
 decl_stmt|;
 if|if
 condition|(
@@ -903,8 +997,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|qfpathname
 argument_list|)
 expr_stmt|;
@@ -1268,13 +1364,14 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check to see if target appears in list of size cnt.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|oneof
 argument_list|(
 name|target
@@ -1283,16 +1380,16 @@ name|list
 argument_list|,
 name|cnt
 argument_list|)
-specifier|register
+decl|register
 name|char
-operator|*
+modifier|*
 name|target
-operator|,
-operator|*
+decl_stmt|,
+modifier|*
 name|list
 index|[]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -1351,38 +1448,30 @@ begin_comment
 comment|/*  * Check to see if a particular quota is to be enabled.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|hasquota
-argument_list|(
+parameter_list|(
 name|fs
-argument_list|,
+parameter_list|,
 name|type
-argument_list|,
+parameter_list|,
 name|qfnamep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|fstab
-operator|*
+modifier|*
 name|fs
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|qfnamep
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1392,14 +1481,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strtok
-argument_list|()
 decl_stmt|;
 specifier|static
 name|char
@@ -1495,6 +1576,7 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -1503,6 +1585,7 @@ name|opt
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|cp
@@ -1601,7 +1684,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Routines to manage the file usage table.  *  * Lookup an id of a specific type.  */
@@ -1723,14 +1806,9 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|calloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
+operator|(
 name|fup
 operator|=
 name|lookup
@@ -1739,6 +1817,7 @@ name|id
 argument_list|,
 name|type
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -1787,20 +1866,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"out of memory for fileusage structures\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"out of memory for fileusage structures"
 argument_list|)
 expr_stmt|;
-block|}
 name|fhp
 operator|=
 operator|&
