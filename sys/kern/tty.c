@@ -11902,10 +11902,9 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%lld.%02ldu "
+literal|"%ld.%02ldu "
 argument_list|,
 operator|(
-name|long
 name|long
 operator|)
 name|utime
@@ -11924,10 +11923,9 @@ name|ttyprintf
 argument_list|(
 name|tp
 argument_list|,
-literal|"%lld.%02lds "
+literal|"%ld.%02lds "
 argument_list|,
 operator|(
-name|long
 name|long
 operator|)
 name|stime
