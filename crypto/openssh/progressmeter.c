@@ -998,6 +998,8 @@ argument_list|,
 name|buf
 argument_list|,
 name|win_size
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|last_update
