@@ -42,13 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/specdev.h>
+file|<sys/trace.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/trace.h>
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_include
