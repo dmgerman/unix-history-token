@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gettable.c	4.4 (Berkeley) %G%"
+literal|"@(#)gettable.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,16 @@ name|sp
 decl_stmt|;
 name|int
 name|version
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|beginseen
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|endseen
 init|=
 literal|0
 decl_stmt|;
@@ -624,6 +634,9 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|version
+operator|&&
 name|equaln
 argument_list|(
 name|buf
@@ -632,7 +645,38 @@ literal|"BEGIN"
 argument_list|,
 literal|5
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|beginseen
 operator|||
+name|endseen
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gettable: BEGIN sequence error\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|90
+argument_list|)
+expr_stmt|;
+block|}
+name|beginseen
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|version
+operator|&&
 name|equaln
 argument_list|(
 name|buf
@@ -643,6 +687,30 @@ literal|3
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|beginseen
+operator|||
+name|endseen
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gettable: END sequence error\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|91
+argument_list|)
+expr_stmt|;
+block|}
+name|endseen
+operator|++
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -661,12 +729,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"gettable: hostnames error: %s"
+literal|"gettable: hostname service error: %s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|exit
+argument_list|(
+literal|92
+argument_list|)
+expr_stmt|;
 block|}
 name|fprintf
 argument_list|(
@@ -685,21 +757,62 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|version
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|beginseen
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Version number received.\n"
+literal|"gettable: no BEGIN seen\n"
 argument_list|)
 expr_stmt|;
-else|else
+name|exit
+argument_list|(
+literal|93
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|endseen
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"gettable: no END seen\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|94
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
 literal|"Host table received.\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Version number received.\n"
 argument_list|)
 expr_stmt|;
 name|close
