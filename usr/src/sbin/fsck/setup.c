@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.5 (Berkeley) %G%"
+literal|"@(#)setup.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,6 +1361,22 @@ operator|=
 name|sblock
 operator|.
 name|fs_maxbpg
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_npsect
+operator|=
+name|sblock
+operator|.
+name|fs_npsect
+expr_stmt|;
+name|altsblock
+operator|.
+name|fs_interleave
+operator|=
+name|sblock
+operator|.
+name|fs_interleave
 expr_stmt|;
 name|bcopy
 argument_list|(
