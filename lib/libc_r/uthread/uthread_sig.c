@@ -3168,6 +3168,33 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Setup the signal mask: */
+name|SIGSETOR
+argument_list|(
+name|thread
+operator|->
+name|sigmask
+argument_list|,
+name|_thread_sigact
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sigaddset
+argument_list|(
+operator|&
+name|thread
+operator|->
+name|sigmask
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
 comment|/* Set up the new frame: */
 name|thread
 operator|->
