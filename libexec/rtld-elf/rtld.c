@@ -1148,6 +1148,25 @@ name|weak
 name|_DYNAMIC
 end_pragma
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RTLD_IS_DYNAMIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RTLD_IS_DYNAMIC
+parameter_list|()
+value|(&_DYNAMIC != NULL)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * These are the functions the dynamic linker exports to application  * programs.  They are the only symbols the dynamic linker is willing  * to export from itself.  */
 end_comment
@@ -4884,10 +4903,8 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|&
-name|_DYNAMIC
-operator|!=
-literal|0
+name|RTLD_IS_DYNAMIC
+argument_list|()
 condition|)
 block|{
 name|objtmp

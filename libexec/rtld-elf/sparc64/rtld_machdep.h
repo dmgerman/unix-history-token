@@ -48,15 +48,28 @@ end_comment
 begin_function_decl
 name|Elf_Dyn
 modifier|*
-name|rtld_dynamic
-parameter_list|(
-specifier|const
-name|struct
-name|Struct_Obj_Entry
-modifier|*
-parameter_list|)
+name|rtld_dynamic_addr
+parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|rtld_dynamic
+parameter_list|(
+name|obj
+parameter_list|)
+value|rtld_dynamic_addr()
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTLD_IS_DYNAMIC
+parameter_list|()
+value|(rtld_dynamic_addr() != NULL)
+end_define
 
 begin_function_decl
 name|Elf_Addr
