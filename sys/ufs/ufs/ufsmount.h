@@ -37,36 +37,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * Arguments to mount MFS  */
-end_comment
-
-begin_struct
-struct|struct
-name|mfs_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* name to export for statfs */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* if exported MFSes are supported */
-name|caddr_t
-name|base
-decl_stmt|;
-comment|/* base of file system in memory */
-name|u_long
-name|size
-decl_stmt|;
-comment|/* size of file system */
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

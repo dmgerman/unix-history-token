@@ -1591,15 +1591,9 @@ name|devvp
 operator|->
 name|v_rdev
 expr_stmt|;
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device.  See ffs_mountmfs() for more details. 	 */
+comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device. 	 */
 if|if
 condition|(
-name|devvp
-operator|->
-name|v_tag
-operator|!=
-name|VT_MFS
-operator|&&
 name|vn_isdisk
 argument_list|(
 name|devvp
@@ -2577,15 +2571,9 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device.  This excludes the original MFS implementation. 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
+comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device. 	 * Note that it is optional that the backing device be VMIOed.  This 	 * increases the opportunity for metadata caching. 	 */
 if|if
 condition|(
-name|devvp
-operator|->
-name|v_tag
-operator|!=
-name|VT_MFS
-operator|&&
 name|vn_isdisk
 argument_list|(
 name|devvp
