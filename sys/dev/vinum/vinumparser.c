@@ -360,6 +360,11 @@ argument_list|)
 block|,
 name|keypair
 argument_list|(
+name|size
+argument_list|)
+block|,
+name|keypair
+argument_list|(
 name|state
 argument_list|)
 block|,
@@ -410,6 +415,11 @@ block|,
 name|keypair
 argument_list|(
 name|printconfig
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+name|saveconfig
 argument_list|)
 block|,
 name|keypair
@@ -525,6 +535,11 @@ block|,
 name|keypair
 argument_list|(
 name|getdaemon
+argument_list|)
+block|,
+name|keypair
+argument_list|(
+name|max
 argument_list|)
 block|,
 name|keypair
@@ -877,6 +892,14 @@ operator|->
 name|k
 decl_stmt|;
 comment|/* point to the keywords */
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* parameter exists */
 for|for
 control|(
 name|i
@@ -919,6 +942,7 @@ index|]
 operator|.
 name|keyword
 return|;
+block|}
 return|return
 name|kw_invalid_keyword
 return|;
