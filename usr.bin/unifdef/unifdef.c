@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost. Support for #if and #elif was added by Tony Finch.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2002, 2003 Tony Finch<dot@dotat.at>  * Copyright (c) 1985, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dave Yost. It was rewritten to support ANSI C by Tony Finch.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,16 +15,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char copyright[] = "@(#) Copyright (c) 1985, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n";
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -57,7 +58,7 @@ name|__IDSTRING
 argument_list|(
 name|dotat
 argument_list|,
-literal|"$dotat: things/unifdef.c,v 1.148 2003/01/20 12:05:41 fanf2 Exp $"
+literal|"$dotat: things/unifdef.c,v 1.160 2003/07/01 15:21:25 fanf2 Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -66,6 +67,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -80,11 +90,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -806,6 +811,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|done
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|error
 parameter_list|(
 specifier|const
@@ -1243,9 +1258,6 @@ operator|=
 operator|*
 name|argv
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|input
 operator|=
 name|fopen
@@ -1254,32 +1266,20 @@ name|filename
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|input
+operator|==
 name|NULL
 condition|)
-block|{
-name|process
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fclose
-argument_list|(
-name|input
-argument_list|)
-expr_stmt|;
-block|}
-else|else
 name|err
 argument_list|(
 literal|2
 argument_list|,
 literal|"can't open %s"
 argument_list|,
-operator|*
-name|argv
+name|filename
 argument_list|)
 expr_stmt|;
 block|}
@@ -1293,15 +1293,14 @@ name|input
 operator|=
 name|stdin
 expr_stmt|;
+block|}
 name|process
 argument_list|()
 expr_stmt|;
-block|}
-name|exit
-argument_list|(
-name|exitstat
-argument_list|)
+name|abort
+argument_list|()
 expr_stmt|;
+comment|/* bug */
 block|}
 end_function
 
@@ -1318,7 +1317,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: unifdef [-cdeklst]"
-literal|" [[-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym]] ... [file]\n"
+literal|" [-Dsym[=val]] [-Usym] [-iDsym[=val]] [-iUsym] ... [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1330,7 +1329,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line. A NULL entry  * indicate that processing is complete.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
+comment|/*  * A state transition function alters the global #if processing state  * in a particular way. The table below is indexed by the current  * processing state and the type of the current line.  *  * Nesting is handled by keeping a stack of states; some transition  * functions increase or decrease the depth. They also maintain the  * ignore state on a stack. In some complicated cases they have to  * alter the preprocessor directive, as follows.  *  * When we have processed a group that starts off with a known-false  * #if/#elif sequence (which has therefore been deleted) followed by a  * #elif that we don't understand and therefore must keep, we edit the  * latter into a #if to keep the nesting correct.  *  * When we find a true #elif in a group, the following block will  * always be kept and the rest of the sequence after the next #elif or  * #else will be discarded. We edit the #elif into a #else and the  * following directive to #endif since this has the desired behaviour.  *  * "Dodgy" directives are split across multiple lines, the most common  * example being a multi-line comment hanging off the right of the  * directive. We can handle them correctly only if there is no change  * from printing to dropping (or vice versa) caused by that directive.  * If the directive is the first of a group we have a choice between  * failing with an error, or passing it through unchanged instead of  * evaluating it. The latter is not the default to avoid questions from  * users about unifdef unexpectedly leaving behind preprocessor directives.  */
 end_comment
 
 begin_typedef
@@ -2024,7 +2023,7 @@ name|Eendif
 block|,
 name|print
 block|,
-name|NULL
+name|done
 block|}
 block|,
 comment|/* IS_FALSE_PREFIX */
@@ -2461,6 +2460,31 @@ end_comment
 begin_function
 specifier|static
 name|void
+name|done
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|incomment
+condition|)
+name|error
+argument_list|(
+literal|"EOF in comment"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|exitstat
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ignoreoff
 parameter_list|(
 name|void
@@ -2651,10 +2675,6 @@ block|{
 name|Linetype
 name|lineval
 decl_stmt|;
-name|state_fn
-modifier|*
-name|trans
-decl_stmt|;
 for|for
 control|(
 init|;
@@ -2669,8 +2689,6 @@ operator|=
 name|getline
 argument_list|()
 expr_stmt|;
-name|trans
-operator|=
 name|trans_table
 index|[
 name|ifstate
@@ -2681,16 +2699,8 @@ index|]
 index|[
 name|lineval
 index|]
-expr_stmt|;
-if|if
-condition|(
-name|trans
-operator|==
-name|NULL
-condition|)
-break|break;
-name|trans
-argument_list|()
+operator|(
+operator|)
 expr_stmt|;
 name|debug
 argument_list|(
@@ -2713,20 +2723,11 @@ name|depth
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|incomment
-condition|)
-name|error
-argument_list|(
-literal|"EOF in comment"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Parse a line and determine its type. We keep the preprocessor line  * parser state between calls in a global variable.  */
+comment|/*  * Parse a line and determine its type. We keep the preprocessor line  * parser state between calls in the global variable linestate, with  * help from skipcomment().  */
 end_comment
 
 begin_function
@@ -3231,7 +3232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * These are the operators that are supported by the expression evaluator.  */
+comment|/*  * These are the binary operators that are supported by the expression  * evaluator. Note that if support for division is added then we also  * need short-circuiting booleans because of divide-by-zero.  */
 end_comment
 
 begin_function
@@ -3999,11 +4000,22 @@ name|false
 expr_stmt|;
 block|}
 else|else
+block|{
+name|debug
+argument_list|(
+literal|"eval%d bad expr"
+argument_list|,
+name|ops
+operator|-
+name|eval_ops
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|LT_IF
 operator|)
 return|;
+block|}
 operator|*
 name|cpp
 operator|=
@@ -4311,6 +4323,13 @@ argument_list|,
 name|cpp
 argument_list|)
 expr_stmt|;
+name|debug
+argument_list|(
+literal|"eval = %d"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|keepthis
@@ -4324,7 +4343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Skip over comments and stop at the next character position that is  * not whitespace. Between calls we keep the comment state in a global  * variable, and we also make a note when we get a proper end-of-line.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
+comment|/*  * Skip over comments and stop at the next character position that is  * not whitespace. Between calls we keep the comment state in the  * global variable incomment, and we also adjust the global variable  * linestate when we see a newline.  * XXX: doesn't cope with the buffer splitting inside a state transition.  */
 end_comment
 
 begin_function
@@ -4350,8 +4369,9 @@ name|depth
 index|]
 condition|)
 block|{
-while|while
-condition|(
+for|for
+control|(
+init|;
 name|isspace
 argument_list|(
 operator|(
@@ -4361,10 +4381,20 @@ operator|)
 operator|*
 name|cp
 argument_list|)
-condition|)
+condition|;
 name|cp
-operator|+=
-literal|1
+operator|++
+control|)
+if|if
+condition|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+condition|)
+name|linestate
+operator|=
+name|LS_START
 expr_stmt|;
 return|return
 operator|(
@@ -4379,6 +4409,7 @@ name|cp
 operator|!=
 literal|'\0'
 condition|)
+comment|/* don't reset to LS_START after a line continuation */
 if|if
 condition|(
 name|strncmp
@@ -4690,10 +4721,10 @@ name|C_COMMENT
 expr_stmt|;
 continue|continue;
 default|default:
-comment|/* bug */
 name|abort
 argument_list|()
 expr_stmt|;
+comment|/* bug */
 block|}
 return|return
 operator|(
