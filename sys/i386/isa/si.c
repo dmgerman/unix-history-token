@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.2 1995/08/10 08:48:34 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SLXOS) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.3 1995/08/13 15:18:05 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -198,6 +198,16 @@ end_define
 
 begin_comment
 comment|/* turn on poller to generate buffer empty interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SI_DEF_HWFLOW
+end_define
+
+begin_comment
+comment|/* turn on default CRTSCTS flow control */
 end_comment
 
 begin_define
@@ -783,11 +793,74 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|sidefaultrate
+name|si_default_rate
 init|=
 name|TTYDEF_SPEED
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|si_default_iflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|si_default_oflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|si_default_lflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SI_DEF_HWFLOW
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|si_default_cflag
+init|=
+name|TTYDEF_CFLAG
+operator||
+name|CRTSCTS
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|static
+name|int
+name|si_default_cflag
+init|=
+name|TTYDEF_CFLAG
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -2980,7 +3053,7 @@ name|sp_iin
 operator|.
 name|c_iflag
 operator|=
-literal|0
+name|si_default_iflag
 expr_stmt|;
 name|pp
 operator|->
@@ -2988,7 +3061,7 @@ name|sp_iin
 operator|.
 name|c_oflag
 operator|=
-literal|0
+name|si_default_oflag
 expr_stmt|;
 name|pp
 operator|->
@@ -2996,7 +3069,7 @@ name|sp_iin
 operator|.
 name|c_cflag
 operator|=
-name|TTYDEF_CFLAG
+name|si_default_cflag
 expr_stmt|;
 name|pp
 operator|->
@@ -3004,7 +3077,7 @@ name|sp_iin
 operator|.
 name|c_lflag
 operator|=
-literal|0
+name|si_default_lflag
 expr_stmt|;
 name|termioschars
 argument_list|(
@@ -3026,7 +3099,7 @@ name|sp_iin
 operator|.
 name|c_ospeed
 operator|=
-name|sidefaultrate
+name|si_default_rate
 expr_stmt|;
 name|pp
 operator|->
