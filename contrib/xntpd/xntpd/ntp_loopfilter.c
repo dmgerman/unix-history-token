@@ -955,6 +955,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NTP_SYSCALLS_LIBC
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -972,6 +978,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* no NTP syscalls in libc */
+end_comment
 
 begin_decl_stmt
 name|void
