@@ -13681,6 +13681,33 @@ name|s
 operator|->
 name|sizeof_ehdr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/* Quick and dirty hack to brand the file as a FreeBSD ELF file. */
+name|strncpy
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|i_ehdrp
+operator|->
+name|e_ident
+index|[
+literal|8
+index|]
+argument_list|,
+literal|"FreeBSD"
+argument_list|,
+name|EI_NIDENT
+operator|-
+literal|8
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* no program header, for now. */
 name|i_ehdrp
 operator|->
