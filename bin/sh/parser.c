@@ -2273,7 +2273,12 @@ operator|,
 name|readtoken
 argument_list|()
 expr_stmt|;
-do|do
+while|while
+condition|(
+name|lasttoken
+operator|!=
+name|TESAC
+condition|)
 block|{
 operator|*
 name|cpp
@@ -2465,13 +2470,6 @@ operator|.
 name|next
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|lasttoken
-operator|!=
-name|TESAC
-condition|)
-do|;
 name|noaliases
 operator|=
 literal|0
