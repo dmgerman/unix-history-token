@@ -9280,8 +9280,10 @@ operator||=
 name|DC_TX_INTR_ALWAYS
 operator||
 name|DC_TX_COALESCE
+operator||
+name|DC_TX_ALIGN
 expr_stmt|;
-comment|/* 		 * We don't actually need to coalesce, but we're doing 		 * it to obtain a double word aligned buffer. 		 */
+comment|/* 		 * We don't actually need to coalesce, but we're doing 		 * it to obtain a double word aligned buffer. 		 * The DC_TX_COALESCE flag is required. 		 */
 break|break;
 case|case
 name|DC_DEVICEID_RS7112
@@ -13741,6 +13743,20 @@ operator|->
 name|dc_flags
 operator|&
 name|DC_TX_COALESCE
+operator|&&
+operator|(
+name|m_head
+operator|->
+name|m_next
+operator|!=
+name|NULL
+operator|||
+name|sc
+operator|->
+name|dc_flags
+operator|&
+name|DC_TX_ALIGN
+operator|)
 condition|)
 block|{
 if|if

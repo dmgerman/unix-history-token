@@ -3899,6 +3899,17 @@ name|DC_TX_ONE
 value|0x00008000
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_TX_ALIGN
+value|0x00010000
+end_define
+
+begin_comment
+comment|/* align mbuf on tx */
+end_comment
+
 begin_comment
 comment|/*  * register space access macros  */
 end_comment
