@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.30 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	5.31 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.30 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	5.31 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1404,17 +1404,6 @@ case|case
 name|CMDHELP
 case|:
 comment|/* help -- give user info */
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\0'
-condition|)
-name|p
-operator|=
-literal|"SMTP"
-expr_stmt|;
 name|help
 argument_list|(
 name|p
@@ -1847,14 +1836,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|len
+if|if
+condition|(
+name|topic
+operator|==
+name|NULL
+operator|||
+operator|*
+name|topic
+operator|==
+literal|'\0'
+condition|)
+name|topic
 operator|=
-name|strlen
+literal|"smtp"
+expr_stmt|;
+else|else
+name|makelower
 argument_list|(
 name|topic
 argument_list|)
 expr_stmt|;
-name|makelower
+name|len
+operator|=
+name|strlen
 argument_list|(
 name|topic
 argument_list|)
