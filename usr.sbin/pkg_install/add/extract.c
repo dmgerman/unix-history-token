@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: extract.c,v 1.7.4.1 1997/02/14 01:54:12 jkh Exp $"
+literal|"$Id: extract.c,v 1.7.4.2 1997/02/15 16:35:38 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,12 +119,9 @@ name|sysconf
 argument_list|(
 name|_SC_ARG_MAX
 argument_list|)
+operator|/
+literal|2
 expr_stmt|;
-name|maxargs
-operator|-=
-literal|64
-expr_stmt|;
-comment|/* some slop for the tar cmd text, 					   and sh -c */
 name|where_args
 operator|=
 name|alloca
