@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_pcb.h,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)iso_pcb.h	7.3 (Berkeley) %G% */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -65,14 +69,6 @@ name|sockaddr_iso
 modifier|*
 name|isop_faddr
 decl_stmt|;
-define|#
-directive|define
-name|isop_lportlen
-value|isop_laddr->siso_tsuffixlen
-define|#
-directive|define
-name|isop_fportlen
-value|isop_faddr->siso_tsuffixlen
 struct|struct
 name|route_iso
 block|{

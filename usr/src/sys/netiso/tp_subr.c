@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr.c,v 5.3 88/11/18 17:28:43 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr.c,v $  *	@(#)tp_subr.c	7.3 (Berkeley) %G% *  *  * The main work of data transfer is done here.  * These routines are called from tp.trans.  * They include the routines that check the validity of acks and Xacks,  * (tp_goodack() and tp_goodXack() )  * take packets from socket buffers and send them (tp_send()),  * drop the data from the socket buffers (tp_sbdrop()),    * and put incoming packet data into socket buffers (tp_stash()).  */
 end_comment
 
 begin_ifndef
@@ -1654,6 +1654,7 @@ end_macro
 begin_while
 while|while
 condition|(
+operator|(
 name|SEQ_LT
 argument_list|(
 name|tpcb
@@ -1662,8 +1663,9 @@ name|lowseq
 argument_list|,
 name|highseq
 argument_list|)
-condition|)
-block|{
+operator|)
+operator|&&
+operator|(
 name|mb
 operator|=
 name|m
@@ -1671,22 +1673,9 @@ operator|=
 name|sb
 operator|->
 name|sb_mb
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-operator|(
-expr|struct
-name|mbuf
-operator|*
 operator|)
-literal|0
 condition|)
 block|{
-break|break;
-comment|/* empty socket buffer */
-block|}
 if|if
 condition|(
 name|tpcb
@@ -1696,21 +1685,6 @@ operator|.
 name|sb_mb
 condition|)
 block|{
-specifier|register
-name|SeqNum
-name|Xuna
-init|=
-operator|*
-operator|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|SeqNum
-operator|*
-argument_list|)
-operator|)
-decl_stmt|;
 name|IFTRACE
 argument_list|(
 argument|D_XPD
@@ -1721,15 +1695,17 @@ name|TPPTmisc
 argument_list|,
 literal|"tp_send XPD mark low high tpcb.Xuna"
 argument_list|,
-name|Xuna
-argument_list|,
 name|lowseq
 argument_list|,
 name|highseq
 argument_list|,
 name|tpcb
 operator|->
-name|tp_Xuna
+name|tp_Xsnd
+operator|.
+name|sb_mb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ENDTRACE
@@ -1793,8 +1769,6 @@ argument_list|)
 expr_stmt|;
 comment|/* reduce counts in socket buffer */
 block|}
-name|m
-operator|=
 name|sb
 operator|->
 name|sb_mb
@@ -1887,11 +1861,9 @@ operator|)
 operator|==
 name|MNULL
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 block|}
 else|else
 block|{
@@ -1909,7 +1881,7 @@ if|if
 condition|(
 name|m
 operator|==
-name|NULL
+name|MNULL
 condition|)
 goto|goto
 name|done
@@ -1919,12 +1891,6 @@ operator|->
 name|m_len
 operator|=
 literal|0
-expr_stmt|;
-name|m
-operator|->
-name|m_act
-operator|=
-name|MNULL
 expr_stmt|;
 block|}
 name|SEQ_INC
@@ -2487,6 +2453,12 @@ operator|->
 name|m_flags
 operator||=
 name|M_EOR
+expr_stmt|;
+name|n
+operator|->
+name|m_act
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|IFDEBUG
@@ -3412,19 +3384,11 @@ name|E
 operator|.
 name|e_data
 decl_stmt|;
-comment|/* sigh. have to go through this again! */
-comment|/* a kludgy optimization would be to take care of this in 		 * tp_input (oh, horrors!)  		 */
-while|while
-condition|(
 name|n
 operator|->
-name|m_next
-condition|)
-name|n
-operator|=
-name|n
-operator|->
-name|m_next
+name|m_flags
+operator||=
+name|M_EOR
 expr_stmt|;
 name|n
 operator|->
@@ -3433,17 +3397,11 @@ operator|=
 name|MNULL
 expr_stmt|;
 comment|/* set on tp_input */
-name|n
-operator|->
-name|m_flags
-operator||=
-name|M_EOR
-expr_stmt|;
 block|}
 end_if
 
 begin_expr_stmt
-name|sbappendrecord
+name|sbappend
 argument_list|(
 operator|&
 name|tpcb

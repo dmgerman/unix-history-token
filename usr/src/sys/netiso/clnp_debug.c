@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netargo/RCS/clnp_debug.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp_debug.c	7.4 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1131,7 +1135,7 @@ name|int
 operator|)
 name|s
 operator|->
-name|siso_tsuffixlen
+name|siso_tlen
 argument_list|,
 name|cp
 argument_list|)

@@ -7,6 +7,10 @@ begin_comment
 comment|/* $Source$ */
 end_comment
 
+begin_comment
+comment|/*	@(#)tp_astring.c	7.3 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -47,6 +51,8 @@ block|,
 literal|"TP_REFWAIT(0x6)"
 block|,
 literal|"TP_LISTENING(0x7)"
+block|,
+literal|"TP_CONFIRMING(0x8)"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -105,6 +111,8 @@ block|,
 literal|"T_DETACH(0x16)"
 block|,
 literal|"T_NETRESET(0x17)"
+block|,
+literal|"T_ACPT_req(0x18)"
 block|, }
 decl_stmt|;
 end_decl_stmt

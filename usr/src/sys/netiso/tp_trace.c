@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_trace.c,v 5.3 88/11/18 17:29:14 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_trace.c,v $  *  * The whole protocol trace module.  * We keep a circular buffer of trace structures, which are big  * unions of different structures we might want to see.  * Unfortunately this gets too big pretty easily. Pcbs were removed  * from the tracing when the kernel got too big to boot.  */
+comment|/*   * ARGO TP  *  * $Header: tp_trace.c,v 5.3 88/11/18 17:29:14 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_trace.c,v $  *	@(#)tp_trace.c	7.3 (Berkeley) %G% *  *  * The whole protocol trace module.  * We keep a circular buffer of trace structures, which are big  * unions of different structures we might want to see.  * Unfortunately this gets too big pretty easily. Pcbs were removed  * from the tracing when the kernel got too big to boot.  */
 end_comment
 
 begin_ifndef

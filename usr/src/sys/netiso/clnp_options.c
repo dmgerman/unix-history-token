@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /var/src/sys/netiso/RCS/clnp_options.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp_options.c	7.5 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

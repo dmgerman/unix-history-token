@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *  * Some auxiliary routines:  * 		tp_protocol_error: required by xebec- called when a combo of state,  *			event, predicate isn't covered for by the transition file.  *		tp_indicate: gives indications(signals) to the user process  *		tp_getoptions: initializes variables that are affected by the options  *          chosen.  */
+comment|/*   * ARGO TP  *  * $Header: tp_subr2.c,v 5.5 88/11/18 17:28:55 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_subr2.c,v $  *	@(#)tp_subr2.c	7.3 (Berkeley) %G% *  *  * Some auxiliary routines:  * 		tp_protocol_error: required by xebec- called when a combo of state,  *			event, predicate isn't covered for by the transition file.  *		tp_indicate: gives indications(signals) to the user process  *		tp_getoptions: initializes variables that are affected by the options  *          chosen.  */
 end_comment
 
 begin_ifndef
@@ -1313,6 +1313,11 @@ case|case
 name|ISO_CLNS
 case|:
 comment|/* This is a kludge but seems necessary so the passive end 			 * can get long enough timers. sigh. 			if( siso->siso_addr.osinet_idi[1] == (u_char)IDI_OSINET ) 			 */
+define|#
+directive|define
+name|IDI_OSINET
+value|0x0004
+comment|/* bcd of "0004" */
 if|if
 condition|(
 name|siso

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso_usrreq.c,v 4.2 88/06/29 15:00:06 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_usrreq.c,v $   *  * iso_usrreq.c : support for iso address family ioctls only.  * (which support ifconfig, for example)  */
+comment|/*  * $Header: iso_usrreq.c,v 4.2 88/06/29 15:00:06 hagens Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso_usrreq.c,v $   *	@(#)iso_usrreq.c	7.3 (Berkeley) %G% *  *  * iso_usrreq.c : support for iso address family ioctls only.  * (which support ifconfig, for example)  */
 end_comment
 
 begin_ifndef

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_trace.h,v 5.1 88/10/12 12:21:51 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_trace.h,v $  *  *   * Definitions needed for the protocol trace mechanism.  */
+comment|/*   * ARGO TP  *  * $Header: tp_trace.h,v 5.1 88/10/12 12:21:51 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_trace.h,v $  *	@(#)tp_trace.h	7.3 (Berkeley) %G% *  *  *   * Definitions needed for the protocol trace mechanism.  */
 end_comment
 
 begin_ifndef

@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso.h	7.2 (Berkeley) %G% */
+comment|/*	@(#)iso.h	7.3 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -312,192 +312,65 @@ endif|IN_CLASSA_NET
 end_endif
 
 begin_comment
-comment|/*  *	Type 37 Address  *  *	This address is named for the value of its AFI (37). This format  *	supports an X.121 address. A type 37 address has the following format:  *  *<----- idp -------><- dsp ->  *<- afi -><- idi -><- dsp ->  *  | "37"   | 7 bytes | 9 bytes |  *  *	The idi contains 14 bcd digits of X.121 address.  *	The use of the dsp part is unknown.  *  *	The afi is considered the "network" portion of the address.  *  This means that you can't have multihoming in the x.25 environment.  *  Makes loopback a bear.  */
+comment|/* The following looks like a sockaddr  * to facilitate using tree lookup routines */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|BIGSOCKADDRS
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIGSOCKADDRS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ADDR37_IDI_LEN
-value|7
-end_define
-
-begin_comment
-comment|/* 14 bcd digits == 7 octets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDR37_DSP_LEN
-value|9
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ADDR37_IDI_LEN
-value|7
-end_define
-
-begin_comment
-comment|/* 14 bcd digits == 7 octets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDR37_DSP_LEN
-value|3
-end_define
-
-begin_comment
-comment|/* this is a lie to fit in sockaddr */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|BIGSOCKADDRS
-end_endif
 
 begin_struct
 struct|struct
-name|addr_37
+name|iso_addr
 block|{
 name|u_char
-name|a37_idi
+name|isoa_len
+decl_stmt|;
+comment|/* length (in bytes) */
+name|char
+name|isoa_genaddr
 index|[
-name|ADDR37_IDI_LEN
+literal|20
 index|]
 decl_stmt|;
-comment|/* initial domain identifier */
-name|u_char
-name|a37_dsp
-index|[
-name|ADDR37_DSP_LEN
-index|]
-decl_stmt|;
-comment|/* domain specific part */
+comment|/* general opaque address */
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|ovl_37
-block|{
-comment|/* overlay for type 37 address */
-name|u_char
-name|o37_afi
-decl_stmt|;
-comment|/* afi */
-name|u_char
-name|o37_x121
-index|[
-name|ADDR37_IDI_LEN
-index|]
-decl_stmt|;
-comment|/* X.121 address */
-name|u_char
-name|o37_dsp
-index|[
-name|ADDR37_DSP_LEN
-index|]
-decl_stmt|;
-comment|/* unknown use at this time */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  *	OSINET address  *  *	This style address is used by the OSINET group  *	An OSINET address has the following (variable-length) format  *  *<----- idp -------><---------------- dsp --------------------------->  *<- afi -><- idi -><---------------- dsp --------------------------->  *  | "47"   | "0004"   |             11 bytes                            |  *  |  afi(1)| osinetid | orgid(2) | subnet id(2) | (4-8) | nsap sel(1) |  *  *	the afi, orgid, and subnet id are considered the "network" portion of  *	the address.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIGSOCKADDRS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ADDROSINET_IDI_LEN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADDROSINET_DSP_LEN
-value|11
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ADDROSINET_IDI_LEN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADDROSINET_DSP_LEN
-value|8
-end_define
-
-begin_comment
-comment|/* this is a lie to fit in sockaddr */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|BIGSOCKADDRS
-end_endif
-
-begin_struct
-struct|struct
-name|addr_osinet
+name|sockaddr_iso
 block|{
 name|u_char
-name|aosi_idi
-index|[
-name|ADDROSINET_IDI_LEN
-index|]
+name|siso_len
 decl_stmt|;
-comment|/* initial domain identifier */
+comment|/* length */
 name|u_char
-name|aosi_dsp
+name|siso_family
+decl_stmt|;
+comment|/* family */
+name|u_char
+name|siso_plen
+decl_stmt|;
+comment|/* presentation selector length */
+name|u_char
+name|siso_slen
+decl_stmt|;
+comment|/* session selector length */
+name|u_char
+name|siso_tlen
+decl_stmt|;
+comment|/* transport selector length */
+name|struct
+name|iso_addr
+name|siso_addr
+decl_stmt|;
+comment|/* network address */
+name|u_char
+name|siso_pad
 index|[
-name|ADDROSINET_DSP_LEN
+literal|6
 index|]
 decl_stmt|;
-comment|/* domain specific part */
+comment|/* space for gosip v2 sels */
+comment|/* makes struct 32 bytes long */
 block|}
 struct|;
 end_struct
@@ -505,225 +378,42 @@ end_struct
 begin_define
 define|#
 directive|define
-name|OVLOSINET_ID_LEN
-value|2
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BIGSOCKADDRS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|OVLOSINET_ORGID_LEN
-value|2
+name|siso_nlen
+value|siso_addr.isoa_len
 end_define
 
 begin_define
 define|#
 directive|define
-name|OVLOSINET_SNETID_LEN
-value|2
+name|siso_data
+value|siso_addr.isoa_genaddr
 end_define
 
 begin_define
 define|#
 directive|define
-name|OVLOSINET_SNPA_LEN
-value|8
+name|TSEL
+parameter_list|(
+name|s
+parameter_list|)
+value|((caddr_t)((s)->siso_data + (s)->siso_nlen))
 end_define
 
 begin_define
 define|#
 directive|define
-name|OVLOSINET_NSAP_LEN
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|OVLOSINET_ORGID_LEN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|OVLOSINET_SNETID_LEN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|OVLOSINET_SNPA_LEN
-value|5
+name|SAME_ISOADDR
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(bcmp((a)->siso_data, (b)->siso_data, (unsigned)(a)->siso_nlen)==0)
 end_define
 
 begin_comment
-comment|/* this is a lie to fit in sockaddr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OVLOSINET_NSAP_LEN
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|BIGSOCKADDRS
-end_endif
-
-begin_struct
-struct|struct
-name|ovl_osinet
-block|{
-comment|/* overlay for osinet address */
-name|u_char
-name|oosi_afi
-decl_stmt|;
-comment|/* afi */
-name|u_char
-name|oosi_id
-index|[
-name|OVLOSINET_ID_LEN
-index|]
-decl_stmt|;
-comment|/* osinet id */
-name|u_char
-name|oosi_orgid
-index|[
-name|OVLOSINET_ORGID_LEN
-index|]
-decl_stmt|;
-comment|/* orgid */
-name|u_char
-name|oosi_snetid
-index|[
-name|OVLOSINET_SNETID_LEN
-index|]
-decl_stmt|;
-comment|/* subnet id */
-name|u_char
-name|oosi_snpa
-index|[
-name|OVLOSINET_SNPA_LEN
-index|]
-decl_stmt|;
-comment|/* snpa */
-name|u_char
-name|oosi_nsap
-index|[
-name|OVLOSINET_NSAP_LEN
-index|]
-decl_stmt|;
-comment|/* nsap sel */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  *	RFC 986 address  *  *	This style address is used when DOD internet addresses are used  *	The format of rfc986 addresses is:  *  *<----- idp -------><---------------- dsp -------------------->  *<- afi -><- idi -><---------------- dsp -------------------->  *  | "47"   | "0006"  |             6 bytes                       |  *  |  afi(1)| idi(2)  | version (1) | inet addr (4) | proto id(1) |  *  *	the afi, idi, and network portion of the inet address are considered   *	the "network" portion of the address.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRRFC986_IDI_LEN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|ADDRRFC986_DSP_LEN
-value|6
-end_define
-
-begin_struct
-struct|struct
-name|addr_rfc986
-block|{
-name|u_char
-name|a986_idi
-index|[
-name|ADDRRFC986_IDI_LEN
-index|]
-decl_stmt|;
-comment|/* initial domain identifier */
-name|u_char
-name|a986_dsp
-index|[
-name|ADDRRFC986_DSP_LEN
-index|]
-decl_stmt|;
-comment|/* domain specific part */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|OVLRFC986_INET_LEN
-value|4
-end_define
-
-begin_struct
-struct|struct
-name|ovl_rfc986
-block|{
-name|u_char
-name|o986_afi
-decl_stmt|;
-comment|/* afi */
-name|u_char
-name|o986_idi
-index|[
-name|ADDRRFC986_IDI_LEN
-index|]
-decl_stmt|;
-comment|/* idi */
-name|u_char
-name|o986_vers
-decl_stmt|;
-comment|/* version */
-name|u_char
-name|o986_inetaddr
-index|[
-name|OVLRFC986_INET_LEN
-index|]
-decl_stmt|;
-comment|/* internet address */
-name|u_char
-name|o986_upid
-decl_stmt|;
-comment|/* upper protocol id */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|RFC986V1
-value|0x01
-end_define
-
-begin_comment
-comment|/* version of 986 addr */
+comment|/*  * The following are specific values for siso->siso_data[0],  * otherwise known as the AFI:  */
 end_comment
 
 begin_define
@@ -767,311 +457,8 @@ value|0x00
 end_define
 
 begin_comment
-comment|/* SubNetwork Address; invalid really... 								- used by ES-IS */
+comment|/* SubNetwork Address; invalid really...*/
 end_comment
-
-begin_comment
-comment|/* the idi for type 37 addresses is very different than the others */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IDI_OSINET
-value|0x0004
-end_define
-
-begin_comment
-comment|/* bcd of "0004" */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IDI_RFC986
-value|0x0006
-end_define
-
-begin_comment
-comment|/* bcd of "0006" */
-end_comment
-
-begin_comment
-comment|/*  *	This address type is used to store a subnetwork address in a   *	sockaddr_iso. The isoa_len field should contain the length of the  *	subnetwork address plus the length of the afi (ie +1 ).  *  *	This address format is used only by the ES-IS protocol  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ADDRSNA_IDI_LEN
-value|7
-end_define
-
-begin_struct
-struct|struct
-name|addr_sn
-block|{
-name|char
-name|sna_addr
-index|[
-name|ADDRSNA_IDI_LEN
-index|]
-decl_stmt|;
-comment|/* subnetwork address */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*   *	Type 47 is the biggest address: 11 bytes. The length of iso_addr  *	is 13 bytes.  */
-end_comment
-
-begin_struct
-struct|struct
-name|old_iso_addr
-block|{
-name|u_char
-name|isoa_afi
-decl_stmt|;
-comment|/* authority and format id */
-union|union
-block|{
-name|struct
-name|addr_37
-name|addr_37
-decl_stmt|;
-comment|/* type 37 */
-name|struct
-name|addr_osinet
-name|addr_osinet
-decl_stmt|;
-comment|/* type osinet */
-name|struct
-name|addr_rfc986
-name|addr_rfc986
-decl_stmt|;
-comment|/* type rfc986 */
-name|struct
-name|addr_sn
-name|addr_sn
-decl_stmt|;
-comment|/* subnetwork address */
-block|}
-name|isoa_u
-union|;
-name|u_char
-name|isoa_len
-decl_stmt|;
-comment|/* length (in bytes) */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* The following looks like a sockaddr  * in case we decide to use tree routines */
-end_comment
-
-begin_struct
-struct|struct
-name|iso_addr
-block|{
-name|u_char
-name|isoa_len
-decl_stmt|;
-comment|/* length (in bytes) */
-name|char
-name|isoa_genaddr
-index|[
-literal|20
-index|]
-decl_stmt|;
-comment|/* general opaque address */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|t37_idi
-value|isoa_u.addr_37.a37_idi
-end_define
-
-begin_define
-define|#
-directive|define
-name|t37_dsp
-value|isoa_u.addr_37.a37_dsp
-end_define
-
-begin_define
-define|#
-directive|define
-name|osinet_idi
-value|isoa_u.addr_osinet.aosi_idi
-end_define
-
-begin_define
-define|#
-directive|define
-name|osinet_dsp
-value|isoa_u.addr_osinet.aosi_dsp
-end_define
-
-begin_define
-define|#
-directive|define
-name|rfc986_idi
-value|isoa_u.addr_rfc986.a986_idi
-end_define
-
-begin_define
-define|#
-directive|define
-name|rfc986_dsp
-value|isoa_u.addr_rfc986.a986_dsp
-end_define
-
-begin_define
-define|#
-directive|define
-name|sna_idi
-value|isoa_u.addr_sn.sna_addr
-end_define
-
-begin_comment
-comment|/*  *	An iso_addr is 18 bytes, a sockaddr_iso is therefore 20 bytes.  *	the struct sockaddr data field has been changed to 22 bytes.  *  * severly changed osinet and t37 addresses from argo code, we don't want  * sockaddrs to grow bigger than the original 16 bytes so we changed the   * t37 and osinet addresses so that they were only 10 bytes long  */
-end_comment
-
-begin_struct
-struct|struct
-name|sockaddr_iso
-block|{
-name|u_char
-name|siso_len
-decl_stmt|;
-comment|/* length */
-name|u_char
-name|siso_family
-decl_stmt|;
-comment|/* family */
-name|u_char
-name|siso_ssuffixlen
-decl_stmt|;
-comment|/* session suffix len */
-name|u_char
-name|siso_tsuffixlen
-decl_stmt|;
-comment|/* transport suffix len */
-comment|/*  u_char				siso_nsaptype;		/* someday?? */
-name|struct
-name|iso_addr
-name|siso_addr
-decl_stmt|;
-comment|/* network address */
-name|u_char
-name|siso_pad
-index|[
-literal|3
-index|]
-decl_stmt|;
-comment|/* make multiple of sizeof long */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|siso_data
-value|siso_addr.isoa_genaddr
-end_define
-
-begin_define
-define|#
-directive|define
-name|siso_nlen
-value|siso_addr.isoa_len
-end_define
-
-begin_define
-define|#
-directive|define
-name|TSEL
-parameter_list|(
-name|s
-parameter_list|)
-value|((caddr_t)((s)->siso_data + (s)->siso_nlen))
-end_define
-
-begin_define
-define|#
-directive|define
-name|SAME_ISOADDR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-define|\
-value|(bcmp((a)->siso_data, (b)->siso_data, (unsigned)(a)->siso_nlen)==0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_UNKNOWN
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_INET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_X121BCD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_X121BIN
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_DCCBCD
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_DCCBIN
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_OSINET
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|NSAPTYPE_RFC986
-value|6
-end_define
 
 begin_ifdef
 ifdef|#
@@ -1166,12 +553,6 @@ directive|endif
 endif|KERNEL
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-endif|__ISO__
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1183,6 +564,12 @@ name|m
 parameter_list|)
 value|((int)((caddr_t)&((t *)0)->m))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|__ISO__
+end_endif
 
 end_unit
 

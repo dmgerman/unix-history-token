@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  * $Header: tp_cons.c,v 5.6 88/11/18 17:27:13 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_cons.c,v $  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  *		tpcons_mtu: figure out what size tpdu to use  *		tpcons_input: pullup and call tp_input w/ correct arguments  *		tpcons_output_dg: package a pkt for cons given 2 addresses& some data  *		tpcons_output: package a pkt for cons given an isopcb& some data  *		cons_chan_to_tpcb: find a tpcb based on the channel #  */
+comment|/*   * ARGO TP  * $Header: tp_cons.c,v 5.6 88/11/18 17:27:13 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_cons.c,v $  *	@(#)tp_cons.c	7.3 (Berkeley) %G% *  *  * Here is where you find the iso-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  *		tpcons_mtu: figure out what size tpdu to use  *		tpcons_input: pullup and call tp_input w/ correct arguments  *		tpcons_output_dg: package a pkt for cons given 2 addresses& some data  *		tpcons_output: package a pkt for cons given an isopcb& some data  *		cons_chan_to_tpcb: find a tpcb based on the channel #  */
 end_comment
 
 begin_ifndef

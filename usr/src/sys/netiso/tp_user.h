@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.3 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.4 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
 
 begin_ifdef
@@ -318,6 +318,17 @@ name|TPOPT_PEER_TSEL
 value|0x900
 end_define
 
+begin_define
+define|#
+directive|define
+name|TPOPT_NGC8_ACCEPT
+value|0xd00
+end_define
+
+begin_comment
+comment|/* negotiate connection requests */
+end_comment
+
 begin_comment
 comment|/*   ***********************flags**********************************  */
 end_comment
@@ -394,6 +405,17 @@ directive|define
 name|TPFLAG_NLQOS_PDN
 value|(u_char)0x01
 end_define
+
+begin_define
+define|#
+directive|define
+name|TPFLAG_NGC8_ACCEPT
+value|(u_char)0x04
+end_define
+
+begin_comment
+comment|/* negotiate conn rq's */
+end_comment
 
 begin_comment
 comment|/*   ***********************end flags******************************  */

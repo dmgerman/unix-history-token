@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  */
 end_comment
 
+begin_comment
+comment|/*	@(#)iso_snpac.h	7.3 (Berkeley) %G% */
+end_comment
+
 begin_define
 define|#
 directive|define

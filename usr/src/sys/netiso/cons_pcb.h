@@ -16,6 +16,10 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/cons_pcb.h,v $ */
 end_comment
 
 begin_comment
+comment|/*	@(#)cons_pcb.h	7.3 (Berkeley) %G% */
+end_comment
+
+begin_comment
 comment|/*  * protocol control block for the connection oriented network service  */
 end_comment
 

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  *	$Header: esis.h,v 4.7 88/09/15 11:24:18 hagens Exp $  *	$Source: /usr/argo/sys/netiso/RCS/esis.h,v $  */
+comment|/*  *	$Header: esis.h,v 4.7 88/09/15 11:24:18 hagens Exp $  *	$Source: /usr/argo/sys/netiso/RCS/esis.h,v $  *	@(#)esis.h	7.3 (Berkeley) %G% *  */
 end_comment
 
 begin_ifndef

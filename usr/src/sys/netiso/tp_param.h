@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_param.h,v 5.3 88/11/18 17:28:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_param.h,v $  *  */
+comment|/*   * ARGO TP  *  * $Header: tp_param.h,v 5.3 88/11/18 17:28:18 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_param.h,v $  *	@(#)tp_param.h	7.4 (Berkeley) %G% *  *  */
 end_comment
 
 begin_ifndef

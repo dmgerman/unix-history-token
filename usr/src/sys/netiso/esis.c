@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - Madison  */
 end_comment
 
+begin_comment
+comment|/*	@(#)esis.c	7.4 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -151,13 +155,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|"esis.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"esis.h"
+file|"argo_debug.h"
 end_include
 
 begin_comment

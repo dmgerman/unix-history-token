@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_raw.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp_raw.c	7.4 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -399,6 +403,21 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* flags for clnp_output */
+if|if
+condition|(
+literal|0
+operator|==
+name|m0
+operator|->
+name|m_flags
+operator|&
+name|M_PKTHDR
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 *	Set up src address. If user has bound socket to an address, use it. 	 *	Otherwise, do not specify src (clnp_output will fill it in). 	 */
 if|if
 condition|(
@@ -500,6 +519,12 @@ operator|&
 name|rp
 operator|->
 name|risop_isop
+argument_list|,
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 argument_list|,
 name|flags
 operator||

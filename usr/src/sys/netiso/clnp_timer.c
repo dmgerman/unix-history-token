@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_timer.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp_timer.c	7.3 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef

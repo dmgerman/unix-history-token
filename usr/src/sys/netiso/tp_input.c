@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*   * ARGO TP  *  * $Header: tp_input.c,v 5.6 88/11/18 17:27:38 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_input.c,v $  *	@(#)tp_input.c	7.3 (Berkeley) %G% *  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_ifndef
@@ -676,18 +676,13 @@ name|tp_pcb
 modifier|*
 name|newtpcb
 decl_stmt|;
+specifier|extern
 name|struct
-name|proc
+name|socket
 modifier|*
-name|selproc
-init|=
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_sel
-decl_stmt|;
-comment|/* kludge for select */
+name|sonewsock
+parameter_list|()
+function_decl|;
 comment|/*  	 * sonewconn() gets a new socket structure, 	 * a new lower layer pcb and a new tpcb, 	 * but the pcbs are unnamed (not bound) 	 */
 name|IFTRACE
 argument_list|(
@@ -697,13 +692,11 @@ name|tptraceTPCB
 argument_list|(
 name|TPPTmisc
 argument_list|,
-literal|"newsock: listg_so,_tpcb selproc, so_head"
+literal|"newsock: listg_so, _tpcb, so_head"
 argument_list|,
 name|so
 argument_list|,
 name|tpcb
-argument_list|,
-name|selproc
 argument_list|,
 name|so
 operator|->
@@ -716,9 +709,11 @@ condition|(
 operator|(
 name|so
 operator|=
-name|sonewconn
+name|sonewsock
 argument_list|(
 name|so
+argument_list|,
+name|SS_ISCONFIRMING
 argument_list|)
 operator|)
 operator|==
@@ -740,32 +735,23 @@ name|tptraceTPCB
 argument_list|(
 name|TPPTmisc
 argument_list|,
-literal|"newsock: after newconn so, selproc, so_head"
+literal|"newsock: after newconn so, so_head"
 argument_list|,
 name|so
-argument_list|,
-name|selproc
 argument_list|,
 name|so
 operator|->
 name|so_head
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ENDTRACE
-name|so
-operator|->
-name|so_rcv
-operator|.
-name|sb_sel
-init|=
-name|selproc
-decl_stmt|;
-comment|/* so that soisconnected() after receipt 		* of the ack will wake this guy up if he's selecting on the 		* listening socket 		*/
 name|IFDEBUG
 argument_list|(
-argument|D_NEWSOCK
+name|D_NEWSOCK
 argument_list|)
 name|printf
 argument_list|(
@@ -775,7 +761,7 @@ name|cons_channel
 argument_list|,
 name|so
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|dump_addr
 argument_list|(
 name|fname
@@ -1283,8 +1269,6 @@ name|e
 decl_stmt|;
 name|int
 name|error
-init|=
-literal|0
 decl_stmt|;
 name|unsigned
 name|dutype
@@ -1301,12 +1285,8 @@ decl_stmt|;
 comment|/*VAX*/
 name|u_char
 name|preferred_class
-init|=
-literal|0
 decl_stmt|,
 name|class_to_use
-init|=
-literal|0
 decl_stmt|;
 name|u_char
 name|opt
@@ -1320,8 +1300,6 @@ directive|ifdef
 name|TP_PERF_MEAS
 name|u_char
 name|perf_meas
-init|=
-literal|0
 decl_stmt|;
 endif|#
 directive|endif
@@ -1334,12 +1312,8 @@ name|lsufxlen
 decl_stmt|;
 name|caddr_t
 name|fsufxloc
-init|=
-literal|0
 decl_stmt|,
 name|lsufxloc
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|tpdu_len
@@ -1352,8 +1326,6 @@ name|fcc_present
 decl_stmt|;
 name|caddr_t
 name|errloc
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|tp_conn_param
@@ -1363,6 +1335,8 @@ name|int
 name|tpcons_output
 parameter_list|()
 function_decl|;
+name|again
+label|:
 ifdef|#
 directive|ifdef
 name|TP_PERF_MEAS
@@ -1373,6 +1347,10 @@ name|e
 operator|.
 name|e_time
 argument_list|)
+expr_stmt|;
+name|perf_meas
+operator|=
+literal|0
 expr_stmt|;
 endif|#
 directive|endif
@@ -1391,10 +1369,8 @@ name|cons_channel
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-name|again
-range|:
 name|tpdu_len
-operator|=
+init|=
 literal|0
 decl_stmt|;
 name|tpcb
@@ -1410,7 +1386,23 @@ name|fsufxlen
 operator|=
 literal|0
 expr_stmt|;
+name|fsufxloc
+operator|=
+literal|0
+expr_stmt|;
 name|lsufxlen
+operator|=
+literal|0
+expr_stmt|;
+name|lsufxloc
+operator|=
+literal|0
+expr_stmt|;
+name|errloc
+operator|=
+literal|0
+expr_stmt|;
+name|error
 operator|=
 literal|0
 expr_stmt|;
@@ -1441,6 +1433,14 @@ expr_stmt|;
 name|fcc_present
 operator|=
 name|FALSE
+expr_stmt|;
+name|preferred_class
+operator|=
+literal|0
+expr_stmt|;
+name|class_to_use
+operator|=
+literal|0
 expr_stmt|;
 comment|/*  	 * get the actual tpdu length - necessary for monitoring 	 * and for checksumming 	 *  	 * Also, maybe measure the mbuf chain lengths and sizes. 	 */
 block|{
@@ -3029,6 +3029,25 @@ argument_list|,
 name|fsufxlen
 argument_list|,
 name|TP_FOREIGN
+argument_list|)
+expr_stmt|;
+call|(
+name|tpcb
+operator|->
+name|tp_nlproto
+operator|->
+name|nlp_putsufx
+call|)
+argument_list|(
+name|so
+operator|->
+name|so_pcb
+argument_list|,
+name|lsufxloc
+argument_list|,
+name|lsufxlen
+argument_list|,
+name|TP_LOCAL
 argument_list|)
 expr_stmt|;
 ifdef|#

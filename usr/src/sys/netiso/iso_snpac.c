@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)iso_snpac.c	7.5 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -154,13 +158,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"argo_debug.h"
+file|"esis.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"esis.h"
+file|"argo_debug.h"
 end_include
 
 begin_define

@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"esis.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../netinet/in_systm.h"
 end_include
 
@@ -158,13 +164,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"eonvar.h"
+file|"../netinet/if_ether.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"esis.h"
+file|"eonvar.h"
 end_include
 
 begin_include
@@ -627,11 +633,11 @@ argument_list|(
 name|m
 argument_list|,
 expr|struct
-name|llc_etherhdr
+name|ether_header
 operator|*
 argument_list|)
 operator|->
-name|dst
+name|ether_dhost
 argument_list|)
 argument_list|,
 operator|(
@@ -658,7 +664,7 @@ operator|+=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|llc_etherhdr
+name|ether_header
 argument_list|)
 expr_stmt|;
 name|m
@@ -668,7 +674,7 @@ operator|-=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|llc_etherhdr
+name|ether_header
 argument_list|)
 expr_stmt|;
 name|m
@@ -680,7 +686,7 @@ operator|-=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|llc_etherhdr
+name|ether_header
 argument_list|)
 expr_stmt|;
 block|}

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_timer.h,v 5.1 88/10/12 12:21:41 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.h,v $  *  * ARGO TP  * The callout structures used by the tp timers.  */
+comment|/*   * ARGO TP  *  * $Header: tp_timer.h,v 5.1 88/10/12 12:21:41 root Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_timer.h,v $  *	@(#)tp_timer.h	7.3 (Berkeley) %G% *  *  * ARGO TP  * The callout structures used by the tp timers.  */
 end_comment
 
 begin_ifndef

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: tp_meas.c,v 5.2 88/11/18 17:28:04 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_meas.c,v $  *   * tp_meas.c : create a performance measurement event  * in the circular buffer tp_Meas[]  */
+comment|/*  * $Header: tp_meas.c,v 5.2 88/11/18 17:28:04 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_meas.c,v $  *	@(#)tp_meas.c	7.3 (Berkeley) %G% *  *   * tp_meas.c : create a performance measurement event  * in the circular buffer tp_Meas[]  */
 end_comment
 
 begin_ifndef

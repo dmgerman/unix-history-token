@@ -15,6 +15,10 @@ begin_comment
 comment|/* $Source: /var/src/sys/netiso/RCS/clnp_output.c,v $ */
 end_comment
 
+begin_comment
+comment|/*	@(#)clnp_output.c	7.4 (Berkeley) %G% */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -304,6 +308,8 @@ argument|m0
 argument_list|,
 argument|isop
 argument_list|,
+argument|datalen
+argument_list|,
 argument|flags
 argument_list|)
 end_macro
@@ -334,6 +340,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|datalen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of bytes of data in m0 */
+end_comment
+
+begin_decl_stmt
+name|int
 name|flags
 decl_stmt|;
 end_decl_stmt
@@ -359,10 +375,6 @@ init|=
 name|m0
 decl_stmt|;
 comment|/* mbuf for clnp header chain */
-name|int
-name|datalen
-decl_stmt|;
-comment|/* number of bytes of data in m */
 specifier|register
 name|struct
 name|clnp_fixed
@@ -426,36 +438,6 @@ operator|->
 name|isop_faddr
 operator|->
 name|siso_addr
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_PKTHDR
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
-name|datalen
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
 expr_stmt|;
 name|IFDEBUG
 argument_list|(
