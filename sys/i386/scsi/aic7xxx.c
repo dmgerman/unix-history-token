@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.25 1995/05/01 18:43:14 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.26 1995/05/11 19:26:26 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -95,6 +95,18 @@ parameter_list|(
 name|x
 parameter_list|)
 value|vtophys(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIN
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a< b) ? a : b)
 end_define
 
 begin_decl_stmt
@@ -1390,6 +1402,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AWAITING_MSG
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
 name|BRKADRINT
 value|0x08
 end_define
@@ -1626,6 +1645,17 @@ value|0xc31ul
 end_define
 
 begin_comment
+comment|/*  * Bit vector of targets that have disconnection disabled.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HA_DISC_DSB
+value|0xc32ul
+end_define
+
+begin_comment
 comment|/*  * Length of pending message  */
 end_comment
 
@@ -1821,6 +1851,13 @@ define|#
 directive|define
 name|MSG_ABORT
 value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_BUS_DEVICE_RESET
+value|0x0c
 end_define
 
 begin_define
@@ -3243,6 +3280,11 @@ name|rate
 decl_stmt|,
 name|targ_scratch
 decl_stmt|;
+name|u_char
+name|maxoffset
+decl_stmt|,
+name|mask
+decl_stmt|;
 comment|/*  				 * Help the sequencer to translate the  				 * negotiated transfer rate.  Transfer is  				 * 1/4 the period in ns as is returned by  				 * the sync negotiation message.  So, we must  				 * multiply by four 				 */
 name|transfer
 operator|=
@@ -3276,20 +3318,6 @@ argument_list|)
 operator|>>
 literal|0x4
 expr_stmt|;
-name|ahc_scsirate
-argument_list|(
-operator|&
-name|rate
-argument_list|,
-name|transfer
-argument_list|,
-name|offset
-argument_list|,
-name|unit
-argument_list|,
-name|scsi_id
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|inb
@@ -3306,6 +3334,14 @@ name|scsi_id
 operator|+=
 literal|8
 expr_stmt|;
+name|mask
+operator|=
+operator|(
+literal|0x01
+operator|<<
+name|scsi_id
+operator|)
+expr_stmt|;
 name|targ_scratch
 operator|=
 name|inb
@@ -3314,6 +3350,40 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
+name|scsi_id
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|targ_scratch
+operator|&
+literal|0x80
+condition|)
+name|maxoffset
+operator|=
+literal|0x08
+expr_stmt|;
+else|else
+name|maxoffset
+operator|=
+literal|0x0f
+expr_stmt|;
+name|ahc_scsirate
+argument_list|(
+operator|&
+name|rate
+argument_list|,
+name|transfer
+argument_list|,
+name|MIN
+argument_list|(
+name|offset
+argument_list|,
+name|maxoffset
+argument_list|)
+argument_list|,
+name|unit
+argument_list|,
 name|scsi_id
 argument_list|)
 expr_stmt|;
@@ -3349,7 +3419,7 @@ condition|(
 operator|(
 name|rate
 operator|&
-literal|0x7f
+literal|0x0f
 operator|)
 operator|==
 literal|0
@@ -3374,11 +3444,7 @@ name|ahc
 operator|->
 name|sdtrpending
 operator|&
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|mask
 condition|)
 block|{
 comment|/* 					 * Don't send an SDTR back to 					 * the target 					 */
@@ -3427,22 +3493,14 @@ operator|->
 name|needsdtr
 operator|&=
 operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|mask
 expr_stmt|;
 name|ahc
 operator|->
 name|sdtrpending
 operator|&=
 operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|mask
 expr_stmt|;
 break|break;
 block|}
@@ -3556,11 +3614,7 @@ argument_list|)
 expr_stmt|;
 name|scratch
 operator||=
-literal|0x88
-expr_stmt|;
-name|scratch
-operator|&=
-literal|0xf8
+literal|0x80
 expr_stmt|;
 break|break;
 block|}
@@ -3610,11 +3664,7 @@ argument_list|)
 expr_stmt|;
 name|scratch
 operator||=
-literal|0x88
-expr_stmt|;
-name|scratch
-operator|&=
-literal|0xf8
+literal|0x80
 expr_stmt|;
 break|break;
 block|}
@@ -4678,6 +4728,69 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|AWAITING_MSG
+case|:
+block|{
+name|int
+name|scb_index
+decl_stmt|;
+name|scb_index
+operator|=
+name|inb
+argument_list|(
+name|SCBPTR
+operator|+
+name|iobase
+argument_list|)
+expr_stmt|;
+name|scb
+operator|=
+name|ahc
+operator|->
+name|scbarray
+index|[
+name|scb_index
+index|]
+expr_stmt|;
+comment|/* 			 * This SCB had a zero length command, informing 			 * the sequencer that we wanted to send a special 			 * message to this target.  We only do this for 			 * BUS_DEVICE_RESET messages currently. 			 */
+if|if
+condition|(
+name|scb
+operator|->
+name|flags
+operator|&
+name|SCB_DEVICE_RESET
+condition|)
+block|{
+name|outb
+argument_list|(
+name|HA_MSG_START
+operator|+
+name|iobase
+argument_list|,
+name|MSG_BUS_DEVICE_RESET
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|HA_MSG_LEN
+operator|+
+name|iobase
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|panic
+argument_list|(
+literal|"ahcintr: AWAITING_MSG for an SCB that"
+literal|"does not have a waiting message"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 default|default:
 name|printf
 argument_list|(
@@ -4986,6 +5099,7 @@ name|ahc
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 name|status
@@ -5064,23 +5178,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
+operator|!
+operator|(
 name|status
 operator|&
 name|BUSFREE
+operator|)
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/*  		      * Has seen busfree since selection, i.e.                       * a "spurious" selection. Shouldn't happen.                       */
-block|printf("ahc: unexpected busfree\n");                        xs->error = XS_DRIVER_STUFFUP;                        outb(CLRSINT1 + iobase, BUSFREE);
-comment|/* CLRBUSFREE */
-endif|#
-directive|endif
-block|}
-else|else
 block|{
 name|printf
 argument_list|(
@@ -6110,6 +6217,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|ahc
+operator|->
+name|type
+operator|&
+name|AHC_AIC7870
+operator|)
+condition|)
+block|{
+if|if
+condition|(
 name|ahc
 operator|->
 name|pause
@@ -6131,6 +6250,7 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -6987,14 +7107,14 @@ name|flags
 operator|&
 name|SCSI_RESET
 condition|)
-block|{
-comment|/* XXX: Needs Implementation */
-name|printf
-argument_list|(
-literal|"ahc0: SCSI_RESET called.\n"
-argument_list|)
+name|scb
+operator|->
+name|flags
+operator||=
+name|SCB_DEVICE_RESET
+operator||
+name|SCB_IMMED
 expr_stmt|;
-block|}
 comment|/*          * Put all the arguments for the xfer in the scb          */
 if|if
 condition|(
@@ -7043,6 +7163,7 @@ operator||=
 name|mask
 expr_stmt|;
 block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -7433,7 +7554,22 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*  else No data xfer, use non S/G values  	 *  the SG_segment_count and SG_list_pointer are pre-zeroed, so  	 *  we don't have to do anything 	 */
+else|else
+block|{
+comment|/* 		 * No data xfer, use non S/G values  	 	 */
+name|scb
+operator|->
+name|SG_segment_count
+operator|=
+literal|0
+expr_stmt|;
+name|scb
+operator|->
+name|SG_list_pointer
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/*                                         * Usually return SUCCESSFULLY QUEUED          */
 ifdef|#
 directive|ifdef
@@ -8059,12 +8195,11 @@ name|scbp
 operator|->
 name|next
 expr_stmt|;
-name|bzero
-argument_list|(
 name|scbp
-argument_list|,
-name|SCB_BZERO_SIZE
-argument_list|)
+operator|->
+name|control
+operator|=
+literal|0
 expr_stmt|;
 name|scbp
 operator|->
@@ -8940,12 +9075,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* I MEAN IT ! */
-name|scb
-operator|->
-name|flags
-operator||=
-name|SCB_IMMED_FAIL
-expr_stmt|;
 name|ahc_done
 argument_list|(
 name|unit
