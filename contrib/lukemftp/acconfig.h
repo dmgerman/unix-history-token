@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: acconfig.h,v 1.6 2000/09/17 23:29:12 lukem Exp $ */
+comment|/* $Id: acconfig.h,v 1.9 2002/06/10 01:27:13 lukem Exp $ */
 end_comment
 
 begin_expr_stmt
@@ -22,6 +22,16 @@ name|HAVE_LONG_LONG
 end_undef
 
 begin_comment
+comment|/* Define if *printf() uses %qd to print `long long' (otherwise uses %lld) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PRINTF_QD
+end_undef
+
+begin_comment
 comment|/* Define if in_port_t exists */
 end_comment
 
@@ -29,6 +39,16 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_IN_PORT_T
+end_undef
+
+begin_comment
+comment|/* Define if sa_family_t exists in<sys/socket.h> */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SA_FAMILY_T
 end_undef
 
 begin_comment
@@ -99,16 +119,6 @@ begin_undef
 undef|#
 directive|undef
 name|HAVE_D_NAMLEN
-end_undef
-
-begin_comment
-comment|/* Define if GLOB_BRACE exists in<glob.h> */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|HAVE_GLOB_BRACE
 end_undef
 
 begin_comment

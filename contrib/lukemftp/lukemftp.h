@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lukemftp.h,v 1.36 2000/10/11 03:07:36 lukem Exp $ */
+comment|/* $Id: lukemftp.h,v 1.43 2002/06/10 08:13:01 lukem Exp $ */
 end_comment
 
 begin_define
@@ -14,7 +14,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.5"
+value|"1.6-beta2"
 end_define
 
 begin_include
@@ -398,8 +398,12 @@ end_endif
 begin_if
 if|#
 directive|if
-name|HAVE_GLOB_BRACE
+name|USE_GLOB_H
 end_if
+
+begin_comment
+comment|/* not set by configure; used by other build systems */
+end_comment
 
 begin_include
 include|#
@@ -435,10 +439,16 @@ directive|include
 file|<paths.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_BSHELL
+end_ifndef
 
 begin_define
 define|#
@@ -446,6 +456,17 @@ directive|define
 name|_PATH_BSHELL
 value|"/bin/sh"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_TMP
+end_ifndef
 
 begin_define
 define|#
@@ -660,6 +681,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|HAVE_LIBUTIL_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|HAVE_VIS_H
 end_if
 
@@ -697,6 +735,26 @@ typedef|typedef
 name|unsigned
 name|short
 name|in_port_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_SA_FAMILY_T
+end_if
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|sa_family_t
 typedef|;
 end_typedef
 
@@ -1622,6 +1680,32 @@ begin_if
 if|#
 directive|if
 operator|!
+name|HAVE_FSEEKO
+end_if
+
+begin_function_decl
+name|int
+name|fseeko
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+name|off_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|HAVE_FPARSELN
 end_if
 
@@ -1726,6 +1810,34 @@ begin_if
 if|#
 directive|if
 operator|!
+name|HAVE_INET_PTON
+end_if
+
+begin_function_decl
+name|int
+name|inet_pton
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|HAVE_MKSTEMP
 end_if
 
@@ -1733,6 +1845,40 @@ begin_function_decl
 name|int
 name|mkstemp
 parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_SETPROGNAME
+end_if
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|getprogname
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setprogname
+parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)

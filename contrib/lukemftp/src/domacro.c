@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: domacro.c,v 1.17 2000/07/18 06:45:03 lukem Exp $	*/
+comment|/*	$NetBSD: domacro.c,v 1.19 2002/02/01 05:04:43 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -54,7 +54,7 @@ name|cp2
 decl_stmt|,
 name|line2
 index|[
-literal|200
+name|FTPBUFLEN
 index|]
 decl_stmt|;
 name|struct
@@ -177,11 +177,16 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|line2
 argument_list|,
 name|line
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line2
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|TOP
@@ -315,7 +320,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|cp2
 argument_list|,
@@ -325,6 +330,17 @@ name|j
 operator|+
 literal|1
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+operator|(
+name|cp2
+operator|-
+name|line
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp2
@@ -371,7 +387,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|cp2
 argument_list|,
@@ -379,6 +395,17 @@ name|argv
 index|[
 name|count
 index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
+operator|-
+operator|(
+name|cp2
+operator|-
+name|line
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp2
@@ -527,6 +554,15 @@ name|ttyout
 argument_list|)
 expr_stmt|;
 block|}
+name|margv
+index|[
+literal|0
+index|]
+operator|=
+name|c
+operator|->
+name|c_name
+expr_stmt|;
 call|(
 modifier|*
 name|c
@@ -560,11 +596,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strlcpy
 argument_list|(
 name|line
 argument_list|,
 name|line2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|line
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|makeargv
