@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.30 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.31 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.30 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.31 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,12 +929,6 @@ index|[
 name|PACKETSZ
 index|]
 decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|__hostalias
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -1033,27 +1027,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|n
-operator|==
-literal|0
-operator|&&
-operator|(
-name|cp
-operator|=
-name|__hostalias
-argument_list|(
-name|host
-argument_list|)
-operator|)
-condition|)
-name|n
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 comment|/* 	 * We do at least one level of search if 	 *	- there is no dot and RES_DEFNAME is set, or 	 *	- there is at least one dot, there is no trailing dot, 	 *	  and RES_DNSRCH is set. 	 */
 name|ret
 operator|=
