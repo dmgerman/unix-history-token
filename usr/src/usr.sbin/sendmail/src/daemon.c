@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.83 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.84 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.83 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.84 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3302,6 +3302,9 @@ expr_stmt|;
 break|break;
 case|case
 name|HOST_NOT_FOUND
+case|:
+case|case
+name|NO_DATA
 case|:
 operator|*
 name|statp
