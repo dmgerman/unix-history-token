@@ -49,6 +49,9 @@ name|char
 modifier|*
 modifier|*
 name|devnames
+parameter_list|,
+name|int
+name|states
 parameter_list|)
 block|{
 return|return
@@ -65,6 +68,8 @@ argument_list|,
 literal|"No network interfaces available"
 argument_list|,
 name|DC_CLS_NETIF
+argument_list|,
+name|states
 argument_list|)
 return|;
 block|}
