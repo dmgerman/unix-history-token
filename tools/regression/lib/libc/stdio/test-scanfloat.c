@@ -690,7 +690,7 @@ name|assert
 argument_list|(
 name|ld
 operator|==
-literal|0x
+literal|0x0
 literal|.0123456789abcdefffp
 operator|-
 literal|3L
