@@ -5090,12 +5090,6 @@ operator|<
 name|AD_MAX_RETRIES
 condition|)
 block|{
-name|int
-name|s
-init|=
-name|splbio
-argument_list|()
-decl_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -5110,11 +5104,6 @@ argument_list|,
 name|request
 argument_list|,
 name|chain
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
