@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.2 (Berkeley) %G%"
+literal|"@(#)ls.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +100,12 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-specifier|static
 name|char
-modifier|*
 name|modep
-decl_stmt|;
-name|char
+index|[
+literal|15
+index|]
+decl_stmt|,
 modifier|*
 name|user_from_uid
 argument_list|()
@@ -134,40 +134,18 @@ operator|->
 name|st_blocks
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|strmode
 argument_list|(
 name|sb
 operator|->
 name|st_mode
 argument_list|,
-operator|&
 name|modep
 argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"find: %s.\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
