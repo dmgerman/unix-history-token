@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.2 (Berkeley) %G%"
+literal|"@(#)ld.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2833,7 +2833,7 @@ name|ldrand
 argument_list|()
 condition|)
 continue|continue;
-name|cfree
+name|free
 argument_list|(
 operator|(
 name|char
@@ -2842,7 +2842,7 @@ operator|)
 name|tab
 argument_list|)
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 name|tabstr
 argument_list|)
@@ -3187,6 +3187,11 @@ operator|.
 name|ran_name
 argument_list|)
 operator|)
+operator|==
+literal|0
+operator|||
+operator|*
+name|hp
 operator|==
 literal|0
 condition|)
@@ -7127,7 +7132,7 @@ argument_list|,
 name|b2
 argument_list|)
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 operator|(
 name|char
@@ -7136,7 +7141,7 @@ operator|)
 name|relp
 argument_list|)
 expr_stmt|;
-name|cfree
+name|free
 argument_list|(
 name|codep
 argument_list|)
