@@ -122,18 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/diskslice.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -814,26 +802,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|RAIDLABELDEV
-parameter_list|(
-name|dev
-parameter_list|)
-value|dkmodpart(dev, RAW_PART)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISKPART
-parameter_list|(
-name|dev
-parameter_list|)
-value|dkpart(dev)
-end_define
 
 begin_function_decl
 specifier|static
@@ -5837,13 +5805,6 @@ name|bp
 operator|->
 name|bio_blkno
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* XXX Is this needed? */
-block|if (DISKPART(bp->bio_dev) != RAW_PART) { 			struct partition *pp; 			pp =&sc->sc_dkdev.d_label.d_partitions[DISKPART( 			    bp->bio_dev)]; 			blocknum += pp->p_offset; 		}
-endif|#
-directive|endif
 name|rf_printf
 argument_list|(
 literal|3
