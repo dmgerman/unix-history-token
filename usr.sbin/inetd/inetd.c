@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.44 1998/12/28 15:09:43 des Exp $"
+literal|"$Id: inetd.c,v 1.45 1999/01/02 16:04:19 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1254,7 +1254,7 @@ block|,
 name|discard_dg
 block|}
 block|,
-comment|/* Return 32 bit time since 1970 */
+comment|/* Return 32 bit time since 1900 */
 block|{
 literal|"time"
 block|,
@@ -9102,6 +9102,7 @@ comment|/*  * Return a machine readable date and time, in the form of the  * num
 end_comment
 
 begin_function
+name|unsigned
 name|long
 name|machtime
 parameter_list|()
@@ -9191,6 +9192,7 @@ modifier|*
 name|sep
 decl_stmt|;
 block|{
+name|unsigned
 name|long
 name|result
 decl_stmt|;
@@ -9243,6 +9245,7 @@ modifier|*
 name|sep
 decl_stmt|;
 block|{
+name|unsigned
 name|long
 name|result
 decl_stmt|;
