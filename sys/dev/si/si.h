@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.h,v 1.10 1998/02/15 14:42:32 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  * 'C' definitions for Specialix serial multiplex driver.  *  * Copyright (C) 1990, 1992, 1998 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@netplex.com.au>  *  * Derived from:	SunOS 4.x version  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.h,v 1.11 1998/03/21 06:17:14 peter Exp $  */
 end_comment
 
 begin_include
@@ -232,7 +232,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SI2
+name|SIMCA
 value|2
 end_define
 
@@ -329,9 +329,11 @@ decl_stmt|;
 name|BYTE
 name|rx_int_count
 decl_stmt|;
+comment|/* isr_count on Jet */
 name|BYTE
-name|spare
+name|main_count
 decl_stmt|;
+comment|/* spare on Z-280 */
 name|WORD
 name|int_pending
 decl_stmt|;
@@ -391,65 +393,49 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	The 'next' pointer& with 0x7fff + SI base addres give  *	the address of the next module block if fitted. (else 0)  *	Note that next points to the TX buffer so 0x60 must be  *	subtracted to find the true base.  *  *	Type is a bit field as follows:  The bottom 5 bits are the  *	number of channels  on this module,  the top 3 bits are  *	as the module type thus:  *  *	000	2698 RS232 module (4 port or 8 port)  *	001	Reserved for 2698 RS422 module  *	010	Reserved for 8530 based sync module  *	011	Reserved for parallel printer module  *	100	Reserved for network module  *	101-111	Reserved for expansion.  *  *	The number field is the cable position of the module.  */
+comment|/*  *	The 'next' pointer& with 0x7fff + SI base addres give  *	the address of the next module block if fitted. (else 0)  *	Note that next points to the TX buffer so 0x60 must be  *	subtracted to find the true base.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|M232
+name|TA4
 value|0x00
 end_define
 
 begin_define
 define|#
 directive|define
-name|M422
-value|0x20
+name|TA8
+value|0x08
 end_define
-
-begin_comment
-comment|/* not supported */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MSYNC
-value|0x40
+name|TA4_ASIC
+value|0x0A
 end_define
-
-begin_comment
-comment|/* this is the Telebit Netblazer module */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MCENT
-value|0x60
+name|TA8_ASIC
+value|0x0B
 end_define
-
-begin_comment
-comment|/* not supported */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MNET
-value|0x80
+name|MTA
+value|0x28
 end_define
-
-begin_comment
-comment|/* not supported */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|MMASK
-value|0x1F
+name|SXDC
+value|0x48
 end_define
 
 begin_comment
