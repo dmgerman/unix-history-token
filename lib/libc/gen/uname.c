@@ -18,18 +18,13 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/*static char sccsid[] = "From: @(#)uname.c	8.1 (Berkeley) 1/4/94";*/
-end_comment
-
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"From: @(#)uname.c	8.1 (Berkeley) 1/4/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#

@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * getvfsent.c - get a listing of installed filesystems  * Written September 1994 by Garrett A. Wollman  * This file is in the public domain.  *  * $FreeBSD$  */
+comment|/*  * getvfsent.c - get a listing of installed filesystems  * Written September 1994 by Garrett A. Wollman  * This file is in the public domain.  *  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
