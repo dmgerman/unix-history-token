@@ -1110,7 +1110,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d\n"
+literal|"%d"
 argument_list|,
 operator|(
 name|int
@@ -1146,7 +1146,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"0x%lx\n"
+literal|"0x%lx"
 argument_list|,
 name|rman_get_start
 argument_list|(
@@ -1183,7 +1183,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%lu\n"
+literal|"%lu"
 argument_list|,
 name|rman_get_start
 argument_list|(
