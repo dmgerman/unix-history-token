@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.4 (Berkeley) %G%"
+literal|"@(#)tio.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,10 +765,6 @@ argument_list|(
 name|bytes
 argument_list|,
 name|t2
-operator|.
-name|time
-operator|-
-name|t1
 operator|.
 name|time
 argument_list|)

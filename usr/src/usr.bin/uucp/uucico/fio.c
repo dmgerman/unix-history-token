@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fio.c	5.2 (Berkeley) %G%"
+literal|"@(#)fio.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -905,10 +905,6 @@ argument_list|,
 name|t2
 operator|.
 name|time
-operator|-
-name|t1
-operator|.
-name|time
 argument_list|)
 expr_stmt|;
 if|if
@@ -1312,10 +1308,6 @@ argument_list|(
 name|abytes
 argument_list|,
 name|t2
-operator|.
-name|time
-operator|-
-name|t1
 operator|.
 name|time
 argument_list|)
