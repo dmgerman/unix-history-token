@@ -225,6 +225,9 @@ comment|/* display rule sets */
 name|test_only
 decl_stmt|,
 comment|/* only check syntax */
+name|comment_only
+decl_stmt|,
+comment|/* only print action and comment */
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -4120,6 +4123,11 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|comment_only
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 operator|*
 name|flags
@@ -4955,6 +4963,14 @@ operator||
 name|HAVE_OPTIONS
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|comment_only
+condition|)
+name|comment
+operator|=
+literal|"..."
+expr_stmt|;
 for|for
 control|(
 name|l
@@ -4999,6 +5015,37 @@ operator|*
 operator|)
 name|cmd
 decl_stmt|;
+if|if
+condition|(
+name|comment_only
+condition|)
+block|{
+if|if
+condition|(
+name|cmd
+operator|->
+name|opcode
+operator|!=
+name|O_NOP
+condition|)
+continue|continue;
+name|printf
+argument_list|(
+literal|" // %s\n"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|cmd
+operator|+
+literal|1
+operator|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|show_prerequisites
 argument_list|(
 operator|&
@@ -9762,7 +9809,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"ipfw syntax summary (but please do read the ipfw(8) manpage):\n"
-literal|"ipfw [-acdeftTnNpqS]<command> where<command> is one of:\n"
+literal|"ipfw [-abcdefhnNqStTv]<command> where<command> is one of:\n"
 literal|"add [num] [set N] [prob x] RULE-BODY\n"
 literal|"{pipe|queue} N config PIPE-BODY\n"
 literal|"[pipe|queue] {zero|delete|show} [N{,N}]\n"
@@ -18889,7 +18936,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"acdefhnNqs:STtv"
+literal|"abcdefhnNqs:STtv"
 argument_list|)
 operator|)
 operator|!=
@@ -18905,6 +18952,18 @@ case|case
 literal|'a'
 case|:
 name|do_acct
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|comment_only
+operator|=
+literal|1
+expr_stmt|;
+name|do_compact
 operator|=
 literal|1
 expr_stmt|;
