@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.57 1999/07/02 16:21:13 sheldonh Exp $"
+literal|"$Id: inetd.c,v 1.58 1999/07/09 11:18:59 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1287,6 +1287,21 @@ argument_list|(
 operator|(
 expr|struct
 name|servtab
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|inetd_setproctitle
+name|__P
+argument_list|(
+operator|(
+name|char
 operator|*
 operator|,
 name|int
@@ -3179,6 +3194,13 @@ name|sep
 argument_list|)
 condition|)
 block|{
+name|inetd_setproctitle
+argument_list|(
+literal|"wrapping"
+argument_list|,
+name|ctrl
+argument_list|)
+expr_stmt|;
 name|service
 operator|=
 name|sep
