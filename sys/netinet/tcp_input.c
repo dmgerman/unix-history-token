@@ -1629,7 +1629,6 @@ argument_list|,
 name|tqe_q
 argument_list|)
 expr_stmt|;
-comment|/* Unlocked read. */
 if|if
 condition|(
 name|so
@@ -5389,7 +5388,6 @@ argument_list|)
 expr_stmt|;
 comment|/* some progress has been done */
 comment|/* #ifdef TCPDEBUG 			if (so->so_options& SO_DEBUG) 				tcp_trace(TA_INPUT, ostate, tp, 				    (void *)tcp_saveipgen,&tcp_savetcp, 0); #endif 			 * Add data to socket buffer. 			 */
-comment|/* Unlocked read. */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
@@ -9339,7 +9337,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-comment|/* Unlocked read. */
 name|SOCKBUF_LOCK
 argument_list|(
 operator|&
