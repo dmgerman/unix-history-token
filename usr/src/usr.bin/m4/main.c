@@ -719,7 +719,10 @@ name|m4temp
 operator|=
 name|mktemp
 argument_list|(
+name|strdup
+argument_list|(
 name|DIVNAM
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* filename for diversions   */
