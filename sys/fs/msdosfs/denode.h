@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.12 1997/02/26 14:23:09 bde Exp $ */
+comment|/*	$Id: denode.h,v 1.13 1997/08/26 07:32:36 phk Exp $ */
 end_comment
 
 begin_comment
@@ -128,6 +128,11 @@ struct|struct
 name|denode
 block|{
 name|struct
+name|lock
+name|de_lock
+decl_stmt|;
+comment|/* denode lock>Keep this first< */
+name|struct
 name|denode
 modifier|*
 name|de_next
@@ -192,11 +197,6 @@ modifier|*
 name|de_lockf
 decl_stmt|;
 comment|/* byte level lock list */
-name|struct
-name|lock
-name|de_lock
-decl_stmt|;
-comment|/* denode lock */
 comment|/* the next two fields must be contiguous in memory... */
 name|u_char
 name|de_Name
