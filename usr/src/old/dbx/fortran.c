@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortran.c	1.3	%G%"
+literal|"@(#)fortran.c	1.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -849,6 +849,7 @@ argument_list|(
 literal|" (dummy argument) "
 argument_list|)
 expr_stmt|;
+comment|/* fall through */
 case|case
 name|VAR
 case|:
@@ -861,20 +862,12 @@ operator|->
 name|class
 operator|==
 name|ARRAY
-operator|&&
-operator|(
-name|not
-name|istypename
+name|and
 argument_list|(
-name|s
-operator|->
-name|type
-operator|->
-name|type
-argument_list|,
+argument|not istypename(s->type->type,
 literal|"char"
+argument|)
 argument_list|)
-operator|)
 condition|)
 block|{
 name|char
@@ -985,11 +978,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|" subroutine"
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|" %s "
@@ -1011,7 +1006,7 @@ name|MODULE
 case|:
 name|printf
 argument_list|(
-literal|"source file \"%s.c\""
+literal|"source file \"%s.f\""
 argument_list|,
 name|symname
 argument_list|(
