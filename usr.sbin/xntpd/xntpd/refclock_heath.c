@@ -998,7 +998,7 @@ name|i
 operator|%
 literal|24
 expr_stmt|;
-comment|/* 	 * We determine the day of the year from the DIPswitches. This 	 * should be fixed, since somebody might forget to set them. 	 * Someday this hazard will be fixed by a fiendish scheme that 	 * looks at the timecode and year the radio shows, then computes 	 * the residue of the seconds mod the seconds in a leap cycle. 	 * If in the third year of that cycle and the third and later 	 * months of that year, add one to the day. Then, correct the 	 * timecode accordingly. Icky pooh. This bit of nonsense could 	 * be avoided if the engineers had been required to write a 	 * device driver before finalizing the timecode format. 	 * 	 * Yes, I know this code incorrectly thinks that 2000 is a leap 	 * year; but, the latest year that can be set by the DIPswitches 	 * is 1997 anyay. Life is short. 	 */
+comment|/* 	 * We determine the day of the year from the DIPswitches. This 	 * should be fixed, since somebody might forget to set them. 	 * Someday this hazard will be fixed by a fiendish scheme that 	 * looks at the timecode and year the radio shows, then computes 	 * the residue of the seconds mod the seconds in a leap cycle. 	 * If in the third year of that cycle and the third and later 	 * months of that year, add one to the day. Then, correct the 	 * timecode accordingly. Icky pooh. This bit of nonsense could 	 * be avoided if the engineers had been required to write a 	 * device driver before finalizing the timecode format. 	 * 	 * Yes, I know this code incorrectly thinks that 2100 is a leap 	 * year; but, the latest year that can be set by the DIPswitches 	 * is 1997 anyay. Life is short. 	 */
 if|if
 condition|(
 name|month

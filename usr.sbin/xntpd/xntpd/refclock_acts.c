@@ -1659,7 +1659,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Yes, I know this code incorrectly thinks that 2000 is a leap 	 * year. The ACTS timecode format croaks then anyway. Life is 	 * short. Would only the timecode mavens resist the urge to 	 * express months of the year and days of the month in favor of 	 * days of the year. 	 */
+comment|/* 	 * Yes, I know this code incorrectly thinks that 2100 is a leap 	 * year. The ACTS timecode format croaks then anyway. Life is 	 * short. Would only the timecode mavens resist the urge to 	 * express months of the year and days of the month in favor of 	 * days of the year. 	 */
 if|if
 condition|(
 name|month
