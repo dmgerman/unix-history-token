@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.28	82/09/12	*/
+comment|/*	ht.c	4.29	82/10/10	*/
 end_comment
 
 begin_include
@@ -78,18 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/mbareg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mbavar.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/ioctl.h"
 end_include
 
@@ -108,19 +96,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/cpu.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/uio.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/htreg.h"
+file|"../vax/cpu.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbareg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/mbavar.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../vaxmba/htreg.h"
 end_include
 
 begin_decl_stmt
