@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.103 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.104 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -6663,11 +6663,18 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+name|int
+name|isize
+decl_stmt|;
+name|isize
+operator|=
 name|ip
 operator|->
 name|i_size
+expr_stmt|;
+if|if
+condition|(
+name|isize
 operator|<
 name|vp
 operator|->
@@ -6686,12 +6693,7 @@ name|ip
 operator|->
 name|i_shortlink
 argument_list|,
-operator|(
-name|int
-operator|)
-name|ip
-operator|->
-name|i_size
+name|isize
 argument_list|,
 name|ap
 operator|->
