@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.118		%G%"
+literal|"@(#)sendmail.h	4.1		%G%"
 decl_stmt|;
 end_decl_stmt
 

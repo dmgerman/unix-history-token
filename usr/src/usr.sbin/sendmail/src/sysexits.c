@@ -21,7 +21,7 @@ operator|)
 name|sysexits
 operator|.
 name|c
-literal|3.6
+literal|4.1
 operator|%
 name|G
 operator|%
