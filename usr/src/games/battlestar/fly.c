@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fly.c	5.4 (Berkeley) %G%"
+literal|"@(#)fly.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,12 +122,10 @@ name|oldsig
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|succumb
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -159,11 +157,13 @@ call|(
 modifier|*
 name|oldsig
 call|)
-argument_list|()
+argument_list|(
+name|SIGINT
+argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_macro
 name|visual
@@ -883,12 +883,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|moveenemy
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|double
 name|d
@@ -1155,7 +1153,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|endfly
