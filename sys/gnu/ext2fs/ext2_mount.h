@@ -15,28 +15,6 @@ directive|define
 name|_SYS_GNU_EXT2FS_EXT2_MOUNT_H_
 end_define
 
-begin_comment
-comment|/*  * Arguments to mount ext2fs filesystems  */
-end_comment
-
-begin_struct
-struct|struct
-name|ext2_args
-block|{
-name|char
-modifier|*
-name|fspec
-decl_stmt|;
-comment|/* block special device to mount */
-name|struct
-name|export_args
-name|export
-decl_stmt|;
-comment|/* network export information */
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
