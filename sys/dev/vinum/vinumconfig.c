@@ -2336,6 +2336,12 @@ operator||=
 name|VF_NEWBORN
 expr_stmt|;
 comment|/* newly born drive */
+name|drive
+operator|->
+name|dev
+operator|=
+name|NODEV
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|drive
@@ -2864,6 +2870,21 @@ argument_list|(
 name|drive
 operator|->
 name|freelist
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|drive
+operator|->
+name|dev
+operator|!=
+name|NODEV
+condition|)
+name|dev_rel
+argument_list|(
+name|drive
+operator|->
+name|dev
 argument_list|)
 expr_stmt|;
 name|bzero

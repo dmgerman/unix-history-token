@@ -114,6 +114,13 @@ comment|/* didn't find anything */
 return|return
 name|ENOENT
 return|;
+name|dev_ref
+argument_list|(
+name|drive
+operator|->
+name|dev
+argument_list|)
+expr_stmt|;
 name|drive
 operator|->
 name|dev
