@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: crontab.c,v 1.9 1997/02/22 16:04:53 peter Exp $"
+literal|"$Id: crontab.c,v 1.10 1997/03/31 05:09:58 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,9 +338,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: usage error: %s\n"
-argument_list|,
-name|ProgramName
+literal|"crontab: usage error: %s\n"
 argument_list|,
 name|msg
 argument_list|)
@@ -348,46 +347,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\t%s [-u user] file\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: crontab [-u user] file"
 argument_list|,
-literal|"\t%s [-u user] { -e | -l | -r }\n"
-argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t\t(default operation is replace, per 1003.2)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-e\t(edit user's crontab)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-l\t(list user's crontab)\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-r\t(delete user's crontab)\n"
+literal|"       crontab [-u user] { -e | -l | -r }"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -481,22 +445,11 @@ name|User
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"You (%s) are not allowed to use this program (%s)\n"
+literal|"you (%s) are not allowed to use this program"
 argument_list|,
 name|User
-argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"See crontab(1) for more information\n"
 argument_list|)
 expr_stmt|;
 name|log_it
@@ -561,6 +514,10 @@ operator|=
 name|ERROR_EXIT
 expr_stmt|;
 break|break;
+case|case
+name|opt_unknown
+case|:
+break|break;
 block|}
 name|exit
 argument_list|(
@@ -605,29 +562,13 @@ argument_list|()
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: your UID isn't in the passwd file.\n"
-argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"bailing out.\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"your UID isn't in the passwd file, bailing out"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -728,20 +669,13 @@ argument_list|()
 operator|!=
 name|ROOT_UID
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"must be privileged to use -u\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"must be privileged to use -u"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -754,24 +688,15 @@ name|optarg
 argument_list|)
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERROR_EXIT
 argument_list|,
-literal|"%s:  user `%s' unknown\n"
-argument_list|,
-name|ProgramName
+literal|"user `%s' unknown"
 argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -988,18 +913,13 @@ argument_list|()
 operator|<
 name|OK
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"swapping uids"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1014,18 +934,15 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|swap_uids
@@ -1033,18 +950,13 @@ argument_list|()
 operator|<
 name|OK
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"swapping uids back"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 block|}
 name|Debug
@@ -1122,24 +1034,23 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERROR_EXIT
 argument_list|,
-literal|"no crontab for %s\n"
+literal|"no crontab for %s"
 argument_list|,
 name|User
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 block|}
@@ -1224,24 +1135,23 @@ name|errno
 operator|==
 name|ENOENT
 condition|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|ERROR_EXIT
 argument_list|,
-literal|"no crontab for %s\n"
+literal|"no crontab for %s"
 argument_list|,
 name|User
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
-argument_list|(
-name|n
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 block|}
@@ -1378,23 +1288,18 @@ name|errno
 operator|!=
 name|ENOENT
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|exit
+name|warnx
 argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"no crontab for %s - using an empty one\n"
+literal|"no crontab for %s - using an empty one"
 argument_list|,
 name|User
 argument_list|)
@@ -1413,18 +1318,13 @@ literal|"r"
 argument_list|)
 operator|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"/dev/null"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 name|um
 operator|=
@@ -1458,8 +1358,10 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
@@ -1522,7 +1424,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|perror
+name|warn
 argument_list|(
 literal|"fchown"
 argument_list|)
@@ -1546,7 +1448,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fdopen"
 argument_list|)
@@ -1671,18 +1573,15 @@ argument_list|(
 name|NewCrontab
 argument_list|)
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 name|again
 label|:
 if|if
@@ -1698,7 +1597,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"stat"
 argument_list|)
@@ -1767,7 +1666,7 @@ case|case
 operator|-
 literal|1
 case|:
-name|perror
+name|warn
 argument_list|(
 literal|"fork"
 argument_list|)
@@ -1789,18 +1688,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"setuid(getuid())"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|chdir
@@ -1810,18 +1704,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"chdir(/tmp)"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|strlen
@@ -1838,22 +1727,13 @@ literal|2
 operator|>=
 name|MAX_TEMPSTR
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: editor or filename too long\n"
-argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"editor or filename too long"
 argument_list|)
 expr_stmt|;
-block|}
 name|execlp
 argument_list|(
 name|editor
@@ -1865,14 +1745,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-name|editor
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|editor
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -1974,13 +1853,9 @@ operator|!=
 name|pid
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: wrong PID (%d != %d) from \"%s\"\n"
-argument_list|,
-name|ProgramName
+literal|"wrong PID (%d != %d) from \"%s\""
 argument_list|,
 name|xpid
 argument_list|,
@@ -2006,13 +1881,9 @@ name|waiter
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: \"%s\" exited with status %d\n"
-argument_list|,
-name|ProgramName
+literal|"\"%s\" exited with status %d"
 argument_list|,
 name|editor
 argument_list|,
@@ -2034,13 +1905,9 @@ name|waiter
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: \"%s\" killed; signal %d (%score dumped)\n"
-argument_list|,
-name|ProgramName
+literal|"\"%s\" killed; signal %d (%score dumped)"
 argument_list|,
 name|editor
 argument_list|,
@@ -2076,7 +1943,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"stat"
 argument_list|)
@@ -2094,26 +1961,18 @@ operator|.
 name|st_mtime
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: no changes made to crontab\n"
-argument_list|,
-name|ProgramName
+literal|"no changes made to crontab"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|remove
 goto|;
 block|}
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: installing new crontab\n"
-argument_list|,
-name|ProgramName
+literal|"installing new crontab"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2131,8 +1990,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|Filename
 argument_list|)
 expr_stmt|;
@@ -2243,13 +2104,9 @@ literal|2
 case|:
 name|abandon
 label|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: edits left in %s\n"
-argument_list|,
-name|ProgramName
+literal|"edits left in %s"
 argument_list|,
 name|Filename
 argument_list|)
@@ -2258,13 +2115,9 @@ goto|goto
 name|done
 goto|;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: panic: bad switch() in replace_cmd()\n"
-argument_list|,
-name|ProgramName
+literal|"panic: bad switch() in replace_cmd()"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2350,13 +2203,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: Cannot allocate memory.\n"
-argument_list|,
-name|ProgramName
+literal|"cannot allocate memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2406,8 +2255,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|tn
 argument_list|)
 expr_stmt|;
@@ -2511,13 +2362,9 @@ name|tmp
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: error while writing new crontab to %s\n"
-argument_list|,
-name|ProgramName
+literal|"error while writing new crontab to %s"
 argument_list|,
 name|tn
 argument_list|)
@@ -2620,11 +2467,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"errors in crontab file, can't install.\n"
+literal|"errors in crontab file, can't install"
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -2683,7 +2528,7 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"chown"
 argument_list|)
@@ -2738,7 +2583,7 @@ condition|)
 endif|#
 directive|endif
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"chown"
 argument_list|)
@@ -2770,7 +2615,7 @@ operator|==
 name|EOF
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fclose"
 argument_list|)
@@ -2810,22 +2655,13 @@ name|n
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: error renaming %s to %s\n"
-argument_list|,
-name|ProgramName
+literal|"error renaming %s to %s"
 argument_list|,
 name|tn
 argument_list|,
 name|n
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"rename"
 argument_list|)
 expr_stmt|;
 name|unlink
@@ -2916,15 +2752,10 @@ operator|<
 name|OK
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"can't update mtime on spooldir %s"
 argument_list|,
-literal|"crontab: can't update mtime on spooldir\n"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|SPOOL_DIR
 argument_list|)
 expr_stmt|;
@@ -2944,15 +2775,10 @@ operator|<
 name|OK
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"can't update mtime on spooldir %s"
 argument_list|,
-literal|"crontab: can't update mtime on spooldir\n"
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|SPOOL_DIR
 argument_list|)
 expr_stmt|;

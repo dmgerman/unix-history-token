@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: entry.c,v 1.6 1997/02/22 16:05:06 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: env.c,v 1.5 1997/02/22 16:05:07 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -836,11 +837,13 @@ name|q
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 operator|*
 name|envp
 operator|++
+operator|)
 condition|)
 block|{
 if|if

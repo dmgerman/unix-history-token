@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: misc.c,v 1.5 1997/02/22 16:05:08 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -550,18 +557,13 @@ argument_list|)
 operator|<
 name|OK
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"seteuid"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -573,18 +575,13 @@ argument_list|)
 operator|<
 name|OK
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+name|ERROR_EXIT
+argument_list|,
 literal|"setuid"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -617,8 +614,10 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|CRONDIR
 argument_list|)
 expr_stmt|;
@@ -634,11 +633,9 @@ literal|0700
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: created\n"
+literal|"%s: created"
 argument_list|,
 name|CRONDIR
 argument_list|)
@@ -654,23 +651,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|CRONDIR
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"mkdir"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s: mkdir"
+argument_list|,
+name|CRONDIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -686,22 +673,15 @@ operator|&
 name|S_IFDIR
 operator|)
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|ERROR_EXIT
 argument_list|,
-literal|"'%s' is not a directory, bailing out.\n"
+literal|"'%s' is not a directory, bailing out"
 argument_list|,
 name|CRONDIR
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|chdir
@@ -711,27 +691,15 @@ argument_list|)
 operator|<
 name|OK
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cannot chdir(%s), bailing out.\n"
-argument_list|,
-name|CRONDIR
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-name|CRONDIR
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"cannot chdir(%s), bailing out"
+argument_list|,
+name|CRONDIR
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* CRONDIR okay (now==CWD), now look at SPOOL_DIR ("tabs" or some such) 	 */
 if|if
 condition|(
@@ -750,8 +718,10 @@ operator|==
 name|ENOENT
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|SPOOL_DIR
 argument_list|)
 expr_stmt|;
@@ -767,11 +737,9 @@ literal|0700
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: created\n"
+literal|"%s: created"
 argument_list|,
 name|SPOOL_DIR
 argument_list|)
@@ -787,23 +755,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|SPOOL_DIR
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|"mkdir"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s: mkdir"
+argument_list|,
+name|SPOOL_DIR
 argument_list|)
 expr_stmt|;
 block|}
@@ -819,22 +777,15 @@ operator|&
 name|S_IFDIR
 operator|)
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+name|ERROR_EXIT
 argument_list|,
-literal|"'%s' is not a directory, bailing out.\n"
+literal|"'%s' is not a directory, bailing out"
 argument_list|,
 name|SPOOL_DIR
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-name|ERROR_EXIT
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -964,17 +915,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|ProgramName
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|log_it
 argument_list|(
 literal|"CRON"
@@ -987,9 +927,13 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1038,17 +982,6 @@ name|save_errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|ProgramName
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 name|log_it
 argument_list|(
 literal|"CRON"
@@ -1061,9 +994,13 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 name|ERROR_EXIT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 block|}
@@ -1777,17 +1714,10 @@ operator|<
 name|OK
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"can't open log file %s"
 argument_list|,
-literal|"%s: can't open log file\n"
-argument_list|,
-name|ProgramName
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|LOG_FILE
 argument_list|)
 expr_stmt|;
@@ -1874,18 +1804,16 @@ name|LogFD
 operator|>=
 name|OK
 condition|)
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|LOG_FILE
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: can't write to log file\n"
-argument_list|,
-name|ProgramName
+literal|"can't write to log file"
 argument_list|)
 expr_stmt|;
 name|write

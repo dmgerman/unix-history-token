@@ -21,11 +21,12 @@ end_if
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: user.c,v 1.5 1997/02/22 16:04:47 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,7 +177,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"fdopen on crontab_fd in load_user"
 argument_list|)
