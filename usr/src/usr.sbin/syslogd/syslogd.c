@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.46 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5397,8 +5397,8 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-modifier|*
 name|h_errlist
+index|[]
 decl_stmt|;
 name|logerror
 argument_list|(
