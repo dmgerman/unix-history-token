@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)doname.c	4.9 (Berkeley) 87/06/18"
+literal|"@(#)doname.c	4.10 (Berkeley) 93/03/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,15 +34,6 @@ end_comment
 begin_comment
 comment|/* p->done = 0   don't know what to do yet p->done = 1   file in process of being updated p->done = 2   file already exists in current state p->done = 3   file make failed */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_siglist
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_expr_stmt
 name|doname
