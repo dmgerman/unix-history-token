@@ -19,20 +19,24 @@ begin_struct
 struct|struct
 name|vx_softc
 block|{
+name|int
+name|unit
+decl_stmt|;
+comment|/* unit number */
 name|struct
 name|arpcom
 name|arpcom
 decl_stmt|;
-comment|/* Ethernet common part		 */
-name|short
+comment|/* Ethernet common part		*/
+name|u_int
 name|vx_io_addr
 decl_stmt|;
-comment|/* i/o bus address		 */
+comment|/* i/o bus address		*/
 define|#
 directive|define
 name|MAX_MBS
 value|8
-comment|/* # of mbufs we keep around	 */
+comment|/* # of mbufs we keep around	*/
 name|struct
 name|mbuf
 modifier|*
@@ -41,105 +45,32 @@ index|[
 name|MAX_MBS
 index|]
 decl_stmt|;
-comment|/* spare mbuf storage.		 */
+comment|/* spare mbuf storage.		*/
 name|int
 name|next_mb
 decl_stmt|;
-comment|/* Which mbuf to use next. 	 */
+comment|/* Which mbuf to use next. 	*/
 name|int
 name|last_mb
 decl_stmt|;
-comment|/* Last mbuf.			 */
-name|struct
-name|mbuf
-modifier|*
-name|top
-decl_stmt|,
-modifier|*
-name|mcur
+comment|/* Last mbuf.			*/
+name|char
+name|vx_connectors
 decl_stmt|;
+comment|/* Connectors on this card.	*/
+name|char
+name|vx_connector
+decl_stmt|;
+comment|/* Connector to use.		*/
 name|short
 name|tx_start_thresh
 decl_stmt|;
-comment|/* Current TX_start_thresh.	 */
-name|short
-name|tx_rate
-decl_stmt|;
-name|short
-name|tx_counter
-decl_stmt|;
-name|short
-name|rx_early_thresh
-decl_stmt|;
-comment|/* Current RX_early_thresh.     */
-name|short
-name|rx_latency
-decl_stmt|;
-name|short
-name|rx_avg_pkt
-decl_stmt|;
-name|short
-name|cur_len
-decl_stmt|;
-name|caddr_t
-name|bpf
-decl_stmt|;
-comment|/* BPF  "magic cookie"		 */
-name|u_short
-name|vx_connectors
-decl_stmt|;
-comment|/* Connectors on this card.	 */
+comment|/* Current TX_start_thresh.	*/
 name|int
-name|stat
+name|tx_succ_ok
 decl_stmt|;
-comment|/* some flags */
-define|#
-directive|define
-name|F_RX_FIRST
-value|0x1
-define|#
-directive|define
-name|F_WAIT_TRAIL
-value|0x2
-define|#
-directive|define
-name|F_RX_TRAILER
-value|0x4
-define|#
-directive|define
-name|F_PROMISC
-value|0x8
-define|#
-directive|define
-name|F_ALLMULTI
-value|0x10
-define|#
-directive|define
-name|F_ACCESS_32_BITS
-value|0x100
-ifdef|#
-directive|ifdef
-name|VX_LOCAL_STATS
-name|short
-name|tx_underrun
-decl_stmt|;
-name|short
-name|rx_no_first
-decl_stmt|;
-name|short
-name|rx_no_mbuf
-decl_stmt|;
-name|short
-name|rx_bpf_disc
-decl_stmt|;
-name|short
-name|rx_overrunf
-decl_stmt|;
-name|short
-name|rx_overrunl
-decl_stmt|;
-endif|#
-directive|endif
+comment|/* # packets sent in sequence	*/
+comment|/* w/o underrun			*/
 block|}
 struct|;
 end_struct
@@ -147,27 +78,6 @@ end_struct
 begin_comment
 comment|/*  * Some global constants  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ETHER_MIN_LEN
-value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_MAX_LEN
-value|1518
-end_define
-
-begin_define
-define|#
-directive|define
-name|ETHER_ADDR_LEN
-value|6
-end_define
 
 begin_define
 define|#
@@ -316,36 +226,9 @@ name|EEPROM_BUSY
 value|(1<<15)
 end_define
 
-begin_define
-define|#
-directive|define
-name|EEPROM_TST_MODE
-value|(1<<14)
-end_define
-
 begin_comment
 comment|/*  * Some short functions, worth to let them be a macro  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|is_eeprom_busy
-parameter_list|(
-name|b
-parameter_list|)
-value|(inw((b)+VX_W0_EEPROM_COMMAND)&EEPROM_BUSY)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GO_WINDOW
-parameter_list|(
-name|x
-parameter_list|)
-value|outw(BASE+VX_COMMAND, WINDOW_SELECT|(x))
-end_define
 
 begin_comment
 comment|/**************************************************************************  *									  *  * These define the EEPROM data structure.  They are used in the probe  * function to verify the existence of the adapter after having sent  * the ID_Sequence.  *  * There are others but only the ones we use are defined here.  *  **************************************************************************/
@@ -431,6 +314,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EEPROM_OEM_ADDR_0
+value|0xa
+end_define
+
+begin_comment
+comment|/* Word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_OEM_ADDR_1
+value|0xb
+end_define
+
+begin_comment
+comment|/* Word */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEPROM_OEM_ADDR_2
+value|0xc
+end_define
+
+begin_comment
+comment|/* Word */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EEPROM_SOFT_INFO_2
 value|0xf
 end_define
@@ -503,6 +419,45 @@ define|#
 directive|define
 name|VX_W0_EEPROM_COMMAND
 value|0x0a
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_W0_RESOURCE_CFG
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_W0_ADDRESS_CFG
+value|0x06
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_W0_CONFIG_CTRL
+value|0x04
+end_define
+
+begin_comment
+comment|/* Read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VX_W0_PRODUCT_ID
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|VX_W0_MFG_ID
+value|0x00
 end_define
 
 begin_comment
@@ -632,7 +587,7 @@ value|0x00
 end_define
 
 begin_comment
-comment|/*  * Window 3 registers.   */
+comment|/*  * Window 3 registers. FIFO Management.  */
 end_comment
 
 begin_comment
@@ -949,97 +904,6 @@ name|REQ_INTR
 value|(u_short) (0xc<<11)
 end_define
 
-begin_define
-define|#
-directive|define
-name|SET_INTR_MASK
-value|(u_short) (0xe<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RD_0_MASK
-value|(u_short) (0xf<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RX_FILTER
-value|(u_short) (0x10<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_INDIVIDUAL
-value|(u_short) (0x1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_GROUP
-value|(u_short) (0x2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_BRDCST
-value|(u_short) (0x4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIL_ALL
-value|(u_short) (0x8)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_RX_EARLY_THRESH
-value|(u_short) (0x11<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_TX_AVAIL_THRESH
-value|(u_short) (0x12<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_TX_START_THRESH
-value|(u_short) (0x13<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATS_ENABLE
-value|(u_short) (0x15<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATS_DISABLE
-value|(u_short) (0x16<<11)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOP_TRANSCEIVER
-value|(u_short) (0x17<<11)
-end_define
-
 begin_comment
 comment|/*  * The following C_* acknowledge the various interrupts. Some of them don't  * do anything.  See the manual.  */
 end_comment
@@ -1110,13 +974,93 @@ end_define
 begin_define
 define|#
 directive|define
-name|C_MASK
-value|(u_short) 0xFF
+name|SET_INTR_MASK
+value|(u_short) (0xe<<11)
 end_define
 
-begin_comment
-comment|/* mask of C_* */
-end_comment
+begin_define
+define|#
+directive|define
+name|SET_RD_0_MASK
+value|(u_short) (0xf<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RX_FILTER
+value|(u_short) (0x10<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_INDIVIDUAL
+value|(u_short) (0x1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_MULTICAST
+value|(u_short) (0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_BRDCST
+value|(u_short) (0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIL_PROMISC
+value|(u_short) (0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_RX_EARLY_THRESH
+value|(u_short) (0x11<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_TX_AVAIL_THRESH
+value|(u_short) (0x12<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SET_TX_START_THRESH
+value|(u_short) (0x13<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATS_ENABLE
+value|(u_short) (0x15<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATS_DISABLE
+value|(u_short) (0x16<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STOP_TRANSCEIVER
+value|(u_short) (0x17<<11)
+end_define
 
 begin_comment
 comment|/*  * Status register. All windows.  *  *     15-13:  Window number(0-7).  *     12:     Command_in_progress.  *     11:     reserved.  *     10:     reserved.  *     9:      reserved.  *     8:      reserved.  *     7:      Update Statistics.  *     6:      Interrupt Requested.  *     5:      RX Early.  *     4:      RX Complete.  *     3:      TX Available.  *     2:      TX Complete.  *     1:      Adapter Failure.  *     0:      Interrupt Latch.  */
@@ -1181,30 +1125,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|S_MASK
-value|(u_short) 0xFF
-end_define
-
-begin_comment
-comment|/* mask of S_* */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|S_5_INTS
-value|(S_CARD_FAILURE|S_TX_COMPLETE|\ 				 S_TX_AVAIL|S_RX_COMPLETE|S_RX_EARLY)
-end_define
-
-begin_define
-define|#
-directive|define
 name|S_COMMAND_IN_PROGRESS
 value|(u_short) (0x1000)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VX_BUSY_WAIT
+value|while (inw(BASE + VX_STATUS)& S_COMMAND_IN_PROGRESS)
+end_define
+
 begin_comment
-comment|/* Address Config. Register.  * Window 0/Port 06  */
+comment|/* Address Config. Register.      * Window 0/Port 06  */
 end_comment
 
 begin_define
@@ -1246,89 +1179,78 @@ begin_define
 define|#
 directive|define
 name|INTERNAL_CONNECTOR_MASK
-value|0x00700000
+value|0x01700000
 end_define
 
 begin_comment
-comment|/* Resource configuration register.  * Window 0/Port 08  *  */
+comment|/*  * FIFO Registers. RX Status.  *  *     15:     Incomplete or FIFO empty.  *     14:     1: Error in RX Packet   0: Incomplete or no error.  *     13-11:  Type of error.  *	      1000 = Overrun.  *	      1011 = Run Packet Error.  *	      1100 = Alignment Error.  *	      1101 = CRC Error.  *	      1001 = Oversize Packet Error (>1514 bytes)  *	      0010 = Dribble Bits.  *	      (all other error codes, no errors.)  *  *     10-0:   RX Bytes (0-1514)  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_IRQ
-parameter_list|(
-name|i
-parameter_list|)
-value|(((i)<<12) | 0xF00)
-end_define
-
-begin_comment
-comment|/* set IRQ i */
-end_comment
-
-begin_comment
-comment|/*  * FIFO Registers.  * RX Status. Window 1/Port 08  *  *     15:     Incomplete or FIFO empty.  *     14:     1: Error in RX Packet   0: Incomplete or no error.  *     13-11:  Type of error.  *	      1000 = Overrun.  *	      1011 = Run Packet Error.  *	      1100 = Alignment Error.  *	      1101 = CRC Error.  *	      1001 = Oversize Packet Error (>1514 bytes)  *	      0010 = Dribble Bits.  *	      (all other error codes, no errors.)  *  *     10-0:   RX Bytes (0-1514)  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ERR_RX_INCOMPLETE
-value|(u_short) (0x1<<15)
+name|ERR_INCOMPLETE
+value|(u_short) (0x8000)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ERR_RX
-value|(u_short) (0x1<<14)
+value|(u_short) (0x4000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_OVERRUN
-value|(u_short) (0x8<<11)
+name|ERR_MASK
+value|(u_short) (0x7800)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_RUN_PKT
-value|(u_short) (0xb<<11)
+name|ERR_OVERRUN
+value|(u_short) (0x4000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_ALIGN
-value|(u_short) (0xc<<11)
+name|ERR_RUNT
+value|(u_short) (0x5800)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_CRC
-value|(u_short) (0xd<<11)
+name|ERR_ALIGNMENT
+value|(u_short) (0x6000)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_OVERSIZE
-value|(u_short) (0x9<<11)
+name|ERR_CRC
+value|(u_short) (0x6800)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ERR_RX_DRIBBLE
-value|(u_short) (0x2<<11)
+name|ERR_OVERSIZE
+value|(u_short) (0x4800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERR_DRIBBLE
+value|(u_short) (0x1000)
 end_define
 
 begin_comment
-comment|/*  * FIFO Registers.  * TX Status. Window 1/Port 0B  *  *   Reports the transmit status of a completed transmission. Writing this  *   register pops the transmit completion stack.  *  *   Window 1/Port 0x0b.  *  *     7:      Complete  *     6:      Interrupt on successful transmission requested.  *     5:      Jabber Error (TP Only, TX Reset required. )  *     4:      Underrun (TX Reset required. )  *     3:      Maximum Collisions.  *     2:      TX Status Overflow.  *     1-0:    Undefined.  *  */
+comment|/*  * TX Status.   *  *   Reports the transmit status of a completed transmission. Writing this  *   register pops the transmit completion stack.  *  *   Window 1/Port 0x0b.  *  *     7:      Complete  *     6:      Interrupt on successful transmission requested.  *     5:      Jabber Error (TP Only, TX Reset required. )  *     4:      Underrun (TX Reset required. )  *     3:      Maximum Collisions.  *     2:      TX Status Overflow.  *     1-0:    Undefined.  *  */
 end_comment
 
 begin_define
@@ -1341,7 +1263,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TXS_SUCCES_INTR_REQ
+name|TXS_INTR_REQ
 value|0x40
 end_define
 
@@ -1394,22 +1316,71 @@ name|RS_UTP
 value|(1<<3)
 end_define
 
-begin_comment
-comment|/*  * Media type and status.  * Window 4/Port 0A  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|ENABLE_UTP
-value|0xc0
+name|RS_T4
+value|(1<<0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DISABLE_UTP
-value|0x0
+name|RS_TX
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS_FX
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RS_MII
+value|(1<<6)
+end_define
+
+begin_comment
+comment|/*  * FIFO Status (Window 4)  *  *   Supports FIFO diagnostics  *  *   Window 4/Port 0x04.1  *  *     15:	1=RX receiving (RO). Set when a packet is being received  *		into the RX FIFO.  *     14:	Reserved  *     13:	1=RX underrun (RO). Generates Adapter Failure interrupt.  *		Requires RX Reset or Global Reset command to recover.  *		It is generated when you read past the end of a packet -  *		reading past what has been received so far will give bad  *		data.  *     12:	1=RX status overrun (RO). Set when there are already 8  *		packets in the RX FIFO. While this bit is set, no additional  *		packets are received. Requires no action on the part of  *		the host. The condition is cleared once a packet has been  *		read out of the RX FIFO.  *     11:	1=RX overrun (RO). Set when the RX FIFO is full (there  *		may not be an overrun packet yet). While this bit is set,  *		no additional packets will be received (some additional  *		bytes can still be pending between the wire and the RX  *		FIFO). Requires no action on the part of the host. The  *		condition is cleared once a few bytes have been read out  *		from the RX FIFO.  *     10:	1=TX overrun (RO). Generates adapter failure interrupt.  *		Requires TX Reset or Global Reset command to recover.  *		Disables Transmitter.  *     9-8:	Unassigned.  *     7-0:	Built in self test bits for the RX and TX FIFO's.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIFOS_RX_RECEIVING
+value|(u_short) 0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOS_RX_UNDERRUN
+value|(u_short) 0x2000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOS_RX_STATUS_OVERRUN
+value|(u_short) 0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOS_RX_OVERRUN
+value|(u_short) 0x0800
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIFOS_TX_OVERRUN
+value|(u_short) 0x0400
 end_define
 
 begin_comment
@@ -1419,65 +1390,78 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TAG_ADAPTER
+value|0xd0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACTIVATE_ADAPTER_TO_CONFIG
 value|0xff
 end_define
 
-begin_comment
-comment|/* to the id_port */
-end_comment
+begin_define
+define|#
+directive|define
+name|ENABLE_DRQ_IRQ
+value|0x0001
+end_define
 
 begin_define
 define|#
 directive|define
 name|MFG_ID
-value|0x6d50
+value|0x506d
 end_define
 
 begin_comment
-comment|/* in EEPROM and W0 ADDR_CONFIG */
+comment|/* `TCM' */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PROD_ID
-value|0x9150
+value|0x5090
 end_define
 
 begin_define
 define|#
 directive|define
-name|AUI
-value|0x1
+name|GO_WINDOW
+parameter_list|(
+name|x
+parameter_list|)
+value|outw(BASE+VX_COMMAND, WINDOW_SELECT|(x))
 end_define
 
 begin_define
 define|#
 directive|define
-name|BNC
-value|0x2
+name|JABBER_GUARD_ENABLE
+value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
-name|UTP
-value|0x4
+name|LINKBEAT_ENABLE
+value|0x80
 end_define
 
 begin_define
 define|#
 directive|define
-name|ETHER_ADDR_LEN
-value|6
+name|ENABLE_UTP
+value|(JABBER_GUARD_ENABLE | LINKBEAT_ENABLE)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ETHER_MAX
-value|1536
+name|DISABLE_UTP
+value|0x0
 end_define
 
 begin_define
@@ -1487,23 +1471,133 @@ name|RX_BYTES_MASK
 value|(u_short) (0x07ff)
 end_define
 
-begin_comment
-comment|/* EISA support */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|VX_EISA_START
-value|0x1000
+name|TX_INDICATE
+value|1<<15
 end_define
 
 begin_define
 define|#
 directive|define
-name|VX_EISA_W0
-value|0x0c80
+name|VX_IOSIZE
+value|0x20
 end_define
+
+begin_define
+define|#
+directive|define
+name|VX_CONNECTORS
+value|8
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vx_softc
+modifier|*
+name|vx_softc
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|vx_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vx_softc
+modifier|*
+name|vxalloc
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vxfree
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vx_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vxattach
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vx_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vxstop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vx_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|vxintr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vx_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vxbusyeeprom
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vx_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
