@@ -63,12 +63,11 @@ name|NSCAN
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|NOPMEM
-value|0
-end_define
+begin_include
+include|#
+directive|include
+file|"od.h"
+end_include
 
 begin_include
 include|#
@@ -146,7 +145,7 @@ directive|endif
 if|#
 directive|if
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -363,7 +362,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -392,7 +391,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -698,7 +697,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -832,7 +831,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -933,7 +932,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1096,7 +1095,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1163,7 +1162,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1206,7 +1205,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1258,7 +1257,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1293,7 +1292,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1358,7 +1357,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1415,7 +1414,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1512,7 +1511,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1589,7 +1588,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1640,7 +1639,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1687,7 +1686,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1740,7 +1739,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1793,7 +1792,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -1884,7 +1883,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -2011,7 +2010,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)
@@ -2076,7 +2075,7 @@ literal|0
 operator|)
 operator|||
 operator|(
-name|NOPMEM
+name|NOD
 operator|>
 literal|0
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.34 1995/08/23 23:03:33 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.35 1995/10/09 15:14:59 joerg Exp $  */
 end_comment
 
 begin_include
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|"ch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"od.h"
 end_include
 
 begin_include
@@ -556,6 +562,15 @@ block|{
 name|u_int32
 name|type
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|u_int32
+name|driver
+decl_stmt|;
+comment|/* normally the same as type */
+endif|#
+directive|endif
 name|boolean
 name|removable
 decl_stmt|;
@@ -616,6 +631,47 @@ name|SC_MORE_LUS
 value|0x02
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|scsidevs
+name|unknowndev
+init|=
+block|{
+name|T_UNKNOWN
+block|,
+name|T_UNKNOWN
+block|,
+literal|0
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"uk"
+block|,
+name|SC_MORE_LUS
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !NEW_SCSICONF */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -639,6 +695,15 @@ name|SC_MORE_LUS
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEW_SCSICONF */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -936,12 +1001,77 @@ ifdef|#
 directive|ifdef
 name|NEW_SCSICONF
 block|{
+comment|/* od's must be probed before sd's since some of them identify as T_DIRECT */
+if|#
+directive|if
+name|NOD
+operator|>
+literal|0
+block|{
+name|T_OPTICAL
+block|,
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"MATSHITA"
+block|,
+literal|"PD-1 LF-1000"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+block|{
+name|T_DIRECT
+block|,
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"SONY"
+block|,
+literal|"SMO-*"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+block|{
+name|T_OPTICAL
+block|,
+name|T_OPTICAL
+block|,
+name|T_REMOV
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"*"
+block|,
+literal|"od"
+block|,
+name|SC_ONE_LU
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* NOD */
 if|#
 directive|if
 name|NSD
 operator|>
 literal|0
 block|{
+name|T_DIRECT
+block|,
 name|T_DIRECT
 block|,
 name|T_FIXED
@@ -958,6 +1088,8 @@ name|SC_ONE_LU
 block|}
 block|,
 block|{
+name|T_DIRECT
+block|,
 name|T_DIRECT
 block|,
 name|T_FIXED
@@ -984,6 +1116,8 @@ literal|0
 block|{
 name|T_SEQUENTIAL
 block|,
+name|T_SEQUENTIAL
+block|,
 name|T_REMOV
 block|,
 literal|"TANDBERG"
@@ -1002,6 +1136,8 @@ name|mode_tandberg3600
 block|}
 block|,
 block|{
+name|T_SEQUENTIAL
+block|,
 name|T_SEQUENTIAL
 block|,
 name|T_REMOV
@@ -1024,6 +1160,8 @@ block|,
 block|{
 name|T_SEQUENTIAL
 block|,
+name|T_SEQUENTIAL
+block|,
 name|T_REMOV
 block|,
 literal|"ARCHIVE"
@@ -1042,6 +1180,8 @@ name|mode_archive150
 block|}
 block|,
 block|{
+name|T_SEQUENTIAL
+block|,
 name|T_SEQUENTIAL
 block|,
 name|T_REMOV
@@ -1064,6 +1204,8 @@ block|,
 block|{
 name|T_SEQUENTIAL
 block|,
+name|T_SEQUENTIAL
+block|,
 name|T_REMOV
 block|,
 literal|"WangDAT"
@@ -1082,6 +1224,8 @@ name|mode_wangdat1300
 block|}
 block|,
 block|{
+name|T_SEQUENTIAL
+block|,
 name|T_SEQUENTIAL
 block|,
 name|T_REMOV
@@ -1112,6 +1256,8 @@ literal|0
 block|{
 name|T_CHANGER
 block|,
+name|T_CHANGER
+block|,
 name|T_REMOV
 block|,
 literal|"*"
@@ -1140,6 +1286,8 @@ comment|/* make cdroms unrecognised to test the uk driver */
 block|{
 name|T_READONLY
 block|,
+name|T_READONLY
+block|,
 name|T_REMOV
 block|,
 literal|"SONY"
@@ -1154,6 +1302,8 @@ name|SC_ONE_LU
 block|}
 block|,
 block|{
+name|T_READONLY
+block|,
 name|T_READONLY
 block|,
 name|T_REMOV
@@ -1172,6 +1322,8 @@ block|,
 block|{
 name|T_READONLY
 block|,
+name|T_READONLY
+block|,
 name|T_REMOV
 block|,
 literal|"PIONEER"
@@ -1186,6 +1338,8 @@ name|SC_MORE_LUS
 block|}
 block|,
 block|{
+name|T_READONLY
+block|,
 name|T_READONLY
 block|,
 name|T_REMOV
@@ -1215,6 +1369,8 @@ literal|0
 block|{
 name|T_WORM
 block|,
+name|T_WORM
+block|,
 name|T_REMOV
 block|,
 literal|"YAMAHA"
@@ -1229,6 +1385,8 @@ name|SC_ONE_LU
 block|}
 block|,
 block|{
+name|T_WORM
+block|,
 name|T_WORM
 block|,
 name|T_REMOV
@@ -1305,6 +1463,46 @@ operator|,
 endif|#
 directive|endif
 comment|/* NSD */
+if|#
+directive|if
+name|NOD
+operator|>
+literal|0
+block|{
+name|T_OPTICAL
+operator|,
+name|T_REMOV
+operator|,
+literal|"standard"
+operator|,
+literal|"any"
+operator|,
+literal|"any"
+operator|,
+literal|"od"
+operator|,
+name|SC_ONE_LU
+block|}
+operator|,
+block|{
+name|T_OPTICAL
+operator|,
+name|T_REMOV
+operator|,
+literal|"MATSHITA"
+operator|,
+literal|"PD-1 LF-1000"
+operator|,
+literal|"any"
+operator|,
+literal|"od"
+operator|,
+name|SC_MORE_LUS
+block|}
+operator|,
+endif|#
+directive|endif
+comment|/* NOD */
 if|#
 directive|if
 name|NST
@@ -4967,10 +5165,21 @@ else|else
 operator|*
 name|type_p
 operator|=
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|bestmatch
+operator|->
+name|driver
+expr_stmt|;
+else|#
+directive|else
 name|bestmatch
 operator|->
 name|type
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|bestmatch
 return|;
