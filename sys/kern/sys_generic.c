@@ -144,23 +144,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|KTRACE
 end_ifdef
 
