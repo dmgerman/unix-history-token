@@ -30,7 +30,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ev_timers.c,v 1.25 1999/10/07 20:44:04 vixie Exp $"
+literal|"$Id: ev_timers.c,v 1.26 2000/07/17 07:36:54 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +59,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/assertions.h>
 end_include
 
 begin_include
@@ -492,6 +498,21 @@ literal|0
 argument_list|)
 operator|)
 return|;
+name|INSIST
+argument_list|(
+name|now
+operator|.
+name|tv_usec
+operator|>=
+literal|0
+operator|&&
+name|now
+operator|.
+name|tv_usec
+operator|<
+literal|1000000
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|evTimeSpec

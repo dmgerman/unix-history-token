@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.103 2000/04/23 02:18:58 vixie Exp $"
+literal|"$Id: ns_maint.c,v 8.105 2000/07/17 07:25:00 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2593,6 +2593,9 @@ operator|->
 name|z_class
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|qs
 operator|->
 name|serial
@@ -2606,6 +2609,9 @@ operator|.
 name|sin_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|zp
 operator|->
 name|z_serial
@@ -4126,11 +4132,14 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|unlink
 argument_list|(
 name|tsig_name
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|xferstatus
 index|[
 name|i

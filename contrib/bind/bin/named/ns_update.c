@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_update.c,v 8.78 2000/04/23 02:19:00 vixie Exp $"
+literal|"$Id: ns_update.c,v 8.81 2000/07/11 09:25:14 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1230,6 +1230,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+if|if
+condition|(
+name|zp
+operator|->
+name|z_maintain_ixfr_base
+operator|==
+literal|1
+condition|)
+block|{
 name|ifp
 operator|=
 name|open_ixfr_log
@@ -1256,6 +1265,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+block|}
+else|else
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|time
@@ -1297,6 +1312,10 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|fprintf
 argument_list|(
 name|ifp
@@ -1391,6 +1410,10 @@ argument_list|,
 name|old_serial
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 name|fprintf
 argument_list|(
 name|ifp
@@ -1554,6 +1577,11 @@ name|dp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ifp
@@ -1603,6 +1631,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|dp
 operator|=
 name|dp
@@ -1650,6 +1679,11 @@ name|updlist
 argument_list|,
 name|dp
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|ifp
 condition|)
 block|{
 name|fprintf
@@ -1724,6 +1758,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Update log. */
 name|fprintf
@@ -1951,6 +1986,11 @@ name|dp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|ifp
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ifp
@@ -2024,6 +2064,7 @@ literal|"\n[END_DELTA]\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 break|break;
 default|default:
 break|break;
@@ -2046,6 +2087,10 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+condition|)
 operator|(
 name|void
 operator|)
@@ -14669,6 +14714,13 @@ operator|-
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|zp
+operator|->
+name|z_maintain_ixfr_base
+condition|)
+block|{
 name|ifp
 operator|=
 name|open_ixfr_log
@@ -14879,6 +14931,7 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
 comment|/* 	 * This shouldn't happen, but we check to be sure. 	 */
 if|if
 condition|(
