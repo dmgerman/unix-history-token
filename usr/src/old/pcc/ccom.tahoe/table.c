@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.15 (Berkeley) %G%"
+literal|"@(#)table.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,8 +206,6 @@ operator||
 name|NASL
 block|,
 name|RESC1
-operator||
-name|RESCC
 block|,
 literal|"	ZU\n"
 block|,
@@ -229,8 +227,6 @@ name|NAREG
 operator||
 name|NASL
 block|,
-name|RESC1
-operator||
 name|RESCC
 block|,
 literal|"	ZV\n"
@@ -1353,8 +1349,6 @@ block|,
 name|INAREG
 operator||
 name|FOREFF
-operator||
-name|FORCC
 block|,
 name|SAREG
 operator||
@@ -1371,12 +1365,30 @@ block|,
 literal|0
 block|,
 name|RLEFT
-operator||
-name|RRIGHT
-operator||
-name|RESCC
 block|,
 literal|"	ZU\n"
+block|,
+name|ASSIGN
+block|,
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|ANYFIXED
+block|,
+name|SAREG
+operator||
+name|AWD
+block|,
+name|ANYFIXED
+block|,
+literal|0
+block|,
+name|RESCC
+block|,
+literal|"	ZV\n"
 block|,
 name|ASSIGN
 block|,
