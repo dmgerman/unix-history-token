@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.32 (Berkeley) %G%"
+literal|"@(#)route.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
 end_include
 
 begin_include
@@ -121,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -133,13 +133,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -231,7 +237,12 @@ union|,
 name|so_ifa
 union|,
 name|so_ifp
-union|,
+union|;
+end_union
+
+begin_decl_stmt
+name|union
+name|sockunion
 modifier|*
 name|so_addrs
 index|[]
@@ -257,8 +268,8 @@ name|so_ifa
 block|,
 literal|0
 block|}
-union|;
-end_union
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -784,12 +795,19 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 name|K_MONITOR
 case|:
 name|monitor
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 name|K_FLUSH
 case|:
@@ -800,6 +818,12 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 name|usage
 argument_list|(
@@ -859,7 +883,7 @@ if|if
 condition|(
 name|uid
 condition|)
-name|usage
+name|quit
 argument_list|(
 literal|"must be root to alter routing table"
 argument_list|)
@@ -898,10 +922,10 @@ switch|switch
 condition|(
 name|keyword
 argument_list|(
-literal|1
-operator|+
 operator|*
 name|argv
+operator|+
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -1270,12 +1294,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -1439,6 +1457,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|in
 argument_list|,
@@ -2477,7 +2499,7 @@ if|if
 condition|(
 name|uid
 condition|)
-name|usage
+name|quit
 argument_list|(
 literal|"must be root to alter routing table"
 argument_list|)
@@ -3325,12 +3347,6 @@ name|err
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -5328,7 +5344,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\nmetric values:\n\n"
+literal|"\nmetric values:\n  "
 argument_list|)
 expr_stmt|;
 define|#
@@ -5339,61 +5355,62 @@ name|f
 parameter_list|,
 name|e
 parameter_list|)
-value|printf("\t%s:\t%d\n", "f", rtm->rtm_rmx.e)
+define|\
+value|printf("%s: %d%s", __STRING(f), rtm->rtm_rmx.__CONCAT(rmx_,f), e)
 name|metric
 argument_list|(
-name|RTV_RPIPE
+name|recvpipe
 argument_list|,
-name|rmx_recvpipe
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_SPIPE
+name|sendpipe
 argument_list|,
-name|rmx_sendpipe
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_SSTHRESH
+name|ssthresh
 argument_list|,
-name|rmx_ssthresh
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_RTT
+name|rtt
 argument_list|,
-name|rmx_rtt
+literal|"\n  "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_RTTVAR
+name|rttvar
 argument_list|,
-name|rmx_rttvar
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_HOPCOUNT
+name|hopcount
 argument_list|,
-name|rmx_hopcount
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_MTU
+name|mtu
 argument_list|,
-name|rmx_mtu
+literal|", "
 argument_list|)
 expr_stmt|;
 name|metric
 argument_list|(
-name|RTV_EXPIRE
+name|expire
 argument_list|,
-name|rmx_expire
+literal|"\n"
 argument_list|)
 expr_stmt|;
 undef|#
