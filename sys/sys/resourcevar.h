@@ -187,7 +187,7 @@ name|uid_t
 name|ui_uid
 decl_stmt|;
 comment|/* uid */
-name|u_short
+name|u_int
 name|ui_ref
 decl_stmt|;
 comment|/* reference count */
