@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: fil.c,v 2.3.2.16 2000/01/27 08:49:37 darrenr Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -2032,6 +2032,8 @@ name|ip
 argument_list|)
 init|;
 name|hlen
+operator|>
+literal|0
 condition|;
 control|)
 block|{
@@ -2047,16 +2049,28 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-name|ol
-operator|=
-operator|(
+elseif|else
+if|if
+condition|(
 name|opt
 operator|==
 name|IPOPT_NOP
-operator|)
-condition|?
+condition|)
+name|ol
+operator|=
 literal|1
-else|:
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|hlen
+operator|<
+literal|2
+condition|)
+break|break;
+name|ol
+operator|=
 operator|(
 name|int
 operator|)
@@ -2069,11 +2083,6 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|opt
-operator|>
-literal|1
-operator|&&
-operator|(
 name|ol
 operator|<
 literal|2
@@ -2081,9 +2090,9 @@ operator|||
 name|ol
 operator|>
 name|hlen
-operator|)
 condition|)
 break|break;
+block|}
 for|for
 control|(
 name|i
