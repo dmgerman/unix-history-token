@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.4 (Berkeley) %G%"
+literal|"@(#)display.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -801,6 +807,10 @@ name|vflag
 operator|==
 name|ALL
 operator|||
+name|vflag
+operator|==
+name|FIRST
+operator|||
 name|bcmp
 argument_list|(
 name|curp
@@ -816,6 +826,10 @@ condition|(
 name|vflag
 operator|==
 name|DUP
+operator|||
+name|vflag
+operator|==
+name|FIRST
 condition|)
 name|vflag
 operator|=
@@ -1254,6 +1268,10 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1261,7 +1279,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"hexdump: out of memory.\n"
+literal|"hexdump: %s.\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

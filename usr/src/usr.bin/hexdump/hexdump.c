@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hexdump.c	5.2 (Berkeley) %G%"
+literal|"@(#)hexdump.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,7 @@ name|enum
 name|_vflag
 name|vflag
 init|=
-name|WAIT
+name|FIRST
 decl_stmt|;
 end_decl_stmt
 
@@ -577,7 +577,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"hexdump: [bcdov] [-e format] [-f file] [-n length] [-s skip] [file ...]\n"
+literal|"hexdump: [-bcdovx] [-e format] [-f file] [-n length] [-s skip] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
