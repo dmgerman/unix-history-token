@@ -131,11 +131,6 @@ name|int
 name|byte
 decl_stmt|;
 block|{
-name|int
-name|nbytes
-init|=
-literal|1
-decl_stmt|;
 name|bp
 operator|->
 name|left
@@ -146,7 +141,7 @@ name|BufExpand
 argument_list|(
 name|bp
 argument_list|,
-name|nbytes
+literal|1
 argument_list|)
 expr_stmt|;
 operator|*
