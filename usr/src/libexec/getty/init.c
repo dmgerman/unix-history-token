@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.3 (Berkeley) %G%"
+literal|"@(#)init.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,6 +42,12 @@ begin_include
 include|#
 directive|include
 file|"gettytab.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -155,7 +161,7 @@ comment|/* enviroment */
 block|{
 literal|"lo"
 block|,
-literal|"/bin/login"
+name|_PATH_LOGIN
 block|}
 block|,
 comment|/* login program */
