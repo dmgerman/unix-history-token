@@ -5678,13 +5678,13 @@ name|MODULE_DEPEND
 argument_list|(
 name|snd_solo
 argument_list|,
-name|snd_pcm
+name|sound
 argument_list|,
-name|PCM_MINVER
+name|SOUND_MINVER
 argument_list|,
-name|PCM_PREFVER
+name|SOUND_PREFVER
 argument_list|,
-name|PCM_MAXVER
+name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
 end_expr_stmt

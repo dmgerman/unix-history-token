@@ -365,28 +365,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|PCM_MODVER
+name|SOUND_MODVER
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCM_MINVER
+name|SOUND_MINVER
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCM_PREFVER
-value|PCM_MODVER
+name|SOUND_PREFVER
+value|SOUND_MODVER
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCM_MAXVER
+name|SOUND_MAXVER
 value|1
 end_define
 
