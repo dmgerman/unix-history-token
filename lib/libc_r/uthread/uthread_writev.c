@@ -280,7 +280,7 @@ block|{
 comment|/* Perform a non-blocking write syscall: */
 name|n
 operator|=
-name|_thread_sys_writev
+name|__sys_writev
 argument_list|(
 name|fd
 argument_list|,

@@ -87,7 +87,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_recvmsg
+name|__sys_recvmsg
 argument_list|(
 name|fd
 argument_list|,

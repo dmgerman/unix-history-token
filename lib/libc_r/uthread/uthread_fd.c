@@ -332,7 +332,7 @@ name|entry
 operator|->
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -388,7 +388,7 @@ name|saved_errno
 operator|=
 name|errno
 expr_stmt|;
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,

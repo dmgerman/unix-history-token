@@ -68,7 +68,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_socket
+name|__sys_socket
 argument_list|(
 name|af
 argument_list|,
@@ -95,7 +95,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)

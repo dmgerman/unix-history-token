@@ -322,7 +322,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_open
+name|__sys_open
 argument_list|(
 name|tmpfile
 argument_list|,
@@ -375,7 +375,7 @@ argument_list|,
 literal|"\n\n=============\nACTIVE THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -416,7 +416,7 @@ argument_list|,
 literal|"\n\n=============\nREADY THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -467,7 +467,7 @@ argument_list|,
 literal|"\n\n=============\nWAITING THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -508,7 +508,7 @@ argument_list|,
 literal|"\n\n=============\nTHREADS IN WORKQ\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -561,7 +561,7 @@ argument_list|,
 literal|"\n\nTHERE ARE NO DEAD THREADS\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -584,7 +584,7 @@ argument_list|,
 literal|"\n\nDEAD THREADS\n\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -634,7 +634,7 @@ argument_list|,
 name|_thread_dtablesize
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -744,7 +744,7 @@ operator|->
 name|w_lineno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -759,7 +759,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Close the dump file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)
@@ -873,7 +873,7 @@ operator|->
 name|lineno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -908,7 +908,7 @@ argument_list|,
 literal|"This is the running thread\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -937,7 +937,7 @@ argument_list|,
 literal|"This is the initial thread\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1008,7 +1008,7 @@ operator|.
 name|branch
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1058,7 +1058,7 @@ operator|->
 name|w_owner
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1086,7 +1086,7 @@ argument_list|,
 literal|"sigmask (hi)"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1135,7 +1135,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1160,7 +1160,7 @@ argument_list|,
 literal|"(lo)\n"
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,

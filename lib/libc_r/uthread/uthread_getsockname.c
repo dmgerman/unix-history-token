@@ -73,7 +73,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_getsockname
+name|__sys_getsockname
 argument_list|(
 name|s
 argument_list|,

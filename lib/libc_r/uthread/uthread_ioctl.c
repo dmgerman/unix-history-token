@@ -154,7 +154,7 @@ break|break;
 default|default:
 name|ret
 operator|=
-name|_thread_sys_ioctl
+name|__sys_ioctl
 argument_list|(
 name|fd
 argument_list|,

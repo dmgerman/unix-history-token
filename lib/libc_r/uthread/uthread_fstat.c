@@ -95,7 +95,7 @@ block|{
 comment|/* Get the file status: */
 name|ret
 operator|=
-name|_thread_sys_fstat
+name|__sys_fstat
 argument_list|(
 name|fd
 argument_list|,

@@ -67,7 +67,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_fchmod
+name|__sys_fchmod
 argument_list|(
 name|fd
 argument_list|,

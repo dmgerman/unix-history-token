@@ -365,7 +365,7 @@ block|{
 comment|/* Perform a non-blocking sendfile syscall. */
 name|ret
 operator|=
-name|_thread_sys_sendfile
+name|__sys_sendfile
 argument_list|(
 name|fd
 argument_list|,

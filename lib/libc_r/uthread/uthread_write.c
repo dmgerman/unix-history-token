@@ -183,7 +183,7 @@ block|{
 comment|/* Perform a non-blocking write syscall: */
 name|n
 operator|=
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,

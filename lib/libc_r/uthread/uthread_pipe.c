@@ -52,7 +52,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_pipe
+name|__sys_pipe
 argument_list|(
 name|fds
 argument_list|)
@@ -84,7 +84,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fds
 index|[
@@ -92,7 +92,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fds
 index|[

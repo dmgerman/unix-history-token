@@ -122,7 +122,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -148,7 +148,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|ret
 argument_list|)
@@ -189,7 +189,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -204,7 +204,7 @@ name|F_GETFD
 case|:
 name|ret
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -251,7 +251,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -274,7 +274,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -328,7 +328,7 @@ default|default:
 comment|/* Might want to make va_arg use a union */
 name|ret
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,

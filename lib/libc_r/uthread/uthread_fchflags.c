@@ -67,7 +67,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_fchflags
+name|__sys_fchflags
 argument_list|(
 name|fd
 argument_list|,

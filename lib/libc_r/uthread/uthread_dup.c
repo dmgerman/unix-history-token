@@ -63,7 +63,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_dup
+name|__sys_dup
 argument_list|(
 name|fd
 argument_list|)
@@ -85,7 +85,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|ret
 argument_list|)

@@ -73,7 +73,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_getpeername
+name|__sys_getpeername
 argument_list|(
 name|fd
 argument_list|,

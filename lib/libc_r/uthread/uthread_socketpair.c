@@ -75,7 +75,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_socketpair
+name|__sys_socketpair
 argument_list|(
 name|af
 argument_list|,
@@ -113,7 +113,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|pair
 index|[
@@ -121,7 +121,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|pair
 index|[

@@ -103,7 +103,7 @@ argument_list|)
 expr_stmt|;
 name|rc
 operator|=
-name|_thread_sys_kevent
+name|__sys_kevent
 argument_list|(
 name|kq
 argument_list|,
@@ -227,7 +227,7 @@ break|break;
 block|}
 name|rc
 operator|=
-name|_thread_sys_kevent
+name|__sys_kevent
 argument_list|(
 name|kq
 argument_list|,

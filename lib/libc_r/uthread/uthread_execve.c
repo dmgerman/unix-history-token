@@ -126,7 +126,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Close the pthread kernel pipe: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -134,7 +134,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -182,7 +182,7 @@ block|{
 comment|/* Get the current flags: */
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -192,7 +192,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Clear the nonblocking file descriptor flag: */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -298,7 +298,7 @@ operator|.
 name|sa_flags
 expr_stmt|;
 comment|/* Change the signal action for the process: */
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,
@@ -312,7 +312,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Set the signal mask: */
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -327,7 +327,7 @@ expr_stmt|;
 comment|/* Execute the process: */
 name|ret
 operator|=
-name|_thread_sys_execve
+name|__sys_execve
 argument_list|(
 name|name
 argument_list|,

@@ -487,7 +487,7 @@ expr_stmt|;
 comment|/* 		 * The signal handler should have saved the state of 		 * the current thread.  Restore the process signal 		 * mask. 		 */
 if|if
 condition|(
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -507,7 +507,7 @@ expr_stmt|;
 comment|/* 		 * Since the signal handler didn't return normally, we 		 * have to tell the kernel to reuse the signal stack. 		 */
 if|if
 condition|(
-name|_thread_sys_sigaltstack
+name|__sys_sigaltstack
 argument_list|(
 operator|&
 name|_thread_sigstack
@@ -2161,7 +2161,7 @@ expr_stmt|;
 comment|/* 	 * Wait for a file descriptor to be ready for read, write, or 	 * an exception, or a timeout to occur: 	 */
 name|count
 operator|=
-name|_thread_sys_poll
+name|__sys_poll
 argument_list|(
 name|_thread_pfd_table
 argument_list|,
@@ -3021,7 +3021,7 @@ operator|(
 operator|(
 name|num
 operator|=
-name|_thread_sys_read
+name|__sys_read
 argument_list|(
 name|_thread_kern_pipe
 index|[

@@ -376,7 +376,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(1, buf, strlen(buf));	\ } while (0)
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(1, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_define
@@ -387,7 +387,7 @@ parameter_list|(
 name|args
 modifier|...
 parameter_list|)
-value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	_thread_sys_write(2, buf, strlen(buf));	\ } while (0)
+value|do {		\ 	char buf[128];				\ 	snprintf(buf, sizeof(buf), ##args);	\ 	__sys_write(2, buf, strlen(buf));	\ } while (0)
 end_define
 
 begin_comment
@@ -3999,7 +3999,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_kevent
+name|__sys_kevent
 parameter_list|(
 name|int
 parameter_list|,
@@ -4041,7 +4041,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_ioctl
+name|__sys_ioctl
 parameter_list|(
 name|int
 parameter_list|,
@@ -4070,7 +4070,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_msync
+name|__sys_msync
 parameter_list|(
 name|void
 modifier|*
@@ -4099,7 +4099,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_fstatfs
+name|__sys_fstatfs
 parameter_list|(
 name|int
 parameter_list|,
@@ -4127,7 +4127,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_accept
+name|__sys_accept
 parameter_list|(
 name|int
 parameter_list|,
@@ -4143,23 +4143,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_bind
-parameter_list|(
-name|int
-parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|socklen_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_thread_sys_connect
+name|__sys_bind
 parameter_list|(
 name|int
 parameter_list|,
@@ -4175,7 +4159,23 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_getpeername
+name|__sys_connect
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|socklen_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|__sys_getpeername
 parameter_list|(
 name|int
 parameter_list|,
@@ -4191,7 +4191,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_getsockname
+name|__sys_getsockname
 parameter_list|(
 name|int
 parameter_list|,
@@ -4207,7 +4207,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_getsockopt
+name|__sys_getsockopt
 parameter_list|(
 name|int
 parameter_list|,
@@ -4226,7 +4226,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_listen
+name|__sys_listen
 parameter_list|(
 name|int
 parameter_list|,
@@ -4237,7 +4237,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sendfile
+name|__sys_sendfile
 parameter_list|(
 name|int
 parameter_list|,
@@ -4261,7 +4261,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_setsockopt
+name|__sys_setsockopt
 parameter_list|(
 name|int
 parameter_list|,
@@ -4280,7 +4280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_shutdown
+name|__sys_shutdown
 parameter_list|(
 name|int
 parameter_list|,
@@ -4291,7 +4291,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_socket
+name|__sys_socket
 parameter_list|(
 name|int
 parameter_list|,
@@ -4304,7 +4304,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_socketpair
+name|__sys_socketpair
 parameter_list|(
 name|int
 parameter_list|,
@@ -4320,7 +4320,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_recvfrom
+name|__sys_recvfrom
 parameter_list|(
 name|int
 parameter_list|,
@@ -4343,7 +4343,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_recvmsg
+name|__sys_recvmsg
 parameter_list|(
 name|int
 parameter_list|,
@@ -4358,7 +4358,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_sendmsg
+name|__sys_sendmsg
 parameter_list|(
 name|int
 parameter_list|,
@@ -4374,7 +4374,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_sendto
+name|__sys_sendto
 parameter_list|(
 name|int
 parameter_list|,
@@ -4413,7 +4413,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_fchflags
+name|__sys_fchflags
 parameter_list|(
 name|int
 parameter_list|,
@@ -4424,7 +4424,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_fchmod
+name|__sys_fchmod
 parameter_list|(
 name|int
 parameter_list|,
@@ -4435,7 +4435,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_fstat
+name|__sys_fstat
 parameter_list|(
 name|int
 parameter_list|,
@@ -4463,7 +4463,7 @@ end_ifdef
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_readv
+name|__sys_readv
 parameter_list|(
 name|int
 parameter_list|,
@@ -4479,7 +4479,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_writev
+name|__sys_writev
 parameter_list|(
 name|int
 parameter_list|,
@@ -4510,7 +4510,7 @@ end_ifdef
 
 begin_function_decl
 name|pid_t
-name|_thread_sys_wait4
+name|__sys_wait4
 parameter_list|(
 name|pid_t
 parameter_list|,
@@ -4543,7 +4543,7 @@ end_ifdef
 
 begin_decl_stmt
 name|int
-name|_thread_sys_aio_suspend
+name|__sys_aio_suspend
 argument_list|(
 specifier|const
 expr|struct
@@ -4579,7 +4579,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_getdirentries
+name|__sys_getdirentries
 parameter_list|(
 name|int
 parameter_list|,
@@ -4611,7 +4611,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_fcntl
+name|__sys_fcntl
 parameter_list|(
 name|int
 parameter_list|,
@@ -4624,7 +4624,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_flock
+name|__sys_flock
 parameter_list|(
 name|int
 parameter_list|,
@@ -4635,7 +4635,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_open
+name|__sys_open
 parameter_list|(
 specifier|const
 name|char
@@ -4665,7 +4665,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_poll
+name|__sys_poll
 parameter_list|(
 name|struct
 name|pollfd
@@ -4693,15 +4693,6 @@ directive|ifdef
 name|_SCHED_H_
 end_ifdef
 
-begin_function_decl
-name|int
-name|_thread_sys_sched_yield
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -4719,7 +4710,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_sigaction
+name|__sys_sigaction
 parameter_list|(
 name|int
 parameter_list|,
@@ -4737,7 +4728,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigaltstack
+name|__sys_sigaltstack
 parameter_list|(
 specifier|const
 name|struct
@@ -4753,7 +4744,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigblock
+name|__sys_sigblock
 parameter_list|(
 name|int
 parameter_list|)
@@ -4762,7 +4753,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigpending
+name|__sys_sigpending
 parameter_list|(
 name|sigset_t
 modifier|*
@@ -4772,7 +4763,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 parameter_list|(
 name|int
 parameter_list|,
@@ -4788,7 +4779,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigsetmask
+name|__sys_sigsetmask
 parameter_list|(
 name|int
 parameter_list|)
@@ -4797,7 +4788,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigsuspend
+name|__sys_sigsuspend
 parameter_list|(
 specifier|const
 name|sigset_t
@@ -4823,7 +4814,7 @@ end_ifdef
 
 begin_function_decl
 name|int
-name|_thread_sys_nanosleep
+name|__sys_nanosleep
 parameter_list|(
 specifier|const
 name|struct
@@ -4854,7 +4845,7 @@ end_ifdef
 
 begin_function_decl
 name|void
-name|_thread_sys__exit
+name|__sys__exit
 parameter_list|(
 name|int
 parameter_list|)
@@ -4863,7 +4854,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_close
+name|__sys_close
 parameter_list|(
 name|int
 parameter_list|)
@@ -4872,7 +4863,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_dup
+name|__sys_dup
 parameter_list|(
 name|int
 parameter_list|)
@@ -4881,7 +4872,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_dup2
+name|__sys_dup2
 parameter_list|(
 name|int
 parameter_list|,
@@ -4892,7 +4883,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_execve
+name|__sys_execve
 parameter_list|(
 specifier|const
 name|char
@@ -4913,7 +4904,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_fchown
+name|__sys_fchown
 parameter_list|(
 name|int
 parameter_list|,
@@ -4926,7 +4917,7 @@ end_function_decl
 
 begin_function_decl
 name|pid_t
-name|_thread_sys_fork
+name|__sys_fork
 parameter_list|(
 name|void
 parameter_list|)
@@ -4935,7 +4926,7 @@ end_function_decl
 
 begin_function_decl
 name|long
-name|_thread_sys_fpathconf
+name|__sys_fpathconf
 parameter_list|(
 name|int
 parameter_list|,
@@ -4946,7 +4937,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_fsync
+name|__sys_fsync
 parameter_list|(
 name|int
 parameter_list|)
@@ -4955,7 +4946,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_pipe
+name|__sys_pipe
 parameter_list|(
 name|int
 modifier|*
@@ -4965,7 +4956,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_read
+name|__sys_read
 parameter_list|(
 name|int
 parameter_list|,
@@ -4979,7 +4970,7 @@ end_function_decl
 
 begin_function_decl
 name|pid_t
-name|_thread_sys_rfork
+name|__sys_rfork
 parameter_list|(
 name|int
 parameter_list|)
@@ -4988,7 +4979,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_select
+name|__sys_select
 parameter_list|(
 name|int
 parameter_list|,
@@ -5010,7 +5001,7 @@ end_function_decl
 
 begin_function_decl
 name|pid_t
-name|_thread_sys_vfork
+name|__sys_vfork
 parameter_list|(
 name|void
 parameter_list|)
@@ -5019,7 +5010,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|_thread_sys_write
+name|__sys_write
 parameter_list|(
 name|int
 parameter_list|,

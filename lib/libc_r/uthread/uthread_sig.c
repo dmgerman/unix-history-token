@@ -463,7 +463,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -1647,7 +1647,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 				 * Set the file descriptor to non-blocking: 				 */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,

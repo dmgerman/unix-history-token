@@ -75,7 +75,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_getdirentries
+name|__sys_getdirentries
 argument_list|(
 name|fd
 argument_list|,

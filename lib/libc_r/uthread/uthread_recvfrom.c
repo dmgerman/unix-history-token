@@ -98,7 +98,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_recvfrom
+name|__sys_recvfrom
 argument_list|(
 name|fd
 argument_list|,

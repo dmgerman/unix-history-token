@@ -78,7 +78,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_getsockopt
+name|__sys_getsockopt
 argument_list|(
 name|fd
 argument_list|,

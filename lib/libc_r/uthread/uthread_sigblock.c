@@ -42,7 +42,7 @@ name|n
 decl_stmt|;
 name|n
 operator|=
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,

@@ -578,7 +578,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_poll
+name|__sys_poll
 argument_list|(
 name|data
 operator|.

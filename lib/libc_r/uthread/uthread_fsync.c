@@ -58,7 +58,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_fsync
+name|__sys_fsync
 argument_list|(
 name|fd
 argument_list|)

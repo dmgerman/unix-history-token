@@ -74,7 +74,7 @@ name|_THREAD_SAFE
 end_ifdef
 
 begin_comment
-comment|/*  * For the thread_safe versions, we prepend _thread_sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
+comment|/*  * For the thread_safe versions, we prepend __sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
 end_comment
 
 begin_define
@@ -84,7 +84,7 @@ name|PSYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror));	\ 			ENTRY(__CONCAT(_thread_sys_,x));		\ 			lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
+value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror));	\ 			ENTRY(__CONCAT(__sys_,x));			\ 			lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|ENTRY(__CONCAT(_thread_sys_,x));		\ 			lea __CONCAT(SYS_,y), %eax; KERNCALL; ret
+value|ENTRY(__CONCAT(__sys_,x));			\ 			lea __CONCAT(SYS_,y), %eax; KERNCALL; ret
 end_define
 
 begin_else

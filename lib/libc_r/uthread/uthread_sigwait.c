@@ -335,7 +335,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,
@@ -473,7 +473,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,

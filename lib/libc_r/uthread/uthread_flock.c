@@ -61,7 +61,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_flock
+name|__sys_flock
 argument_list|(
 name|fd
 argument_list|,

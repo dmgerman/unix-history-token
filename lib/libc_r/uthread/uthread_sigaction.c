@@ -263,7 +263,7 @@ expr_stmt|;
 comment|/* Change the signal action in the kernel: */
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|sig
 argument_list|,

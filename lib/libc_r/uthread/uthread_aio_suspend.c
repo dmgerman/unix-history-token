@@ -57,7 +57,7 @@ argument_list|()
 expr_stmt|;
 name|ret
 operator|=
-name|_thread_sys_aio_suspend
+name|__sys_aio_suspend
 argument_list|(
 name|iocbs
 argument_list|,

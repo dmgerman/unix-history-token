@@ -71,7 +71,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_wait4
+name|__sys_wait4
 argument_list|(
 name|pid
 argument_list|,

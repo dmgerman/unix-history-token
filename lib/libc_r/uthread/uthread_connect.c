@@ -96,7 +96,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_connect
+name|__sys_connect
 argument_list|(
 name|fd
 argument_list|,
@@ -188,7 +188,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_getpeername
+name|__sys_getpeername
 argument_list|(
 name|fd
 argument_list|,
@@ -218,7 +218,7 @@ argument_list|(
 name|errno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_getsockopt
+name|__sys_getsockopt
 argument_list|(
 name|fd
 argument_list|,

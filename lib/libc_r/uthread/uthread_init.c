@@ -436,7 +436,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_open
+name|__sys_open
 argument_list|(
 name|_PATH_CONSOLE
 argument_list|,
@@ -468,7 +468,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_sys_ioctl
+name|__sys_ioctl
 argument_list|(
 name|fd
 argument_list|,
@@ -491,7 +491,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_thread_sys_dup2
+name|__sys_dup2
 argument_list|(
 name|fd
 argument_list|,
@@ -501,7 +501,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|_thread_sys_dup2
+name|__sys_dup2
 argument_list|(
 name|fd
 argument_list|,
@@ -511,7 +511,7 @@ operator|==
 operator|-
 literal|1
 operator|||
-name|_thread_sys_dup2
+name|__sys_dup2
 argument_list|(
 name|fd
 argument_list|,
@@ -550,7 +550,7 @@ index|[
 name|i
 index|]
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|i
 argument_list|,
@@ -578,7 +578,7 @@ expr_stmt|;
 comment|/* 	 * Create a pipe that is written to by the signal handler to prevent 	 * signals being missed in calls to _select: 	 */
 if|if
 condition|(
-name|_thread_sys_pipe
+name|__sys_pipe
 argument_list|(
 name|_thread_kern_pipe
 argument_list|)
@@ -600,7 +600,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -628,7 +628,7 @@ comment|/* Make the read pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -660,7 +660,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -688,7 +688,7 @@ comment|/* Make the write pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -1266,7 +1266,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|_thread_sys_sigaltstack
+name|__sys_sigaltstack
 argument_list|(
 operator|&
 name|_thread_sigstack
@@ -1313,7 +1313,7 @@ comment|/* Get the signal handler details: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|i
 argument_list|,
@@ -1350,7 +1350,7 @@ block|}
 comment|/* 		 * Install the signal handler for the most important 		 * signals that the user-thread kernel needs. Actually 		 * SIGINFO isn't really needed, but it is nice to have. 		 */
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|_SCHED_SIGNAL
 argument_list|,
@@ -1362,7 +1362,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|SIGINFO
 argument_list|,
@@ -1374,7 +1374,7 @@ argument_list|)
 operator|!=
 literal|0
 operator|||
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|SIGCHLD
 argument_list|,
@@ -1428,7 +1428,7 @@ operator|=
 name|SA_SIGINFO
 expr_stmt|;
 comment|/* Get the process signal mask: */
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

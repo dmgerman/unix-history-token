@@ -70,7 +70,7 @@ expr_stmt|;
 comment|/* Perform the sigaction syscall: */
 if|if
 condition|(
-name|_thread_sys_sigaction
+name|__sys_sigaction
 argument_list|(
 name|s
 argument_list|,

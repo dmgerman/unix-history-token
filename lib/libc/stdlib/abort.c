@@ -134,7 +134,7 @@ name|_THREAD_SAFE
 operator|(
 name|void
 operator|)
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,
@@ -197,7 +197,7 @@ name|_THREAD_SAFE
 operator|(
 name|void
 operator|)
-name|_thread_sys_sigprocmask
+name|__sys_sigprocmask
 argument_list|(
 name|SIG_SETMASK
 argument_list|,

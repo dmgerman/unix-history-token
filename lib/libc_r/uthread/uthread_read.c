@@ -152,7 +152,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_read
+name|__sys_read
 argument_list|(
 name|fd
 argument_list|,

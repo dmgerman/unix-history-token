@@ -114,7 +114,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_thread_sys_open
+name|__sys_open
 argument_list|(
 name|path
 argument_list|,
@@ -140,7 +140,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)

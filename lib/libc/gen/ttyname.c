@@ -271,7 +271,7 @@ return|;
 comment|/* Must be a character device. */
 if|if
 condition|(
-name|_thread_sys_fstat
+name|__sys_fstat
 argument_list|(
 name|fd
 argument_list|,

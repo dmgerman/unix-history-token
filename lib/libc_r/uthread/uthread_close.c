@@ -131,7 +131,7 @@ operator|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fstat
+name|__sys_fstat
 argument_list|(
 name|fd
 argument_list|,
@@ -178,7 +178,7 @@ block|{
 comment|/* Get the current flags: */
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -188,7 +188,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Clear the nonblocking file descriptor flag: */
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -225,7 +225,7 @@ expr_stmt|;
 comment|/* Close the file descriptor: */
 name|ret
 operator|=
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|fd
 argument_list|)

@@ -81,7 +81,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_shutdown
+name|__sys_shutdown
 argument_list|(
 name|fd
 argument_list|,
@@ -120,7 +120,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_shutdown
+name|__sys_shutdown
 argument_list|(
 name|fd
 argument_list|,
@@ -159,7 +159,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_shutdown
+name|__sys_shutdown
 argument_list|(
 name|fd
 argument_list|,

@@ -53,7 +53,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|_thread_sys_msync
+name|__sys_msync
 argument_list|(
 name|addr
 argument_list|,

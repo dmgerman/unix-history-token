@@ -61,7 +61,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_fpathconf
+name|__sys_fpathconf
 argument_list|(
 name|fd
 argument_list|,

@@ -143,7 +143,7 @@ block|{
 comment|/* Perform the 'dup2' syscall: */
 name|ret
 operator|=
-name|_thread_sys_dup2
+name|__sys_dup2
 argument_list|(
 name|fd
 argument_list|,
@@ -190,7 +190,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|ret
 argument_list|)

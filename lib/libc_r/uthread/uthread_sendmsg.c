@@ -88,7 +88,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_sendmsg
+name|__sys_sendmsg
 argument_list|(
 name|fd
 argument_list|,

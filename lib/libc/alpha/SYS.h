@@ -145,7 +145,7 @@ name|_THREAD_SAFE
 end_ifdef
 
 begin_comment
-comment|/*  * For the thread_safe versions, we prepend _thread_sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
+comment|/*  * For the thread_safe versions, we prepend __sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
 end_comment
 
 begin_define
@@ -156,7 +156,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|CALL(___CONCAT(_thread_sys_,name))
+value|CALL(___CONCAT(__sys_,name))
 end_define
 
 begin_define
@@ -169,7 +169,7 @@ parameter_list|,
 name|args
 parameter_list|)
 define|\
-value|LEAF(___CONCAT(_thread_sys_,name),args)
+value|LEAF(___CONCAT(__sys_,name),args)
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|END(___CONCAT(_thread_sys_,name))
+value|END(___CONCAT(__sys_,name))
 end_define
 
 begin_define

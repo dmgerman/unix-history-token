@@ -82,7 +82,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_fork
+name|__sys_fork
 argument_list|()
 operator|)
 operator|!=
@@ -94,7 +94,7 @@ block|}
 else|else
 block|{
 comment|/* Close the pthread kernel pipe: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -102,7 +102,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -119,10 +119,10 @@ operator|->
 name|sigpend
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * _thread_sys_select:  		 */
+comment|/* 		 * Create a pipe that is written to by the signal handler to 		 * prevent signals being missed in calls to 		 * __sys_select:  		 */
 if|if
 condition|(
-name|_thread_sys_pipe
+name|__sys_pipe
 argument_list|(
 name|_thread_kern_pipe
 argument_list|)
@@ -144,7 +144,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -170,7 +170,7 @@ comment|/* Make the read pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -200,7 +200,7 @@ condition|(
 operator|(
 name|flags
 operator|=
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[
@@ -226,7 +226,7 @@ comment|/* Make the write pipe non-blocking: */
 elseif|else
 if|if
 condition|(
-name|_thread_sys_fcntl
+name|__sys_fcntl
 argument_list|(
 name|_thread_kern_pipe
 index|[

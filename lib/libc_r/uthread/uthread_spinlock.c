@@ -187,7 +187,7 @@ operator|->
 name|lineno
 argument_list|)
 expr_stmt|;
-name|_thread_sys_write
+name|__sys_write
 argument_list|(
 literal|2
 argument_list|,

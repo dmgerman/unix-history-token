@@ -67,7 +67,7 @@ condition|)
 block|{
 name|ret
 operator|=
-name|_thread_sys_listen
+name|__sys_listen
 argument_list|(
 name|fd
 argument_list|,

@@ -140,7 +140,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_readv
+name|__sys_readv
 argument_list|(
 name|fd
 argument_list|,

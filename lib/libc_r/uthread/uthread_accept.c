@@ -96,7 +96,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_accept
+name|__sys_accept
 argument_list|(
 name|fd
 argument_list|,
@@ -235,7 +235,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the socket: */
-name|_thread_sys_close
+name|__sys_close
 argument_list|(
 name|ret
 argument_list|)

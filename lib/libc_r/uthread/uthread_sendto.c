@@ -99,7 +99,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|_thread_sys_sendto
+name|__sys_sendto
 argument_list|(
 name|fd
 argument_list|,
