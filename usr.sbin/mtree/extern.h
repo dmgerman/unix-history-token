@@ -10,6 +10,12 @@ name|crc_total
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_FTS_H_
+end_ifdef
+
 begin_function_decl
 name|int
 name|compare
@@ -25,6 +31,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -120,6 +131,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mtree_specspec
+parameter_list|(
+name|FILE
+modifier|*
+name|fi
+parameter_list|,
+name|FILE
+modifier|*
+name|fj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|check_excludes
 parameter_list|(
 specifier|const
@@ -149,6 +175,18 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|ftype
+parameter_list|(
+name|u_int
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

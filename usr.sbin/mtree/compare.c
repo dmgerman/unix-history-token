@@ -193,18 +193,6 @@ name|lineno
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|ftype
-parameter_list|(
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -1777,7 +1765,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*
