@@ -1336,7 +1336,7 @@ name|DEBUGGER
 parameter_list|(
 name|x
 parameter_list|)
-value|printf("mac_test: %x\n", (x))
+value|printf("mac_test: %s\n", (x))
 end_define
 
 begin_endif
