@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -163,7 +169,8 @@ name|DebugFD
 operator|=
 name|open
 argument_list|(
-literal|"/dev/ttyv1"
+name|_PATH_DEV
+literal|"ttyv1"
 argument_list|,
 name|O_RDWR
 argument_list|)
