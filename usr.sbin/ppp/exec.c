@@ -245,6 +245,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -274,6 +276,14 @@ name|niov
 parameter_list|,
 name|int
 name|maxiov
+parameter_list|,
+name|int
+modifier|*
+name|auxfd
+parameter_list|,
+name|int
+modifier|*
+name|nauxfd
 parameter_list|)
 block|{
 if|if
@@ -355,6 +365,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|p
+operator|->
+name|fd
+operator|--
+expr_stmt|;
+comment|/* We own the device but maybe can't use it - change fd */
 if|if
 condition|(
 name|socketpair

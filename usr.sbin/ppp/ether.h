@@ -20,7 +20,7 @@ specifier|extern
 name|struct
 name|device
 modifier|*
-name|exec_Create
+name|ether_Create
 parameter_list|(
 name|struct
 name|physical
@@ -34,7 +34,7 @@ specifier|extern
 name|struct
 name|device
 modifier|*
-name|exec_iov2device
+name|ether_iov2device
 parameter_list|(
 name|int
 parameter_list|,
@@ -60,12 +60,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|exec_DeviceSize
-value|physical_DeviceSize
-end_define
+begin_function_decl
+specifier|extern
+name|int
+name|ether_DeviceSize
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 

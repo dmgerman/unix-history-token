@@ -763,7 +763,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"2.23"
+literal|"2.24"
 decl_stmt|;
 end_decl_stmt
 
