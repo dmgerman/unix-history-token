@@ -1340,13 +1340,13 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Attempting to delete a non-present default ACL 			 * will return success for portability purposes. 			 * (TRIX) 		 	 */
+comment|/* 			 * Attempting to delete a non-present default ACL 			 * will return success for portability purposes. 			 * (TRIX) 			 * 			 * XXX: Note that since we can't distinguish 			 * "that EA is not supported" from "that EA is not 			 * defined", the success case here overlaps the 			 * the ENOENT->EOPNOTSUPP case below. 		 	 */
 comment|/* XXX: the ENOENT here will eventually be ENOATTR. */
 if|if
 condition|(
 name|error
 operator|==
-name|EINVAL
+name|ENOENT
 condition|)
 name|error
 operator|=
