@@ -55,7 +55,11 @@ argument_list|)
 expr_stmt|;
 name|feraiseexcept
 argument_list|(
+operator|(
 name|fpsr
+operator|>>
+name|_FPUSW_SHIFT
+operator|)
 operator|&
 name|FE_ALL_EXCEPT
 argument_list|)
