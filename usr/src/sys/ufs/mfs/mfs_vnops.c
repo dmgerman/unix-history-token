@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mfs_vnops.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -124,49 +130,18 @@ comment|/*  * mfs vnode operations.  */
 end_comment
 
 begin_decl_stmt
-name|int
-name|mfs_open
-argument_list|()
-decl_stmt|,
-name|mfs_strategy
-argument_list|()
-decl_stmt|,
-name|mfs_bmap
-argument_list|()
-decl_stmt|,
-name|mfs_ioctl
-argument_list|()
-decl_stmt|,
-name|mfs_close
-argument_list|()
-decl_stmt|,
-name|mfs_inactive
-argument_list|()
-decl_stmt|,
-name|mfs_print
-argument_list|()
-decl_stmt|,
-name|mfs_badop
-argument_list|()
-decl_stmt|,
-name|mfs_nullop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnodeops
 name|mfs_vnodeops
 init|=
 block|{
-name|mfs_badop
+name|mfs_lookup
 block|,
 comment|/* lookup */
-name|mfs_badop
+name|mfs_create
 block|,
 comment|/* create */
-name|mfs_badop
+name|mfs_mknod
 block|,
 comment|/* mknod */
 name|mfs_open
@@ -175,73 +150,73 @@ comment|/* open */
 name|mfs_close
 block|,
 comment|/* close */
-name|mfs_badop
+name|mfs_access
 block|,
 comment|/* access */
-name|mfs_badop
+name|mfs_getattr
 block|,
 comment|/* getattr */
-name|mfs_badop
+name|mfs_setattr
 block|,
 comment|/* setattr */
-name|mfs_badop
+name|mfs_read
 block|,
 comment|/* read */
-name|mfs_badop
+name|mfs_write
 block|,
 comment|/* write */
 name|mfs_ioctl
 block|,
 comment|/* ioctl */
-name|mfs_badop
+name|mfs_select
 block|,
 comment|/* select */
-name|mfs_badop
+name|mfs_mmap
 block|,
 comment|/* mmap */
-name|mfs_badop
+name|mfs_fsync
 block|,
 comment|/* fsync */
-name|mfs_badop
+name|mfs_seek
 block|,
 comment|/* seek */
-name|mfs_badop
+name|mfs_remove
 block|,
 comment|/* remove */
-name|mfs_badop
+name|mfs_link
 block|,
 comment|/* link */
-name|mfs_badop
+name|mfs_rename
 block|,
 comment|/* rename */
-name|mfs_badop
+name|mfs_mkdir
 block|,
 comment|/* mkdir */
-name|mfs_badop
+name|mfs_rmdir
 block|,
 comment|/* rmdir */
-name|mfs_badop
+name|mfs_symlink
 block|,
 comment|/* symlink */
-name|mfs_badop
+name|mfs_readdir
 block|,
 comment|/* readdir */
-name|mfs_badop
+name|mfs_readlink
 block|,
 comment|/* readlink */
-name|mfs_badop
+name|mfs_abortop
 block|,
 comment|/* abortop */
 name|mfs_inactive
 block|,
 comment|/* inactive */
-name|mfs_nullop
+name|mfs_reclaim
 block|,
 comment|/* reclaim */
-name|mfs_nullop
+name|mfs_lock
 block|,
 comment|/* lock */
-name|mfs_nullop
+name|mfs_unlock
 block|,
 comment|/* unlock */
 name|mfs_bmap
@@ -253,10 +228,10 @@ comment|/* strategy */
 name|mfs_print
 block|,
 comment|/* print */
-name|mfs_nullop
+name|mfs_islocked
 block|,
 comment|/* islocked */
-name|mfs_badop
+name|mfs_advlock
 block|,
 comment|/* advlock */
 block|}
@@ -279,6 +254,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -299,6 +276,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +333,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -382,6 +369,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +421,14 @@ name|vnode
 modifier|*
 name|vp
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+init|=
+name|curproc
+decl_stmt|;
+comment|/* XXX */
 if|if
 condition|(
 name|vfinddev
@@ -464,7 +467,7 @@ name|mfsp
 operator|->
 name|mfs_pid
 operator|==
-name|curproc
+name|p
 operator|->
 name|p_pid
 condition|)
@@ -1149,6 +1152,8 @@ argument_list|,
 name|flag
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -1169,6 +1174,14 @@ name|struct
 name|ucred
 modifier|*
 name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1327,6 +1340,8 @@ begin_macro
 name|mfs_inactive
 argument_list|(
 argument|vp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1335,6 +1350,14 @@ name|struct
 name|vnode
 modifier|*
 name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1441,25 +1464,6 @@ literal|"mfs_badop called\n"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_block
-
-begin_comment
-comment|/*  * Block device null operation  */
-end_comment
-
-begin_macro
-name|mfs_nullop
-argument_list|()
-end_macro
-
-begin_block
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
