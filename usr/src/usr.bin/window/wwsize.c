@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsize.c	3.6 (Berkeley) %G%"
+literal|"@(#)wwsize.c	3.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,23 @@ include|#
 directive|include
 file|"ww.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIX_TTY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Resize a window.  Should be unattached.  */

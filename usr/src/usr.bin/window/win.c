@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)win.c	3.21 (Berkeley) %G%"
+literal|"@(#)win.c	3.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,23 @@ include|#
 directive|include
 file|"char.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIX_TTY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Higher level routines for dealing with windows.  *  * There are two types of windows: user window, and information window.  * User windows are the ones with a pty and shell.  Information windows  * are for displaying error messages, and other information.  *  * The windows are doubly linked in overlapping order and divided into  * two groups: foreground and normal.  Information  * windows are always foreground.  User windows can be either.  * Addwin() adds a window to the list at the top of one of the two groups.  * Deletewin() deletes a window.  Front() moves a window to the front  * of its group.  Wwopen(), wwadd(), and wwdelete() should never be called  * directly.  */

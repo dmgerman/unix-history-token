@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwiomux.c	3.22 (Berkeley) %G%"
+literal|"@(#)wwiomux.c	3.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,23 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|POSIX_TTY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

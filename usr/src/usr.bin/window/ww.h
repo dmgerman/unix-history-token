@@ -1,13 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ww.h	3.57 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ww.h	3.58 (Berkeley) %G%  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|POSIX_TTY
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<sgtty.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -287,6 +309,9 @@ begin_struct
 struct|struct
 name|ww_tty
 block|{
+ifndef|#
+directive|ifndef
+name|POSIX_TTY
 name|struct
 name|sgttyb
 name|ww_sgttyb
@@ -305,6 +330,14 @@ decl_stmt|;
 name|int
 name|ww_ldisc
 decl_stmt|;
+else|#
+directive|else
+name|struct
+name|termios
+name|ww_termios
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|ww_fflags
 decl_stmt|;
