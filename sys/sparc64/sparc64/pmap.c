@@ -6788,6 +6788,9 @@ argument_list|(
 name|pmap_enter_nreplace
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pmap_remove_tte
 argument_list|(
 name|pm
@@ -6798,6 +6801,9 @@ name|tp
 argument_list|,
 name|va
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|tlb_page_demap
 argument_list|(
