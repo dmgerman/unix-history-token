@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vnops.c	8.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -454,6 +454,14 @@ block|,
 comment|/* valloc */
 block|{
 operator|&
+name|vop_reallocblks_desc
+block|,
+name|ffs_reallocblks
+block|}
+block|,
+comment|/* reallocblks */
+block|{
+operator|&
 name|vop_vfree_desc
 block|,
 name|ffs_vfree
@@ -831,6 +839,14 @@ name|spec_valloc
 block|}
 block|,
 comment|/* valloc */
+block|{
+operator|&
+name|vop_reallocblks_desc
+block|,
+name|spec_reallocblks
+block|}
+block|,
+comment|/* reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
@@ -1216,6 +1232,14 @@ name|fifo_valloc
 block|}
 block|,
 comment|/* valloc */
+block|{
+operator|&
+name|vop_reallocblks_desc
+block|,
+name|fifo_reallocblks
+block|}
+block|,
+comment|/* reallocblks */
 block|{
 operator|&
 name|vop_vfree_desc
