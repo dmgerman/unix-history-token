@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: rtadvd.h,v 1.16 2001/04/10 15:08:31 suz Exp $	*/
+comment|/*	$KAME: rtadvd.h,v 1.26 2003/08/05 12:34:23 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -95,10 +95,6 @@ name|DEF_ADVPREFERREDLIFETIME
 value|604800
 end_define
 
-begin_comment
-comment|/*XXX int-to-double comparison for INTERVAL items */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -110,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|MIN_MAXINTERVAL
-value|4.0
+value|4
 end_define
 
 begin_define
@@ -261,6 +257,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ROUTEINFO
+end_ifdef
+
 begin_struct
 struct|struct
 name|rtinfo
@@ -295,6 +297,11 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -419,6 +426,9 @@ name|long
 name|clockskew
 decl_stmt|;
 comment|/* used for consisitency check of lifetimes */
+ifdef|#
+directive|ifdef
+name|ROUTEINFO
 name|struct
 name|rtinfo
 name|route
@@ -428,6 +438,8 @@ name|int
 name|routes
 decl_stmt|;
 comment|/* number of route information options */
+endif|#
+directive|endif
 comment|/* actual RA packet data and its length */
 name|size_t
 name|ra_datalen
