@@ -646,7 +646,6 @@ name|ipintrq
 expr_stmt|;
 comment|/* we are in ip_input */
 break|break;
-break|break;
 ifdef|#
 directive|ifdef
 name|NS
