@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|"mount.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"namei.h"
 end_include
 
 begin_include
@@ -155,62 +161,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|spec_lookup
-argument_list|()
-decl_stmt|,
-name|spec_open
-argument_list|()
-decl_stmt|,
-name|spec_read
-argument_list|()
-decl_stmt|,
-name|spec_write
-argument_list|()
-decl_stmt|,
-name|spec_strategy
-argument_list|()
-decl_stmt|,
-name|spec_bmap
-argument_list|()
-decl_stmt|,
-name|spec_ioctl
-argument_list|()
-decl_stmt|,
-name|spec_select
-argument_list|()
-decl_stmt|,
-name|spec_lock
-argument_list|()
-decl_stmt|,
-name|spec_unlock
-argument_list|()
-decl_stmt|,
-name|spec_close
-argument_list|()
-decl_stmt|,
-name|spec_print
-argument_list|()
-decl_stmt|,
-name|spec_advlock
-argument_list|()
-decl_stmt|,
-name|spec_ebadf
-argument_list|()
-decl_stmt|,
-name|spec_badop
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-name|nullop
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
 name|struct
 name|vnodeops
 name|spec_vnodeops
@@ -219,10 +169,10 @@ block|{
 name|spec_lookup
 block|,
 comment|/* lookup */
-name|spec_badop
+name|spec_create
 block|,
 comment|/* create */
-name|spec_badop
+name|spec_mknod
 block|,
 comment|/* mknod */
 name|spec_open
@@ -231,13 +181,13 @@ comment|/* open */
 name|spec_close
 block|,
 comment|/* close */
-name|spec_ebadf
+name|spec_access
 block|,
 comment|/* access */
-name|spec_ebadf
+name|spec_getattr
 block|,
 comment|/* getattr */
-name|spec_ebadf
+name|spec_setattr
 block|,
 comment|/* setattr */
 name|spec_read
@@ -252,46 +202,46 @@ comment|/* ioctl */
 name|spec_select
 block|,
 comment|/* select */
-name|spec_badop
+name|spec_mmap
 block|,
 comment|/* mmap */
-name|nullop
+name|spec_fsync
 block|,
 comment|/* fsync */
-name|spec_badop
+name|spec_seek
 block|,
 comment|/* seek */
-name|spec_badop
+name|spec_remove
 block|,
 comment|/* remove */
-name|spec_badop
+name|spec_link
 block|,
 comment|/* link */
-name|spec_badop
+name|spec_rename
 block|,
 comment|/* rename */
-name|spec_badop
+name|spec_mkdir
 block|,
 comment|/* mkdir */
-name|spec_badop
+name|spec_rmdir
 block|,
 comment|/* rmdir */
-name|spec_badop
+name|spec_symlink
 block|,
 comment|/* symlink */
-name|spec_badop
+name|spec_readdir
 block|,
 comment|/* readdir */
-name|spec_badop
+name|spec_readlink
 block|,
 comment|/* readlink */
-name|spec_badop
+name|spec_abortop
 block|,
 comment|/* abortop */
-name|nullop
+name|spec_inactive
 block|,
 comment|/* inactive */
-name|nullop
+name|spec_reclaim
 block|,
 comment|/* reclaim */
 name|spec_lock
@@ -309,7 +259,7 @@ comment|/* strategy */
 name|spec_print
 block|,
 comment|/* print */
-name|nullop
+name|spec_islocked
 block|,
 comment|/* islocked */
 name|spec_advlock
@@ -329,6 +279,8 @@ argument_list|(
 argument|vp
 argument_list|,
 argument|ndp
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -345,6 +297,14 @@ name|struct
 name|nameidata
 modifier|*
 name|ndp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +346,8 @@ argument_list|,
 name|mode
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -409,16 +371,16 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|dev_t
 name|dev
 init|=
@@ -627,9 +589,10 @@ name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|uio
+operator|->
+name|uio_procp
 decl_stmt|;
-comment|/* XXX */
 name|struct
 name|buf
 modifier|*
@@ -662,6 +625,9 @@ specifier|extern
 name|int
 name|mem_no
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -675,6 +641,27 @@ argument_list|(
 literal|"spec_read mode"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+operator|&&
+name|uio
+operator|->
+name|uio_procp
+operator|!=
+name|curproc
+condition|)
+name|panic
+argument_list|(
+literal|"spec_read proc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|uio
@@ -1133,9 +1120,10 @@ name|proc
 modifier|*
 name|p
 init|=
-name|curproc
+name|uio
+operator|->
+name|uio_procp
 decl_stmt|;
-comment|/* XXX */
 name|struct
 name|buf
 modifier|*
@@ -1168,6 +1156,9 @@ specifier|extern
 name|int
 name|mem_no
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|uio
@@ -1181,6 +1172,27 @@ argument_list|(
 literal|"spec_write mode"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_USERSPACE
+operator|&&
+name|uio
+operator|->
+name|uio_procp
+operator|!=
+name|curproc
+condition|)
+name|panic
+argument_list|(
+literal|"spec_write proc"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|vp
@@ -1580,6 +1592,8 @@ argument_list|,
 argument|fflag
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1617,16 +1631,16 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|dev_t
 name|dev
 init|=
@@ -1764,6 +1778,8 @@ argument_list|,
 argument|fflags
 argument_list|,
 argument|cred
+argument_list|,
+argument|p
 argument_list|)
 end_macro
 
@@ -1791,16 +1807,16 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|dev_t
 name|dev
@@ -2055,6 +2071,8 @@ argument_list|,
 name|flag
 argument_list|,
 name|cred
+argument_list|,
+name|p
 argument_list|)
 specifier|register
 expr|struct
@@ -2078,16 +2096,16 @@ name|cred
 decl_stmt|;
 end_decl_stmt
 
-begin_block
-block|{
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
-name|curproc
 decl_stmt|;
-comment|/* XXX */
+end_decl_stmt
+
+begin_block
+block|{
 name|dev_t
 name|dev
 init|=
@@ -2308,6 +2326,10 @@ end_block
 
 begin_comment
 comment|/*  * Special device advisory byte-level locks.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
 end_comment
 
 begin_macro
