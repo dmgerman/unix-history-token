@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exec.c	5.16 (Berkeley) %G%"
+literal|"@(#)exec.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,15 @@ end_include
 begin_comment
 comment|/*  * System level search and execute of a command.  We look in each directory  * for the specified command name.  If the name contains a '/' then we  * execute only the full path name.  If there is no search path then we  * execute only full path names.  */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * As we search for the command we note the first non-trivial error  * message for presentation to the user.  This allows us often  * to show that a file has the wrong mode/no access when the file  * is not in the last component of the search path, so we must  * go on after first detecting the error.  */
@@ -1045,11 +1054,13 @@ comment|/* don't use a previous error */
 operator|(
 name|void
 operator|)
-name|execv
+name|execve
 argument_list|(
 name|f
 argument_list|,
 name|t
+argument_list|,
+name|environ
 argument_list|)
 expr_stmt|;
 name|Vt
@@ -1319,11 +1330,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|execv
+name|execve
 argument_list|(
 name|f
 argument_list|,
 name|t
+argument_list|,
+name|environ
 argument_list|)
 expr_stmt|;
 name|Vt
