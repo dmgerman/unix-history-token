@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kill.c	5.4 (Berkeley) %G%"
+literal|"@(#)kill.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,27 +240,22 @@ literal|3
 expr_stmt|;
 for|for
 control|(
+name|numsig
+operator|=
+name|NSIG
+operator|,
 name|p
 operator|=
 name|sys_signame
+operator|+
+literal|1
 init|;
+operator|--
+name|numsig
 condition|;
 operator|++
 name|p
 control|)
-block|{
-if|if
-condition|(
-operator|!
-operator|*
-name|p
-condition|)
-name|nosig
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -282,7 +277,17 @@ name|sys_signame
 expr_stmt|;
 break|break;
 block|}
-block|}
+if|if
+condition|(
+operator|!
+name|numsig
+condition|)
+name|nosig
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
