@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.11 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4141,7 +4141,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"prof\t%X %X %X %X\n"
+literal|"prof\t%x %x %x %x\n"
 argument_list|,
 name|U
 operator|.
@@ -4216,16 +4216,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"start\t%D\n"
+literal|"start\t%ld\n"
 argument_list|,
 name|U
 operator|.
 name|u_start
+operator|.
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"acflag\t%D\n"
+literal|"acflag\t%ld\n"
 argument_list|,
 name|U
 operator|.
@@ -4234,7 +4236,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cmask\t%D\n"
+literal|"cmask\t%ld\n"
 argument_list|,
 name|U
 operator|.
@@ -4299,7 +4301,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%D "
+literal|"%ld "
 argument_list|,
 name|ip
 index|[
@@ -4353,7 +4355,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%D "
+literal|"%ld "
 argument_list|,
 name|ip
 index|[
