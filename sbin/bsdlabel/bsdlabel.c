@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.21 1998/08/23 07:32:37 bde Exp $"
+literal|"$Id: disklabel.c,v 1.22 1998/10/17 09:56:32 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1079,6 +1079,8 @@ name|_PATH_DEV
 argument_list|,
 name|dkname
 argument_list|,
+literal|'a'
+operator|+
 name|RAW_PART
 argument_list|)
 expr_stmt|;
