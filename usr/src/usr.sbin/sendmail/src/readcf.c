@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.34 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,11 +240,45 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|syserr
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|||
+name|OpMode
+operator|==
+name|MD_FREEZE
+condition|)
+name|fprintf
 argument_list|(
-literal|"WARNING: dangerous write permissions"
+name|stderr
+argument_list|,
+literal|"%s: WARNING: dangerous write permissions\n"
+argument_list|,
+name|FileName
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_CRIT
+argument_list|,
+literal|"%s: WARNING: dangerous write permissions"
+argument_list|,
+name|FileName
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 while|while
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.34 (Berkeley) %G%"
+literal|"@(#)conf.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1672,6 +1672,29 @@ operator|+
 literal|1
 operator|)
 operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		none. ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		none. */
+end_comment
+
+begin_function
+name|bool
+name|refuseconnections
+parameter_list|()
+block|{
+comment|/* this is probably too simplistic */
+return|return
+operator|(
+name|CurrentLA
+operator|>
+name|RefuseLA
 operator|)
 return|;
 block|}

@@ -97,7 +97,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.31 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	5.32 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.31 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.32 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.31 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.32 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2656,27 +2656,11 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|safefile
-argument_list|(
-name|buf
-argument_list|,
-name|user
-operator|->
-name|q_uid
-argument_list|,
-name|S_IREAD
-argument_list|)
-condition|)
-return|return;
-comment|/* we do have an address to forward to -- do it */
 name|include
 argument_list|(
 name|buf
 argument_list|,
-literal|"forwarding"
+name|TRUE
 argument_list|,
 name|user
 argument_list|,

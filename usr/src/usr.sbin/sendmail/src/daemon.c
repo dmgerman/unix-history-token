@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.42.1.1 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.43 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.42.1.1 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.43 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -164,6 +164,11 @@ name|int
 name|on
 init|=
 literal|1
+decl_stmt|;
+name|bool
+name|refusingconnections
+init|=
+name|TRUE
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -384,35 +389,6 @@ block|{
 name|syserr
 argument_list|(
 literal|"getrequests: cannot bind"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|DaemonSocket
-argument_list|)
-expr_stmt|;
-goto|goto
-name|severe
-goto|;
-block|}
-if|if
-condition|(
-name|listen
-argument_list|(
-name|DaemonSocket
-argument_list|,
-literal|10
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|syserr
-argument_list|(
-literal|"getrequests: cannot listen"
 argument_list|)
 expr_stmt|;
 operator|(

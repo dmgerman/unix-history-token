@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.26 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1340,7 +1340,7 @@ index|[
 literal|9
 index|]
 argument_list|,
-literal|" sending"
+name|FALSE
 argument_list|,
 name|a
 argument_list|,
@@ -2244,15 +2244,22 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		msg -- message to print in verbose mode. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
+comment|/* **  INCLUDE -- handle :include: specification. ** **	Parameters: **		fname -- filename to include. **		forwarding -- if TRUE, we are reading a .forward file. **			if FALSE, it's a :include: file. **		ctladdr -- address template to use to fill in these **			addresses -- effective user/group id are **			the important things. **		sendq -- a pointer to the head of the send queue **			to put these addresses in. ** **	Returns: **		none. ** **	Side Effects: **		reads the :include: file and sends to everyone **		listed in that file. */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|jmp_buf
+name|CtxIncludeTimeout
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|include
 argument_list|(
 argument|fname
 argument_list|,
-argument|msg
+argument|forwarding
 argument_list|,
 argument|ctladdr
 argument_list|,
@@ -2268,9 +2275,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|msg
+name|bool
+name|forwarding
 decl_stmt|;
 end_decl_stmt
 
@@ -2291,12 +2297,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
-decl_stmt|;
 specifier|register
 name|FILE
 modifier|*
@@ -2321,6 +2321,96 @@ name|oldlinenumber
 init|=
 name|LineNumber
 decl_stmt|;
+specifier|register
+name|EVENT
+modifier|*
+name|ev
+init|=
+name|NULL
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|includetimeout
+parameter_list|()
+function_decl|;
+comment|/* 	**  If home directory is remote mounted but server is down, 	**  this can hang or give errors; use a timeout to avoid this 	*/
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|CtxIncludeTimeout
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QQUEUEUP
+operator||
+name|QDONTSEND
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|usrerr
+argument_list|(
+literal|"451 open timeout on %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ev
+operator|=
+name|setevent
+argument_list|(
+operator|(
+name|time_t
+operator|)
+literal|60
+argument_list|,
+name|includetimeout
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* if forwarding, the input file must be marked safe */
+if|if
+condition|(
+name|forwarding
+operator|&&
+operator|!
+name|safefile
+argument_list|(
+name|fname
+argument_list|,
+name|ctladdr
+operator|->
+name|q_uid
+argument_list|,
+name|S_IREAD
+argument_list|)
+condition|)
+block|{
+comment|/* don't use this .forward file */
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|fp
 operator|=
 name|fopen
@@ -2405,6 +2495,11 @@ operator||=
 name|QGOODUID
 expr_stmt|;
 block|}
+name|clrevent
+argument_list|(
+name|ev
+argument_list|)
+expr_stmt|;
 comment|/* read the file -- each line is a comma-separated list. */
 name|FileName
 operator|=
@@ -2484,7 +2579,11 @@ name|Arpa_Info
 argument_list|,
 literal|"%s to %s"
 argument_list|,
-name|msg
+name|forwarding
+condition|?
+literal|"forwarding"
+else|:
+literal|"sending"
 argument_list|,
 name|buf
 argument_list|)
@@ -2526,14 +2625,19 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
-end_comment
-
 begin_expr_stmt
+specifier|static
+name|includetimeout
+argument_list|()
+block|{
+name|longjmp
+argument_list|(
+name|CtxIncludeTimeout
+argument_list|,
+literal|1
+argument_list|)
+block|; }
+comment|/* **  SENDTOARGV -- send to an argument vector. ** **	Parameters: **		argv -- argument vector to send to. ** **	Returns: **		none. ** **	Side Effects: **		puts all addresses on the argument vector onto the **			send queue. */
 name|sendtoargv
 argument_list|(
 name|argv
