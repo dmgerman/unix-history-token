@@ -105,12 +105,21 @@ name|CHAR16
 modifier|*
 name|path
 decl_stmt|;
+comment|/* 	 * We cannot blindly assume that f->f_devdata points to a 	 * efi_devdesc structure. Before we dereference 'dev', make 	 * sure that the underlying device is ours. 	 */
 if|if
 condition|(
-operator|!
+name|f
+operator|->
+name|f_dev
+operator|!=
+operator|&
+name|efifs_dev
+operator|||
 name|dev
 operator|->
 name|d_handle
+operator|==
+name|NULL
 condition|)
 return|return
 name|ENOENT
