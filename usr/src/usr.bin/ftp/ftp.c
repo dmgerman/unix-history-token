@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.11 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3237,10 +3237,9 @@ name|struct
 name|timeval
 name|td
 decl_stmt|;
-name|long
-name|ms
-decl_stmt|;
 name|float
+name|s
+decl_stmt|,
 name|bs
 decl_stmt|;
 name|tvsub
@@ -3253,22 +3252,18 @@ argument_list|,
 name|t0
 argument_list|)
 expr_stmt|;
-name|ms
+name|s
 operator|=
-operator|(
 name|td
 operator|.
 name|tv_sec
-operator|*
-literal|1000
-operator|)
 operator|+
 operator|(
 name|td
 operator|.
 name|tv_usec
 operator|/
-literal|1000
+literal|1000000.
 operator|)
 expr_stmt|;
 define|#
@@ -3280,43 +3275,22 @@ parameter_list|)
 value|((x) == 0 ? 1 : (x))
 name|bs
 operator|=
-operator|(
-operator|(
 name|bytes
-operator|*
-name|NBBY
-operator|*
-literal|1000
-operator|)
 operator|/
-operator|(
-name|float
-operator|)
 name|nz
 argument_list|(
-name|ms
+name|s
 argument_list|)
-operator|)
-operator|/
-name|NBBY
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%ld bytes %s in %d.%02d seconds (%.2g Kbytes/s)\n"
+literal|"%ld bytes %s in %.2g seconds (%.2g Kbytes/s)\n"
 argument_list|,
 name|bytes
 argument_list|,
 name|direction
 argument_list|,
-name|td
-operator|.
-name|tv_sec
-argument_list|,
-name|td
-operator|.
-name|tv_usec
-operator|/
-literal|10000
+name|s
 argument_list|,
 name|bs
 operator|/
