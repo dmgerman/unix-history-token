@@ -3554,12 +3554,6 @@ name|v_bufobj
 expr_stmt|;
 name|bo
 operator|->
-name|bo_private
-operator|=
-name|vp
-expr_stmt|;
-name|bo
-operator|->
 name|__bo_vnode
 operator|=
 name|vp
@@ -3646,6 +3640,12 @@ name|bo_ops
 operator|=
 operator|&
 name|buf_ops_bio
+expr_stmt|;
+name|bo
+operator|->
+name|bo_private
+operator|=
+name|vp
 expr_stmt|;
 name|vp
 operator|->
