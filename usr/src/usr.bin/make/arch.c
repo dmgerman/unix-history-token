@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arch.c	5.2 (Berkeley) %G%"
+literal|"@(#)arch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,9 +118,6 @@ name|ArchFindMember
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_ParseArchive --  *	Parse the archive specification in the given line and find/create  *	the nodes for the specified archive members, placing their nodes  *	on the given list.  *  * Results:  *	SUCCESS if it was a valid specification. The linePtr is updated  *	to point to the first non-space after the archive spec. The  *	nodes for the members are placed on the given list.  *  * Side Effects:  *	Some nodes may be created. The given list is extended.  *  *-----------------------------------------------------------------------  */
@@ -907,9 +904,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ArchFindArchive --  *	See if the given archive is the one we are looking for. Called  *	From ArchStatMember and ArchFindMember via Lst_Find.  *  * Results:  *	0 if it is, non-zero if it isn't.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -948,9 +942,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ArchStatMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member.  *  * Results:  *	A pointer to the current struct ar_hdr structure for the member. Note  *	That no position is returned, so this is not useful for touching  *	archive members. This is mostly because we have no assurances that  *	The archive will remain constant after we read all the headers, so  *	there's not much point in remembering the position...  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
@@ -1362,7 +1353,7 @@ name|ar
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|archive
 argument_list|)
@@ -1524,7 +1515,7 @@ name|ar
 operator|->
 name|members
 argument_list|,
-name|Str_New
+name|strdup
 argument_list|(
 name|memName
 argument_list|)
@@ -1700,9 +1691,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ArchFindMember --  *	Locate a member of an archive, given the path of the archive and  *	the path of the desired member. If the archive is to be modified,  *	the mode should be "r+", if not, it should be "r".  *  * Results:  *	An FILE *, opened for reading and writing, positioned at the  *	start of the member's struct ar_hdr, or NULL if the member was  *	nonexistent. The current struct ar_hdr for member.  *  * Side Effects:  *	The passed struct ar_hdr structure is filled in.  *  *-----------------------------------------------------------------------  */
@@ -2097,9 +2085,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_Touch --  *	Touch a member of an archive.  *  * Results:  *	The 'time' field of the member's header is updated.  *  * Side Effects:  *	The modification time of the entire archive is also changed.  *	For a library, this could necessitate the re-ranlib'ing of the  *	whole thing.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2203,9 +2188,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_TouchLib --  *	Given a node which represents a library, touch the thing, making  *	sure that the table of contents also is touched.  *  * Results:  *	None.  *  * Side Effects:  *	Both the modification time of the library and of the LIBTOC  *	member are set to 'now'.  *  *-----------------------------------------------------------------------  */
@@ -2352,9 +2334,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_MTime --  *	Return the modification time of a member of an archive.  *  * Results:  *	The modification time (seconds).  *  * Side Effects:  *	The mtime field of the given node is filled in with the value  *	returned by the function.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2450,9 +2429,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_MemMTime --  *	Given a non-existent archive member's node, get its modification  *	time from its archived form, if it exists.  *  * Results:  *	The modification time.  *  * Side Effects:  *	The mtime field is filled in.  *  *-----------------------------------------------------------------------  */
@@ -2634,9 +2610,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_FindLib --  *	Search for a library along the given search path.   *  * Results:  *	None.  *  * Side Effects:  *	The node's 'path' field is set to the found path (including the  *	actual file name, not -l...). If the system can handle the -L  *	flag when linking (or we cannot find the library), we assume that  *	the user has placed the .LIBRARIES variable in the final linking  *	command (or the linker will know where to find it) and set the  *	TARGET variable for this node to be the node's name. Otherwise,  *	we set the TARGET variable to be the full path of the library,  *	as returned by Dir_FindFile.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2761,9 +2734,6 @@ directive|endif
 endif|LIBRARIES
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_LibOODate --  *	Decide if a node with the OP_LIB attribute is out-of-date. Called  *	from Make_OODate to make its life easier.  *  *	There are several ways for a library to be out-of-date that are  *	not available to ordinary files. In addition, there are ways  *	that are open to regular files that are not available to  *	libraries. A library that is only used as a source is never  *	considered out-of-date by itself. This does not preclude the  *	library's modification time from making its parent be out-of-date.  *	A library will be considered out-of-date for any of these reasons,  *	given that it is a target on a dependency line somewhere:  *	    Its modification time is less than that of one of its  *	    	  sources (gn->mtime< gn->cmtime).  *	    Its modification time is greater than the time at which the  *	    	  make began (i.e. it's been modified in the course  *	    	  of the make, probably by archiving).  *	    Its modification time doesn't agree with the modification  *	    	  time of its LIBTOC member (i.e. its table of contents  *	    	  is out-of-date).  *  *  * Results:  *	TRUE if the library is out-of-date. FALSE otherwise.  *  * Side Effects:  *	The library will be hashed if it hasn't been already.  *  *-----------------------------------------------------------------------  */
@@ -2957,9 +2927,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Arch_Init --  *	Initialize things for this module.  *  * Results:  *	None.  *  * Side Effects:  *	The 'archives' list is initialized.  *  *-----------------------------------------------------------------------  */

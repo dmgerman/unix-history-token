@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.2 (Berkeley) %G%"
+literal|"@(#)dir.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,9 +167,6 @@ begin_comment
 comment|/* Results of doing a last-resort stat in 			     * Dir_FindFile -- if we have to go to the 			     * system to find the file, we might as well 			     * have its mtime on record. XXX: If this is done 			     * way early, there's a chance other rules will 			     * have already updated the file, in which case 			     * we'll update it again. Generally, there won't 			     * be two rules to update a single file, so this 			     * should be ok, but... */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Init --  *	initialize things for this module  *  * Results:  *	none  *  * Side Effects:  *	some directories may be opened.  *-----------------------------------------------------------------------  */
 end_comment
@@ -232,9 +229,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirFindName --  *	See if the Path structure describes the same directory as the  *	given one by comparing their names. Called from Dir_AddDir via  *	Lst_Find when searching the list of open directories.  *  * Results:  *	0 if it is the same. Non-zero otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -273,9 +267,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_HasWildcards  --  *	see if the given name has any wildcard characters in it  *  * Results:  *	returns TRUE if the word should be expanded, FALSE otherwise  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
@@ -343,9 +334,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirMatchFiles --  * 	Given a pattern and a Path structure, see if any files  *	match the pattern and add their names to the 'expansions' list if  *	any do. This is incomplete -- it doesn't take care of patterns like  *	src/*src/*.c properly (just *.c on any of the directories), but it  *	will do for now.  *  * Results:  *	Always returns 0  *  * Side Effects:  *	File names are added to the expansions lst. The directory will be  *	fully hashed when this is done.  *-----------------------------------------------------------------------  */
@@ -496,7 +484,7 @@ argument_list|,
 operator|(
 name|isDot
 condition|?
-name|Str_New
+name|strdup
 argument_list|(
 name|entry
 operator|->
@@ -531,9 +519,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirExpandCurly --  *	Expand curly braces like the C shell. Does this recursively.  *	Note the special case: if after the piece of the curly brace is  *	done there are no wildcard characters in the result, the result is  *	placed on the list WITHOUT CHECKING FOR ITS EXISTENCE.  *  * Results:  *	None.  *  * Side Effects:  *	The given list is filled with the expansions...  *  *-----------------------------------------------------------------------  */
@@ -927,9 +912,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirExpandInt --  *	Internal expand routine. Passes through the directories in the  *	path one by one, calling DirMatchFiles for each. NOTE: This still  *	doesn't handle patterns in directories...  *  * Results:  *	None.  *  * Side Effects:  *	Things are added to the expansions list.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1022,9 +1004,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirPrintWord --  *	Print a word in the list of expansions. Callback for Dir_Expand  *	when DEBUG(DIR), via Lst_ForEach.  *  * Results:  *	=== 0  *  * Side Effects:  *	The passed word is printed, followed by a space.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1055,9 +1034,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Expand  --  *	Expand the given word into a list of words by globbing it looking  *	in the directories on the given search path.  *  * Results:  *	A list of words consisting of the files which exist along the search  *	path matching the given pattern.  *  * Side Effects:  *	Directories may be opened. Who knows?  *-----------------------------------------------------------------------  */
@@ -1392,9 +1368,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_FindFile  --  *	Find the file with the given name along the given search path.  *  * Results:  *	The path to the file or NULL. This path is guaranteed to be in a  *	different part of memory than name and so may be safely free'd.  *  * Side Effects:  *	If the file is found in a directory which is not on the path  *	already (either 'name' is absolute or it is a relative path  *	[ dir1/.../dirn/file ] which exists below one of the directories  *	already on the search path), its directory is added to the end  *	of the path on the assumption that there will be more files in  *	that directory later on. Sometimes this is true. Sometimes not.  *-----------------------------------------------------------------------  */
 end_comment
@@ -1586,7 +1559,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -2050,7 +2023,7 @@ block|{
 comment|/* 		 * Checking in dot -- DON'T put a leading ./ on the thing. 		 */
 name|file
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -2345,7 +2318,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -2424,7 +2397,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -2495,7 +2468,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -2533,9 +2506,6 @@ directive|endif
 comment|/* notdef */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *   * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
@@ -2783,9 +2753,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is   *	read and hashed.  *-----------------------------------------------------------------------  */
 end_comment
@@ -2965,7 +2932,7 @@ name|p
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -3124,9 +3091,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_CopyDir --  *	Callback function for duplicating a search path via Lst_Duplicate.  *	Ups the reference count for the directory.  *  * Results:  *	Returns the Path it was given.  *  * Side Effects:  *	The refCount of the path is incremented.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3159,9 +3123,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_MakeFlags --  *	Make a string by taking all the directories in the given search  *	path and preceding them by the given flag. Used by the suffix  *	module to create variables for compilers based on suffix search  *	paths.  *  * Results:  *	The string mentioned above. Note that there is no space between  *	the given flag and each directory. The empty string is returned if  *	Things don't go well.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -3207,7 +3168,7 @@ decl_stmt|;
 comment|/* the structure describing the current directory */
 name|str
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 literal|""
 argument_list|)
@@ -3287,9 +3248,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Destroy --  *	Nuke a directory descriptor, if possible. Callback procedure  *	for the suffixes module when destroying a search path.  *  * Results:  *	None.  *  * Side Effects:  *	If no other path references this directory (refCount == 0),  *	the Path and all its data are freed.  *  *-----------------------------------------------------------------------  */
@@ -3384,9 +3342,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_ClearPath --  *	Clear out all elements of the given search path. This is different  *	from destroying the list, notice.  *  * Results:  *	None.  *  * Side Effects:  *	The path is set to the empty list.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3434,9 +3389,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Concat --  *	Concatenate two paths, adding the second to the end of the first.  *	Makes sure to avoid duplicates.  *  * Results:  *	None  *  * Side Effects:  *	Reference counts for added dirs are upped.  *  *-----------------------------------------------------------------------  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c	5.2 (Berkeley) %G%"
+literal|"@(#)var.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,9 +182,6 @@ name|Var
 typedef|;
 end_typedef
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarCmp  --  *	See if the given variable matches the named one. Called from  *	Lst_Find when searching for a variable of a given name.  *  * Results:  *	0 if they match. non-zero otherwise.  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
 end_comment
@@ -223,9 +220,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarFind --  *	Find the given variable in the given context and any other contexts  *	indicated.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NIL if the variable does not exist.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -720,9 +714,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarAdd  --  *	Add a new variable of name name and value val to the given context  *  * Results:  *	None  *  * Side Effects:  *	The new variable is placed at the front of the given context  *	The name and val arguments are duplicated so they may  *	safely be freed.  *-----------------------------------------------------------------------  */
 end_comment
@@ -797,7 +788,7 @@ name|v
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -880,9 +871,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Delete --  *	Remove a variable from a context.  *  * Results:  *	None.  *  * Side Effects:  *	The Var structure is removed and freed.  *  *-----------------------------------------------------------------------  */
@@ -1004,9 +992,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Set --  *	Set the variable name to the value val in the given context.  *  * Results:  *	None.  *  * Side Effects:  *	If the variable doesn't yet exist, a new record is created for it.  *	Else the old value is freed and the new one stuck in its place  *  * Notes:  *	The variable is searched for only in its context before being  *	created in that context. I.e. if the context is VAR_GLOBAL,  *	only VAR_GLOBAL->context is searched. Likewise if it is VAR_CMD, only  *	VAR_CMD->context is searched. This is done to avoid the literally  *	thousands of unnecessary strcmp's that used to be done to  *	set, say, $(@) or $(<).  *-----------------------------------------------------------------------  */
@@ -1151,9 +1136,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Append --  *	The variable of the given name has the given value appended to it in  *	the given context.  *  * Results:  *	None  *  * Side Effects:  *	If the variable doesn't exist, it is created. Else the strings  *	are concatenated (with a space in between).  *  * Notes:  *	Only if the variable is being sought in the global context is the  *	environment searched.  *	XXX: Knows its calling circumstances in that if called with ctxt  *	an actual target, it will only search that context since only  *	a local variable could be being appended to. This is actually  *	a big win and must be tolerated.  *-----------------------------------------------------------------------  */
@@ -1334,9 +1316,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Exists --  *	See if the given variable exists.  *  * Results:  *	TRUE if it does, FALSE if it doesn't  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1433,9 +1412,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Value --  *	Return the value of the named variable in the given context  *  * Results:  *	The value if the variable exists, NULL if it doesn't  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -1525,9 +1501,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarHead --  *	Remove the tail of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
@@ -1675,9 +1648,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarTail --  *	Remove the head of the given word and place the result in the given  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1806,9 +1776,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarSuffix --  *	Place the suffix of the given word in the given buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The suffix from the word is placed in the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1925,9 +1892,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarRoot --  *	Remove the suffix of the given word and place the result in the  *	buffer.  *  * Results:  *	TRUE if characters were added to the buffer (a space needs to be  *	added to the buffer before the next word).  *  * Side Effects:  *	The trimmed word is added to the buffer.  *  *-----------------------------------------------------------------------  */
@@ -2053,9 +2017,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarMatch --  *	Place the word in the buffer if it matches the given pattern.  *	Callback function for VarModify to implement the :M modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2146,9 +2107,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarNoMatch --  *	Place the word in the buffer if it doesn't match the given pattern.  *	Callback function for VarModify to implement the :N modifier.  *	  * Results:  *	TRUE if a space should be placed in the buffer before the next  *	word.  *  * Side Effects:  *	The word may be copied to the buffer.  *  *-----------------------------------------------------------------------  */
@@ -2241,9 +2199,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_typedef
 typedef|typedef
@@ -3004,9 +2959,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * VarModify --  *	Modify each of the words of the passed string using the given  *	function. Used to implement all modifiers.  *  * Results:  *	A string of all the words modified appropriately.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -3227,9 +3179,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Parse --  *	Given the start of a variable invocation, extract the variable  *	name and find its value, then modify it according to the  *	specification.  *  * Results:  *	The (possibly-modified) value of the variable or var_Error if the  *	specification is invalid. The length of the specification is  *	placed in *lengthPtr (for invalid specifications, this is just  *	2...?).  *	A Boolean in *freePtr telling whether the returned string should  *	be freed by the caller.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -5998,9 +5947,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Subst  --  *	Substitute for all variables in the given string in the given context  *	If undefErr is TRUE, Parse_Error will be called when an undefined  *	variable is encountered.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None. The old string must be freed by the caller  *-----------------------------------------------------------------------  */
 end_comment
@@ -6368,9 +6314,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_GetTail --  *	Return the tail from each of a list of words. Used to set the  *	System V local variables.  *  * Results:  *	The resulting string.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -6405,9 +6348,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_GetHead --  *	Find the leading components of a (list of) filename(s).  *	XXX: VarHead does not replace foo by ., as (sun) System V make  *	does.  *  * Results:  *	The leading components.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -6444,9 +6384,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Init --  *	Initialize the module  *  * Results:  *	None  *  * Side Effects:  *	The VAR_CMD and VAR_GLOBAL contexts are created   *-----------------------------------------------------------------------  */
 end_comment
@@ -6472,9 +6409,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/****************** PRINT DEBUGGING INFO *****************/
@@ -6523,9 +6457,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Var_Dump --  *	print all variables in a context  *-----------------------------------------------------------------------  */

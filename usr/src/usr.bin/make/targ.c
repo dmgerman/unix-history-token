@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)targ.c	5.2 (Berkeley) %G%"
+literal|"@(#)targ.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,9 +118,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_NewGN  --  *	Create and initialize a new graph node  *  * Results:  *	An initialized graph node with the name field filled with a copy  *	of the passed name  *  * Side Effects:  *	None.  *-----------------------------------------------------------------------  */
 end_comment
@@ -161,7 +158,7 @@ name|gn
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|name
 argument_list|)
@@ -323,9 +320,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_FindNode  --  *	Find a node in the list using the given name for matching  *  * Results:  *	The node in the list if it was. If it wasn't, return NILGNODE of  *	flags was TARG_NOCREATE or the newly created and initialized node  *	if it was TARG_CREATE  *  * Side Effects:  *	Sometimes a node is created and added to the list  *-----------------------------------------------------------------------  */
 end_comment
@@ -465,9 +459,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names   *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.   *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
@@ -642,9 +633,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_Ignore  --  *	Return true if should ignore errors when creating gn  *  * Results:  *	TRUE if should ignore errors  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -689,9 +677,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_Silent  --  *	Return true if be silent when creating gn  *  * Results:  *	TRUE if should be silent  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -735,9 +720,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_Precious --  *	See if the given target is precious  *  * Results:  *	TRUE if it is precious. FALSE otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -788,9 +770,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/******************* DEBUG INFO PRINTING ****************/
@@ -1646,9 +1625,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * TargPrintOnlySrc --  *	Print only those targets that are just a source.  *  * Results:  *	0.  *  * Side Effects:  *	The name of each file is printed preceeded by #\t  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1704,9 +1680,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintGraph --  *	print the entire graph. heh heh  *  * Results:  *	none  *  * Side Effects:  *	lots o' output  *-----------------------------------------------------------------------  */

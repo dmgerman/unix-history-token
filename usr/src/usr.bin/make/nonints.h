@@ -632,14 +632,6 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|Str_New
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
 modifier|*
 name|Str_BreakString
 parameter_list|()

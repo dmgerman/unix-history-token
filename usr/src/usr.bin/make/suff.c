@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)suff.c	5.2 (Berkeley) %G%"
+literal|"@(#)suff.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,9 +211,6 @@ begin_comment
 comment|/* The empty suffix required for POSIX 				 * single-suffix transformation rules */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*************** Lst Predicates ****************/
 end_comment
@@ -276,9 +273,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffSuffIsSuffix  --  *	See if suff is a suffix of str. Str should point to THE END of the  *	string to check. (THE END == the null byte)  *  * Results:  *	NULL if it ain't, pointer to character in str before suffix if  *	it is.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -372,9 +366,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffSuffIsSuffixP --  *	Predicate form of SuffSuffIsSuffix. Passed as the callback function  *	to Lst_Find.  *  * Results:  *	0 if the suffix is the one desired, non-zero if not.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -418,9 +409,6 @@ return|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffSuffHasNameP --  *	Callback procedure for finding a suffix based on its name. Used by  *	Suff_GetPath.  *  * Results:  *	0 if the suffix is of the given name. non-zero otherwise.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -459,9 +447,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffSuffIsPrefix  --  *	See if the suffix described by s is a prefix of the string. Care  *	must be taken when using this to search for transformations and  *	what-not, since there could well be two suffixes, one of which  *	is a prefix of the other...  *  * Results:  *	0 if s is a prefix of str. non-zero otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -508,9 +493,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffGNHasNameP  --  *	See if the graph node has the desired name  *  * Results:  *	0 if it does. non-zero if it doesn't  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -549,9 +531,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*********** Maintenance Functions ************/
@@ -620,9 +599,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffInsert  --  *	Insert the suffix into the list keeping the list ordered by suffix  *	numbers.  *  * Results:  *	None  *  * Side Effects:  *	Not really  *-----------------------------------------------------------------------  */
@@ -837,9 +813,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_ClearSuffixes --  *	This is gross. Nuke the list of suffixes but keep all transformation  *	rules around. The transformation graph is destroyed in this process,  *	but we leave the list of rules so when a new graph is formed the rules  *	will remain.  *	This function is called from the parse module when a  *	.SUFFIXES:\n line is encountered.  *  * Results:  *	none  *  * Side Effects:  *	the sufflist and its graph nodes are destroyed  *-----------------------------------------------------------------------  */
 end_comment
@@ -873,9 +846,6 @@ name|emptySuff
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffParseTransform --  *	Parse a transformation string to find its two component suffixes.  *  * Results:  *	TRUE if the string is a valid transformation and FALSE otherwise.  *  * Side Effects:  *	The passed pointers are overwritten.  *  *-----------------------------------------------------------------------  */
@@ -1124,9 +1094,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_IsTransform  --  *	Return TRUE if the given string is a transformation rule  *  *  * Results:  *	TRUE if the string is a concatenation of two known suffixes.  *	FALSE otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -1166,9 +1133,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_AddTransform --  *	Add the transformation rule described by the line to the  *	list of rules and place the transformation itself in the graph  *  * Results:  *	The node created for the transformation in the transforms list  *  * Side Effects:  *	The node is placed on the end of the transforms Lst and links are  *	made between the two suffixes mentioned in the target name  *-----------------------------------------------------------------------  */
@@ -1368,9 +1332,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_EndTransform --  *	Handle the finish of a transformation definition, removing the  *	transformation from the graph if it has neither commands nor  *	sources. This is a callback procedure for the Parse module via  *	Lst_ForEach  *  * Results:  *	=== 0  *  * Side Effects:  *	If the node has no commands or children, the children and parents  *	lists of the affected suffices are altered.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1565,9 +1526,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffRebuildGraph --  *	Called from Suff_AddSuffix via Lst_ForEach to search through the  *	list of existing transformation rules and rebuild the transformation  *	graph when it has been destroyed by Suff_ClearSuffixes. If the  *	given rule is a transformation involving this suffix and another,  *	existing suffix, the proper relationship is established between  *	the two.  *  * Results:  *	Always 0.  *  * Side Effects:  *	The appropriate links will be made between this suffix and  *	others if transformation rules exist for it.  *  *-----------------------------------------------------------------------  */
@@ -1804,9 +1762,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_AddSuffix --  *	Add the suffix in string to the end of the list of known suffixes.  *	Should we restructure the suffix graph? Make doesn't...  *  * Results:  *	None  *  * Side Effects:  *	A GNode is created for the suffix and a Suff structure is created and  *	added to the suffixes list unless the suffix was already known.  *-----------------------------------------------------------------------  */
 end_comment
@@ -1870,7 +1825,7 @@ name|s
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|str
 argument_list|)
@@ -1956,9 +1911,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_GetPath --  *	Return the search path for the given suffix, if it's defined.  *  * Results:  *	The searchPath for the desired suffix or NILLST if the suffix isn't  *	defined.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
@@ -2031,9 +1983,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_DoPaths --  *	Extend the search paths for all suffixes to include the default  *	search path.  *  * Results:  *	None.  *  * Side Effects:  *	The searchPath field of all the suffixes is extended by the  *	directories in dirSearchPath. If paths were specified for the  *	".h" suffix, the directories are stuffed into a global variable  *	called ".INCLUDES" with each directory preceeded by a -I. The same  *	is done for the ".a" suffix, except the variable is called  *	".LIBS" and the flag is -L.  *-----------------------------------------------------------------------  */
@@ -2257,9 +2206,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_AddInclude --  *	Add the given suffix as a type of file which gets included.  *	Called from the parse module when a .INCLUDES line is parsed.  *	The suffix must have already been defined.  *  * Results:  *	None.  *  * Side Effects:  *	The SUFF_INCLUDE bit is set in the suffix's flags field  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2325,9 +2271,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_AddLib --  *	Add the given suffix as a type of file which is a library.  *	Called from the parse module when parsing a .LIBS line. The  *	suffix must have been defined via .SUFFIXES before this is  *	called.  *  * Results:  *	None.  *  * Side Effects:  *	The SUFF_LIBRARY bit is set in the suffix's flags field  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -2392,9 +2335,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/********** Implicit Source Search Functions *********/
@@ -2499,7 +2439,7 @@ name|s2
 operator|->
 name|file
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|targ
 operator|->
@@ -2652,9 +2592,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffAddLevel  --  *	Add all the children of targ as Src structures to the given list  *  * Results:  *	None  *  * Side Effects:  * 	Lots of structures are created and added to the list  *-----------------------------------------------------------------------  */
 end_comment
@@ -2712,9 +2649,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *----------------------------------------------------------------------  * SuffFreeSrc --  *	Free all memory associated with a Src structure  *  * Results:  *	None  *  * Side Effects:  *	The memory is free'd.  *----------------------------------------------------------------------  */
@@ -2799,9 +2733,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffFindThem --  *	Find the first existing file/target in the list srcs  *  * Results:  *	The lowest structure in the chain of transformations  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
@@ -2966,9 +2897,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffFindCmds --  *	See if any of the children of the target in the Src structure is  *	one from which the target can be transformed. If there is one,  *	a Src structure is put together for it and returned.  *  * Results:  *	The Src structure of the "winning" child, or NIL if no such beast.  *  * Side Effects:  *	A Src structure may be allocated.  *  *-----------------------------------------------------------------------  */
@@ -3199,7 +3127,7 @@ name|ret
 operator|->
 name|file
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|s
 operator|->
@@ -3289,9 +3217,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffExpandChildren --  *	Expand the names of any children of a given node that contain  *	variable invocations or file wildcards into actual targets.  *  * Results:  *	=== 0 (continue)  *  * Side Effects:  *	The expanded node is removed from the parent's list of children,  *	and the parent's unmade counter is decremented, but other nodes  * 	may be added.  *  *-----------------------------------------------------------------------  */
@@ -4199,9 +4124,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffApplyTransform --  *	Apply a transformation rule, given the source and target nodes  *	and suffixes.  *  * Results:  *	TRUE if successful, FALSE if not.  *  * Side Effects:  *	The source and target are linked and the commands from the  *	transformation are added to the target node's commands list.  *	All attributes but OP_DEPMASK and OP_TRANSFORM are applied  *	to the target. The target also inherits all the sources for  *	the transformation rule.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -4576,9 +4498,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffFindArchiveDeps --  *	Locate dependencies for an OP_ARCHV node.  *  * Results:  *	None  *  * Side Effects:  *	Same as Suff_FindDeps  *  *-----------------------------------------------------------------------  */
@@ -5013,9 +4932,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * SuffFindNormalDeps --  *	Locate implicit dependencies for regular targets.  *  * Results:  *	None.  *  * Side Effects:  *	Same as Suff_FindDeps...  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -5227,7 +5143,7 @@ name|targ
 operator|->
 name|file
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|gn
 operator|->
@@ -5390,7 +5306,7 @@ name|targ
 operator|->
 name|file
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|gn
 operator|->
@@ -5423,7 +5339,7 @@ name|targ
 operator|->
 name|pref
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 name|sopref
 argument_list|)
@@ -6114,9 +6030,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_FindDeps  --  *	Find implicit sources for the target described by the graph node  *	gn  *  * Results:  *	Nothing.  *  * Side Effects:  *	Nodes are added to the graph below the passed-in node. The nodes  *	are marked to have their IMPSRC variable filled in. The  *	PREFIX variable is set for the given node and all its  *	implied children.  *  * Notes:  *	The path found by this target is the shortest path in the  *	transformation graph, which may pass through non-existent targets,  *	to an existing target. The search continues on all paths from the  *	root suffix until a file is found. I.e. if there's a path  *	.o -> .c -> .l -> .l,v from the root and the .l,v file exists but  *	the .c and .l files don't, the search will branch out in  *	all directions from .o and again from all the nodes on the  *	next level until the .l,v node is encountered.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -6293,9 +6206,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_SetNull --  *	Define which suffix is the null suffix.  *  * Results:  *	None.  *  * Side Effects:  *	'suffNull' is altered.  *  * Notes:  *	Need to handle the changing of the null suffix gracefully so the  *	old transformation rules don't just go away.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -6397,9 +6307,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Suff_Init --  *	Initialize suffixes module  *  * Results:  *	None  *  * Side Effects:  *	Many  *-----------------------------------------------------------------------  */
 end_comment
@@ -6448,7 +6355,7 @@ name|suffNull
 operator|->
 name|name
 operator|=
-name|Str_New
+name|strdup
 argument_list|(
 literal|""
 argument_list|)

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.2 (Berkeley) %G%"
+literal|"@(#)parse.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -606,9 +606,6 @@ block|, }
 struct|;
 end_struct
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *----------------------------------------------------------------------  * ParseFindKeyword --  *	Look in the table of keywords for one matching the given string.  *  * Results:  *	The index of the keyword, or -1 if it isn't there.  *  * Side Effects:  *	None  *----------------------------------------------------------------------  */
 end_comment
@@ -745,9 +742,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * Parse_Error  --  *	Error message abort function for parsing. Prints out the context  *	of the error (line number and file) as well as the message with  *	two optional arguments.  *  * Results:  *	None  *  * Side Effects:  *	"fatals" is incremented if the level is PARSE_FATAL.  *---------------------------------------------------------------------  */
 end_comment
@@ -858,9 +852,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Parse_AnyExport --  *	Return TRUE if any target was labeled for exportation.  *  * Results:  *	TRUE or FALSE...  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -877,9 +868,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseLinkSrc  --  *	Link the parent node to its new child. Used in a Lst_ForEach by  *	ParseDoDependency. If the specType isn't 'Not', the parent  *	isn't linked as a parent of the child.  *  * Results:  *	Always = 0  *  * Side Effects:  *	New elements are added to the parents list of cgn and the  *	children list of cgn. the unmade field of pgn is updated  *	to reflect the additional child.  *---------------------------------------------------------------------  */
@@ -974,9 +962,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseDoOp  --  *	Apply the parsed operator to the given target node. Used in a  *	Lst_ForEach call by ParseDoDependency once all targets have  *	been found and their operator parsed. If the previous and new  *	operators are incompatible, a major error is taken.  *  * Results:  *	Always 0  *  * Side Effects:  *	The type field of the node is altered to reflect any new bits in  *	the op.  *---------------------------------------------------------------------  */
@@ -1172,9 +1157,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseDoSrc  --  *	Given the name of a source, figure out if it is an attribute  *	and apply it to the targets if it is. Else decide if there is  *	some attribute which should be applied *to* the source because  *	of some special target and apply it if so. Otherwise, make the  *	source be a child of the targets in the list 'targets'  *  * Results:  *	None  *  * Side Effects:  *	Operator bits may be added to the list of targets or to the source.  *	The targets may have a new source added to their lists of children.  *---------------------------------------------------------------------  */
 end_comment
@@ -1304,7 +1286,7 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
-name|Str_New
+name|strdup
 argument_list|(
 name|src
 argument_list|)
@@ -1511,9 +1493,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseFindMain --  *	Find a real target in the list and set it to be the main one.  *	Called by ParseDoDependency when a main target hasn't been found  *	yet.  *  * Results:  *	0 if main not found yet, 1 if it is.  *  * Side Effects:  *	mainNode is changed and Targ_SetMain is called.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1578,9 +1557,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseAddDir --  *	Front-end for Dir_AddDir to make sure Lst_ForEach keeps going  *  * Results:  *	=== 0  *  * Side Effects:  *	See Dir_AddDir.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1617,9 +1593,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseClearPath --  *	Front-end for Dir_ClearPath to make sure Lst_ForEach keeps going  *  * Results:  *	=== 0  *  * Side Effects:  *	See Dir_ClearPath  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1647,9 +1620,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseDoDependency  --  *	Parse the dependency line in line.  *  * Results:  *	None  *  * Side Effects:  *	The nodes of the sources are linked as children to the nodes of the  *	targets. Some nodes may be created.  *  *	We parse a dependency line by first extracting words from the line and  * finding nodes in the list of all targets with that name. This is done  * until a character is encountered which is an operator character. Currently  * these are only ! and :. At this point the operator is parsed and the  * pointer into the line advanced until the first source is encountered.  * 	The parsed operator is applied to each node in the 'targets' list,  * which is where the nodes found for the targets are kept, by means of  * the ParseDoOp function.  *	The sources are read in much the same way as the targets were except  * that now they are expanded using the wildcarding scheme of the C-Shell  * and all instances of the resulting words in the list of all targets  * are found. Each of the resulting nodes is then linked to each of the  * targets as one of its children.  *	Certain targets are handled specially. These are the ones detailed  * by the specType variable.  *	The storing of transformation rules is also taken care of here.  * A target is recognized as a transformation rule by calling  * Suff_IsTransform. If it is a transformation rule, its node is gotten  * from the suffix module via Suff_AddTransform rather than the standard  * Targ_FindNode in the target module.  *---------------------------------------------------------------------  */
@@ -3223,9 +3193,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * Parse_IsVar  --  *	Return TRUE if the passed line is a variable assignment. A variable  *	assignment consists of a single word followed by optional whitespace  *	followed by either a += or an = operator.  *	This function is used both by the Parse_File function and main when  *	parsing the command-line arguments.  *  * Results:  *	TRUE if it is. FALSE if it ain't  *  * Side Effects:  *	none  *---------------------------------------------------------------------  */
 end_comment
@@ -3449,9 +3416,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * Parse_DoVar  --  *	Take the variable assignment in the passed line and do it in the  *	global context.  *  *	Note: There is a lexical ambiguity with assignment modifier characters  *	in variable names. This routine interprets the character before the =  *	as a modifier. Therefore, an assignment like  *	    C++=/usr/bin/CC  *	is interpreted as "C+ +=" instead of "C++ =".  *  * Results:  *	none  *  * Side Effects:  *	the variable structure of the given variable name is altered in the  *	global context.  *---------------------------------------------------------------------  */
@@ -4142,9 +4106,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseAddCmd  --  *	Lst_ForEach function to add a command line to all targets  *  * Results:  *	Always 0  *  * Side Effects:  *	A new element is added to the commands list of the node.  *---------------------------------------------------------------------  */
 end_comment
@@ -4216,9 +4177,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseHasCommands --  *	Callback procedure for Parse_File when destroying the list of  *	targets on the last dependency line. Marks a target as already  *	having commands if it does, to keep from having shell commands  *	on multiple dependency lines.  *  * Results:  *	Always 0.  *  * Side Effects:  *	OP_HAS_COMMANDS may be set for the target.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -4262,9 +4220,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Parse_AddIncludeDir --  *	Add a directory to the path searched for included makefiles  *	bracketed by double-quotes. Used by functions in main.c  *  * Results:  *	None.  *  * Side Effects:  *	The directory is appended to the list.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -4290,9 +4245,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseDoInclude  --  *	Push to another file.  *	  *	The input is the line minus the #include. A file spec is a string  *	enclosed in<> or "". The former is looked for only in sysIncPath.  *	The latter in . and the directories specified by -I command line  *	options  *  * Results:  *	None  *  * Side Effects:  *	A structure is added to the includes Lst and readProc, lineno,  *	fname and curFILE are altered for the new file  *---------------------------------------------------------------------  */
@@ -4772,9 +4724,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseEOF  --  *	Called when EOF is reached in the current file. If we were reading  *	an include file, the includes stack is popped and things set up  *	to go back to reading the previous file at the previous location.  *  * Results:  *	CONTINUE if there's more to do. DONE if not.  *  * Side Effects:  *	The old curFILE, is closed. The includes list is shortened.  *	lineno, curFILE, and fname are changed if CONTINUE is returned.  *---------------------------------------------------------------------  */
 end_comment
@@ -4859,9 +4808,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseReadc  --  *	Read a character from the current file and update the line number  *	counter as necessary  *  * Results:  *	The character that was read  *  * Side Effects:  *	The lineno counter is incremented if the character is a newline  *---------------------------------------------------------------------  */
 end_comment
@@ -4908,9 +4854,6 @@ end_endif
 begin_comment
 comment|/* notdef */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * ParseReadLine --  *	Read an entire line from the input file. Called only by Parse_File.  *	To facilitate escaped newlines and what have you, a character is  *	buffered in 'lastc', which is '\0' when no characters have been  *	read. When we break out of the loop, c holds the terminating  *	character and lastc holds a character that should be added to  *	the line (unless we don't read anything but a terminator).  *  * Results:  *	A line w/o its newline  *  * Side Effects:  *	Only those associated with reading a character  *---------------------------------------------------------------------  */
@@ -5602,9 +5545,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * ParseFinishLine --  *	Handle the end of a dependency group.  *  * Results:  *	Nothing.  *  * Side Effects:  *	inLine set FALSE. 'targets' list destroyed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -5651,9 +5591,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * Parse_File --  *	Parse a file into its component parts, incorporating it into the  *	current dependency graph. This is the main function and controls  *	almost every other function in this module  *  * Results:  *	None  *  * Side Effects:  *	Loads. Nodes are added to the list of all targets, nodes and links  *	are added to the dependency graph. etc. etc. etc.  *---------------------------------------------------------------------  */
@@ -6168,9 +6105,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *---------------------------------------------------------------------  * Parse_Init --  *	initialize the parsing module  *  * Results:  *	none  *  * Side Effects:  *	the parseIncPath list is initialized...  *---------------------------------------------------------------------  */
 end_comment
@@ -6297,9 +6231,6 @@ block|}
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Parse_MainName --  *	Return a Lst of the main target to create for main()'s sake. If  *	no such target exists, we Punt with an obnoxious error message.  *  * Results:  *	A Lst of the single node to create.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */

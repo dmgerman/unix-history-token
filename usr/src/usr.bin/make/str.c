@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.2 (Berkeley) %G%"
+literal|"@(#)str.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_New	  	    	Duplicate a string and return the copy.  *  *	Str_FindSubstring   	Find a substring within a string (from  *	    	  	    	original Sprite libc).  *  *	Str_Match   	    	Pattern match two strings.  */
+comment|/*-  * str.c --  *	General utilites for handling strings.  *  * Interface:  *	Str_Concat	     	Concatenate two strings, placing some sort  *	    	  	    	of separator between them and freeing  *	    	  	    	the two strings, all this under the control  *	    	  	    	of the STR_ flags given as the third arg.  *  *	Str_FindSubstring   	Find a substring within a string (from  *	    	  	    	original Sprite libc).  *  *	Str_Match   	    	Pattern match two strings.  */
 end_comment
 
 begin_include
@@ -275,65 +275,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
-begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Str_New  --  *	Create a new unique copy of the given string  *  * Results:  *	A pointer to the new copy of it  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|Str_New
-parameter_list|(
-name|str
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-comment|/* string to duplicate */
-block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-comment|/* new space */
-name|cp
-operator|=
-name|malloc
-argument_list|(
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|cp
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|cp
-operator|)
-return|;
-block|}
-end_function
-
-begin_escape
-end_escape
-
 begin_function
 specifier|static
 name|char
@@ -399,9 +340,6 @@ return|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Str_BreakString --  *	Fracture a string into an array of words, taking quotation marks  *	into account. The string should have its leading 'breaks'  *	characters removed.  *  * Results:  *	Pointer to the array of pointers to the words. This array must  *	be freed by the caller. To make life easier, the first word is  *	always the value of the .PMAKE variable.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
@@ -1078,9 +1016,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Str_FreeVec --  *	Free a string vector returned by Str_BreakString. Frees all the  *	strings in the vector and then frees the vector itself.  *  * Results:  *	None.  *  * Side Effects:  *	The blocks addressed by the vector are freed.  *  *-----------------------------------------------------------------------  */
 end_comment
@@ -1141,9 +1076,6 @@ ifndef|#
 directive|ifndef
 name|Sprite
 end_ifndef
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  *----------------------------------------------------------------------  * Str_FindSubstring --  *	See if a string contains a particular substring.  *  * Results:  *	If string contains substring, the return value is the  *	location of the first matching instance of substring  *	in string.  If string doesn't contain substring, the  *	return value is NULL.  Matching is done on an exact  *	character-for-character basis with no wildcards or special  *	characters.  *  * Side effects:  *	None.  *----------------------------------------------------------------------  */
@@ -1265,9 +1197,6 @@ end_endif
 begin_comment
 comment|/* !Sprite */
 end_comment
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  *----------------------------------------------------------------------  *  * Str_Match --  *  *      See if a particular string matches a particular pattern.  *  * Results:  *      Non-zero is returned if string matches pattern, 0 otherwise.  *      The matching operation permits the following special characters  *      in the pattern: *?\[] (see the man page for details on what  *      these mean).  *  * Side effects:  *      None.  *  *----------------------------------------------------------------------  */
