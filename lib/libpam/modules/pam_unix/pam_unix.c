@@ -675,6 +675,8 @@ name|rhostip
 index|[
 name|MAXHOSTNAMELEN
 index|]
+init|=
+literal|""
 decl_stmt|;
 name|pam_std_option
 argument_list|(
