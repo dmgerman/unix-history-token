@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id$  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.13 1995/07/23 05:36:30 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -103,6 +103,18 @@ decl_stmt|,
 name|fw_bcnt
 decl_stmt|;
 comment|/* Packet and byte counters */
+name|u_char
+name|fw_ipopt
+decl_stmt|,
+name|fw_ipnopt
+decl_stmt|;
+comment|/* IP options set/unset */
+name|u_char
+name|fw_tcpf
+decl_stmt|,
+name|fw_tcpnf
+decl_stmt|;
+comment|/* TCP flags sen/unset */
 block|}
 struct|;
 end_struct
@@ -249,17 +261,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_F_TCPSYN
-value|0x080
-end_define
-
-begin_comment
-comment|/* For tcp packets-check SYN only     */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IP_FW_F_ICMPRPL
 value|0x100
 end_define
@@ -289,6 +290,84 @@ end_define
 begin_comment
 comment|/* All possible flag bits mask        */
 end_comment
+
+begin_comment
+comment|/*  * Definitions for IP option names.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IPOPT_LSRR
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IPOPT_SSRR
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IPOPT_RR
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_IPOPT_TS
+value|0x08
+end_define
+
+begin_comment
+comment|/*  * Definitions for TCP flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_FIN
+value|TH_FIN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_SYN
+value|TH_SYN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_RST
+value|TH_RST
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_PUSH
+value|TH_PUSH
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_ACK
+value|TH_ACK
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_URG
+value|TH_URG
+end_define
 
 begin_comment
 comment|/*  * New IP firewall options for [gs]etsockopt at the RAW IP level.  */
@@ -385,8 +464,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|IP_FW_P_MBIPO
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|IP_FW_P_MASK
-value|0x03
+value|0x07
 end_define
 
 begin_comment
