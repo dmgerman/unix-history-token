@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	5.8 (Berkeley) %G%"
+literal|"@(#)ping.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -763,7 +763,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ping: you must be root to use the -f option.\n"
+literal|"ping: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|EPERM
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2063,6 +2068,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|!
+operator|(
+name|options
+operator|&
+name|F_QUIET
+operator|)
+operator|&&
 name|options
 operator|&
 name|F_FLOOD
