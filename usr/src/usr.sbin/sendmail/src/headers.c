@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.35 (Berkeley) %G%"
+literal|"@(#)headers.c	6.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1669,6 +1669,11 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|sbp
+decl_stmt|;
 name|char
 name|hbuf
 index|[
@@ -1786,9 +1791,13 @@ expr_stmt|;
 block|}
 block|}
 comment|/* some versions of syslog only take 5 printf args */
+name|sbp
+operator|=
+name|sbuf
+expr_stmt|;
 name|sprintf
 argument_list|(
-name|sbuf
+name|sbp
 argument_list|,
 literal|"from=%.200s, size=%ld, class=%d, pri=%ld, nrcpts=%d, msgid=%.100s"
 argument_list|,
@@ -1815,6 +1824,71 @@ operator|->
 name|e_nrcpts
 argument_list|,
 name|msgid
+argument_list|)
+expr_stmt|;
+name|sbp
+operator|+=
+name|strlen
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|e_bodytype
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|sbp
+argument_list|,
+literal|", bodytype=%.20s"
+argument_list|,
+name|e
+operator|->
+name|e_bodytype
+argument_list|)
+expr_stmt|;
+name|sbp
+operator|+=
+name|strlen
+argument_list|(
+name|sbp
+argument_list|)
+expr_stmt|;
+block|}
+name|p
+operator|=
+name|macvalue
+argument_list|(
+literal|'r'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|sbp
+argument_list|,
+literal|", proto=%.20s"
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|syslog
