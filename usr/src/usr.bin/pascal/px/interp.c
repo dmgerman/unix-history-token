@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c 1.14 %G%"
+literal|"@(#)interp.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1193,6 +1193,12 @@ operator|.
 name|cp
 operator|++
 expr_stmt|;
+name|tcp
+operator|=
+name|popaddr
+argument_list|()
+expr_stmt|;
+comment|/* ptr to display save area */
 name|tfp
 operator|=
 operator|(
@@ -1289,15 +1295,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-operator|&
-name|tfp
-operator|->
-name|fdisp
-index|[
-name|tfp
-operator|->
-name|fbn
-index|]
+name|tcp
 argument_list|)
 expr_stmt|;
 name|blkcpy
@@ -1383,6 +1381,27 @@ operator|+
 name|tl
 operator|)
 expr_stmt|;
+name|tcp1
+operator|=
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+operator|(
+name|tcp
+operator|+
+name|tl
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|formalrtn
+operator|*
+argument_list|)
+operator|)
+expr_stmt|;
 if|if
 condition|(
 name|tl
@@ -1404,6 +1423,12 @@ expr|struct
 name|formalrtn
 operator|*
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1417,6 +1442,12 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|formalrtn
+operator|*
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+name|char
 operator|*
 argument_list|)
 argument_list|)
@@ -1434,15 +1465,7 @@ expr|struct
 name|disp
 argument_list|)
 argument_list|,
-operator|&
-name|tfp
-operator|->
-name|fdisp
-index|[
-name|tfp
-operator|->
-name|fbn
-index|]
+name|tcp1
 argument_list|,
 operator|&
 name|_display
