@@ -686,6 +686,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|g_provider
+modifier|*
+name|g_dev_getprovider
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* geom_dump.c */
 end_comment
