@@ -22,6 +22,7 @@ end_define
 begin_typedef
 typedef|typedef
 struct|struct
+name|MD2Context
 block|{
 name|unsigned
 name|char
