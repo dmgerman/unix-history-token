@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	8.6 (Berkeley) %G%"
+literal|"@(#)opendir.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +307,10 @@ name|ddptr
 init|=
 literal|0
 decl_stmt|;
+name|char
+modifier|*
+name|ddeptr
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
@@ -418,6 +422,10 @@ operator|>
 literal|0
 condition|)
 do|;
+name|ddeptr
+operator|=
+name|ddptr
+expr_stmt|;
 name|flags
 operator||=
 name|__DTF_READALL
@@ -501,9 +509,7 @@ while|while
 condition|(
 name|ddptr
 operator|<
-name|buf
-operator|+
-name|len
+name|ddeptr
 condition|)
 block|{
 name|struct
@@ -546,9 +552,7 @@ operator|->
 name|d_reclen
 operator|>
 operator|(
-name|buf
-operator|+
-name|len
+name|ddeptr
 operator|+
 literal|1
 operator|-
