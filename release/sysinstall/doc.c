@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.5 1995/10/22 17:39:05 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.6 1995/10/26 08:55:40 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -261,17 +261,23 @@ argument_list|,
 literal|"Please enter the URL of the location you wish to visit."
 argument_list|)
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"FAQ"
+argument_list|)
+condition|)
 block|{
-name|sprintf
+name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"/usr/share/doc/%s/%s.html"
-argument_list|,
-name|str
-argument_list|,
-name|str
+literal|"/usr/share/doc/FAQ/freebsd-faq.html"
 argument_list|)
 expr_stmt|;
 if|if
@@ -282,13 +288,11 @@ argument_list|(
 name|target
 argument_list|)
 condition|)
-name|sprintf
+name|strcpy
 argument_list|(
 name|target
 argument_list|,
-literal|"http://www.freebsd.org/%s"
-argument_list|,
-name|str
+literal|"http://www.freebsd.org/FAQ"
 argument_list|)
 expr_stmt|;
 name|where
@@ -296,6 +300,50 @@ operator|=
 name|target
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|str
+argument_list|,
+literal|"Handbook"
+argument_list|)
+condition|)
+block|{
+name|strcpy
+argument_list|(
+name|target
+argument_list|,
+literal|"/usr/share/doc/handbook/handbook.html"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+name|target
+argument_list|)
+condition|)
+name|strcpy
+argument_list|(
+name|target
+argument_list|,
+literal|"http://www.freebsd.org/handbook"
+argument_list|)
+expr_stmt|;
+name|where
+operator|=
+name|target
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|where
+condition|)
+block|{
 name|sprintf
 argument_list|(
 name|tmp
@@ -315,6 +363,19 @@ expr_stmt|;
 return|return
 name|RET_SUCCESS
 return|;
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmmmm!  I can't seem to access the documentation you selected!\n"
+literal|"Have you loaded the bin distribution?  Is your network connected?"
+argument_list|)
+expr_stmt|;
+return|return
+name|RET_FAIL
+return|;
+block|}
 block|}
 end_function
 
