@@ -3,6 +3,28 @@ begin_comment
 comment|/*  * Copyright (C) 2000  * Dr. Duncan McLennan Barclay, dmlb@ragnet.demon.co.uk.  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY DUNCAN BARCLAY AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL DUNCAN BARCLAY OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: if_raymib.h,v 1.4 2000/03/31 20:13:03 dmlb Exp $  *  */
 end_comment
 
+begin_comment
+comment|/*  * Bit mask definitions for firmware versioning  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RAY_V4
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_V5
+value|0x2
+end_define
+
+begin_comment
+comment|/*  * MIB stuctures  */
+end_comment
+
 begin_struct
 struct|struct
 name|ray_mib_common_head
@@ -1071,149 +1093,178 @@ begin_define
 define|#
 directive|define
 name|RAY_MIB_STRINGS
-value|{		\ 	"Network type",			\ 	"AP status",			\ 	"SSID",				\ 	"Scan mode",			\ 	"APM mode",			\ 	"MAC address",			\ 	"FRAG_THRESH",			\ 	"DWELL_TIME",			\ 	"BEACON_PERIOD",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET",		\ 	"Firmware version",		\ 	"Current BSS Id",		\ 	"Current INITED",		\ 	"Current DEF_TXRATE",		\ 	"Current ENCRYPT",		\ 	"Current NET_TYPE",		\ 	"Current SSID",			\ 	"Current PRIV_START",		\ 	"Current PRIV_JOIN",		\ 	"Desired BSSID",		\ 	"Desired INITED",		\ 	"Desired DEF_TXRATE",		\ 	"Desired ENCRYPT",		\ 	"Desired NET_TYPE",		\ 	"Desired SSID",			\ 	"Desired PRIV_START",		\ 	"Desired PRIV_JOIN"		\ }
+value|{		\ 	"Network type",			\ 	"AP status",			\ 	"SSID",				\ 	"Scan mode",			\ 	"APM mode",			\ 	"MAC address",			\ 	"Fragmentation threshold",	\ 	"Dwell tIME",			\ 	"Beacon period",		\ 	"DTIM_INTERVAL",		\ 	"MAX_RETRY",			\ 	"ACK_TIMO",			\ 	"SIFS",				\ 	"DIFS",				\ 	"PIFS",				\ 	"RTS_THRESH",			\ 	"SCAN_DWELL",			\ 	"SCAN_MAX_DWELL",		\ 	"ASSOC_TIMO",			\ 	"ADHOC_SCAN_CYCLE",		\ 	"INFRA_SCAN_CYCLE",		\ 	"INFRA_SUPER_SCAN_CYCLE",	\ 	"PROMISC",			\ 	"UNIQ_WORD",			\ 	"SLOT_TIME",			\ 	"ROAM_LOW_SNR_THRESH",		\ 	"LOW_SNR_COUNT",		\ 	"INFRA_MISSED_BEACON_COUNT",	\ 	"ADHOC_MISSED_BEACON_COUNT",	\ 	"COUNTRY_CODE",			\ 	"HOP_SEQ",			\ 	"HOP_SEQ_LEN",			\ 	"CW_MAX",			\ 	"CW_MIN",			\ 	"NOISE_FILTER_GAIN",		\ 	"NOISE_LIMIT_OFFSET",		\ 	"RSSI_THRESH_OFFSET",		\ 	"BUSY_THRESH_OFFSET",		\ 	"SYNC_THRESH",			\ 	"TEST_MODE",			\ 	"TEST_MIN_CHAN",		\ 	"TEST_MAX_CHAN",		\ 	"ALLOW_PROBE_RESP",		\ 	"PRIVACY_MUST_START",		\ 	"PRIVACY_CAN_JOIN",		\ 	"BASIC_RATE_SET",		\ 	"Firmware version",		\ 	"Current BSS Id",		\ 	"Current INITED",		\ 	"Current DEF_TXRATE",		\ 	"Current ENCRYPT",		\ 	"Current NET_TYPE",		\ 	"Current SSID",			\ 	"Current PRIV_START",		\ 	"Current PRIV_JOIN",		\ 	"Desired BSSID",		\ 	"Desired INITED",		\ 	"Desired DEF_TXRATE",		\ 	"Desired ENCRYPT",		\ 	"Desired NET_TYPE",		\ 	"Desired SSID",			\ 	"Desired PRIV_START",		\ 	"Desired PRIV_JOIN"		\ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAY_MIB_HELP_STRINGS
-value|{			\ 	"0 Ad hoc, 1 Infrastructure",		\ 	"0 Station, 1 Access Point",		\ 	"",					\ 	"0 Passive, 1 Active",			\ 	"0 Off, 1 On",				\ 	"",					\ 	"FRAG_THRESH",				\ 	"DWELL_TIME",				\ 	"BEACON_PERIOD",			\ 	"DTIM_INTERVAL",			\ 	"MAX_RETRY",				\ 	"ACK_TIMO",				\ 	"SIFS",					\ 	"DIFS",					\ 	"PIFS",					\ 	"RTS_THRESH",				\ 	"SCAN_DWELL",				\ 	"SCAN_MAX_DWELL",			\ 	"ASSOC_TIMO",				\ 	"ADHOC_SCAN_CYCLE",			\ 	"INFRA_SCAN_CYCLE",			\ 	"INFRA_SUPER_SCAN_CYCLE",		\ 	"PROMISC",				\ 	"UNIQ_WORD",				\ 	"SLOT_TIME",				\ 	"ROAM_LOW_SNR_THRESH",			\ 	"LOW_SNR_COUNT",			\ 	"INFRA_MISSED_BEACON_COUNT",		\ 	"ADHOC_MISSED_BEACON_COUNT",		\ 	"COUNTRY_CODE",				\ 	"HOP_SEQ",				\ 	"HOP_SEQ_LEN",				\ 	"CW_MAX",				\ 	"CW_MIN",				\ 	"NOISE_FILTER_GAIN",			\ 	"NOISE_LIMIT_OFFSET",			\ 	"RSSI_THRESH_OFFSET",			\ 	"BUSY_THRESH_OFFSET",			\ 	"SYNC_THRESH",				\ 	"TEST_MODE",				\ 	"TEST_MIN_CHAN",			\ 	"TEST_MAX_CHAN",			\ 	"ALLOW_PROBE_RESP",			\ 	"PRIVACY_MUST_START",			\ 	"PRIVACY_CAN_JOIN",			\ 	"BASIC_RATE_SET",			\ 	"",					\ 	"",					\ 	"0 Joined a net, 1 Created a net",	\ 	"Current DEF_TXRATE",			\ 	"Current ENCRYPT",			\ 	"Current NET_TYPE",			\ 	"",					\ 	"Current PRIV_START",			\ 	"Current PRIV_JOIN",			\ 	"N/A",					\ 	"N/A",					\ 	"Desired DEF_TXRATE",			\ 	"Desired ENCRYPT",			\ 	"Desired NET_TYPE",			\ 	"",					\ 	"Desired PRIV_START",			\ 	"Desired PRIV_JOIN"			\ }
+value|{			\ 	"0 Ad hoc, 1 Infrastructure",		\ 	"0 Station, 1 Access Point",		\ 	"",					\ 	"0 Passive, 1 Active",			\ 	"0 Off, 1 On",				\ 	"",					\ 	"FRAG_THRESH",				\ 	"DWELL_TIME",				\ 	"BEACON_PERIOD",			\ 	"DTIM_INTERVAL",			\ 	"MAX_RETRY",				\ 	"ACK_TIMO",				\ 	"SIFS",					\ 	"DIFS",					\ 	"PIFS",					\ 	"RTS_THRESH",				\ 	"SCAN_DWELL",				\ 	"SCAN_MAX_DWELL",			\ 	"ASSOC_TIMO",				\ 	"ADHOC_SCAN_CYCLE",			\ 	"INFRA_SCAN_CYCLE",			\ 	"INFRA_SUPER_SCAN_CYCLE",		\ 	"PROMISC",				\ 	"UNIQ_WORD",				\ 	"SLOT_TIME",				\ 	"ROAM_LOW_SNR_THRESH",			\ 	"LOW_SNR_COUNT",			\ 	"INFRA_MISSED_BEACON_COUNT",		\ 	"ADHOC_MISSED_BEACON_COUNT",		\ 	"COUNTRY_CODE",				\ 	"HOP_SEQ",				\ 	"HOP_SEQ_LEN",				\ 	"CW_MAX",				\ 	"CW_MIN",				\ 	"NOISE_FILTER_GAIN",			\ 	"NOISE_LIMIT_OFFSET",			\ 	"RSSI_THRESH_OFFSET",			\ 	"BUSY_THRESH_OFFSET",			\ 	"SYNC_THRESH",				\ 	"TEST_MODE",				\ 	"TEST_MIN_CHAN",			\ 	"TEST_MAX_CHAN",			\ 	"ALLOW_PROBE_RESP",			\ 	"PRIVACY_MUST_START",			\ 	"PRIVACY_CAN_JOIN",			\ 	"BASIC_RATE_SET",			\ 	"",					\ 	"",					\ 	"0 Joined a net, 1 Created a net",	\ 	"Current DEF_TXRATE",			\ 	"Current ENCRYPT",			\ 	"Current NET_TYPE",			\ 	"",					\ 	"Current PRIV_START",			\ 	"Current PRIV_JOIN",			\ 	"",					\ 	"N/A",					\ 	"Desired DEF_TXRATE",			\ 	"Desired ENCRYPT",			\ 	"Desired NET_TYPE",			\ 	"",					\ 	"Desired PRIV_START",			\ 	"Desired PRIV_JOIN"			\ }
 end_define
 
 begin_comment
-comment|/*  * Sizes for each MIB element  */
+comment|/*  * Applicable versions and work size for each MIB element  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RAY_MIB_SIZES
-value|{					\ 	1,
+name|RAY_MIB_INFO_SIZ4
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFO_SIZ5
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_SIZE
+parameter_list|(
+name|info
+parameter_list|,
+name|mib
+parameter_list|,
+name|version
+parameter_list|)
+define|\
+value|info[(mib)][(version& RAY_V4)?RAY_MIB_INFO_SIZ4:RAY_MIB_INFO_SIZ5]
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAY_MIB_INFO
+value|{							\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_NET_TYPE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_AP_STATUS */
-value|\ 	IEEE80211_NWID_LEN,
+value|\ {RAY_V4|RAY_V5,	IEEE80211_NWID_LEN, 					\ 			IEEE80211_NWID_LEN},
 comment|/* RAY_MIB_SSID */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_SCAN_MODE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_APM_MODE */
-value|\ 	ETHER_ADDR_LEN,
+value|\ {RAY_V4|RAY_V5,	ETHER_ADDR_LEN,						\ 			ETHER_ADDR_LEN},
 comment|/* RAY_MIB_MAC_ADDR */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_FRAG_THRESH */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_DWELL_TIME */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_BEACON_PERIOD */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DTIM_INTERVAL */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_MAX_RETRY */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_ACK_TIMO */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_SIFS */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DIFS */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_PIFS */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_RTS_THRESH */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_SCAN_DWELL */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_SCAN_MAX_DWELL */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_ASSOC_TIMO */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_ADHOC_SCAN_CYCLE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_INFRA_SCAN_CYCLE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_INFRA_SUPER_SCAN_CYCLE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_PROMISC */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	2,	2},
 comment|/* RAY_MIB_UNIQ_WORD */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_SLOT_TIME */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_ROAM_LOW_SNR_THRESH */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_LOW_SNR_COUNT */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_INFRA_MISSED_BEACON_COUNT */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_ADHOC_MISSED_BEACON_COUNT */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_COUNTRY_CODE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_HOP_SEQ */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_HOP_SEQ_LEN */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	1,	2},
 comment|/* RAY_MIB_CW_MAX */
-value|\ 	2,
+value|\ {RAY_V4|RAY_V5,	1,	2},
 comment|/* RAY_MIB_CW_MIN */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_NOISE_FILTER_GAIN */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_NOISE_LIMIT_OFFSET */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_RSSI_THRESH_OFFSET */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_BUSY_THRESH_OFFSET */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_SYNC_THRESH */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_TEST_MODE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_TEST_MIN_CHAN */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_TEST_MAX_CHAN */
-value|\ 	1,
+value|\ {       RAY_V5,	0,	1},
 comment|/* RAY_MIB_ALLOW_PROBE_RESP */
-value|\ 	1,
+value|\ {       RAY_V5,	0,	1},
 comment|/* RAY_MIB_PRIVACY_MUST_START */
-value|\ 	1,
+value|\ {       RAY_V5,	0,	1},
 comment|/* RAY_MIB_PRIVACY_CAN_JOIN */
-value|\ 	8,
+value|\ {       RAY_V5,	0,	8},
 comment|/* RAY_MIB_BASIC_RATE_SET */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_VERSION */
-value|\ 	ETHER_ADDR_LEN,
+value|\ {RAY_V4|RAY_V5,	ETHER_ADDR_LEN,						\ 			ETHER_ADDR_LEN},
 comment|/* RAY_MIB_CUR_BSSID */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_INITED */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_DEF_TXRATE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_ENCRYPT */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_NET_TYPE */
-value|\ 	IEEE80211_NWID_LEN,
+value|\ {RAY_V4|RAY_V5,	IEEE80211_NWID_LEN,					\ 			IEEE80211_NWID_LEN},
 comment|/* RAY_MIB_CUR_SSID */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_PRIV_START */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_CUR_PRIV_JOIN */
-value|\ 	ETHER_ADDR_LEN,
+value|\ {RAY_V4|RAY_V5,	ETHER_ADDR_LEN,						\ 			ETHER_ADDR_LEN},
 comment|/* RAY_MIB_DES_BSSID */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DES_INITED */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DES_DEF_TXRATE */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DES_ENCRYPT */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DES_NET_TYPE */
-value|\ 	IEEE80211_NWID_LEN,
+value|\ {RAY_V4|RAY_V5,	IEEE80211_NWID_LEN, 					\ 			IEEE80211_NWID_LEN},
 comment|/* RAY_MIB_DES_SSID */
-value|\ 	1,
+value|\ {RAY_V4|RAY_V5,	1,	1},
 comment|/* RAY_MIB_DES_PRIV_START */
-value|\ 	1
+value|\ {RAY_V4|RAY_V5,	1, 	1}
 comment|/* RAY_MIB_DES_PRIV_JOIN */
 value|\ }
 end_define
@@ -2466,24 +2517,6 @@ directive|define
 name|RAY_FAILCAUSE_EDEVSTOP
 value|256
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|RAY_FAILCAUSE_WAITING
-value|257
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Get a param the data is a ray_param_req structure */
