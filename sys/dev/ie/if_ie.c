@@ -860,12 +860,14 @@ name|isa_driver
 name|iedriver
 init|=
 block|{
+name|INTR_TYPE_NET
+block|,
 name|ieprobe
 block|,
 name|ieattach
 block|,
 literal|"ie"
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
