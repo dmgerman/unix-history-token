@@ -763,6 +763,28 @@ begin_comment
 comment|/* query AFC on/off */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|BT848_SLNOTCH
+value|_IOW('x', 55, int)
+end_define
+
+begin_comment
+comment|/* set luma notch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BT848_GLNOTCH
+value|_IOR('x', 56, int)
+end_define
+
+begin_comment
+comment|/* get luma notch */
+end_comment
+
 begin_comment
 comment|/*  * XXX: more bad magic,  *      we need to fix the METEORGINPUT to return something public  *      duplicate them here for now...  */
 end_comment
@@ -799,6 +821,8 @@ block|{
 name|METEOR_PIXTYPE_RGB
 block|,
 name|METEOR_PIXTYPE_YUV
+block|,
+name|METEOR_PIXTYPE_YUV_PACKED
 block|}
 name|METEOR_PIXTYPE
 typedef|;

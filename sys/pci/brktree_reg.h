@@ -863,6 +863,66 @@ expr_stmt|;
 comment|/* 10c, 10d,10e,10f */
 define|#
 directive|define
+name|BT848_DMA_CTL_PL23TP4
+value|(0<<6)
+comment|/* planar1 trigger 4 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL23TP8
+value|(1<<6)
+comment|/* planar1 trigger 8 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL23TP16
+value|(2<<6)
+comment|/* planar1 trigger 16 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL23TP32
+value|(3<<6)
+comment|/* planar1 trigger 32 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL1TP4
+value|(0<<4)
+comment|/* planar1 trigger 4 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL1TP8
+value|(1<<4)
+comment|/* planar1 trigger 8 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL1TP16
+value|(2<<4)
+comment|/* planar1 trigger 16 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PL1TP32
+value|(3<<4)
+comment|/* planar1 trigger 32 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PKTP4
+value|(0<<2)
+comment|/* packed trigger 4 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PKTP8
+value|(1<<2)
+comment|/* packed trigger 8 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PKTP16
+value|(2<<2)
+comment|/* packed trigger 16 */
+define|#
+directive|define
+name|BT848_DMA_CTL_PKTP32
+value|(3<<2)
+comment|/* packed trigger 32 */
+define|#
+directive|define
 name|BT848_DMA_CTL_RISC_EN
 value|(1<<1)
 define|#
@@ -1467,9 +1527,15 @@ name|hdelay
 decl_stmt|,
 name|hactive
 decl_stmt|;
-comment|/* One might expect this to be hactive / htotal, but maybe not! */
-name|float
-name|hactive_frac
+comment|/* visible active horizontal and vertical : 480 640 for NTSC */
+name|int
+name|horizontal
+decl_stmt|,
+name|vertical
+decl_stmt|;
+comment|/* frame rate . for ntsc is 30 frames per second */
+name|int
+name|frame_rate
 decl_stmt|;
 block|}
 struct|;
@@ -1491,6 +1557,30 @@ begin_struct
 struct|struct
 name|bktr_softc
 block|{
+ifdef|#
+directive|ifdef
+name|__bsdi__
+name|struct
+name|device
+name|bktr_dev
+decl_stmt|;
+comment|/* base device */
+name|struct
+name|isadev
+name|bktr_id
+decl_stmt|;
+comment|/* ISA device */
+name|struct
+name|intrhand
+name|bktr_ih
+decl_stmt|;
+comment|/* interrupt vectoring */
+define|#
+directive|define
+name|pcici_t
+value|pci_devaddr_t
+endif|#
+directive|endif
 name|bt848_ptr_t
 name|base
 decl_stmt|;
@@ -1615,7 +1705,8 @@ comment|/* reg 0xdc capture control */
 name|u_short
 name|bktr_cap_ctl
 decl_stmt|;
-name|unsigned
+specifier|volatile
+name|u_int
 name|flags
 decl_stmt|;
 define|#
