@@ -113,6 +113,12 @@ begin_comment
 comment|/* Use default search algorithm. */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_comment
 comment|/*  * Structure filled in by dladdr().  */
 end_comment
@@ -178,6 +184,15 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
 begin_function_decl
 name|__BEGIN_DECLS
 comment|/* XSI functions first. */
@@ -222,12 +237,12 @@ name|dlsym
 parameter_list|(
 name|void
 modifier|*
-comment|/* __restrict */
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-comment|/* __restrict */
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -258,12 +273,12 @@ name|dlfunc
 parameter_list|(
 name|void
 modifier|*
-comment|/* __restrict */
+name|__restrict
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-comment|/* __restrict */
+name|__restrict
 parameter_list|)
 function_decl|;
 end_function_decl
