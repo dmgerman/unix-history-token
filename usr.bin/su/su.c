@@ -115,12 +115,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<libutil.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<login_cap.h>
 end_include
 
@@ -201,7 +195,9 @@ name|what
 parameter_list|,
 name|item
 parameter_list|)
-value|do {					\ 	int local_ret;							\ 	local_ret = pam_set_item(pamh, what, item);			\ 	if (local_ret != PAM_SUCCESS) {					\ 		syslog(LOG_ERR, "pam_set_item(" #what "): %s",		\ 			pam_strerror(pamh, local_ret));			\ 		errx(1, "pam_set_item(" #what "): %s",			\ 			pam_strerror(pamh, local_ret));			\ 	}								\ } while (0)
+value|do {					\ 	int local_ret;							\ 	local_ret = pam_set_item(pamh, what, item);			\ 	if (local_ret != PAM_SUCCESS) {					\ 		syslog(LOG_ERR, "pam_set_item(" #what "): %s",		\ 			pam_strerror(pamh, local_ret));			\ 		errx(1, "pam_set_item(" #what "): %s",			\ 			pam_strerror(pamh, local_ret));			\
+comment|/* NOTREACHED */
+value|\ 	}								\ } while (0)
 end_define
 
 begin_enum
@@ -252,25 +248,27 @@ specifier|static
 name|int
 name|chshell
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|export_pam_environment
 parameter_list|(
 name|void
@@ -312,6 +310,11 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|static
+name|char
+modifier|*
+name|cleanenv
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
@@ -375,20 +378,18 @@ name|prio
 decl_stmt|,
 name|i
 decl_stmt|,
-name|setwhat
-decl_stmt|,
 name|retcode
 decl_stmt|,
 name|statusp
 decl_stmt|,
 name|setmaclabel
 decl_stmt|;
+name|u_int
+name|setwhat
+decl_stmt|;
 name|char
 modifier|*
 name|username
-decl_stmt|,
-modifier|*
-name|cleanenv
 decl_stmt|,
 modifier|*
 name|class
@@ -548,6 +549,7 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
@@ -572,6 +574,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+comment|/* NOTREACHED */
 if|if
 condition|(
 name|strlen
@@ -600,11 +603,14 @@ name|char
 operator|*
 argument_list|)
 operator|*
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|argc
 operator|+
 literal|4
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -947,12 +953,6 @@ operator|!=
 name|PAM_SUCCESS
 condition|)
 block|{
-if|#
-directive|if
-literal|0
-block|syslog(LOG_ERR, "pam_authenticate: %s", 		    pam_strerror(pamh, retcode));
-endif|#
-directive|endif
 name|syslog
 argument_list|(
 name|LOG_AUTH
@@ -1203,6 +1203,14 @@ literal|1
 argument_list|,
 literal|"permission denied (shell)"
 argument_list|)
+expr_stmt|;
+name|shell
+operator|=
+name|_PATH_BSHELL
+expr_stmt|;
+name|iscsh
+operator|=
+name|NO
 expr_stmt|;
 block|}
 elseif|else
@@ -1520,19 +1528,14 @@ operator|-
 literal|1
 condition|)
 block|{
+name|PAM_END
+argument_list|()
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"pipe"
-argument_list|)
-expr_stmt|;
-name|PAM_END
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1695,26 +1698,24 @@ argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
+name|WEXITSTATUS
+argument_list|(
 name|statusp
+argument_list|)
 argument_list|)
 expr_stmt|;
 case|case
 operator|-
 literal|1
 case|:
+name|PAM_END
+argument_list|()
+expr_stmt|;
 name|err
 argument_list|(
 literal|1
 argument_list|,
 literal|"fork"
-argument_list|)
-expr_stmt|;
-name|PAM_END
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 case|case
@@ -2076,7 +2077,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|export_pam_environment
 parameter_list|(
 name|void
@@ -2123,9 +2124,6 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|PAM_SUCCESS
-return|;
 block|}
 end_function
 
@@ -2288,6 +2286,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -2296,6 +2295,7 @@ specifier|static
 name|int
 name|chshell
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|sh
