@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.1 (Berkeley) %G%"
+literal|"@(#)process.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_function_decl
@@ -501,9 +507,11 @@ name|utmp
 name|ubuf
 decl_stmt|;
 name|int
-name|fd
-decl_stmt|,
 name|status
+decl_stmt|;
+name|FILE
+modifier|*
+name|fd
 decl_stmt|;
 name|struct
 name|stat
@@ -520,16 +528,15 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"/etc/utmp"
 argument_list|,
-literal|0
+literal|"r"
 argument_list|)
 operator|)
 operator|==
-operator|-
-literal|1
+name|NULL
 condition|)
 block|{
 name|perror
@@ -568,10 +575,8 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|read
+name|fread
 argument_list|(
-name|fd
-argument_list|,
 operator|(
 name|char
 operator|*
@@ -581,12 +586,13 @@ name|ubuf
 argument_list|,
 sizeof|sizeof
 name|ubuf
+argument_list|,
+literal|1
+argument_list|,
+name|fd
 argument_list|)
 operator|==
-sizeof|sizeof
-argument_list|(
-name|ubuf
-argument_list|)
+literal|1
 condition|)
 if|if
 condition|(
@@ -694,7 +700,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|close
+name|fclose
 argument_list|(
 name|fd
 argument_list|)
