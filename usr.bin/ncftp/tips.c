@@ -39,6 +39,8 @@ init|=
 block|{
 literal|"Have you tried typing 'open' by itself lately?"
 block|,
+literal|"You know what?  You're using obselete software.  Ask your sysadmin \n\ 	 to upgrade to a version of ncftp numbered 2.2 or higher."
+block|,
 literal|"If you don't want a .ncrecent file in your home directory, put the \n\      command '#unset recent-list' in your .ncftprc file."
 block|,
 literal|"pseudo-filename-completion is supported in some commands.  To use it,\n\      use a wildcard expression that will match exactly one file.  I.e., if you\n\      want to fetch obnoxiouslylongfilename.zip, try 'get obn*.zip.'  Note that\n\      you can't use the cd command with this feature (yet)."

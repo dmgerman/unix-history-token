@@ -1,10 +1,20 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 name|v1
-literal|.9.4
+literal|.9.5
 operator|-
-name|April
-literal|15
+name|October
+literal|29
+operator|,
+literal|1995.
+name|Termcap
+name|needs
+name|ospeed
+name|initialization
+end_expr_stmt
+
+begin_for
+for|for BSD.  v1.9.4 - April 15
 operator|,
 literal|1995.
 name|Using
@@ -33,7 +43,7 @@ literal|5
 operator|,
 literal|1995.
 name|Support
-end_expr_stmt
+end_for
 
 begin_for
 for|for NetBSD and DELL added.  Linger works   with passive mode now.  v1.9.2 - January 20

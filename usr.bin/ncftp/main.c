@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|FTP_VERSION
-value|"1.9.4 (April 15, 1995)"
+value|"1.9.5 (October 29, 1995)"
 end_define
 
 begin_comment
@@ -151,6 +151,31 @@ end_endif
 begin_comment
 comment|/* CURSES */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CURSES
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SGTTYB
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sgtty.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -5465,6 +5490,19 @@ name|char
 modifier|*
 name|term
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SGTTYB
+name|struct
+name|sgttyb
+name|ttyb
+decl_stmt|;
+specifier|extern
+name|short
+name|ospeed
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -5603,6 +5641,34 @@ argument_list|(
 name|tcap_reverse
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SGTTYB
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+name|TIOCGETP
+argument_list|,
+operator|&
+name|ttyb
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|ospeed
+operator|=
+name|ttyb
+operator|.
+name|sg_ospeed
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
