@@ -155,6 +155,7 @@ argument|cdev
 argument_list|)
 name|si_hash
 expr_stmt|;
+comment|/* UNUSED */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
