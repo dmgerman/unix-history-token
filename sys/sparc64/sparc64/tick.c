@@ -347,6 +347,18 @@ name|clock
 operator|/
 name|hz
 expr_stmt|;
+comment|/* 	 * UltraSparc II[e,i] based systems come up with the tick interrupt 	 * enabled and a handler that resets the tick counter, causing DELAY() 	 * to not work properly when used early in boot. 	 */
+name|wr
+argument_list|(
+name|asr23
+argument_list|,
+literal|1L
+operator|<<
+literal|63
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
