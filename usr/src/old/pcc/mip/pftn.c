@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.22 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -538,6 +538,26 @@ name|type
 operator|!=
 name|stp
 condition|)
+goto|goto
+name|mismatch
+goto|;
+if|if
+condition|(
+name|blevel
+operator|>
+name|slev
+operator|&&
+operator|(
+name|class
+operator|==
+name|AUTO
+operator|||
+name|class
+operator|==
+name|REGISTER
+operator|)
+condition|)
+comment|/* new scope */
 goto|goto
 name|mismatch
 goto|;
