@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001, 2002    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_struct_decl
@@ -101,13 +101,16 @@ block|,
 comment|// ` ' -- ordinary space
 name|TOKEN_SPECIAL
 block|,
-comment|// a special character -- \' \` \- \(xx
+comment|// a special character -- \' \` \- \(xx \[xxx]
 name|TOKEN_SPREAD
 block|,
 comment|// \p -- break and spread output line
 name|TOKEN_STRETCHABLE_SPACE
 block|,
 comment|// \~
+name|TOKEN_UNSTRETCHABLE_SPACE
+block|,
+comment|// `\ '
 name|TOKEN_TAB
 block|,
 comment|// tab
@@ -117,6 +120,9 @@ comment|// \!
 name|TOKEN_TRANSPARENT_DUMMY
 block|,
 comment|// \)
+name|TOKEN_ZERO_WIDTH_BREAK
+block|,
+comment|// \:
 name|TOKEN_EOF
 comment|// end of file
 block|}
@@ -178,6 +184,11 @@ name|stretchable_space
 parameter_list|()
 function_decl|;
 comment|// is the current token a stretchable space?
+name|int
+name|unstretchable_space
+parameter_list|()
+function_decl|;
+comment|// is the current token an unstretchable space?
 name|int
 name|white_space
 parameter_list|()
@@ -242,6 +253,10 @@ parameter_list|()
 function_decl|;
 name|int
 name|hyphen_indicator
+parameter_list|()
+function_decl|;
+name|int
+name|zero_width_break
 parameter_list|()
 function_decl|;
 name|int
@@ -359,6 +374,15 @@ specifier|extern
 name|charinfo
 modifier|*
 name|get_optional_char
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|read_string
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -555,6 +579,22 @@ return|return
 name|type
 operator|==
 name|TOKEN_STRETCHABLE_SPACE
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|int
+name|token
+operator|::
+name|unstretchable_space
+argument_list|()
+block|{
+return|return
+name|type
+operator|==
+name|TOKEN_UNSTRETCHABLE_SPACE
 return|;
 block|}
 end_expr_stmt
@@ -812,6 +852,22 @@ return|return
 name|type
 operator|==
 name|TOKEN_HYPHEN_INDICATOR
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|int
+name|token
+operator|::
+name|zero_width_break
+argument_list|()
+block|{
+return|return
+name|type
+operator|==
+name|TOKEN_ZERO_WIDTH_BREAK
 return|;
 block|}
 end_expr_stmt

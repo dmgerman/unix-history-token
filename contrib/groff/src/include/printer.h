@@ -4,8 +4,22 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2001 Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|//<groff_src_dir>/src/include/printer.h
 end_comment
+
+begin_comment
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2001, 2002    Free Software Foundation, Inc.     Written by James Clark (jjc@jclark.com)     Last update: 12 Apr 2002     This file is part of groff.     groff is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     groff is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with groff; see the file COPYING.  If not, write to the Free    Software Foundation, 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA. */
+end_comment
+
+begin_comment
+comment|/* Description     The class `printer' performs the postprocessing.  Each    postprocessor only need to implement a derived class of `printer' and    a suitable function `make_printer' for the device-dependent tasks.    Then the methods of class `printer' are called automatically by    `do_file()' in `input.cc'. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"color.h"
+end_include
 
 begin_struct
 struct|struct
@@ -28,6 +42,14 @@ name|height
 decl_stmt|;
 name|int
 name|slant
+decl_stmt|;
+name|color
+modifier|*
+name|col
+decl_stmt|;
+name|color
+modifier|*
+name|fill
 decl_stmt|;
 block|}
 struct|;
@@ -198,6 +220,30 @@ modifier|*
 name|env
 parameter_list|)
 function_decl|;
+comment|// perform change of line color (text, outline) in the print-out
+name|virtual
+name|void
+name|change_color
+parameter_list|(
+specifier|const
+name|environment
+modifier|*
+specifier|const
+name|env
+parameter_list|)
+function_decl|;
+comment|// perform change of fill color in the print-out
+name|virtual
+name|void
+name|change_fill_color
+parameter_list|(
+specifier|const
+name|environment
+modifier|*
+specifier|const
+name|env
+parameter_list|)
+function_decl|;
 name|virtual
 name|void
 name|begin_page
@@ -250,18 +296,6 @@ name|char
 name|type
 init|=
 literal|'p'
-parameter_list|)
-function_decl|;
-specifier|static
-name|int
-name|adjust_arc_center
-parameter_list|(
-specifier|const
-name|int
-modifier|*
-parameter_list|,
-name|double
-modifier|*
 parameter_list|)
 function_decl|;
 name|protected

@@ -4,7 +4,7 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001, 2002    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_struct
@@ -463,6 +463,18 @@ name|get_tfont
 parameter_list|()
 function_decl|;
 name|virtual
+name|color
+modifier|*
+name|get_glyph_color
+parameter_list|()
+function_decl|;
+name|virtual
+name|color
+modifier|*
+name|get_fill_color
+parameter_list|()
+function_decl|;
+name|virtual
 name|void
 name|tprint
 parameter_list|(
@@ -666,6 +678,11 @@ block|;
 name|char
 name|was_escape_colon
 block|;
+name|color
+operator|*
+name|col
+block|;
+comment|/* for grotty */
 name|space_node
 argument_list|(
 name|hunits
@@ -673,6 +690,9 @@ argument_list|,
 name|int
 argument_list|,
 name|int
+argument_list|,
+name|color
+operator|*
 argument_list|,
 name|node
 operator|*
@@ -684,9 +704,14 @@ name|public
 operator|:
 name|space_node
 argument_list|(
-argument|hunits d
+name|hunits
 argument_list|,
-argument|node *p =
+name|color
+operator|*
+argument_list|,
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -873,6 +898,9 @@ name|hunits
 argument_list|,
 name|int
 argument_list|,
+name|color
+operator|*
+argument_list|,
 name|width_list
 operator|*
 argument_list|,
@@ -889,6 +917,9 @@ operator|:
 name|word_space_node
 argument_list|(
 name|hunits
+argument_list|,
+name|color
+operator|*
 argument_list|,
 name|width_list
 operator|*
@@ -976,6 +1007,9 @@ name|hunits
 argument_list|,
 name|int
 argument_list|,
+name|color
+operator|*
+argument_list|,
 name|node
 operator|*
 operator|=
@@ -987,6 +1021,9 @@ operator|:
 name|unbreakable_space_node
 argument_list|(
 name|hunits
+argument_list|,
+name|color
+operator|*
 argument_list|,
 name|node
 operator|*
@@ -1349,11 +1386,18 @@ name|unsigned
 name|char
 name|unformat
 block|;
+name|color
+operator|*
+name|col
+block|;
+comment|/* for grotty */
 name|public
 operator|:
 name|hmotion_node
 argument_list|(
 argument|hunits i
+argument_list|,
+argument|color *c
 argument_list|,
 argument|node *next =
 literal|0
@@ -1378,6 +1422,11 @@ name|unformat
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|col
+argument_list|(
+argument|c
+argument_list|)
 block|{}
 name|hmotion_node
 argument_list|(
@@ -1386,6 +1435,8 @@ argument_list|,
 argument|int flag1
 argument_list|,
 argument|int flag2
+argument_list|,
+argument|color *c
 argument_list|,
 argument|node *next =
 literal|0
@@ -1408,7 +1459,12 @@ argument_list|)
 block|,
 name|unformat
 argument_list|(
-argument|flag2
+name|flag2
+argument_list|)
+block|,
+name|col
+argument_list|(
+argument|c
 argument_list|)
 block|{}
 name|node
@@ -1510,9 +1566,14 @@ name|public
 operator|:
 name|space_char_hmotion_node
 argument_list|(
-argument|hunits i
+name|hunits
 argument_list|,
-argument|node *next =
+name|color
+operator|*
+argument_list|,
+name|node
+operator|*
+operator|=
 literal|0
 argument_list|)
 block|;
@@ -1592,16 +1653,28 @@ block|{
 name|vunits
 name|n
 block|;
+name|color
+operator|*
+name|col
+block|;
+comment|/* for grotty */
 name|public
 operator|:
 name|vmotion_node
 argument_list|(
 argument|vunits i
+argument_list|,
+argument|color *c
 argument_list|)
 operator|:
 name|n
 argument_list|(
-argument|i
+name|i
+argument_list|)
+block|,
+name|col
+argument_list|(
+argument|c
 argument_list|)
 block|{}
 name|void
@@ -2339,6 +2412,14 @@ name|tfont
 operator|*
 name|tf
 block|;
+name|color
+operator|*
+name|gcol
+block|;
+name|color
+operator|*
+name|fcol
+block|;
 name|int
 name|no_init_string
 block|;
@@ -2384,6 +2465,12 @@ name|macro
 operator|&
 argument_list|,
 name|tfont
+operator|*
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|color
 operator|*
 argument_list|,
 name|int
@@ -2452,6 +2539,9 @@ block|;
 name|char
 name|position
 block|;
+name|int
+name|image_id
+block|;
 name|public
 operator|:
 name|suppress_node
@@ -2466,6 +2556,8 @@ argument_list|(
 argument|symbol f
 argument_list|,
 argument|char p
+argument_list|,
+argument|int id
 argument_list|)
 block|;
 name|suppress_node
@@ -2477,6 +2569,8 @@ argument_list|,
 argument|symbol f
 argument_list|,
 argument|char p
+argument_list|,
+argument|int id
 argument_list|)
 block|;
 name|node
@@ -2560,6 +2654,14 @@ block|;
 name|font_size
 name|sz
 block|;
+name|color
+operator|*
+name|gcol
+block|;
+name|color
+operator|*
+name|fcol
+block|;
 name|char
 name|code
 block|;
@@ -2579,6 +2681,12 @@ argument_list|,
 name|int
 argument_list|,
 name|font_size
+argument_list|,
+name|color
+operator|*
+argument_list|,
+name|color
+operator|*
 argument_list|)
 block|;
 operator|~
@@ -3078,6 +3186,18 @@ modifier|*
 name|lookup_family
 parameter_list|(
 name|symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|symbol
+name|get_font_name
+parameter_list|(
+name|int
+parameter_list|,
+name|environment
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
