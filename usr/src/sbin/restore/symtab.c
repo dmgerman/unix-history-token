@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.9	(Berkeley)	83/03/27"
+literal|"@(#)symtab.c	3.10	(Berkeley)	83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -2511,9 +2511,8 @@ argument_list|(
 literal|"no memory for entry table\n"
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+name|ep
+operator|=
 name|addentry
 argument_list|(
 literal|"."
@@ -2522,6 +2521,12 @@ name|ROOTINO
 argument_list|,
 name|NODE
 argument_list|)
+expr_stmt|;
+name|ep
+operator|->
+name|e_flags
+operator||=
+name|NEW
 expr_stmt|;
 return|return;
 block|}
