@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuxqt.c	5.5 (Berkeley) %G%"
+literal|"@(#)uuxqt.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,14 +167,6 @@ name|int
 name|Nfiles
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|strpbrk
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|int
@@ -602,9 +594,6 @@ name|ulockf
 argument_list|(
 name|X_LOCK
 argument_list|,
-operator|(
-name|time_t
-operator|)
 name|X_LOCKTIME
 argument_list|)
 operator|!=
@@ -1143,11 +1132,9 @@ argument_list|,
 name|DEVNULL
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|strcpy
 argument_list|(
 name|sysout
-argument_list|,
-literal|"%.7s"
 argument_list|,
 name|Myname
 argument_list|)
@@ -1287,7 +1274,7 @@ argument_list|)
 expr_stmt|;
 name|sysout
 index|[
-literal|7
+name|MAXBASENAME
 index|]
 operator|=
 literal|'\0'
@@ -2371,11 +2358,6 @@ name|time_t
 name|ystrdy
 decl_stmt|;
 comment|/* yesterday */
-specifier|extern
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|struct
 name|stat
 name|stbuf
@@ -3574,77 +3556,6 @@ name|CNULL
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-end_block
-
-begin_comment
-comment|/*  * this is like index, but takes a string as the second argument  */
-end_comment
-
-begin_function
-name|char
-modifier|*
-name|strpbrk
-parameter_list|(
-name|str
-parameter_list|,
-name|chars
-parameter_list|)
-specifier|register
-name|char
-modifier|*
-name|str
-decl_stmt|,
-decl|*
-name|chars
-decl_stmt|;
-end_function
-
-begin_block
-block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-do|do
-block|{
-name|cp
-operator|=
-name|chars
-operator|-
-literal|1
-expr_stmt|;
-while|while
-condition|(
-operator|*
-operator|++
-name|cp
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|str
-operator|==
-operator|*
-name|cp
-condition|)
-return|return
-name|str
-return|;
-block|}
-block|}
-do|while
-condition|(
-operator|*
-name|str
-operator|++
-condition|)
-do|;
-return|return
-name|NULL
-return|;
 block|}
 end_block
 

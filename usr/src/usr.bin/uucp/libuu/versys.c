@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)versys.c	5.3 (Berkeley) %G%"
+literal|"@(#)versys.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,12 +38,9 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|SNAMESIZE
-value|7
-end_define
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	verify system names n1 and n2  *	return codes:  SUCCESS  |  FAIL  *  *	NOTE:  *		the old calling sequence was versys(name) but is  *	now versys(&name) so that we can perform aliasing!!!!  *	See accompanying changes in uucp.c and uux.c  *		-- Ray Essick, April 27, 1984  */
@@ -119,7 +116,7 @@ name|name
 argument_list|,
 name|Myname
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|==
 literal|0
@@ -193,7 +190,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-literal|7
+name|MAXBASENAME
 argument_list|)
 operator|==
 name|SAME
@@ -446,6 +443,9 @@ name|koshername
 operator|=
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|strlen
 argument_list|(
 name|buf
