@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_geom.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-end_ifdef
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -469,29 +457,6 @@ argument_list|(
 name|sc
 operator|->
 name|mcd_dev_t
-index|[
-literal|2
-index|]
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|sc
-operator|->
-name|mcd_dev_t
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
-name|destroy_dev
-argument_list|(
-name|sc
-operator|->
-name|mcd_dev_t
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|mcd_release_resources
@@ -989,15 +954,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* GEOM */
-end_comment
 
 end_unit
 
