@@ -359,7 +359,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sn
+name|if_sn
 argument_list|,
 name|pccard
 argument_list|,
