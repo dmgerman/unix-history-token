@@ -2711,11 +2711,6 @@ operator|&
 name|pfsync_cloner
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"pfsync: $Name:  $\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD

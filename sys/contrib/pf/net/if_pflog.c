@@ -1785,11 +1785,6 @@ operator|&
 name|pflog_cloner
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"pflog: $Name:  $\n"
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
