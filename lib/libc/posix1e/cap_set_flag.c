@@ -19,11 +19,27 @@ directive|include
 file|"namespace.h"
 end_include
 
+begin_comment
+comment|/* need capability.h macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_CAPABILITY_NEEDMACROS
+end_define
+
 begin_include
 include|#
 directive|include
 file|<sys/capability.h>
 end_include
+
+begin_undef
+undef|#
+directive|undef
+name|_CAPABILITY_NEEDMACROS
+end_undef
 
 begin_include
 include|#
