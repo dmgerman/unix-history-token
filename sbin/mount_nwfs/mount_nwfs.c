@@ -12,19 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_include
@@ -278,16 +266,9 @@ name|argc
 operator|<
 literal|2
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|argc
@@ -312,11 +293,6 @@ condition|)
 block|{
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -687,11 +663,9 @@ operator|>
 name|NCP_VOLNAME_LEN
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"Volume name too long: %s\n"
+literal|"volume name too long: %s\n"
 argument_list|,
 name|tmp
 argument_list|)
@@ -844,7 +818,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"An error occured while parsing '%s'"
+literal|"an error occured while parsing '%s'"
 argument_list|,
 name|argv
 index|[
@@ -947,7 +921,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"Volume too long: %s\n"
+literal|"volume too long: %s\n"
 argument_list|,
 name|optarg
 argument_list|)
@@ -1160,11 +1134,6 @@ literal|'?'
 case|:
 name|usage
 argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
 case|case
@@ -1404,9 +1373,6 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-literal|1
-return|;
 block|}
 block|}
 if|if
@@ -1438,7 +1404,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"Volume name should be specified"
+literal|"volume name should be specified"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1449,14 +1415,9 @@ name|argc
 operator|-
 literal|1
 condition|)
-block|{
 name|usage
 argument_list|()
 expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 name|realpath
 argument_list|(
 name|argv
@@ -1743,32 +1704,22 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"cannot login to server %s"
 argument_list|,
-literal|"Cannot login to server %s,%s\n"
+name|error
 argument_list|,
 name|li
 operator|.
 name|server
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|ncp_disconnect
+name|exit
 argument_list|(
-name|connHandle
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|error
 operator|=
@@ -1787,11 +1738,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"could not convert handle to refernce."
 argument_list|,
-literal|"Cannot convert handle to refernce. Consider this as a big bug.\n"
+name|error
 argument_list|)
 expr_stmt|;
 name|ncp_disconnect
@@ -1799,11 +1750,11 @@ argument_list|(
 name|connHandle
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|exit
+argument_list|(
 literal|1
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|strcpy
 argument_list|(
@@ -1845,16 +1796,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|fprintf
+name|ncp_error
 argument_list|(
-name|stderr
+literal|"mount error: %s"
 argument_list|,
-literal|"mount error: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
 name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ncp_disconnect
@@ -1892,7 +1838,7 @@ block|{
 name|printf
 argument_list|(
 literal|"usage: %s [connection options] [options] \n"
-literal|"       server:user/volume[/path] mount-point\n\n"
+literal|"       /server:user/volume[/path] mount-point\n\n"
 argument_list|,
 name|__progname
 argument_list|)
@@ -1908,6 +1854,11 @@ literal|"    -d mode        permission the dirs get\n"
 literal|"    -h             print this help text\n"
 literal|"    -v             print nwfs version number\n"
 literal|"\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
