@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.4 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,7 @@ block|,
 block|{
 literal|"arp"
 block|,
+operator|-
 name|IFF_NOARP
 block|,
 name|setifflags
@@ -191,7 +192,6 @@ block|,
 block|{
 literal|"-arp"
 block|,
-operator|-
 name|IFF_NOARP
 block|,
 name|setifflags
@@ -606,24 +606,22 @@ operator|=
 operator|-
 name|value
 expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|value
+expr_stmt|;
+block|}
+else|else
+name|flags
+operator||=
+name|value
+expr_stmt|;
 name|ifr
 operator|.
 name|ifr_flags
 operator|=
-operator|(
 name|flags
-operator|&
-operator|~
-name|value
-operator|)
-expr_stmt|;
-block|}
-else|else
-name|ifr
-operator|.
-name|ifr_flags
-operator||=
-name|value
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -746,7 +744,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4ROUTE\5POINTOPOINT\6NOTRAILERS\7RUNNING"
+value|"\020\1UP\2BROADCAST\3DEBUG\4ROUTE\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP"
 name|printb
 argument_list|(
 literal|"flags"
