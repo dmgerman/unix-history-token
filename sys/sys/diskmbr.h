@@ -1692,10 +1692,6 @@ name|bp
 operator|,
 name|char
 operator|*
-name|dname
-operator|,
-name|char
-operator|*
 name|what
 operator|,
 name|int
