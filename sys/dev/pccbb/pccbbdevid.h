@@ -116,7 +116,7 @@ value|0x69721217ul
 end_define
 
 begin_comment
-comment|/* Also 6972? */
+comment|/* Also 6972 */
 end_comment
 
 begin_define
