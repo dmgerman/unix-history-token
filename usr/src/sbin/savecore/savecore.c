@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.22 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,6 +184,27 @@ else|#
 directive|else
 end_else
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|i386
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ok
+parameter_list|(
+name|number
+parameter_list|)
+value|((number)&~0xfe000000)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -193,6 +214,11 @@ name|number
 parameter_list|)
 value|(number)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
