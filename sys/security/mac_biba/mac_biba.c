@@ -11694,7 +11694,7 @@ block|,
 operator|.
 name|mpo_init_ipq_label
 operator|=
-name|mac_biba_init_label
+name|mac_biba_init_label_waitcheck
 block|,
 operator|.
 name|mpo_init_mbuf_label

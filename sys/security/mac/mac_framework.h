@@ -576,12 +576,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|mac_init_ipq
 parameter_list|(
 name|struct
 name|ipq
 modifier|*
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 end_function_decl

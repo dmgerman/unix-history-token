@@ -127,7 +127,7 @@ modifier|*
 name|label
 parameter_list|)
 function_decl|;
-name|void
+name|int
 function_decl|(
 modifier|*
 name|mpo_init_ipq_label
@@ -137,6 +137,9 @@ name|struct
 name|label
 modifier|*
 name|label
+parameter_list|,
+name|int
+name|flag
 parameter_list|)
 function_decl|;
 name|int
