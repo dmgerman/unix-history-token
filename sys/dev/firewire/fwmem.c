@@ -1532,7 +1532,7 @@ name|dev
 operator|->
 name|si_drv1
 argument_list|,
-name|M_FW
+name|M_FWMEM
 argument_list|)
 expr_stmt|;
 name|dev
