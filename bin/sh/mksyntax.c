@@ -1833,11 +1833,16 @@ name|fprintf
 argument_list|(
 name|cfile
 argument_list|,
-literal|"      %td,\n"
+literal|"      %d,\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|digit
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
