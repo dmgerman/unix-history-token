@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/user.h>
 end_include
 
@@ -89,7 +95,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Save the thread's FPU CPU number, and set the CPU's current  	 * FPU thread 	 */
+comment|/* 	 * Save the thread's FPU CPU number, and set the CPU's current 	 * FPU thread 	 */
 name|td
 operator|->
 name|td_pcb
@@ -693,7 +699,7 @@ name|pcb
 operator|->
 name|pcb_fpcpu
 operator|=
-name|NULL
+name|INT_MAX
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
