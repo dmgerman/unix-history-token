@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.13 %G%"
+literal|"@(#)object.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4221,6 +4221,16 @@ literal|','
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|curchar
+operator|==
+literal|';'
+condition|)
+name|curchar
+operator|++
+expr_stmt|;
 break|break;
 case|case
 literal|'*'
