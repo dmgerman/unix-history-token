@@ -134,6 +134,13 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|mcount_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
