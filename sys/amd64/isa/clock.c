@@ -951,116 +951,36 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|volatile
+comment|/* 	 * Don't need volatile; should always use unsigned if 2's 	 * complement arithmetic is desired. 	 */
+name|unsigned
 name|long
-name|edx
+name|long
+name|count
 decl_stmt|,
-name|eax
-decl_stmt|,
-name|lasteax
-decl_stmt|,
-name|lastedx
+name|last_count
 decl_stmt|;
-asm|__asm __volatile(".byte 0x0f, 0x31" : "=a"(lasteax), "=d"(lastedx) : );
+asm|__asm __volatile(".byte 0xf,0x31" : "=A" (last_count));
 name|DELAY
 argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile(".byte 0x0f, 0x31" : "=a"(eax), "=d"(edx) : );
-comment|/* 	 * This assumes that you will never have a clock rate higher 	 * than 4GHz, probably a good assumption. 	 */
-comment|/* The following C code is correct, but our current gcc 2.6.3 	 * seems to produce bad assembly code for it , ATS , XXXX */
-if|#
-directive|if
-literal|0
-block|cycles_per_sec = ((long long)edx<< 32) + eax; 	cycles_per_sec -= ((long long)lastedx<< 32) + lasteax; 	pentium_mhz = ((long)cycles_per_sec + 500000) / 1000000;
-comment|/* round up */
-else|#
-directive|else
-comment|/* produce a workaround for the code above */
-block|{
-union|union
-block|{
-name|long
-name|long
-name|extralong
-decl_stmt|;
-name|long
-name|shorty
-index|[
-literal|2
-index|]
-decl_stmt|;
-block|}
-name|tmp
-union|;
-name|tmp
-operator|.
-name|shorty
-index|[
-literal|0
-index|]
-operator|=
-name|eax
-expr_stmt|;
-name|tmp
-operator|.
-name|shorty
-index|[
-literal|1
-index|]
-operator|=
-name|edx
-expr_stmt|;
-name|cycles_per_sec
-operator|=
-name|tmp
-operator|.
-name|extralong
-expr_stmt|;
-name|tmp
-operator|.
-name|shorty
-index|[
-literal|0
-index|]
-operator|=
-name|lasteax
-expr_stmt|;
-name|tmp
-operator|.
-name|shorty
-index|[
-literal|1
-index|]
-operator|=
-name|lastedx
-expr_stmt|;
-name|cycles_per_sec
-operator|-=
-name|tmp
-operator|.
-name|extralong
-expr_stmt|;
-comment|/* round up */
+asm|__asm __volatile(".byte 0xf,0x31" : "=A" (count));
+comment|/* 	 * XX lose if the clock rate is not nearly a multiple of 1000000. 	 */
 name|pentium_mhz
 operator|=
-call|(
-name|long
-call|)
-argument_list|(
 operator|(
-name|cycles_per_sec
+operator|(
+name|count
+operator|-
+name|last_count
+operator|)
 operator|+
 literal|500000
 operator|)
 operator|/
 literal|1000000
-argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 
