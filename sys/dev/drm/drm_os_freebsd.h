@@ -1125,7 +1125,7 @@ parameter_list|,
 name|uaddr
 parameter_list|)
 define|\
-value|((val) = fuword(uaddr), 0)
+value|((val) = fuword32(uaddr), 0)
 end_define
 
 begin_define
@@ -1138,7 +1138,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|suword(uaddr, val)
+value|suword32(uaddr, val)
 end_define
 
 begin_comment
@@ -1220,12 +1220,16 @@ name|__amd64__
 argument_list|)
 end_elif
 
+begin_comment
+comment|//#warning FIX-ME!!!
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DRM_READMEMORYBARRIER
 parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
+value|__asm __volatile("lfence" ::: "memory");
 end_define
 
 begin_define
@@ -1233,7 +1237,7 @@ define|#
 directive|define
 name|DRM_WRITEMEMORYBARRIER
 parameter_list|()
-value|__asm __volatile("" : : : "memory");
+value|__asm __volatile("sfence" ::: "memory");
 end_define
 
 begin_define
@@ -1241,7 +1245,7 @@ define|#
 directive|define
 name|DRM_MEMORYBARRIER
 parameter_list|()
-value|__asm __volatile( \ 					"lock; addl $0,0(%%rsp)" : : : "memory");
+value|__asm __volatile("mfence" ::: "memory");
 end_define
 
 begin_endif
