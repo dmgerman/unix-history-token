@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: slattach.c,v 1.28 1997/06/19 14:33:42 charnier Exp $"
+literal|"$Id: slattach.c,v 1.29 1997/12/21 13:42:27 eivind Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1003,7 +1003,7 @@ comment|/* upon INT log a timestamp and exit.  */
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
@@ -1025,7 +1025,7 @@ comment|/* upon TERM log a timestamp and exit.  */
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
@@ -1047,7 +1047,7 @@ comment|/* upon HUP redial and reconnect.  */
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
@@ -1332,7 +1332,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|signal
 argument_list|(
