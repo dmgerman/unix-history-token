@@ -4590,6 +4590,10 @@ argument_list|,
 name|current_output
 argument_list|)
 expr_stmt|;
+name|jump
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|i
