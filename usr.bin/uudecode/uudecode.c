@@ -304,6 +304,21 @@ operator|=
 name|optarg
 expr_stmt|;
 comment|/* set the output filename */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|outfile
+argument_list|,
+literal|"/dev/stdout"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|pflag
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
