@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	8.10 (Berkeley) %G%"
+literal|"@(#)mount.c	8.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -661,15 +661,13 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"cannot get mount information"
+literal|"getmntinfo"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -874,11 +872,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"-u malloc failed"
+name|NULL
 argument_list|)
 expr_stmt|;
 operator|(
@@ -964,7 +962,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"unknown special file or file system %s.\n"
+literal|"unknown special file or file system %s."
 argument_list|,
 operator|*
 name|argv
@@ -983,7 +981,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s has unknown file system type.\n"
+literal|"%s has unknown file system type."
 argument_list|,
 operator|*
 name|argv
@@ -1751,7 +1749,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mount table full\n"
+literal|"Mount table full.\n"
 argument_list|)
 expr_stmt|;
 break|break;
