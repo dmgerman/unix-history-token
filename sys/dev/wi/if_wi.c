@@ -44,6 +44,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"pci.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -131,6 +137,14 @@ directive|include
 file|<sys/rman.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_include
 include|#
 directive|include
@@ -142,6 +156,11 @@ include|#
 directive|include
 file|<pci/pcivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -756,7 +775,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|wi_pci_probe
+name|wi_pccard_attach
 name|__P
 argument_list|(
 operator|(
@@ -766,10 +785,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_decl_stmt
 specifier|static
 name|int
-name|wi_pccard_attach
+name|wi_pci_probe
 name|__P
 argument_list|(
 operator|(
@@ -791,6 +818,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -968,6 +1000,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -1013,6 +1053,11 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 name|driver_t
@@ -1031,6 +1076,14 @@ operator|)
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -1097,17 +1150,15 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|wi_pccard_devclass
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|wi_pci_devclass
+name|wi_devclass
 decl_stmt|;
 end_decl_stmt
 
@@ -1120,7 +1171,7 @@ name|pccard
 argument_list|,
 name|wi_pccard_driver
 argument_list|,
-name|wi_pccard_devclass
+name|wi_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -1128,6 +1179,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
 
 begin_expr_stmt
 name|DRIVER_MODULE
@@ -1138,7 +1197,7 @@ name|pci
 argument_list|,
 name|wi_pci_driver
 argument_list|,
-name|wi_pci_devclass
+name|wi_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -1146,6 +1205,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1315,6 +1379,14 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -1423,6 +1495,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1684,6 +1761,14 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|NPCI
+operator|>
+literal|0
+end_if
 
 begin_function
 specifier|static
@@ -2102,6 +2187,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
