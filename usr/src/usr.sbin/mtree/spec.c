@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.15 (Berkeley) %G%"
+literal|"@(#)spec.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,10 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
+name|root
+operator|=
+name|NULL
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -314,6 +318,25 @@ operator|==
 literal|'#'
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|DEBUG
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"line %d: {%s}\n"
+argument_list|,
+name|lineno
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c_cur
