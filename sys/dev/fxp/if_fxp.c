@@ -6196,7 +6196,7 @@ name|sc
 argument_list|,
 name|FXP_CSR_PORT
 argument_list|,
-name|FXP_PORT_SOFTWARE_RESET
+name|FXP_PORT_SELECTIVE_RESET
 argument_list|)
 expr_stmt|;
 name|DELAY
