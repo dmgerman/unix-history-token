@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* graph.c	1.3	83/07/05  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
+comment|/* graph.c	1.4	83/07/08  *  *	This file contains the functions for producing the graphics  *   images in the varian/versatec drivers for ditroff.  */
 end_comment
 
 begin_include
@@ -34,6 +34,62 @@ directive|define
 name|FALSE
 value|0
 end_define
+
+begin_comment
+comment|/* imports from dver.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|hmot
+parameter_list|(
+name|n
+parameter_list|)
+value|hpos += n;
+end_define
+
+begin_define
+define|#
+directive|define
+name|vmot
+parameter_list|(
+name|n
+parameter_list|)
+value|vgoto(vpos + n);
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|hpos
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vpos
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern vgoto(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_extern
+extern|extern point(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -107,62 +163,6 @@ name|log2_10
 value|3.3219280948873623
 end_define
 
-begin_comment
-comment|/* imports from dver.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|hmot
-parameter_list|(
-name|n
-parameter_list|)
-value|hpos += n;
-end_define
-
-begin_define
-define|#
-directive|define
-name|vmot
-parameter_list|(
-name|n
-parameter_list|)
-value|vgoto(vpos + n);
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|hpos
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|vpos
-decl_stmt|;
-end_decl_stmt
-
-begin_extern
-extern|extern vgoto(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_extern
-extern|extern point(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
 begin_decl_stmt
 name|int
 name|linethickness
@@ -185,6 +185,10 @@ end_decl_stmt
 
 begin_comment
 comment|/* type of line (SOLID, DOTTED, DASHED...) */
+end_comment
+
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	drawline (horizontal_motion, vertical_motion)  *  * Results:	Draws a line of "linethickness" width and "linmod" style  *		from current (hpos, vpos) to (hpos + dh, vpos + dv).  *  * Side Efct:	Resulting position is at end of line (hpos + dh, vpos + dv)  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_expr_stmt
@@ -239,6 +243,10 @@ comment|/* the end of the line */
 block|}
 end_block
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	drawcirc (diameter)  *  * Results:	Draws a circle with leftmost point at current (hpos, vpos)  *		with the given diameter d.  *  * Side Efct:	Resulting position is at (hpos + diameter, vpos)  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_expr_stmt
 name|drawcirc
 argument_list|(
@@ -252,6 +260,7 @@ end_expr_stmt
 
 begin_block
 block|{
+comment|/* 0.0 is the angle to sweep the arc: = full circle */
 name|HGArc
 argument_list|(
 name|hpos
@@ -279,7 +288,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*******************************************************************************  *  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  *	This routine draws regular ellipses given the major diagonals.  *	It does so by drawing many small lines, every other pixel.  *  *	The ellipse formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1  *	is used, converting to y = f(x) and duplicating the lines about  *	the vertical axis.  *  * Results:	The current position is at the rightmost point of the ellipse  *  ******************************************************************************/
+comment|/*----------------------------------------------------------------------------  * Routine:	drawellip (horizontal_diameter, vertical_diameter)  *  * Results:	Draws regular ellipses given the major "diameters."  It does  *		so by drawing many small lines, every other pixel.  The ellipse  *		formula:  ((x-x0)/hrad)**2 + ((y-y0)/vrad)**2 = 1 is used,  *		converting to:  y = y0 +- vrad * sqrt(1 - ((x-x0)/hrad)**2).  *		The line segments are duplicated (mirrored) on either side of  *		the horizontal "diameter".  *  * Side Efct:	Resulting position is at (hpos + hd, vpos).  *  * Bugs:	Odd numbered horizontal axes are rounded up to even numbers.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_expr_stmt
@@ -349,7 +358,7 @@ operator|/
 literal|2
 operator|)
 expr_stmt|;
-comment|/* don't accept odd diagonals */
+comment|/* don't accept odd diameters */
 name|bx
 operator|=
 literal|4
@@ -416,6 +425,10 @@ do|do
 block|{
 name|yk
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|k1
 operator|*
 name|sqrt
@@ -439,8 +452,7 @@ literal|2
 operator|)
 argument_list|)
 argument_list|)
-operator|+
-literal|0.5
+argument_list|)
 expr_stmt|;
 name|HGtline
 argument_list|(
@@ -496,6 +508,10 @@ condition|)
 do|;
 block|}
 end_block
+
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	drawarc (xcenter, ycenter, xpoint, ypoint)  *  * Results:	Draws an arc starting at current (hpos, vpos).  Center is  *		at (hpos + cdh, vpos + cdv) and the terminating point is  *		at<center> + (pdh, pdv).  The angle between the lines  *		formed by the starting, ending, and center points is figured  *		first, then the points and angle are sent to HGArc for the  *		drawing.  *  * Side Efct:	Resulting position is at the last point of the arc.  *----------------------------------------------------------------------------*/
+end_comment
 
 begin_expr_stmt
 name|drawarc
@@ -629,6 +645,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	drawwig (character_buffer, file_pointer)  *  * Results:	Given the starting position, the motion list in buf, and any  *		extra characters from fp (terminated by a \n), drawwig sets  *		up a point list to make a spline from and calls HGCurve.  *  * Side Efct:	Resulting position is reached from adding successive motions  *		to the current position.  *  * Bugs:	This MAY not be the final spline maker (PIC expects different)  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_macro
 name|drawwig
 argument_list|(
@@ -663,12 +683,14 @@ argument_list|(
 name|buf
 argument_list|)
 decl_stmt|;
+comment|/* length of the string in "buf" */
 specifier|register
 name|int
 name|i
 init|=
 literal|2
 decl_stmt|;
+comment|/* point list index */
 specifier|register
 name|char
 modifier|*
@@ -676,6 +698,7 @@ name|ptr
 init|=
 name|buf
 decl_stmt|;
+comment|/* "walking" pointer into buf */
 name|float
 name|x
 index|[
@@ -687,6 +710,7 @@ index|[
 name|MAXPOINTS
 index|]
 decl_stmt|;
+comment|/* point list */
 while|while
 condition|(
 operator|*
@@ -728,7 +752,7 @@ operator|!=
 literal|'\n'
 condition|)
 block|{
-comment|/* curve commands end with a "cr" */
+comment|/* curve commands end with a '\n' */
 name|hmot
 argument_list|(
 name|atoi
@@ -737,7 +761,7 @@ name|ptr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* convert to curve points */
+comment|/* convert motion to curve points */
 name|x
 index|[
 name|i
@@ -903,52 +927,68 @@ comment|/* now, actually DO the curve */
 block|}
 end_block
 
-begin_macro
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	line (xstart, ystart, xend, yend)  *  * Results:	Draws a one-pixel wide line from (x0, y0) to  *		(x1, y1) using point(x,y) to place the dots.  *----------------------------------------------------------------------------*/
+end_comment
+
+begin_expr_stmt
 name|line
 argument_list|(
-argument|x0
+name|x0
 argument_list|,
-argument|y0
+name|y0
 argument_list|,
-argument|x1
+name|x1
 argument_list|,
-argument|y1
+name|y1
 argument_list|)
-end_macro
+specifier|register
+name|int
+name|x0
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|register
+name|int
+name|y0
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|x0
-decl_stmt|,
-name|y0
-decl_stmt|,
 name|x1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|y1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* This routine is called to draw a line from the point at (x0, y0) to (x1, y1).  * The line is drawn using a variation of   */
-end_comment
-
 begin_block
 block|{
+specifier|register
 name|int
 name|dx
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|dy
 decl_stmt|;
-name|int
-name|xinc
-decl_stmt|,
-name|yinc
-decl_stmt|;
+specifier|register
 name|int
 name|res1
 decl_stmt|;
 name|int
 name|res2
+decl_stmt|;
+name|int
+name|xinc
+decl_stmt|;
+name|int
+name|yinc
 decl_stmt|;
 name|int
 name|slope
@@ -1166,6 +1206,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	HGArc (xcenter, ycenter, xstart, ystart, angle)  *  * Results:	This routine plots an arc centered about (cx, cy) counter  *		clockwise starting from the point (px, py) through 'angle'  *		degrees.  If angle is 0, a full circle is drawn.  *		It does so by calling RoundEnd (fat point maker) for points  *		along the circle with density depending on the circle's size.  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_expr_stmt
 name|HGArc
 argument_list|(
@@ -1212,10 +1256,6 @@ name|int
 name|angle
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* This routine plots an arc centered about (cx, cy) counter clockwise for  * the point (px, py) through 'angle' degrees.  If angle is 0, a full circle  * is drawn.  */
-end_comment
 
 begin_block
 block|{
@@ -1416,6 +1456,10 @@ begin_comment
 comment|/* end HGArc */
 end_comment
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	RoundEnd (x, y, radius, filled_flag)  *  * Results:	Plots a filled (if requested) circle of the specified radius  *		centered about (x, y).  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_macro
 name|RoundEnd
 argument_list|(
@@ -1444,14 +1488,6 @@ name|int
 name|filled
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* indicates whether the circle is filled */
-end_comment
-
-begin_comment
-comment|/* This routine plots a filled circle of the specified radius centered   * about (x, y).  */
-end_comment
 
 begin_block
 block|{
@@ -1486,8 +1522,8 @@ name|radius
 operator|<
 literal|1
 condition|)
-comment|/* too small to notice */
 block|{
+comment|/* too small to notice */
 name|point
 argument_list|(
 name|x
@@ -1517,7 +1553,7 @@ name|pi
 operator|*
 name|radius
 operator|/
-literal|2
+literal|2.0
 expr_stmt|;
 comment|/* 1/4 the circumference */
 comment|/* Calculate the trajectory of the circle for 1/4 the circumference          * and mirror appropriately to get the other three quadrants.          */
@@ -1746,6 +1782,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	Paramaterize (xpoints, ypoints, hparams, num_points)  *  * Results:	This routine calculates parameteric values for use in  *		calculating curves.  The parametric values are returned  *		in the array h.  The values are an approximation of  *		cumulative arc lengths of the curve (uses cord length).  *		For additional information, see paper cited below.  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|Paramaterize
@@ -1763,28 +1803,32 @@ name|x
 index|[
 name|MAXPOINTS
 index|]
-operator|,
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|float
 name|y
 index|[
 name|MAXPOINTS
 index|]
-operator|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
 name|h
 index|[
 name|MAXPOINTS
 index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*     This routine calculates parameteric values for use in calculating  * curves.  The parametric values are returned in the array u.  The values  * are an approximation of cumulative arc lengths of the curve (uses cord  * length).  For additional information, see paper cited below.  */
-end_comment
 
 begin_block
 block|{
@@ -1931,6 +1975,10 @@ begin_comment
 comment|/* end Paramaterize */
 end_comment
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	PeriodicSpline (h, z, dz, d2z, d3z, npoints)  *  * Results:	This routine solves for the cubic polynomial to fit a  *		spline curve to the the points  specified by the list  *		of values.  The Curve generated is periodic.  The algorithms  *		for this curve are from the "Spline Curve Techniques" paper  *		cited below.  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_expr_stmt
 specifier|static
 name|PeriodicSpline
@@ -2005,10 +2053,6 @@ begin_comment
 comment|/* number of valid points */
 end_comment
 
-begin_comment
-comment|/*  *     This routine solves for the cubic polynomial to fit a spline  * curve to the the points  specified by the list of values.  * The Curve generated is periodic.  The alogrithms for this   * curve are from the "Spline Curve Techniques" paper cited below.  */
-end_comment
-
 begin_block
 block|{
 name|float
@@ -2067,20 +2111,16 @@ operator|++
 name|i
 control|)
 block|{
-if|if
-condition|(
-name|h
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
 name|deltaz
 index|[
 name|i
 index|]
 operator|=
+name|h
+index|[
+name|i
+index|]
+condition|?
 operator|(
 name|z
 index|[
@@ -2099,13 +2139,7 @@ name|h
 index|[
 name|i
 index|]
-expr_stmt|;
-else|else
-name|deltaz
-index|[
-name|i
-index|]
-operator|=
+else|:
 literal|0
 expr_stmt|;
 block|}
@@ -2625,20 +2659,16 @@ operator|)
 operator|/
 literal|6
 expr_stmt|;
-if|if
-condition|(
-name|h
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
 name|d3z
 index|[
 name|i
 index|]
 operator|=
+name|h
+index|[
+name|i
+index|]
+condition|?
 operator|(
 name|d2z
 index|[
@@ -2657,13 +2687,7 @@ name|h
 index|[
 name|i
 index|]
-expr_stmt|;
-else|else
-name|d3z
-index|[
-name|i
-index|]
-operator|=
+else|:
 literal|0
 expr_stmt|;
 block|}
@@ -2672,6 +2696,10 @@ end_block
 
 begin_comment
 comment|/* end PeriodicSpline */
+end_comment
+
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	NaturalEndSpline (h, z, dz, d2z, d3z, npoints)  *  * Results:	This routine solves for the cubic polynomial to fit a  *		spline curve the the points  specified by the list of  *		values.  The alogrithms for this curve are from the  *		"Spline Curve Techniques" paper cited below.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_expr_stmt
@@ -2748,10 +2776,6 @@ begin_comment
 comment|/* number of valid points */
 end_comment
 
-begin_comment
-comment|/*  *     This routine solves for the cubic polynomial to fit a spline  * curve the the points  specified by the list of values.  The alogrithms for  * this curve are from the "Spline Curve Techniques" paper cited below.  */
-end_comment
-
 begin_block
 block|{
 name|float
@@ -2794,20 +2818,16 @@ operator|++
 name|i
 control|)
 block|{
-if|if
-condition|(
-name|h
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
 name|deltaz
 index|[
 name|i
 index|]
 operator|=
+name|h
+index|[
+name|i
+index|]
+condition|?
 operator|(
 name|z
 index|[
@@ -2826,13 +2846,7 @@ name|h
 index|[
 name|i
 index|]
-expr_stmt|;
-else|else
-name|deltaz
-index|[
-name|i
-index|]
-operator|=
+else|:
 literal|0
 expr_stmt|;
 block|}
@@ -3139,20 +3153,16 @@ operator|)
 operator|/
 literal|6
 expr_stmt|;
-if|if
-condition|(
-name|h
-index|[
-name|i
-index|]
-operator|!=
-literal|0
-condition|)
 name|d3z
 index|[
 name|i
 index|]
 operator|=
+name|h
+index|[
+name|i
+index|]
+condition|?
 operator|(
 name|d2z
 index|[
@@ -3171,13 +3181,7 @@ name|h
 index|[
 name|i
 index|]
-expr_stmt|;
-else|else
-name|d3z
-index|[
-name|i
-index|]
-operator|=
+else|:
 literal|0
 expr_stmt|;
 block|}
@@ -3186,6 +3190,10 @@ end_block
 
 begin_comment
 comment|/* end NaturalEndSpline */
+end_comment
+
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	HGCurve(xpoints, ypoints, num_points)  *  * Results:	This routine generates a smooth curve through a set of points.  *		The method used is the parametric spline curve on unit knot  *		mesh described in "Spline Curve Techniques" by Patrick  *		Baudelaire, Robert Flegal, and Robert Sproull -- Xerox Parc.  *----------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -3212,7 +3220,11 @@ name|x
 index|[
 name|MAXPOINTS
 index|]
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
 name|y
 index|[
 name|MAXPOINTS
@@ -3225,10 +3237,6 @@ name|int
 name|numpoints
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*  *    This routine generates a smooth curve through a set of points.  The   * method used is the parametric spline curve on unit knot mesh described  * in "Spline Curve Techniques" by Patrick Baudelaire, Robert Flegal, and   * Robert Sproull -- Xerox Parc.  */
-end_comment
 
 begin_block
 block|{
@@ -3275,26 +3283,28 @@ decl_stmt|,
 name|t2
 decl_stmt|,
 name|t3
-decl_stmt|,
-name|xinter
-decl_stmt|,
-name|yinter
+decl_stmt|;
+specifier|register
+name|int
+name|j
+decl_stmt|;
+specifier|register
+name|int
+name|k
+decl_stmt|;
+specifier|register
+name|int
+name|nx
+decl_stmt|;
+specifier|register
+name|int
+name|ny
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|k
-decl_stmt|,
 name|lx
 decl_stmt|,
 name|ly
-decl_stmt|,
-name|nx
-decl_stmt|,
-name|ny
-decl_stmt|;
+decl_stmt|,;
 name|lx
 operator|=
 operator|(
@@ -3510,8 +3520,12 @@ name|t
 operator|*
 name|t
 expr_stmt|;
-name|xinter
+name|nx
 operator|=
+call|(
+name|int
+call|)
+argument_list|(
 name|x
 index|[
 name|j
@@ -3541,16 +3555,14 @@ name|j
 index|]
 operator|/
 literal|6
+argument_list|)
 expr_stmt|;
-name|nx
+name|ny
 operator|=
-operator|(
+call|(
 name|int
-operator|)
-name|xinter
-expr_stmt|;
-name|yinter
-operator|=
+call|)
+argument_list|(
 name|y
 index|[
 name|j
@@ -3580,13 +3592,7 @@ name|j
 index|]
 operator|/
 literal|6
-expr_stmt|;
-name|ny
-operator|=
-operator|(
-name|int
-operator|)
-name|yinter
+argument_list|)
 expr_stmt|;
 name|HGtline
 argument_list|(
@@ -3618,6 +3624,10 @@ begin_comment
 comment|/* end HGCurve */
 end_comment
 
+begin_comment
+comment|/*----------------------------------------------------------------------------  * Routine:	HGtline(xstart, ystart, xend, yend)  *  * Results:	Draws a line of proper thickness by calling "line" numerous  *		times until the desired thickness is reached.  *----------------------------------------------------------------------------*/
+end_comment
+
 begin_expr_stmt
 name|HGtline
 argument_list|(
@@ -3643,25 +3653,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 name|x1
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|register
 name|int
 name|y1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  *      This routine calls line repeatedly until the line is   * of the proper thickness.  */
-end_comment
-
 begin_block
 block|{
+specifier|register
+name|int
+name|xs
+decl_stmt|;
+specifier|register
+name|int
+name|xe
+decl_stmt|;
+specifier|register
+name|int
+name|ys
+decl_stmt|;
+specifier|register
+name|int
+name|ye
+decl_stmt|;
 name|double
 name|morelen
 decl_stmt|,
@@ -3674,15 +3694,6 @@ decl_stmt|,
 name|xx
 decl_stmt|,
 name|xy
-decl_stmt|;
-name|int
-name|xs
-decl_stmt|,
-name|xe
-decl_stmt|,
-name|ys
-decl_stmt|,
-name|ye
 decl_stmt|;
 name|int
 name|addln
@@ -3723,8 +3734,8 @@ name|dx
 operator|<
 literal|0
 condition|)
-comment|/* for extra thickness */
 block|{
+comment|/* for extra thickness */
 name|dx
 operator|=
 operator|-
