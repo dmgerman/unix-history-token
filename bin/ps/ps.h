@@ -85,6 +85,30 @@ parameter_list|)
 value|(&(ki)->ki_p->kp_eproc)
 end_define
 
+begin_comment
+comment|/* These two make it easier to MFC some changes from 5.x. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_PROC2
+parameter_list|(
+name|ki
+parameter_list|)
+value|(&(ki)->kp_proc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KI_EPROC2
+parameter_list|(
+name|ki
+parameter_list|)
+value|(&(ki)->kp_eproc)
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
