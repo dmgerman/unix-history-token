@@ -104,32 +104,6 @@ begin_comment
 comment|/* tmp bug report */
 end_comment
 
-begin_comment
-comment|/* permissions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DIR_MODE
-value|0750
-end_define
-
-begin_comment
-comment|/* directory creation mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FILE_MODE
-value|0644
-end_define
-
-begin_comment
-comment|/* file creation mode */
-end_comment
-
 begin_define
 define|#
 directive|define
