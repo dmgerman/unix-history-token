@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.2 %G%"
+literal|"@(#)clas.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -754,9 +754,22 @@ operator|&
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|PC
 return|return
 name|REGVAR
 return|;
+else|#
+directive|else
+name|panic
+argument_list|(
+literal|"whereis"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|PC
 block|}
 return|return
 name|LOCALVAR
