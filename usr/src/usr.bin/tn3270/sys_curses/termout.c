@@ -87,6 +87,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ascii/disp_asc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../ctlr/hostctlr.h"
 end_include
 
@@ -392,12 +398,6 @@ end_endif
 begin_comment
 comment|/* defined(unix) */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"disp_asc.out"
-end_include
 
 begin_escape
 end_escape
