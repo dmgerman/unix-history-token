@@ -11102,9 +11102,8 @@ literal|0
 condition|)
 name|tos
 operator|=
-literal|020
+name|IPTOS_LOWDELAY
 expr_stmt|;
-comment|/* Low Delay bit */
 if|if
 condition|(
 name|tos
