@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.24	83/01/13	*/
+comment|/*	socket.h	4.25	83/01/22	*/
 end_comment
 
 begin_comment
@@ -84,12 +84,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SO_DONTLINGER
+name|SO_REUSEADDR
 value|0x04
 end_define
 
 begin_comment
-comment|/* don't linger on close */
+comment|/* allow local address reuse (gag) */
 end_comment
 
 begin_define
@@ -144,7 +144,18 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* ~SO_DONTLINGER */
+comment|/* linger on close if data present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_DONTLINGER
+value|(~SO_LINGER)
+end_define
+
+begin_comment
+comment|/* ~SO_LINGER */
 end_comment
 
 begin_comment
