@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgetpos.c	5.1 (Berkeley) %G%"
+literal|"@(#)fgetpos.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ argument_list|(
 name|fp
 argument_list|)
 operator|)
-operator|!=
+operator|==
 operator|(
 name|fpos_t
 operator|)
