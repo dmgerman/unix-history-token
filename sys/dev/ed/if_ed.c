@@ -6892,6 +6892,13 @@ expr_stmt|;
 comment|/* device attach does transition from UNCONFIGURED to IDLE state */
 if|if
 condition|(
+name|bootverbose
+operator|||
+literal|1
+condition|)
+block|{
+if|if
+condition|(
 name|sc
 operator|->
 name|type_str
@@ -6905,8 +6912,10 @@ operator|!=
 literal|0
 operator|)
 condition|)
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"type %s "
 argument_list|,
 name|sc
@@ -6915,8 +6924,10 @@ name|type_str
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|device_printf
 argument_list|(
+name|dev
+argument_list|,
 literal|"type unknown (0x%x) "
 argument_list|,
 name|sc
@@ -7008,6 +7019,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
