@@ -1590,22 +1590,6 @@ operator|->
 name|sc_banner
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"%s: 802.11 address: %s\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_xname
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__NetBSD__

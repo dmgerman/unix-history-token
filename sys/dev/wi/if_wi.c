@@ -1656,19 +1656,6 @@ name|error
 operator|)
 return|;
 block|}
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"802.11 address: %6D\n"
-argument_list|,
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 comment|/* Read NIC identification */
 name|wi_read_nicid
 argument_list|(

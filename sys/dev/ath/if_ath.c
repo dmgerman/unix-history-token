@@ -1962,20 +1962,6 @@ name|it_present
 operator|=
 name|ATH_RX_RADIOTAP_PRESENT
 expr_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"802.11 address: %s\n"
-argument_list|,
-name|ether_sprintf
-argument_list|(
-name|ic
-operator|->
-name|ic_myaddr
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;

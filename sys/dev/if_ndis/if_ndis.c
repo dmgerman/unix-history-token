@@ -2212,26 +2212,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * An NDIS device was detected. Inform the world. 	 */
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"%s address: %6D\n"
-argument_list|,
-name|sc
-operator|->
-name|ndis_80211
-condition|?
-literal|"802.11"
-else|:
-literal|"Ethernet"
-argument_list|,
-name|eaddr
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 operator|&
