@@ -233,7 +233,7 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|Xurthread
+name|curthread
 value|(__curthread())
 end_define
 
