@@ -966,6 +966,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 default|default:
+empty_stmt|;
 block|}
 comment|/* 		 * If we are in case (2) or (3) above, we need to append the                  * source name to the target name.                  */
 if|if
