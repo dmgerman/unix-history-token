@@ -642,6 +642,17 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ed_probe_Novell
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|,
+name|flags
+argument_list|)
+expr_stmt|;
 goto|goto
 name|end2
 goto|;
