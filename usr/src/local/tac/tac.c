@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tac.c	1.3 %G%"
+literal|"@(#)tac.c	1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -172,6 +172,10 @@ end_function_decl
 begin_decl_stmt
 specifier|extern
 name|char
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|,
 modifier|*
 name|malloc
 argument_list|()
@@ -465,6 +469,9 @@ operator|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -487,6 +494,9 @@ operator|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -509,6 +519,9 @@ operator|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -524,11 +537,17 @@ argument_list|(
 name|tfile
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tfile
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -536,6 +555,9 @@ argument_list|,
 name|sigint
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -543,6 +565,9 @@ argument_list|,
 name|sighup
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGTERM
@@ -586,6 +611,9 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|workplate
@@ -665,6 +693,9 @@ name|cleanup
 argument_list|()
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|fd
@@ -1330,6 +1361,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tfile
