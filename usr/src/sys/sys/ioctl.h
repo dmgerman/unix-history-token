@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.30	83/03/19	*/
+comment|/*	ioctl.h	4.31	83/05/18	*/
 end_comment
 
 begin_comment
@@ -140,6 +140,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IO
+end_ifndef
+
 begin_comment
 comment|/*  * Ioctl's have the command encoded in the lower word,  * and the size of any in or out parameters in the upper  * word.  The high 2 bits of the upper word are used  * to encode the in/out status of the parameter; for now  * we restrict parameters to at most 128 bytes.  */
 end_comment
@@ -256,6 +262,11 @@ name|t
 parameter_list|)
 value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|('x'<<8)|y)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * tty ioctl commands  */

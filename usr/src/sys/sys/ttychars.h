@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ttychars.h	4.2	82/12/05	*/
+comment|/*	ttychars.h	4.3	83/05/18	*/
 end_comment
 
 begin_comment
@@ -97,6 +97,12 @@ begin_comment
 comment|/* default special characters */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -121,6 +127,47 @@ end_define
 begin_comment
 comment|/* DEL, ^? */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CERASE
+value|0177
+end_define
+
+begin_comment
+comment|/* DEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CKILL
+value|CTRL(u)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CINTR
+value|CTRL(c)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

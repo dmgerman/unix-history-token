@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.9	82/11/13	*/
+comment|/*	types.h	4.10	83/05/18	*/
 end_comment
 
 begin_comment
@@ -82,6 +82,18 @@ name|long
 name|u_long
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|short
+name|ushort
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* sys III compat */
+end_comment
 
 begin_ifdef
 ifdef|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	4.20	83/01/20	*/
+comment|/*	proc.h	4.21	83/05/18	*/
 end_comment
 
 begin_comment
@@ -206,6 +206,17 @@ name|struct
 name|itimerval
 name|p_realtimer
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+name|struct
+name|context
+modifier|*
+name|p_ctx
+decl_stmt|;
+comment|/* pointer to current context */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|QUOTA

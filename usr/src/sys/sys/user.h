@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.25	83/02/10	*/
+comment|/*	user.h	4.25	83/05/18	*/
 end_comment
 
 begin_ifdef
@@ -495,6 +495,15 @@ comment|/* pc scaling */
 block|}
 name|u_prof
 struct|;
+ifdef|#
+directive|ifdef
+name|sun
+name|int
+name|u_lofault
+decl_stmt|;
+comment|/* catch faults in locore.s */
+endif|#
+directive|endif
 name|int
 name|u_stack
 index|[

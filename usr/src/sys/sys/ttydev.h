@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ttydev.h	4.2	82/12/05	*/
+comment|/*	ttydev.h	4.3	83/05/18	*/
 end_comment
 
 begin_comment
@@ -17,24 +17,6 @@ begin_define
 define|#
 directive|define
 name|_TTYDEV_
-end_define
-
-begin_comment
-comment|/* hardware bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DONE
-value|0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|IENABLE
-value|0100
 end_define
 
 begin_comment
@@ -158,6 +140,24 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_comment
+comment|/*  * Hardware bits.  * SHOULD NOT BE HERE.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DONE
+value|0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IENABLE
+value|0100
+end_define
 
 begin_comment
 comment|/*  * Modem control commands.  */

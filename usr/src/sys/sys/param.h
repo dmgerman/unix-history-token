@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.31	83/03/31	*/
+comment|/*	param.h	4.32	83/05/18	*/
 end_comment
 
 begin_comment
-comment|/*  * Macine type dependent parameters.  */
+comment|/*  * Machine type dependent parameters.  */
 end_comment
 
 begin_ifdef

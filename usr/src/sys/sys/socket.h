@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.25	83/01/22	*/
+comment|/*	socket.h	4.26	83/05/18	*/
 end_comment
 
 begin_comment
@@ -166,11 +166,11 @@ begin_struct
 struct|struct
 name|sockproto
 block|{
-name|short
+name|u_short
 name|sp_family
 decl_stmt|;
 comment|/* protocol family */
-name|short
+name|u_short
 name|sp_protocol
 decl_stmt|;
 comment|/* protocol within family */
@@ -307,7 +307,7 @@ begin_struct
 struct|struct
 name|sockaddr
 block|{
-name|short
+name|u_short
 name|sa_family
 decl_stmt|;
 comment|/* address family */
