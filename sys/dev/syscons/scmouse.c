@@ -1831,6 +1831,7 @@ block|{
 name|cut_buffer
 index|[
 name|blank
+operator|++
 index|]
 operator|=
 literal|'\r'
@@ -1838,8 +1839,6 @@ expr_stmt|;
 name|i
 operator|=
 name|blank
-operator|+
-literal|1
 expr_stmt|;
 block|}
 block|}
