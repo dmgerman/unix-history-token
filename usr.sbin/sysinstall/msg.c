@@ -1034,6 +1034,17 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NONINTERACTIVE
+argument_list|)
+condition|)
+return|return
+literal|1
+return|;
+comment|/* If non-interactive, return YES all the time */
 name|ret
 operator|=
 name|dialog_yesno
@@ -1157,6 +1168,17 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NONINTERACTIVE
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+comment|/* If non-interactive, return NO all the time */
 name|ret
 operator|=
 name|dialog_noyes
