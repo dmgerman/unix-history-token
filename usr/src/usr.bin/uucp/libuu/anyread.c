@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)anyread.c	5.3 (Berkeley) %G%"
+literal|"@(#)anyread.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,10 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
+
+begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
 
 begin_comment
 comment|/*  *	anyread		check if anybody can read  *	return SUCCESS ok: FAIL not ok  */
