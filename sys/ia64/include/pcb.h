@@ -84,8 +84,6 @@ decl_stmt|;
 name|uint64_t
 name|pcb_ia32_fsr
 decl_stmt|;
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
