@@ -4,7 +4,7 @@ comment|/* execute.c - run a bc program. */
 end_comment
 
 begin_comment
-comment|/*  This file is part of GNU bc.     Copyright (C) 1991, 1992, 1993, 1994, 1997 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
+comment|/*  This file is part of GNU bc.     Copyright (C) 1991-1994, 1997, 2000 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to       The Free Software Foundation, Inc.       59 Temple Place, Suite 330       Boston, MA 02111 USA      You may contact the author by:        e-mail:  philnelson@acm.org       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
 end_comment
 
 begin_include
@@ -84,28 +84,6 @@ modifier|*
 name|pc
 decl_stmt|;
 block|{
-name|int
-name|seg
-decl_stmt|,
-name|offset
-decl_stmt|;
-name|seg
-operator|=
-name|pc
-operator|->
-name|pc_addr
-operator|>>
-name|BC_SEG_LOG
-expr_stmt|;
-name|offset
-operator|=
-name|pc
-operator|->
-name|pc_addr
-operator|++
-operator|%
-name|BC_SEG_SIZE
-expr_stmt|;
 return|return
 operator|(
 name|functions
@@ -117,10 +95,10 @@ index|]
 operator|.
 name|f_body
 index|[
-name|seg
-index|]
-index|[
-name|offset
+name|pc
+operator|->
+name|pc_addr
+operator|++
 index|]
 operator|)
 return|;
@@ -185,7 +163,7 @@ name|runtime_error
 operator|=
 name|FALSE
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -295,12 +273,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"   %d = "
+literal|"  %d = "
 argument_list|,
 name|depth
 argument_list|)
 expr_stmt|;
-name|out_num
+name|bc_out_num
 argument_list|(
 name|temp
 operator|->
@@ -309,6 +287,8 @@ argument_list|,
 literal|10
 argument_list|,
 name|out_char
+argument_list|,
+name|std_only
 argument_list|)
 expr_stmt|;
 name|depth
@@ -321,6 +301,11 @@ operator|->
 name|s_next
 expr_stmt|;
 block|}
+name|out_char
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 endif|#
@@ -357,11 +342,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -387,7 +372,7 @@ comment|/* Branch to a label if TOS == 0. Remove value on TOS. */
 name|c_code
 operator|=
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -521,11 +506,11 @@ operator|=
 operator|(
 operator|(
 name|new_func
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -714,11 +699,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -760,11 +745,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1003,11 +988,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1028,7 +1013,7 @@ case|:
 comment|/* Test tos for zero */
 name|c_code
 operator|=
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1049,7 +1034,7 @@ case|case
 literal|'P'
 case|:
 comment|/* Write the value on the top of the stack.  No newline. */
-name|out_num
+name|bc_out_num
 argument_list|(
 name|ex_stack
 operator|->
@@ -1058,6 +1043,8 @@ argument_list|,
 name|o_base
 argument_list|,
 name|out_char
+argument_list|,
+name|std_only
 argument_list|)
 expr_stmt|;
 if|if
@@ -1137,7 +1124,7 @@ index|]
 operator|==
 literal|0
 condition|)
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|ex_stack
@@ -1152,7 +1139,7 @@ name|n_scale
 argument_list|)
 expr_stmt|;
 else|else
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|ex_stack
@@ -1177,7 +1164,7 @@ case|case
 literal|'S'
 case|:
 comment|/* Scale function. */
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|ex_stack
@@ -1256,11 +1243,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1311,11 +1298,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1357,11 +1344,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1432,11 +1419,11 @@ operator|=
 operator|(
 operator|(
 name|var_name
-operator|<<
-literal|8
-operator|)
 operator|&
 literal|0x7f
+operator|)
+operator|<<
+literal|8
 operator|)
 operator|+
 name|byte
@@ -1545,7 +1532,7 @@ case|:
 comment|/* Negate the boolean value on top of the stack. */
 name|c_code
 operator|=
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1573,7 +1560,7 @@ block|{
 name|c_code
 operator|=
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1583,7 +1570,7 @@ name|s_num
 argument_list|)
 operator|&&
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1615,7 +1602,7 @@ block|{
 name|c_code
 operator|=
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1625,7 +1612,7 @@ name|s_num
 argument_list|)
 operator|||
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1683,7 +1670,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -1732,7 +1719,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -1781,7 +1768,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -1835,7 +1822,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -1864,7 +1851,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1907,7 +1894,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -1948,7 +1935,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|ex_stack
 operator|->
@@ -1957,7 +1944,7 @@ operator|->
 name|s_num
 argument_list|)
 operator|&&
-name|is_neg
+name|bc_is_neg
 argument_list|(
 name|ex_stack
 operator|->
@@ -1980,7 +1967,7 @@ argument_list|(
 name|temp_num
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp_num
@@ -2389,6 +2376,9 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|int
+operator|)
 name|in_ch
 argument_list|)
 condition|)
@@ -2529,19 +2519,19 @@ name|char
 name|negative
 decl_stmt|;
 comment|/* Initialize all bc numbers */
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|temp
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|result
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|mult
@@ -2549,7 +2539,7 @@ argument_list|)
 expr_stmt|;
 name|build
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_zero_
 argument_list|)
@@ -2559,7 +2549,7 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* The conversion base. */
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|mult
@@ -2646,7 +2636,7 @@ name|conv_base
 operator|-
 literal|1
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|build
@@ -2694,7 +2684,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|temp
@@ -2747,13 +2737,13 @@ name|conv_base
 operator|-
 literal|1
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|result
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|temp
@@ -2761,14 +2751,14 @@ argument_list|)
 expr_stmt|;
 name|divisor
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_one_
 argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_zero_
 argument_list|)
@@ -2796,7 +2786,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|temp
@@ -2903,19 +2893,19 @@ argument_list|(
 name|build
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|temp
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|result
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|mult
@@ -3106,13 +3096,13 @@ operator|>
 literal|9
 condition|)
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|build
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|build
@@ -3145,7 +3135,7 @@ condition|)
 block|{
 name|build
 operator|=
-name|new_num
+name|bc_new_num
 argument_list|(
 literal|1
 argument_list|,
@@ -3169,7 +3159,7 @@ else|else
 block|{
 name|build
 operator|=
-name|new_num
+name|bc_new_num
 argument_list|(
 name|kdigits
 argument_list|,
@@ -3196,6 +3186,7 @@ name|inchar
 operator|!=
 literal|'.'
 condition|)
+block|{
 if|if
 condition|(
 name|inchar
@@ -3215,6 +3206,7 @@ operator|++
 operator|=
 name|inchar
 expr_stmt|;
+block|}
 name|inchar
 operator|=
 name|byte
@@ -3245,7 +3237,7 @@ name|char
 name|c_code
 decl_stmt|;
 block|{
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|ex_stack
@@ -3261,7 +3253,7 @@ name|ex_stack
 operator|->
 name|s_num
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_one_
 argument_list|)
@@ -3271,7 +3263,7 @@ name|ex_stack
 operator|->
 name|s_num
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_zero_
 argument_list|)

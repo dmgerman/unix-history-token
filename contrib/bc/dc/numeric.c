@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * interface dc to the bc numeric routines  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * interface dc to the bc numeric routines  *  * Copyright (C) 1994, 1997, 1998, 2000 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to:  *   The Free Software Foundation, Inc.  *   59 Temple Place, Suite 330  *   Boston, MA 02111 USA  */
 end_comment
 
 begin_comment
@@ -61,19 +61,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"bcdefs.h"
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proto.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"global.h"
+file|"number.h"
 end_include
 
 begin_include
@@ -94,6 +88,26 @@ directive|ifdef
 name|__GNUC__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|__GNUC__
+operator|>
+literal|2
+operator|||
+operator|(
+name|__GNUC__
+operator|==
+literal|2
+operator|&&
+name|__GNUC_MINOR__
+operator|-
+literal|0
+operator|>=
+literal|7
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -104,10 +118,21 @@ parameter_list|)
 value|__attribute__(x)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATTRIB
+end_ifndef
 
 begin_define
 define|#
@@ -122,6 +147,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Forward prototype */
+end_comment
+
+begin_function_decl
+specifier|static
+name|void
+name|out_char
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* there is no POSIX standard for dc, so we'll take the GNU definitions */
@@ -188,7 +227,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -263,7 +302,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -332,7 +371,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -401,7 +440,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -492,7 +531,7 @@ modifier|*
 name|remainder
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -501,7 +540,7 @@ operator|)
 name|quotient
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -592,7 +631,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -678,7 +717,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -718,7 +757,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|CastNum
 argument_list|(
@@ -778,7 +817,7 @@ modifier|*
 name|result
 name|DC_DECLEND
 block|{
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -847,7 +886,7 @@ name|tmp
 decl_stmt|;
 name|tmp
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|CastNum
 argument_list|(
@@ -876,7 +915,7 @@ argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|tmp
@@ -972,7 +1011,7 @@ name|result
 decl_stmt|;
 name|result
 operator|=
-name|num2long
+name|bc_num2long
 argument_list|(
 name|CastNum
 argument_list|(
@@ -1025,7 +1064,7 @@ block|{
 name|dc_data
 name|result
 decl_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|(
 name|bc_num
@@ -1039,7 +1078,7 @@ operator|.
 name|number
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|(
 name|bc_num
@@ -1140,19 +1179,19 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|build
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|base
@@ -1160,12 +1199,12 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_zero_
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|base
@@ -1300,7 +1339,7 @@ name|input
 call|)
 argument_list|()
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|tmp
@@ -1340,13 +1379,13 @@ operator|==
 literal|'.'
 condition|)
 block|{
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|build
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|tmp
@@ -1354,14 +1393,14 @@ argument_list|)
 expr_stmt|;
 name|divisor
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_one_
 argument_list|)
 expr_stmt|;
 name|build
 operator|=
-name|copy_num
+name|bc_copy_num
 argument_list|(
 name|_zero_
 argument_list|)
@@ -1418,7 +1457,7 @@ literal|'A'
 expr_stmt|;
 else|else
 break|break;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|tmp
@@ -1508,19 +1547,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|build
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|base
@@ -1595,6 +1634,15 @@ operator|+
 name|num
 operator|->
 name|n_scale
+operator|-
+operator|(
+operator|*
+name|num
+operator|->
+name|n_value
+operator|==
+literal|'\0'
+operator|)
 return|;
 block|}
 end_decl_stmt
@@ -1664,7 +1712,7 @@ name|dc_math_init
 name|DC_DECLVOID
 parameter_list|()
 block|{
-name|init_numbers
+name|bc_init_numbers
 argument_list|()
 expr_stmt|;
 block|}
@@ -1705,7 +1753,13 @@ name|dc_discard
 name|discard_p
 name|DC_DECLEND
 block|{
-name|out_num
+name|out_char
+argument_list|(
+literal|'\0'
+argument_list|)
+expr_stmt|;
+comment|/* clear the column counter */
+name|bc_out_num
 argument_list|(
 name|CastNum
 argument_list|(
@@ -1715,6 +1769,8 @@ argument_list|,
 name|obase
 argument_list|,
 name|out_char
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -1723,7 +1779,7 @@ name|newline_p
 operator|==
 name|DC_WITHNL
 condition|)
-name|out_char
+name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
@@ -1753,7 +1809,7 @@ name|dc_dump_num
 name|DC_DECLARG
 argument_list|(
 operator|(
-name|value
+name|dcvalue
 operator|,
 name|discard_p
 operator|)
@@ -1804,19 +1860,19 @@ decl_stmt|;
 name|bc_num
 name|digit
 decl_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|value
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|obase
 argument_list|)
 expr_stmt|;
-name|init_num
+name|bc_init_num
 argument_list|(
 operator|&
 name|digit
@@ -1858,7 +1914,7 @@ operator|&
 name|dcvalue
 argument_list|)
 expr_stmt|;
-name|int2num
+name|bc_int2num
 argument_list|(
 operator|&
 name|obase
@@ -1904,7 +1960,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|num2long
+name|bc_num2long
 argument_list|(
 name|digit
 argument_list|)
@@ -1923,7 +1979,7 @@ block|}
 do|while
 condition|(
 operator|!
-name|is_zero
+name|bc_is_zero
 argument_list|(
 name|value
 argument_list|)
@@ -1961,19 +2017,19 @@ name|cur
 argument_list|)
 expr_stmt|;
 block|}
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|digit
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|obase
 argument_list|)
 expr_stmt|;
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|&
 name|value
@@ -2003,7 +2059,7 @@ modifier|*
 name|value
 name|DC_DECLEND
 block|{
-name|free_num
+name|bc_free_num
 argument_list|(
 operator|(
 name|bc_num
@@ -2132,12 +2188,13 @@ comment|/* Output routines: Write a character CH to the standard output.    It k
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|out_char
 parameter_list|(
 name|ch
 parameter_list|)
-name|char
+name|int
 name|ch
 decl_stmt|;
 block|{
@@ -2145,17 +2202,12 @@ if|if
 condition|(
 name|ch
 operator|==
-literal|'\n'
+literal|'\0'
 condition|)
 block|{
 name|out_col
 operator|=
 literal|0
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2265,12 +2317,13 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
-name|char
-name|error_mesg
-index|[
-literal|255
-index|]
-decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Runtime error: "
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STDARG_H
@@ -2290,9 +2343,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vsprintf
+name|vfprintf
 argument_list|(
-name|error_mesg
+name|stderr
 argument_list|,
 name|mesg
 argument_list|,
@@ -2308,9 +2361,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Runtime error: %s\n"
-argument_list|,
-name|error_mesg
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2372,12 +2423,13 @@ block|{
 name|va_list
 name|args
 decl_stmt|;
-name|char
-name|error_mesg
-index|[
-literal|255
-index|]
-decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Runtime warning: "
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STDARG_H
@@ -2397,9 +2449,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vsprintf
+name|vfprintf
 argument_list|(
-name|error_mesg
+name|stderr
 argument_list|,
 name|mesg
 argument_list|,
@@ -2415,9 +2467,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Runtime warning: %s\n"
-argument_list|,
-name|error_mesg
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

@@ -93,34 +93,37 @@ value|1
 end_define
 
 begin_comment
-comment|/* PACKAGE name */
+comment|/* VERSION number for DC target*/
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PACKAGE
-value|"bc"
+name|DC_VERSION
+value|"1.3"
 end_define
 
 begin_comment
-comment|/* Package VERSION number */
+comment|/* COPYRIGHT notice for DC target */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|VERSION
-value|"1.05"
+name|DC_COPYRIGHT
+value|"Copyright 1994, 1997, 1998, 2000 Free Software Foundation, Inc."
 end_define
 
 begin_comment
-comment|/* define if the math lib is to be loaded from a file. */
+comment|/* COPYRIGHT notice for BC target */
 end_comment
 
-begin_comment
-comment|/* #undef BC_MATH_FILE */
-end_comment
+begin_define
+define|#
+directive|define
+name|BC_COPYRIGHT
+value|"Copyright 1991-1994, 1997, 1998, 2000 Free Software Foundation, Inc."
+end_define
 
 begin_comment
 comment|/* Define to use the readline library. */
@@ -132,6 +135,14 @@ directive|define
 name|READLINE
 value|1
 end_define
+
+begin_comment
+comment|/* Define to use the BSD libedit library. */
+end_comment
+
+begin_comment
+comment|/* #undef LIBEDIT */
+end_comment
 
 begin_comment
 comment|/* Define to `size_t' if<sys/types.h> and<stddef.h> don't define.  */
@@ -235,6 +246,28 @@ define|#
 directive|define
 name|HAVE_UNISTD_H
 value|1
+end_define
+
+begin_comment
+comment|/* Name of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"bc"
+end_define
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VERSION
+value|"1.06"
 end_define
 
 end_unit

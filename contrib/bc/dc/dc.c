@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * implement the "dc" Desk Calculator language.  *  * Copyright (C) 1994, 1997, 1998 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to: The Free Software Foundation,  * Inc.; 675 Mass Ave. Cambridge, MA 02139, USA.  */
+comment|/*   * implement the "dc" Desk Calculator language.  *  * Copyright (C) 1994, 1997, 1998, 2000 Free Software Foundation, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, you can either send email to this  * program's author (see below) or write to:  *   The Free Software Foundation, Inc.  *   59 Temple Place, Suite 330  *   Boston, MA 02111 USA  */
 end_comment
 
 begin_comment
@@ -97,12 +97,6 @@ directive|include
 file|"dc-proto.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"version.h"
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -159,6 +153,49 @@ begin_comment
 comment|/* basename of program invocation */
 end_comment
 
+begin_function
+specifier|static
+name|void
+name|bug_report_info
+name|DC_DECLVOID
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"Email bug reports to:  bug-dc@gnu.org .\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|show_version
+name|DC_DECLVOID
+parameter_list|()
+block|{
+name|printf
+argument_list|(
+literal|"dc (GNU %s %s) %s\n"
+argument_list|,
+name|PACKAGE
+argument_list|,
+name|VERSION
+argument_list|,
+name|DC_VERSION
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n%s\n\ This is free software; see the source for copying conditions.  There is NO\n\ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE,\n\ to the extent permitted by law.\n"
+argument_list|,
+name|DC_COPYRIGHT
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/* your generic usage function */
 end_comment
@@ -182,40 +219,16 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\ Usage: %s [OPTION] [file ...]\n\   -e, --expression=EXPR    evaluate expression\n\   -f, --file=FILE          evaluate contents of file\n\   -h, --help               display this help and exit\n\   -V, --version            output version information and exit\n\ \n\ Report bugs to bug-gnu-utils@prep.ai.mit.edu\n\ Be sure to include the word ``dc'' somewhere in the ``Subject:'' field.\n\ "
+literal|"\ Usage: %s [OPTION] [file ...]\n\   -e, --expression=EXPR    evaluate expression\n\   -f, --file=FILE          evaluate contents of file\n\   -h, --help               display this help and exit\n\   -V, --version            output version information and exit\n\ \n\ "
 argument_list|,
 name|progname
 argument_list|)
 expr_stmt|;
+name|bug_report_info
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|show_version
-name|DC_DECLVOID
-parameter_list|()
-block|{
-name|printf
-argument_list|(
-literal|"%s\n\n"
-argument_list|,
-name|DC_VERSION
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Email bug reports to:  bug-gnu-utils@prep.ai.mit.edu .\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Be sure to include the word ``dc'' \ somewhere in the ``Subject:'' field.\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/* returns a pointer to one past the last occurance of c in s,  * or s if c does not occur in s.  */
