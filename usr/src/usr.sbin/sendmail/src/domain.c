@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.26 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.27 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.26 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.27 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,24 +95,6 @@ include|#
 directive|include
 file|<netdb.h>
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD4_4
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__dn_skipname
-value|dn_skipname
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_typedef
 typedef|typedef
@@ -404,7 +386,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|__dn_skipname
+name|dn_skipname
 argument_list|(
 name|cp
 argument_list|,
@@ -1086,7 +1068,7 @@ condition|(
 operator|(
 name|n
 operator|=
-name|__dn_skipname
+name|dn_skipname
 argument_list|(
 name|cp
 argument_list|,
