@@ -127,6 +127,15 @@ literal|512
 block|}
 block|,
 comment|/* MACHINE_ALPHA */
+block|{
+literal|8
+block|,
+literal|2
+block|,
+literal|512
+block|}
+block|,
+comment|/* MACHINE_IA64 */
 block|}
 struct|;
 end_struct

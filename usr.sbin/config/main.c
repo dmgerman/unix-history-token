@@ -670,6 +670,9 @@ case|:
 case|case
 name|MACHINE_ALPHA
 case|:
+case|case
+name|MACHINE_IA64
+case|:
 break|break;
 default|default:
 name|printf
