@@ -1797,6 +1797,8 @@ index|[
 name|ISP_RQDSEG_T2
 index|]
 decl_stmt|;
+comment|/* 			 * For CTIO3, an ispds64_t would go here, padded 			 * to the end of the request. 			 */
+comment|/* 			 * For CTIO4, an ispdlist_t would go here, padded 			 * to the end of the request. 			 */
 block|}
 name|m0
 struct|;
