@@ -2002,9 +2002,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
-literal|"MakeDev: Unable to lookup user \"root\".\n"
+literal|"MakeDev: Unable to lookup user \"root\", using 0.\n"
 argument_list|)
 expr_stmt|;
 name|owner
@@ -2035,9 +2040,14 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
 name|msgDebug
 argument_list|(
-literal|"MakeDev: Unable to lookup group \"operator\".\n"
+literal|"MakeDev: Unable to lookup group \"operator\", using 5.\n"
 argument_list|)
 expr_stmt|;
 name|group
