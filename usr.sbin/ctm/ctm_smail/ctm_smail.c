@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Send a compressed CTM delta to a recipient mailing list by encoding it  * in safe ASCII characters, in mailer-friendly chunks, and passing it  * to sendmail.  The encoding is almost the same as MIME BASE64, and is  * protected by a simple checksum.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  *  * $Id: ctm_smail.c,v 1.6 1996/07/01 20:54:11 gpalmer Exp $  */
+comment|/*  * Send a compressed CTM delta to a recipient mailing list by encoding it  * in safe ASCII characters, in mailer-friendly chunks, and passing it  * to sendmail.  The encoding is almost the same as MIME BASE64, and is  * protected by a simple checksum.  *  * Author: Stephen McKay  *  * NOTICE: This is free software.  I hope you get some use from this program.  * In return you should think about all the nice people who give away software.  * Maybe you should write some free software too.  *  * $Id: ctm_smail.c,v 1.7 1996/09/07 18:48:44 peter Exp $  */
 end_comment
 
 begin_include
@@ -550,6 +550,10 @@ decl_stmt|;
 name|unsigned
 name|sum
 decl_stmt|;
+name|char
+modifier|*
+name|deltaname
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|howmany
@@ -635,6 +639,28 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|deltaname
+operator|=
+name|strrchr
+argument_list|(
+name|delta
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|deltaname
+condition|)
+name|deltaname
+operator|++
+expr_stmt|;
+comment|/* skip slash */
+else|else
+name|deltaname
+operator|=
+name|delta
+expr_stmt|;
 for|for
 control|(
 name|pce
@@ -713,7 +739,7 @@ name|err
 argument_list|(
 literal|"%s %d/%d sent to %s"
 argument_list|,
-name|delta
+name|deltaname
 argument_list|,
 name|pce
 argument_list|,
@@ -2431,13 +2457,6 @@ name|tempnames
 index|[
 name|pce
 index|]
-argument_list|,
-name|queuefile
-argument_list|)
-expr_stmt|;
-name|err
-argument_list|(
-literal|"Queue file %s now exists"
 argument_list|,
 name|queuefile
 argument_list|)
