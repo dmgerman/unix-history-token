@@ -2517,9 +2517,16 @@ name|id2
 operator|!=
 literal|0x5c
 condition|)
+block|{
+name|ATA_UNLOCK_CH
+argument_list|(
+name|ch
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 name|div
 operator|=
 literal|1
