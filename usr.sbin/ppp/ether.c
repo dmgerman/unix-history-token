@@ -1012,6 +1012,8 @@ modifier|*
 name|r
 decl_stmt|;
 name|int
+name|asciilen
+decl_stmt|,
 name|ret
 decl_stmt|;
 if|if
@@ -1187,6 +1189,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|asciilen
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|rep
@@ -1293,6 +1299,14 @@ operator|->
 name|hook
 argument_list|)
 expr_stmt|;
+name|asciilen
+operator|=
+name|rep
+operator|->
+name|header
+operator|.
+name|arglen
+expr_stmt|;
 break|break;
 default|default:
 name|snprintf
@@ -1320,17 +1334,33 @@ name|unknown
 expr_stmt|;
 break|break;
 block|}
+if|if
+condition|(
+name|asciilen
+condition|)
 name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Received NGM_PPPOE_%s (hook \"%s\")\n"
+literal|"Received NGM_PPPOE_%s (hook \"%.*s\")\n"
 argument_list|,
 name|msg
+argument_list|,
+name|asciilen
 argument_list|,
 name|sts
 operator|->
 name|hook
+argument_list|)
+expr_stmt|;
+else|else
+name|log_Printf
+argument_list|(
+name|LogPHASE
+argument_list|,
+literal|"Received NGM_PPPOE_%s\n"
+argument_list|,
+name|msg
 argument_list|)
 expr_stmt|;
 switch|switch
