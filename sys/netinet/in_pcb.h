@@ -1115,6 +1115,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|callout
+name|ipport_tick_callout
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|in_pcbpurgeif0
 name|__P
@@ -1449,6 +1457,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|ipport_tick
+parameter_list|(
+name|void
+modifier|*
+name|xtp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
