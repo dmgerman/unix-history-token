@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.2 %G%"
+literal|"@(#)pccaseop.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,6 +1351,15 @@ argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
+literal|"	jgtr	L%d"
+argument_list|,
+literal|0
+argument_list|,
+name|gtrlabel
+argument_list|)
+expr_stmt|;
+name|putprintf
+argument_list|(
 literal|"	jeql	L%d"
 argument_list|,
 literal|0
@@ -1361,15 +1370,6 @@ name|half
 index|]
 operator|.
 name|clabel
-argument_list|)
-expr_stmt|;
-name|putprintf
-argument_list|(
-literal|"	jgtr	L%d"
-argument_list|,
-literal|0
-argument_list|,
-name|gtrlabel
 argument_list|)
 expr_stmt|;
 name|bsrecur
