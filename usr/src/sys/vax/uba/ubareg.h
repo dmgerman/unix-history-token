@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.8	81/02/19	*/
+comment|/*	ubareg.h	4.9	81/02/21	*/
 end_comment
 
 begin_comment
@@ -49,21 +49,27 @@ block|{
 name|int
 name|uba_cnfgr
 decl_stmt|;
+comment|/* configuration register */
 name|int
 name|uba_cr
 decl_stmt|;
+comment|/* control register */
 name|int
 name|uba_sr
 decl_stmt|;
+comment|/* status register */
 name|int
 name|uba_dcr
 decl_stmt|;
+comment|/* diagnostic control register */
 name|int
 name|uba_fmer
 decl_stmt|;
+comment|/* failed map entry register */
 name|int
 name|uba_fubar
 decl_stmt|;
+comment|/* failed UNIBUS address register */
 name|int
 name|pad1
 index|[
@@ -82,12 +88,14 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* receive vector registers */
 name|int
 name|uba_dpr
 index|[
 literal|16
 index|]
 decl_stmt|;
+comment|/* buffered data path register */
 name|int
 name|pad2
 index|[
@@ -101,12 +109,14 @@ index|[
 literal|496
 index|]
 decl_stmt|;
+comment|/* unibus map register */
 name|int
 name|pad3
 index|[
 literal|16
 index|]
 decl_stmt|;
+comment|/* no maps for device address space */
 block|}
 struct|;
 end_struct
@@ -527,8 +537,12 @@ begin_define
 define|#
 directive|define
 name|UBA_ERROR
-value|0x20000000
+value|0x80000000
 end_define
+
+begin_comment
+comment|/* error occurred */
+end_comment
 
 begin_define
 define|#
@@ -537,6 +551,10 @@ name|UBA_NXM
 value|0x40000000
 end_define
 
+begin_comment
+comment|/* nxm from memory */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -544,12 +562,20 @@ name|UBA_UCE
 value|0x20000000
 end_define
 
+begin_comment
+comment|/* uncorrectable error */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UBA_PURGE
 value|0x00000001
 end_define
+
+begin_comment
+comment|/* purge bdp */
+end_comment
 
 begin_endif
 endif|#
@@ -742,7 +768,7 @@ name|uba_dinfo
 modifier|*
 name|ui_forw
 decl_stmt|;
-comment|/* if the driver isn't also a controller, this is the controller it is on */
+comment|/* if the device isn't also a controller, this is the controller it is on */
 name|struct
 name|uba_minfo
 modifier|*
@@ -894,7 +920,7 @@ block|{
 name|int
 function_decl|(
 modifier|*
-name|ud_cntrlr
+name|ud_probe
 function_decl|)
 parameter_list|()
 function_decl|;
@@ -906,7 +932,15 @@ name|ud_slave
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* see if a slave is there; init */
+comment|/* see if a slave is there */
+name|int
+function_decl|(
+modifier|*
+name|ud_attach
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* setup driver for a slave */
 name|int
 function_decl|(
 modifier|*
@@ -914,12 +948,7 @@ name|ud_dgo
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* routine to stuff driver regs */
-comment|/* dgo is called back by the unibus (usu ubaalloc), when the bus is ready */
-name|short
-name|ud_needexcl
-decl_stmt|;
-comment|/* need exclusive use of uba (rk07) */
+comment|/* fill csr/ba to start transfer */
 name|u_short
 modifier|*
 name|ud_addr

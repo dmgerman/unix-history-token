@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.7	81/02/19	*/
+comment|/*	mbavar.h	4.8	81/02/21	*/
 end_comment
 
 begin_comment
@@ -762,7 +762,7 @@ name|short
 name|mh_active
 decl_stmt|;
 name|short
-name|mh_flags
+name|mh_ndrive
 decl_stmt|;
 name|struct
 name|mba_regs

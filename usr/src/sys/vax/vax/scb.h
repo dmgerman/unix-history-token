@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	scb.h	4.2	81/02/19	*/
+comment|/*	scb.h	4.3	81/02/21	*/
 end_comment
 
 begin_comment
@@ -18,7 +18,7 @@ name|scb_stray
 function_decl|)
 parameter_list|()
 function_decl|;
-comment|/* reverved */
+comment|/* reserved */
 name|int
 function_decl|(
 modifier|*
@@ -359,9 +359,13 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|scb
-name|Scbbase
+name|scb
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* scb.scb_ubaint is the same as UNIvec */
+end_comment
 
 begin_endif
 endif|#

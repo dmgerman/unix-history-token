@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mtpr.h	4.3	81/02/19	*/
+comment|/*	mtpr.h	4.4	81/02/21	*/
 end_comment
 
 begin_comment
@@ -11,7 +11,7 @@ begin_define
 define|#
 directive|define
 name|KSP
-value|0
+value|0x0
 end_define
 
 begin_comment
@@ -22,7 +22,7 @@ begin_define
 define|#
 directive|define
 name|ESP
-value|1
+value|0x1
 end_define
 
 begin_comment
@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|SSP
-value|2
+value|0x2
 end_define
 
 begin_comment
@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|USP
-value|3
+value|0x3
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|ISP
-value|4
+value|0x4
 end_define
 
 begin_comment
@@ -66,7 +66,7 @@ begin_define
 define|#
 directive|define
 name|P0BR
-value|8
+value|0x8
 end_define
 
 begin_comment
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|P0LR
-value|9
+value|0x9
 end_define
 
 begin_comment
@@ -88,7 +88,7 @@ begin_define
 define|#
 directive|define
 name|P1BR
-value|10
+value|0xa
 end_define
 
 begin_comment
@@ -99,7 +99,7 @@ begin_define
 define|#
 directive|define
 name|P1LR
-value|11
+value|0xb
 end_define
 
 begin_comment
@@ -110,7 +110,7 @@ begin_define
 define|#
 directive|define
 name|SBR
-value|12
+value|0xc
 end_define
 
 begin_comment
@@ -121,7 +121,7 @@ begin_define
 define|#
 directive|define
 name|SLR
-value|13
+value|0xd
 end_define
 
 begin_comment
@@ -132,7 +132,7 @@ begin_define
 define|#
 directive|define
 name|PCBB
-value|16
+value|0x10
 end_define
 
 begin_comment
@@ -143,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|SCBB
-value|17
+value|0x11
 end_define
 
 begin_comment
@@ -154,7 +154,7 @@ begin_define
 define|#
 directive|define
 name|IPL
-value|18
+value|0x12
 end_define
 
 begin_comment
@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|ASTLVL
-value|19
+value|0x13
 end_define
 
 begin_comment
@@ -176,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|SIRR
-value|20
+value|0x14
 end_define
 
 begin_comment
@@ -187,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|SISR
-value|21
+value|0x15
 end_define
 
 begin_comment
@@ -198,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|ICCS
-value|24
+value|0x18
 end_define
 
 begin_comment
@@ -209,7 +209,7 @@ begin_define
 define|#
 directive|define
 name|NICR
-value|25
+value|0x19
 end_define
 
 begin_comment
@@ -220,7 +220,7 @@ begin_define
 define|#
 directive|define
 name|ICR
-value|26
+value|0x1a
 end_define
 
 begin_comment
@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|TODR
-value|27
+value|0x1b
 end_define
 
 begin_comment
@@ -242,7 +242,7 @@ begin_define
 define|#
 directive|define
 name|RXCS
-value|32
+value|0x20
 end_define
 
 begin_comment
@@ -253,7 +253,7 @@ begin_define
 define|#
 directive|define
 name|RXDB
-value|33
+value|0x21
 end_define
 
 begin_comment
@@ -264,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|TXCS
-value|34
+value|0x22
 end_define
 
 begin_comment
@@ -275,7 +275,7 @@ begin_define
 define|#
 directive|define
 name|TXDB
-value|35
+value|0x23
 end_define
 
 begin_comment
@@ -286,7 +286,7 @@ begin_define
 define|#
 directive|define
 name|MAPEN
-value|56
+value|0x38
 end_define
 
 begin_comment
@@ -297,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|TBIA
-value|57
+value|0x39
 end_define
 
 begin_comment
@@ -308,7 +308,7 @@ begin_define
 define|#
 directive|define
 name|TBIS
-value|58
+value|0x3a
 end_define
 
 begin_comment
@@ -319,7 +319,7 @@ begin_define
 define|#
 directive|define
 name|PMR
-value|61
+value|0x3d
 end_define
 
 begin_comment
@@ -330,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|SID
-value|62
+value|0x3e
 end_define
 
 begin_comment
@@ -349,7 +349,7 @@ begin_define
 define|#
 directive|define
 name|ACCS
-value|40
+value|0x28
 end_define
 
 begin_comment
@@ -360,7 +360,7 @@ begin_define
 define|#
 directive|define
 name|ACCR
-value|41
+value|0x29
 end_define
 
 begin_comment
@@ -371,7 +371,7 @@ begin_define
 define|#
 directive|define
 name|WCSA
-value|44
+value|0x2c
 end_define
 
 begin_comment
@@ -382,7 +382,7 @@ begin_define
 define|#
 directive|define
 name|WCSD
-value|45
+value|0x2d
 end_define
 
 begin_comment
@@ -393,7 +393,7 @@ begin_define
 define|#
 directive|define
 name|SBIFS
-value|48
+value|0x30
 end_define
 
 begin_comment
@@ -404,7 +404,7 @@ begin_define
 define|#
 directive|define
 name|SBIS
-value|49
+value|0x31
 end_define
 
 begin_comment
@@ -415,7 +415,7 @@ begin_define
 define|#
 directive|define
 name|SBISC
-value|50
+value|0x32
 end_define
 
 begin_comment
@@ -426,7 +426,7 @@ begin_define
 define|#
 directive|define
 name|SBIMT
-value|51
+value|0x33
 end_define
 
 begin_comment
@@ -437,7 +437,7 @@ begin_define
 define|#
 directive|define
 name|SBIER
-value|52
+value|0x34
 end_define
 
 begin_comment
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|SBITA
-value|53
+value|0x35
 end_define
 
 begin_comment
@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|SBIQC
-value|54
+value|0x36
 end_define
 
 begin_comment
@@ -470,7 +470,7 @@ begin_define
 define|#
 directive|define
 name|MBRK
-value|60
+value|0x3c
 end_define
 
 begin_comment
@@ -489,6 +489,17 @@ name|VAX
 operator|==
 literal|750
 end_if
+
+begin_define
+define|#
+directive|define
+name|MCSR
+value|0x17
+end_define
+
+begin_comment
+comment|/* machine check status register */
+end_comment
 
 begin_define
 define|#

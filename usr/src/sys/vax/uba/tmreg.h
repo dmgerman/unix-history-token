@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tmreg.h	4.2	81/02/19	*/
+comment|/*	tmreg.h	4.3	81/02/21	*/
+end_comment
+
+begin_comment
+comment|/*  * TM11 controller registers  */
 end_comment
 
 begin_struct
@@ -10,21 +14,31 @@ block|{
 name|u_short
 name|tmer
 decl_stmt|;
+comment|/* error register, per drive */
 name|u_short
 name|tmcs
 decl_stmt|;
+comment|/* control-status register */
 name|short
 name|tmbc
 decl_stmt|;
+comment|/* byte/frame count */
 name|u_short
 name|tmba
 decl_stmt|;
+comment|/* address */
 name|short
 name|tmdb
 decl_stmt|;
+comment|/* data buffer */
 name|short
 name|tmrd
 decl_stmt|;
+comment|/* read lines */
+name|short
+name|tmmr
+decl_stmt|;
+comment|/* maintenance register */
 block|}
 struct|;
 end_struct
@@ -50,107 +64,167 @@ end_comment
 begin_define
 define|#
 directive|define
-name|GO
-value|01
+name|TM_GO
+value|0000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|OFFL
-value|0
+name|TM_OFFL
+value|0000000
 end_define
+
+begin_comment
+comment|/* offline */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|RCOM
-value|02
+name|TM_RCOM
+value|0000002
 end_define
+
+begin_comment
+comment|/* read */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WCOM
-value|04
+name|TM_WCOM
+value|0000004
 end_define
+
+begin_comment
+comment|/* write */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WEOF
-value|06
+name|TM_WEOF
+value|0000006
 end_define
+
+begin_comment
+comment|/* write-eof */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SFORW
-value|010
+name|TM_SFORW
+value|0000010
 end_define
+
+begin_comment
+comment|/* space forward */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SREV
-value|012
+name|TM_SREV
+value|0000012
 end_define
+
+begin_comment
+comment|/* space backwards */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WIRG
-value|014
+name|TM_WIRG
+value|0000014
 end_define
+
+begin_comment
+comment|/* write with xtra interrecord gap */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|REW
-value|016
+name|TM_REW
+value|0000016
 end_define
+
+begin_comment
+comment|/* rewind */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IENABLE
-value|0100
+name|TM_SENSE
+value|TM_IE
 end_define
+
+begin_comment
+comment|/* sense (internal to driver) */
+end_comment
+
+begin_comment
+comment|/* TM_SNS is a pseudo-op used to get tape status */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CUR
-value|0200
+name|TM_IE
+value|0000100
 end_define
+
+begin_comment
+comment|/* interrupt enable */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|NOP
-value|IENABLE
+name|TM_CUR
+value|0000200
 end_define
+
+begin_comment
+comment|/* control unit is ready */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DCLR
-value|010000
+name|TM_DCLR
+value|0010000
 end_define
+
+begin_comment
+comment|/* drive clear */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|D800
-value|060000
+name|TM_D800
+value|0060000
 end_define
+
+begin_comment
+comment|/* select 800 bpi density */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ERROR
+name|TM_ERR
 value|0100000
 end_define
+
+begin_comment
+comment|/* drive error summary */
+end_comment
 
 begin_comment
 comment|/* bits in tmer */
@@ -159,120 +233,180 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUR
-value|1
+name|TM_TUR
+value|0000001
 end_define
+
+begin_comment
+comment|/* tape unit ready */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|RWS
-value|02
+name|TM_RWS
+value|0000002
 end_define
+
+begin_comment
+comment|/* tape unit rewinding */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|WRL
-value|04
+name|TM_WRL
+value|0000004
 end_define
+
+begin_comment
+comment|/* tape unit write protected */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SDWN
-value|010
+name|TM_SDWN
+value|0000010
 end_define
+
+begin_comment
+comment|/* gap settling down */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|BOT
-value|040
+name|TM_BOT
+value|0000040
 end_define
+
+begin_comment
+comment|/* at beginning of tape */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SELR
-value|0100
+name|TM_SELR
+value|0000100
 end_define
+
+begin_comment
+comment|/* tape unit properly selected */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|NXM
-value|0200
+name|TM_NXM
+value|0000200
 end_define
+
+begin_comment
+comment|/* non-existant memory */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TMBTE
-value|0400
+name|TM_BTE
+value|0000400
 end_define
+
+begin_comment
+comment|/* bad tape error */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|RLE
-value|01000
+name|TM_RLE
+value|0001000
 end_define
+
+begin_comment
+comment|/* record length error */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|EOT
-value|02000
+name|TM_EOT
+value|0002000
 end_define
+
+begin_comment
+comment|/* at end of tape */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|BGL
-value|04000
+name|TM_BGL
+value|0004000
 end_define
+
+begin_comment
+comment|/* bus grant late */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PAE
-value|010000
+name|TM_PAE
+value|0010000
 end_define
+
+begin_comment
+comment|/* parity error */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CRE
-value|020000
+name|TM_CRE
+value|0020000
 end_define
+
+begin_comment
+comment|/* cyclic redundancy error */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|EOF
-value|040000
+name|TM_EOF
+value|0040000
 end_define
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|ILC
+name|TM_ILC
 value|0100000
 end_define
 
+begin_comment
+comment|/* illegal command */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|HARD
-value|(ILC|EOT)
+name|TM_HARD
+value|(TM_ILC|TM_EOT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SOFT
-value|(CRE|PAE|BGL|RLE|TMBTE|NXM)
+name|TM_SOFT
+value|(TM_CRE|TM_PAE|TM_BGL|TM_RLE|TM_BTE|TM_NXM)
 end_define
 
 end_unit
