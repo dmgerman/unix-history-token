@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -6322,7 +6322,7 @@ argument_list|)
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|15
 argument_list|,
 operator|(
 literal|"%s: uhci_intr: exit\n"
