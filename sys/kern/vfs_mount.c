@@ -446,8 +446,12 @@ index|]
 decl_stmt|;
 name|vfsname
 operator|=
+name|NULL
+expr_stmt|;
 name|path
 operator|=
+name|NULL
+expr_stmt|;
 name|mp
 operator|=
 name|NULL
