@@ -35,7 +35,7 @@ file|<curses.h>
 end_include
 
 begin_function
-name|int
+name|void
 name|_putchar
 parameter_list|(
 name|ch
@@ -67,9 +67,6 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 

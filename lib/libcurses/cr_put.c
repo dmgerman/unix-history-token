@@ -126,7 +126,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|plodput
 name|__P
 argument_list|(
@@ -603,7 +603,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|int
+name|void
 name|plodput
 parameter_list|(
 name|c
@@ -625,9 +625,6 @@ argument_list|(
 name|c
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 end_function
 
