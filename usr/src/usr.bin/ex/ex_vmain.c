@@ -69,6 +69,13 @@ name|addr
 decl_stmt|;
 name|int
 name|ind
+decl_stmt|,
+name|nlput
+decl_stmt|;
+name|int
+name|shouldpo
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|onumber
@@ -420,6 +427,15 @@ goto|goto
 name|looptop
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|value
+argument_list|(
+name|REMAP
+argument_list|)
+condition|)
+break|break;
 block|}
 do|while
 condition|(
@@ -451,12 +467,41 @@ name|c
 condition|)
 block|{
 comment|/* 		 * ^L		Clear screen e.g. after transmission error. 		 */
+comment|/* 		 * ^R		Retype screen, getting rid of @ lines. 		 *		If in open, equivalent to ^L. 		 *		On terminals where the right arrow key sends 		 *		^L we make ^R act like ^L, since there is no 		 *		way to get ^L.  These terminals (adm31, tvi) 		 *		are intelligent so ^R is useless.  Soroc 		 *		will probably foul this up, but nobody has 		 *		one of them. 		 */
 case|case
 name|CTRL
 argument_list|(
 name|l
 argument_list|)
 case|:
+case|case
+name|CTRL
+argument_list|(
+name|r
+argument_list|)
+case|:
+if|if
+condition|(
+name|c
+operator|==
+name|CTRL
+argument_list|(
+name|l
+argument_list|)
+operator|||
+operator|(
+name|KR
+operator|&&
+operator|*
+name|KR
+operator|==
+name|CTRL
+argument_list|(
+name|l
+argument_list|)
+operator|)
+condition|)
+block|{
 name|vclear
 argument_list|()
 expr_stmt|;
@@ -467,14 +512,7 @@ argument_list|,
 name|vcnt
 argument_list|)
 expr_stmt|;
-comment|/* fall into... */
-comment|/* 		 * ^R		Retype screen, getting rid of @ lines. 		 *		If in open, equivalent to ^L. 		 */
-case|case
-name|CTRL
-argument_list|(
-name|r
-argument_list|)
-case|:
+block|}
 if|if
 condition|(
 name|state
@@ -536,9 +574,16 @@ literal|'@'
 case|:
 name|c
 operator|=
-name|getkey
+name|getesc
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 name|c
@@ -601,6 +646,8 @@ expr_stmt|;
 name|macpush
 argument_list|(
 name|tmpbuf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ONERR
@@ -1403,6 +1450,8 @@ comment|/* toggle the case */
 name|macpush
 argument_list|(
 name|mbuf
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1506,9 +1555,17 @@ literal|10000
 else|:
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|vundkind
 operator|=
 name|VCHNG
+expr_stmt|;
+name|vmoving
+operator|=
+literal|0
 expr_stmt|;
 name|CP
 argument_list|(
@@ -1567,6 +1624,9 @@ name|onintr
 argument_list|()
 expr_stmt|;
 comment|/* fall into... */
+ifdef|#
+directive|ifdef
+name|notdef
 comment|/* 		 * q		Quit back to command mode, unless called as 		 *		vi on command line in which case dont do it 		 */
 case|case
 literal|'q'
@@ -1601,6 +1661,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 comment|/* fall into... */
 comment|/* 		 * Q		Is like q, but always gets to command mode 		 *		even if command line invocation was as vi. 		 */
 case|case
@@ -1610,6 +1672,34 @@ name|vsave
 argument_list|()
 expr_stmt|;
 return|return;
+comment|/* 		 * ZZ		Like :x 		 */
+case|case
+literal|'Z'
+case|:
+name|forbid
+argument_list|(
+name|getkey
+argument_list|()
+operator|!=
+literal|'Z'
+argument_list|)
+expr_stmt|;
+name|oglobp
+operator|=
+name|globp
+expr_stmt|;
+name|globp
+operator|=
+literal|"x"
+expr_stmt|;
+name|vclrech
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+goto|goto
+name|gogo
+goto|;
 comment|/* 		 * P		Put back text before cursor or before current 		 *		line.  If text was whole lines goes back 		 *		as whole lines.  If part of a single line 		 *		or parts of whole lines splits up current 		 *		line to form many new lines. 		 *		May specify a named buffer, or the delete 		 *		saving buffers 1-9. 		 * 		 * p		Like P but after rather than before. 		 */
 case|case
 literal|'P'
@@ -1623,6 +1713,14 @@ literal|0
 expr_stmt|;
 name|forbid
 argument_list|(
+operator|!
+name|vreg
+operator|&&
+name|value
+argument_list|(
+name|UNDOMACRO
+argument_list|)
+operator|&&
 name|inopen
 operator|<
 literal|0
@@ -1763,6 +1861,11 @@ name|killU
 argument_list|()
 expr_stmt|;
 comment|/* 			 * The call to putreg can potentially 			 * bomb since there may be nothing in a named buffer. 			 * We thus put a catch in here.  If we didn't and 			 * there was an error we would end up in command mode. 			 */
+name|addr
+operator|=
+name|dol
+expr_stmt|;
+comment|/* old dol */
 name|CATCH
 name|vremote
 argument_list|(
@@ -1811,6 +1914,14 @@ name|splitw
 init|=
 literal|0
 decl_stmt|;
+name|nlput
+operator|=
+name|dol
+operator|-
+name|addr
+operator|+
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1818,6 +1929,10 @@ name|i
 condition|)
 block|{
 comment|/* 				 * Increment undap1, undap2 to make up 				 * for their incorrect initialization in the 				 * routine vremote before calling put/putreg. 				 */
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|undap1
 operator|++
 operator|,
@@ -1827,21 +1942,61 @@ expr_stmt|;
 name|vcline
 operator|++
 expr_stmt|;
-block|}
-comment|/* 			 * After a put want current line first line, 			 * and dot was made the last line put in code run 			 * so far.  This is why we increment vcline above, 			 * and decrease (usually) dot here. 			 */
-name|dot
-operator|=
-name|undap1
+name|nlput
+operator|--
 expr_stmt|;
+comment|/* 				 * After a put want current line first line, 				 * and dot was made the last line put in code 				 * run so far.  This is why we increment vcline 				 * above and decrease dot here. 				 */
+name|dot
+operator|-=
+name|nlput
+operator|-
+literal|1
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"vreplace(%d, %d, %d), undap1=%d, undap2=%d, dot=%d\n"
+argument_list|,
+name|vcline
+argument_list|,
+name|i
+argument_list|,
+name|nlput
+argument_list|,
+name|lineno
+argument_list|(
+name|undap1
+argument_list|)
+argument_list|,
+name|lineno
+argument_list|(
+name|undap2
+argument_list|)
+argument_list|,
+name|lineno
+argument_list|(
+name|dot
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vreplace
 argument_list|(
 name|vcline
 argument_list|,
 name|i
 argument_list|,
-name|undap2
-operator|-
-name|undap1
+name|nlput
 argument_list|)
 expr_stmt|;
 if|if
@@ -2093,6 +2248,20 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|shouldpo
+condition|)
+block|{
+comment|/* 				 * So after a "Hit return..." ":", we do 				 * another "Hit return..." the next time 				 */
+name|pofix
+argument_list|()
+expr_stmt|;
+name|shouldpo
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|CATCH
 comment|/* 				 * Save old values of options so we can 				 * notice when they change; switch into 				 * cooked mode so we are interruptible. 				 */
 name|onumber
@@ -2255,6 +2424,8 @@ label|:
 comment|/* 			 * If a change occurred, other than 			 * a write which clears changes, then 			 * we should allow an undo even if . 			 * didn't move. 			 * 			 * BUG: You can make this wrong by 			 * tricking around with multiple commands 			 * on one line of : escape, and including 			 * a write command there, but its not 			 * worth worrying about. 			 */
 if|if
 condition|(
+name|FIXUNDO
+operator|&&
 name|tchng
 operator|&&
 name|tchng
@@ -2284,8 +2455,16 @@ block|{
 name|getDOT
 argument_list|()
 expr_stmt|;
+name|shouldpo
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
+name|shouldpo
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 			 * In the case where the file being edited is 			 * new; e.g. if the initial state hasn't been 			 * saved yet, then do so now. 			 */
 if|if
 condition|(
@@ -2461,10 +2640,12 @@ name|state
 operator|==
 name|CRTOPEN
 condition|)
+block|{
 name|vcnt
 operator|=
 literal|0
 expr_stmt|;
+block|}
 block|}
 comment|/* 				 * Limit max value of vcnt based on $ 				 */
 name|i
@@ -2790,21 +2971,19 @@ name|cnt
 operator|-
 literal|1
 expr_stmt|;
+name|inglobal
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-name|inopen
-operator|>
-literal|0
+name|FIXUNDO
 condition|)
 name|undap1
 operator|=
 name|undap2
 operator|=
 name|dot
-expr_stmt|;
-name|inglobal
-operator|=
-literal|0
 expr_stmt|;
 call|(
 modifier|*
@@ -2820,9 +2999,7 @@ name|oing
 expr_stmt|;
 if|if
 condition|(
-name|inopen
-operator|>
-literal|0
+name|FIXUNDO
 condition|)
 name|vundkind
 operator|=
@@ -2861,6 +3038,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|FIXUNDO
+operator|&&
 name|vundkind
 operator|==
 name|VCHNG

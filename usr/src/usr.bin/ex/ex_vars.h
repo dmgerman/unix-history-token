@@ -86,49 +86,49 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAPINPUT
+name|NUMBER
 value|12
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUMBER
+name|OPEN
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPEN
+name|OPTIMIZE
 value|14
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTIMIZE
+name|PARAGRAPHS
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|PARAGRAPHS
+name|PROMPT
 value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROMPT
+name|REDRAW
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|REDRAW
+name|REMAP
 value|18
 end_define
 
@@ -184,14 +184,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TABSTOP
+name|TAGS
 value|26
 end_define
 
 begin_define
 define|#
 directive|define
-name|TTYTYPE
+name|TABSTOP
 value|27
 end_define
 
@@ -212,43 +212,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|WARN
+name|TIMEOUT
 value|30
 end_define
 
 begin_define
 define|#
 directive|define
-name|WINDOW
+name|TTYTYPE
 value|31
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRAPSCAN
+name|UNDOMACRO
 value|32
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRAPMARGIN
+name|WARN
 value|33
 end_define
 
 begin_define
 define|#
 directive|define
-name|WRITEANY
+name|WINDOW
 value|34
 end_define
 
 begin_define
 define|#
 directive|define
-name|NOPTS
+name|WRAPSCAN
 value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRAPMARGIN
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITEANY
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOPTS
+value|38
 end_define
 
 end_unit

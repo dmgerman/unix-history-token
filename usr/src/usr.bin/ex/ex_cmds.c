@@ -1835,11 +1835,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|putpad
-argument_list|(
-name|TI
-argument_list|)
-expr_stmt|;
 continue|continue;
 comment|/* source */
 case|case
@@ -2057,7 +2052,7 @@ expr_stmt|;
 comment|/* should use SCCS subst here */
 name|printf
 argument_list|(
-literal|"Version 3.2, January 4, 1980"
+literal|"Version 3.3, February 2, 1980"
 argument_list|)
 expr_stmt|;
 name|noonl
@@ -2120,6 +2115,8 @@ else|:
 literal|"write"
 argument_list|)
 expr_stmt|;
+name|wq
+label|:
 if|if
 condition|(
 name|skipwh
@@ -2131,6 +2128,9 @@ operator|==
 literal|'!'
 condition|)
 block|{
+name|pofix
+argument_list|()
+expr_stmt|;
 name|ignchar
 argument_list|()
 expr_stmt|;
@@ -2172,6 +2172,30 @@ goto|goto
 name|quit
 goto|;
 continue|continue;
+comment|/* xit */
+case|case
+literal|'x'
+case|:
+name|tail
+argument_list|(
+literal|"xit"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|chng
+condition|)
+goto|goto
+name|quit
+goto|;
+name|c
+operator|=
+literal|'q'
+expr_stmt|;
+goto|goto
+name|wq
+goto|;
 comment|/* yank */
 case|case
 literal|'y'
@@ -2333,17 +2357,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|dot
-operator|==
-name|dol
-condition|)
-name|error
-argument_list|(
-literal|"At EOF|At end-of-file"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|UP
 operator|!=
 name|NOSTR
@@ -2373,6 +2386,18 @@ operator|=
 name|dot
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|dot
+operator|==
+name|dol
+condition|)
+name|error
+argument_list|(
+literal|"At EOF|At end-of-file"
+argument_list|)
+expr_stmt|;
 name|addr1
 operator|=
 name|addr2
@@ -2381,6 +2406,7 @@ name|dot
 operator|+
 literal|1
 expr_stmt|;
+block|}
 block|}
 name|setdot
 argument_list|()
@@ -2471,6 +2497,15 @@ expr_stmt|;
 name|setall
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|inglobal
+operator|==
+literal|2
+condition|)
+name|pofix
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d"
@@ -2517,7 +2552,7 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|vnfl
+name|pofix
 argument_list|()
 expr_stmt|;
 name|putpad
@@ -2546,12 +2581,7 @@ argument_list|)
 expr_stmt|;
 name|vcontin
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|putpad
-argument_list|(
-name|TI
+literal|0
 argument_list|)
 expr_stmt|;
 name|nochng

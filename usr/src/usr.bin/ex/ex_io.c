@@ -1003,6 +1003,19 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* so errors don't mess up the screen */
+name|open
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|execl
 argument_list|(
 name|svalue
@@ -1191,7 +1204,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-name|NOSTR
+literal|"No match"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1576,6 +1589,8 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|FIXUNDO
+operator|&&
 name|inopen
 operator|&&
 name|c
@@ -1768,6 +1783,10 @@ name|one
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|undkind
 operator|=
 name|UNDNONE
@@ -2035,6 +2054,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|savedfile
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"No file|No current filename"
+argument_list|)
+expr_stmt|;
 name|saddr1
 operator|=
 name|addr1
@@ -2886,6 +2919,10 @@ expr_stmt|;
 if|if
 condition|(
 name|inopen
+operator|&&
+name|Outchar
+operator|!=
+name|termchar
 condition|)
 block|{
 name|vclreol
@@ -3551,6 +3588,10 @@ operator|&
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|undap1
 operator|=
 name|undap2

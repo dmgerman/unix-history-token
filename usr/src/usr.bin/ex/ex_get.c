@@ -41,26 +41,12 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|c
-decl_stmt|;
-do|do
-name|c
-operator|=
-name|getcd
-argument_list|()
-expr_stmt|;
-do|while
-condition|(
-name|c
-operator|==
-name|CTRL
+name|ignore
 argument_list|(
-name|d
+name|getchar
+argument_list|()
 argument_list|)
-condition|)
-do|;
+expr_stmt|;
 block|}
 end_block
 
@@ -83,6 +69,9 @@ argument_list|()
 expr_stmt|;
 do|while
 condition|(
+operator|!
+name|globp
+operator|&&
 name|c
 operator|==
 name|CTRL
@@ -139,6 +128,9 @@ name|inopen
 condition|)
 if|if
 condition|(
+operator|!
+name|globp
+operator|&&
 name|c
 operator|==
 name|CTRL

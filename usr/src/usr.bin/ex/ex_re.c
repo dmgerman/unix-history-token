@@ -245,6 +245,9 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+name|saveall
+argument_list|()
+expr_stmt|;
 name|inglobal
 operator|=
 literal|2
@@ -295,9 +298,6 @@ literal|01
 expr_stmt|;
 block|}
 comment|/* should use gdelete from ed to avoid n**2 here on g/.../d */
-name|saveall
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|inopen
@@ -452,8 +452,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|inglobal
+name|FIXUNDO
 condition|)
 name|save12
 argument_list|()
@@ -1012,6 +1011,19 @@ case|:
 case|case
 name|EOF
 case|:
+if|if
+condition|(
+operator|!
+operator|(
+name|globp
+operator|&&
+name|globp
+index|[
+literal|0
+index|]
+operator|)
+condition|)
+block|{
 name|ungetchar
 argument_list|(
 name|c
@@ -1020,6 +1032,7 @@ expr_stmt|;
 goto|goto
 name|endrhs
 goto|;
+block|}
 case|case
 literal|'~'
 case|:

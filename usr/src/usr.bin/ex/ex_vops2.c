@@ -123,6 +123,10 @@ expr_stmt|;
 name|setLAST
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|vundkind
 operator|=
 name|VCHNG
@@ -1103,6 +1107,8 @@ block|}
 comment|/* 		 * If we started out as a single line operation and are now 		 * turning into a multi-line change, then we had better yank 		 * out dot before it changes so that undo will work 		 * correctly later. 		 */
 if|if
 condition|(
+name|FIXUNDO
+operator|&&
 name|vundkind
 operator|==
 name|VCHNG
@@ -1452,10 +1458,13 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|value
-argument_list|(
-name|MAPINPUT
-argument_list|)
+name|vglobp
+operator|==
+literal|0
+operator|&&
+name|Peekkey
+operator|==
+literal|0
 condition|)
 while|while
 condition|(
@@ -1466,16 +1475,27 @@ name|map
 argument_list|(
 name|c
 argument_list|,
-name|arrows
+name|immacs
 argument_list|)
 operator|)
 operator|!=
 name|c
 condition|)
+block|{
 name|c
 operator|=
 name|ch
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|value
+argument_list|(
+name|REMAP
+argument_list|)
+condition|)
+break|break;
+block|}
 if|if
 condition|(
 operator|!
@@ -2144,7 +2164,7 @@ expr_stmt|;
 name|back1
 argument_list|()
 expr_stmt|;
-name|vputc
+name|vputchar
 argument_list|(
 literal|' '
 argument_list|)

@@ -21,14 +21,14 @@ begin_define
 define|#
 directive|define
 name|EXRECOVER
-value|libpath(ex3.2recover)
+value|libpath(ex3.3recover)
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPRESERVE
-value|libpath(ex3.2preserve)
+value|libpath(ex3.3preserve)
 end_define
 
 begin_ifndef
@@ -41,20 +41,13 @@ begin_define
 define|#
 directive|define
 name|EXSTRINGS
-value|libpath(ex3.2strings)
+value|libpath(ex3.3strings)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|MASTERTAGS
-value|libpath(tags)
-end_define
 
 begin_comment
 comment|/*  * If your system believes that tabs expand to a width other than  * 8 then your makefile should cc with -DTABS=whatever, otherwise we use 8.  */
@@ -186,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|ONMSZ
-value|32
+value|64
 end_define
 
 begin_comment

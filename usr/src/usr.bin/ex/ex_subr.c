@@ -2193,6 +2193,26 @@ specifier|register
 name|int
 name|more
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|FIXUNDO
+condition|)
+return|return;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"before save"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|undkind
 operator|=
 name|UNDNONE
@@ -2316,6 +2336,20 @@ name|a2
 operator|+
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"after save"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 

@@ -2603,6 +2603,12 @@ operator|=
 name|shft
 expr_stmt|;
 do|do
+block|{
+if|if
+condition|(
+operator|*
+name|up
+condition|)
 name|vputchar
 argument_list|(
 operator|*
@@ -2610,6 +2616,9 @@ name|up
 operator|++
 argument_list|)
 expr_stmt|;
+else|else
+break|break;
+block|}
 do|while
 condition|(
 operator|--
@@ -3505,7 +3514,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Patch to fix problem of>79 chars on echo line: don't echo extras */
+comment|/* Fix problem of>79 chars on echo line. */
 if|if
 condition|(
 name|destcol
@@ -3520,7 +3529,9 @@ name|destline
 operator|==
 name|WECHO
 condition|)
-return|return;
+name|pofix
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|destcol

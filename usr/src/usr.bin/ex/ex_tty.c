@@ -454,7 +454,7 @@ operator|++
 expr_stmt|;
 name|CP
 argument_list|(
-name|genbuf
+name|ltcbuf
 argument_list|,
 literal|"xx|dumb:"
 argument_list|)
@@ -500,9 +500,10 @@ operator|<
 name|B1200
 condition|)
 name|l
-operator|/=
-literal|2
+operator|=
+literal|9
 expr_stmt|;
+comment|/* including the message line at the bottom */
 elseif|else
 if|if
 condition|(
@@ -512,13 +513,7 @@ name|B2400
 condition|)
 name|l
 operator|=
-operator|(
-name|l
-operator|*
-literal|2
-operator|)
-operator|/
-literal|3
+literal|17
 expr_stmt|;
 name|aoftspace
 operator|=
@@ -798,7 +793,7 @@ name|ttytype
 argument_list|,
 name|longname
 argument_list|(
-name|genbuf
+name|ltcbuf
 argument_list|,
 name|type
 argument_list|)

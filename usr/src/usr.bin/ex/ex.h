@@ -974,6 +974,17 @@ parameter_list|)
 value|(ignore(strcpy(a, b)))
 end_define
 
+begin_comment
+comment|/* 			 * FIXUNDO: do we want to mung undo vars? 			 * Usually yes unless in a macro or global. 			 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FIXUNDO
+value|(inopen>= 0&& (inopen || !inglobal))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1142,7 +1153,7 @@ begin_decl_stmt
 name|char
 name|direct
 index|[
-literal|32
+name|ONMSZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1155,7 +1166,7 @@ begin_decl_stmt
 name|char
 name|shell
 index|[
-literal|32
+name|ONMSZ
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1168,7 +1179,7 @@ begin_decl_stmt
 name|char
 name|ttytype
 index|[
-literal|16
+name|ONMSZ
 index|]
 decl_stmt|;
 end_decl_stmt

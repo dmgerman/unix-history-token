@@ -1011,8 +1011,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|-
-literal|20000
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1054,8 +1053,7 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|-
-literal|20000
+literal|0
 expr_stmt|;
 name|vutmp
 operator|=

@@ -264,7 +264,7 @@ block|{
 name|beep
 argument_list|()
 expr_stmt|;
-return|return;
+break|break;
 block|}
 comment|/* 		 * Undo() call below basically replaces undap1 to undap2-1 		 * with dol through unddol-1.  Hack screen image to 		 * reflect this replacement. 		 */
 name|vreplace
@@ -344,7 +344,7 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 if|if
 condition|(
@@ -368,7 +368,7 @@ name|vmcurs
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|VCHNG
 case|:
@@ -468,7 +468,7 @@ argument_list|(
 name|cursor
 argument_list|)
 expr_stmt|;
-return|return;
+break|break;
 block|}
 comment|/* 		 * Pseudo insert command. 		 */
 name|vcursat
@@ -578,14 +578,14 @@ expr_stmt|;
 name|vfixcurs
 argument_list|()
 expr_stmt|;
-return|return;
+break|break;
 case|case
 name|VNONE
 case|:
 name|beep
 argument_list|()
 expr_stmt|;
-return|return;
+break|break;
 block|}
 block|}
 end_block
@@ -1875,6 +1875,10 @@ expr_stmt|;
 name|prepapp
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|vundkind
 operator|=
 name|VMANY
@@ -2311,6 +2315,7 @@ name|notenam
 operator|=
 literal|""
 expr_stmt|;
+comment|/* 	 * BUG: we shouldn't be depending on what undap2 and undap1 are, 	 * since we may be inside a macro.  What's really wanted is the 	 * number of lines we read from the filter.  However, the mistake 	 * will be an overestimate so it only results in extra work, 	 * it shouldn't cause any real screwups. 	 */
 name|vreplace
 argument_list|(
 name|vcline
@@ -2673,6 +2678,10 @@ argument_list|,
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|vundkind
 operator|=
 name|VCHNG
@@ -2773,6 +2782,10 @@ name|notenam
 operator|=
 literal|"yank"
 expr_stmt|;
+if|if
+condition|(
+name|FIXUNDO
+condition|)
 name|vundkind
 operator|=
 name|VNONE

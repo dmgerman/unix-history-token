@@ -2106,9 +2106,64 @@ operator|<
 name|destcol
 condition|)
 block|{
+comment|/* 		 * move one char to the right.  We don't use ND space 		 * because it's better to just print the char we are 		 * moving over.  There are various exceptions, however. 		 * If !inopen, vtube contains garbage.  If the char is 		 * a null or a tab we want to print a space.  Other random 		 * chars we use space for instead, too. 		 */
+ifdef|#
+directive|ifdef
+name|TRACE
 if|if
 condition|(
+name|trace
+condition|)
+name|fprintf
+argument_list|(
+name|trace
+argument_list|,
+literal|"ND: inopen=%d, i=%d, outline=%d, outcol=%d\n"
+argument_list|,
 name|inopen
+argument_list|,
+name|i
+argument_list|,
+name|outline
+argument_list|,
+name|outcol
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+operator|!
+name|inopen
+operator|||
+name|vtube
+index|[
+name|outline
+index|]
+operator|==
+name|NULL
+operator|||
+operator|(
+name|i
+operator|=
+name|vtube
+index|[
+name|outline
+index|]
+index|[
+name|outcol
+index|]
+operator|)
+operator|<
+literal|' '
+condition|)
+name|i
+operator|=
+literal|' '
+expr_stmt|;
+if|if
+condition|(
+name|insmode
 operator|&&
 name|ND
 condition|)
@@ -2124,7 +2179,7 @@ expr_stmt|;
 else|else
 name|plodput
 argument_list|(
-literal|' '
+name|i
 argument_list|)
 expr_stmt|;
 name|outcol
@@ -2774,7 +2829,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TIOCGETC
+name|EATQS
 name|nttyc
 operator|.
 name|t_quitc
@@ -3003,7 +3058,7 @@ name|sg_flags
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|TIOCGETC
+name|EATQS
 if|if
 condition|(
 name|f
@@ -3078,7 +3133,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|TIOCGETC
+name|EATQS
 name|ioctl
 argument_list|(
 name|i
@@ -3163,7 +3218,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|TIOCSETC
+name|EATQS
 name|ioctl
 argument_list|(
 name|i

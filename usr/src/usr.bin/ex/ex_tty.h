@@ -809,6 +809,39 @@ name|costCM
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MAXNOMACS
+value|128
+end_define
+
+begin_comment
+comment|/* max number of macros of each kind */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCHARMACS
+value|2048
+end_define
+
+begin_comment
+comment|/* max # of chars total in macros */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -817,7 +850,7 @@ value|32
 end_define
 
 begin_comment
-comment|/* max number of macros */
+comment|/* max number of macros of each kind */
 end_comment
 
 begin_define
@@ -830,6 +863,11 @@ end_define
 begin_comment
 comment|/* max # of chars total in macros */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -866,6 +904,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* macro defs - 1st 5 built in */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|maps
+name|immacs
+index|[
+name|MAXNOMACS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for while in insert mode */
 end_comment
 
 begin_decl_stmt

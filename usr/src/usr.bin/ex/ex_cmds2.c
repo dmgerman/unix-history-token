@@ -510,6 +510,18 @@ name|ppid
 operator|)
 expr_stmt|;
 comment|/* Only children die */
+name|inglobal
+operator|=
+literal|0
+expr_stmt|;
+name|globp
+operator|=
+name|vglobp
+operator|=
+name|vmacp
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|vcatch
@@ -518,16 +530,6 @@ operator|!
 name|die
 condition|)
 block|{
-name|inglobal
-operator|=
-literal|0
-expr_stmt|;
-name|vglobp
-operator|=
-name|vmacp
-operator|=
-literal|0
-expr_stmt|;
 name|inopen
 operator|=
 literal|1
@@ -535,6 +537,13 @@ expr_stmt|;
 name|vcatch
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|str
+condition|)
+name|noonl
+argument_list|()
 expr_stmt|;
 name|fixol
 argument_list|()
@@ -583,14 +592,6 @@ name|setlastchar
 argument_list|(
 literal|'\n'
 argument_list|)
-expr_stmt|;
-name|inglobal
-operator|=
-literal|0
-expr_stmt|;
-name|globp
-operator|=
-literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1524,7 +1525,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Continue after a shell escape from open/visual.  */
+comment|/*  * Continue after a : command from open/visual.  */
 end_comment
 
 begin_macro
@@ -1565,7 +1566,42 @@ operator|!=
 name|VISUAL
 condition|)
 block|{
-comment|/* 			vtube[WECHO][0] = '*'; 			vnfl(); */
+comment|/* 			 * We don't know what a shell command may have left on 			 * the screen, so we move the cursor to the right place 			 * and then put out a newline.  But this makes an extra 			 * blank line most of the time so we only do it for :sh 			 * since the prompt gets left on the screen. 			 * 			 * BUG: :!echo longer than current line \\c 			 * will screw it up, but be reasonable! 			 */
+if|if
+condition|(
+name|state
+operator|==
+name|CRTOPEN
+condition|)
+block|{
+name|termreset
+argument_list|()
+expr_stmt|;
+name|vgoto
+argument_list|(
+name|WECHO
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|ask
+condition|)
+block|{
+name|putch
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+name|putch
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 if|if
@@ -1595,6 +1631,9 @@ condition|(
 name|ask
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|EATQS
 comment|/* 			 * Gobble ^Q/^S since the tty driver should be eating 			 * them (as far as the user can see) 			 */
 while|while
 condition|(
@@ -1620,6 +1659,8 @@ name|getkey
 argument_list|()
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|getkey
@@ -1627,12 +1668,43 @@ argument_list|()
 operator|==
 literal|':'
 condition|)
+block|{
+comment|/* Ugh. Extra newlines, but no other way */
+name|putch
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|outline
+operator|=
+name|WECHO
+expr_stmt|;
 name|ungetkey
 argument_list|(
 literal|':'
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|vclrech
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ask
+operator|&&
+name|Peekkey
+operator|!=
+literal|':'
+condition|)
+block|{
+name|putpad
+argument_list|(
+name|TI
+argument_list|)
+expr_stmt|;
 name|putpad
 argument_list|(
 name|VS
@@ -1643,6 +1715,7 @@ argument_list|(
 name|KS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block

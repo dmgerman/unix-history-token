@@ -1476,6 +1476,20 @@ end_expr_stmt
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|fclose
+argument_list|(
+name|trace
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|_exit
 argument_list|(
 name|i

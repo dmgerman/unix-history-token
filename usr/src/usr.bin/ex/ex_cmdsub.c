@@ -100,11 +100,9 @@ name|dot
 operator|=
 name|a
 expr_stmt|;
-comment|/* 	 * This is probably a bug, since it's different than the other tests 	 * in appendnone, delete, and deletenone. It is known to fail for 	 * the command :g/foo/r xxx (where there is one foo and the file 	 * xxx exists) and you try to undo it. I'm leaving it in for now 	 * because I'm afraid if I change it I'll break something. 	 */
 if|if
 condition|(
-operator|!
-name|inglobal
+name|FIXUNDO
 operator|&&
 operator|!
 name|inopen
@@ -155,8 +153,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|inglobal
+name|FIXUNDO
 operator|&&
 name|f
 operator|==
@@ -272,16 +269,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|inopen
-operator|>=
-literal|0
-operator|&&
-operator|(
-name|inopen
-operator|||
-operator|!
-name|inglobal
-operator|)
+name|FIXUNDO
 condition|)
 block|{
 name|undkind
@@ -442,16 +430,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|inopen
-operator|>=
-literal|0
-operator|&&
-operator|(
-name|inopen
-operator|||
-operator|!
-name|inglobal
-operator|)
+name|FIXUNDO
 condition|)
 block|{
 specifier|register
@@ -674,16 +653,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|inopen
-operator|>=
-literal|0
-operator|&&
-operator|(
-name|inopen
-operator|||
-operator|!
-name|inglobal
-operator|)
+name|FIXUNDO
 condition|)
 block|{
 name|undkind
@@ -737,6 +707,11 @@ literal|1
 decl_stmt|;
 if|if
 condition|(
+name|FIXUNDO
+condition|)
+block|{
+if|if
+condition|(
 name|inopen
 operator|==
 operator|-
@@ -779,6 +754,7 @@ name|unddol
 operator|=
 name|dol
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -1351,6 +1327,11 @@ name|inglobal
 condition|)
 if|if
 condition|(
+name|FIXUNDO
+condition|)
+block|{
+if|if
+condition|(
 name|cflag
 condition|)
 block|{
@@ -1391,6 +1372,7 @@ expr_stmt|;
 name|squish
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 block|}
 end_block
@@ -1479,6 +1461,16 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|FIXUNDO
+condition|)
+name|error
+argument_list|(
+literal|"Cannot put inside global/macro"
+argument_list|)
+expr_stmt|;
 name|cnt
 operator|=
 name|unddol
@@ -1738,8 +1730,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|inglobal
+name|FIXUNDO
 condition|)
 name|save12
 argument_list|()
@@ -1966,6 +1957,12 @@ index|[
 name|FNSIZE
 index|]
 decl_stmt|;
+name|char
+name|tagfbuf
+index|[
+literal|128
+index|]
+decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -1977,20 +1974,63 @@ name|samef
 init|=
 literal|1
 decl_stmt|;
-name|bool
-name|notagsfile
+name|int
+name|tfcount
 init|=
 literal|0
 decl_stmt|;
-name|short
-name|master
-init|=
-operator|-
-literal|1
-decl_stmt|;
-name|short
+name|int
 name|omagic
 decl_stmt|;
+name|char
+modifier|*
+name|fn
+decl_stmt|,
+modifier|*
+name|fne
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
+comment|/* 	 * We have lots of room so we bring in stdio and do 	 * a binary search on the tags file. 	 */
+undef|#
+directive|undef
+name|EOF
+include|#
+directive|include
+file|<stdio.h>
+undef|#
+directive|undef
+name|getchar
+undef|#
+directive|undef
+name|putchar
+name|FILE
+modifier|*
+name|iof
+decl_stmt|;
+name|char
+name|iofbuf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|long
+name|mid
+decl_stmt|;
+comment|/* assumed byte offset */
+name|long
+name|top
+decl_stmt|,
+name|bot
+decl_stmt|;
+comment|/* length of tag file */
+name|struct
+name|stat
+name|sbuf
+decl_stmt|;
+endif|#
+directive|endif
 name|omagic
 operator|=
 name|value
@@ -2120,33 +2160,156 @@ expr_stmt|;
 name|clrstats
 argument_list|()
 expr_stmt|;
-do|do
+comment|/* 	 * Loop once for each file in tags "path". 	 */
+name|CP
+argument_list|(
+name|tagfbuf
+argument_list|,
+name|svalue
+argument_list|(
+name|TAGS
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fne
+operator|=
+name|tagfbuf
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|fne
+condition|)
 block|{
+name|fn
+operator|=
+operator|++
+name|fne
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|fne
+operator|&&
+operator|*
+name|fne
+operator|!=
+literal|' '
+condition|)
+name|fne
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|fne
+operator|==
+literal|0
+condition|)
+name|fne
+operator|=
+literal|0
+expr_stmt|;
+comment|/* done, quit after this time */
+else|else
+operator|*
+name|fne
+operator|=
+literal|0
+expr_stmt|;
+comment|/* null terminate filename */
+ifdef|#
+directive|ifdef
+name|VMUNIX
+name|iof
+operator|=
+name|fopen
+argument_list|(
+name|fn
+argument_list|,
+literal|"r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|iof
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|tfcount
+operator|++
+expr_stmt|;
+name|setbuf
+argument_list|(
+name|iof
+argument_list|,
+name|iofbuf
+argument_list|)
+expr_stmt|;
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|iof
+argument_list|)
+argument_list|,
+operator|&
+name|sbuf
+argument_list|)
+expr_stmt|;
+name|top
+operator|=
+name|sbuf
+operator|.
+name|st_size
+expr_stmt|;
+if|if
+condition|(
+name|top
+operator|==
+literal|0L
+operator|||
+name|iof
+operator|==
+name|NULL
+condition|)
+name|top
+operator|=
+operator|-
+literal|1L
+expr_stmt|;
+name|bot
+operator|=
+literal|0L
+expr_stmt|;
+while|while
+condition|(
+name|top
+operator|>=
+name|bot
+condition|)
+block|{
+else|#
+directive|else
+comment|/* 		 * Avoid stdio and scan tag file linearly. 		 */
 name|io
 operator|=
 name|open
 argument_list|(
-name|master
-condition|?
-literal|"tags"
-else|:
-name|MASTERTAGS
+name|fn
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|master
-operator|&&
 name|io
 operator|<
 literal|0
 condition|)
-name|notagsfile
-operator|=
-literal|1
-expr_stmt|;
+continue|continue;
 while|while
 condition|(
 name|getfile
@@ -2155,6 +2318,9 @@ operator|==
 literal|0
 condition|)
 block|{
+endif|#
+directive|endif
+comment|/* loop for each tags file entry */
 specifier|register
 name|char
 modifier|*
@@ -2173,6 +2339,72 @@ name|char
 modifier|*
 name|oglobp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
+name|mid
+operator|=
+operator|(
+name|top
+operator|+
+name|bot
+operator|)
+operator|/
+literal|2
+expr_stmt|;
+name|fseek
+argument_list|(
+name|iof
+argument_list|,
+name|mid
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|>
+literal|0
+condition|)
+comment|/* to get first tag in file to work */
+name|fgets
+argument_list|(
+name|linebuf
+argument_list|,
+sizeof|sizeof
+name|linebuf
+argument_list|,
+name|iof
+argument_list|)
+expr_stmt|;
+comment|/* scan to next \n */
+name|fgets
+argument_list|(
+name|linebuf
+argument_list|,
+sizeof|sizeof
+name|linebuf
+argument_list|,
+name|iof
+argument_list|)
+expr_stmt|;
+comment|/* get a line */
+name|linebuf
+index|[
+name|strlen
+argument_list|(
+name|linebuf
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* was '\n' */
+endif|#
+directive|endif
 while|while
 condition|(
 operator|*
@@ -2202,12 +2434,55 @@ operator|*
 name|cp
 argument_list|)
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|VMUNIX
+if|if
+condition|(
+operator|*
+name|lp
+operator|>
+operator|*
+name|cp
+condition|)
+name|bot
+operator|=
+name|mid
+operator|+
+literal|1
+expr_stmt|;
+else|else
+name|top
+operator|=
+name|mid
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* Not this tag.  Try the next */
 continue|continue;
+block|}
+comment|/* 			 * We found the tag.  Decode the line in the file. 			 */
+ifdef|#
+directive|ifdef
+name|VMUNIX
+name|fclose
+argument_list|(
+name|iof
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|close
 argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* name of file */
 while|while
 condition|(
 operator|*
@@ -2380,6 +2655,7 @@ operator|+
 literal|10
 index|]
 decl_stmt|;
+comment|/* Different file.  Do autowrite& get it. */
 if|if
 condition|(
 operator|!
@@ -2434,14 +2710,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * BUG: if it isn't found (user edited header 				 * line) we get left in nomagic mode. 				 */
-name|value
-argument_list|(
-name|MAGIC
-argument_list|)
-operator|=
-literal|0
-expr_stmt|;
 name|commands
 argument_list|(
 literal|1
@@ -2469,6 +2737,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/* 			 * Look for pattern in the current file. 			 */
 name|oglobp
 operator|=
 name|globp
@@ -2495,6 +2764,7 @@ argument_list|(
 name|dot
 argument_list|)
 expr_stmt|;
+comment|/* 			 * BUG: if it isn't found (user edited header 			 * line) we get left in nomagic mode. 			 */
 name|value
 argument_list|(
 name|MAGIC
@@ -2526,24 +2796,39 @@ name|omagic
 expr_stmt|;
 return|return;
 block|}
+comment|/* end of "for each tag in file" */
+comment|/* 		 * No such tag in this file.  Close it and try the next. 		 */
+ifdef|#
+directive|ifdef
+name|VMUNIX
+name|fclose
+argument_list|(
+name|iof
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|close
+argument_list|(
+name|io
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-do|while
-condition|(
-operator|++
-name|master
-operator|==
-literal|0
-condition|)
-do|;
+comment|/* end of "for each file in path" */
 if|if
 condition|(
-name|notagsfile
+name|tfcount
+operator|<=
+literal|0
 condition|)
 name|error
 argument_list|(
 literal|"No tags file"
 argument_list|)
 expr_stmt|;
+else|else
 name|serror
 argument_list|(
 literal|"%s: No such tag@in tags file"
@@ -2552,19 +2837,20 @@ name|lasttag
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * Save lines from addr1 thru addr2 as though  * they had been deleted.  */
-end_comment
-
-begin_macro
 name|yank
 argument_list|()
-end_macro
-
-begin_block
 block|{
+if|if
+condition|(
+operator|!
+name|FIXUNDO
+condition|)
+name|error
+argument_list|(
+literal|"Can't yank inside global/macro"
+argument_list|)
+expr_stmt|;
 name|save12
 argument_list|()
 expr_stmt|;
@@ -2582,44 +2868,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_comment
 comment|/*  * z command; print windows of text in the file.  *  * If this seems unreasonably arcane, the reasons  * are historical.  This is one of the first commands  * added to the first ex (then called en) and the  * number of facilities here were the major advantage  * of en over ed since they allowed more use to be  * made of fast terminals w/o typing .,.22p all the time.  */
-end_comment
-
-begin_decl_stmt
 name|bool
 name|zhadpr
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|bool
 name|znoclear
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|short
 name|zweight
 decl_stmt|;
-end_decl_stmt
-
-begin_macro
 name|zop
 argument_list|(
 argument|hadpr
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|int
 name|hadpr
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2868,9 +3133,6 @@ name|op
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|zop2
 argument_list|(
 name|lines
@@ -2881,16 +3143,10 @@ specifier|register
 name|int
 name|lines
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|op
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|line
@@ -3217,9 +3473,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 specifier|static
 name|splitit
 argument_list|()
@@ -3257,17 +3510,18 @@ expr_stmt|;
 name|putnl
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
 begin_expr_stmt
-unit|}  plines
-operator|(
+name|plines
+argument_list|(
 name|adr1
-operator|,
+argument_list|,
 name|adr2
-operator|,
+argument_list|,
 name|movedot
-operator|)
+argument_list|)
 name|line
 operator|*
 name|adr1
@@ -3416,6 +3670,20 @@ decl_stmt|,
 modifier|*
 name|newadot
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"before undo"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|inglobal
@@ -3777,6 +4045,7 @@ operator|=
 name|newadot
 expr_stmt|;
 block|}
+else|else
 name|undkind
 operator|=
 name|UNDCHANGE
@@ -3796,6 +4065,20 @@ name|dot
 operator|=
 name|one
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TRACE
+if|if
+condition|(
+name|trace
+condition|)
+name|vudump
+argument_list|(
+literal|"after undo"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -3973,6 +4256,21 @@ name|char
 modifier|*
 name|dname
 decl_stmt|;
+name|struct
+name|maps
+modifier|*
+name|mp
+decl_stmt|;
+comment|/* the map structure we are working on */
+name|mp
+operator|=
+name|exclam
+argument_list|()
+condition|?
+name|immacs
+else|:
+name|arrows
+expr_stmt|;
 if|if
 condition|(
 name|skipend
@@ -4006,7 +4304,7 @@ name|i
 operator|=
 literal|0
 init|;
-name|arrows
+name|mp
 index|[
 name|i
 index|]
@@ -4018,7 +4316,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|arrows
+name|mp
 index|[
 name|i
 index|]
@@ -4030,7 +4328,7 @@ name|lprintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|arrows
+name|mp
 index|[
 name|i
 index|]
@@ -4047,7 +4345,7 @@ name|lprintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|arrows
+name|mp
 index|[
 name|i
 index|]
@@ -4064,7 +4362,7 @@ name|lprintf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|arrows
+name|mp
 index|[
 name|i
 index|]
@@ -4165,6 +4463,8 @@ argument_list|,
 name|NOSTR
 argument_list|,
 name|NOSTR
+argument_list|,
+name|mp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4351,13 +4651,15 @@ argument_list|,
 name|rhs
 argument_list|,
 name|dname
+argument_list|,
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Add a macro definition to those that already exist. The sequence of  * chars "src" is mapped into "dest". If src is already mapped into something  * this overrides the mapping. There is no recursion. Unmap is done by  * using NOSTR for dest.  */
+comment|/*  * Add a macro definition to those that already exist. The sequence of  * chars "src" is mapped into "dest". If src is already mapped into something  * this overrides the mapping. There is no recursion. Unmap is done by  * using NOSTR for dest.  Dname is what to show in listings.  mp is  * the structure to affect (arrows, etc).  */
 end_comment
 
 begin_expr_stmt
@@ -4368,6 +4670,8 @@ argument_list|,
 name|dest
 argument_list|,
 name|dname
+argument_list|,
+name|mp
 argument_list|)
 specifier|register
 name|char
@@ -4382,6 +4686,15 @@ name|dname
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|register
+name|struct
+name|maps
+modifier|*
+name|mp
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -4393,10 +4706,14 @@ decl_stmt|;
 if|if
 condition|(
 name|dest
+operator|&&
+name|mp
+operator|==
+name|arrows
 condition|)
 block|{
 comment|/* Make sure user doesn't screw himself */
-comment|/* 		 * Prevent tail recursion. We really should be 		 * checking to see if src is a suffix of dest 		 * but we are too lazy here, so we don't bother unless 		 * src is only 1 char long. 		 */
+comment|/* 		 * Prevent tail recursion. We really should be 		 * checking to see if src is a suffix of dest 		 * but this makes mapping involving escapes that 		 * is reasonable mess up. 		 */
 if|if
 condition|(
 name|src
@@ -4457,9 +4774,46 @@ argument_list|(
 literal|"Too dangerous to map that"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the src were null it would cause the dest to 		 * be mapped always forever. This is not good. 		 */
+block|}
+elseif|else
 if|if
 condition|(
+name|dest
+condition|)
+block|{
+comment|/* check for tail recursion in input mode: fussier */
+if|if
+condition|(
+name|eq
+argument_list|(
+name|src
+argument_list|,
+name|dest
+operator|+
+name|strlen
+argument_list|(
+name|dest
+argument_list|)
+operator|-
+name|strlen
+argument_list|(
+name|src
+argument_list|)
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"No tail recursion"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * If the src were null it would cause the dest to 	 * be mapped always forever. This is not good. 	 */
+if|if
+condition|(
+name|src
+operator|==
+name|NOSTR
+operator|||
 name|src
 index|[
 literal|0
@@ -4469,10 +4823,9 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"Null lhs"
+literal|"Missing lhs"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* see if we already have a def for src */
 name|zer
 operator|=
@@ -4485,7 +4838,7 @@ name|slot
 operator|=
 literal|0
 init|;
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4498,7 +4851,7 @@ control|)
 block|{
 if|if
 condition|(
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4512,7 +4865,7 @@ name|eq
 argument_list|(
 name|src
 argument_list|,
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4542,7 +4895,7 @@ block|{
 comment|/* unmap */
 if|if
 condition|(
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4550,7 +4903,7 @@ operator|.
 name|cap
 condition|)
 block|{
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4559,7 +4912,7 @@ name|cap
 operator|=
 name|NOSTR
 expr_stmt|;
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4586,7 +4939,7 @@ name|zer
 operator|>=
 literal|0
 operator|&&
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4660,7 +5013,7 @@ argument_list|,
 name|src
 argument_list|)
 expr_stmt|;
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4686,7 +5039,7 @@ argument_list|,
 name|dest
 argument_list|)
 expr_stmt|;
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4716,7 +5069,7 @@ argument_list|,
 name|dname
 argument_list|)
 expr_stmt|;
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
@@ -4738,7 +5091,7 @@ block|}
 else|else
 block|{
 comment|/* default descr to string user enters */
-name|arrows
+name|mp
 index|[
 name|slot
 index|]
