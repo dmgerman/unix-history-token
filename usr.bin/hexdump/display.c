@@ -817,6 +817,8 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pr
 operator|->
 name|fmt
