@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.3 (Berkeley) %G%"
+literal|"@(#)tio.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1164,6 +1164,22 @@ return|;
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1179,6 +1195,12 @@ init|=
 name|TC
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
+end_endif
 
 begin_expr_stmt
 name|trdblk
@@ -1210,6 +1232,19 @@ name|i
 decl_stmt|,
 name|ret
 decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
 comment|/* call ultouch occasionally */
 if|if
 condition|(
@@ -1227,6 +1262,9 @@ name|ultouch
 argument_list|()
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
 for|for
 control|(
 name|i
@@ -1302,10 +1340,19 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
-name|int
-name|ret
-decl_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|BSD4_2
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USG
+argument_list|)
 comment|/* call ultouch occasionally */
 if|if
 condition|(
@@ -1323,8 +1370,10 @@ name|ultouch
 argument_list|()
 expr_stmt|;
 block|}
-name|ret
-operator|=
+endif|#
+directive|endif
+endif|!BSD4_2&& !USG
+return|return
 name|write
 argument_list|(
 name|fn
@@ -1333,9 +1382,6 @@ name|blk
 argument_list|,
 name|len
 argument_list|)
-expr_stmt|;
-return|return
-name|ret
 return|;
 block|}
 end_block
