@@ -213,6 +213,13 @@ literal|"w"
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|script
+argument_list|,
+literal|"$ SET NOON\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -295,12 +302,10 @@ argument_list|,
 name|dirname
 argument_list|)
 expr_stmt|;
-name|strcpy
-argument_list|(
-name|dirname
-argument_list|,
-name|release
-argument_list|)
+operator|*
+name|k
+operator|=
+literal|'.'
 expr_stmt|;
 block|}
 name|sprintf
