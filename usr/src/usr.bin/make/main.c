@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.8 (Berkeley) %G%"
+literal|"@(#)main.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine   	Takes a line of arguments, breaks them and  *	    	  	    	treats them as if they were given when first  *	    	  	    	invoked. Used by the parse module to implement  *	    	  	    	the .MFLAGS target.  *  *	Error	  	    	Print a tagged error message. The global  *	    	  	    	MAKE variable must have been defined. This  *	    	  	    	takes a format string and two optional  *	    	  	    	arguments for it.  *  *	Fatal	  	    	Print an error message and exit. Also takes  *	    	  	    	a format string and two arguments.  *  *	Punt	  	    	Aborts all jobs and exits with a message. Also  *	    	  	    	takes a format string and two arguments.  *  *	Finish	  	    	Finish things up by printing the number of  *	    	  	    	errors which occured, as passed to it, and  *	    	  	    	exiting.  */
+comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine	Takes a line of arguments, breaks them and  *				treats them as if they were given when first  *				invoked. Used by the parse module to implement  *				the .MFLAGS target.  *  *	Error			Print a tagged error message. The global  *				MAKE variable must have been defined. This  *				takes a format string and two optional  *				arguments for it.  *  *	Fatal			Print an error message and exit. Also takes  *				a format string and two arguments.  *  *	Punt			Aborts all jobs and exits with a message. Also  *				takes a format string and two arguments.  *  *	Finish			Finish things up by printing the number of  *				errors which occured, as passed to it, and  *				exiting.  */
 end_comment
 
 begin_include
@@ -422,9 +422,9 @@ name|help
 index|[]
 init|=
 block|{
-literal|"-B	    	Be as backwards-compatible with make as possible without\n\ 		being make."
+literal|"-B		Be as backwards-compatible with make as possible without\n\ 		being make."
 block|,
-literal|"-C	    	Cancel any current indications of compatibility."
+literal|"-C		Cancel any current indications of compatibility."
 block|,
 literal|"-D<var>	Define the variable<var> with value 1."
 block|,
@@ -438,11 +438,11 @@ literal|"-M		Be Make as closely as possible."
 block|,
 literal|"-P		Don't use pipes to catch the output of jobs, use files."
 block|,
-literal|"-S	    	Turn off the -k flag (see below)."
+literal|"-S		Turn off the -k flag (see below)."
 block|,
 literal|"-W		Don't print warning messages."
 block|,
-literal|"-d<flags>  	Turn on debugging output."
+literal|"-d<flags>	Turn on debugging output."
 block|,
 literal|"-e		Give environment variables precedence over those in the\n\ 		makefile(s)."
 block|,
@@ -452,19 +452,19 @@ literal|"-i		Ignore errors from executed commands."
 block|,
 literal|"-k		On error, continue working on targets that do not depend on\n\ 		the one for which an error was detected."
 block|,
-literal|"-n	    	Don't execute commands, just print them."
+literal|"-n		Don't execute commands, just print them."
 block|,
-literal|"-p<num>    	Tell when to print the input graph: 1 (before processing),\n\ 		2 (after processing), or 3 (both)."
+literal|"-p<num>	Tell when to print the input graph: 1 (before processing),\n\ 		2 (after processing), or 3 (both)."
 block|,
-literal|"-q	    	See if anything needs to be done. Exits 1 if so."
+literal|"-q		See if anything needs to be done. Exits 1 if so."
 block|,
-literal|"-r	    	Do not read the system makefile for pre-defined rules."
+literal|"-r		Do not read the system makefile for pre-defined rules."
 block|,
-literal|"-s	    	Don't print commands as they are executed."
+literal|"-s		Don't print commands as they are executed."
 block|,
-literal|"-t	    	Update targets by \"touching\" them (see touch(1))."
+literal|"-t		Update targets by \"touching\" them (see touch(1))."
 block|,
-literal|"-v	    	Be compatible with System V make. Implies -B."
+literal|"-v		Be compatible with System V make. Implies -B."
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -485,23 +485,12 @@ parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-comment|/* Number of arguments in argv */
 name|char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
-comment|/* The arguments themselves */
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 specifier|extern
 name|int
 name|optind
@@ -510,6 +499,15 @@ specifier|extern
 name|char
 modifier|*
 name|optarg
+decl_stmt|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|cp
 decl_stmt|;
 name|char
 name|c
@@ -787,35 +785,28 @@ name|modules
 condition|)
 block|{
 case|case
-literal|'s'
+literal|'*'
 case|:
 name|debug
-operator||=
-name|DEBUG_SUFF
+operator|=
+operator|~
+literal|0
 expr_stmt|;
 break|break;
 case|case
-literal|'m'
+literal|'a'
 case|:
 name|debug
 operator||=
-name|DEBUG_MAKE
+name|DEBUG_ARCH
 expr_stmt|;
 break|break;
 case|case
-literal|'j'
+literal|'c'
 case|:
 name|debug
 operator||=
-name|DEBUG_JOB
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-name|debug
-operator||=
-name|DEBUG_TARG
+name|DEBUG_COND
 expr_stmt|;
 break|break;
 case|case
@@ -827,19 +818,19 @@ name|DEBUG_DIR
 expr_stmt|;
 break|break;
 case|case
-literal|'v'
+literal|'j'
 case|:
 name|debug
 operator||=
-name|DEBUG_VAR
+name|DEBUG_JOB
 expr_stmt|;
 break|break;
 case|case
-literal|'c'
+literal|'m'
 case|:
 name|debug
 operator||=
-name|DEBUG_COND
+name|DEBUG_MAKE
 expr_stmt|;
 break|break;
 case|case
@@ -859,25 +850,32 @@ name|DEBUG_RMT
 expr_stmt|;
 break|break;
 case|case
-literal|'a'
+literal|'s'
 case|:
 name|debug
 operator||=
-name|DEBUG_ARCH
+name|DEBUG_SUFF
 expr_stmt|;
 break|break;
 case|case
-literal|'*'
+literal|'t'
 case|:
 name|debug
-operator|=
-operator|~
-literal|0
+operator||=
+name|DEBUG_TARG
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|debug
+operator||=
+name|DEBUG_VAR
 expr_stmt|;
 break|break;
 block|}
-name|modules
 operator|++
+name|modules
 expr_stmt|;
 block|}
 name|Var_Append
@@ -1003,6 +1001,7 @@ name|queryFlag
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* Kind of nonsensical, wot? */
 name|Var_Append
 argument_list|(
 name|MAKEFLAGS
@@ -1012,7 +1011,6 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/* Kind of 							  * nonsensical, wot? 							  */
 break|break;
 case|case
 literal|'r'
@@ -1118,7 +1116,9 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s\n"
@@ -1129,7 +1129,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 name|c
@@ -1145,22 +1144,20 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/*      * Take care of encompassing compatibility levels...      */
+comment|/* Take care of encompassing compatibility levels... */
 if|if
 condition|(
 name|amMake
 condition|)
-block|{
 name|backwards
 operator|=
 name|TRUE
 expr_stmt|;
-block|}
 name|oldVars
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/*      * See if the rest of the arguments are variable assignments and perform      * them if so. Else take them to be targets and stuff them on the end      * of the "create" list.      */
+comment|/* 	 * See if the rest of the arguments are variable assignments and 	 * perform them if so. Else take them to be targets and stuff them 	 * on the end of the "create" list. 	 */
 for|for
 control|(
 name|i
@@ -1240,7 +1237,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *----------------------------------------------------------------------  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  *-----------------------------------------------------------------------  */
+comment|/*-  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1279,8 +1276,8 @@ name|line
 operator|==
 literal|' '
 condition|)
-name|line
 operator|++
+name|line
 expr_stmt|;
 name|argv
 operator|=
@@ -1314,7 +1311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *----------------------------------------------------------------------  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  *  *----------------------------------------------------------------------  */
+comment|/*-  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_function
@@ -1333,10 +1330,14 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
 name|Lst
 name|targs
 decl_stmt|;
-comment|/* list of target nodes to create. Passed to 				 * Make_Init */
+comment|/* target nodes to create -- passed to Make_Init */
 name|Boolean
 name|outOfDate
 decl_stmt|;
@@ -1344,10 +1345,6 @@ comment|/* FALSE if all targets up to date */
 name|char
 modifier|*
 name|cp
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 name|create
 operator|=
@@ -1431,18 +1428,18 @@ name|maxJobs
 operator|=
 name|DEFMAXJOBS
 expr_stmt|;
-comment|/* Set the default maximum concurrency */
+comment|/* Set default max concurrency */
 name|maxLocal
 operator|=
 name|DEFMAXLOCAL
 expr_stmt|;
-comment|/* Set the default local max concurrency */
-comment|/*      * Deal with disagreement between different getopt's as to what      * the initial value of optind should be by simply saving the      * damn thing.      */
+comment|/* Set default local max concurrency */
+comment|/* 	 * Deal with disagreement between different getopt's as to what 	 * the initial value of optind should be by simply saving the 	 * damn thing. 	 */
 name|initOptInd
 operator|=
 name|optind
 expr_stmt|;
-comment|/*      * See what the user calls us. If s/he calls us (yuck) "make", then      * act like it. Otherwise act like our normal, cheerful self.      */
+comment|/* 	 * See what the user calls us. If s/he calls us (yuck) "make", then 	 * act like it. Otherwise act like our normal, cheerful self. 	 */
 name|cp
 operator|=
 name|rindex
@@ -1549,7 +1546,7 @@ name|FALSE
 expr_stmt|;
 comment|/* Do things MY way, not MAKE's */
 block|}
-comment|/*      * Initialize the parsing, directory and variable modules to prepare      * for the reading of inclusion paths and variable settings on the      * command line       */
+comment|/* 	 * Initialize the parsing, directory and variable modules to prepare 	 * for the reading of inclusion paths and variable settings on the 	 * command line 	 */
 name|Dir_Init
 argument_list|()
 expr_stmt|;
@@ -1562,7 +1559,7 @@ name|Var_Init
 argument_list|()
 expr_stmt|;
 comment|/* As well as the lists of variables for 				 * parsing arguments */
-comment|/*      * Initialize various variables.      *	.PMAKE gets how we were executed.      *	MAKE also gets this name, for compatibility      *	.MAKEFLAGS gets set to the empty string just in case.      *  MFLAGS also gets initialized empty, for compatibility.      */
+comment|/* 	 * Initialize various variables. 	 *	.PMAKE gets how we were executed. 	 *	MAKE also gets this name, for compatibility 	 *	.MAKEFLAGS gets set to the empty string just in case. 	 *	MFLAGS also gets initialized empty, for compatibility. 	 */
 name|Var_Set
 argument_list|(
 literal|".PMAKE"
@@ -1605,7 +1602,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/*      * First snag any flags out of the PMAKE environment variable.      * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's in      * a different format).      */
+comment|/* 	 * First snag any flags out of the PMAKE environment variable. 	 * (Note this is *not* MAKEFLAGS since /bin/make uses that and it's 	 * in a different format). 	 */
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1636,7 +1633,7 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
-comment|/*      * Initialize archive, target and suffix modules in preparation for      * parsing the makefile(s)       */
+comment|/* 	 * Initialize archive, target and suffix modules in preparation for 	 * parsing the makefile(s) 	 */
 name|Arch_Init
 argument_list|()
 expr_stmt|;
@@ -1650,14 +1647,16 @@ name|DEFAULT
 operator|=
 name|NILGNODE
 expr_stmt|;
-name|now
-operator|=
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
-literal|0
+operator|&
+name|now
 argument_list|)
 expr_stmt|;
-comment|/*      * Set up the .TARGETS variable to contain the list of targets to be      * created. If none specified, make the variable empty -- the parser      * will fill the thing in with the default or .MAIN target.      */
+comment|/* 	 * Set up the .TARGETS variable to contain the list of targets to be 	 * created. If none specified, make the variable empty -- the parser 	 * will fill the thing in with the default or .MAIN target. 	 */
 if|if
 condition|(
 operator|!
@@ -1716,7 +1715,6 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|Var_Set
 argument_list|(
 literal|".TARGETS"
@@ -1726,8 +1724,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * Read in the built-in rules first, followed by the specified makefile,      * if it was (makefile != (char *) NULL), or the default Makefile and      * makefile, in that order, if it wasn't.       */
+comment|/* 	 * Read in the built-in rules first, followed by the specified makefile, 	 * if it was (makefile != (char *) NULL), or the default Makefile and 	 * makefile, in that order, if it wasn't. 	 */
 if|if
 condition|(
 operator|!
@@ -1739,7 +1736,6 @@ argument_list|(
 name|DEFSYSMK
 argument_list|)
 condition|)
-block|{
 name|Fatal
 argument_list|(
 literal|"Could not open system rules (%s)"
@@ -1747,7 +1743,6 @@ argument_list|,
 name|DEFSYSMK
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1759,7 +1754,9 @@ condition|)
 block|{
 name|LstNode
 name|ln
-init|=
+decl_stmt|;
+name|ln
+operator|=
 name|Lst_Find
 argument_list|(
 name|makefiles
@@ -1771,14 +1768,13 @@ name|NULL
 argument_list|,
 name|ReadMakefile
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ln
 operator|!=
 name|NILLNODE
 condition|)
-block|{
 name|Fatal
 argument_list|(
 literal|"Cannot open %s"
@@ -1794,7 +1790,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 else|else
 block|{
 ifdef|#
@@ -1808,7 +1803,6 @@ argument_list|(
 literal|"makefile"
 argument_list|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1817,7 +1811,6 @@ argument_list|(
 literal|"Makefile"
 argument_list|)
 expr_stmt|;
-block|}
 else|#
 directive|else
 if|if
@@ -1836,7 +1829,6 @@ else|:
 literal|"Makefile"
 argument_list|)
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -1853,7 +1845,6 @@ else|:
 literal|"makefile"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -1871,7 +1862,7 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-comment|/*      * Install all the flags into the PMAKE envariable.      */
+comment|/* Install all the flags into the PMAKE envariable. */
 ifdef|#
 directive|ifdef
 name|POSIX
@@ -1903,7 +1894,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * For compatibility, look at the directories in the VPATH variable      * and add them to the search path, if the variable is defined. The      * variable's value is in the same format as the PATH envariable, i.e.      *<directory>:<directory>:<directory>...      */
+comment|/* 	 * For compatibility, look at the directories in the VPATH variable 	 * and add them to the search path, if the variable is defined. The 	 * variable's value is in the same format as the PATH envariable, i.e. 	 *<directory>:<directory>:<directory>... 	 */
 if|if
 condition|(
 name|Var_Exists
@@ -1917,18 +1908,16 @@ block|{
 name|char
 modifier|*
 name|vpath
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|path
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|cp
-decl_stmt|;
-name|char
+decl_stmt|,
 name|savec
 decl_stmt|;
+comment|/* 		 * GCC stores string constants in read-only memory, but 		 * Var_Subst will want to write this thing, so store it 		 * in an array 		 */
 specifier|static
 name|char
 name|VPATH
@@ -1936,7 +1925,6 @@ index|[]
 init|=
 literal|"${VPATH}"
 decl_stmt|;
-comment|/* GCC stores string constants in 					     * read-only memory, but Var_Subst 					     * will want to write this thing, 					     * so store it in an array */
 name|vpath
 operator|=
 name|Var_Subst
@@ -1954,7 +1942,7 @@ name|vpath
 expr_stmt|;
 do|do
 block|{
-comment|/* 	     * Skip to end of directory 	     */
+comment|/* skip to end of directory */
 for|for
 control|(
 name|cp
@@ -1977,7 +1965,7 @@ control|)
 block|{
 continue|continue;
 block|}
-comment|/* 	     * Save terminator character to figure out when to stop 	     */
+comment|/* Save terminator character so know when to stop */
 name|savec
 operator|=
 operator|*
@@ -1988,7 +1976,7 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * Add directory to search path 	     */
+comment|/* Add directory to search path */
 name|Dir_AddDir
 argument_list|(
 name|dirSearchPath
@@ -2015,6 +2003,9 @@ operator|==
 literal|':'
 condition|)
 do|;
+operator|(
+name|void
+operator|)
 name|free
 argument_list|(
 operator|(
@@ -2024,25 +2015,23 @@ name|vpath
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Now that all search paths have been read for suffixes et al, it's      * time to add the default search path to their lists...      */
+comment|/* 	 * Now that all search paths have been read for suffixes et al, it's 	 * time to add the default search path to their lists... 	 */
 name|Suff_DoPaths
 argument_list|()
 expr_stmt|;
-comment|/*      * Print the initial graph, if the user requested it      */
+comment|/* Print the initial graph, if the user requested it */
 if|if
 condition|(
 name|printGraph
 operator|&
 literal|1
 condition|)
-block|{
 name|Targ_PrintGraph
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * Have now read the entire graph and need to make a list of targets to      * create. If none was given on the command line, we consult the parsing      * module to find the main target(s) to create.      */
+comment|/* 	 * Have now read the entire graph and need to make a list of targets 	 * to create. If none was given on the command line, we consult the 	 * parsing module to find the main target(s) to create. 	 */
 if|if
 condition|(
 name|Lst_IsEmpty
@@ -2050,15 +2039,12 @@ argument_list|(
 name|create
 argument_list|)
 condition|)
-block|{
 name|targs
 operator|=
 name|Parse_MainName
 argument_list|()
 expr_stmt|;
-block|}
 else|else
-block|{
 name|targs
 operator|=
 name|Targ_FindList
@@ -2068,14 +2054,13 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
 name|amMake
 condition|)
 block|{
-comment|/* 	 * Initialize job module before traversing the graph, now that any 	 * .BEGIN and .END targets have been read. This is done only if the 	 * -q flag wasn't given (to prevent the .BEGIN from being executed 	 * should it exist). 	 */
+comment|/* 		 * Initialize job module before traversing the graph, now that 		 * any .BEGIN and .END targets have been read.  This is done 		 * only if the -q flag wasn't given (to prevent the .BEGIN from 		 * being executed should it exist). 		 */
 if|if
 condition|(
 operator|!
@@ -2089,12 +2074,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|maxLocal
 operator|=
 name|maxJobs
 expr_stmt|;
-block|}
 name|Job_Init
 argument_list|(
 name|maxJobs
@@ -2107,7 +2090,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
-comment|/* 	 * Traverse the graph, checking on all the targets  	 */
+comment|/* Traverse the graph, checking on all the targets */
 name|outOfDate
 operator|=
 name|Make_Run
@@ -2117,54 +2100,46 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-comment|/* 	 * Compat_Init will take care of creating all the targets as well 	 * as initializing the module. 	 */
+comment|/* 		 * Compat_Init will take care of creating all the targets as 		 * well as initializing the module. 		 */
 name|Compat_Run
 argument_list|(
 name|targs
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*      * Print the graph now it's been processed if the user requested it      */
+comment|/* Print the graph now it's been processed if the user requested it */
 if|if
 condition|(
 name|printGraph
 operator|&
 literal|2
 condition|)
-block|{
 name|Targ_PrintGraph
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|queryFlag
 operator|&&
 name|outOfDate
 condition|)
-block|{
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * ReadMakefile  --  *	Open and parse the given makefile.  *  * Results:  *	TRUE if ok. FALSE if couldn't open file.  *  * Side Effects:  *	lots  *-----------------------------------------------------------------------  */
+comment|/*-  * ReadMakefile  --  *	Open and parse the given makefile.  *  * Results:  *	TRUE if ok. FALSE if couldn't open file.  *  * Side Effects:  *	lots  */
 end_comment
 
 begin_function
@@ -2208,24 +2183,19 @@ argument_list|,
 name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
 block|}
 else|else
 block|{
-name|FILE
-modifier|*
-name|stream
-decl_stmt|;
 specifier|extern
 name|Lst
 name|parseIncPath
 decl_stmt|,
 name|sysIncPath
 decl_stmt|;
+name|FILE
+modifier|*
+name|stream
+decl_stmt|;
 name|stream
 operator|=
 name|fopen
@@ -2246,18 +2216,20 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Look in -I directories... 	     */
+comment|/* Look in -I directories... */
 name|char
 modifier|*
 name|name
-init|=
+decl_stmt|;
+name|name
+operator|=
 name|Dir_FindFile
 argument_list|(
 name|fname
 argument_list|,
 name|parseIncPath
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|name
@@ -2265,7 +2237,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Last-ditch: look in system include directories. 		 */
+comment|/* 				 * Last-ditch: look in system include 				 * directories. 				 */
 name|name
 operator|=
 name|Dir_FindFile
@@ -2281,13 +2253,11 @@ name|name
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 block|}
 name|stream
 operator|=
@@ -2308,20 +2278,18 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
 comment|/* Better safe than sorry... */
 return|return
 operator|(
 name|FALSE
 operator|)
 return|;
-block|}
 name|fname
 operator|=
 name|name
 expr_stmt|;
 block|}
-comment|/* 	 * Set the MAKEFILE variable desired by System V fans -- the placement 	 * of the setting here means it gets set to the last makefile 	 * specified, as it is set by SysV make... 	 */
+comment|/* 		 * Set the MAKEFILE variable desired by System V fans -- the 		 * placement of the setting here means it gets set to the 		 * last makefile specified, as it is set by SysV make... 		 */
 name|Var_Set
 argument_list|(
 literal|"MAKEFILE"
@@ -2338,22 +2306,25 @@ argument_list|,
 name|stream
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|stream
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|TRUE
 operator|)
 return|;
 block|}
-block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Error --  *	Print an error message given its format and 0, 1, 2 or 3 arguments.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  *  *-----------------------------------------------------------------------  */
+comment|/*-  * Error --  *	Print an error message given its format and 0, 1, 2 or 3 arguments.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
 end_comment
 
 begin_comment
@@ -2376,17 +2347,15 @@ name|char
 modifier|*
 name|fmt
 decl_stmt|;
-comment|/* Format string */
+comment|/* format string */
 name|int
 name|arg1
 decl_stmt|,
-comment|/* First optional argument */
 name|arg2
 decl_stmt|,
-comment|/* Second optional argument */
 name|arg3
 decl_stmt|;
-comment|/* Third optional argument */
+comment|/* optional arguments */
 block|{
 specifier|static
 name|char
@@ -2396,6 +2365,9 @@ name|BSIZE
 index|]
 decl_stmt|;
 comment|/* output string */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|estr
@@ -2410,6 +2382,9 @@ name|VAR_GLOBAL
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 operator|&
@@ -2440,6 +2415,9 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fputs
 argument_list|(
 name|estr
@@ -2447,6 +2425,9 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stderr
@@ -2456,7 +2437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Fatal --  *	Produce a Fatal error message. If jobs are running, waits for them  *	to finish.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  *-----------------------------------------------------------------------  */
+comment|/*-  * Fatal --  *	Produce a Fatal error message. If jobs are running, waits for them  *	to finish.  *  * Results:  *	None  *  * Side Effects:  *	The program exits  */
 end_comment
 
 begin_comment
@@ -2480,22 +2461,18 @@ decl_stmt|;
 comment|/* format string */
 name|int
 name|arg1
-decl_stmt|;
-comment|/* first optional argument */
-name|int
+decl_stmt|,
 name|arg2
 decl_stmt|;
-comment|/* second optional argument */
+comment|/* optional arguments */
 block|{
 if|if
 condition|(
 name|jobsRunning
 condition|)
-block|{
 name|Job_Wait
 argument_list|()
 expr_stmt|;
-block|}
 name|Error
 argument_list|(
 name|fmt
@@ -2511,13 +2488,11 @@ name|printGraph
 operator|&
 literal|2
 condition|)
-block|{
 name|Targ_PrintGraph
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|2
@@ -2528,7 +2503,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------  * Punt --  *	Major exception once jobs are being created. Kills all jobs, prints  *	a message and exits.  *  * Results:  *	None   *  * Side Effects:  *	All children are killed indiscriminately and the program Lib_Exits  *-----------------------------------------------------------------------  */
+comment|/*  * Punt --  *	Major exception once jobs are being created. Kills all jobs, prints  *	a message and exits.  *  * Results:  *	None   *  * Side Effects:  *	All children are killed indiscriminately and the program Lib_Exits  */
 end_comment
 
 begin_comment
@@ -2552,12 +2527,10 @@ decl_stmt|;
 comment|/* format string */
 name|int
 name|arg1
-decl_stmt|;
-comment|/* optional argument */
-name|int
+decl_stmt|,
 name|arg2
 decl_stmt|;
-comment|/* optional second argument */
+comment|/* optional arguments */
 block|{
 name|Error
 argument_list|(
@@ -2575,7 +2548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * DieHorribly --  *	Exit without giving a message.  *  * Results:  *	None  *  * Side Effects:  *	A big one...  *-----------------------------------------------------------------------  */
+comment|/*-  * DieHorribly --  *	Exit without giving a message.  *  * Results:  *	None  *  * Side Effects:  *	A big one...  */
 end_comment
 
 begin_function
@@ -2587,24 +2560,20 @@ if|if
 condition|(
 name|jobsRunning
 condition|)
-block|{
 name|Job_AbortAll
 argument_list|()
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|printGraph
 operator|&
 literal|2
 condition|)
-block|{
 name|Targ_PrintGraph
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|2
@@ -2615,7 +2584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *-----------------------------------------------------------------------  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.   *  * Results:  *	None   *  * Side Effects:  *	The program exits  * -----------------------------------------------------------------------  */
+comment|/*  * Finish --  *	Called when aborting due to errors in child shell to signal  *	abnormal exit.   *  * Results:  *	None   *  * Side Effects:  *	The program exits  */
 end_comment
 
 begin_function
