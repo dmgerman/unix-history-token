@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.43 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1320,6 +1320,14 @@ argument_list|,
 name|e
 operator|->
 name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
+name|e
+operator|->
+name|e_id
 argument_list|,
 name|a
 operator|->
@@ -1651,6 +1659,14 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: deferred: udbexpand: %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id
@@ -4005,6 +4021,14 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: forward %s => %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id

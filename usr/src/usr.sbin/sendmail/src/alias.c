@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.23 (Berkeley) %G%"
+literal|"@(#)alias.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2964,6 +2964,14 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: forward %s: transient error: %s"
 argument_list|,
+name|e
+operator|->
+name|e_id
+operator|==
+name|NULL
+condition|?
+literal|"NOQUEUE"
+else|:
 name|e
 operator|->
 name|e_id
