@@ -148,7 +148,7 @@ if|#
 directive|if
 literal|0
 comment|/* The supporting code for this is not yet available.      * Return to the old situation for now.      */
-block|return (AeLocalGetRootPointer(Flags, (ACPI_PHYSICAL_ADDRESS *)Address));
+block|return (AeLocalGetRootPointer(Flags, Address));
 else|#
 directive|else
 return|return
