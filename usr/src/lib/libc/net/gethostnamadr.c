@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.1 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,10 +24,6 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
-
-begin_comment
-comment|/*  * Copyright (c) 1985 Regents of the University of California  *	All Rights Reserved  */
-end_comment
 
 begin_include
 include|#
@@ -62,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nameser.h>
+file|<arpa/nameser.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<resolv.h>
+file|<arpa/resolv.h>
 end_include
 
 begin_define
