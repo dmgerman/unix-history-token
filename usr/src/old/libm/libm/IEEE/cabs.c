@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cabs.c	1.2 (Berkeley) %G%"
+literal|"@(#)cabs.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,11 +79,19 @@ begin_comment
 comment|/* HYPOT(X,Y)  * RETURN THE SQUARE ROOT OF X^2 + Y^2  WHERE Z=X+iY  * DOUBLE PRECISION (VAX D format 56 bits, IEEE DOUBLE 53 BITS)  * CODED IN C BY K.C. NG, 11/28/84;   * REVISED BY K.C. NG, 7/12/85.  *  * Required system supported functions :  *	copysign(x,y)  *	finite(x)  *	scalb(x,N)  *	sqrt(x)  *  * Method :  *	1. replace x by |x| and y by |y|, and swap x and  *	   y if y> x (hence x is never smaller than y).  *	2. Hypot(x,y) is computed by:  *	   Case I, x/y> 2  *		  *				       y  *		hypot = x + -----------------------------  *			 		    2  *			    sqrt ( 1 + [x/y]  )  +  x/y  *  *	   Case II, x/y<= 2   *				                   y  *		hypot = x + --------------------------------------------------  *				          		     2   *				     			[x/y]   -  2  *			   (sqrt(2)+1) + (x-y)/y + -----------------------------  *			 		    			  2  *			    			  sqrt ( 1 + [x/y]  )  + sqrt(2)  *  *  *  * Special cases:  *	hypot(x,y) is INF if x or y is +INF or -INF; else  *	hypot(x,y) is NAN if x or y is NAN.  *  * Accuracy:  * 	hypot(x,y) returns the sqrt(x^2+y^2) with error less than 1 ulps (units  *	in the last place). See Kahan's "Interval Arithmetic Options in the  *	Proposed IEEE Floating Point Arithmetic Standard", Interval Mathematics  *      1980, Edited by Karl L.E. Nickel, pp 99-128. (A faster but less accurate  *	code follows in	comments.) In a test run with 500,000 random arguments  *	on a VAX, the maximum observed error was .959 ulps.  *  * Constants:  * The hexadecimal values are the intended ones for the following constants.  * The decimal values may be used, provided that the compiler will convert  * from decimal to binary accurately enough to produce the hexadecimal values  * shown.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
+end_if
 
 begin_comment
 comment|/* VAX D format */

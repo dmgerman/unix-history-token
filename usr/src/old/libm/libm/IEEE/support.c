@@ -17,7 +17,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	1.2 (Berkeley) %G%"
+literal|"@(#)support.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -234,9 +234,17 @@ operator|(
 name|x
 operator|)
 return|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -515,7 +523,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -542,9 +550,17 @@ name|y
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -616,7 +632,7 @@ name|k
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|short
 modifier|*
 name|px
@@ -632,9 +648,17 @@ name|k
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 return|return
 operator|(
 operator|(
@@ -744,9 +768,17 @@ name|double
 name|x
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 return|return
 operator|(
 literal|1.0
@@ -898,7 +930,7 @@ literal|3
 decl_stmt|;
 else|#
 directive|else
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 name|unsigned
 name|short
 modifier|*
@@ -952,9 +984,17 @@ name|pp
 operator|&=
 name|msign
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 if|if
 condition|(
 operator|(
@@ -1159,9 +1199,17 @@ name|pt
 operator|+=
 name|k
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 if|if
 condition|(
 name|x
@@ -1273,9 +1321,17 @@ decl_stmt|,
 name|finite
 argument_list|()
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|VAX
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TAHOE
+argument_list|)
 name|int
 name|k
 init|=
@@ -1710,7 +1766,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* VAX, SUN, ZILOG */
+comment|/* VAX, SUN, ZILOG, TAHOE */
 end_comment
 
 begin_endif
