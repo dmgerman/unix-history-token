@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_main.c	2.3 85/04/25"
+literal|"@(#)pl_main.c	2.3 85/04/26"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +99,10 @@ expr_stmt|;
 name|play
 argument_list|()
 expr_stmt|;
+return|return
+literal|0
+return|;
+comment|/* for lint,  play() never returns */
 block|}
 end_block
 
