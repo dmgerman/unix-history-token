@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +74,12 @@ end_comment
 begin_comment
 comment|/*  * TFTP User Program -- Command Interface.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
@@ -100,7 +120,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -830,22 +850,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
@@ -882,20 +886,13 @@ name|sp
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tftp: udp/tftp: unknown service\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"udp/tftp: unknown service"
 argument_list|)
 expr_stmt|;
-block|}
 name|f
 operator|=
 name|socket
@@ -913,18 +910,13 @@ name|f
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"tftp: socket"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|3
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 name|bzero
 argument_list|(
 operator|(
@@ -968,18 +960,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"tftp: bind"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"bind"
 argument_list|)
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 name|mode
@@ -1050,7 +1037,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|100
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1956,15 +1943,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"tftp: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2069,15 +2051,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"tftp: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|argv
 index|[
 name|n
@@ -2478,15 +2455,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"tftp: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2550,15 +2522,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
+literal|"%s"
 argument_list|,
-literal|"tftp: "
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
