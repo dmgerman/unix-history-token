@@ -266,6 +266,9 @@ name|NULL
 argument_list|)
 operator|)
 block|{
+if|if
+condition|(
+operator|(
 name|pwd
 operator|=
 name|getpwnam
@@ -273,13 +276,25 @@ argument_list|(
 name|getlogin
 argument_list|()
 argument_list|)
-block|;
+operator|)
+operator|==
+name|NULL
+condition|)
+name|PAM_RETURN
+argument_list|(
+name|PAM_AUTH_ERR
+argument_list|)
+expr_stmt|;
 name|user
 operator|=
 name|pwd
 operator|->
 name|pw_name
-block|; 	}
+argument_list|;
+block|}
+end_function
+
+begin_else
 else|else
 block|{
 name|retval
@@ -312,17 +327,29 @@ name|retval
 argument_list|)
 expr_stmt|;
 block|}
+end_else
+
+begin_expr_stmt
 name|PAM_LOG
 argument_list|(
 literal|"Got user: %s"
 argument_list|,
 name|user
 argument_list|)
-argument_list|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	 * Don't call the OPIE atexit() handler when our program exits, 	 * since the module has been unloaded and we will SEGV. 	 */
+end_comment
+
+begin_expr_stmt
 name|opiedisableaeh
 argument_list|()
-argument_list|;
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|opiechallenge
 argument_list|(
 operator|&
@@ -336,19 +363,23 @@ name|user
 argument_list|,
 name|challenge
 argument_list|)
-argument_list|; 	for
-operator|(
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
 name|i
 operator|=
 literal|0
-expr|;
+init|;
 name|i
 operator|<
 literal|2
-expr|;
+condition|;
 name|i
 operator|++
-operator|)
+control|)
 block|{
 name|snprintf
 argument_list|(
@@ -364,7 +395,7 @@ index|]
 argument_list|,
 name|challenge
 argument_list|)
-block|;
+expr_stmt|;
 name|retval
 operator|=
 name|pam_get_pass
@@ -379,7 +410,7 @@ argument_list|,
 operator|&
 name|options
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|retval
@@ -404,15 +435,16 @@ name|i
 argument_list|,
 name|response
 argument_list|)
-argument_list|;  		if
-operator|(
+expr_stmt|;
+if|if
+condition|(
 name|response
 index|[
 literal|0
 index|]
 operator|!=
 literal|'\0'
-operator|)
+condition|)
 break|break;
 comment|/* Second time round, echo the password */
 name|pam_set_option
@@ -424,23 +456,23 @@ name|PAM_OPT_ECHO_PASS
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_for
 
 begin_comment
 comment|/* We have to copy the response, because opieverify mucks with it. */
 end_comment
 
 begin_expr_stmt
-name|snprintf
+name|strlcpy
 argument_list|(
 name|resp
 argument_list|,
-sizeof|sizeof
-name|resp
-argument_list|,
-literal|"%s"
-argument_list|,
 name|response
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|resp
+argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
