@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.14	81/05/08	*/
+comment|/*	ts.c	4.15	81/05/09	*/
 end_comment
 
 begin_include
@@ -770,8 +770,25 @@ name|TS_ONL
 operator|)
 operator|==
 literal|0
-operator|||
-operator|(
+condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"ts%d: not online\n"
+argument_list|,
+name|tsunit
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_error
+operator|=
+name|EIO
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 operator|(
 name|flag
 operator|&
@@ -793,10 +810,19 @@ name|s_xs0
 operator|&
 name|TS_WLK
 operator|)
-operator|)
 condition|)
+block|)
+end_block
+
+begin_block
 block|{
-comment|/* 		 * Not online or write locked. 		 */
+name|uprintf
+argument_list|(
+literal|"ts%d: no write ring\n"
+argument_list|,
+name|tsunit
+argument_list|)
+expr_stmt|;
 name|u
 operator|.
 name|u_error
@@ -805,12 +831,18 @@ name|EIO
 expr_stmt|;
 return|return;
 block|}
+end_block
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_openf
 operator|=
 literal|1
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_blkno
@@ -820,32 +852,38 @@ name|daddr_t
 operator|)
 literal|0
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_nxrec
 operator|=
 name|INF
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|sc
 operator|->
 name|sc_lastiow
 operator|=
 literal|0
 expr_stmt|;
-block|}
-end_block
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * Close tape device.  *  * If tape was open for writing or last operation was  * a write, then write two EOF's and backspace over the last one.  * Unless this is a non-rewinding special file, rewind the tape.  * Make the tape available to others.  */
 end_comment
 
 begin_expr_stmt
-name|tsclose
-argument_list|(
+unit|tsclose
+operator|(
 name|dev
-argument_list|,
+operator|,
 name|flag
-argument_list|)
+operator|)
 specifier|register
 name|dev_t
 name|dev
