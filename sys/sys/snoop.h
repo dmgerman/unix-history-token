@@ -106,10 +106,6 @@ decl_stmt|;
 comment|/* Flags place		       */
 define|#
 directive|define
-name|SNOOP_NBIO
-value|0x0001
-define|#
-directive|define
 name|SNOOP_ASYNC
 value|0x0002
 define|#
