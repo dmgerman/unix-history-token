@@ -50,7 +50,7 @@ comment|/* swap file (e.g., /dev/drum) */
 name|int
 name|nlfd
 decl_stmt|;
-comment|/* namelist file (e.g., /vmunix) */
+comment|/* namelist file (e.g., /kernel) */
 name|struct
 name|kinfo_proc
 modifier|*

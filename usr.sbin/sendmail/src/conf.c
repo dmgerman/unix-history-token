@@ -1954,7 +1954,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_UNIX
-value|"/vmunix"
+value|"/kernel"
 end_define
 
 begin_endif

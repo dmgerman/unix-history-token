@@ -226,7 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* if 1 check if /vmunix has changed */
+comment|/* if 1 check if /kernel has changed */
 end_comment
 
 begin_decl_stmt

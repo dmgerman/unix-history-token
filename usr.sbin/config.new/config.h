@@ -69,7 +69,7 @@ name|char
 modifier|*
 name|cf_name
 decl_stmt|;
-comment|/* "vmunix" */
+comment|/* "kernel" */
 name|int
 name|cf_lineno
 decl_stmt|;

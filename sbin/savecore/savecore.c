@@ -360,7 +360,7 @@ end_comment
 begin_decl_stmt
 name|char
 modifier|*
-name|vmunix
+name|kernel
 decl_stmt|;
 end_decl_stmt
 
@@ -762,7 +762,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|vmunix
+name|kernel
 operator|=
 name|optarg
 expr_stmt|;
@@ -824,7 +824,7 @@ name|argc
 operator|==
 literal|2
 condition|)
-name|vmunix
+name|kernel
 operator|=
 name|argv
 index|[
@@ -1035,9 +1035,9 @@ expr_stmt|;
 block|}
 name|dump_sys
 operator|=
-name|vmunix
+name|kernel
 condition|?
-name|vmunix
+name|kernel
 else|:
 name|_PATH_UNIX
 expr_stmt|;
@@ -1329,7 +1329,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vmunix
+name|kernel
 condition|)
 return|return;
 operator|(
@@ -1467,7 +1467,7 @@ argument_list|,
 name|core_vers
 argument_list|)
 operator|&&
-name|vmunix
+name|kernel
 operator|==
 literal|0
 condition|)
@@ -2338,9 +2338,9 @@ name|ifd
 operator|=
 name|Open
 argument_list|(
-name|vmunix
+name|kernel
 condition|?
-name|vmunix
+name|kernel
 else|:
 name|_PATH_UNIX
 argument_list|,
@@ -2359,7 +2359,7 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"%s/vmunix.%d%s"
+literal|"%s/kernel.%d%s"
 argument_list|,
 name|dirname
 argument_list|,
@@ -2528,7 +2528,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"WARNING: vmunix may be incomplete"
+literal|"WARNING: kernel may be incomplete"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2551,9 +2551,9 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|vmunix
+name|kernel
 condition|?
-name|vmunix
+name|kernel
 else|:
 name|_PATH_UNIX
 argument_list|,
@@ -2567,7 +2567,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"WARNING: vmunix may be incomplete"
+literal|"WARNING: kernel may be incomplete"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3105,14 +3105,14 @@ name|fp
 decl_stmt|;
 name|char
 modifier|*
-name|tvmunix
+name|tkernel
 decl_stmt|;
 name|off_t
 name|minfree
 decl_stmt|,
 name|spacefree
 decl_stmt|,
-name|vmunixsize
+name|kernelsize
 decl_stmt|,
 name|needed
 decl_stmt|;
@@ -3135,11 +3135,11 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|tvmunix
+name|tkernel
 operator|=
-name|vmunix
+name|kernel
 condition|?
-name|vmunix
+name|kernel
 else|:
 name|_PATH_UNIX
 expr_stmt|;
@@ -3147,7 +3147,7 @@ if|if
 condition|(
 name|stat
 argument_list|(
-name|tvmunix
+name|tkernel
 argument_list|,
 operator|&
 name|st
@@ -3162,7 +3162,7 @@ name|LOG_ERR
 argument_list|,
 literal|"%s: %m"
 argument_list|,
-name|tvmunix
+name|tkernel
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3171,7 +3171,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|vmunixsize
+name|kernelsize
 operator|=
 name|st
 operator|.
@@ -3301,7 +3301,7 @@ operator|=
 operator|(
 name|dumpsize
 operator|+
-name|vmunixsize
+name|kernelsize
 operator|)
 operator|/
 literal|1024

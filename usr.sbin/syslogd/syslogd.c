@@ -2305,7 +2305,7 @@ name|strcpy
 argument_list|(
 name|line
 argument_list|,
-literal|"vmunix: "
+literal|"kernel: "
 argument_list|)
 expr_stmt|;
 name|lp
