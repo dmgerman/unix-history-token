@@ -129,10 +129,6 @@ index|]
 decl_stmt|;
 comment|/* base RID for pmap */
 name|int
-name|pm_flags
-decl_stmt|;
-comment|/* pmap flags */
-name|int
 name|pm_active
 decl_stmt|;
 comment|/* active flag */
@@ -141,12 +137,6 @@ name|pmap_statistics
 name|pm_stats
 decl_stmt|;
 comment|/* pmap statistics */
-name|struct
-name|vm_page
-modifier|*
-name|pm_ptphint
-decl_stmt|;
-comment|/* pmap ptp hint */
 block|}
 struct|;
 end_struct

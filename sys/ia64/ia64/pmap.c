@@ -2661,12 +2661,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|pmap
-operator|->
-name|pm_flags
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -2689,12 +2683,6 @@ index|]
 operator|=
 name|pmap_allocate_rid
 argument_list|()
-expr_stmt|;
-name|pmap
-operator|->
-name|pm_ptphint
-operator|=
-name|NULL
 expr_stmt|;
 name|pmap
 operator|->
