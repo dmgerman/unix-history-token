@@ -4601,6 +4601,8 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|,
+name|error
+decl_stmt|,
 name|rv
 init|=
 literal|0
@@ -4742,18 +4744,6 @@ name|splimp
 argument_list|()
 expr_stmt|;
 block|}
-name|ifq
-operator|=
-operator|(
-expr|struct
-name|ifqueue
-operator|*
-operator|)
-operator|&
-name|ifp
-operator|->
-name|if_snd
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET
@@ -4846,7 +4836,19 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * Put low delay, telnet, rlogin and ftp control packets 		 * in front of the queue. 		 */
+comment|/* 		 * Put low delay, telnet, rlogin and ftp control packets 		 * in front of the queue or let ALTQ take care. 		 */
+if|if
+condition|(
+name|ALTQ_IS_ENABLED
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|_IF_QFULL
@@ -5315,7 +5317,14 @@ block|}
 comment|/* 	 * Queue message on interface, and start output if interface 	 * not yet active. 	 */
 if|if
 condition|(
+name|ifq
+operator|!=
+name|NULL
+condition|)
+name|error
+operator|=
 operator|!
+operator|(
 name|IF_HANDOFF_ADJ
 argument_list|(
 name|ifq
@@ -5326,6 +5335,23 @@ name|ifp
 argument_list|,
 literal|3
 argument_list|)
+operator|)
+expr_stmt|;
+else|else
+name|IFQ_HANDOFF_ADJ
+argument_list|(
+name|ifp
+argument_list|,
+name|m
+argument_list|,
+literal|3
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 operator|++

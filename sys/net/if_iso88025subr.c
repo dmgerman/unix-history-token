@@ -1801,24 +1801,22 @@ return|;
 comment|/* XXX */
 block|}
 block|}
-if|if
-condition|(
-operator|!
-name|IF_HANDOFF_ADJ
+name|IFQ_HANDOFF_ADJ
 argument_list|(
-operator|&
 name|ifp
-operator|->
-name|if_snd
 argument_list|,
 name|m
-argument_list|,
-name|ifp
 argument_list|,
 name|ISO88025_HDR_LEN
 operator|+
 name|LLC_SNAPFRAMELEN
+argument_list|,
+name|error
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|printf
@@ -1826,10 +1824,10 @@ argument_list|(
 literal|"iso88025_output: packet dropped QFULL.\n"
 argument_list|)
 expr_stmt|;
-name|senderr
-argument_list|(
-name|ENOBUFS
-argument_list|)
+name|ifp
+operator|->
+name|if_oerrors
+operator|++
 expr_stmt|;
 block|}
 return|return

@@ -1364,6 +1364,9 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|ifv
 operator|=
 name|ifp
@@ -1693,19 +1696,19 @@ endif|#
 directive|endif
 block|}
 comment|/* 		 * Send it, precisely as ether_output() would have. 		 * We are already running at splimp. 		 */
-if|if
-condition|(
-name|IF_HANDOFF
+name|IFQ_HANDOFF
 argument_list|(
-operator|&
 name|p
-operator|->
-name|if_snd
 argument_list|,
 name|m
 argument_list|,
-name|p
+name|error
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|error
 condition|)
 name|ifp
 operator|->
