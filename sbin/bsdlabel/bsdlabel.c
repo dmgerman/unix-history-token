@@ -1756,9 +1756,6 @@ modifier|*
 name|lp
 parameter_list|)
 block|{
-name|int
-name|flag
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
@@ -1830,8 +1827,6 @@ literal|0
 operator|)
 return|;
 block|}
-else|else
-block|{
 name|setbootflag
 argument_list|(
 name|lp
@@ -1866,10 +1861,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|rflag
 condition|)
 block|{
-comment|/* 			 * First set the kernel disk label, 			 * then write a label to the raw disk. 			 * If the SDINFO ioctl fails because it is unimplemented, 			 * keep going; otherwise, the kernel consistency checks 			 * may prevent us from changing the current (in-core) 			 * label. 			 */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|f
+argument_list|,
+name|DIOCWDINFO
+argument_list|,
+name|lp
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|l_perror
+argument_list|(
+literal|"ioctl DIOCWDINFO"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+comment|/* 	 * First set the kernel disk label, 	 * then write a label to the raw disk. 	 * If the SDINFO ioctl fails because it is unimplemented, 	 * keep going; otherwise, the kernel consistency checks 	 * may prevent us from changing the current (in-core) 	 * label. 	 */
 if|if
 condition|(
 name|ioctl
@@ -1921,7 +1948,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__alpha__
-comment|/* 			 * Generate the bootblock checksum for the SRM console. 			 */
+comment|/* 	 * Generate the bootblock checksum for the SRM console. 	 */
 for|for
 control|(
 name|p
@@ -1966,7 +1993,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|__sparc64__
-comment|/* 			 * Generate a Sun disklabel around the BSD label for 			 * PROM compatability. 			 */
+comment|/* 	 * Generate a Sun disklabel around the BSD label for 	 * PROM compatability. 	 */
 name|sl
 operator|=
 operator|(
@@ -2113,7 +2140,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* 				 * SunOS partitions must start on a cylinder 				 * boundary. Note this restriction is forced 				 * upon FreeBSD/sparc64 labels too, since we 				 * want to keep both labels synchronised. 				 */
+comment|/* 		 * SunOS partitions must start on a cylinder 		 * boundary. Note this restriction is forced 		 * upon FreeBSD/sparc64 labels too, since we 		 * want to keep both labels synchronised. 		 */
 name|spp
 operator|->
 name|sdkp_cyloffset
@@ -2219,7 +2246,7 @@ directive|if
 name|NUMBOOT
 operator|>
 literal|0
-comment|/* 			 * Output the remainder of the disklabel 			 */
+comment|/* 	 * Output the remainder of the disklabel 	 */
 if|if
 condition|(
 name|bootbuf
@@ -2249,34 +2276,6 @@ return|;
 block|}
 endif|#
 directive|endif
-block|}
-elseif|else
-if|if
-condition|(
-name|ioctl
-argument_list|(
-name|f
-argument_list|,
-name|DIOCWDINFO
-argument_list|,
-name|lp
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|l_perror
-argument_list|(
-literal|"ioctl DIOCWDINFO"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-block|}
 return|return
 operator|(
 literal|0
@@ -8672,9 +8671,9 @@ operator|>
 literal|0
 name|fprintf
 argument_list|(
-argument|stderr
+name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: disklabel [-r] disk"
 argument_list|,
@@ -8708,7 +8707,6 @@ argument_list|,
 literal|"       disklabel -R -B [-n] [ -b boot1 [ -s boot2 ] ] disk protofile [ type ]"
 argument_list|,
 literal|"\t\t(to restore label and boot program)"
-argument_list|,
 else|#
 directive|else
 literal|"       disklabel -B [-n] [ -b bootprog ] disk [ type ]"
@@ -8722,39 +8720,47 @@ argument_list|,
 literal|"       disklabel -R -B [-n] [ -b bootprog ] disk protofile [ type ]"
 argument_list|,
 literal|"\t\t(to restore label and install boot program)"
-argument_list|,
 endif|#
 directive|endif
+argument_list|)
+expr_stmt|;
 else|#
 directive|else
-argument|fprintf(stderr,
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
-argument|,
+argument_list|,
 literal|"usage: disklabel [-r] disk"
-argument|,
+argument_list|,
 literal|"(to read label)"
-argument|,
+argument_list|,
 literal|"       disklabel -w [-r] [-n] disk type [ packid ]"
-argument|,
+argument_list|,
 literal|"\t\t(to write label)"
-argument|,
+argument_list|,
 literal|"       disklabel -e [-r] [-n] disk"
-argument|,
+argument_list|,
 literal|"\t\t(to edit label)"
-argument|,
+argument_list|,
 literal|"       disklabel -R [-r] [-n] disk protofile"
-argument|,
+argument_list|,
 literal|"\t\t(to restore label)"
-argument|,
+argument_list|,
 literal|"       disklabel [-NW] disk"
-argument|,
+argument_list|,
 literal|"\t\t(to write disable/enable label)"
-argument|);
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
-argument|exit(
+name|exit
+argument_list|(
 literal|1
-argument|); }
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit
