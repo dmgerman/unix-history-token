@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysctl.c	8.1 (Berkeley) %G%"
+literal|"@(#)sysctl.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,7 +733,7 @@ operator|*
 operator|)
 name|oldp
 operator|=
-literal|1024
+name|NAME_MAX
 expr_stmt|;
 return|return
 operator|(
