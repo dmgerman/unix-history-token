@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: keyword.c,v 1.18 1997/08/11 02:41:02 steve Exp $"
+literal|"$Id: keyword.c,v 1.19 1998/05/25 05:07:17 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -516,7 +516,7 @@ argument_list|(
 name|p_estcpu
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 literal|"d"
 block|}
@@ -549,7 +549,7 @@ argument_list|(
 name|p_flag
 argument_list|)
 block|,
-name|LONG
+name|INT
 block|,
 literal|"x"
 block|}
@@ -592,7 +592,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -648,7 +648,7 @@ argument_list|(
 name|p_traceflag
 argument_list|)
 block|,
-name|LONG
+name|INT
 block|,
 literal|"x"
 block|}
@@ -675,7 +675,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -760,7 +760,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -785,7 +785,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -810,7 +810,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -835,7 +835,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -893,7 +893,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -926,7 +926,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -951,7 +951,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -976,7 +976,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -1001,7 +1001,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1026,7 +1026,7 @@ argument_list|)
 block|,
 name|LONG
 block|,
-literal|"d"
+literal|"ld"
 block|}
 block|,
 block|{
@@ -1059,7 +1059,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1084,7 +1084,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1139,7 +1139,7 @@ argument_list|(
 name|e_pgid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|PIDFMT
 block|}
@@ -1164,7 +1164,7 @@ argument_list|(
 name|p_pid
 argument_list|)
 block|,
-name|LONG
+name|UINT
 block|,
 name|PIDFMT
 block|}
@@ -1197,7 +1197,7 @@ argument_list|(
 name|e_ppid
 argument_list|)
 block|,
-name|LONG
+name|UINT
 block|,
 name|PIDFMT
 block|}
@@ -1238,7 +1238,7 @@ argument_list|(
 name|p_swtime
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 literal|"d"
 block|}
@@ -1265,7 +1265,7 @@ operator|.
 name|p_rgid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|UIDFMT
 block|}
@@ -1294,7 +1294,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1380,7 +1380,7 @@ operator|.
 name|p_ruid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|UIDFMT
 block|}
@@ -1425,7 +1425,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1448,7 +1448,7 @@ argument_list|(
 name|p_siglist
 argument_list|)
 block|,
-name|LONG
+name|INT
 block|,
 literal|"x"
 block|}
@@ -1473,7 +1473,7 @@ argument_list|(
 name|p_sigcatch
 argument_list|)
 block|,
-name|LONG
+name|UINT
 block|,
 literal|"x"
 block|}
@@ -1498,7 +1498,7 @@ argument_list|(
 name|p_sigignore
 argument_list|)
 block|,
-name|LONG
+name|UINT
 block|,
 literal|"x"
 block|}
@@ -1523,7 +1523,7 @@ argument_list|(
 name|p_sigmask
 argument_list|)
 block|,
-name|LONG
+name|UINT
 block|,
 literal|"x"
 block|}
@@ -1548,7 +1548,7 @@ argument_list|(
 name|p_slptime
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 literal|"d"
 block|}
@@ -1617,7 +1617,7 @@ operator|.
 name|p_svgid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|UIDFMT
 block|}
@@ -1644,7 +1644,7 @@ operator|.
 name|p_svuid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|UIDFMT
 block|}
@@ -1701,7 +1701,7 @@ argument_list|(
 name|e_tpgid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|PIDFMT
 block|}
@@ -1728,7 +1728,7 @@ argument_list|)
 block|,
 name|KPTR
 block|,
-literal|"x"
+literal|"lx"
 block|}
 block|,
 block|{
@@ -1817,7 +1817,7 @@ operator|.
 name|cr_uid
 argument_list|)
 block|,
-name|ULONG
+name|UINT
 block|,
 name|UIDFMT
 block|}
