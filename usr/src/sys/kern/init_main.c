@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.17	81/08/13	*/
+comment|/*	init_main.c	4.18	81/08/24	*/
 end_comment
 
 begin_include
@@ -580,7 +580,7 @@ ifdef|#
 directive|ifdef
 name|BBNNET
 comment|/* 	 * Initialize bbn network. 	 */
-name|netinit
+name|netmain
 argument_list|()
 expr_stmt|;
 endif|#
