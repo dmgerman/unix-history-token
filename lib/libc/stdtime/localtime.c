@@ -4918,10 +4918,6 @@ name|tmp
 operator|->
 name|TM_ZONE
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|sp
 operator|->
