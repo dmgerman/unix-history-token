@@ -823,7 +823,7 @@ name|i4b_Dgetmbuf
 argument_list|(
 literal|8
 operator|+
-literal|18
+literal|27
 operator|+
 name|slen
 operator|+
@@ -3085,7 +3085,7 @@ name|i4b_Dgetmbuf
 argument_list|(
 literal|8
 operator|+
-literal|11
+literal|21
 operator|+
 name|dlen
 argument_list|)
@@ -3331,6 +3331,32 @@ index|]
 operator|=
 name|BCH_ST_FREE
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_nbch
+operator|==
+literal|30
+condition|)
+block|{
+comment|/* With PRI, we can't really ignore calls  -- normal clearing */
+name|msg
+operator|=
+name|capimsg_setu16
+argument_list|(
+name|msg
+argument_list|,
+operator|(
+literal|0x3480
+operator||
+name|CAUSE_Q850_NCCLR
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|msg
 operator|=
 name|capimsg_setu16
@@ -3341,6 +3367,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Ignore */
+block|}
 break|break;
 default|default:
 name|sc
@@ -4184,7 +4211,7 @@ name|i4b_Dgetmbuf
 argument_list|(
 literal|8
 operator|+
-literal|14
+literal|6
 argument_list|)
 decl_stmt|;
 name|u_int8_t
