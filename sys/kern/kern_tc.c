@@ -3204,17 +3204,6 @@ name|capcount
 expr_stmt|;
 return|return;
 block|}
-comment|/* Return if nothing really happened. */
-if|if
-condition|(
-operator|*
-name|pcount
-operator|==
-name|pps
-operator|->
-name|capcount
-condition|)
-return|return;
 comment|/* Convert the count to a timespec. */
 name|tcount
 operator|=
