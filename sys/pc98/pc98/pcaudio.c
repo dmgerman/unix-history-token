@@ -1,7 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1998 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1994-1998 Sen Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -2458,9 +2457,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/* audioctl device can always be opened */
@@ -2593,9 +2592,9 @@ name|int
 name|fmt
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 comment|/* audioctl device can always be closed */
@@ -2950,9 +2949,9 @@ name|int
 name|flag
 parameter_list|,
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|)
 block|{
 name|audio_info_t
@@ -3331,7 +3330,7 @@ directive|else
 asm|"outb %0,$0x42"
 endif|#
 directive|endif
-asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" (volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if (pca_status.current> 2)  			pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcapoll(dev_t dev, int events, struct proc *p) {  	int s;  	struct proc *p1; 	int revents = 0;   	s = spltty();  	if (events& (POLLOUT | POLLWRNORM)) {  		if (!pca_status.in_use[0] || !pca_status.in_use[1] ||  		    !pca_status.in_use[2])  			revents |= events& (POLLOUT | POLLWRNORM);  		else { 			if (pca_status.wsel.si_pid&& 			    (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait) 				pca_status.wsel.si_flags = SI_COLL; 			else 				pca_status.wsel.si_pid = p->p_pid; 		} 	} 	splx(s); 	return (revents); }
+asm|: : "a" ((char)pca_status.buffer[pca_status.index]), 			    "b" (volume_table) ); 		enable_intr(); 		pca_status.counter += pca_status.scale; 		pca_status.index = (pca_status.counter>> 8); 	} 	if (pca_status.index>= pca_status.in_use[pca_status.current]) { 		pca_status.index = pca_status.counter = 0; 		pca_status.in_use[pca_status.current] = 0; 		pca_status.current++;  		if (pca_status.current> 2)  			pca_status.current = 0; 		pca_status.buffer = pca_status.buf[pca_status.current];                 if (pca_sleep) 			wakeup(&pca_sleep); 		if (pca_status.wsel.si_pid) { 			selwakeup((struct selinfo *)&pca_status.wsel.si_pid); 			pca_status.wsel.si_pid = 0; 			pca_status.wsel.si_flags = 0; 		} 	} }   static int pcapoll(dev_t dev, int events, struct thread *td) {  	int s;  	struct proc *p1; 	int revents = 0;   	s = spltty();  	if (events& (POLLOUT | POLLWRNORM)) {  		if (!pca_status.in_use[0] || !pca_status.in_use[1] ||  		    !pca_status.in_use[2])  			revents |= events& (POLLOUT | POLLWRNORM);  		else { 			if (pca_status.wsel.si_pid&& 			    (p1=pfind(pca_status.wsel.si_pid))&& p1->p_wchan == (caddr_t)&selwait) 				pca_status.wsel.si_flags = SI_COLL; 			else 				pca_status.wsel.si_pid = td->p_pid; 		} 	} 	splx(s); 	return (revents); }
 end_function
 
 end_unit
