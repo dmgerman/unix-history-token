@@ -93,12 +93,10 @@ specifier|static
 name|int
 name|lflush
 parameter_list|(
-name|fp
-parameter_list|)
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

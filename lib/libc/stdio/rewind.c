@@ -72,13 +72,10 @@ begin_function
 name|void
 name|rewind
 parameter_list|(
-name|fp
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|FLOCKFILE
 argument_list|(

@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,16 +62,6 @@ directive|include
 file|"local.h"
 end_include
 
-begin_function_decl
-name|int
-name|__srefill
-parameter_list|(
-name|FILE
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Handle getc() when the buffer ran out:  * Refill, then return the first character  * in the newly-filled buffer.  */
 end_comment
@@ -80,13 +70,10 @@ begin_function
 name|int
 name|__srget
 parameter_list|(
-name|fp
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(

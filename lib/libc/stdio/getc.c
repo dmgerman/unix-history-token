@@ -76,13 +76,10 @@ begin_function
 name|int
 name|getc
 parameter_list|(
-name|fp
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|retval

@@ -380,27 +380,19 @@ begin_function
 name|int
 name|__svfscanf
 parameter_list|(
-name|fp
-parameter_list|,
-name|fmt0
-parameter_list|,
-name|ap
-parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
+parameter_list|,
 name|char
 specifier|const
 modifier|*
 name|fmt0
-decl_stmt|;
+parameter_list|,
 name|va_list
 name|ap
-decl_stmt|;
+parameter_list|)
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|fmt
@@ -411,33 +403,27 @@ operator|*
 operator|)
 name|fmt0
 decl_stmt|;
-specifier|register
 name|int
 name|c
 decl_stmt|;
 comment|/* character from format, or conversion */
-specifier|register
 name|size_t
 name|width
 decl_stmt|;
 comment|/* field width, or 0 */
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
 comment|/* points into all kinds of strings */
-specifier|register
 name|int
 name|n
 decl_stmt|;
 comment|/* handy integer */
-specifier|register
 name|int
 name|flags
 decl_stmt|;
 comment|/* flags as defined above */
-specifier|register
 name|char
 modifier|*
 name|p0
