@@ -1003,7 +1003,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|nanotime
+name|getnanotime
 argument_list|(
 operator|&
 name|de
