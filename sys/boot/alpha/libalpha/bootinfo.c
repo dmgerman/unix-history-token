@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootinfo.c,v 1.4 1999/03/08 11:05:42 dcs Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: bootinfo.c,v 1.6 1999/03/20 14:13:09 dcs Exp $  */
 end_comment
 
 begin_include
@@ -495,6 +495,15 @@ modifier|*
 name|mp
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|rootdevname
+decl_stmt|;
+name|struct
+name|alpha_devdesc
+modifier|*
+name|rootdev
+decl_stmt|;
 name|struct
 name|loaded_module
 modifier|*
@@ -518,6 +527,68 @@ name|module_metadata
 modifier|*
 name|md
 decl_stmt|;
+comment|/*       * Allow the environment variable 'rootdev' to override the supplied device       * This should perhaps go to MI code and/or have $rootdev tested/set by      * MI code before launching the kernel.      */
+name|rootdevname
+operator|=
+name|getenv
+argument_list|(
+literal|"rootdev"
+argument_list|)
+expr_stmt|;
+name|alpha_getdev
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|(
+operator|&
+name|rootdev
+operator|)
+argument_list|,
+name|rootdevname
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rootdev
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* bad $rootdev/$currdev */
+name|printf
+argument_list|(
+literal|"can't determine root device\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+comment|/* Try reading the /etc/fstab file to select the root device */
+name|getrootmount
+argument_list|(
+name|alpha_fmtdev
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|rootdev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|rootdev
+argument_list|)
+expr_stmt|;
 name|ssym
 operator|=
 name|esym
