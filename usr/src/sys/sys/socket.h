@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	4.22	82/11/13	*/
+comment|/*	socket.h	4.23	83/01/08	*/
 end_comment
 
 begin_comment
@@ -123,6 +123,28 @@ end_define
 
 begin_comment
 comment|/* give new fd on connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_USELOOPBACK
+value|0x40
+end_define
+
+begin_comment
+comment|/* bypass hardware when possible */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SO_LINGER
+value|0x80
+end_define
+
+begin_comment
+comment|/* ~SO_DONTLINGER */
 end_comment
 
 begin_comment
@@ -421,6 +443,10 @@ name|AF_MAX
 value|11
 end_define
 
+begin_comment
+comment|/*  * Structure passed in at system call level.  */
+end_comment
+
 begin_struct
 struct|struct
 name|socketopt
@@ -428,10 +454,65 @@ block|{
 name|int
 name|so_optlen
 decl_stmt|;
-name|char
+comment|/* total size of options */
+name|struct
+name|sotemplate
 modifier|*
 name|so_optdata
 decl_stmt|;
+comment|/* option records */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Options are specified as an array of records,  * each of the following structure.  opt_level  * indicates who's options are being specified.  * Only SOL_SOCKET is globally known, other levels  * use protocol numbers to tag options.  The   * opt_size field does not include the space  * occupied by opt_level and opt_size.  opt_data  * is usually structured differently at each level.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sotemplate
+block|{
+name|u_short
+name|opt_level
+decl_stmt|;
+comment|/* level for which options are for */
+define|#
+directive|define
+name|SOL_SOCKET
+value|0xffff
+comment|/* options for socket level */
+name|u_short
+name|opt_size
+decl_stmt|;
+comment|/* amount of data in opt_data */
+name|u_char
+name|opt_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* acutally longer */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used in specifying socket  * level (SOL_SOCKET) options.  */
+end_comment
+
+begin_struct
+struct|struct
+name|sooptions
+block|{
+name|int
+name|sop_name
+decl_stmt|;
+comment|/* defined above */
+name|int
+name|sop_val
+decl_stmt|;
+comment|/* optional value */
 block|}
 struct|;
 end_struct
@@ -443,12 +524,31 @@ name|SOF_OOB
 value|0x1
 end_define
 
+begin_comment
+comment|/* send/recv out-of-band data */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|SOF_PREVIEW
 value|0x2
 end_define
+
+begin_comment
+comment|/* look at data, but don't read */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOF_DONTROUTE
+value|0x4
+end_define
+
+begin_comment
+comment|/* send without routing data */
+end_comment
 
 end_unit
 
