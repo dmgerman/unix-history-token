@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socket.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)socket.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -402,8 +402,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|AF_DECnet
 value|12
+end_define
+
+begin_comment
+comment|/* DECnet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_DLI
+value|13
+end_define
+
+begin_comment
+comment|/* Direct data link interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_LAT
+value|14
+end_define
+
+begin_comment
+comment|/* LAT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_HYLINK
+value|15
+end_define
+
+begin_comment
+comment|/* NSC Hyperchannel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|16
 end_define
 
 begin_comment
@@ -540,8 +584,36 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_DECnet
+value|AF_DECnet
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_DLI
+value|AF_DLI
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_LAT
+value|AF_LAT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_HYLINK
+value|AF_HYLINK
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_MAX
-value|12
+value|AF_MAX
 end_define
 
 begin_comment
