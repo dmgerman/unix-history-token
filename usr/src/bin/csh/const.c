@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.3 (Berkeley) %G%"
+literal|"@(#)const.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1531,6 +1531,19 @@ block|,
 literal|'n'
 block|,
 literal|'t'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Char
+name|STRret
+index|[]
+init|=
+block|{
+literal|'\n'
 block|,
 literal|'\0'
 block|}
