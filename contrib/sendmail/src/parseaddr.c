@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.153 (Berkeley) 6/24/98"
+literal|"@(#)parseaddr.c	8.156 (Berkeley) 10/27/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,27 +115,6 @@ name|pvpbuf
 index|[
 name|PSBUFSIZE
 index|]
-decl_stmt|;
-specifier|extern
-name|ADDRESS
-modifier|*
-name|buildaddr
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|,
-name|ADDRESS
-operator|*
-operator|,
-name|int
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
 decl_stmt|;
 specifier|extern
 name|bool
@@ -6226,9 +6205,10 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"map_lookup(%s, %s) => "
+literal|"map_lookup(%s, %s"
 argument_list|,
 name|map
 operator|->
@@ -6237,6 +6217,54 @@ argument_list|,
 name|key
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|60
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|argvect
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+name|printf
+argument_list|(
+literal|", %%%d=%s"
+argument_list|,
+name|i
+argument_list|,
+name|argvect
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|") => "
+argument_list|)
+expr_stmt|;
+block|}
 name|replac
 operator|=
 call|(
@@ -6697,7 +6725,7 @@ name|ubuf
 index|[
 name|MAXNAME
 operator|+
-literal|1
+literal|2
 index|]
 decl_stmt|;
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snprintf.c	8.11 (Berkeley) 6/4/98"
+literal|"@(#)snprintf.c	8.12 (Berkeley) 10/13/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -1630,7 +1630,7 @@ index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* 	** Use sprintf() instead of snprintf() since snprintf() 	** does not support %qu or %llu.  The buffer is large enough 	** to hold the string so there is no danger of buffer 	** overflow. 	*/
+comment|/* 	**  Use sprintf() instead of snprintf() since snprintf() 	**  does not support %qu or %llu.  The buffer is large enough 	**  to hold the string so there is no danger of buffer 	**  overflow. 	*/
 if|#
 directive|if
 name|NEED_PERCENTQ

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.353 (Berkeley) 6/30/98"
+literal|"@(#)deliver.c	8.366 (Berkeley) 12/18/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -1548,6 +1548,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mode
+operator|!=
+name|SM_VERIFY
+operator|&&
 name|LogLevel
 operator|>
 literal|4
@@ -2360,7 +2364,11 @@ endif|#
 directive|endif
 comment|/* HASFLOCK */
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* be sure to give error messages in child */
@@ -2374,6 +2382,14 @@ argument_list|(
 name|FALSE
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* 		**  Since the delivery may happen in a child and the parent 		**  does not wait, the parent may close the maps thereby 		**  removing any shared memory used by the map.  Therefore, 		**  open a copy of the maps for the delivery process. 		*/
+name|initmaps
+argument_list|(
+name|FALSE
+argument_list|,
+name|e
 argument_list|)
 expr_stmt|;
 if|#
@@ -2448,7 +2464,11 @@ name|e
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -2530,7 +2550,11 @@ operator|==
 name|SM_FORK
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4365,7 +4389,19 @@ operator|==
 name|EX_OK
 condition|)
 block|{
-comment|/* do in-code checking */
+comment|/* do in-code checking if not discarding */
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
 name|rcode
 operator|=
 name|checkcompat
@@ -4408,6 +4444,51 @@ name|xstart
 argument_list|,
 name|e
 argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_DISCARD
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|10
+argument_list|,
+literal|5
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"deliver: discarding recipient "
+argument_list|)
+expr_stmt|;
+name|printaddr
+argument_list|(
+name|to
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 			**  Remove discard bit to prevent discard of 			**  future recipients 			*/
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_DISCARD
 expr_stmt|;
 continue|continue;
 block|}
@@ -5718,8 +5799,10 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* try the connection */
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %s"
 argument_list|,
 name|e
@@ -9061,7 +9144,7 @@ name|tobuf
 argument_list|)
 operator|+
 literal|2
-operator|>=
+operator|>
 sizeof|sizeof
 name|tobuf
 condition|)
@@ -12076,7 +12159,7 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-comment|/* 			** If we can construct a UUCP path, do so 			*/
+comment|/* 			**  If we can construct a UUCP path, do so 			*/
 name|at
 operator|=
 name|strrchr
@@ -12268,6 +12351,15 @@ name|char
 name|buf
 index|[
 name|MAXLINE
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|boundaries
+index|[
+name|MAXMIMENESTING
+operator|+
+literal|1
 index|]
 decl_stmt|;
 comment|/* 	**  Output the body of the message 	*/
@@ -12466,15 +12558,6 @@ name|mci_flags
 argument_list|)
 condition|)
 block|{
-name|char
-modifier|*
-name|boundaries
-index|[
-name|MAXMIMENESTING
-operator|+
-literal|1
-index|]
-decl_stmt|;
 comment|/* 		**  Do 8 to 7 bit MIME conversion. 		*/
 comment|/* make sure it looks like a MIME message */
 if|if
@@ -12594,6 +12677,50 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+elseif|else
+if|if
+condition|(
+name|MaxMimeHeaderLength
+operator|>
+literal|0
+operator|||
+name|MaxMimeFieldLength
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Use mime8to7 to check multipart for MIME header overflows */
+name|boundaries
+index|[
+literal|0
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_INHEADER
+expr_stmt|;
+name|mime8to7
+argument_list|(
+name|mci
+argument_list|,
+name|e
+operator|->
+name|e_header
+argument_list|,
+name|e
+argument_list|,
+name|boundaries
+argument_list|,
+name|M87F_OUTER
+operator||
+name|M87F_NO8TO7
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 endif|#
 directive|endif
@@ -12641,7 +12768,6 @@ index|[
 literal|10
 index|]
 decl_stmt|;
-comment|/* we can pass it through unmodified */
 if|if
 condition|(
 name|bitset
@@ -13981,6 +14107,9 @@ decl_stmt|;
 name|MCI
 name|mcibuf
 decl_stmt|;
+name|int
+name|err
+decl_stmt|;
 specifier|volatile
 name|int
 name|oflags
@@ -14105,6 +14234,26 @@ directive|ifdef
 name|HASLSTAT
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|DBS_FILEDELIVERYTOSYMLINK
+argument_list|,
+name|DontBlameSendmail
+argument_list|)
+condition|)
+name|err
+operator|=
+name|stat
+argument_list|(
+name|filename
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+expr_stmt|;
+else|else
+name|err
+operator|=
 name|lstat
 argument_list|(
 name|filename
@@ -14112,6 +14261,10 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
 operator|<
 literal|0
 condition|)

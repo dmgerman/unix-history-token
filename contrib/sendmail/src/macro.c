@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	8.25 (Berkeley) 5/19/98"
+literal|"@(#)macro.c	8.26 (Berkeley) 11/8/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -828,7 +828,9 @@ decl_stmt|;
 name|char
 name|mbuf
 index|[
-literal|21
+name|MAXMACNAMELEN
+operator|+
+literal|1
 index|]
 decl_stmt|;
 if|if
@@ -983,6 +985,8 @@ name|mbuf
 index|[
 sizeof|sizeof
 name|mbuf
+operator|-
+literal|1
 index|]
 condition|)
 block|{

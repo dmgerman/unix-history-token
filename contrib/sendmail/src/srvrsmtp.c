@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.181 (Berkeley) 6/15/98 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.187 (Berkeley) 10/23/1998 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.181 (Berkeley) 6/15/98 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.187 (Berkeley) 10/23/1998 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -636,6 +636,7 @@ comment|/* number of RCPT commands */
 name|bool
 name|doublequeue
 decl_stmt|;
+specifier|volatile
 name|bool
 name|discard
 decl_stmt|;
@@ -859,8 +860,10 @@ operator|->
 name|e_flags
 argument_list|)
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"server %s startup"
 argument_list|,
 name|CurSmtpClient
@@ -1159,8 +1162,10 @@ name|SmtpPhase
 operator|=
 literal|"server cmd read"
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"server %s cmd read"
 argument_list|,
 name|CurSmtpClient
@@ -1253,7 +1258,7 @@ argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
-comment|/* 			** If have not accepted mail (DATA), do not bounce 			** bad addresses back to sender. 			*/
+comment|/* 			**  If have not accepted mail (DATA), do not bounce 			**  bad addresses back to sender. 			*/
 if|if
 condition|(
 name|bitset
@@ -1280,7 +1285,11 @@ operator|=
 name|EX_QUIT
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* clean up end of line */
@@ -1338,8 +1347,10 @@ name|e_id
 operator|==
 name|NULL
 condition|)
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s: %.80s"
 argument_list|,
 name|CurSmtpClient
@@ -1348,8 +1359,10 @@ name|inp
 argument_list|)
 expr_stmt|;
 else|else
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %.80s"
 argument_list|,
 name|e
@@ -1988,7 +2001,11 @@ name|p
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* make sure we know who the sending host is */
@@ -2159,8 +2176,10 @@ name|EF_LOGSENDER
 operator||
 name|EF_CLRQUEUE
 expr_stmt|;
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"%s %s: %.80s"
 argument_list|,
 name|e
@@ -2216,7 +2235,11 @@ operator|~
 name|EF_FATALERRS
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -2755,15 +2778,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|a
-operator|==
-name|NULL
-operator|||
 name|Errors
 operator|>
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Missing recipient"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|delimptr
@@ -3392,24 +3425,6 @@ name|e_ctime
 argument_list|)
 condition|)
 block|{
-specifier|extern
-name|pid_t
-name|dowork
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|bool
-operator|,
-name|bool
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
 name|unlockqueue
 argument_list|(
 name|e
@@ -3439,7 +3454,11 @@ condition|(
 name|InChild
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 comment|/* clean up a bit */
 name|gotmail
@@ -3515,7 +3534,11 @@ condition|(
 name|InChild
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 comment|/* clean up a bit */
 name|gotmail
@@ -3915,7 +3938,11 @@ condition|(
 name|InChild
 condition|)
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4208,7 +4235,11 @@ name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 case|case
 name|CMDVERB
@@ -5695,8 +5726,10 @@ name|int
 name|st
 decl_stmt|;
 comment|/* parent -- wait for child to complete */
-name|setproctitle
+name|sm_setproctitle
 argument_list|(
+name|TRUE
+argument_list|,
 literal|"server %s child wait"
 argument_list|,
 name|CurSmtpClient
@@ -5762,7 +5795,11 @@ name|e
 argument_list|)
 expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|ExitStat
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* restore the child signal */
@@ -5818,14 +5855,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* open alias database */
-name|initmaps
-argument_list|(
-name|FALSE
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0

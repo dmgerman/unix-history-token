@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.138 (Berkeley) 6/17/98"
+literal|"@(#)savemail.c	8.139 (Berkeley) 8/5/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -320,12 +320,12 @@ argument_list|(
 literal|"553 Cannot parse Postmaster!"
 argument_list|)
 expr_stmt|;
-name|ExitStat
-operator|=
-name|EX_SOFTWARE
-expr_stmt|;
 name|finis
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|,
+name|EX_SOFTWARE
+argument_list|)
 expr_stmt|;
 block|}
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)sendmail.h	8.280 (Berkeley) 6/5/98  */
+comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	@(#)sendmail.h	8.292 (Berkeley) 11/21/1998  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.280		6/5/98"
+literal|"@(#)sendmail.h	8.292		11/21/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -4202,6 +4202,10 @@ name|time_t
 name|map_mtime
 decl_stmt|;
 comment|/* last database modification time */
+name|pid_t
+name|map_pid
+decl_stmt|;
+comment|/* PID of process which opened map */
 name|int
 name|map_lockfd
 decl_stmt|;
@@ -6357,6 +6361,17 @@ begin_comment
 comment|/* processing multipart/digest */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M87F_NO8TO7
+value|0x0004
+end_define
+
+begin_comment
+comment|/* don't do 8->7 bit conversions */
+end_comment
+
 begin_comment
 comment|/* **  Flags passed to returntosender. */
 end_comment
@@ -6608,6 +6623,17 @@ begin_comment
 comment|/* IBM specific config syntax */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VENDOR_SENDMAIL
+value|5
+end_define
+
+begin_comment
+comment|/* Sendmail, Inc. specific config syntax */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|int
@@ -6708,13 +6734,6 @@ define|#
 directive|define
 name|DBS_FORWARDFILEINUNSAFEDIRPATH
 value|0x00000040
-end_define
-
-begin_define
-define|#
-directive|define
-name|DBS_INCLUDEFILEINUNSAFEDIRPATH
-value|0x00000060
 end_define
 
 begin_define
@@ -6869,6 +6888,13 @@ define|#
 directive|define
 name|DBS_RUNWRITABLEPROGRAM
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_INCLUDEFILEINUNSAFEDIRPATH
+value|0x20000000
 end_define
 
 begin_comment
@@ -7266,12 +7292,12 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|uid_t
-name|TrustedFileUid
+name|TrustedUid
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* uid of trusted owner of files and dirs */
+comment|/* uid of trusted user for files and startup */
 end_comment
 
 begin_decl_stmt
@@ -7690,6 +7716,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* location of proc id file [conf.c] */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|ControlSocketName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* control socket filename [control.c] */
 end_comment
 
 begin_decl_stmt
@@ -8401,6 +8439,28 @@ comment|/* saved user environment */
 end_comment
 
 begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxMimeHeaderLength
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum MIME header length */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|MaxMimeFieldLength
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum MIME field length */
+end_comment
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|errno
@@ -8408,7 +8468,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ** Queue Run Limitations */
+comment|/* **  Queue Run Limitations */
 end_comment
 
 begin_struct
@@ -9069,7 +9129,10 @@ name|finis
 name|__P
 argument_list|(
 operator|(
-name|void
+name|bool
+operator|,
+specifier|volatile
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9605,6 +9668,25 @@ name|__P
 argument_list|(
 operator|(
 name|pid_t
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|proc_list_set
+name|__P
+argument_list|(
+operator|(
+name|pid_t
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -9627,6 +9709,33 @@ begin_decl_stmt
 specifier|extern
 name|void
 name|proc_list_clear
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|proc_list_display
+name|__P
+argument_list|(
+operator|(
+name|FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|proc_list_probe
 name|__P
 argument_list|(
 operator|(
@@ -10269,6 +10378,32 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|closecontrolsocket
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clrcontrol
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -10549,6 +10684,25 @@ name|setproctitle
 name|__P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sm_setproctitle
+name|__P
+argument_list|(
+operator|(
+name|bool
+operator|,
 specifier|const
 name|char
 operator|*

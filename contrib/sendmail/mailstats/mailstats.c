@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mailstats.c	8.26 (Berkeley) 7/2/98"
+literal|"@(#)mailstats.c	8.28 (Berkeley) 9/14/1998"
 decl_stmt|;
 end_decl_stmt
 
@@ -156,6 +156,9 @@ decl_stmt|;
 name|bool
 name|mnames
 decl_stmt|;
+name|bool
+name|progmode
+decl_stmt|;
 name|long
 name|frmsgs
 init|=
@@ -205,6 +208,9 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
@@ -223,6 +229,10 @@ name|mnames
 operator|=
 name|TRUE
 expr_stmt|;
+name|progmode
+operator|=
+name|FALSE
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -234,7 +244,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"C:f:o"
+literal|"C:f:op"
 argument_list|)
 operator|)
 operator|!=
@@ -270,19 +280,46 @@ operator|=
 name|FALSE
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_MAILSTATS_PROGMODE
+case|case
+literal|'p'
+case|:
+name|progmode
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 literal|'?'
 case|:
 default|default:
 name|usage
 label|:
+if|#
+directive|if
+name|_FFR_MAILSTATS_PROGMODE
 name|fputs
 argument_list|(
-literal|"usage: mailstats [-C cffile] [-f stfile] -o\n"
+literal|"usage: mailstats [-C cffile] [-f stfile] -o -p\n"
 argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|fputs
+argument_list|(
+literal|"usage: mailstats [-C cffile] [-f stfile] -o \n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 name|EX_USAGE
@@ -1027,6 +1064,37 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|progmode
+condition|)
+block|{
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%ld %ld\n"
+argument_list|,
+operator|(
+name|long
+operator|)
+name|stat
+operator|.
+name|stat_itime
+argument_list|,
+operator|(
+name|long
+operator|)
+name|now
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"Statistics from %s"
@@ -1051,6 +1119,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -1096,9 +1165,26 @@ name|i
 index|]
 condition|)
 block|{
+name|char
+modifier|*
+name|format
+decl_stmt|;
+if|if
+condition|(
+name|progmode
+condition|)
+name|format
+operator|=
+literal|"%2d %8ld %10ld %8ld %10ld   %6ld  %6ld"
+expr_stmt|;
+else|else
+name|format
+operator|=
+literal|"%2d %8ld %10ldK %8ld %10ldK   %6ld  %6ld"
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%2d %8ld %10ldK %8ld %10ldK   %6ld  %6ld"
+name|format
 argument_list|,
 name|i
 argument_list|,
@@ -1220,6 +1306,58 @@ index|]
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|progmode
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" T %8ld %10ld %8ld %10ld   %6ld  %6ld\n"
+argument_list|,
+name|frmsgs
+argument_list|,
+name|frbytes
+argument_list|,
+name|tomsgs
+argument_list|,
+name|tobytes
+argument_list|,
+name|rejmsgs
+argument_list|,
+name|dismsgs
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+name|open
+argument_list|(
+name|sfile
+argument_list|,
+name|O_RDWR
+operator||
+name|O_TRUNC
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|>
+literal|0
+condition|)
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|printf
 argument_list|(
 literal|"=============================================================\n"
@@ -1242,6 +1380,7 @@ argument_list|,
 name|dismsgs
 argument_list|)
 expr_stmt|;
+block|}
 name|exit
 argument_list|(
 name|EX_OK

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Sendmail, Inc.  All rights reserved.  *  * By u
 end_comment
 
 begin_comment
-comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense+ldap@stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.9 (Berkeley) 5/19/98 */
+comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense+ldap@stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.10 (Berkeley) 9/14/1998 */
 end_comment
 
 begin_ifndef
@@ -175,7 +175,7 @@ begin_define
 define|#
 directive|define
 name|LDAP_MAP_MAX_FILTER
-value|256
+value|1024
 end_define
 
 begin_ifdef
