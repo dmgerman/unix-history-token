@@ -10,6 +10,16 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_aac.h"
+end_include
+
+begin_comment
+comment|/* include<stddef.h> */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -499,11 +509,10 @@ parameter_list|,
 name|int
 name|queue
 parameter_list|,
-name|u_int32_t
-name|fib_size
-parameter_list|,
-name|u_int32_t
-name|fib_addr
+name|struct
+name|aac_command
+modifier|*
+name|cm
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1371,6 +1380,13 @@ operator|.
 name|MntCount
 operator|=
 name|i
+expr_stmt|;
+name|rsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|mir
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2559,8 +2575,8 @@ name|cm
 expr_stmt|;
 comment|/* XXX 64-bit physical 							 * address issue */
 comment|/* put the FIB on the outbound queue */
-if|if
-condition|(
+name|error
+operator|=
 name|aac_enqueue_fib
 argument_list|(
 name|sc
@@ -2568,40 +2584,8 @@ argument_list|,
 name|AAC_ADAP_NORM_CMD_QUEUE
 argument_list|,
 name|cm
-operator|->
-name|cm_fib
-operator|->
-name|Header
-operator|.
-name|Size
-argument_list|,
-name|cm
-operator|->
-name|cm_fib
-operator|->
-name|Header
-operator|.
-name|ReceiverFibAddress
-argument_list|)
-condition|)
-block|{
-name|error
-operator|=
-name|EBUSY
-expr_stmt|;
-block|}
-else|else
-block|{
-name|aac_enqueue_busy
-argument_list|(
-name|cm
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
@@ -3652,9 +3636,7 @@ name|PRIBIO
 argument_list|,
 literal|"aacwait"
 argument_list|,
-name|timeout
-operator|*
-name|hz
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -5834,6 +5816,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+name|datasize
+operator|<=
+sizeof|sizeof
+argument_list|(
+name|fib
+operator|->
+name|data
+argument_list|)
+argument_list|,
+literal|"aac_sync_fib: datasize to large"
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|data
@@ -5902,6 +5898,35 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|u_int
+name|copysize
+decl_stmt|;
+name|copysize
+operator|=
+name|fib
+operator|->
+name|Header
+operator|.
+name|Size
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|aac_fib_header
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|copysize
+operator|>
+operator|*
+name|resultsize
+condition|)
+name|copysize
+operator|=
+operator|*
+name|resultsize
+expr_stmt|;
 operator|*
 name|resultsize
 operator|=
@@ -5925,8 +5950,7 @@ name|data
 argument_list|,
 name|result
 argument_list|,
-operator|*
-name|resultsize
+name|copysize
 argument_list|)
 expr_stmt|;
 block|}
@@ -6025,11 +6049,10 @@ parameter_list|,
 name|int
 name|queue
 parameter_list|,
-name|u_int32_t
-name|fib_size
-parameter_list|,
-name|u_int32_t
-name|fib_addr
+name|struct
+name|aac_command
+modifier|*
+name|cm
 parameter_list|)
 block|{
 name|u_int32_t
@@ -6042,6 +6065,32 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+name|u_int32_t
+name|fib_size
+decl_stmt|;
+name|u_int32_t
+name|fib_addr
+decl_stmt|;
+name|fib_size
+operator|=
+name|cm
+operator|->
+name|cm_fib
+operator|->
+name|Header
+operator|.
+name|Size
+expr_stmt|;
+name|fib_addr
+operator|=
+name|cm
+operator|->
+name|cm_fib
+operator|->
+name|Header
+operator|.
+name|ReceiverFibAddress
+expr_stmt|;
 name|debug_called
 argument_list|(
 literal|3
@@ -6165,6 +6214,12 @@ name|pi
 operator|+
 literal|1
 expr_stmt|;
+comment|/*      * To avoid a race with its completion interrupt, place this command on the      * busy queue prior to advertising it to the controller.      */
+name|aac_enqueue_busy
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 comment|/* notify the adapter if we know how */
 if|if
 condition|(
@@ -6246,6 +6301,9 @@ name|s
 decl_stmt|,
 name|error
 decl_stmt|;
+name|int
+name|notify
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|3
@@ -6301,6 +6359,21 @@ goto|goto
 name|out
 goto|;
 block|}
+name|notify
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|ci
+operator|==
+name|pi
+operator|+
+literal|1
+condition|)
+name|notify
+operator|++
+expr_stmt|;
 comment|/* wrap the queue? */
 if|if
 condition|(
@@ -6375,15 +6448,7 @@ expr_stmt|;
 comment|/* if we have made the queue un-full, notify the adapter */
 if|if
 condition|(
-operator|(
-operator|(
-name|pi
-operator|+
-literal|1
-operator|)
-operator|==
-name|ci
-operator|)
+name|notify
 operator|&&
 operator|(
 name|aac_qinfo
@@ -6453,12 +6518,14 @@ decl_stmt|;
 name|time_t
 name|deadline
 decl_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* simulate an interrupt to handle possibly-missed interrupts */
-name|aac_intr
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
+comment|/*      * XXX This was done to work around another bug which has since been      * fixed.  It is dangerous anyways because you don't want multiple      * threads in the interrupt handler at the same time!  If calling      * is deamed neccesary in the future, proper mutexes must be used.      */
+block|s = splbio();     aac_intr(sc);     splx(s);
+endif|#
+directive|endif
 comment|/* kick the I/O queue to restart it in the case of deadlock */
 name|aac_startio
 argument_list|(
@@ -6495,15 +6562,7 @@ name|cm_timestamp
 operator|<
 name|deadline
 operator|)
-operator|&&
-operator|!
-operator|(
-name|cm
-operator|->
-name|cm_flags
-operator|&
-name|AAC_CMD_TIMEDOUT
-operator|)
+comment|/*&& !(cm->cm_flags& AAC_CMD_TIMEDOUT) */
 condition|)
 block|{
 name|cm
@@ -6518,7 +6577,9 @@ name|sc
 operator|->
 name|aac_dev
 argument_list|,
-literal|"COMMAND TIMED OUT AFTER %d SECONDS\n"
+literal|"COMMAND %p TIMEOUT AFTER %d SECONDS\n"
+argument_list|,
+name|cm
 argument_list|,
 call|(
 name|int
@@ -7238,6 +7299,13 @@ expr_stmt|;
 name|arg
 operator|=
 literal|0
+expr_stmt|;
+name|bufsize
+operator|=
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8052,6 +8120,12 @@ name|Size
 operator|=
 name|size
 expr_stmt|;
+name|cm
+operator|->
+name|cm_timestamp
+operator|=
+name|time_second
+expr_stmt|;
 comment|/*      * Pass the FIB to the controller, wait for it to complete.      */
 if|if
 condition|(
@@ -8141,11 +8215,13 @@ name|cm
 operator|!=
 name|NULL
 condition|)
+block|{
 name|aac_release_command
 argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|error
