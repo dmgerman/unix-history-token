@@ -3845,14 +3845,6 @@ comment|/* #undef IRIX4 */
 end_comment
 
 begin_comment
-comment|/* Define if you have the krb4 package. */
-end_comment
-
-begin_comment
-comment|/* #undef KRB4 */
-end_comment
-
-begin_comment
 comment|/* Enable Kerberos 5 support in applications. */
 end_comment
 
@@ -4459,21 +4451,6 @@ begin_comment
 comment|/* #undef uid_t */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_FOUR_VALUED_KRB_PUT_INT
-argument_list|)
-operator|||
-operator|!
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
@@ -4489,32 +4466,6 @@ name|S
 parameter_list|)
 value|krb_put_int((F), (T), (L), (S))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KRB_PUT_INT
-parameter_list|(
-name|F
-parameter_list|,
-name|T
-parameter_list|,
-name|L
-parameter_list|,
-name|S
-parameter_list|)
-value|krb_put_int((F), (T), (S))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
