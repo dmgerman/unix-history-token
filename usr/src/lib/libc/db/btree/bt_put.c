@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	5.8 (Berkeley) %G%"
+literal|"@(#)bt_put.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,6 +204,19 @@ name|R_CURSOR
 case|:
 if|if
 condition|(
+operator|!
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_SEQINIT
+argument_list|)
+condition|)
+goto|goto
+name|einval
+goto|;
+if|if
+condition|(
 name|ISSET
 argument_list|(
 name|t
@@ -211,17 +224,9 @@ argument_list|,
 name|BTF_DELCRSR
 argument_list|)
 condition|)
-block|{
-name|errno
-operator|=
-name|EINVAL
-expr_stmt|;
-return|return
-operator|(
-name|RET_ERROR
-operator|)
-return|;
-block|}
+goto|goto
+name|einval
+goto|;
 break|break;
 case|case
 literal|0
@@ -231,6 +236,8 @@ name|R_NOOVERWRITE
 case|:
 break|break;
 default|default:
+name|einval
+label|:
 name|errno
 operator|=
 name|EINVAL
