@@ -1450,11 +1450,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-abceghprvwxzHF] [-s|-t] [-i|-nu] [-Dname[=def]]"
+literal|"Usage: lint [-abceghprvwxzHF] [-s|-t] [-i|-nu] [-Dname[=def]]"
 literal|" [-Uname] [-X<id>[,<id>]...\n"
-argument_list|,
-name|getprogname
-argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1475,11 +1472,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s [-abceghprvwzHF] [-s|-t] -Clibrary [-Dname[=def]]\n"
+literal|"       lint [-abceghprvwzHF] [-s|-t] -Clibrary [-Dname[=def]]\n"
 literal|" [-X<id>[,<id>]...\n"
-argument_list|,
-name|getprogname
-argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1533,14 +1527,6 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|setprogname
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -41,6 +41,14 @@ endif|#
 directive|endif
 end_endif
 
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -314,14 +322,6 @@ name|char
 modifier|*
 name|ptr
 decl_stmt|;
-name|setprogname
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
 name|ERR_ZERO
 argument_list|(
 operator|&
@@ -728,10 +728,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-abcdeghmprstuvwyzF] [-X<id>[,<id>]... src dest\n"
-argument_list|,
-name|getprogname
-argument_list|()
+literal|"Usage: lint1 [-abcdeghmprstuvwyzF] [-X<id>[,<id>]... src dest\n"
 argument_list|)
 expr_stmt|;
 name|exit
