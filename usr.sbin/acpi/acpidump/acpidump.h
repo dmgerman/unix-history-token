@@ -409,10 +409,10 @@ literal|3
 index|]
 decl_stmt|;
 name|u_int64_t
-name|x_firmware_ctrl
+name|x_facs_ptr
 decl_stmt|;
 name|u_int64_t
-name|x_dsdt
+name|x_dsdt_ptr
 decl_stmt|;
 name|struct
 name|ACPIgas
