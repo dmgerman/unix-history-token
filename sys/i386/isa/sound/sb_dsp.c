@@ -103,7 +103,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|sb_no_recording
 init|=
@@ -370,7 +369,6 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-specifier|static
 name|sound_os_info
 modifier|*
 name|sb_osp
