@@ -3,6 +3,10 @@ begin_comment
 comment|/* hard-locale.c -- Determine whether a locale is hard.    Copyright 1997, 1998, 1999 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -171,12 +175,7 @@ block|{
 if|#
 directive|if
 operator|!
-operator|(
-name|defined
-name|ENABLE_NLS
-operator|&&
 name|HAVE_SETLOCALE
-operator|)
 return|return
 literal|0
 return|;
@@ -207,11 +206,18 @@ block|{
 if|#
 directive|if
 name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|(
+name|defined
 name|__GLIBC__
 operator|&&
 name|__GLIBC__
 operator|>=
 literal|2
+operator|)
 if|if
 condition|(
 name|strcmp
