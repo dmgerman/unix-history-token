@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1377,6 +1377,14 @@ name|brelse
 argument_list|(
 name|bp
 argument_list|)
+expr_stmt|;
+name|mountp
+operator|->
+name|mnt_maxsymlinklen
+operator|=
+name|fs
+operator|->
+name|fs_maxsymlinklen
 expr_stmt|;
 name|ffs_oldfscompat
 argument_list|(
