@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
 
@@ -12,11 +16,7 @@ comment|/*  * acconfig.h -- configuration definitions for gawk.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  */
-end_comment
-
-begin_comment
-comment|/*   * Copyright (C) 1995-2000 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
+comment|/*  * Copyright (C) 1995-2001 the Free Software Foundation, Inc.  *  * This file is part of GAWK, the GNU implementation of the  * AWK Programming Language.  *  * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA  */
 end_comment
 
 begin_comment
@@ -213,11 +213,27 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define as __inline if that's what the C compiler calls it.  */
+end_comment
+
+begin_comment
+comment|/* #undef inline */
+end_comment
+
+begin_comment
 comment|/* Define if on MINIX.  */
 end_comment
 
 begin_comment
 comment|/* #undef _MINIX */
+end_comment
+
+begin_comment
+comment|/* Define to `long' if<sys/types.h> doesn't define.  */
+end_comment
+
+begin_comment
+comment|/* #undef off_t */
 end_comment
 
 begin_comment
@@ -312,17 +328,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HAVE_STRINGIZE
-value|1
-end_define
-
-begin_comment
-comment|/* can use ANSI # operator in cpp */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|REGEX_MALLOC
 value|1
 end_define
@@ -343,43 +348,97 @@ comment|/* return type of sprintf */
 end_comment
 
 begin_comment
-comment|/* #undef BITOPS */
+comment|/* #undef HAVE_MKTIME */
 end_comment
 
 begin_comment
-comment|/* bitwise ops (undocumented feature) */
+comment|/* we have the mktime function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SOCKETS
+value|1
+end_define
+
+begin_comment
+comment|/* we have sockets on this system */
 end_comment
 
 begin_comment
-comment|/* #undef NONDECDATA */
+comment|/* #undef HAVE_PORTALS */
 end_comment
 
 begin_comment
-comment|/* non-decimal input data (undocumented feature) */
+comment|/* we have portals on /p on this system */
 end_comment
 
 begin_comment
-comment|/* #undef _FILE_OFFSET_BITS */
+comment|/* #undef DYNAMIC */
 end_comment
 
 begin_comment
-comment|/* bits in a file offset, where this matters */
+comment|/* allow dynamic addition of builtins */
 end_comment
 
 begin_comment
-comment|/* #undef _LARGEFILE_SOURCE */
+comment|/* #undef STRTOD_NOT_C89 */
 end_comment
 
 begin_comment
-comment|/* makes fseeko etc. visible on some hosts */
+comment|/* strtod doesn't have C89 semantics */
 end_comment
 
 begin_comment
-comment|/* #undef _LARGE_FILES */
+comment|/* #undef ssize_t */
 end_comment
 
 begin_comment
-comment|/* emables large files on AIX-style hosts */
+comment|/* signed version of size_t */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_count function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_COUNT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_next function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_NEXT */
+end_comment
+
+begin_comment
+comment|/* Define if you have the __argz_stringify function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___ARGZ_STRINGIFY */
+end_comment
+
+begin_comment
+comment|/* Define if you have the alarm function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_ALARM
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the dcgettext function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_DCGETTEXT */
 end_comment
 
 begin_comment
@@ -394,6 +453,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the getcwd function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETCWD
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the getpagesize function.  */
 end_comment
 
@@ -401,17 +471,6 @@ begin_define
 define|#
 directive|define
 name|HAVE_GETPAGESIZE
-value|1
-end_define
-
-begin_comment
-comment|/* Define if you have the madvise function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAVE_MADVISE
 value|1
 end_define
 
@@ -449,6 +508,39 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the munmap function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_MUNMAP
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the putenv function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_PUTENV
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the setenv function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETENV
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the setlocale function.  */
 end_comment
 
@@ -460,6 +552,25 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the stpcpy function.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STPCPY */
+end_comment
+
+begin_comment
+comment|/* Define if you have the strcasecmp function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRCASECMP
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the strchr function.  */
 end_comment
 
@@ -467,6 +578,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRCHR
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the strdup function.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRDUP
 value|1
 end_define
 
@@ -537,6 +659,33 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<argz.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_ARGZ_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<fcntl.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FCNTL_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<libintl.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBINTL_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<limits.h> header file.  */
 end_comment
 
@@ -559,6 +708,22 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<malloc.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MALLOC_H */
+end_comment
+
+begin_comment
+comment|/* Define if you have the<mcheck.h> header file.  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_MCHECK_H */
+end_comment
+
+begin_comment
 comment|/* Define if you have the<memory.h> header file.  */
 end_comment
 
@@ -566,6 +731,39 @@ begin_define
 define|#
 directive|define
 name|HAVE_MEMORY_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<netdb.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NETDB_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<netinet/in.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NETINET_IN_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<nl_types.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NL_TYPES_H
 value|1
 end_define
 
@@ -585,6 +783,17 @@ begin_define
 define|#
 directive|define
 name|HAVE_STDARG_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<stdlib.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STDLIB_H
 value|1
 end_define
 
@@ -619,6 +828,28 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if you have the<sys/socket.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SOCKET_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define if you have the<sys/time.h> header file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_TIME_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define if you have the<unistd.h> header file.  */
 end_comment
 
@@ -628,6 +859,22 @@ directive|define
 name|HAVE_UNISTD_H
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the i library (-li).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBI */
+end_comment
+
+begin_comment
+comment|/* Define if you have the intl library (-lintl).  */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBINTL */
+end_comment
 
 begin_comment
 comment|/* Define if you have the m library (-lm).  */
@@ -641,19 +888,30 @@ value|1
 end_define
 
 begin_comment
+comment|/* Name of package */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE
+value|"gawk"
+end_define
+
+begin_comment
+comment|/* Version number of package */
+end_comment
+
+begin_comment
+comment|/* #define VERSION "3.1.0" */
+end_comment
+
+begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
 end_comment
 
 begin_comment
 comment|/* #undef _FILE_OFFSET_BITS */
-end_comment
-
-begin_comment
-comment|/* Define to make ftello visible on some hosts (e.g. HP-UX 10.20). */
-end_comment
-
-begin_comment
-comment|/* #undef _LARGEFILE_SOURCE */
 end_comment
 
 begin_comment
@@ -665,11 +923,60 @@ comment|/* #undef _LARGE_FILES */
 end_comment
 
 begin_comment
-comment|/* Define to make ftello visible on some hosts (e.g. glibc 2.1.3). */
+comment|/* Define if compiler has function prototypes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROTOTYPES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the stpcpy function. */
 end_comment
 
 begin_comment
-comment|/* #undef _XOPEN_SOURCE */
+comment|/* #undef HAVE_STPCPY */
+end_comment
+
+begin_comment
+comment|/* Define if your locale.h file contains LC_MESSAGES. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_LC_MESSAGES
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if NLS is requested. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_NLS
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have gettext and don't want to use GNU gettext. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETTEXT */
+end_comment
+
+begin_comment
+comment|/* Define as 1 if you have catgets and don't want to use GNU gettext. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_CATGETS */
 end_comment
 
 begin_include
