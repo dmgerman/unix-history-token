@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 70 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 71 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -128,7 +128,7 @@ name|Type
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ScopeName
 argument_list|)

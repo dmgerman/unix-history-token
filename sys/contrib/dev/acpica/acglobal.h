@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 101 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 102 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -660,27 +660,6 @@ name|ACPI_EXTERN
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|AcpiGbl_ParsedNamespaceRoot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*****************************************************************************  *  * Hardware globals  *  ****************************************************************************/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|ACPI_C_STATE_HANDLER
-name|AcpiHwCxHandlers
-index|[
-name|MAX_CX_STATES
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|UINT32
-name|AcpiHwActiveCxState
 decl_stmt|;
 end_decl_stmt
 

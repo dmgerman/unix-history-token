@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 37 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psutils - Parser miscellaneous utilities (Parser only)  *              $Revision: 38 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -439,7 +439,7 @@ condition|)
 block|{
 name|Op
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|Size
 argument_list|)
@@ -640,7 +640,7 @@ return|return;
 block|}
 block|}
 comment|/*      * Not a GENERIC OP, or the cache is full, just free the Op      */
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|Op
 argument_list|)
@@ -681,7 +681,7 @@ name|AcpiGbl_ParseCache
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_ParseCache
 argument_list|)
@@ -707,7 +707,7 @@ name|AcpiGbl_ExtParseCache
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_ExtParseCache
 argument_list|)

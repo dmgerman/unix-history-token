@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1768,15 +1768,27 @@ argument_list|(
 name|TRACE_EXEC
 argument_list|,
 operator|(
-literal|"RgnObj %p Addr %X Len %X\n"
+literal|"RgnObj %p Addr %8.8lX%8.8lX Len %X\n"
 operator|,
 name|ObjDesc
 operator|,
+name|HIDWORD
+argument_list|(
 name|ObjDesc
 operator|->
 name|Region
 operator|.
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|ObjDesc
+operator|->
+name|Region
+operator|.
+name|Address
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->
@@ -2410,13 +2422,15 @@ break|break;
 case|case
 name|AML_BREAK_POINT_OP
 case|:
-comment|/* Call up to the OS dependent layer to handle this */
-name|AcpiOsBreakpoint
+comment|/* Call up to the OS service layer to handle this */
+name|AcpiOsSignal
 argument_list|(
-name|NULL
+name|ACPI_SIGNAL_BREAKPOINT
+argument_list|,
+literal|"Executed AML Breakpoint opcode"
 argument_list|)
 expr_stmt|;
-comment|/* If it returns, we are done! */
+comment|/* If and when it returns, all done. */
 break|break;
 case|case
 name|AML_BREAK_OP
@@ -2432,10 +2446,20 @@ name|Op
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* TBD: update behavior for ACPI 2.0 */
 comment|/*          * As per the ACPI specification:          *      "The break operation causes the current package          *          execution to complete"          *      "Break -- Stop executing the current code package          *          at this point"          *          * Returning AE_FALSE here will cause termination of          * the current package, and execution will continue one          * level up, starting with the completion of the parent Op.          */
 name|Status
 operator|=
 name|AE_CTRL_FALSE
+expr_stmt|;
+break|break;
+case|case
+name|AML_CONTINUE_OP
+case|:
+comment|/* ACPI 2.0 */
+name|Status
+operator|=
+name|AE_NOT_IMPLEMENTED
 expr_stmt|;
 break|break;
 default|default:

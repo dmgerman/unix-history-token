@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 37 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbutils - AML debugger utilities  *              $Revision: 39 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -825,14 +825,14 @@ literal|"Could not locate name: %s %s\n"
 argument_list|,
 name|Name
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|InternalPath
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 65 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 67 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -265,7 +265,7 @@ operator|)
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -716,7 +716,7 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|(
 operator|*
@@ -1200,7 +1200,7 @@ name|AmlOffset
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|Name
 argument_list|)
@@ -1417,7 +1417,7 @@ name|Package
 operator|.
 name|Elements
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|(
 name|ObjDesc

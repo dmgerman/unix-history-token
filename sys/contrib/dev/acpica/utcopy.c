@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 74 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1047,6 +1047,7 @@ name|ExternalObject
 operator|->
 name|Type
 expr_stmt|;
+comment|/*      * Simple types supported are: String, Buffer, Integer      */
 switch|switch
 condition|(
 name|ExternalObject
@@ -1113,7 +1114,6 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/*          * Number is included in the object itself          */
 name|InternalObject
 operator|->
 name|Integer
@@ -1128,9 +1128,10 @@ name|Value
 expr_stmt|;
 break|break;
 default|default:
+comment|/*          * Whatever other type -- it is not supported          */
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_CTRL_RETURN_VALUE
+name|AE_SUPPORT
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1628,7 +1629,7 @@ name|Package
 operator|.
 name|Elements
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|(
 name|SourceObj

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 91 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 93 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -233,7 +233,7 @@ literal|"Object [%s] not found [%s]\n"
 operator|,
 name|Pathname
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -286,7 +286,7 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|InternalPath
 argument_list|)
@@ -471,7 +471,7 @@ condition|(
 name|InternalPath
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|InternalPath
 argument_list|)

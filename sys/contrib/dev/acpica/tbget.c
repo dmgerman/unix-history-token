@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 48 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 51 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -295,7 +295,7 @@ block|}
 comment|/* Allocate buffer for the entire table */
 name|FullTable
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|TableHeader
 operator|->
@@ -1314,13 +1314,23 @@ argument_list|(
 name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"RSDP located at %p, RSDT physical=%p \n"
+literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
 operator|,
 name|AcpiGbl_RSDP
 operator|,
+name|HIDWORD
+argument_list|(
 name|AcpiGbl_RSDP
 operator|->
 name|RsdtPhysicalAddress
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|AcpiGbl_RSDP
+operator|->
+name|RsdtPhysicalAddress
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1357,7 +1367,7 @@ argument_list|,
 operator|(
 literal|"Could not get the RSDT, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1550,7 +1560,7 @@ block|{
 comment|/*          * Getting table from a file -- allocate a buffer and          * read the table.          */
 name|TablePtr
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|Size
 argument_list|)

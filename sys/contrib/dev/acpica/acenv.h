@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acenv.h - Generation environment specific items  *       $Revision: 76 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -166,7 +166,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
+name|ACPI_DBG_TRACK_ALLOCATIONS
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 61 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -574,7 +574,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"%s, while unloading [%s]\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2199,7 +2199,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not obtain _PRT: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2243,7 +2243,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"GetIrqRoutingTable failed: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2308,7 +2308,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not obtain _CRS: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2352,7 +2352,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"AcpiGetCurrentResources failed: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2417,7 +2417,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not obtain _PRS: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2461,7 +2461,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"AcpiGetPossibleResources failed: %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 64 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ argument_list|,
 operator|(
 literal|"*** Thread awake after blocking, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -194,7 +194,7 @@ comment|/* Since this thread will sleep, we must release the interpreter */
 name|AcpiExExitInterpreter
 argument_list|()
 expr_stmt|;
-name|AcpiOsSleepUsec
+name|AcpiOsStall
 argument_list|(
 name|HowLong
 argument_list|)
@@ -206,9 +206,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiOsSleepUsec
+name|AcpiOsSleep
 argument_list|(
+literal|0
+argument_list|,
+operator|(
 name|HowLong
+operator|/
+literal|1000
+operator|)
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresop - AML Interpreter operand/object resolution  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -786,6 +786,9 @@ name|Status
 operator|=
 name|AcpiExConvertToInteger
 argument_list|(
+operator|*
+name|StackPtr
+argument_list|,
 name|StackPtr
 argument_list|,
 name|WalkState
@@ -854,6 +857,9 @@ name|Status
 operator|=
 name|AcpiExConvertToBuffer
 argument_list|(
+operator|*
+name|StackPtr
+argument_list|,
 name|StackPtr
 argument_list|,
 name|WalkState
@@ -922,7 +928,12 @@ name|Status
 operator|=
 name|AcpiExConvertToString
 argument_list|(
+operator|*
 name|StackPtr
+argument_list|,
+name|StackPtr
+argument_list|,
+name|ACPI_UINT32_MAX
 argument_list|,
 name|WalkState
 argument_list|)

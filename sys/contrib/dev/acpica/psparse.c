@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 85 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psparse - Parser top level AML parse routines  *              $Revision: 87 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -225,7 +225,7 @@ argument_list|)
 expr_stmt|;
 name|ParserState
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1284,7 +1284,7 @@ argument_list|,
 operator|(
 literal|"Invoked method did not return a value, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1299,7 +1299,7 @@ argument_list|,
 operator|(
 literal|"GetPredicate Failed, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -3246,7 +3246,7 @@ operator|->
 name|ParserState
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|WalkState
 operator|->
@@ -3356,7 +3356,7 @@ argument_list|(
 name|ParserState
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ParserState
 argument_list|)

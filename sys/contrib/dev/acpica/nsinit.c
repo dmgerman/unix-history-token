@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 25 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"acdispat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acinterp.h"
 end_include
 
 begin_define
@@ -420,6 +426,47 @@ name|AE_OK
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_REGION
+operator|)
+operator|&&
+operator|(
+name|Type
+operator|!=
+name|ACPI_TYPE_BUFFER_FIELD
+operator|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+comment|/*      * Must lock the interpreter before executing AML code      */
+name|Status
+operator|=
+name|AcpiExEnterInterpreter
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 switch|switch
 condition|(
 name|Type
@@ -482,7 +529,7 @@ argument_list|,
 operator|(
 literal|"%s while getting region arguments [%4.4s]\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -573,7 +620,7 @@ argument_list|,
 operator|(
 literal|"%s while getting buffer field arguments [%4.4s]\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -611,6 +658,9 @@ default|default:
 break|break;
 block|}
 comment|/*      * We ignore errors from above, and always return OK, since      * we don't want to abort the walk on a single error.      */
+name|AcpiExExitInterpreter
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -853,14 +903,14 @@ literal|"%s._INI failed: %s\n"
 operator|,
 name|ScopeName
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ScopeName
 argument_list|)

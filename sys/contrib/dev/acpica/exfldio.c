@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 57 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 59 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -94,9 +94,11 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RgnDesc
 decl_stmt|;
-name|FUNCTION_TRACE
+name|FUNCTION_TRACE_U32
 argument_list|(
 literal|"ExSetupField"
+argument_list|,
+name|FieldDatumByteOffset
 argument_list|)
 expr_stmt|;
 comment|/* Parameter validation */
@@ -495,7 +497,7 @@ argument_list|(
 name|TRACE_BFIELD
 argument_list|,
 operator|(
-literal|"Region %s(%X) width %X base:off %X:%X at %08lX\n"
+literal|"Region %s(%X) width %X base:off %X:%X at %8.8lX%8.8lX\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -526,7 +528,15 @@ name|BaseByteOffset
 operator|,
 name|FieldDatumByteOffset
 operator|,
+name|HIDWORD
+argument_list|(
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|Address
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1460,7 +1470,7 @@ argument_list|(
 name|TRACE_BFIELD
 argument_list|,
 operator|(
-literal|"Store %X in Region %s(%X) at %p width %X\n"
+literal|"Store %X in Region %s(%X) at %8.8lX%8.8lX width %X\n"
 operator|,
 name|Value
 operator|,
@@ -1479,7 +1489,15 @@ name|Region
 operator|.
 name|SpaceId
 operator|,
+name|HIDWORD
+argument_list|(
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|Address
+argument_list|)
 operator|,
 name|ObjDesc
 operator|->

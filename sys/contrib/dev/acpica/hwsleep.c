@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 12 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 14 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -410,7 +410,7 @@ name|SLP_TYPE_X_MASK
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* write #1: fill in SLP_TYPE data */
+comment|/* write #1: fill in SLP_TYP data */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -452,7 +452,7 @@ name|SLP_EN_MASK
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* write #2: the whole tamale */
+comment|/* write #2: SLP_TYP + SLP_EN */
 name|AcpiHwRegisterWrite
 argument_list|(
 name|ACPI_MTX_LOCK
@@ -469,6 +469,28 @@ argument_list|,
 name|PM1B_CONTROL
 argument_list|,
 name|PM1BControl
+argument_list|)
+expr_stmt|;
+comment|/* wait a second, then try again */
+name|AcpiOsStall
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_LOCK
+argument_list|,
+name|PM1_CONTROL
+argument_list|,
+operator|(
+literal|1
+operator|<<
+name|AcpiHwGetBitShift
+argument_list|(
+name|SLP_EN_MASK
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|enable

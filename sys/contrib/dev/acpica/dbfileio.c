@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 41 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 43 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -509,11 +509,7 @@ expr_stmt|;
 operator|*
 name|TablePtr
 operator|=
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 operator|(
 name|size_t
@@ -640,7 +636,7 @@ argument_list|(
 literal|"Error - could not read the table file\n"
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 operator|*
 name|TablePtr
@@ -933,14 +929,14 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not install table, %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TablePtr
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 71 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 72 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -448,7 +448,7 @@ name|ObjPointer
 operator|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ObjPointer
 argument_list|)
@@ -596,7 +596,7 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Free the combined parameter pointer list and object array */
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ObjList
 argument_list|)

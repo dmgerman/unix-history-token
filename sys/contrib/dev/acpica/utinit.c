@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 96 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 98 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -466,7 +466,7 @@ condition|(
 name|AcpiGbl_Gpe0EnableRegisterSave
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_Gpe0EnableRegisterSave
 argument_list|)
@@ -477,7 +477,7 @@ condition|(
 name|AcpiGbl_Gpe1EnableRegisterSave
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_Gpe1EnableRegisterSave
 argument_list|)
@@ -569,7 +569,7 @@ expr_stmt|;
 comment|/* Debug only - display leftover memory allocation, if any */
 ifdef|#
 directive|ifdef
-name|ENABLE_DEBUGGER
+name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiUtDumpCurrentAllocations
 argument_list|(
 name|ACPI_UINT32_MAX

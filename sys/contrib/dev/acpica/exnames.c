@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ block|}
 comment|/*      * Allocate a buffer for the name.      * This buffer must be deleted by the caller!      */
 name|NameString
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|SizeNeeded
 argument_list|)

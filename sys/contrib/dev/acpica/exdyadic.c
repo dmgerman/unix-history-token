@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML (p-code) execution for dyadic operators  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exdyadic - ACPI AML execution for dyadic (2-operand) operators  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDoConcatenate  *  * PARAMETERS:  *ObjDesc        - Object to be converted.  Must be an  *                                Integer, Buffer, or String  *  * RETURN:      Status  *  * DESCRIPTION: Concatenate two objects OF THE SAME TYPE.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDoConcatenate  *  * PARAMETERS:  *ObjDesc            - Object to be converted.  Must be an  *                                    Integer, Buffer, or String  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Concatenate two objects OF THE SAME TYPE.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -187,7 +187,7 @@ literal|2
 expr_stmt|;
 name|NewBuf
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|RetDesc
 operator|->
@@ -332,7 +332,7 @@ block|}
 comment|/* Operand1 is string  */
 name|NewBuf
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|ObjDesc
 operator|->
@@ -451,7 +451,7 @@ return|;
 block|}
 name|NewBuf
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|ObjDesc
 operator|->
@@ -595,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic1  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 1 dyadic operator with numeric operands:  *              NotifyOp  *  * ALLOCATION:  Deletes both operands  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -708,7 +708,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -842,7 +842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2R  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              one or two result operands.  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1016,7 +1016,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1053,6 +1053,9 @@ name|AML_BIT_XOR_OP
 case|:
 case|case
 name|AML_DIVIDE_OP
+case|:
+case|case
+name|AML_MOD_OP
 case|:
 case|case
 name|AML_MULTIPLY_OP
@@ -1256,7 +1259,7 @@ block|{
 name|REPORT_ERROR
 argument_list|(
 operator|(
-literal|"ExDyadic2R/DivideOp: Divide by zero\n"
+literal|"DivideOp: Divide by zero\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1319,6 +1322,59 @@ operator|.
 name|Value
 operator|=
 name|ACPI_DIVIDE
+argument_list|(
+name|ObjDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|,
+name|ObjDesc2
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* DefMod   :=  ModOp Dividend Divisor Remainder  */
+case|case
+name|AML_MOD_OP
+case|:
+comment|/* ACPI 2.0 */
+if|if
+condition|(
+operator|!
+name|ObjDesc2
+operator|->
+name|Integer
+operator|.
+name|Value
+condition|)
+block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"ModOp: Divide by zero\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_AML_DIVIDE_BY_ZERO
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* Remainder (modulo) */
+name|RetDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|=
+name|ACPI_MODULO
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1447,6 +1503,8 @@ name|Status
 operator|=
 name|AcpiExConvertToInteger
 argument_list|(
+name|ObjDesc2
+argument_list|,
 operator|&
 name|ObjDesc2
 argument_list|,
@@ -1461,8 +1519,12 @@ name|Status
 operator|=
 name|AcpiExConvertToString
 argument_list|(
+name|ObjDesc2
+argument_list|,
 operator|&
 name|ObjDesc2
+argument_list|,
+name|ACPI_UINT32_MAX
 argument_list|,
 name|WalkState
 argument_list|)
@@ -1475,6 +1537,8 @@ name|Status
 operator|=
 name|AcpiExConvertToBuffer
 argument_list|(
+name|ObjDesc2
+argument_list|,
 operator|&
 name|ObjDesc2
 argument_list|,
@@ -1527,6 +1591,46 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+break|break;
+comment|/* DefToString  := Buffer, Length, Result */
+case|case
+name|AML_TO_STRING_OP
+case|:
+comment|/* ACPI 2.0 */
+name|Status
+operator|=
+name|AcpiExConvertToString
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|RetDesc
+argument_list|,
+operator|(
+name|UINT32
+operator|)
+name|ObjDesc2
+operator|->
+name|Integer
+operator|.
+name|Value
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* DefConcatRes := Buffer, Buffer, Result */
+case|case
+name|AML_CONCAT_RES_OP
+case|:
+comment|/* ACPI 2.0 */
+name|Status
+operator|=
+name|AE_NOT_IMPLEMENTED
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 break|break;
 default|default:
 name|REPORT_ERROR
@@ -1660,7 +1764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2S  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2S  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic synchronization operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1774,7 +1878,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1943,7 +2047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExDyadic2  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Type 2 dyadic operator with numeric operands and  *              no result operands  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *              containing result value  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2060,7 +2164,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -2222,6 +2326,19 @@ operator|.
 name|Value
 argument_list|)
 expr_stmt|;
+break|break;
+comment|/* DefCopy  := Source, Destination */
+case|case
+name|AML_COPY_OP
+case|:
+comment|/* ACPI 2.0 */
+name|Status
+operator|=
+name|AE_NOT_IMPLEMENTED
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 break|break;
 default|default:
 name|REPORT_ERROR

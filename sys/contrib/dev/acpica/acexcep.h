@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -634,7 +634,6 @@ comment|/*  * String versions of the exception codes above  * These strings must
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_ExceptionNames_Env
@@ -699,7 +698,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_ExceptionNames_Pgm
@@ -720,7 +718,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_ExceptionNames_Tbl
@@ -739,7 +736,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_ExceptionNames_Aml
@@ -800,7 +796,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|NATIVE_CHAR
 modifier|*
 name|AcpiGbl_ExceptionNames_Ctrl
@@ -832,7 +827,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DEFINE_ACPI_GLOBALS */
+comment|/* ACPI GLOBALS */
 end_comment
 
 begin_endif

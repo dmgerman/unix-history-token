@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 72 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: evsci - System Control Interrupt configuration and  *                      legacy to ACPI mode state transition functions  *              $Revision: 73 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -412,7 +412,7 @@ condition|(
 name|AcpiGbl_GpeRegisters
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_GpeRegisters
 argument_list|)
@@ -423,7 +423,7 @@ condition|(
 name|AcpiGbl_GpeInfo
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_GpeInfo
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML (p-code) execution for monadic operators  *              $Revision: 99 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmonad - ACPI AML execution for monadic (1 operand) operators  *              $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -276,9 +276,14 @@ block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
+init|=
+name|NULL
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|ACPI_STATUS
+name|ResolveStatus
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
@@ -287,8 +292,8 @@ argument_list|,
 name|WALK_OPERANDS
 argument_list|)
 expr_stmt|;
-comment|/* Resolve all operands */
-name|Status
+comment|/* Resolve the operand */
+name|ResolveStatus
 operator|=
 name|AcpiExResolveOperands
 argument_list|(
@@ -315,9 +320,9 @@ argument_list|,
 literal|"after AcpiExResolveOperands"
 argument_list|)
 expr_stmt|;
-comment|/* Get all operands */
+comment|/* Get the operand */
 name|Status
-operator||=
+operator|=
 name|AcpiDsObjStackPopObject
 argument_list|(
 operator|&
@@ -326,6 +331,38 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+comment|/* Check operand status */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|ResolveStatus
+argument_list|)
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"[%s]: Could not resolve operands, %s\n"
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Opcode
+argument_list|)
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|ResolveStatus
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -339,14 +376,14 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"bad operand(s) %s\n"
+literal|"[%s]: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -516,6 +553,9 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_STATUS
+name|ResolveStatus
+decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
@@ -533,7 +573,7 @@ name|WALK_OPERANDS
 argument_list|)
 expr_stmt|;
 comment|/* Resolve all operands */
-name|Status
+name|ResolveStatus
 operator|=
 name|AcpiExResolveOperands
 argument_list|(
@@ -562,7 +602,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Get all operands */
 name|Status
-operator||=
+operator|=
 name|AcpiDsObjStackPopObject
 argument_list|(
 operator|&
@@ -581,6 +621,38 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+comment|/* Now we can check the status codes */
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|ResolveStatus
+argument_list|)
+condition|)
+block|{
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"[%s]: Could not resolve operands, %s\n"
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Opcode
+argument_list|)
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|ResolveStatus
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -594,14 +666,14 @@ argument_list|(
 name|ACPI_ERROR
 argument_list|,
 operator|(
-literal|"bad operand(s) %s\n"
+literal|"[%s]: bad operand(s) %s\n"
 operator|,
 name|AcpiPsGetOpcodeName
 argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1194,6 +1266,82 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/*      * ACPI 2.0 Opcodes      */
+case|case
+name|AML_TO_DECSTRING_OP
+case|:
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_ERROR
+argument_list|,
+operator|(
+literal|"%s is not implemented\n"
+operator|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|Opcode
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_NOT_IMPLEMENTED
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+break|break;
+case|case
+name|AML_TO_HEXSTRING_OP
+case|:
+name|Status
+operator|=
+name|AcpiExConvertToString
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|RetDesc
+argument_list|,
+name|ACPI_UINT32_MAX
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_TO_BUFFER_OP
+case|:
+name|Status
+operator|=
+name|AcpiExConvertToBuffer
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|RetDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_TO_INTEGER_OP
+case|:
+name|Status
+operator|=
+name|AcpiExConvertToInteger
+argument_list|(
+name|ObjDesc
+argument_list|,
+operator|&
+name|RetDesc
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/*      * These are obsolete opcodes      */
 comment|/*  DefShiftLeftBit     :=  ShiftLeftBitOp      Source          BitNum  */
 comment|/*  DefShiftRightBit    :=  ShiftRightBitOp     Source          BitNum  */
@@ -1421,7 +1569,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|ResolveStatus
 argument_list|)
@@ -1452,7 +1600,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1626,7 +1774,7 @@ argument_list|(
 name|Opcode
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

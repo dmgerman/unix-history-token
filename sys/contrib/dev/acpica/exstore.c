@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 139 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 140 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1074,17 +1074,6 @@ literal|"ExStoreObjectToNode"
 argument_list|)
 expr_stmt|;
 comment|/*      * Assuming the parameters were already validated      */
-name|ACPI_ASSERT
-argument_list|(
-operator|(
-name|Node
-operator|)
-operator|&&
-operator|(
-name|SourceDesc
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/*      * Get current type of the node, and object attached to Node      */
 name|TargetType
 operator|=
@@ -1352,17 +1341,6 @@ literal|"ExStoreObjectToObject"
 argument_list|)
 expr_stmt|;
 comment|/*      *  Assuming the parameters are valid!      */
-name|ACPI_ASSERT
-argument_list|(
-operator|(
-name|DestDesc
-operator|)
-operator|&&
-operator|(
-name|SourceDesc
-operator|)
-argument_list|)
-expr_stmt|;
 name|DEBUG_PRINTP
 argument_list|(
 name|ACPI_INFO

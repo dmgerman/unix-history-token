@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswstate - Dispatcher parse tree walk management routines  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2148,7 +2148,7 @@ block|}
 else|else
 block|{
 comment|/* The cache is empty, create a new object */
-comment|/* Avoid deadlock with AcpiUtCallocate */
+comment|/* Avoid deadlock with ACPI_MEM_CALLOCATE */
 name|AcpiUtReleaseMutex
 argument_list|(
 name|ACPI_MTX_CACHES
@@ -2156,7 +2156,7 @@ argument_list|)
 expr_stmt|;
 name|WalkState
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2408,7 +2408,7 @@ operator|>=
 name|MAX_WALK_CACHE_DEPTH
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|WalkState
 argument_list|)
@@ -2499,7 +2499,7 @@ name|AcpiGbl_WalkStateCache
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_WalkStateCache
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psopcode - Parser opcode information table  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2684,7 +2684,7 @@ name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
 operator||
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 operator||
 name|AML_HAS_ARGS
 argument_list|,
@@ -2701,7 +2701,7 @@ name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
 operator||
-name|OPTYPE_MATCH
+name|OPTYPE_HEXADIC
 operator||
 name|AML_HAS_ARGS
 argument_list|,
@@ -3331,7 +3331,7 @@ name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
 operator||
-name|OPTYPE_FATAL
+name|OPTYPE_TRIADIC
 operator||
 name|AML_HAS_ARGS
 argument_list|,
@@ -3821,7 +3821,7 @@ name|ARGI_TO_BUFFER_OP
 argument_list|)
 block|,
 comment|/*  74 */
-comment|/* AML_TO_DEC_STR_OP */
+comment|/* AML_TO_DECSTR_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3838,7 +3838,7 @@ name|ARGI_TO_DEC_STR_OP
 argument_list|)
 block|,
 comment|/*  75 */
-comment|/* AML_TO_HEX_STR_OP */
+comment|/* AML_TO_HEXSTR_OP */
 name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
@@ -3877,7 +3877,7 @@ name|OP_INFO_ENTRY
 argument_list|(
 name|ACPI_OP_TYPE_OPCODE
 operator||
-name|OPTYPE_MONADIC2R
+name|OPTYPE_DYADIC2R
 operator||
 name|AML_HAS_ARGS
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxfroot - Find the root ACPI table (RSDT)  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -53,13 +53,16 @@ value|20
 end_define
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpPhysicalAddress       - Where to place the RSDP address  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiFindRootPointer  *  * PARAMETERS:  **RsdpPhysicalAddress       - Where to place the RSDP address  *              Flags                       - Logical/Physical addressing  *  * RETURN:      Status, Physical address of the RSDP  *  * DESCRIPTION: Find the RSDP  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|AcpiFindRootPointer
 parameter_list|(
+name|UINT32
+name|Flags
+parameter_list|,
 name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|RsdpPhysicalAddress
@@ -84,7 +87,7 @@ argument_list|(
 operator|&
 name|TableInfo
 argument_list|,
-name|ACPI_LOGICAL_ADDRESSING
+name|Flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -212,6 +215,17 @@ literal|0
 condition|)
 block|{
 comment|/* If so, we have found the RSDP */
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_INFO
+argument_list|,
+operator|(
+literal|"RSDP located at physical address %p\n"
+operator|,
+name|MemRover
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_PTR
 argument_list|(
 name|MemRover
@@ -220,6 +234,15 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Searched entire block, no RSDP was found */
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_INFO
+argument_list|,
+operator|(
+literal|"Searched entire block, no RSDP was found.\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|return_PTR
 argument_list|(
 name|NULL
@@ -543,9 +566,6 @@ block|{
 name|ACPI_PHYSICAL_ADDRESS
 name|PhysicalAddress
 decl_stmt|;
-name|ACPI_TABLE_DESC
-name|TableInfo
-decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
 name|RsdtPtr
@@ -604,15 +624,15 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the RSDP by scanning low memory */
+comment|/* Get the RSDP */
 name|Status
 operator|=
-name|AcpiTbFindRsdp
+name|AcpiOsGetRootPointer
 argument_list|(
-operator|&
-name|TableInfo
-argument_list|,
 name|Flags
+argument_list|,
+operator|&
+name|PhysicalAddress
 argument_list|)
 expr_stmt|;
 if|if
@@ -625,10 +645,10 @@ condition|)
 block|{
 name|DEBUG_PRINTP
 argument_list|(
-name|ACPI_ERROR
+name|ACPI_INFO
 argument_list|,
 operator|(
-literal|"RSDP structure not found\n"
+literal|"RSDP  not found\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -644,9 +664,35 @@ operator|(
 name|RSDP_DESCRIPTOR
 operator|*
 operator|)
-name|TableInfo
-operator|.
-name|Pointer
+operator|(
+name|ACPI_TBLPTR
+operator|)
+name|PhysicalAddress
+expr_stmt|;
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_INFO
+argument_list|,
+operator|(
+literal|"RSDP located at %p, RSDT physical=%8.8lX%8.8lX \n"
+operator|,
+name|AcpiGbl_RSDP
+operator|,
+name|HIDWORD
+argument_list|(
+name|AcpiGbl_RSDP
+operator|->
+name|RsdtPhysicalAddress
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|AcpiGbl_RSDP
+operator|->
+name|RsdtPhysicalAddress
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Get the RSDT and validate it */
 name|PhysicalAddress

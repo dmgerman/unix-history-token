@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1539,18 +1539,29 @@ name|OPTYPE_DYADIC2S
 value|12
 end_define
 
+begin_comment
+comment|/* Multi-operand (>=3) opcodes */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPTYPE_MATCH
+name|OPTYPE_QUADRADIC
 value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPTYPE_HEXADIC
+value|15
 end_define
 
 begin_comment
@@ -1561,7 +1572,7 @@ begin_define
 define|#
 directive|define
 name|OPTYPE_METHOD_CALL
-value|15
+value|16
 end_define
 
 begin_comment
@@ -1572,13 +1583,6 @@ begin_define
 define|#
 directive|define
 name|OPTYPE_CREATE_FIELD
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPTYPE_FATAL
 value|17
 end_define
 
