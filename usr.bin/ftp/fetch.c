@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id$"
+literal|"$Id: fetch.c,v 1.3 1997/12/13 20:38:16 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -783,6 +783,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|host
 index|[
 literal|0

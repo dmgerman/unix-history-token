@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$	*/
+comment|/*	$Id: ftp.c,v 1.11 1997/12/13 20:38:17 pst Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id$"
+literal|"$Id: ftp.c,v 1.11 1997/12/13 20:38:17 pst Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1646,6 +1646,10 @@ literal|4
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -1686,6 +1690,10 @@ literal|1
 operator|&&
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
