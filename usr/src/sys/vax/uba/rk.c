@@ -12,7 +12,7 @@ name|RKBDEBUG
 end_define
 
 begin_comment
-comment|/*	rk.c	4.41	82/06/14	*/
+comment|/*	rk.c	4.42	82/07/15	*/
 end_comment
 
 begin_include
@@ -693,7 +693,11 @@ name|RK_CDT
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|rkdevice
+argument_list|)
 operator|)
 return|;
 block|}

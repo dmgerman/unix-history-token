@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.5	82/05/27	*/
+comment|/*	uda.c	4.6	82/07/15	*/
 end_comment
 
 begin_include
@@ -685,7 +685,11 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|udadevice
+argument_list|)
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dn.c	4.4	82/04/25	*/
+comment|/*	dn.c	4.5	82/07/15	*/
 end_comment
 
 begin_include
@@ -376,6 +376,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dndevice
+argument_list|)
+operator|)
+return|;
 block|}
 end_block
 

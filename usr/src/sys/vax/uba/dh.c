@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.45	82/07/13	*/
+comment|/*	dh.c	4.46	82/07/15	*/
 end_comment
 
 begin_include
@@ -1124,7 +1124,11 @@ endif|#
 directive|endif
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|dhdevice
+argument_list|)
 operator|)
 return|;
 block|}

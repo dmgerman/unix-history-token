@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpa.c	4.1	82/05/27	*/
+comment|/*	lpa.c	4.2	82/07/15	*/
 end_comment
 
 begin_include
@@ -1155,7 +1155,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lpadevice
+argument_list|)
 operator|)
 return|;
 block|}

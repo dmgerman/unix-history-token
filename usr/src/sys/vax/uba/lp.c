@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lp.c	4.25	82/06/14	*/
+comment|/*	lp.c	4.26	82/07/15	*/
 end_comment
 
 begin_include
@@ -451,11 +451,6 @@ name|cvec
 operator|=
 literal|0200
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 else|#
 directive|else
 name|lpaddr
@@ -475,13 +470,17 @@ name|lpsr
 operator|=
 literal|0
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 endif|#
 directive|endif
+return|return
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|lpdevice
+argument_list|)
+operator|)
+return|;
 block|}
 end_block
 

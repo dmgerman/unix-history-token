@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.24	82/07/13	*/
+comment|/*	ts.c	4.25	82/07/15	*/
 end_comment
 
 begin_include
@@ -509,7 +509,11 @@ literal|0x15
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|tsdevice
+argument_list|)
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.55	82/06/14	*/
+comment|/*	up.c	4.56	82/07/15	*/
 end_comment
 
 begin_include
@@ -755,7 +755,11 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|updevice
+argument_list|)
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.38	82/05/19	*/
+comment|/*	dz.c	4.39	82/07/15	*/
 end_comment
 
 begin_include
@@ -755,7 +755,7 @@ begin_define
 define|#
 directive|define
 name|dzmtsr
-value|dzun.dz32.dztbuf0;
+value|dzun.dz32.dztbuf0
 end_define
 
 begin_define
@@ -1042,7 +1042,11 @@ literal|4
 expr_stmt|;
 return|return
 operator|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|device
+argument_list|)
 operator|)
 return|;
 block|}
