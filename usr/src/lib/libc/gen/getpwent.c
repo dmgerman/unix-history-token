@@ -112,7 +112,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINELENGTH
-value|200
+value|1024
 end_define
 
 begin_decl_stmt
@@ -142,6 +142,10 @@ argument_list|()
 block|,
 operator|*
 name|strsep
+argument_list|()
+block|,
+operator|*
+name|index
 argument_list|()
 block|;
 for|for
@@ -174,6 +178,41 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* skip lines that are too big */
+if|if
+condition|(
+operator|!
+name|index
+argument_list|(
+name|cp
+argument_list|,
+literal|'\n'
+argument_list|)
+condition|)
+block|{
+name|int
+name|ch
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getc
+argument_list|(
+name|_pw_fp
+argument_list|)
+operator|)
+operator|!=
+literal|'\n'
+operator|&&
+name|ch
+operator|!=
+name|EOF
+condition|)
+empty_stmt|;
+continue|continue;
+block|}
 name|_pw_passwd
 operator|.
 name|pw_name
@@ -185,6 +224,9 @@ argument_list|,
 literal|":\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_passwd
@@ -200,6 +242,9 @@ argument_list|,
 literal|":\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -219,6 +264,9 @@ argument_list|)
 operator|)
 condition|)
 continue|continue;
+end_if
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_uid
@@ -228,6 +276,9 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -247,6 +298,9 @@ argument_list|)
 operator|)
 condition|)
 continue|continue;
+end_if
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_gid
@@ -256,6 +310,9 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_gecos
@@ -271,6 +328,9 @@ argument_list|,
 literal|":\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_dir
@@ -286,6 +346,9 @@ argument_list|,
 literal|":\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|_pw_passwd
 operator|.
 name|pw_shell
@@ -301,6 +364,9 @@ argument_list|,
 literal|":\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|_pw_passwd
@@ -326,7 +392,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_expr_stmt
+end_if
 
 begin_comment
 unit|}
