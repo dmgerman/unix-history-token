@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)overwrite.c	5.11 (Berkeley) %G%"
+literal|"@(#)overwrite.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,7 +178,7 @@ name|endx
 condition|)
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 ifdef|#
@@ -292,7 +292,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)erase.c	5.10 (Berkeley) %G%"
+literal|"@(#)erase.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,7 +214,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

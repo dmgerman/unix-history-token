@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getstr.c	5.7 (Berkeley) %G%"
+literal|"@(#)getstr.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,7 +69,7 @@ name|win
 argument_list|)
 operator|)
 operator|!=
-name|CURSES_ERR
+name|ERR
 operator|&&
 operator|*
 name|str
@@ -84,7 +84,7 @@ condition|(
 operator|*
 name|str
 operator|==
-name|CURSES_ERR
+name|ERR
 condition|)
 block|{
 operator|*
@@ -94,7 +94,7 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 block|}
@@ -105,7 +105,7 @@ literal|'\0'
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

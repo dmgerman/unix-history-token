@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)box.c	5.10 (Berkeley) %G%"
+literal|"@(#)box.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

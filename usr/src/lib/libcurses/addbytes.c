@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addbytes.c	5.14 (Berkeley) %G%"
+literal|"@(#)addbytes.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,11 +205,11 @@ literal|8
 operator|)
 argument_list|)
 operator|==
-name|CURSES_ERR
+name|ERR
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 name|SYNCH_IN
@@ -665,7 +665,7 @@ name|SYNCH_OUT
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

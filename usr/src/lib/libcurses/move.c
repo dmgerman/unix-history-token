@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	5.10 (Berkeley) %G%"
+literal|"@(#)move.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,7 +86,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 if|if
@@ -105,7 +105,7 @@ name|maxy
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 name|win
@@ -134,7 +134,7 @@ name|__ISPASTEOL
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

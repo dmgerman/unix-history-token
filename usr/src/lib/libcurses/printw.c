@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printw.c	5.13 (Berkeley) %G%"
+literal|"@(#)printw.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,11 +348,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|CURSES_OK
+name|OK
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 name|ret
@@ -475,11 +475,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|CURSES_OK
+name|OK
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 name|ret
@@ -571,7 +571,7 @@ name|buf
 operator|++
 argument_list|)
 operator|==
-name|CURSES_ERR
+name|ERR
 condition|)
 return|return
 operator|(
@@ -642,7 +642,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 operator|(
@@ -664,9 +664,9 @@ argument_list|(
 name|f
 argument_list|)
 condition|?
-name|CURSES_ERR
+name|ERR
 else|:
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

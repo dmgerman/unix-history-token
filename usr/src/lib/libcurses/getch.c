@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getch.c	5.9 (Berkeley) %G%"
+literal|"@(#)getch.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -97,7 +97,7 @@ literal|1
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 ifdef|#

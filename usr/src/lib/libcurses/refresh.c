@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.26 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,11 +525,11 @@ argument_list|,
 name|wy
 argument_list|)
 operator|==
-name|CURSES_ERR
+name|ERR
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 else|else
@@ -839,7 +839,7 @@ block|}
 block|}
 name|retval
 operator|=
-name|CURSES_OK
+name|OK
 expr_stmt|;
 name|_win
 operator|=
@@ -999,7 +999,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 name|wx
@@ -1028,7 +1028,7 @@ name|maxx
 condition|)
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 elseif|else
@@ -1066,7 +1066,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 elseif|else
@@ -1621,7 +1621,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}
@@ -1894,7 +1894,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}
@@ -1915,7 +1915,7 @@ name|wx
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 block|}
@@ -2176,7 +2176,7 @@ directive|endif
 block|}
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)toucholap.c	5.9 (Berkeley) %G%"
+literal|"@(#)toucholap.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,7 +240,7 @@ name|endx
 condition|)
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 name|starty
@@ -298,7 +298,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}

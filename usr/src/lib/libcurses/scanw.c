@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scanw.c	5.12 (Berkeley) %G%"
+literal|"@(#)scanw.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,11 +309,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|CURSES_OK
+name|OK
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 if|#
@@ -434,11 +434,11 @@ argument_list|,
 name|x
 argument_list|)
 operator|!=
-name|CURSES_OK
+name|OK
 condition|)
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 if|#
@@ -527,7 +527,7 @@ argument_list|,
 name|buf
 argument_list|)
 operator|==
-name|CURSES_OK
+name|OK
 condition|?
 name|vsscanf
 argument_list|(
@@ -538,7 +538,7 @@ argument_list|,
 name|ap
 argument_list|)
 else|:
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)insch.c	5.10 (Berkeley) %G%"
+literal|"@(#)insch.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,12 +252,12 @@ block|}
 else|else
 return|return
 operator|(
-name|CURSES_ERR
+name|ERR
 operator|)
 return|;
 return|return
 operator|(
-name|CURSES_OK
+name|OK
 operator|)
 return|;
 block|}
