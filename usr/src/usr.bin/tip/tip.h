@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.h	4.2	81/06/02	*/
+comment|/*	tip.h	4.3	81/06/16	*/
 end_comment
 
 begin_comment
@@ -190,6 +190,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* this host is dialed up */
+end_comment
+
+begin_decl_stmt
+name|char
+name|HW
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* this device is hardwired, see hunt.c */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hunt.c	4.1	81/05/09	*/
+comment|/*	hunt.c	4.2	81/06/16	*/
 end_comment
 
 begin_include
@@ -134,6 +134,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * Straight through call units, such as the BIZCOMP 		 *  and the DF, must indicate they're hardwired in 		 *  order to get an open file descriptor placed in FD. 		 * Otherwise, as for a DN-11, the open will have to 		 *  be done in the "open" routine. 		 */
+if|if
+condition|(
+operator|!
+name|HW
+condition|)
+break|break;
 name|alarm
 argument_list|(
 literal|10

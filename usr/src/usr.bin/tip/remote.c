@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	remote.c	4.1	81/05/09	*/
+comment|/*	remote.c	4.2	81/06/16	*/
 end_comment
 
 begin_include
@@ -246,6 +246,13 @@ operator|=
 name|rgetflag
 argument_list|(
 literal|"du"
+argument_list|)
+expr_stmt|;
+name|HW
+operator|=
+name|rgetflag
+argument_list|(
+literal|"hw"
 argument_list|)
 expr_stmt|;
 if|if
