@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.31	%G%	*/
+comment|/*	machdep.c	3.32	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.31) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.32) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,10 +390,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: the date is silly; reset it!\n"
+literal|"WARNING: silly date in file system"
 argument_list|)
 expr_stmt|;
-name|base
+name|time
 operator|=
 literal|6
 operator|*
@@ -407,6 +407,12 @@ name|SECDAY
 operator|/
 literal|2
 expr_stmt|;
+name|clkset
+argument_list|()
+expr_stmt|;
+goto|goto
+name|check
+goto|;
 block|}
 comment|/* 	 * Have been told that VMS keeps time internally with base TODRZERO. 	 * If this is correct, then this routine and VMS should maintain 	 * the same date, and switching shouldn't be painful. 	 */
 if|if
@@ -1331,6 +1337,18 @@ index|]
 operator|&=
 operator|~
 name|PSL_USERCLR
+expr_stmt|;
+name|u
+operator|.
+name|u_ar0
+index|[
+name|SP
+index|]
+operator|=
+operator|(
+name|int
+operator|)
+name|sp
 expr_stmt|;
 block|}
 end_block
