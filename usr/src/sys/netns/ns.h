@@ -284,6 +284,21 @@ block|}
 union|;
 end_union
 
+begin_union
+union|union
+name|ns_net_u
+block|{
+name|union
+name|ns_net
+name|net_e
+decl_stmt|;
+name|u_long
+name|long_e
+decl_stmt|;
+block|}
+union|;
+end_union
+
 begin_struct
 struct|struct
 name|ns_addr
