@@ -1670,11 +1670,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|,
-name|descr
-index|[
-name|BUFSIZ
-index|]
-decl_stmt|,
 modifier|*
 name|fmt
 decl_stmt|;
