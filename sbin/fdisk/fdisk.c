@@ -2704,7 +2704,7 @@ name|mboot
 operator|.
 name|parts
 index|[
-literal|3
+literal|0
 index|]
 operator|)
 decl_stmt|;
@@ -2856,7 +2856,7 @@ if|if
 condition|(
 name|i
 operator|==
-literal|4
+literal|1
 condition|)
 block|{
 name|init_sector0
@@ -2866,7 +2866,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nThe static data for the DOS partition 4 has been reinitialized to:\n"
+literal|"\nThe static data for the slice 1 has been reinitialized to:\n"
 argument_list|)
 expr_stmt|;
 name|print_part
