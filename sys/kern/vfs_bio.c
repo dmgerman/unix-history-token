@@ -2241,6 +2241,12 @@ name|QUEUE_EMPTY
 expr_stmt|;
 name|bp
 operator|->
+name|b_vflags
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
 name|b_xflags
 operator|=
 literal|0
@@ -7147,6 +7153,12 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
+name|b_vflags
+operator|=
+literal|0
+expr_stmt|;
+name|bp
+operator|->
 name|b_dev
 operator|=
 name|NODEV
@@ -11950,7 +11962,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" iosize: %ld, lblkno: %jd, flags: 0x%lx, npages: %d\n"
+literal|" iosize: %ld, lblkno: %jd, flags: 0x%x, npages: %d\n"
 argument_list|,
 name|bp
 operator|->
@@ -11981,7 +11993,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" VDEV, lblkno: %jd, flags: 0x%lx, npages: %d\n"
+literal|" VDEV, lblkno: %jd, flags: 0x%x, npages: %d\n"
 argument_list|,
 operator|(
 name|intmax_t

@@ -192,7 +192,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
+comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  *  *	All fields are protected by the buffer lock except those marked:  *		V - Protected by owning vnode lock  *		Q - Protected by the buf queue lock  *		D - Protected by an dependency implementation specific lock  */
 end_comment
 
 begin_struct
@@ -310,35 +310,39 @@ argument|buf
 argument_list|)
 name|b_vnbufs
 expr_stmt|;
-comment|/* Buffer's associated vnode. */
+comment|/* (V) Buffer's associated vnode. */
 name|struct
 name|buf
 modifier|*
 name|b_left
 decl_stmt|;
-comment|/* splay tree link (V) */
+comment|/* (V) splay tree link */
 name|struct
 name|buf
 modifier|*
 name|b_right
 decl_stmt|;
-comment|/* splay tree link (V) */
+comment|/* (V) splay tree link */
+name|uint32_t
+name|b_vflags
+decl_stmt|;
+comment|/* (V) BV_* flags */
 name|TAILQ_ENTRY
 argument_list|(
 argument|buf
 argument_list|)
 name|b_freelist
 expr_stmt|;
-comment|/* Free list position if not active. */
-name|long
-name|b_flags
-decl_stmt|;
-comment|/* B_* flags. */
+comment|/* (Q) Free list position inactive. */
 name|unsigned
 name|short
 name|b_qindex
 decl_stmt|;
-comment|/* buffer queue index */
+comment|/* (Q) buffer queue index */
+name|uint32_t
+name|b_flags
+decl_stmt|;
+comment|/* B_* flags. */
 name|b_xflags_t
 name|b_xflags
 decl_stmt|;
@@ -456,7 +460,7 @@ name|struct
 name|workhead
 name|b_dep
 decl_stmt|;
-comment|/* List of filesystem dependencies. */
+comment|/* (D) List of filesystem dependencies. */
 block|}
 struct|;
 end_struct
@@ -607,12 +611,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|B_SCANNED
+name|B_00001000
 value|0x00001000
 end_define
 
 begin_comment
-comment|/* VOP_FSYNC funcs mark written bufs */
+comment|/* Available flag. */
 end_comment
 
 begin_define
@@ -921,6 +925,17 @@ end_define
 
 begin_comment
 comment|/* No buffer offset calculated yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BV_SCANNED
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* VOP_FSYNC funcs mark written bufs */
 end_comment
 
 begin_ifdef
