@@ -810,17 +810,6 @@ name|error
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|new
-operator|!=
-name|i
-condition|)
-name|panic
-argument_list|(
-literal|"dup2: fdalloc"
-argument_list|)
-expr_stmt|;
 comment|/* 		 * fdalloc() may block, retest everything. 		 */
 goto|goto
 name|retry
