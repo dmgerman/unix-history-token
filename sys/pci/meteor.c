@@ -211,7 +211,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
-name|int
+name|void
 name|meteor_intr
 name|__P
 argument_list|(
@@ -1455,7 +1455,7 @@ end_comment
 
 begin_function
 specifier|static
-name|int
+name|void
 name|meteor_intr
 parameter_list|(
 name|void
@@ -2177,11 +2177,6 @@ operator||=
 literal|0x7
 expr_stmt|;
 comment|/* clear interrupt status */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.52 1996/01/05 16:13:44 gibbs Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/eisa/aic7770.c	27/284X and aic7770 motherboard controllers  * pci/aic7870.c	3940, 2940, aic7870 and aic7850 controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.53 1996/01/07 19:24:31 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2153,8 +2153,8 @@ comment|/*  * Catch an interrupt from the adaptor  */
 end_comment
 
 begin_function
-name|int
-name|ahcintr
+name|void
+name|ahc_intr
 parameter_list|(
 name|arg
 parameter_list|)
@@ -2223,9 +2223,7 @@ operator|&
 name|INT_PEND
 operator|)
 condition|)
-return|return
-literal|0
-return|;
+return|return;
 if|if
 condition|(
 name|intstat
@@ -3204,7 +3202,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc%d:%c:%d: ahcintr - referenced scb "
+literal|"ahc%d:%c:%d: ahc_intr - referenced scb "
 literal|"not valid during seqint 0x%x scb(%d)\n"
 argument_list|,
 name|ahc
@@ -4000,7 +3998,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"ahcintr: AWAITING_MSG for an SCB that"
+literal|"ahc_intr: AWAITING_MSG for an SCB that"
 literal|"does not have a waiting message"
 argument_list|)
 expr_stmt|;
@@ -4164,7 +4162,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"ahcintr: Immediate complete for "
+literal|"ahc_intr: Immediate complete for "
 literal|"unknown operation."
 argument_list|)
 expr_stmt|;
@@ -4273,7 +4271,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc%d: ahcintr - referenced scb not "
+literal|"ahc%d: ahc_intr - referenced scb not "
 literal|"valid during scsiint 0x%x scb(%d)\n"
 argument_list|,
 name|ahc
@@ -4843,28 +4841,6 @@ argument_list|)
 condition|)
 do|;
 block|}
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|ahc_eisa_intr
-parameter_list|(
-name|arg
-parameter_list|)
-name|void
-modifier|*
-name|arg
-decl_stmt|;
-block|{
-name|ahcintr
-argument_list|(
-name|arg
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
