@@ -4373,6 +4373,13 @@ name|slpflag
 decl_stmt|,
 name|slptimeo
 decl_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|"nfs_vinvalbuf"
+argument_list|)
+expr_stmt|;
 name|VI_LOCK
 argument_list|(
 name|vp
@@ -5554,13 +5561,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-name|ASSERT_VOP_LOCKED
-argument_list|(
-name|vp
-argument_list|,
-literal|"nfs_doio"
-argument_list|)
-expr_stmt|;
+comment|/* ASSERT_VOP_LOCKED(vp, "nfs_doio"); */
 if|if
 condition|(
 name|p
