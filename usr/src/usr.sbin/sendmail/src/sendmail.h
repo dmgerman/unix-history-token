@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.56 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.57 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.56		%G%"
+literal|"@(#)sendmail.h	8.57		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,7 +501,7 @@ begin_define
 define|#
 directive|define
 name|QDONTSEND
-value|000001
+value|0x0001
 end_define
 
 begin_comment
@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|QBADADDR
-value|000002
+value|0x0002
 end_define
 
 begin_comment
@@ -523,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|QGOODUID
-value|000004
+value|0x0004
 end_define
 
 begin_comment
@@ -534,7 +534,7 @@ begin_define
 define|#
 directive|define
 name|QPRIMARY
-value|000010
+value|0x0008
 end_define
 
 begin_comment
@@ -545,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|QQUEUEUP
-value|000020
+value|0x0010
 end_define
 
 begin_comment
@@ -556,7 +556,7 @@ begin_define
 define|#
 directive|define
 name|QSENT
-value|000040
+value|0x0020
 end_define
 
 begin_comment
@@ -567,7 +567,7 @@ begin_define
 define|#
 directive|define
 name|QNOTREMOTE
-value|000100
+value|0x0040
 end_define
 
 begin_comment
@@ -578,7 +578,7 @@ begin_define
 define|#
 directive|define
 name|QSELFREF
-value|000200
+value|0x0080
 end_define
 
 begin_comment
@@ -589,7 +589,7 @@ begin_define
 define|#
 directive|define
 name|QVERIFIED
-value|000400
+value|0x0100
 end_define
 
 begin_comment
@@ -600,7 +600,7 @@ begin_define
 define|#
 directive|define
 name|QREPORT
-value|001000
+value|0x0200
 end_define
 
 begin_comment
@@ -611,7 +611,7 @@ begin_define
 define|#
 directive|define
 name|QBOGUSSHELL
-value|002000
+value|0x0400
 end_define
 
 begin_comment
@@ -622,7 +622,7 @@ begin_define
 define|#
 directive|define
 name|QUNSAFEADDR
-value|004000
+value|0x0800
 end_define
 
 begin_comment
@@ -1295,7 +1295,7 @@ begin_define
 define|#
 directive|define
 name|H_EOH
-value|00001
+value|0x0001
 end_define
 
 begin_comment
@@ -1306,7 +1306,7 @@ begin_define
 define|#
 directive|define
 name|H_RCPT
-value|00002
+value|0x0002
 end_define
 
 begin_comment
@@ -1317,7 +1317,7 @@ begin_define
 define|#
 directive|define
 name|H_DEFAULT
-value|00004
+value|0x0004
 end_define
 
 begin_comment
@@ -1328,7 +1328,7 @@ begin_define
 define|#
 directive|define
 name|H_RESENT
-value|00010
+value|0x0008
 end_define
 
 begin_comment
@@ -1339,7 +1339,7 @@ begin_define
 define|#
 directive|define
 name|H_CHECK
-value|00020
+value|0x0010
 end_define
 
 begin_comment
@@ -1350,7 +1350,7 @@ begin_define
 define|#
 directive|define
 name|H_ACHECK
-value|00040
+value|0x0020
 end_define
 
 begin_comment
@@ -1361,7 +1361,7 @@ begin_define
 define|#
 directive|define
 name|H_FORCE
-value|00100
+value|0x0040
 end_define
 
 begin_comment
@@ -1372,7 +1372,7 @@ begin_define
 define|#
 directive|define
 name|H_TRACE
-value|00200
+value|0x0080
 end_define
 
 begin_comment
@@ -1383,7 +1383,7 @@ begin_define
 define|#
 directive|define
 name|H_FROM
-value|00400
+value|0x0100
 end_define
 
 begin_comment
@@ -1394,7 +1394,7 @@ begin_define
 define|#
 directive|define
 name|H_VALID
-value|01000
+value|0x0200
 end_define
 
 begin_comment
@@ -1405,7 +1405,7 @@ begin_define
 define|#
 directive|define
 name|H_RECEIPTTO
-value|02000
+value|0x0400
 end_define
 
 begin_comment
@@ -1416,11 +1416,22 @@ begin_define
 define|#
 directive|define
 name|H_ERRORSTO
-value|04000
+value|0x0800
 end_define
 
 begin_comment
 comment|/* this field has error address info */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_CTE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* this field is a content-transfer-encoding */
 end_comment
 
 begin_escape
@@ -1516,7 +1527,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_VALID
-value|000001
+value|0x0001
 end_define
 
 begin_comment
@@ -1527,7 +1538,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_TEMP
-value|000002
+value|0x0002
 end_define
 
 begin_comment
@@ -1538,7 +1549,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_CACHED
-value|000004
+value|0x0004
 end_define
 
 begin_comment
@@ -1549,7 +1560,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_ESMTP
-value|000010
+value|0x0008
 end_define
 
 begin_comment
@@ -1560,7 +1571,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_EXPN
-value|000020
+value|0x0010
 end_define
 
 begin_comment
@@ -1571,7 +1582,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_SIZE
-value|000040
+value|0x0020
 end_define
 
 begin_comment
@@ -1582,7 +1593,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_8BITMIME
-value|000100
+value|0x0040
 end_define
 
 begin_comment
@@ -1593,7 +1604,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_7BIT
-value|000200
+value|0x0080
 end_define
 
 begin_comment
@@ -1604,7 +1615,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_MULTSTAT
-value|000400
+value|0x0100
 end_define
 
 begin_comment
@@ -1615,7 +1626,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_INHEADER
-value|001000
+value|0x0200
 end_define
 
 begin_comment
@@ -1626,7 +1637,7 @@ begin_define
 define|#
 directive|define
 name|MCIF_CVT8TO7
-value|002000
+value|0x0400
 end_define
 
 begin_comment
@@ -3734,7 +3745,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NEEDMAILHELO
-value|00001
+value|0x0001
 end_define
 
 begin_comment
@@ -3745,7 +3756,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NEEDEXPNHELO
-value|00002
+value|0x0002
 end_define
 
 begin_comment
@@ -3756,7 +3767,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NEEDVRFYHELO
-value|00004
+value|0x0004
 end_define
 
 begin_comment
@@ -3767,7 +3778,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NOEXPN
-value|00010
+value|0x0008
 end_define
 
 begin_comment
@@ -3778,7 +3789,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NOVRFY
-value|00020
+value|0x0010
 end_define
 
 begin_comment
@@ -3789,7 +3800,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_AUTHWARNINGS
-value|00040
+value|0x0020
 end_define
 
 begin_comment
@@ -3800,7 +3811,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_NORECEIPTS
-value|00100
+value|0x0040
 end_define
 
 begin_comment
@@ -3811,7 +3822,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_RESTRICTMAILQ
-value|01000
+value|0x1000
 end_define
 
 begin_comment
@@ -3822,7 +3833,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_RESTRICTQRUN
-value|02000
+value|0x2000
 end_define
 
 begin_comment
@@ -3833,7 +3844,7 @@ begin_define
 define|#
 directive|define
 name|PRIV_GOAWAY
-value|00777
+value|0x0fff
 end_define
 
 begin_comment
@@ -3869,7 +3880,7 @@ begin_define
 define|#
 directive|define
 name|RF_SENDERADDR
-value|0001
+value|0x001
 end_define
 
 begin_comment
@@ -3880,7 +3891,7 @@ begin_define
 define|#
 directive|define
 name|RF_HEADERADDR
-value|0002
+value|0x002
 end_define
 
 begin_comment
@@ -3891,7 +3902,7 @@ begin_define
 define|#
 directive|define
 name|RF_CANONICAL
-value|0004
+value|0x004
 end_define
 
 begin_comment
@@ -3902,7 +3913,7 @@ begin_define
 define|#
 directive|define
 name|RF_ADDDOMAIN
-value|0010
+value|0x008
 end_define
 
 begin_comment
@@ -3913,7 +3924,7 @@ begin_define
 define|#
 directive|define
 name|RF_COPYPARSE
-value|0020
+value|0x010
 end_define
 
 begin_comment
@@ -3924,7 +3935,7 @@ begin_define
 define|#
 directive|define
 name|RF_COPYPADDR
-value|0040
+value|0x020
 end_define
 
 begin_comment
