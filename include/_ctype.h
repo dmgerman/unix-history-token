@@ -393,21 +393,34 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__BSD_VISIBLE
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
 end_if
 
 begin_function_decl
 name|int
-name|digittoint
+name|isblank
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
 begin_function_decl
 name|int
-name|isblank
+name|digittoint
 parameter_list|(
 name|int
 parameter_list|)
@@ -604,6 +617,20 @@ endif|#
 directive|endif
 if|#
 directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+define|#
+directive|define
+name|isblank
+parameter_list|(
+name|c
+parameter_list|)
+value|__istype((c), _CTYPE_B)
+endif|#
+directive|endif
+if|#
+directive|if
 name|__BSD_VISIBLE
 define|#
 directive|define
@@ -612,13 +639,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|__maskrune((c), 0xFF)
-define|#
-directive|define
-name|isblank
-parameter_list|(
-name|c
-parameter_list|)
-value|__istype((c), _CTYPE_B)
 define|#
 directive|define
 name|ishexnumber
