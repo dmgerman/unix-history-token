@@ -106,6 +106,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|void
+name|cpu_mp_setmaxid
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
 name|int
 name|cpu_mp_probe
 parameter_list|(

@@ -1028,16 +1028,6 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|apic_id
-operator|>
-name|mp_maxid
-condition|)
-name|mp_maxid
-operator|=
-name|apic_id
-expr_stmt|;
-if|if
-condition|(
 name|bootverbose
 condition|)
 name|printf
@@ -1052,6 +1042,20 @@ literal|"BSP"
 else|:
 literal|"AP"
 argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|cpu_mp_setmaxid
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|mp_maxid
+operator|=
+name|MAXCPU
 expr_stmt|;
 block|}
 end_function
@@ -1076,19 +1080,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * No CPUs were found, so this must be a UP system.  Setup 		 * the variables to represent a system with a single CPU 		 * with an id of 0. 		 */
-name|KASSERT
-argument_list|(
-name|mp_maxid
-operator|==
-literal|0
-argument_list|,
-operator|(
-literal|"%s: mp_ncpus is zero, but mp_maxid is not"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
 name|mp_ncpus
 operator|=
 literal|1
@@ -1108,10 +1099,6 @@ literal|1
 condition|)
 block|{
 comment|/* 		 * One CPU was found, so this must be a UP system with 		 * an I/O APIC. 		 */
-name|mp_maxid
-operator|=
-literal|0
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1119,25 +1106,6 @@ operator|)
 return|;
 block|}
 comment|/* At least two CPUs were found. */
-name|KASSERT
-argument_list|(
-name|mp_maxid
-operator|>=
-name|mp_ncpus
-operator|-
-literal|1
-argument_list|,
-operator|(
-literal|"%s: counters out of sync: max %d, count %d"
-operator|,
-name|__func__
-operator|,
-name|mp_maxid
-operator|,
-name|mp_ncpus
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1

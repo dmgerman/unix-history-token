@@ -410,30 +410,21 @@ name|smp_rv_mtx
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|mp_probe_status
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*  * Initialize MI SMP variables.  */
+comment|/*  * Let the MD SMP code initialize mp_maxid very early if it can.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|mp_probe
+name|mp_setmaxid
 parameter_list|(
 name|void
 modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|mp_probe_status
-operator|=
-name|cpu_mp_probe
+name|cpu_mp_setmaxid
 argument_list|()
 expr_stmt|;
 block|}
@@ -442,13 +433,13 @@ end_function
 begin_macro
 name|SYSINIT
 argument_list|(
-argument|cpu_mp_probe
+argument|cpu_mp_setmaxid
 argument_list|,
 argument|SI_SUB_TUNABLES
 argument_list|,
 argument|SI_ORDER_FIRST
 argument_list|,
-argument|mp_probe
+argument|mp_setmaxid
 argument_list|,
 argument|NULL
 argument_list|)
@@ -471,18 +462,26 @@ block|{
 comment|/* Probe for MP hardware. */
 if|if
 condition|(
-name|mp_probe_status
-operator|==
-literal|0
-operator|||
 name|smp_disabled
 operator|!=
+literal|0
+operator|||
+name|cpu_mp_probe
+argument_list|()
+operator|==
 literal|0
 condition|)
 block|{
 name|mp_ncpus
 operator|=
 literal|1
+expr_stmt|;
+name|all_cpus
+operator|=
+name|PCPU_GET
+argument_list|(
+name|cpumask
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

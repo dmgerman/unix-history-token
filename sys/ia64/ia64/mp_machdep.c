@@ -516,9 +516,11 @@ comment|/* NOTREACHED */
 end_comment
 
 begin_macro
-unit|}  int
-name|cpu_mp_probe
-argument_list|()
+unit|}  void
+name|cpu_mp_setmaxid
+argument_list|(
+argument|void
+argument_list|)
 end_macro
 
 begin_block
@@ -541,6 +543,16 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|int
+name|cpu_mp_probe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 comment|/* 	 * If there's only 1 processor, or we don't have a wake-up vector, 	 * we're not going to enable SMP. Note that no wake-up vector can 	 * also mean that the wake-up mechanism is not supported. In this 	 * case we can have multiple processors, but we simply can't wake 	 * them up... 	 */
 return|return
 operator|(
@@ -557,7 +569,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|void

@@ -476,8 +476,8 @@ comment|/*  * Probe for other cpus.  */
 end_comment
 
 begin_function
-name|int
-name|cpu_mp_probe
+name|void
+name|cpu_mp_setmaxid
 parameter_list|(
 name|void
 parameter_list|)
@@ -584,9 +584,19 @@ name|mp_maxid
 operator|=
 name|cpus
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|int
+name|cpu_mp_probe
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 return|return
 operator|(
-name|cpus
+name|mp_maxid
 operator|>
 literal|1
 operator|)
