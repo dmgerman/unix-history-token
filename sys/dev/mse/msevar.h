@@ -204,11 +204,9 @@ begin_comment
 comment|/* don't move this! */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
+begin_comment
+comment|/* pc98 bus mouse types */
+end_comment
 
 begin_define
 define|#
@@ -217,10 +215,9 @@ name|MSE_98BUSMOUSE
 value|0x1
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* isa bus mouse types */
+end_comment
 
 begin_define
 define|#
@@ -242,11 +239,6 @@ directive|define
 name|MSE_LOGI_SIG
 value|0xA5
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* XXX msereg.h? */
