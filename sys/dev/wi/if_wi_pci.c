@@ -118,19 +118,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net80211/ieee80211_radiotap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/wi/if_wavelan_ieee.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/wi/if_wivar.h>
+file|<dev/wi/if_wireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/wi/if_wireg.h>
+file|<dev/wi/if_wivar.h>
 end_include
 
 begin_function_decl
