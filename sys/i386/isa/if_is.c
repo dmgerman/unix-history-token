@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id$  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   *  * Copyright (C) 1993, Paul Richards. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * $Id: if_is.c,v 1.24 1994/08/02 07:39:37 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -4687,6 +4687,36 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|SIOCSIFMTU
+case|:
+comment|/* 		 * Set the interface MTU. 		 */
+if|if
+condition|(
+name|ifr
+operator|->
+name|ifr_mtu
+operator|>
+name|ETHERMTU
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ifp
+operator|->
+name|if_mtu
+operator|=
+name|ifr
+operator|->
+name|ifr_mtu
+expr_stmt|;
+block|}
+break|break;
 default|default:
 name|error
 operator|=
