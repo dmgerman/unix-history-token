@@ -7292,6 +7292,8 @@ name|PAGE_SHIFT
 operator|)
 argument_list|,
 literal|1
+operator|<<
+name|PAGE_SHIFT
 argument_list|)
 expr_stmt|;
 comment|/* 	 * get memory map with INT 15:E820 	 */
