@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.6 (Berkeley) %G%"
+literal|"@(#)cntrl.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,6 +405,8 @@ name|timeb
 name|Now
 decl_stmt|,
 name|LastTurned
+decl_stmt|,
+name|LastCheckedNoLogin
 decl_stmt|;
 end_decl_stmt
 
@@ -1078,7 +1080,33 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
-name|nologinflag
+name|Now
+operator|.
+name|time
+operator|>
+operator|(
+name|LastCheckedNoLogin
+operator|.
+name|time
+operator|+
+literal|60
+operator|)
+condition|)
+block|{
+name|LastCheckedNoLogin
+operator|=
+name|Now
+expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|NOLOGIN
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|logent
@@ -1122,6 +1150,7 @@ expr_stmt|;
 goto|goto
 name|process
 goto|;
+block|}
 block|}
 block|}
 end_if
@@ -1887,10 +1916,6 @@ operator|<<
 name|i
 argument_list|)
 expr_stmt|;
-name|i
-operator|=
-literal|0
-expr_stmt|;
 name|logent
 argument_list|(
 name|Em_msg
@@ -1901,44 +1926,6 @@ argument_list|,
 literal|"REQUEST FAILED"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|&
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|EM_NOTMP
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* dont send him files he can't save */
-name|WMESG
-argument_list|(
-name|HUP
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|RMESG
-argument_list|(
-name|HUP
-argument_list|,
-name|msg
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-goto|goto
-name|process
-goto|;
-block|}
-else|else
 name|TransferSucceeded
 operator|=
 literal|1
@@ -2415,6 +2402,7 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* dont send him files he can't save */
 if|if
 condition|(
 name|strcmp
@@ -2431,7 +2419,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* dont send him files he can't save */
 name|WMESG
 argument_list|(
 name|HUP
@@ -3353,43 +3340,6 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-operator|&
-name|msg
-index|[
-literal|1
-index|]
-argument_list|,
-name|EM_NOTMP
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* dont send him files he can't save */
-name|WMESG
-argument_list|(
-name|HUP
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
-name|RMESG
-argument_list|(
-name|HUP
-argument_list|,
-name|msg
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-goto|goto
-name|process
-goto|;
-block|}
 name|notify
 argument_list|(
 name|mailopt

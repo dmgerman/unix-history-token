@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.8 (Berkeley) %G%"
+literal|"@(#)cico.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -592,16 +592,6 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|rflags
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|umask
 argument_list|(
 name|WFMASK
@@ -791,16 +781,6 @@ name|Debug
 operator|=
 literal|1
 expr_stmt|;
-name|strcat
-argument_list|(
-name|rflags
-argument_list|,
-name|argv
-index|[
-literal|1
-index|]
-argument_list|)
-expr_stmt|;
 name|logent
 argument_list|(
 literal|"ENABLED"
@@ -912,7 +892,7 @@ block|}
 end_while
 
 begin_comment
-comment|/* Try to run as uucp -- rti!trt */
+comment|/* Try to run as uucp */
 end_comment
 
 begin_expr_stmt
@@ -1067,13 +1047,16 @@ name|SLAVE
 condition|)
 block|{
 comment|/* check for /etc/nologin */
-name|ultouch
-argument_list|()
-expr_stmt|;
-comment|/* sets nologinflag as a side effect */
 if|if
 condition|(
-name|nologinflag
+name|access
+argument_list|(
+name|NOLOGIN
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|logent
@@ -1605,11 +1588,16 @@ name|inet_ntoa
 argument_list|()
 decl_stmt|;
 name|int
-name|fromlen
+name|len
 decl_stmt|;
 name|struct
 name|sockaddr_in
 name|from
+decl_stmt|;
+specifier|extern
+name|char
+name|PhoneNumber
+index|[]
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1631,7 +1619,7 @@ expr_stmt|;
 else|#
 directive|else
 else|!NOGETPEER
-name|fromlen
+name|len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1648,7 +1636,7 @@ operator|&
 name|from
 argument_list|,
 operator|&
-name|fromlen
+name|len
 argument_list|)
 operator|<
 literal|0
@@ -1769,12 +1757,13 @@ argument_list|,
 literal|"Request from IP-Host name ="
 argument_list|)
 expr_stmt|;
-comment|/* The following is to determine if the name given us by 			 * the Remote uucico matches any of the names(aliases) 			 * given its network number (remote machine) in our 			 * host table. 			 */
+comment|/* 			 * The following is to determine if the name given us by 			 * the Remote uucico matches any of the names 			 * given its network number (remote machine) in our 			 * host table. 			 * We could check the aliases, but that won't work in 			 * all cases (like if you are running the domain 			 * server, where you don't get any aliases). The only 			 * reliable way I can think of that works in ALL cases 			 * is too look up the site in L.sys and see if the 			 * sitename matches what we would call him if we 			 * originated the call. 			 */
+comment|/* PhoneNumber contains the official network name of the 			   host we are checking. (set in versys.c) */
 if|if
 condition|(
-name|strncmp
+name|sncncmp
 argument_list|(
-name|q
+name|PhoneNumber
 argument_list|,
 name|hp
 operator|->
@@ -1802,54 +1791,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Scan The host aliases */
-for|for
-control|(
-name|alias
-operator|=
-name|hp
-operator|->
-name|h_aliases
-init|;
-operator|*
-name|alias
-operator|!=
-literal|0
-operator|&&
-name|strncmp
-argument_list|(
-name|q
-argument_list|,
-operator|*
-name|alias
-argument_list|,
-name|SYSNSIZE
-argument_list|)
-operator|!=
-literal|0
-condition|;
-operator|++
-name|alias
-control|)
-empty_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|q
-argument_list|,
-operator|*
-name|alias
-argument_list|,
-name|SYSNSIZE
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
 name|logent
 argument_list|(
-name|q
+name|hp
+operator|->
+name|h_name
 argument_list|,
 literal|"FORGED HOSTNAME"
 argument_list|)
@@ -1866,11 +1812,31 @@ argument_list|,
 literal|"ORIGINATED AT"
 argument_list|)
 expr_stmt|;
+name|logent
+argument_list|(
+name|PhoneNumber
+argument_list|,
+literal|"SHOULD BE"
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|wkpre
+argument_list|,
+literal|"You're not who you claim to be: %s !=  %s"
+argument_list|,
+name|hp
+operator|->
+name|h_name
+argument_list|,
+name|PhoneNumber
+argument_list|)
+expr_stmt|;
 name|omsg
 argument_list|(
 literal|'R'
 argument_list|,
-literal|"You're not who you claim to be"
+name|wkpre
 argument_list|,
 name|Ofn
 argument_list|)
@@ -1880,26 +1846,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|Debug
-operator|>
-literal|99
-condition|)
-name|logent
-argument_list|(
-name|q
-argument_list|,
-literal|"Found in host Tables"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 block|}
 endif|#
@@ -1911,6 +1857,8 @@ name|mlock
 argument_list|(
 name|Rmtname
 argument_list|)
+operator|==
+name|FAIL
 condition|)
 block|{
 name|omsg
@@ -2540,13 +2488,16 @@ name|MASTER
 condition|)
 block|{
 comment|/* check for /etc/nologin */
-name|ultouch
-argument_list|()
-expr_stmt|;
-comment|/* sets nologinflag as a side effect */
 if|if
 condition|(
-name|nologinflag
+name|access
+argument_list|(
+name|NOLOGIN
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|logent
@@ -2655,7 +2606,7 @@ argument_list|(
 name|Rmtname
 argument_list|)
 operator|!=
-literal|0
+name|SUCCESS
 condition|)
 block|{
 name|logent
@@ -2902,6 +2853,27 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|!GNXSEQ
+if|if
+condition|(
+name|Debug
+condition|)
+name|sprintf
+argument_list|(
+name|rflags
+argument_list|,
+literal|"-x%d"
+argument_list|,
+name|Debug
+argument_list|)
+expr_stmt|;
+else|else
+name|rflags
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|MaxGrade
