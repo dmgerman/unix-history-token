@@ -541,7 +541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: rcp [-rp] f1 f2, or: rcp [-rp] f1 ... fn d2\n"
+literal|"Usage: rcp [-p] f1 f2; or: rcp [-rp] f1 ... fn d2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3026,6 +3026,11 @@ parameter_list|(
 name|str
 parameter_list|)
 value|{ whopp = str; goto screwup; }
+if|if
+condition|(
+operator|!
+name|pflag
+condition|)
 operator|(
 name|void
 operator|)
@@ -3473,15 +3478,11 @@ literal|0
 expr_stmt|;
 while|while
 condition|(
+name|isdigit
+argument_list|(
 operator|*
 name|cp
-operator|>=
-literal|'0'
-operator|&&
-operator|*
-name|cp
-operator|<=
-literal|'9'
+argument_list|)
 condition|)
 name|size
 operator|=
@@ -3594,6 +3595,20 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|pflag
+condition|)
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|nambuf
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -3691,6 +3706,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|exists
+operator|&&
+name|pflag
+condition|)
+operator|(
+name|void
+operator|)
+name|fchmod
+argument_list|(
+name|of
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
 name|ga
 argument_list|()
 expr_stmt|;
