@@ -1,11 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)trek.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  *  *	@(#)trek.h	5.3 (Berkeley) %G%  */
 end_comment
-
-begin_empty
-empty|#
-end_empty
 
 begin_comment
 comment|/* **  Global Declarations ** **	Virtually all non-local variable declarations are made in this **	file.  Exceptions are those things which are initialized, which **	are defined in "externs.c", and things which are local to one **	program file. ** **	So far as I know, nothing in here must be preinitialized to **	zero. ** **	You may have problems from the loader if you move this to a **	different machine.  These things actually get allocated in each **	source file, which UNIX allows; however, you may (on other **	systems) have to change everything in here to be "extern" and **	actually allocate stuff in "externs.c" */
