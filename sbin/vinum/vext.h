@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/*  * $Id: vext.h,v 1.17 2000/05/07 04:17:12 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vext.h,v 1.18 2000/06/02 03:55:01 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1741,6 +1741,43 @@ name|b
 parameter_list|)
 value|a< b? a: b
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|vinum_perror
+parameter_list|(
+name|str
+parameter_list|)
+define|\
+value|do {												\ 		fprintf(stderr, "%s:%d> ", __FILE__, __LINE__);	\ 		perror(str);									\ 	} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|vinum_perror
+parameter_list|(
+name|str
+parameter_list|)
+value|perror(str)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -183,6 +183,12 @@ name|vinum_super_dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|dev_t
+name|vinum_debug_super_dev
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Called by main() during pseudo-device attachment.  All we need  * to do is allocate enough space for devices to be configured later, and  * add devsw entries.  */
 end_comment
@@ -261,18 +267,26 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
-name|VINUM_DAEMON_DEV_NAME
+literal|"vinum/controld"
 argument_list|)
 expr_stmt|;
-comment|/* daemon device */
-name|vinum_super_dev
+name|vinum_debug_super_dev
 operator|=
 name|make_dev
 argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUM_SUPERDEV
+name|VINUMMINOR
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -282,10 +296,38 @@ name|S_IRUSR
 operator||
 name|S_IWUSR
 argument_list|,
-name|VINUM_SUPERDEV_NAME
+literal|"vinum/Control"
 argument_list|)
 expr_stmt|;
-comment|/* daemon device */
+name|vinum_super_dev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|vinum_cdevsw
+argument_list|,
+name|VINUMMINOR
+argument_list|(
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|VINUM_SUPERDEV_TYPE
+argument_list|)
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+name|S_IRUSR
+operator||
+name|S_IWUSR
+argument_list|,
+literal|"vinum/control"
+argument_list|)
+expr_stmt|;
 comment|/* allocate space: drives... */
 name|DRIVE
 operator|=
@@ -1165,6 +1207,11 @@ comment|/* daemon device */
 name|destroy_dev
 argument_list|(
 name|vinum_super_dev
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|vinum_debug_super_dev
 argument_list|)
 expr_stmt|;
 name|cdevsw_remove

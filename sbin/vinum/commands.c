@@ -4,7 +4,7 @@ comment|/* commands.c: vinum interface program, main commands */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.12 2000/03/01 03:03:53 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: commands.c,v 1.36 2000/12/20 05:05:39 grog Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -522,7 +522,7 @@ argument_list|(
 name|dfd
 argument_list|)
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't read config file"
 argument_list|)
@@ -655,7 +655,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -866,7 +866,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -892,7 +892,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -1371,7 +1371,7 @@ literal|"Can't reset configuration: objects are in use\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't find vinum config"
 argument_list|)
@@ -2587,7 +2587,7 @@ literal|0
 condition|)
 block|{
 comment|/* find out what devices we have */
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't get device list"
 argument_list|)
@@ -3451,7 +3451,7 @@ operator|<
 literal|0
 operator|)
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't unload "
 name|VINUMMOD
@@ -3491,7 +3491,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't reopen Vinum superdevice"
 argument_list|)
@@ -4358,7 +4358,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -4632,7 +4632,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -5282,7 +5282,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -6052,7 +6052,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't get vinum config"
 argument_list|)
@@ -6171,7 +6171,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Cannot get vinum config\n"
 argument_list|)
@@ -7781,7 +7781,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -8499,7 +8499,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -9217,7 +9217,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -9935,7 +9935,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)
@@ -10809,7 +10809,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|perror
+name|vinum_perror
 argument_list|(
 literal|"Can't save Vinum config"
 argument_list|)

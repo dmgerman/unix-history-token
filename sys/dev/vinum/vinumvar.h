@@ -416,7 +416,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_DIR
-value|"vinum"
+value|"/dev/vinum"
 end_define
 
 begin_comment
