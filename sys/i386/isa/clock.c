@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.71 1996/10/25 13:46:21 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.72 1996/10/26 00:11:57 bde Exp $  */
 end_comment
 
 begin_comment
@@ -525,6 +525,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|static
+name|void
+name|set_timer_freq
+parameter_list|(
+name|u_int
+name|freq
+parameter_list|,
+name|int
+name|intr_freq
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1215,6 +1229,8 @@ name|n
 parameter_list|)
 block|{
 name|int
+name|delta
+decl_stmt|,
 name|prev_tick
 decl_stmt|,
 name|tick
@@ -1292,6 +1308,20 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Guard against the timer being uninitialized if we are called 	 * early for console i/o. 	 */
+if|if
+condition|(
+name|timer0_max_count
+operator|==
+literal|0
+condition|)
+name|set_timer_freq
+argument_list|(
+name|timer_freq
+argument_list|,
+name|hz
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 */
 name|prev_tick
 operator|=
@@ -1386,25 +1416,8 @@ name|getit_calls
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|tick
-operator|>
-name|prev_tick
-condition|)
-name|ticks_left
-operator|-=
-name|prev_tick
-operator|-
-operator|(
-name|tick
-operator|-
-name|timer0_max_count
-operator|)
-expr_stmt|;
-else|else
-name|ticks_left
-operator|-=
+name|delta
+operator|=
 name|prev_tick
 operator|-
 name|tick
@@ -1412,6 +1425,33 @@ expr_stmt|;
 name|prev_tick
 operator|=
 name|tick
+expr_stmt|;
+if|if
+condition|(
+name|delta
+operator|<
+literal|0
+condition|)
+block|{
+name|delta
+operator|+=
+name|timer0_max_count
+expr_stmt|;
+comment|/* 			 * Guard against timer0_max_count being wrong. 			 * This shouldn't happen in normal operation, 			 * but it may happen if set_timer_freq() is 			 * traced. 			 */
+if|if
+condition|(
+name|delta
+operator|<
+literal|0
+condition|)
+name|delta
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|ticks_left
+operator|-=
+name|delta
 expr_stmt|;
 block|}
 ifdef|#
