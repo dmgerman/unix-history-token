@@ -86,6 +86,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_comment
 comment|/*  * lptest -- line printer test program (and other devices).  */
 end_comment
@@ -220,9 +226,20 @@ name|j
 operator|++
 control|)
 block|{
+if|if
+condition|(
 name|putchar
 argument_list|(
 name|nc
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Write error"
 argument_list|)
 expr_stmt|;
 if|if
@@ -237,9 +254,20 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|putchar
 argument_list|(
 literal|'\n'
+argument_list|)
+operator|==
+name|EOF
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Write error"
 argument_list|)
 expr_stmt|;
 block|}
