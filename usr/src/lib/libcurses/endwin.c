@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Clean things up before exiting  *  * %G% (Berkeley) %W  */
+comment|/*  * Clean things up before exiting  *  * @(#)endwin.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
