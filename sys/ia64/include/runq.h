@@ -135,7 +135,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|popcnt
+name|__popcnt
 argument_list|(
 name|mask
 operator|^
