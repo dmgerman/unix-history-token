@@ -1287,6 +1287,16 @@ argument_list|,
 name|colorquit
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGQUIT
+argument_list|,
+name|colorquit
+argument_list|)
+expr_stmt|;
 name|parsecolors
 argument_list|(
 name|getenv
