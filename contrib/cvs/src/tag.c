@@ -1776,7 +1776,7 @@ name|which
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_READ
+name|CVS_LOCK_READ
 argument_list|,
 name|where
 argument_list|,
@@ -1838,7 +1838,7 @@ name|which
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_WRITE
+name|CVS_LOCK_WRITE
 argument_list|,
 name|where
 argument_list|,
@@ -5543,7 +5543,7 @@ name|which
 argument_list|,
 name|aflag
 argument_list|,
-name|LOCK_READ
+name|CVS_LOCK_READ
 argument_list|,
 name|NULL
 argument_list|,

@@ -443,7 +443,7 @@ name|W_LOCAL
 argument_list|,
 literal|0
 argument_list|,
-name|LOCK_NONE
+name|CVS_LOCK_NONE
 argument_list|,
 operator|(
 name|char

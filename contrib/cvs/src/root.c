@@ -725,7 +725,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|malloc
+name|xmalloc
 argument_list|(
 name|root_allow_size
 operator|*
@@ -750,7 +750,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|realloc
+name|xrealloc
 argument_list|(
 name|root_allow_vector
 argument_list|,
@@ -786,7 +786,7 @@ block|}
 block|}
 name|p
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
