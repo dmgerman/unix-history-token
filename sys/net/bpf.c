@@ -2211,7 +2211,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-specifier|static
 name|struct
 name|sockaddr
 name|dst
@@ -2253,6 +2252,17 @@ operator|(
 literal|0
 operator|)
 return|;
+name|bzero
+argument_list|(
+operator|&
+name|dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|dst
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|bpf_movein
