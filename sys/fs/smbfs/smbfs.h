@@ -188,12 +188,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|vop_ioctl_args
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|buf
 struct_decl|;
 end_struct_decl
@@ -306,18 +300,6 @@ name|vp
 parameter_list|)
 value|(VFSTOSMBFS(VTOVFS(vp)))
 end_define
-
-begin_function_decl
-name|int
-name|smbfs_ioctl
-parameter_list|(
-name|struct
-name|vop_ioctl_args
-modifier|*
-name|ap
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|int
