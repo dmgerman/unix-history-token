@@ -78,18 +78,17 @@ name|contentionscope
 operator|!=
 name|PTHREAD_SCOPE_PROCESS
 operator|)
-operator|||
+operator|&&
 operator|(
 name|contentionscope
-operator|==
+operator|!=
 name|PTHREAD_SCOPE_SYSTEM
 operator|)
 condition|)
 block|{
-comment|/* We don't support PTHREAD_SCOPE_SYSTEM. */
 name|ret
 operator|=
-name|ENOTSUP
+name|EINVAL
 expr_stmt|;
 block|}
 else|else

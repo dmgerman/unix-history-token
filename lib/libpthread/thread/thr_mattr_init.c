@@ -91,7 +91,7 @@ argument_list|(
 name|pattr
 argument_list|,
 operator|&
-name|pthread_mutexattr_default
+name|_pthread_mutexattr_default
 argument_list|,
 sizeof|sizeof
 argument_list|(

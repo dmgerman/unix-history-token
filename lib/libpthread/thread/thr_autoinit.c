@@ -7,6 +7,18 @@ begin_comment
 comment|/*  * This module uses GCC extentions to initialize the  * threads package at program start-up time.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"thr_private.h"
+end_include
+
 begin_function_decl
 name|void
 name|_thread_init_hack
@@ -30,8 +42,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|_thread_init
-argument_list|()
+name|_libpthread_init
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 end_function

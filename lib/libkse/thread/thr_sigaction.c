@@ -92,12 +92,14 @@ else|else
 block|{
 if|if
 condition|(
-name|_thread_initial
+name|_thr_initial
 operator|==
 name|NULL
 condition|)
-name|_thread_init
-argument_list|()
+name|_libpthread_init
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Check if the existing signal action structure contents are 		 * to be returned:  		 */
 if|if
@@ -206,17 +208,16 @@ name|NULL
 operator|&&
 name|sig
 operator|!=
-name|SIGCHLD
+name|SIGINFO
 condition|)
 block|{
-comment|/* 			 * Ensure the signal handler cannot be interrupted 			 * by other signals.  Always request the POSIX signal 			 * handler arguments. 			 */
-name|sigfillset
-argument_list|(
-operator|&
 name|gact
 operator|.
 name|sa_mask
-argument_list|)
+operator|=
+name|act
+operator|->
+name|sa_mask
 expr_stmt|;
 name|gact
 operator|.
@@ -224,7 +225,9 @@ name|sa_flags
 operator|=
 name|SA_SIGINFO
 operator||
-name|SA_ONSTACK
+name|act
+operator|->
+name|sa_flags
 expr_stmt|;
 comment|/* 			 * Check if the signal handler is being set to 			 * the default or ignore handlers: 			 */
 if|if
@@ -263,7 +266,7 @@ operator|*
 argument_list|)
 argument_list|()
 operator|)
-name|_thread_sig_handler
+name|_thr_sig_handler
 expr_stmt|;
 comment|/* Change the signal action in the kernel: */
 if|if

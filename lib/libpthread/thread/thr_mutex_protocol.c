@@ -175,7 +175,7 @@ operator|)
 operator|->
 name|m_ceiling
 operator|=
-name|PTHREAD_MAX_PRIORITY
+name|THR_MAX_PRIORITY
 expr_stmt|;
 block|}
 return|return

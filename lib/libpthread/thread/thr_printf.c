@@ -20,43 +20,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pthread.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -385,7 +361,7 @@ name|char
 name|c
 parameter_list|)
 block|{
-name|write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,
@@ -416,7 +392,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-name|write
+name|__sys_write
 argument_list|(
 name|fd
 argument_list|,

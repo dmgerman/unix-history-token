@@ -340,9 +340,8 @@ name|ret
 operator|=
 name|EINVAL
 expr_stmt|;
-else|else
-block|{
 comment|/* Lock the mutex: */
+elseif|else
 if|if
 condition|(
 operator|(
@@ -385,7 +384,6 @@ argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(

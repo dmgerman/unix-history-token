@@ -51,13 +51,16 @@ directive|include
 file|"thr_private.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|FLAGS_IN_SCHEDQ
-define|\
-value|(PTHREAD_FLAGS_IN_PRIOQ|PTHREAD_FLAGS_IN_WAITQ|PTHREAD_FLAGS_IN_WORKQ)
-end_define
+begin_function_decl
+name|void
+name|_pthread_exit
+parameter_list|(
+name|void
+modifier|*
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|__weak_reference
@@ -71,7 +74,7 @@ end_expr_stmt
 
 begin_function
 name|void
-name|_thread_exit
+name|_thr_exit
 parameter_list|(
 name|char
 modifier|*
@@ -82,7 +85,7 @@ name|lineno
 parameter_list|,
 name|char
 modifier|*
-name|string
+name|msg
 parameter_list|)
 block|{
 name|char
@@ -103,7 +106,7 @@ argument_list|)
 argument_list|,
 literal|"Fatal error '%s' at line %d in file %s (errno = %d)\n"
 argument_list|,
-name|string
+name|msg
 argument_list|,
 name|lineno
 argument_list|,
@@ -125,26 +128,9 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Force this process to exit: */
-comment|/* XXX - Do we want abort to be conditional on _PTHREADS_INVARIANTS? */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_PTHREADS_INVARIANTS
-argument_list|)
 name|abort
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|__sys_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -154,7 +140,7 @@ end_comment
 
 begin_function
 name|void
-name|_thread_exit_cleanup
+name|_thr_exit_cleanup
 parameter_list|(
 name|void
 parameter_list|)
@@ -195,9 +181,6 @@ init|=
 name|_get_curthread
 argument_list|()
 decl_stmt|;
-name|pthread_t
-name|pthread
-decl_stmt|;
 comment|/* Check if this thread is already in the process of exiting: */
 if|if
 condition|(
@@ -206,7 +189,7 @@ name|curthread
 operator|->
 name|flags
 operator|&
-name|PTHREAD_EXITING
+name|THR_FLAGS_EXITING
 operator|)
 operator|!=
 literal|0
@@ -227,7 +210,9 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Thread %p has called pthread_exit() from a destructor. POSIX 1003.1 1996 s16.2.5.2 does not allow this!"
+literal|"Thread %p has called "
+literal|"pthread_exit() from a destructor. POSIX 1003.1 "
+literal|"1996 s16.2.5.2 does not allow this!"
 argument_list|,
 name|curthread
 argument_list|)
@@ -238,12 +223,12 @@ name|msg
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Flag this thread as exiting: */
+comment|/* 	 * Flag this thread as exiting.  Threads should now be prevented 	 * from joining to this thread. 	 */
 name|curthread
 operator|->
 name|flags
 operator||=
-name|PTHREAD_EXITING
+name|THR_FLAGS_EXITING
 expr_stmt|;
 comment|/* Save the return value: */
 name|curthread
@@ -307,174 +292,31 @@ name|_thread_cleanupspecific
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Lock the garbage collector mutex to ensure that the garbage 	 * collector is not using the dead thread list. 	 */
-if|if
-condition|(
-name|pthread_mutex_lock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot lock gc mutex"
-argument_list|)
-expr_stmt|;
-comment|/* Add this thread to the list of dead threads. */
-name|TAILQ_INSERT_HEAD
-argument_list|(
-operator|&
-name|_dead_list
-argument_list|,
-name|curthread
-argument_list|,
-name|dle
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Signal the garbage collector thread that there is something 	 * to clean up. 	 */
-if|if
-condition|(
-name|pthread_cond_signal
-argument_list|(
-operator|&
-name|_gc_cond
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot signal gc cond"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Avoid a race condition where a scheduling signal can occur 	 * causing the garbage collector thread to run.  If this happens, 	 * the current thread can be cleaned out from under us. 	 */
-name|_thread_kern_sig_defer
-argument_list|()
-expr_stmt|;
-comment|/* Unlock the garbage collector mutex: */
-if|if
-condition|(
-name|pthread_mutex_unlock
-argument_list|(
-operator|&
-name|_gc_mutex
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Cannot unlock gc mutex"
-argument_list|)
-expr_stmt|;
-comment|/* Check if there is a thread joining this one: */
-if|if
-condition|(
-name|curthread
-operator|->
-name|joiner
-operator|!=
-name|NULL
-condition|)
-block|{
-name|pthread
-operator|=
-name|curthread
-operator|->
-name|joiner
-expr_stmt|;
-name|curthread
-operator|->
-name|joiner
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make the joining thread runnable: */
-name|PTHREAD_NEW_STATE
-argument_list|(
-name|pthread
-argument_list|,
-name|PS_RUNNING
-argument_list|)
-expr_stmt|;
-comment|/* Set the return value for the joining thread: */
-name|pthread
-operator|->
-name|join_status
-operator|.
-name|ret
-operator|=
-name|curthread
-operator|->
-name|ret
-expr_stmt|;
-name|pthread
-operator|->
-name|join_status
-operator|.
-name|error
-operator|=
-literal|0
-expr_stmt|;
-name|pthread
-operator|->
-name|join_status
-operator|.
-name|thread
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* Make this thread collectable by the garbage collector. */
-name|PTHREAD_ASSERT
-argument_list|(
-operator|(
-operator|(
-name|curthread
-operator|->
-name|attr
-operator|.
-name|flags
-operator|&
-name|PTHREAD_DETACHED
-operator|)
-operator|==
-literal|0
-operator|)
-argument_list|,
-literal|"Cannot join a detached thread"
-argument_list|)
-expr_stmt|;
-name|curthread
-operator|->
-name|attr
-operator|.
-name|flags
-operator||=
-name|PTHREAD_DETACHED
-expr_stmt|;
-block|}
-comment|/* Remove this thread from the thread list: */
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|_thread_list
-argument_list|,
-name|curthread
-argument_list|,
-name|tle
-argument_list|)
-expr_stmt|;
 comment|/* This thread will never be re-scheduled. */
-name|_thread_kern_sched_state
+name|THR_SCHED_LOCK
 argument_list|(
+name|curthread
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+name|THR_SET_STATE
+argument_list|(
+name|curthread
+argument_list|,
 name|PS_DEAD
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
 argument_list|,
-name|__FILE__
-argument_list|,
-name|__LINE__
+name|curthread
+argument_list|)
+expr_stmt|;
+name|_thr_sched_switch
+argument_list|(
+name|curthread
 argument_list|)
 expr_stmt|;
 comment|/* This point should not be reached. */

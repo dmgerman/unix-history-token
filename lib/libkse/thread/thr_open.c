@@ -70,6 +70,14 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -81,8 +89,10 @@ decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
+name|_thr_enter_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Check if the file is being created: */
 if|if
@@ -126,8 +136,10 @@ argument_list|,
 name|mode
 argument_list|)
 expr_stmt|;
-name|_thread_leave_cancellation_point
-argument_list|()
+name|_thr_leave_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

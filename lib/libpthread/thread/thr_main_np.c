@@ -43,7 +43,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|_thread_initial
+name|_thr_initial
 condition|)
 return|return
 operator|(
@@ -59,7 +59,7 @@ argument_list|(
 name|pthread_self
 argument_list|()
 argument_list|,
-name|_thread_initial
+name|_thr_initial
 argument_list|)
 condition|?
 literal|1

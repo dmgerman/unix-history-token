@@ -55,31 +55,9 @@ name|pthread_switch_routine_t
 name|routine
 parameter_list|)
 block|{
-name|int
-name|ret
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|routine
-operator|==
-name|NULL
-condition|)
-comment|/* Return an invalid argument error: */
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-comment|/* Shouldn't need a lock to protect this assigment. */
-name|_sched_switch_hook
-operator|=
-name|routine
-expr_stmt|;
 return|return
 operator|(
-name|ret
+name|ENOTSUP
 operator|)
 return|;
 block|}
@@ -93,31 +71,9 @@ name|pthread_switch_routine_t
 name|routine
 parameter_list|)
 block|{
-name|int
-name|ret
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|routine
-operator|!=
-name|_sched_switch_hook
-condition|)
-comment|/* Return an invalid argument error: */
-name|ret
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-comment|/* Shouldn't need a lock to protect this assigment. */
-name|_sched_switch_hook
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 operator|(
-name|ret
+name|ENOTSUP
 operator|)
 return|;
 block|}

@@ -74,7 +74,7 @@ operator|)
 operator|->
 name|suspend
 operator|=
-name|PTHREAD_CREATE_SUSPENDED
+name|THR_CREATE_SUSPENDED
 expr_stmt|;
 name|ret
 operator|=

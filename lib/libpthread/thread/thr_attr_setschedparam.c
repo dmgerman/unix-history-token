@@ -91,7 +91,7 @@ name|param
 operator|->
 name|sched_priority
 operator|<
-name|PTHREAD_MIN_PRIORITY
+name|THR_MIN_PRIORITY
 operator|)
 operator|||
 operator|(
@@ -99,7 +99,7 @@ name|param
 operator|->
 name|sched_priority
 operator|>
-name|PTHREAD_MAX_PRIORITY
+name|THR_MAX_PRIORITY
 operator|)
 condition|)
 block|{

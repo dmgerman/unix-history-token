@@ -32,6 +32,17 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|if
+condition|(
+name|_thr_initial
+operator|==
+name|NULL
+condition|)
+name|_libpthread_init
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* Return the running thread pointer: */
 return|return
 operator|(

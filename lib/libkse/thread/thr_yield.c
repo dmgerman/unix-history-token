@@ -59,8 +59,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
-name|_thread_kern_sched
-argument_list|()
+name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 comment|/* Always return no error. */
 return|return
@@ -99,8 +101,10 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* Schedule the next thread: */
-name|_thread_kern_sched
-argument_list|()
+name|_thr_sched_switch
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 block|}
 end_function

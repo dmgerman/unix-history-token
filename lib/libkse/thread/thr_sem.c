@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -234,7 +246,7 @@ block|}
 comment|/* 	 * Initialize the semaphore. 	 */
 if|if
 condition|(
-name|pthread_mutex_init
+name|_pthread_mutex_init
 argument_list|(
 operator|&
 operator|(
@@ -271,7 +283,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|pthread_cond_init
+name|_pthread_cond_init
 argument_list|(
 operator|&
 operator|(
@@ -287,7 +299,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 operator|(
@@ -354,7 +366,9 @@ expr_stmt|;
 name|RETURN
 label|:
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -377,7 +391,7 @@ name|sem
 argument_list|)
 expr_stmt|;
 comment|/* Make sure there are no waiters. */
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -400,7 +414,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -424,7 +438,7 @@ goto|goto
 name|RETURN
 goto|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -435,7 +449,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_destroy
+name|_pthread_mutex_destroy
 argument_list|(
 operator|&
 operator|(
@@ -446,7 +460,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|pthread_cond_destroy
+name|_pthread_cond_destroy
 argument_list|(
 operator|&
 operator|(
@@ -479,7 +493,9 @@ expr_stmt|;
 name|RETURN
 label|:
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -505,7 +521,9 @@ operator|=
 name|ENOSYS
 expr_stmt|;
 return|return
+operator|(
 name|SEM_FAILED
+operator|)
 return|;
 block|}
 end_function
@@ -524,8 +542,10 @@ operator|=
 name|ENOSYS
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -545,8 +565,10 @@ operator|=
 name|ENOSYS
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -560,18 +582,28 @@ modifier|*
 name|sem
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
+name|_thr_enter_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 name|_SEM_CHECK_VALIDITY
 argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -602,7 +634,7 @@ operator|->
 name|nwaiters
 operator|++
 expr_stmt|;
-name|pthread_cond_wait
+name|_pthread_cond_wait
 argument_list|(
 operator|&
 operator|(
@@ -638,7 +670,7 @@ operator|->
 name|count
 operator|--
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -655,11 +687,15 @@ literal|0
 expr_stmt|;
 name|RETURN
 label|:
-name|_thread_leave_cancellation_point
-argument_list|()
+name|_thr_leave_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -681,7 +717,7 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -729,7 +765,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -743,7 +779,9 @@ expr_stmt|;
 name|RETURN
 label|:
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -757,6 +795,9 @@ modifier|*
 name|sem
 parameter_list|)
 block|{
+name|kse_critical_t
+name|crit
+decl_stmt|;
 name|int
 name|retval
 decl_stmt|;
@@ -765,11 +806,13 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-comment|/* 	 * sem_post() is required to be safe to call from within signal 	 * handlers.  Thus, we must defer signals. 	 */
-name|_thread_kern_sig_defer
+comment|/* 	 * sem_post() is required to be safe to call from within signal 	 * handlers.  Thus, we must enter a critical region. 	 */
+name|crit
+operator|=
+name|_kse_critical_enter
 argument_list|()
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -799,7 +842,7 @@ name|nwaiters
 operator|>
 literal|0
 condition|)
-name|pthread_cond_signal
+name|_pthread_cond_signal
 argument_list|(
 operator|&
 operator|(
@@ -810,7 +853,7 @@ operator|->
 name|gtzero
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -821,8 +864,10 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|_thread_kern_sig_undefer
-argument_list|()
+name|_kse_critical_leave
+argument_list|(
+name|crit
+argument_list|)
 expr_stmt|;
 name|retval
 operator|=
@@ -831,7 +876,9 @@ expr_stmt|;
 name|RETURN
 label|:
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function
@@ -857,7 +904,7 @@ argument_list|(
 name|sem
 argument_list|)
 expr_stmt|;
-name|pthread_mutex_lock
+name|_pthread_mutex_lock
 argument_list|(
 operator|&
 operator|(
@@ -881,7 +928,7 @@ argument_list|)
 operator|->
 name|count
 expr_stmt|;
-name|pthread_mutex_unlock
+name|_pthread_mutex_unlock
 argument_list|(
 operator|&
 operator|(
@@ -899,7 +946,9 @@ expr_stmt|;
 name|RETURN
 label|:
 return|return
+operator|(
 name|retval
+operator|)
 return|;
 block|}
 end_function

@@ -52,12 +52,22 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+init|=
+name|_get_curthread
+argument_list|()
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
 comment|/* 	 * XXX This is quite pointless unless we know how to get the 	 * file descriptor associated with the memory, and lock it for 	 * write. The only real use of this wrapper is to guarantee 	 * a cancellation point, as per the standard. sigh. 	 */
-name|_thread_enter_cancellation_point
-argument_list|()
+name|_thr_enter_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=
@@ -70,8 +80,10 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|_thread_leave_cancellation_point
-argument_list|()
+name|_thr_leave_cancellation_point
+argument_list|(
+name|curthread
+argument_list|)
 expr_stmt|;
 return|return
 name|ret

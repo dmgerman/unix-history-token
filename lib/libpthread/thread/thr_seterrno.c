@@ -60,7 +60,7 @@ if|if
 condition|(
 name|thread
 operator|==
-name|_thread_initial
+name|_thr_initial
 condition|)
 comment|/* The initial thread always uses the global error variable: */
 name|errno

@@ -6,6 +6,18 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -39,6 +51,14 @@ name|pthread_t
 name|pthread
 parameter_list|)
 block|{
+name|struct
+name|pthread
+modifier|*
+name|curthread
+decl_stmt|,
+modifier|*
+name|joiner
+decl_stmt|;
 name|int
 name|rval
 init|=
@@ -55,14 +75,14 @@ name|pthread
 operator|->
 name|magic
 operator|!=
-name|PTHREAD_MAGIC
+name|THR_MAGIC
 condition|)
 comment|/* Return an invalid argument error: */
 name|rval
 operator|=
 name|EINVAL
 expr_stmt|;
-comment|/* Check if the thread has not been detached: */
+comment|/* Check if the thread is already detached: */
 elseif|else
 if|if
 condition|(
@@ -75,10 +95,29 @@ name|flags
 operator|&
 name|PTHREAD_DETACHED
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
+comment|/* Return an error: */
+name|rval
+operator|=
+name|EINVAL
+expr_stmt|;
+else|else
 block|{
+comment|/* Lock the detached thread: */
+name|curthread
+operator|=
+name|_get_curthread
+argument_list|()
+expr_stmt|;
+name|THR_SCHED_LOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* Flag the thread as detached: */
 name|pthread
 operator|->
@@ -88,38 +127,119 @@ name|flags
 operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
-comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
-name|_thread_kern_sig_defer
-argument_list|()
-expr_stmt|;
-comment|/* Check if there is a joiner: */
-if|if
-condition|(
+comment|/* Retrieve any joining thread and remove it: */
+name|joiner
+operator|=
 name|pthread
 operator|->
+name|joiner
+expr_stmt|;
+name|pthread
+operator|->
+name|joiner
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* We are already in a critical region. */
+name|KSE_LOCK_ACQUIRE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_list_lock
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|THR_FLAGS_GC_SAFE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|THR_LIST_REMOVE
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|THR_GCLIST_ADD
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
+name|atomic_store_rel_int
+argument_list|(
+operator|&
+name|_gc_check
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|KSE_WAITING
+argument_list|(
+name|_kse_initial
+argument_list|)
+condition|)
+name|KSE_WAKEUP
+argument_list|(
+name|_kse_initial
+argument_list|)
+expr_stmt|;
+block|}
+name|KSE_LOCK_RELEASE
+argument_list|(
+name|curthread
+operator|->
+name|kse
+argument_list|,
+operator|&
+name|_thread_list_lock
+argument_list|)
+expr_stmt|;
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|pthread
+argument_list|)
+expr_stmt|;
+comment|/* See if there is a thread waiting in pthread_join(): */
+if|if
+condition|(
 name|joiner
 operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|pthread
-modifier|*
-name|joiner
-init|=
-name|pthread
-operator|->
-name|joiner
-decl_stmt|;
-comment|/* Make the thread runnable: */
-name|PTHREAD_NEW_STATE
+comment|/* Lock the joiner before fiddling with it. */
+name|THR_SCHED_LOCK
 argument_list|(
-name|joiner
+name|curthread
 argument_list|,
-name|PS_RUNNING
+name|joiner
 argument_list|)
 expr_stmt|;
-comment|/* Set the return value for the woken thread: */
+if|if
+condition|(
+name|joiner
+operator|->
+name|join_status
+operator|.
+name|thread
+operator|==
+name|pthread
+condition|)
+block|{
+comment|/* 				 * Set the return value for the woken thread: 				 */
 name|joiner
 operator|->
 name|join_status
@@ -144,25 +264,21 @@ name|thread
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 			 * Disconnect the joiner from the thread being detached: 			 */
-name|pthread
-operator|->
+name|_thr_setrunnable_unlocked
+argument_list|(
 name|joiner
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Undefer and handle pending signals, yielding if a 		 * scheduling signal occurred while in the critical region. 		 */
-name|_thread_kern_sig_undefer
-argument_list|()
+name|THR_SCHED_UNLOCK
+argument_list|(
+name|curthread
+argument_list|,
+name|joiner
+argument_list|)
 expr_stmt|;
 block|}
-else|else
-comment|/* Return an error: */
-name|rval
-operator|=
-name|EINVAL
-expr_stmt|;
+block|}
 comment|/* Return the completion status: */
 return|return
 operator|(
