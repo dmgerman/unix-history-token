@@ -302,7 +302,7 @@ name|srclist
 operator|==
 name|NULL
 condition|)
-name|err
+name|_err
 argument_list|(
 literal|1
 argument_list|,
@@ -986,7 +986,7 @@ name|_nsmap
 operator|==
 name|NULL
 condition|)
-name|err
+name|_err
 argument_list|(
 literal|1
 argument_list|,

@@ -26,6 +26,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|err
+value|_err
+end_define
+
+begin_define
+define|#
+directive|define
 name|warn
 value|_warn
 end_define

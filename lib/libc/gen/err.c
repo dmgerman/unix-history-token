@@ -173,9 +173,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|_err
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
-name|err
+name|_err
 parameter_list|(
 name|int
 name|eval

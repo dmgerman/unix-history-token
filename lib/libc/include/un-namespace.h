@@ -662,6 +662,12 @@ end_endif
 begin_undef
 undef|#
 directive|undef
+name|err
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|warn
 end_undef
 
