@@ -3969,7 +3969,10 @@ name|icp
 operator|->
 name|icmp_seq
 operator|=
+name|htons
+argument_list|(
 name|ntransmitted
+argument_list|)
 expr_stmt|;
 name|icp
 operator|->
@@ -3980,9 +3983,7 @@ expr_stmt|;
 comment|/* ID */
 name|CLR
 argument_list|(
-name|icp
-operator|->
-name|icmp_seq
+name|ntransmitted
 operator|%
 name|mx_dup_ck
 argument_list|)
@@ -4244,6 +4245,8 @@ name|int
 name|hlen
 decl_stmt|,
 name|dupflag
+decl_stmt|,
+name|seq
 decl_stmt|;
 comment|/* Check the IP header */
 name|ip
@@ -4454,13 +4457,20 @@ operator|=
 name|triptime
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|TST
+name|seq
+operator|=
+name|ntohs
 argument_list|(
 name|icp
 operator|->
 name|icmp_seq
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TST
+argument_list|(
+name|seq
 operator|%
 name|mx_dup_ck
 argument_list|)
@@ -4481,9 +4491,7 @@ else|else
 block|{
 name|SET
 argument_list|(
-name|icp
-operator|->
-name|icmp_seq
+name|seq
 operator|%
 name|mx_dup_ck
 argument_list|)
@@ -4546,9 +4554,7 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
-name|icp
-operator|->
-name|icmp_seq
+name|seq
 argument_list|)
 expr_stmt|;
 operator|(
