@@ -1,0 +1,58 @@
+begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: sigpvc.h,v 1.2 1997/05/06 22:15:43 mks Exp $  *  */
+end_comment
+
+begin_comment
+comment|/*  * PVC-only Signalling Manager  * ---------------------------  *  * Protocol definitions  *  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_SIGPVC_SIGPVC_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SIGPVC_SIGPVC_H
+end_define
+
+begin_comment
+comment|/*  * Protocol Variables  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGPVC_DOWN_DELAY
+value|(15 * ATM_HZ)
+end_define
+
+begin_comment
+comment|/* Delay til i/f marked down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGPVC_UP_DELAY
+value|(5 * ATM_HZ)
+end_define
+
+begin_comment
+comment|/* Delay til i/f marked up */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SIGPVC_SIGPVC_H */
+end_comment
+
+end_unit
+
