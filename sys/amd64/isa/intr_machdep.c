@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.20 1999/04/23 21:01:19 peter Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.21 1999/05/04 21:18:20 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -123,12 +123,6 @@ end_endif
 begin_comment
 comment|/* APIC_IO */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa_device.h>
-end_include
 
 begin_ifdef
 ifdef|#
@@ -451,13 +445,13 @@ name|IDTVEC
 argument_list|(
 name|fastintr15
 argument_list|)
+block|,
 if|#
 directive|if
 name|defined
 argument_list|(
 name|APIC_IO
 argument_list|)
-block|,
 operator|&
 name|IDTVEC
 argument_list|(
@@ -503,8 +497,9 @@ block|,
 operator|&
 name|IDTVEC
 argument_list|(
-argument|fastintr23
+name|fastintr23
 argument_list|)
+block|,
 endif|#
 directive|endif
 comment|/* APIC_IO */
@@ -617,13 +612,13 @@ name|IDTVEC
 argument_list|(
 name|intr15
 argument_list|)
+block|,
 if|#
 directive|if
 name|defined
 argument_list|(
 name|APIC_IO
 argument_list|)
-block|,
 operator|&
 name|IDTVEC
 argument_list|(
@@ -669,8 +664,9 @@ block|,
 operator|&
 name|IDTVEC
 argument_list|(
-argument|intr23
+name|intr23
 argument_list|)
+block|,
 endif|#
 directive|endif
 comment|/* APIC_IO */
@@ -2042,71 +2038,6 @@ block|}
 end_function
 
 begin_function
-name|void
-name|register_imask
-parameter_list|(
-name|dvp
-parameter_list|,
-name|mask
-parameter_list|)
-name|struct
-name|isa_device
-modifier|*
-name|dvp
-decl_stmt|;
-name|u_int
-name|mask
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|dvp
-operator|->
-name|id_alive
-operator|&&
-name|dvp
-operator|->
-name|id_irq
-condition|)
-block|{
-name|int
-name|intr
-decl_stmt|;
-name|intr
-operator|=
-name|ffs
-argument_list|(
-name|dvp
-operator|->
-name|id_irq
-argument_list|)
-operator|-
-literal|1
-expr_stmt|;
-name|intr_mask
-index|[
-name|intr
-index|]
-operator|=
-name|mask
-operator||
-operator|(
-literal|1
-operator|<<
-name|intr
-operator|)
-expr_stmt|;
-block|}
-operator|(
-name|void
-operator|)
-name|update_intr_masks
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|int
 name|icu_unset
 parameter_list|(
@@ -2307,7 +2238,7 @@ comment|/* The following notice applies beyond this point in the file */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: intr_machdep.c,v 1.20 1999/04/23 21:01:19 peter Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: intr_machdep.c,v 1.21 1999/05/04 21:18:20 dfr Exp $  *  */
 end_comment
 
 begin_typedef
@@ -3406,14 +3337,6 @@ operator|<<
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* we want to remove the list head, which was known to intr_mux */
-name|icu_unset
-argument_list|(
-name|irq
-argument_list|,
-name|intr_mux
-argument_list|)
-expr_stmt|;
 comment|/* check whether the new list head is the only element on list */
 name|head
 operator|=
@@ -3429,6 +3352,13 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|icu_unset
+argument_list|(
+name|irq
+argument_list|,
+name|intr_mux
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|head
@@ -3510,6 +3440,19 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+comment|/* revert to old handler, eg: strayintr */
+name|icu_unset
+argument_list|(
+name|irq
+argument_list|,
+name|idesc
+operator|->
+name|handler
+argument_list|)
+expr_stmt|;
 block|}
 name|splx
 argument_list|(
