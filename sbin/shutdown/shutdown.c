@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.17 1999/06/18 14:26:07 ru Exp $"
+literal|"$Id: shutdown.c,v 1.18 1999/06/21 06:21:05 jkoshy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,6 +359,8 @@ decl_stmt|,
 name|killflg
 decl_stmt|,
 name|mbuflen
+decl_stmt|,
+name|oflag
 decl_stmt|;
 end_decl_stmt
 
@@ -481,7 +483,9 @@ name|usage
 name|__P
 argument_list|(
 operator|(
-name|void
+specifier|const
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -562,7 +566,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-hknpr"
+literal|"-hknopr"
 argument_list|)
 operator|)
 operator|!=
@@ -607,6 +611,14 @@ literal|"-n"
 expr_stmt|;
 break|break;
 case|case
+literal|'o'
+case|:
+name|oflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 name|dopower
@@ -627,7 +639,13 @@ literal|'?'
 case|:
 default|default:
 name|usage
-argument_list|()
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|argc
@@ -645,7 +663,13 @@ operator|<
 literal|1
 condition|)
 name|usage
-argument_list|()
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -659,25 +683,41 @@ name|dopower
 operator|>
 literal|1
 condition|)
-block|{
-name|warnx
+name|usage
 argument_list|(
 literal|"incompatible switches -h, -k, -p and -r"
 argument_list|)
 expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
-name|killflg
+name|oflag
 operator|&&
-name|nosync
+operator|!
+operator|(
+name|dohalt
+operator|||
+name|dopower
+operator|||
+name|doreboot
+operator|)
 condition|)
-name|warnx
+name|usage
 argument_list|(
-literal|"option -n ignored with -k"
+literal|"-o requires -h, -p or -r"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nosync
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|oflag
+condition|)
+name|usage
+argument_list|(
+literal|"-n requires -o"
 argument_list|)
 expr_stmt|;
 name|getoffset
@@ -1643,6 +1683,8 @@ expr_stmt|;
 if|if
 condition|(
 name|nosync
+operator|!=
+name|NULL
 condition|)
 operator|(
 name|void
@@ -1662,6 +1704,41 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+if|if
+condition|(
+operator|!
+name|oflag
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|kill
+argument_list|(
+literal|1
+argument_list|,
+name|doreboot
+condition|?
+name|SIGINT
+else|:
+comment|/* reboot */
+name|dohalt
+condition|?
+name|SIGUSR1
+else|:
+comment|/* halt */
+name|dopower
+condition|?
+name|SIGUSR2
+else|:
+comment|/* power-down */
+name|SIGTERM
+argument_list|)
+expr_stmt|;
+comment|/* single-user */
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|doreboot
@@ -1793,7 +1870,8 @@ argument_list|,
 name|SIGTERM
 argument_list|)
 expr_stmt|;
-comment|/* to single user */
+comment|/* to single-user */
+block|}
 endif|#
 directive|endif
 name|finish
@@ -2460,13 +2538,37 @@ end_function
 begin_function
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|cp
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|cp
+decl_stmt|;
 block|{
+if|if
+condition|(
+name|cp
+operator|!=
+name|NULL
+condition|)
+name|warnx
+argument_list|(
+literal|"%s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: shutdown [-] [-hknpr] time [warning-message ...]\n"
+literal|"usage: shutdown [-] [-h | -p | -r | -k] [-o [-n]]"
+literal|" time [warning-message ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
