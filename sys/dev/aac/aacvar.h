@@ -385,6 +385,11 @@ define|#
 directive|define
 name|AAC_ON_AACQ_MASK
 value|((1<<5)|(1<<6)|(1<<7)|(1<<8))
+define|#
+directive|define
+name|AAC_QUEUE_FRZN
+value|(1<<9)
+comment|/* Freeze the processing of 						 * commands on the queue. */
 name|void
 function_decl|(
 modifier|*
