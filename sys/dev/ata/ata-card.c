@@ -345,7 +345,9 @@ name|type
 parameter_list|)
 block|{
 return|return
-literal|1
+name|ch
+operator|->
+name|unit
 return|;
 block|}
 end_function
