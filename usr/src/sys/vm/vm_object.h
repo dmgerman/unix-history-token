@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	7.7 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_object.h	7.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -53,9 +53,6 @@ name|simple_lock_data_t
 name|Lock
 decl_stmt|;
 comment|/* Synchronization */
-name|int
-name|LockHolder
-decl_stmt|;
 name|int
 name|ref_count
 decl_stmt|;
@@ -266,73 +263,6 @@ directive|endif
 endif|KERNEL
 end_endif
 
-begin_if
-if|#
-directive|if
-name|VM_OBJECT_DEBUG
-end_if
-
-begin_define
-define|#
-directive|define
-name|vm_object_lock_init
-parameter_list|(
-name|object
-parameter_list|)
-value|{ simple_lock_init(&(object)->Lock); (object)->LockHolder = 0; }
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_object_lock
-parameter_list|(
-name|object
-parameter_list|)
-value|{ simple_lock(&(object)->Lock); (object)->LockHolder = (int) current_thread(); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_object_unlock
-parameter_list|(
-name|object
-parameter_list|)
-value|{ (object)->LockHolder = 0; simple_unlock(&(object)->Lock); }
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_object_lock_try
-parameter_list|(
-name|object
-parameter_list|)
-value|(simple_lock_try(&(object)->Lock) ? ( ((object)->LockHolder = (int) current_thread()) , TRUE) : FALSE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|vm_object_sleep
-parameter_list|(
-name|event
-parameter_list|,
-name|object
-parameter_list|,
-name|interruptible
-parameter_list|)
-define|\
-value|{ (object)->LockHolder = 0; thread_sleep((event),&(object)->Lock, (interruptible)); }
-end_define
-
-begin_else
-else|#
-directive|else
-else|VM_OBJECT_DEBUG
-end_else
-
 begin_define
 define|#
 directive|define
@@ -387,12 +317,6 @@ parameter_list|)
 define|\
 value|thread_sleep((event),&(object)->Lock, (interruptible))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VM_OBJECT_DEBUG
-end_endif
 
 begin_ifdef
 ifdef|#
