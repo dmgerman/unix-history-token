@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Vixie.  *  * %sccs.include.redist.c%  *  *	@(#)bitstring.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Paul Vixie.  *  * %sccs.include.redist.c%  *  *	@(#)bitstring.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -88,7 +88,7 @@ parameter_list|(
 name|nbits
 parameter_list|)
 define|\
-value|(bitstr_t *)calloc(1, \ 	    (unsigned int)_bitstr_size(nbits) * sizeof(bitstr_t))
+value|(bitstr_t *)calloc(1, \ 	    (unsigned int)bitstr_size(nbits) * sizeof(bitstr_t))
 end_define
 
 begin_comment
@@ -174,7 +174,7 @@ name|start
 parameter_list|,
 name|stop
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	_name[_startbyte]&= 0xff>> (8 - (_start&0x7)); \ 	while (++_startbyte< _stopbyte) \ 		_name[_startbyte] = 0; \ 	_name[_stopbyte]&= 0xff<< ((_stop&0x7) + 1); \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	if (_startbyte == _stopbyte) { \ 		_name[_startbyte]&= ((0xff>> (8 - (_start&0x7))) | \ 				      (0xff<< ((_stop&0x7) + 1))); \ 	} else { \ 		_name[_startbyte]&= 0xff>> (8 - (_start&0x7)); \ 		while (++_startbyte< _stopbyte) \ 			_name[_startbyte] = 0; \ 		_name[_stopbyte]&= 0xff<< ((_stop&0x7) + 1); \ 	} \ }
 end_define
 
 begin_comment
@@ -192,7 +192,7 @@ name|start
 parameter_list|,
 name|stop
 parameter_list|)
-value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	_name[_startbyte] |= 0xff<< ((start)&0x7); \ 	while (++_startbyte< _stopbyte) \ 	    _name[_startbyte] = 0xff; \ 	_name[_stopbyte] |= 0xff>> (7 - (_stop&0x7)); \ }
+value|{ \ 	register bitstr_t *_name = name; \ 	register int _start = start, _stop = stop; \ 	register int _startbyte = _bit_byte(_start); \ 	register int _stopbyte = _bit_byte(_stop); \ 	if (_startbyte == _stopbyte) { \ 		_name[_startbyte] |= ((0xff<< (_start&0x7))& \ 				    (0xff>> (7 - (_stop&0x7)))); \ 	} else { \ 		_name[_startbyte] |= 0xff<< ((_start)&0x7); \ 		while (++_startbyte< _stopbyte) \ 	    		_name[_startbyte] = 0xff; \ 		_name[_stopbyte] |= 0xff>> (7 - (_stop&0x7)); \ 	} \ }
 end_define
 
 begin_comment
