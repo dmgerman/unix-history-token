@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cache.c	8.1 (Berkeley) %G%  *  * from: $Header: cache.c,v 1.10 93/07/18 06:23:51 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)cache.c	8.2 (Berkeley) %G%  *  * from: $Header: cache.c,v 1.12 93/10/31 05:27:47 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
@@ -67,27 +67,32 @@ decl_stmt|,
 name|lim
 decl_stmt|,
 name|ls
+decl_stmt|,
+name|ts
 decl_stmt|;
-name|i
-operator|=
-name|AC_CACHETAGS
-expr_stmt|;
-name|lim
-operator|=
-name|i
-operator|+
-name|cacheinfo
-operator|.
-name|c_totalsize
-expr_stmt|;
 name|ls
 operator|=
 name|cacheinfo
 operator|.
 name|c_linesize
 expr_stmt|;
+name|ts
+operator|=
+name|cacheinfo
+operator|.
+name|c_totalsize
+expr_stmt|;
 for|for
 control|(
+name|i
+operator|=
+name|AC_CACHETAGS
+operator|,
+name|lim
+operator|=
+name|i
+operator|+
+name|ts
 init|;
 name|i
 operator|<
@@ -130,7 +135,19 @@ literal|1
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cache enabled\n"
+literal|"%d byte (%d/line) write-through %cw flush cache enabled\n"
+argument_list|,
+name|ts
+argument_list|,
+name|ls
+argument_list|,
+name|cacheinfo
+operator|.
+name|c_hwflush
+condition|?
+literal|'h'
+else|:
+literal|'s'
 argument_list|)
 expr_stmt|;
 block|}
