@@ -795,7 +795,7 @@ name|acpi_printcpu
 argument_list|()
 expr_stmt|;
 block|}
-name|wbinbd
+name|wbinvd
 argument_list|()
 expr_stmt|;
 if|if
