@@ -2832,7 +2832,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * American Micro Devices (AMD) support function  */
+comment|/*  * American Micro Devices (AMD) support functions  */
 end_comment
 
 begin_function
@@ -14999,33 +14999,33 @@ name|timings
 index|[]
 init|=
 block|{
-literal|0xff
+literal|0xa8
 block|,
-literal|0xff
+literal|0x65
 block|,
-literal|0xff
+literal|0x42
 block|,
-literal|0x55
+literal|0x22
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0xff
+literal|0x42
 block|,
-literal|0x55
+literal|0x22
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|,
-literal|0x51
+literal|0x20
 block|}
 decl_stmt|;
 name|int
