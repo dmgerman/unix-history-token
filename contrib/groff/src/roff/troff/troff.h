@@ -4,25 +4,19 @@ comment|// -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
+comment|/* Copyright (C) 1989, 1990, 1991, 1992, 2000, 2001, 2002    Free Software Foundation, Inc.      Written by James Clark (jjc@jclark.com)  This file is part of groff.  groff is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  groff is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with groff; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|"lib.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
 end_include
 
 begin_include
@@ -52,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"lib.h"
+file|"assert.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"assert.h"
+file|"color.h"
 end_include
 
 begin_include
@@ -129,6 +123,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|suppress_output_flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|color_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -278,6 +279,10 @@ block|,
 name|WARN_IG
 init|=
 literal|01000000
+block|,
+name|WARN_COLOR
+init|=
+literal|02000000
 comment|// change WARN_TOTAL if you add more warning types
 block|}
 enum|;
@@ -288,13 +293,44 @@ specifier|const
 name|int
 name|WARN_TOTAL
 init|=
-literal|01777777
+literal|02777777
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 name|int
 name|warning
+parameter_list|(
+name|warning_type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|errarg
+modifier|&
+init|=
+name|empty_errarg
+parameter_list|,
+specifier|const
+name|errarg
+modifier|&
+init|=
+name|empty_errarg
+parameter_list|,
+specifier|const
+name|errarg
+modifier|&
+init|=
+name|empty_errarg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|output_warning
 parameter_list|(
 name|warning_type
 parameter_list|,

@@ -742,6 +742,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|begin_page
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|end_diversions
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|cleanup_and_exit

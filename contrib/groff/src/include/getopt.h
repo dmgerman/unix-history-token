@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.    This file is part of the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Library General Public License as    published by the Free Software Foundation; either version 2 of the    License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Library General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with the GNU C Library; see the file COPYING.LIB.  If not,    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989-1994, 1996-1999, 2001 Free Software Foundation, Inc.    This file is part of the GNU C Library.     The GNU C Library is free software; you can redistribute it and/or    modify it under the terms of the GNU Lesser General Public    License as published by the Free Software Foundation; either    version 2.1 of the License, or (at your option) any later version.     The GNU C Library is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    Lesser General Public License for more details.     You should have received a copy of the GNU Lesser General Public    License along with the GNU C Library; if not, write to the Free    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307 USA.  */
 end_comment
 
 begin_ifndef
@@ -164,13 +164,13 @@ name|int
 name|getopt
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -197,13 +197,13 @@ name|int
 name|getopt_long
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -226,13 +226,13 @@ name|int
 name|getopt_long_only
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char
@@ -256,13 +256,13 @@ name|int
 name|_getopt_internal
 parameter_list|(
 name|int
-name|__argc
+name|___argc
 parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
-name|__argv
+name|___argv
 parameter_list|,
 specifier|const
 name|char

@@ -1640,15 +1640,11 @@ block|,
 block|{
 literal|"r!"
 block|,
-literal|"\241"
-block|,
 comment|/* 161 */
 block|}
 block|,
 block|{
 literal|"ct"
-block|,
-literal|"\242"
 block|,
 comment|/* 162 */
 block|}
@@ -1656,15 +1652,11 @@ block|,
 block|{
 literal|"Po"
 block|,
-literal|"\243"
-block|,
 comment|/* 163 */
 block|}
 block|,
 block|{
 literal|"Cs"
-block|,
-literal|"\244"
 block|,
 comment|/* 164 */
 block|}
@@ -1672,15 +1664,11 @@ block|,
 block|{
 literal|"Ye"
 block|,
-literal|"\245"
-block|,
 comment|/* 165 */
 block|}
 block|,
 block|{
 literal|"bb"
-block|,
-literal|"\246"
 block|,
 comment|/* 166 */
 block|}
@@ -1688,15 +1676,11 @@ block|,
 block|{
 literal|"sc"
 block|,
-literal|"\247"
-block|,
 comment|/* 167 */
 block|}
 block|,
 block|{
 literal|"ad"
-block|,
-literal|"\250"
 block|,
 comment|/* 168 */
 block|}
@@ -1704,15 +1688,11 @@ block|,
 block|{
 literal|"co"
 block|,
-literal|"\251"
-block|,
 comment|/* 169 */
 block|}
 block|,
 block|{
 literal|"Of"
-block|,
-literal|"\252"
 block|,
 comment|/* 170 */
 block|}
@@ -1720,15 +1700,11 @@ block|,
 block|{
 literal|"Fo"
 block|,
-literal|"\253"
-block|,
 comment|/* 171 */
 block|}
 block|,
 block|{
 literal|"no"
-block|,
-literal|"\254"
 block|,
 comment|/* 172 */
 block|}
@@ -1738,14 +1714,11 @@ literal|"-"
 block|,
 literal|"hy"
 block|,
-literal|"\255"
 comment|/* 173 */
 block|}
 block|,
 block|{
 literal|"rg"
-block|,
-literal|"\256"
 block|,
 comment|/* 174 */
 block|}
@@ -1753,23 +1726,17 @@ block|,
 block|{
 literal|"a-"
 block|,
-literal|"\257"
-block|,
 comment|/* 175 */
 block|}
 block|,
 block|{
 literal|"de"
 block|,
-literal|"\260"
-block|,
 comment|/* 176 */
 block|}
 block|,
 block|{
-literal|"+-"
-block|,
-literal|"\261"
+literal|"t+-"
 block|,
 comment|/* 177 */
 block|}
@@ -1777,15 +1744,11 @@ block|,
 block|{
 literal|"S2"
 block|,
-literal|"\262"
-block|,
 comment|/* 178 */
 block|}
 block|,
 block|{
 literal|"S3"
-block|,
-literal|"\263"
 block|,
 comment|/* 179 */
 block|}
@@ -1793,14 +1756,11 @@ block|,
 block|{
 literal|"aa"
 block|,
-literal|"\264"
-block|,
 comment|/* 180 */
 block|}
 block|,
-comment|/* Omit *m here; we want *m to match the other greek letters in the    symbol font. */
 block|{
-literal|"\265"
+literal|"mc"
 block|,
 comment|/* 181 */
 block|}
@@ -1808,15 +1768,11 @@ block|,
 block|{
 literal|"ps"
 block|,
-literal|"\266"
-block|,
 comment|/* 182 */
 block|}
 block|,
 block|{
 literal|"pc"
-block|,
-literal|"\267"
 block|,
 comment|/* 183 */
 block|}
@@ -1824,15 +1780,11 @@ block|,
 block|{
 literal|"ac"
 block|,
-literal|"\270"
-block|,
 comment|/* 184 */
 block|}
 block|,
 block|{
 literal|"S1"
-block|,
-literal|"\271"
 block|,
 comment|/* 185 */
 block|}
@@ -1840,15 +1792,11 @@ block|,
 block|{
 literal|"Om"
 block|,
-literal|"\272"
-block|,
 comment|/* 186 */
 block|}
 block|,
 block|{
 literal|"Fc"
-block|,
-literal|"\273"
 block|,
 comment|/* 187 */
 block|}
@@ -1856,15 +1804,11 @@ block|,
 block|{
 literal|"14"
 block|,
-literal|"\274"
-block|,
 comment|/* 188 */
 block|}
 block|,
 block|{
 literal|"12"
-block|,
-literal|"\275"
 block|,
 comment|/* 189 */
 block|}
@@ -1872,15 +1816,11 @@ block|,
 block|{
 literal|"34"
 block|,
-literal|"\276"
-block|,
 comment|/* 190 */
 block|}
 block|,
 block|{
 literal|"r?"
-block|,
-literal|"\277"
 block|,
 comment|/* 191 */
 block|}
@@ -1888,15 +1828,11 @@ block|,
 block|{
 literal|"`A"
 block|,
-literal|"\300"
-block|,
 comment|/* 192 */
 block|}
 block|,
 block|{
 literal|"'A"
-block|,
-literal|"\301"
 block|,
 comment|/* 193 */
 block|}
@@ -1904,15 +1840,11 @@ block|,
 block|{
 literal|"^A"
 block|,
-literal|"\302"
-block|,
 comment|/* 194 */
 block|}
 block|,
 block|{
 literal|"~A"
-block|,
-literal|"\303"
 block|,
 comment|/* 195 */
 block|}
@@ -1920,15 +1852,11 @@ block|,
 block|{
 literal|":A"
 block|,
-literal|"\304"
-block|,
 comment|/* 196 */
 block|}
 block|,
 block|{
 literal|"oA"
-block|,
-literal|"\305"
 block|,
 comment|/* 197 */
 block|}
@@ -1936,15 +1864,11 @@ block|,
 block|{
 literal|"AE"
 block|,
-literal|"\306"
-block|,
 comment|/* 198 */
 block|}
 block|,
 block|{
 literal|",C"
-block|,
-literal|"\307"
 block|,
 comment|/* 199 */
 block|}
@@ -1952,15 +1876,11 @@ block|,
 block|{
 literal|"`E"
 block|,
-literal|"\310"
-block|,
 comment|/* 200 */
 block|}
 block|,
 block|{
 literal|"'E"
-block|,
-literal|"\311"
 block|,
 comment|/* 201 */
 block|}
@@ -1968,15 +1888,11 @@ block|,
 block|{
 literal|"^E"
 block|,
-literal|"\312"
-block|,
 comment|/* 202 */
 block|}
 block|,
 block|{
 literal|":E"
-block|,
-literal|"\313"
 block|,
 comment|/* 203 */
 block|}
@@ -1984,15 +1900,11 @@ block|,
 block|{
 literal|"`I"
 block|,
-literal|"\314"
-block|,
 comment|/* 204 */
 block|}
 block|,
 block|{
 literal|"'I"
-block|,
-literal|"\315"
 block|,
 comment|/* 205 */
 block|}
@@ -2000,15 +1912,11 @@ block|,
 block|{
 literal|"^I"
 block|,
-literal|"\316"
-block|,
 comment|/* 206 */
 block|}
 block|,
 block|{
 literal|":I"
-block|,
-literal|"\317"
 block|,
 comment|/* 207 */
 block|}
@@ -2016,15 +1924,11 @@ block|,
 block|{
 literal|"-D"
 block|,
-literal|"\320"
-block|,
 comment|/* 208 */
 block|}
 block|,
 block|{
 literal|"~N"
-block|,
-literal|"\321"
 block|,
 comment|/* 209 */
 block|}
@@ -2032,15 +1936,11 @@ block|,
 block|{
 literal|"`O"
 block|,
-literal|"\322"
-block|,
 comment|/* 210 */
 block|}
 block|,
 block|{
 literal|"'O"
-block|,
-literal|"\323"
 block|,
 comment|/* 211 */
 block|}
@@ -2048,15 +1948,11 @@ block|,
 block|{
 literal|"^O"
 block|,
-literal|"\324"
-block|,
 comment|/* 212 */
 block|}
 block|,
 block|{
 literal|"~O"
-block|,
-literal|"\325"
 block|,
 comment|/* 213 */
 block|}
@@ -2064,15 +1960,11 @@ block|,
 block|{
 literal|":O"
 block|,
-literal|"\326"
-block|,
 comment|/* 214 */
 block|}
 block|,
 block|{
-literal|"mu"
-block|,
-literal|"\327"
+literal|"tmu"
 block|,
 comment|/* 215 */
 block|}
@@ -2080,15 +1972,11 @@ block|,
 block|{
 literal|"/O"
 block|,
-literal|"\330"
-block|,
 comment|/* 216 */
 block|}
 block|,
 block|{
 literal|"`U"
-block|,
-literal|"\331"
 block|,
 comment|/* 217 */
 block|}
@@ -2096,15 +1984,11 @@ block|,
 block|{
 literal|"'U"
 block|,
-literal|"\332"
-block|,
 comment|/* 218 */
 block|}
 block|,
 block|{
 literal|"^U"
-block|,
-literal|"\333"
 block|,
 comment|/* 219 */
 block|}
@@ -2112,15 +1996,11 @@ block|,
 block|{
 literal|":U"
 block|,
-literal|"\334"
-block|,
 comment|/* 220 */
 block|}
 block|,
 block|{
 literal|"'Y"
-block|,
-literal|"\335"
 block|,
 comment|/* 221 */
 block|}
@@ -2128,15 +2008,11 @@ block|,
 block|{
 literal|"TP"
 block|,
-literal|"\336"
-block|,
 comment|/* 222 */
 block|}
 block|,
 block|{
 literal|"ss"
-block|,
-literal|"\337"
 block|,
 comment|/* 223 */
 block|}
@@ -2144,15 +2020,11 @@ block|,
 block|{
 literal|"`a"
 block|,
-literal|"\340"
-block|,
 comment|/* 224 */
 block|}
 block|,
 block|{
 literal|"'a"
-block|,
-literal|"\341"
 block|,
 comment|/* 225 */
 block|}
@@ -2160,15 +2032,11 @@ block|,
 block|{
 literal|"^a"
 block|,
-literal|"\342"
-block|,
 comment|/* 226 */
 block|}
 block|,
 block|{
 literal|"~a"
-block|,
-literal|"\343"
 block|,
 comment|/* 227 */
 block|}
@@ -2176,15 +2044,11 @@ block|,
 block|{
 literal|":a"
 block|,
-literal|"\344"
-block|,
 comment|/* 228 */
 block|}
 block|,
 block|{
 literal|"oa"
-block|,
-literal|"\345"
 block|,
 comment|/* 229 */
 block|}
@@ -2192,15 +2056,11 @@ block|,
 block|{
 literal|"ae"
 block|,
-literal|"\346"
-block|,
 comment|/* 230 */
 block|}
 block|,
 block|{
 literal|",c"
-block|,
-literal|"\347"
 block|,
 comment|/* 231 */
 block|}
@@ -2208,15 +2068,11 @@ block|,
 block|{
 literal|"`e"
 block|,
-literal|"\350"
-block|,
 comment|/* 232 */
 block|}
 block|,
 block|{
 literal|"'e"
-block|,
-literal|"\351"
 block|,
 comment|/* 233 */
 block|}
@@ -2224,15 +2080,11 @@ block|,
 block|{
 literal|"^e"
 block|,
-literal|"\352"
-block|,
 comment|/* 234 */
 block|}
 block|,
 block|{
 literal|":e"
-block|,
-literal|"\353"
 block|,
 comment|/* 235 */
 block|}
@@ -2240,15 +2092,11 @@ block|,
 block|{
 literal|"`i"
 block|,
-literal|"\354"
-block|,
 comment|/* 236 */
 block|}
 block|,
 block|{
 literal|"'i"
-block|,
-literal|"\355"
 block|,
 comment|/* 237 */
 block|}
@@ -2256,15 +2104,11 @@ block|,
 block|{
 literal|"^i"
 block|,
-literal|"\356"
-block|,
 comment|/* 238 */
 block|}
 block|,
 block|{
 literal|":i"
-block|,
-literal|"\357"
 block|,
 comment|/* 239 */
 block|}
@@ -2272,15 +2116,11 @@ block|,
 block|{
 literal|"Sd"
 block|,
-literal|"\360"
-block|,
 comment|/* 240 */
 block|}
 block|,
 block|{
 literal|"~n"
-block|,
-literal|"\361"
 block|,
 comment|/* 241 */
 block|}
@@ -2288,15 +2128,11 @@ block|,
 block|{
 literal|"`o"
 block|,
-literal|"\362"
-block|,
 comment|/* 242 */
 block|}
 block|,
 block|{
 literal|"'o"
-block|,
-literal|"\363"
 block|,
 comment|/* 243 */
 block|}
@@ -2304,15 +2140,11 @@ block|,
 block|{
 literal|"^o"
 block|,
-literal|"\364"
-block|,
 comment|/* 244 */
 block|}
 block|,
 block|{
 literal|"~o"
-block|,
-literal|"\365"
 block|,
 comment|/* 245 */
 block|}
@@ -2320,15 +2152,11 @@ block|,
 block|{
 literal|":o"
 block|,
-literal|"\366"
-block|,
 comment|/* 246 */
 block|}
 block|,
 block|{
-literal|"di"
-block|,
-literal|"\367"
+literal|"tdi"
 block|,
 comment|/* 247 */
 block|}
@@ -2336,15 +2164,11 @@ block|,
 block|{
 literal|"/o"
 block|,
-literal|"\370"
-block|,
 comment|/* 248 */
 block|}
 block|,
 block|{
 literal|"`u"
-block|,
-literal|"\371"
 block|,
 comment|/* 249 */
 block|}
@@ -2352,15 +2176,11 @@ block|,
 block|{
 literal|"'u"
 block|,
-literal|"\372"
-block|,
 comment|/* 250 */
 block|}
 block|,
 block|{
 literal|"^u"
-block|,
-literal|"\373"
 block|,
 comment|/* 251 */
 block|}
@@ -2368,15 +2188,11 @@ block|,
 block|{
 literal|":u"
 block|,
-literal|"\374"
-block|,
 comment|/* 252 */
 block|}
 block|,
 block|{
 literal|"'y"
-block|,
-literal|"\375"
 block|,
 comment|/* 253 */
 block|}
@@ -2384,15 +2200,11 @@ block|,
 block|{
 literal|"Tp"
 block|,
-literal|"\376"
-block|,
 comment|/* 254 */
 block|}
 block|,
 block|{
 literal|":y"
-block|,
-literal|"\377"
 block|,
 comment|/* 255 */
 block|}
@@ -3085,8 +2897,6 @@ block|,
 block|{
 literal|"*m"
 block|,
-literal|"\265"
-block|,
 comment|/* 109 */
 block|}
 block|,
@@ -3480,6 +3290,7 @@ block|{
 literal|"ua"
 block|,
 literal|"arrowverttp"
+block|,
 comment|/* 173 */
 block|}
 block|,
@@ -3493,21 +3304,18 @@ block|{
 literal|"da"
 block|,
 literal|"arrowvertbt"
+block|,
 comment|/* 175 */
 block|}
 block|,
 block|{
 literal|"de"
 block|,
-literal|"\260"
-block|,
 comment|/* 176 */
 block|}
 block|,
 block|{
 literal|"+-"
-block|,
-literal|"\261"
 block|,
 comment|/* 177 */
 block|}
@@ -3526,8 +3334,6 @@ block|}
 block|,
 block|{
 literal|"mu"
-block|,
-literal|"\327"
 block|,
 comment|/* 180 */
 block|}
@@ -3552,8 +3358,6 @@ block|}
 block|,
 block|{
 literal|"di"
-block|,
-literal|"\367"
 block|,
 comment|/* 184 */
 block|}
@@ -3748,8 +3552,6 @@ block|}
 block|,
 block|{
 literal|"no"
-block|,
-literal|"\254"
 block|,
 comment|/* 216 */
 block|}
@@ -3986,6 +3788,7 @@ block|{
 literal|"bracerighttp"
 block|,
 literal|"rt"
+block|,
 comment|/* 252 */
 block|}
 block|,
@@ -3993,6 +3796,7 @@ block|{
 literal|"bracerightmid"
 block|,
 literal|"rk"
+block|,
 comment|/* 253 */
 block|}
 block|,
@@ -4000,6 +3804,7 @@ block|{
 literal|"bracerightbt"
 block|,
 literal|"rb"
+block|,
 comment|/* 254 */
 block|}
 block|,
