@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) %G%"
+literal|"@(#)main.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -600,7 +600,7 @@ end_comment
 begin_expr_stmt
 name|DtableSize
 operator|=
-name|getdtablesize
+name|getdtsize
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -941,6 +941,21 @@ expr_stmt|;
 end_if
 
 begin_comment
+comment|/* our real uid will have to be root -- we will trash this later */
+end_comment
+
+begin_expr_stmt
+name|setuid
+argument_list|(
+operator|(
+name|uid_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Handle any non-getoptable constructions. */
 end_comment
 
@@ -1061,8 +1076,7 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getrgid
-argument_list|()
+name|RealGid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1070,8 +1084,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getruid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 name|safecf
@@ -1926,8 +1939,7 @@ directive|ifdef
 name|DAEMON
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2066,8 +2078,7 @@ case|:
 comment|/* select configuration file (already done) */
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2439,8 +2450,7 @@ case|:
 comment|/* traffic log file */
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 name|TrafficLogFile
@@ -2749,8 +2759,7 @@ if|if
 condition|(
 name|queuemode
 operator|&&
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -2785,8 +2794,7 @@ name|stbuf
 operator|.
 name|st_uid
 operator|!=
-name|getuid
-argument_list|()
+name|RealUid
 condition|)
 block|{
 comment|/* nope, really a botch */
@@ -2831,8 +2839,7 @@ name|void
 operator|)
 name|setgid
 argument_list|(
-name|getgid
-argument_list|()
+name|RealGid
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2840,8 +2847,7 @@ name|void
 operator|)
 name|setuid
 argument_list|(
-name|getuid
-argument_list|()
+name|RealUid
 argument_list|)
 expr_stmt|;
 comment|/* freeze the configuration */
@@ -3172,11 +3178,18 @@ name|OpMode
 operator|!=
 name|MD_TEST
 condition|)
+block|{
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|ExitStat
 argument_list|)
 expr_stmt|;
+block|}
 end_if
 
 begin_comment
@@ -3203,6 +3216,11 @@ argument_list|)
 expr_stmt|;
 name|printqueue
 argument_list|()
+expr_stmt|;
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
@@ -3232,6 +3250,11 @@ argument_list|(
 name|TRUE
 argument_list|,
 name|CurEnv
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|RealUid
 argument_list|)
 expr_stmt|;
 name|exit
@@ -4604,6 +4627,18 @@ name|EX_OK
 expr_stmt|;
 end_if
 
+begin_comment
+comment|/* reset uid for process accounting */
+end_comment
+
+begin_expr_stmt
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|exit
 argument_list|(
@@ -4645,6 +4680,12 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* reset uid for process accounting */
+name|setuid
+argument_list|(
+name|RealUid
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EX_OK

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.3 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.4 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.3 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.4 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1675,9 +1675,6 @@ decl_stmt|;
 name|time_t
 name|timeout
 decl_stmt|;
-name|time_t
-name|mintimeout
-decl_stmt|;
 specifier|static
 name|int
 name|datatimeout
@@ -1892,27 +1889,31 @@ name|e
 operator|->
 name|e_msgsize
 operator|/
-literal|64
-expr_stmt|;
-name|mintimeout
-operator|=
-name|e
-operator|->
-name|e_nrcpts
-operator|*
-literal|90
-operator|+
-literal|60
+literal|16
 expr_stmt|;
 if|if
 condition|(
 name|timeout
 operator|<
-name|mintimeout
+operator|(
+name|time_t
+operator|)
+literal|60
 condition|)
 name|timeout
 operator|=
-name|mintimeout
+operator|(
+name|time_t
+operator|)
+literal|60
+expr_stmt|;
+name|timeout
+operator|+=
+name|e
+operator|->
+name|e_nrcpts
+operator|*
+literal|90
 expr_stmt|;
 name|ev
 operator|=

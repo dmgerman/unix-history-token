@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.2 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1888,6 +1888,20 @@ name|q_flags
 argument_list|)
 condition|)
 continue|continue;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|13
+argument_list|,
+literal|3
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"FATAL ERRORS\n"
+argument_list|)
+expr_stmt|;
 name|e
 operator|->
 name|e_flags
@@ -2971,6 +2985,15 @@ operator|!=
 name|EX_OK
 condition|)
 block|{
+name|markfailure
+argument_list|(
+name|e
+argument_list|,
+name|to
+argument_list|,
+name|rcode
+argument_list|)
+expr_stmt|;
 name|giveresponse
 argument_list|(
 name|rcode

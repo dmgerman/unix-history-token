@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.2 (Berkeley) %G%"
+literal|"@(#)alias.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2508,7 +2508,7 @@ name|ep
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|_POSIX_SAVED_IDS
+name|HASSETEUID
 specifier|register
 name|ADDRESS
 modifier|*
@@ -2627,7 +2627,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_POSIX_SAVED_IDS
+name|HASSETEUID
 name|ca
 operator|=
 name|getctladdr
@@ -2746,9 +2746,29 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"forward: old uid = %d/%d\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_POSIX_SAVED_IDS
+name|HASSETEUID
 name|saveduid
 operator|=
 name|geteuid
@@ -2774,6 +2794,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"forward: new uid = %d/%d\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|include
@@ -2791,7 +2831,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|_POSIX_SAVED_IDS
+name|HASSETEUID
 if|if
 condition|(
 name|saveduid
@@ -2802,16 +2842,50 @@ name|uid
 operator|!=
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|seteuid
 argument_list|(
 name|saveduid
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"seteuid(%d) failure (real=%d, eff=%d)"
+argument_list|,
+name|saveduid
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|27
+argument_list|,
+literal|9
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"forward: reset uid = %d/%d\n"
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|err

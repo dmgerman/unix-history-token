@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.2 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.3 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.2 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.3 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1200,6 +1200,13 @@ name|SuprErrs
 operator|=
 name|TRUE
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
 name|finis
 argument_list|()
 expr_stmt|;
@@ -1810,6 +1817,11 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* check to see if we need to re-expand aliases */
+comment|/* also reset QBADADDR on already-diagnosted addrs */
+name|doublequeue
+operator|=
+name|FALSE
+expr_stmt|;
 for|for
 control|(
 name|a
@@ -1840,7 +1852,40 @@ operator|->
 name|q_flags
 argument_list|)
 condition|)
-break|break;
+block|{
+comment|/* need to re-expand aliases */
+name|doublequeue
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+block|{
+comment|/* make this "go away" */
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QDONTSEND
+expr_stmt|;
+name|a
+operator|->
+name|q_flags
+operator|&=
+operator|~
+name|QBADADDR
+expr_stmt|;
+block|}
 block|}
 comment|/* collect the text of the message */
 name|SmtpPhase
@@ -1851,9 +1896,7 @@ name|collect
 argument_list|(
 name|TRUE
 argument_list|,
-name|a
-operator|!=
-name|NULL
+name|doublequeue
 argument_list|,
 name|e
 argument_list|)
@@ -1885,9 +1928,8 @@ name|nrcpts
 operator|!=
 literal|1
 operator|&&
-name|a
-operator|==
-name|NULL
+operator|!
+name|doublequeue
 condition|)
 block|{
 name|HoldErrs
@@ -2024,9 +2066,7 @@ expr_stmt|;
 comment|/* if we just queued, poke it */
 if|if
 condition|(
-name|a
-operator|!=
-name|NULL
+name|doublequeue
 operator|&&
 name|e
 operator|->

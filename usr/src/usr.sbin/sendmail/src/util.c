@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.2 (Berkeley) %G%"
+literal|"@(#)util.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,6 +1824,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fd
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
+else|else
 return|return
 name|fdopen
 argument_list|(

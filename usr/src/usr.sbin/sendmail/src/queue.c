@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.2 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.3 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.2 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.3 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4460,8 +4460,7 @@ argument_list|,
 name|PrivacyFlags
 argument_list|)
 operator|&&
-name|getuid
-argument_list|()
+name|RealUid
 operator|!=
 literal|0
 condition|)
@@ -4549,8 +4548,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|getgid
-argument_list|()
+name|RealGid
 operator|!=
 name|st
 operator|.

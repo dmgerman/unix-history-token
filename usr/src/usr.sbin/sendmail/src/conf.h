@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -323,6 +323,10 @@ begin_comment
 comment|/* **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. */
 end_comment
 
+begin_comment
+comment|/* general "standard C" defines */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -346,6 +350,36 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* general POSIX defines */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_VERSION
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has setsid(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Per-Operating System defines */
+end_comment
+
+begin_comment
 comment|/* HP-UX -- tested for 8.07 */
 end_comment
 
@@ -362,6 +396,10 @@ name|SYSTEM5
 value|1
 end_define
 
+begin_comment
+comment|/* include all the System V defines */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -376,19 +414,45 @@ end_comment
 begin_define
 define|#
 directive|define
-name|seteuid
-value|setuid
+name|HASSETEUID
+value|1
 end_define
+
+begin_comment
+comment|/* we have seteuid call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|seteuid
+parameter_list|(
+name|uid
+parameter_list|)
+value|setresuid(-1, uid, -1)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
 
 begin_define
 define|#
 directive|define
 name|HASSETVBUF
+value|1
 end_define
 
 begin_comment
 comment|/* we have setvbuf in libc (but not __STDC__) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -499,6 +563,329 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* various systems from Sun Microsystems */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|BSD
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS
+end_ifdef
+
+begin_comment
+comment|/* Solaris 2.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOCKF
+value|1
+end_define
+
+begin_comment
+comment|/* use System V lockf instead of flock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUSTAT
+value|1
+end_define
+
+begin_comment
+comment|/* has the ustat(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|bcopy
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memmove((d), (s), (l)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bzero
+parameter_list|(
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memset((d), '\0', (l)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|bcmp
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|,
+name|l
+parameter_list|)
+value|(memcmp((s), (d), (l)))
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* SunOS 4.1.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* we have seteuid call */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<vfork.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Digital Ultrix 4.2A or 4.3 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* we have seteuid call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OSF/1 (tested on Alpha) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__osf__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* we have seteuid call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|seteuid
+parameter_list|(
+name|uid
+parameter_list|)
+value|setreuid(-1, uid)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NeXTstep */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NeXT__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sleep
+value|sleepX
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* need unsetenv(3) support */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* various flavors of BSD */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* we have getdtablesize(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* 4.4BSD */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD4_4
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|HASSETEUID
+value|1
+end_define
+
+begin_comment
+comment|/* we have seteuid(2) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  End of Per-Operating System defines */
+end_comment
+
+begin_comment
 comment|/* general System V defines */
 end_comment
 
@@ -541,213 +928,16 @@ begin_comment
 comment|/* use System V uname system call */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BSD
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
-name|UNSETENV
+name|NEEDGETDTABLESIZE
 value|1
 end_define
 
 begin_comment
-comment|/* need unsetenv(3) support */
+comment|/* needs a replacement getdtablesize */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SOLARIS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|LOCKF
-value|1
-end_define
-
-begin_comment
-comment|/* use System V lockf instead of flock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASUSTAT
-value|1
-end_define
-
-begin_comment
-comment|/* has the ustat(2) syscall */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vfork.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ultrix
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-value|1
-end_define
-
-begin_comment
-comment|/* has the statfs(2) syscall */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_VERSION
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|HASSETSID
-value|1
-end_define
-
-begin_comment
-comment|/* has setsid(2) call */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__NeXT__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sleep
-value|sleepX
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNSETENV
-value|1
-end_define
-
-begin_comment
-comment|/* need unsetenv(3) support */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD4_4
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_POSIX_SAVED_IDS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_POSIX_SAVED_IDS
-end_define
-
-begin_comment
-comment|/* safe because we actually use seteuid */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
