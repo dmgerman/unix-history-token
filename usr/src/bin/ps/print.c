@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.13 (Berkeley) %G%"
+literal|"@(#)print.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -58,48 +58,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<math.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<tzfile.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stddef.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ps.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -126,19 +84,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ucred.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kinfo_proc.h>
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
 end_include
 
 begin_else
@@ -168,6 +126,60 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nlist.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ps.h"
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -1147,6 +1159,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|v
 operator|->
 name|width
@@ -1166,7 +1181,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -1174,6 +1188,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|v
 operator|->
 name|width
@@ -1195,7 +1212,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_function
 
@@ -1236,6 +1252,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|v
 operator|->
 name|width
@@ -1255,7 +1274,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NEWVM */
 operator|(
 name|void
 operator|)
@@ -1263,6 +1281,9 @@ name|printf
 argument_list|(
 literal|"%-*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|v
 operator|->
 name|width
@@ -1284,7 +1305,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NEWVM */
 block|}
 end_function
 
@@ -3876,8 +3896,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"unknown type %d"
 argument_list|,
 name|v
