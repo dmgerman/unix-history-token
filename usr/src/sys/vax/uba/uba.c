@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"param.h"
 end_include
 
@@ -78,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../vax/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../vax/cpu.h"
 end_include
 
@@ -134,17 +134,6 @@ end_define
 
 begin_comment
 comment|/* IPL 17 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BDPMASK
-value|0xf0000000
-end_define
-
-begin_comment
-comment|/* see ubavar.h */
 end_comment
 
 begin_comment
@@ -589,7 +578,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Allocate and setup UBA map registers, and bdp's  * Flags says whether bdp is needed, whether the caller can't  * wait (e.g. if the caller is at interrupt level).  *  * Return value:  *	Bits 0-8	Byte offset  *	Bits 9-17	Start map reg. no.  *	Bits 18-27	No. mapping reg's  *	Bits 28-31	BDP no.  */
+comment|/*  * Allocate and setup UBA map registers, and bdp's  * Flags says whether bdp is needed, whether the caller can't  * wait (e.g. if the caller is at interrupt level).  * Return value encodes map register plus page offset,  * bdp number and number of map registers.  */
 end_comment
 
 begin_macro
@@ -738,6 +727,17 @@ name|o
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|npf
+operator|>
+name|UBA_MAXNMR
+condition|)
+name|panic
+argument_list|(
+literal|"uba xfer too big"
+argument_list|)
 expr_stmt|;
 name|a
 operator|=
@@ -973,25 +973,16 @@ operator|--
 expr_stmt|;
 name|ubinfo
 operator|=
-operator|(
-name|bdp
-operator|<<
-literal|28
-operator|)
-operator||
-operator|(
-name|npf
-operator|<<
-literal|18
-operator|)
-operator||
-operator|(
-name|reg
-operator|<<
-literal|9
-operator|)
-operator||
+name|UBAI_INFO
+argument_list|(
 name|o
+argument_list|,
+name|reg
+argument_list|,
+name|npf
+argument_list|,
+name|bdp
+argument_list|)
 expr_stmt|;
 name|temp
 operator|=
@@ -1374,13 +1365,10 @@ literal|0
 expr_stmt|;
 name|bdp
 operator|=
-operator|(
+name|UBAI_BDP
+argument_list|(
 name|mr
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0x0f
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1506,25 +1494,17 @@ block|}
 comment|/* 	 * Put back the registers in the resource map. 	 * The map code must not be reentered, 	 * nor can the registers be freed twice. 	 * Unblock interrupts once this is done. 	 */
 name|npf
 operator|=
-operator|(
+name|UBAI_NMR
+argument_list|(
 name|mr
-operator|>>
-literal|18
-operator|)
-operator|&
-literal|0x3ff
+argument_list|)
 expr_stmt|;
 name|reg
 operator|=
-operator|(
-operator|(
+name|UBAI_MR
+argument_list|(
 name|mr
-operator|>>
-literal|9
-operator|)
-operator|&
-literal|0x1ff
-operator|)
+argument_list|)
 operator|+
 literal|1
 expr_stmt|;
@@ -1624,15 +1604,12 @@ specifier|register
 name|int
 name|bdp
 init|=
-operator|(
+name|UBAI_BDP
+argument_list|(
 name|um
 operator|->
 name|um_ubinfo
-operator|>>
-literal|28
-operator|)
-operator|&
-literal|0x0f
+argument_list|)
 decl_stmt|;
 switch|switch
 condition|(
@@ -1729,6 +1706,20 @@ end_expr_stmt
 
 begin_block
 block|{
+if|if
+condition|(
+name|uhp
+operator|->
+name|uh_memsize
+operator|>
+name|UBA_MAXMR
+condition|)
+name|uhp
+operator|->
+name|uh_memsize
+operator|=
+name|UBA_MAXMR
+expr_stmt|;
 name|rminit
 argument_list|(
 name|uhp
@@ -2268,6 +2259,82 @@ endif|DW750 || DW730 || QBA
 block|}
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|QBA
+end_ifdef
+
+begin_comment
+comment|/*  * Determine the interrupt priority of a Q-bus  * peripheral.  The device probe routine must spl6(),  * attempt to make the device request an interrupt,  * delaying as necessary, then call this routine  * before resetting the device.  */
+end_comment
+
+begin_macro
+name|qbgetpri
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|pri
+decl_stmt|;
+specifier|extern
+name|int
+name|cvec
+decl_stmt|;
+for|for
+control|(
+name|pri
+operator|=
+literal|0x17
+init|;
+name|pri
+operator|>
+literal|0x14
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|cvec
+operator|&&
+name|cvec
+operator|!=
+literal|0x200
+condition|)
+comment|/* interrupted at pri */
+break|break;
+name|pri
+operator|--
+expr_stmt|;
+name|splx
+argument_list|(
+name|pri
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|pri
+operator|)
+return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
