@@ -155,6 +155,28 @@ name|SLAVE
 value|1
 end_define
 
+begin_comment
+comment|/*  * Determine the base master and slave modes not including auto EOI support.  * All machines that FreeBSD supports use 8086 mode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BASE_MASTER_MODE
+value|ICW4_8086
+end_define
+
+begin_define
+define|#
+directive|define
+name|BASE_SLAVE_MODE
+value|ICW4_8086
+end_define
+
+begin_comment
+comment|/* Enable automatic EOI if requested. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -165,7 +187,7 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|(ICW4_8086 | ICW4_AEOI)
+value|(BASE_MASTER_MODE | ICW4_AEOI)
 end_define
 
 begin_else
@@ -177,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|MASTER_MODE
-value|ICW4_8086
+value|BASE_MASTER_MODE
 end_define
 
 begin_endif
@@ -195,7 +217,7 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|(ICW4_8086 | ICW4_AEOI)
+value|(BASE_SLAVE_MODE | ICW4_AEOI)
 end_define
 
 begin_else
@@ -207,7 +229,7 @@ begin_define
 define|#
 directive|define
 name|SLAVE_MODE
-value|ICW4_8086
+value|BASE_SLAVE_MODE
 end_define
 
 begin_endif
