@@ -697,6 +697,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_comment
 comment|/* Enable forwarding of wakeups to all other cpus */
 end_comment
@@ -928,6 +934,11 @@ literal|"account for htt"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Arrange to reschedule if necessary, taking the priorities and  * schedulers into account.  */
@@ -2701,6 +2712,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
 begin_comment
 comment|/* enable HTT_2 if you have a 2-way HTT cpu.*/
 end_comment
@@ -3057,6 +3074,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
