@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	4.20	81/03/03	*/
+comment|/*	autoconf.c	4.21	81/03/06	*/
 end_comment
 
 begin_comment
@@ -214,6 +214,26 @@ name|caddr_t
 operator|)
 literal|0x201fe000
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
+
+begin_decl_stmt
+name|char
+name|nexflt_bits
+index|[]
+init|=
+name|NEXFLT_BITS
 decl_stmt|;
 end_decl_stmt
 
@@ -1303,10 +1323,6 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|dt
-operator|&=
-name|MBDT_TYPE
-expr_stmt|;
 name|fnd
 operator|.
 name|mi_slave
@@ -1338,8 +1354,6 @@ operator|&
 name|fnd
 argument_list|,
 name|dt
-operator|&
-name|MBDT_TYPE
 argument_list|)
 expr_stmt|;
 block|}
@@ -1457,7 +1471,11 @@ condition|(
 operator|*
 name|tp
 operator|==
+operator|(
 name|type
+operator|&
+name|MBDT_TYPE
+operator|)
 condition|)
 goto|goto
 name|found
@@ -1495,7 +1513,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%c%d at mba%d drive %d\n"
+literal|"%c%d at mba%d drive %d"
 argument_list|,
 name|mi
 operator|->
@@ -1512,6 +1530,26 @@ argument_list|,
 name|ni
 operator|->
 name|mi_drive
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|type
+operator|&
+name|MBDT_TAP
+condition|)
+name|printf
+argument_list|(
+literal|" slave %d"
+argument_list|,
+name|ni
+operator|->
+name|ni_slave
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|mi
