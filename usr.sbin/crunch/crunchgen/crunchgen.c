@@ -10,6 +10,24 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -47,24 +65,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_define
@@ -694,7 +694,7 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-comment|/*      * generate filenames      */
+comment|/* 	 * generate filenames 	 */
 name|strlcpy
 argument_list|(
 name|infilename
@@ -915,11 +915,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s%s\n\t%s%s\n"
 argument_list|,
-literal|"usage: crunchgen [-foq] [-h<makefile-header-name>] [-m<makefile>]"
+literal|"usage: crunchgen [-foq] "
 argument_list|,
-literal|"	[-p<obj-prefix>] [-c<c-file-name>] [-e<exec-file>]<conffile>"
+literal|"[-h<makefile-header-name>] [-m<makefile>]"
+argument_list|,
+literal|"[-p<obj-prefix>] [-c<c-file-name>] [-e<exec-file>] "
+argument_list|,
+literal|"<conffile>"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1419,7 +1423,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s:%d: %s command needs at least 1 argument, skipping"
+literal|"%s:%d: %s %s"
 argument_list|,
 name|curfilename
 argument_list|,
@@ -1429,6 +1433,8 @@ name|fieldv
 index|[
 literal|0
 index|]
+argument_list|,
+literal|"command needs at least 1 argument, skipping"
 argument_list|)
 expr_stmt|;
 name|goterror
@@ -1855,14 +1861,20 @@ name|p2
 operator|->
 name|ident
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|srcdir
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|realsrcdir
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|objdir
@@ -1873,10 +1885,14 @@ name|p2
 operator|->
 name|links
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|objs
 operator|=
+name|NULL
+expr_stmt|;
 name|p2
 operator|->
 name|keeplist
@@ -3025,7 +3041,7 @@ name|path
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Unless the option to make object files was specified the      * the objects will be built in the source directory unless      * an object directory already exists.      */
+comment|/* Unless the option to make object files was specified the 	* the objects will be built in the source directory unless 	* an object directory already exists. 	*/
 if|if
 condition|(
 operator|!
@@ -3094,7 +3110,7 @@ operator|->
 name|realsrcdir
 expr_stmt|;
 block|}
-comment|/*  * XXX look for a Makefile.{name} in local directory first.  * This lets us override the original Makefile.  */
+comment|/* 	* XXX look for a Makefile.{name} in local directory first. 	* This lets us override the original Makefile. 	*/
 name|snprintf
 argument_list|(
 name|path
@@ -3197,7 +3213,9 @@ name|verbose
 condition|)
 name|warnx
 argument_list|(
-literal|"%s: %s: warning: could not find source directory"
+literal|"%s: %s: %s"
+argument_list|,
+literal|"warning: could not find source directory"
 argument_list|,
 name|infilename
 argument_list|,
@@ -3360,7 +3378,7 @@ name|p
 operator|->
 name|objvar
 expr_stmt|;
-comment|/*      * XXX include outhdrname (e.g. to contain Make variables)      */
+comment|/* 	* XXX include outhdrname (e.g. to contain Make variables) 	*/
 if|if
 condition|(
 name|outhdrname
@@ -3841,7 +3859,8 @@ name|fprintf
 argument_list|(
 name|cachef
 argument_list|,
-literal|"# %s - parm cache generated from %s by crunchgen %s\n\n"
+literal|"# %s - parm cache generated from %s by crunchgen "
+literal|" %s\n\n"
 argument_list|,
 name|cachename
 argument_list|,
@@ -4390,7 +4409,7 @@ decl_stmt|,
 modifier|*
 name|d
 decl_stmt|;
-comment|/*      * generates a Makefile/C identifier from a program name, mapping '-' to      * '_' and ignoring all other non-identifier characters.  This leads to      * programs named "foo.bar" and "foobar" to map to the same identifier.      */
+comment|/* 	 * generates a Makefile/C identifier from a program name, 	 * mapping '-' to '_' and ignoring all other non-identifier 	 * characters.  This leads to programs named "foo.bar" and 	 * "foobar" to map to the same identifier. 	 */
 if|if
 condition|(
 operator|(
@@ -4534,7 +4553,7 @@ argument_list|(
 name|path
 argument_list|)
 condition|)
-continue|continue ;
+continue|continue;
 if|if
 condition|(
 operator|(
@@ -4606,7 +4625,8 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"MAKE=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX) make\n"
+literal|"MAKE=env MAKEOBJDIRPREFIX=$(MAKEOBJDIRPREFIX) "
+literal|"make\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5039,8 +5059,26 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) depend&& \\\n"
-literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) $(%s_OBJS))\n"
+literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) depend&&"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\\\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t\t$(MAKE) $(BUILDOPTS) $(%s_OPTS) "
+literal|"$(%s_OBJS))"
 argument_list|,
 name|p
 operator|->
@@ -5049,10 +5087,13 @@ argument_list|,
 name|p
 operator|->
 name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
 argument_list|,
-name|p
-operator|->
-name|ident
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -5079,11 +5120,23 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"%s_make:\n\t@echo \"** cannot make objs for %s\"\n\n"
+literal|"%s_make:\n"
+argument_list|,
+name|p
+operator|->
+name|ident
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"\t@echo \"** cannot make objs for %s\"\n\n"
 argument_list|,
 name|p
 operator|->
@@ -5094,6 +5147,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|outmk
