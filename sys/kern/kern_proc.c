@@ -387,8 +387,11 @@ name|KINFO_PROC_SIZE
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: size of kinfo_proc (%d) should be %d!!!\n"
+literal|"WARNING: size of kinfo_proc (%ld) should be %d!!!\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 sizeof|sizeof
 argument_list|(
 expr|struct

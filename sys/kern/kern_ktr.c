@@ -1086,6 +1086,9 @@ name|db_printf
 argument_list|(
 literal|"%4ld.%06ld "
 argument_list|,
+operator|(
+name|long
+operator|)
 name|kp
 operator|->
 name|ktr_tv
