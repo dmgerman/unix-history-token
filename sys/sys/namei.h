@@ -292,6 +292,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LOCKSHARED
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Shared lock leaf */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NOFOLLOW
 value|0x0000
 end_define
@@ -304,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|MODMASK
-value|0x00fc
+value|0x01fc
 end_define
 
 begin_comment
@@ -313,17 +324,6 @@ end_comment
 
 begin_comment
 comment|/*  * Namei parameter descriptors.  *  * SAVENAME may be set by either the callers of namei or by VOP_LOOKUP.  * If the caller of namei sets the flag (for example execve wants to  * know the name of the program that is being executed), then it must  * free the buffer. If VOP_LOOKUP sets the flag, then the buffer must  * be freed by either the commit routine or the VOP_ABORT routine.  * SAVESTART is set only by the callers of namei. It implies SAVENAME  * plus the addition of saving the parent directory that contains the  * name in ni_startdir. It allows repeated calls to lookup for the  * name being sought. The caller is responsible for releasing the  * buffer and for vrele'ing ni_startdir.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NOCROSSMOUNT
-value|0x000100
-end_define
-
-begin_comment
-comment|/* do not cross mount points */
 end_comment
 
 begin_define
@@ -472,8 +472,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NOCROSSMOUNT
+value|0x400000
+end_define
+
+begin_comment
+comment|/* do not cross mount points */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PARAMASK
-value|0x1fff00
+value|0x3ffe00
 end_define
 
 begin_comment
