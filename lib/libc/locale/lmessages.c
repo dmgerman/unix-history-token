@@ -37,6 +37,7 @@ value|(offsetof(struct lc_messages_T, yesstr) / sizeof(char *))
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|empty
 index|[]
