@@ -111,10 +111,6 @@ operator|(
 name|u_quad_t
 operator|)
 name|b
-operator|,
-name|neg
-operator|^=
-literal|1
 expr_stmt|;
 else|else
 name|ub
