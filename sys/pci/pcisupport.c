@@ -6870,6 +6870,15 @@ operator|(
 literal|"NeoMagic MagicMedia 256ZX Audio controller"
 operator|)
 return|;
+comment|/* ESS Technology Inc -- vendor 0x125d */
+case|case
+literal|0x1978125d
+case|:
+return|return
+operator|(
+literal|"ESS Technology Maestro 2E Audio controller"
+operator|)
+return|;
 comment|/* Toshiba -- vendor 0x1179 */
 case|case
 literal|0x07011179
@@ -7562,6 +7571,14 @@ case|:
 name|chip
 operator|=
 literal|"Mach64-GX"
+expr_stmt|;
+break|break;
+case|case
+literal|0x4c4d
+case|:
+name|chip
+operator|=
+literal|"Mobility-1"
 expr_stmt|;
 break|break;
 case|case
