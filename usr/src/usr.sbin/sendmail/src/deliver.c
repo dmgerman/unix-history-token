@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.17 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3496,9 +3496,6 @@ argument_list|(
 name|DefGid
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYSTEM5
 operator|(
 name|void
 operator|)
@@ -3509,8 +3506,6 @@ argument_list|,
 name|DefGid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -3532,9 +3527,6 @@ operator|->
 name|q_gid
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYSTEM5
 operator|(
 name|void
 operator|)
@@ -3557,8 +3549,6 @@ operator|->
 name|q_gid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -5121,9 +5111,6 @@ argument_list|(
 name|DefGid
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYSTEM5
 operator|(
 name|void
 operator|)
@@ -5134,8 +5121,6 @@ argument_list|,
 name|DefGid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -5149,9 +5134,6 @@ operator|->
 name|q_gid
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SYSTEM5
 operator|(
 name|void
 operator|)
@@ -5174,8 +5156,6 @@ operator|->
 name|q_gid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 if|if
