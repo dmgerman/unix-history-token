@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1920,6 +1920,9 @@ name|uap
 operator|->
 name|ruid
 operator|!=
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 operator|&&
@@ -1950,6 +1953,9 @@ name|uap
 operator|->
 name|euid
 operator|==
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -2055,6 +2061,9 @@ name|uap
 operator|->
 name|rgid
 operator|!=
+operator|(
+name|gid_t
+operator|)
 operator|-
 literal|1
 operator|&&
@@ -2085,6 +2094,9 @@ name|uap
 operator|->
 name|egid
 operator|==
+operator|(
+name|gid_t
+operator|)
 operator|-
 literal|1
 condition|)
