@@ -298,7 +298,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|int32_t
 function_decl|(
 modifier|*
 name|nfsrv3_procs
@@ -427,6 +427,10 @@ name|mbuf
 modifier|*
 name|mb
 decl_stmt|;
+comment|/* XXXRW: not 100% clear the lock is needed here. */
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|nd
 operator|->
 name|nd_repstat
@@ -451,6 +455,9 @@ comment|/* XXX recheck */
 name|siz
 operator|=
 literal|0
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|MGETHDR
 argument_list|(
@@ -511,6 +518,9 @@ argument_list|(
 name|mreq
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|tl
 operator|=
@@ -854,6 +864,10 @@ name|off
 init|=
 literal|0
 decl_stmt|;
+comment|/* XXXRW: may not need lock? */
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 operator|++
 name|nfs_realign_test
 expr_stmt|;
@@ -891,6 +905,9 @@ literal|0x3
 operator|)
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|MGET
 argument_list|(
 name|n
@@ -917,6 +934,9 @@ name|M_TRYWAIT
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|n
 operator|->
 name|m_len
@@ -1047,6 +1067,9 @@ decl_stmt|,
 modifier|*
 name|md
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|mrep
 operator|=
 name|nd
@@ -1792,6 +1815,14 @@ name|flags
 decl_stmt|,
 name|error
 decl_stmt|;
+comment|/* 	 * XXXRW: For now, assert Giant here since the NFS server upcall 	 * will perform socket operations requiring Giant in a non-mpsafe 	 * kernel. 	 */
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
+comment|/* XXXRW: Unlocked read. */
 if|if
 condition|(
 operator|(
@@ -1816,6 +1847,9 @@ operator|==
 name|M_DONTWAIT
 condition|)
 block|{
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|slp
 operator|->
 name|ns_flag
@@ -1828,9 +1862,9 @@ goto|;
 block|}
 endif|#
 directive|endif
-name|GIANT_REQUIRED
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking is done */
 name|auio
 operator|.
 name|uio_td
@@ -1885,6 +1919,9 @@ name|flags
 operator|=
 name|MSG_DONTWAIT
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|so
@@ -1911,6 +1948,9 @@ argument_list|,
 operator|&
 name|flags
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2061,6 +2101,9 @@ name|flags
 operator|=
 name|MSG_DONTWAIT
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|so
@@ -2141,8 +2184,14 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 continue|continue;
 block|}
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfs_realign
 argument_list|(
 operator|&
@@ -2178,6 +2227,10 @@ name|nr_link
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -2256,6 +2309,9 @@ argument_list|(
 name|slp
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2310,6 +2366,9 @@ decl_stmt|;
 name|u_int32_t
 name|recmark
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|slp
@@ -2649,6 +2708,9 @@ operator|->
 name|ns_reclen
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|m2
 operator|=
 name|m_copym
@@ -2665,6 +2727,9 @@ name|len
 argument_list|,
 name|waitflag
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2880,6 +2945,9 @@ name|nfsrv_rec
 modifier|*
 name|rec
 decl_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|rec
 operator|=
 name|malloc
@@ -2900,6 +2968,9 @@ name|M_NOWAIT
 else|:
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -3015,6 +3086,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 operator|*
 name|ndp
 operator|=
@@ -3086,6 +3160,9 @@ argument_list|,
 name|M_NFSRVDESC
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|nd
@@ -3104,6 +3181,9 @@ name|M_NFSRVDESC
 argument_list|,
 name|M_WAITOK
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nd
 operator|->
@@ -3215,6 +3295,9 @@ name|nfsd
 modifier|*
 name|nd
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3332,9 +3415,12 @@ name|soflags
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking is done */
+name|NFSD_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|soflags
 operator|=
 name|so
@@ -3502,6 +3588,9 @@ operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Scan the write gathering queues for writes that need to be 	 * completed now. 	 */
 name|cur_usec
 operator|=
@@ -3545,6 +3634,9 @@ name|slp
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s

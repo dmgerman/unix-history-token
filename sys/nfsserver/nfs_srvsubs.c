@@ -235,6 +235,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|nfstype
 name|nfsv2_type
 index|[
@@ -330,11 +331,19 @@ name|nfs_prev_nfssvc_sy_call
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|nfsd_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Mapping of old NFS Version 2 RPC numbers to generic numbers.  */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|nfsrv_nfsv3_procid
 index|[
@@ -396,6 +405,7 @@ comment|/*  * and the reverse mapping from generic to Version 2 procedure number
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|int
 name|nfsrvv2_procid
 index|[
@@ -458,6 +468,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_char
 name|nfsrv_v2errmap
 index|[
@@ -616,6 +627,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_null
 index|[]
@@ -630,6 +642,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_getattr
 index|[]
@@ -652,6 +665,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_setattr
 index|[]
@@ -688,6 +702,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_lookup
 index|[]
@@ -718,6 +733,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_access
 index|[]
@@ -740,6 +756,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_readlink
 index|[]
@@ -768,6 +785,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_read
 index|[]
@@ -796,6 +814,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_write
 index|[]
@@ -830,6 +849,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_create
 index|[]
@@ -868,6 +888,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_mkdir
 index|[]
@@ -906,6 +927,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_symlink
 index|[]
@@ -944,6 +966,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_mknod
 index|[]
@@ -984,6 +1007,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_remove
 index|[]
@@ -1016,6 +1040,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_rmdir
 index|[]
@@ -1056,6 +1081,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_rename
 index|[]
@@ -1106,6 +1132,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_link
 index|[]
@@ -1150,6 +1177,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_readdir
 index|[]
@@ -1180,6 +1208,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_readdirplus
 index|[]
@@ -1212,6 +1241,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_fsstat
 index|[]
@@ -1234,6 +1264,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_fsinfo
 index|[]
@@ -1254,6 +1285,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_pathconf
 index|[]
@@ -1274,6 +1306,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 name|nfsv3err_commit
 index|[]
@@ -1296,6 +1329,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|short
 modifier|*
 name|nfsrv_v3errmap
@@ -1369,6 +1403,9 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1377,6 +1414,18 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|mtx_init
+argument_list|(
+operator|&
+name|nfsd_mtx
+argument_list|,
+literal|"nfsd_mtx"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
 name|nfsrv_rpc_vers
 operator|=
 name|txdr_unsigned
@@ -1484,16 +1533,19 @@ name|nfsrv_ticks
 operator|=
 literal|1
 expr_stmt|;
+name|nfsrv_initcache
+argument_list|()
+expr_stmt|;
+comment|/* Init the server request cache */
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|nfsrv_init
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Init server data structures */
-name|nfsrv_initcache
-argument_list|()
-expr_stmt|;
-comment|/* Init the server request cache */
 name|callout_init
 argument_list|(
 operator|&
@@ -1501,6 +1553,9 @@ name|nfsrv_callout
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|nfsrv_timer
 argument_list|(
@@ -1584,8 +1639,17 @@ name|sy_call
 operator|=
 name|nfs_prev_nfssvc_sy_call
 expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|nfsd_mtx
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1765,6 +1829,19 @@ operator|)
 operator|!=
 literal|0
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 operator|*
 name|retdirp
 operator|=
@@ -1982,6 +2059,16 @@ name|out
 goto|;
 block|}
 comment|/* 	 * Extract and set starting directory. 	 */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|nfsrv_fhtovp
@@ -2009,6 +2096,16 @@ argument_list|,
 name|pubflag
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 if|if
 condition|(
 name|error
@@ -2901,6 +2998,16 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2943,6 +3050,9 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Trim from tail.  Scan the mbuf chain, 	 * calculating its length and finding the last mbuf. 	 * If the adjustment only affects this mbuf, then just 	 * adjust and return.  Otherwise, rescan and truncate 	 * after the remaining size. 	 */
 name|count
 operator|=
@@ -3924,6 +4034,9 @@ name|saddr
 decl_stmt|;
 endif|#
 directive|endif
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 operator|*
 name|vpp
 operator|=
@@ -3980,6 +4093,16 @@ operator|(
 name|ESTALE
 operator|)
 return|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
 name|error
 operator|=
 name|VFS_CHECKEXP
@@ -3999,11 +4122,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 name|error
 operator|=
 name|VFS_FHTOVP
@@ -4022,11 +4143,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 ifdef|#
 directive|ifdef
 name|MNT_EXNORESPORT
@@ -4091,13 +4210,12 @@ name|vpp
 operator|=
 name|NULL
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|NFSERR_AUTHERR
 operator||
 name|AUTH_TOOWEAK
-operator|)
-return|;
+expr_stmt|;
 block|}
 block|}
 endif|#
@@ -4204,9 +4322,21 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+name|out
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+comment|/* VFS */
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -4238,6 +4368,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4299,6 +4432,9 @@ name|sockaddr_in
 modifier|*
 name|inetaddr
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|family
@@ -4436,6 +4572,7 @@ name|int
 name|err
 parameter_list|)
 block|{
+specifier|const
 name|short
 modifier|*
 name|defaulterrp
@@ -4446,6 +4583,9 @@ decl_stmt|;
 name|int
 name|e
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|nd
@@ -4571,6 +4711,11 @@ modifier|*
 name|vp
 parameter_list|)
 block|{
+name|GIANT_REQUIRED
+expr_stmt|;
+name|NFSD_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|vp
@@ -4629,6 +4774,9 @@ decl_stmt|;
 name|gid_t
 name|v
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 comment|/* Insertion sort. */
 for|for
 control|(
@@ -4718,6 +4866,9 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -4827,6 +4978,9 @@ name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|v3
@@ -4981,6 +5135,9 @@ name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5059,6 +5216,9 @@ name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx
@@ -5148,6 +5308,9 @@ name|be
 parameter_list|,
 name|caddr_t
 name|bpos
+parameter_list|,
+name|int
+name|droplock
 parameter_list|)
 block|{
 name|struct
@@ -5155,6 +5318,20 @@ name|mbuf
 modifier|*
 name|nmp
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|droplock
+condition|)
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+else|else
+name|NFSD_UNLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -5183,6 +5360,13 @@ name|bp
 operator|-
 name|bpos
 expr_stmt|;
+if|if
+condition|(
+name|droplock
+condition|)
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|MGET
 argument_list|(
 name|nmp
@@ -5198,6 +5382,13 @@ name|nmp
 argument_list|,
 name|M_TRYWAIT
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|droplock
+condition|)
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nmp
 operator|->
@@ -5291,6 +5482,9 @@ decl_stmt|;
 name|int
 name|fhlen
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|nfsd
@@ -5441,6 +5635,9 @@ name|u_int32_t
 modifier|*
 name|tl
 decl_stmt|;
+name|NFSD_LOCK_DONTCARE
+argument_list|()
+expr_stmt|;
 name|tl
 operator|=
 name|nfsm_dissect_xx

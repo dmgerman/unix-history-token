@@ -541,11 +541,11 @@ operator|(
 name|error
 operator|)
 return|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -561,10 +561,13 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 operator|&
 name|nfssvc_sockhead
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PSOCK
 argument_list|,
@@ -574,6 +577,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -767,11 +773,8 @@ literal|0
 expr_stmt|;
 name|done2
 label|:
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
+name|NET_UNLOCK_GIANT
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -824,9 +827,9 @@ name|error
 decl_stmt|,
 name|s
 decl_stmt|;
-name|GIANT_REQUIRED
+name|NET_ASSERT_GIANT
+argument_list|()
 expr_stmt|;
-comment|/* XXX until socket locking done */
 name|so
 operator|=
 name|fp
@@ -836,6 +839,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
+comment|/* 	 * XXXRW: If this code is ever enabled, there's a race when running 	 * MPSAFE. 	 */
 block|tslp = NULL;
 comment|/* 	 * Add it to the list, as required. 	 */
 block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
@@ -1105,6 +1109,9 @@ operator|->
 name|ns_rec
 argument_list|)
 expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -1138,6 +1145,7 @@ name|ns_fp
 operator|=
 name|fp
 expr_stmt|;
+comment|/* 	 * XXXRW: Socket locking here? 	 */
 name|s
 operator|=
 name|splnet
@@ -1185,6 +1193,9 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
+expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1256,6 +1267,9 @@ decl_stmt|;
 name|u_quad_t
 name|cur_usec
 decl_stmt|;
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|nolint
@@ -1294,6 +1308,9 @@ expr_stmt|;
 name|s
 operator|=
 name|splnet
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK
 argument_list|()
 expr_stmt|;
 name|nfsd
@@ -1363,9 +1380,12 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|tsleep
+name|msleep
 argument_list|(
 name|nfsd
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PSOCK
 operator||
@@ -1529,6 +1549,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|nfsrv_rcv
 argument_list|(
 name|slp
@@ -1542,6 +1565,9 @@ name|slp
 argument_list|,
 name|M_TRYWAIT
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|nfs_slpunlock
 argument_list|(
@@ -2063,6 +2089,9 @@ comment|/* FALLTHROUGH */
 case|case
 name|RC_REPLY
 case|:
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|siz
 operator|=
 name|m_length
@@ -2150,6 +2179,9 @@ name|siz
 argument_list|)
 expr_stmt|;
 block|}
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|slp
@@ -2180,6 +2212,13 @@ name|ns_flag
 operator|&
 name|SLP_VALID
 condition|)
+block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
+name|NET_LOCK_GIANT
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|nfsrv_send
@@ -2195,6 +2234,13 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|NET_UNLOCK_GIANT
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
+expr_stmt|;
+block|}
 else|else
 block|{
 name|error
@@ -2484,6 +2530,9 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* Reinitialize everything */
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2533,6 +2582,13 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
+comment|/* 	 * XXXRW: By clearing all flags, other threads/etc should ignore 	 * this slp and we can safely release nfsd_mtx so we can clean 	 * up the slp safely. 	 */
 name|slp
 operator|->
 name|ns_flag
@@ -2551,6 +2607,9 @@ condition|(
 name|fp
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|slp
 operator|->
 name|ns_fp
@@ -2597,6 +2656,9 @@ name|fp
 argument_list|,
 name|NULL
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2759,6 +2821,9 @@ modifier|*
 name|slp
 parameter_list|)
 block|{
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -2806,7 +2871,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lock a socket against others.  */
+comment|/*  * Lock a socket against others.  *  * XXXRW: Wait argument is always 1 in the caller.  Replace with a real  * sleep lock?  */
 end_comment
 
 begin_function
@@ -2831,6 +2896,9 @@ name|slp
 operator|->
 name|ns_solock
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2865,9 +2933,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 name|statep
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PZERO
 operator|-
@@ -2915,6 +2986,9 @@ name|slp
 operator|->
 name|ns_solock
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2980,6 +3054,12 @@ decl_stmt|,
 modifier|*
 name|nslp
 decl_stmt|;
+name|NET_ASSERT_GIANT
+argument_list|()
+expr_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|nfssvc_sockhead_flag

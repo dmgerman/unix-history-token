@@ -48,7 +48,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
@@ -187,6 +199,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|nonidempotent
 index|[
@@ -249,6 +262,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|int
 name|nfsv2_repstat
 index|[
@@ -368,6 +382,9 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Don't cache recent requests for reliable transport protocols. 	 * (Maybe we should for the case of a reconnect, but..) 	 */
 if|if
 condition|(
@@ -465,9 +482,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 name|rp
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PZERO
 operator|-
@@ -607,6 +627,9 @@ operator|.
 name|srvcache_nonidemdonehits
 operator|++
 expr_stmt|;
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|repp
 operator|=
@@ -622,6 +645,9 @@ name|M_COPYALL
 argument_list|,
 name|M_TRYWAIT
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|ret
 operator|=
@@ -709,6 +735,9 @@ operator|<
 name|desirednfsrvcache
 condition|)
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|rp
 operator|=
 operator|(
@@ -731,6 +760,9 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|numnfsrvcache
 operator|++
@@ -774,9 +806,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 name|rp
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PZERO
 operator|-
@@ -1035,6 +1070,9 @@ name|nfsrvcache
 modifier|*
 name|rp
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1127,9 +1165,12 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|tsleep
+name|msleep
 argument_list|(
 name|rp
+argument_list|,
+operator|&
+name|nfsd_mtx
 argument_list|,
 name|PZERO
 operator|-
@@ -1244,6 +1285,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|NFSD_UNLOCK
+argument_list|()
+expr_stmt|;
 name|rp
 operator|->
 name|rc_reply
@@ -1258,6 +1302,9 @@ name|M_COPYALL
 argument_list|,
 name|M_TRYWAIT
 argument_list|)
+expr_stmt|;
+name|NFSD_LOCK
+argument_list|()
 expr_stmt|;
 name|rp
 operator|->
@@ -1336,6 +1383,9 @@ decl_stmt|,
 modifier|*
 name|nextrp
 decl_stmt|;
+name|NFSD_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|rp

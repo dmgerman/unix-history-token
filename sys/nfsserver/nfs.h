@@ -326,6 +326,53 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|nfsd_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NFSD_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&nfsd_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&nfsd_mtx, MA_NOTOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_LOCK_DONTCARE
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_LOCK
+parameter_list|()
+value|mtx_lock(&nfsd_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NFSD_UNLOCK
+parameter_list|()
+value|mtx_unlock(&nfsd_mtx)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -480,6 +527,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|int
 name|nfsrvv2_procid
 index|[
@@ -490,6 +538,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|int
 name|nfsrv_nfsv3_procid
 index|[
