@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.8 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|<sys/termios.h>
 end_include
 
 begin_comment
-comment|/*  * A clist structure is the head of a linked list queue  * of characters.  The characters are stored in blocks  * containing a link and CBSIZE (param.h) characters.   * The routines in tty_subr.c manipulate these structures.  */
+comment|/*  * Clists are character lists, which is a variable length linked list  * of cblocks, wiht a count of the number of characters in the list.  */
 end_comment
 
 begin_struct
@@ -20,17 +20,17 @@ block|{
 name|int
 name|c_cc
 decl_stmt|;
-comment|/* character count */
+comment|/* count of characters in queue */
 name|char
 modifier|*
 name|c_cf
 decl_stmt|;
-comment|/* pointer to first char */
+comment|/* first character/cblock */
 name|char
 modifier|*
 name|c_cl
 decl_stmt|;
-comment|/* pointer to last char */
+comment|/* last chararacter/cblock */
 block|}
 struct|;
 end_struct
@@ -205,18 +205,22 @@ begin_define
 define|#
 directive|define
 name|TTIPRI
-value|28
+value|25
 end_define
+
+begin_comment
+comment|/* sleep priority for tty reads */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|TTOPRI
-value|29
+value|26
 end_define
 
 begin_comment
-comment|/* limits */
+comment|/* sleep priority for tty writes */
 end_comment
 
 begin_define
@@ -288,7 +292,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*KERNEL*/
+comment|/* KERNEL */
 end_comment
 
 begin_comment
@@ -505,7 +509,7 @@ value|0x200000
 end_define
 
 begin_comment
-comment|/* counting tab width, leave FLUSHO alone */
+comment|/* counting tab width, ignore FLUSHO */
 end_comment
 
 begin_define
