@@ -9,10 +9,23 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|__ELF_WORD_SIZE
+value|32
+end_define
+
 begin_include
 include|#
 directive|include
-file|<machine/elf.h>
+file|<sys/elf32.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/elf_generic.h>
 end_include
 
 begin_include
