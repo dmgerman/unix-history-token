@@ -354,9 +354,10 @@ name|name_buffer
 expr_stmt|;
 block|}
 block|}
-name|setuid
+comment|/* revoke */
+name|setgid
 argument_list|(
-name|getuid
+name|getgid
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -970,9 +971,10 @@ specifier|static
 name|del_save_file
 argument_list|()
 block|{
-name|setuid
+comment|/* revoke */
+name|setgid
 argument_list|(
-name|getuid
+name|getgid
 argument_list|()
 argument_list|)
 block|;
