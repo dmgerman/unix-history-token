@@ -2462,6 +2462,8 @@ label|:
 name|fdrop
 argument_list|(
 name|fp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
