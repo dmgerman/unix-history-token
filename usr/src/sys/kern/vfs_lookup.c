@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -849,7 +849,7 @@ comment|/* 1 => wantparent or lockparent flag */
 name|int
 name|rdonly
 decl_stmt|;
-comment|/* mounted read-only flag bit(s) */
+comment|/* lookup read-only flag bit */
 name|int
 name|error
 init|=
@@ -908,19 +908,11 @@ literal|0
 expr_stmt|;
 name|rdonly
 operator|=
-name|MNT_RDONLY
-expr_stmt|;
-if|if
-condition|(
 name|ndp
 operator|->
 name|ni_nameiop
 operator|&
-name|REMOTE
-condition|)
-name|rdonly
-operator||=
-name|MNT_EXRDONLY
+name|RDONLY
 expr_stmt|;
 name|ndp
 operator|->
@@ -1368,6 +1360,9 @@ goto|;
 comment|/* 		 * If creating and at end of pathname, then can consider 		 * allowing file to be created. 		 */
 if|if
 condition|(
+name|rdonly
+operator|||
+operator|(
 name|ndp
 operator|->
 name|ni_dvp
@@ -1376,7 +1371,8 @@ name|v_mount
 operator|->
 name|mnt_flag
 operator|&
-name|rdonly
+name|MNT_RDONLY
+operator|)
 condition|)
 block|{
 name|error
@@ -1642,6 +1638,8 @@ block|{
 comment|/* 		 * Disallow directory write attempts on read-only 		 * file systems. 		 */
 if|if
 condition|(
+name|rdonly
+operator|||
 operator|(
 name|dp
 operator|->
@@ -1649,7 +1647,7 @@ name|v_mount
 operator|->
 name|mnt_flag
 operator|&
-name|rdonly
+name|MNT_RDONLY
 operator|)
 operator|||
 operator|(
@@ -1664,7 +1662,7 @@ name|v_mount
 operator|->
 name|mnt_flag
 operator|&
-name|rdonly
+name|MNT_RDONLY
 operator|)
 operator|)
 condition|)
