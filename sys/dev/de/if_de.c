@@ -2345,11 +2345,13 @@ argument_list|,
 name|__LINE__
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+else|#
+directive|else
 return|return
 name|TULIP_LINK_UNKNOWN
 return|;
+endif|#
+directive|endif
 block|}
 comment|/*      * Have we seen some packets?  If so, the link must be good.      */
 if|if
@@ -6213,8 +6215,8 @@ name|tulip_probe_state
 operator|=
 name|TULIP_PROBE_PHYRESET
 expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|TULIP_PROBE_PHYRESET
 case|:
@@ -6496,8 +6498,8 @@ name|tulip_probe_timeout
 operator|=
 literal|3000
 expr_stmt|;
-comment|/* FALLTHROUGH */
 block|}
+comment|/* FALLTHROUGH */
 case|case
 name|TULIP_PROBE_PHYAUTONEG
 case|:
@@ -17896,10 +17898,6 @@ name|TULIP_PERFSTART
 argument_list|(
 argument|rxget
 argument_list|)
-name|struct
-name|ether_header
-name|eh
-decl_stmt|;
 name|tulip_desc_t
 modifier|*
 name|eop
@@ -18482,18 +18480,6 @@ directive|endif
 endif|#
 directive|endif
 comment|/* TULIP_BUS_DMA */
-name|eh
-operator|=
-operator|*
-name|mtod
-argument_list|(
-name|ms
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__FreeBSD__

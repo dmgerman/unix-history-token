@@ -1976,7 +1976,7 @@ decl_stmt|;
 name|char
 name|tulip_boardid
 index|[
-literal|16
+literal|17
 index|]
 decl_stmt|;
 comment|/* buffer for board ID */
