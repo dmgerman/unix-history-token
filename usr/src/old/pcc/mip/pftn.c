@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.1 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,6 +148,9 @@ name|int
 name|slev
 decl_stmt|,
 name|temp
+decl_stmt|;
+name|int
+name|changed
 decl_stmt|;
 if|if
 condition|(
@@ -512,6 +515,10 @@ name|fn
 operator|.
 name|cdim
 expr_stmt|;
+name|changed
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|temp
@@ -547,6 +554,7 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 name|dimtab
 index|[
 name|dsym
@@ -557,6 +565,11 @@ index|[
 name|ddef
 index|]
 expr_stmt|;
+name|changed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -589,6 +602,17 @@ operator|++
 name|ddef
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|changed
+condition|)
+block|{
+name|FIXDEF
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* check that redeclarations are to the same structure */
 if|if
