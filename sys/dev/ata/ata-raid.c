@@ -1007,7 +1007,7 @@ name|rdp
 operator|->
 name|disk
 argument_list|,
-literal|0
+name|DISKFLAG_NOGIANT
 argument_list|,
 name|NULL
 argument_list|,
@@ -4380,7 +4380,7 @@ name|buf1
 operator|->
 name|bp
 operator|.
-name|bio_caller1
+name|bio_driver1
 operator|=
 operator|(
 name|void
@@ -5396,7 +5396,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|bio_caller1
+name|bio_driver1
 decl_stmt|;
 name|struct
 name|ar_buf
