@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<crypto/rijndael/rijndael.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<crypto/sha1.h>
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|<opencrypto/deflate.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<opencrypto/rijndael.h>
 end_include
 
 begin_include

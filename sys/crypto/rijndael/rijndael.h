@@ -44,31 +44,6 @@ name|RIJNDAEL_MAXNR
 value|14
 end_define
 
-begin_comment
-comment|/* XXX: avoid conflicts with opencrypto */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|rijndael_set_key
-value|_rijndael_set_key
-end_define
-
-begin_define
-define|#
-directive|define
-name|rijndael_decrypt
-value|_rijndael_decrypt
-end_define
-
-begin_define
-define|#
-directive|define
-name|rijndael_encrypt
-value|_rijndael_encrypt
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct
