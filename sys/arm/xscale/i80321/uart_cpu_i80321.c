@@ -126,22 +126,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|got_mmu
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|DO_corb
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|uart_cpu_getdev
@@ -227,12 +211,6 @@ name|uart_bus_space_mem
 operator|=
 name|NULL
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|bus_space_map(di->bas.bst, 0xfe800000, 8, 0,&di->bas.bsh);
-endif|#
-directive|endif
 name|di
 operator|->
 name|bas
