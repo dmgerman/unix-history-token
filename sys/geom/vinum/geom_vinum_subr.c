@@ -1919,7 +1919,7 @@ condition|(
 name|fl
 operator|->
 name|size
-operator|>
+operator|>=
 name|s
 operator|->
 name|size
@@ -2015,7 +2015,16 @@ block|{
 name|i
 operator|++
 expr_stmt|;
-comment|/* Override drive_offset, if given. */
+comment|/* Assign drive offset, if not given. */
+if|if
+condition|(
+name|s
+operator|->
+name|drive_offset
+operator|==
+operator|-
+literal|1
+condition|)
 name|s
 operator|->
 name|drive_offset
@@ -2106,7 +2115,8 @@ name|s
 operator|->
 name|drive_offset
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|s
 operator|->
