@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inline.h	1.3 (Berkeley) 6/8/85  */
+comment|/*  * Copyright (c) 1984 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)inline.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -116,6 +116,9 @@ begin_struct
 struct|struct
 name|pats
 block|{
+name|int
+name|args
+decl_stmt|;
 name|char
 modifier|*
 name|name
