@@ -1800,7 +1800,7 @@ name|m
 parameter_list|,
 name|af
 parameter_list|,
-name|gifp
+name|ifp
 parameter_list|)
 name|struct
 name|mbuf
@@ -1813,7 +1813,7 @@ decl_stmt|;
 name|struct
 name|ifnet
 modifier|*
-name|gifp
+name|ifp
 decl_stmt|;
 block|{
 name|int
@@ -1830,7 +1830,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|gifp
+name|ifp
 operator|==
 name|NULL
 condition|)
@@ -1849,11 +1849,11 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-name|gifp
+name|ifp
 expr_stmt|;
 if|if
 condition|(
-name|gifp
+name|ifp
 operator|->
 name|if_bpf
 condition|)
@@ -1893,7 +1893,7 @@ name|af1
 expr_stmt|;
 name|bpf_mtap
 argument_list|(
-name|gifp
+name|ifp
 argument_list|,
 operator|&
 name|m0
@@ -1981,12 +1981,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|gifp
+name|ifp
 operator|->
 name|if_ipackets
 operator|++
 expr_stmt|;
-name|gifp
+name|ifp
 operator|->
 name|if_ibytes
 operator|+=
