@@ -637,7 +637,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|I586_CPU
+name|I586_CPU_XXX
 end_ifdef
 
 begin_decl_stmt
@@ -3094,7 +3094,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"%s bandwidth = %lu kBps\n"
+literal|"%s bandwidth = %u kBps\n"
 argument_list|,
 name|funcname
 argument_list|,
