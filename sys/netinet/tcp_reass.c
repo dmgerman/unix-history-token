@@ -2897,6 +2897,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* else, should also do ip_srcroute() here? */
 endif|#
 directive|endif
 comment|/* INET6 */
