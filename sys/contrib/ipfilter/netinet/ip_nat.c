@@ -9556,9 +9556,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 comment|/* 		 * Fix TCP pseudo header checksum to compensate for the  		 * IP address change. Before we can do the change, we 		 * must make sure that oip is sufficient large to hold 		 * the TCP checksum (normally it does not!). 		 */
 if|if
 condition|(
@@ -9616,8 +9613,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -9701,9 +9696,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|1
 comment|/*  		 * Fix TCP pseudo header checksum to compensate for the  		 * IP address change. Before we can do the change, we 		 * must make sure that oip is sufficient large to hold 		 * the TCP checksum (normally it does not!). 		 */
 if|if
 condition|(
@@ -9761,9 +9753,6 @@ operator|=
 name|sumd
 expr_stmt|;
 block|}
-empty_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}

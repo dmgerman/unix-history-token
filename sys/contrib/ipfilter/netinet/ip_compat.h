@@ -1496,6 +1496,12 @@ name|defined
 argument_list|(
 name|IPFILTER_LKM
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|USE_INET6
+argument_list|)
 end_if
 
 begin_if
@@ -3873,11 +3879,20 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|||
+operator|(
 name|defined
 argument_list|(
-name|__OpenBSD__
+name|OpenBSD
 argument_list|)
+operator|&&
+operator|(
+name|OpenBSD
+operator|<
+literal|200206
+operator|)
+operator|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|_BSDI_VERSION

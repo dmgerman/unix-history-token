@@ -566,6 +566,12 @@ name|AP_SESS_SIZE
 value|53
 end_define
 
+begin_include
+include|#
+directive|include
+file|"netinet/ip_ftp_pxy.c"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -574,12 +580,6 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"netinet/ip_ftp_pxy.c"
-end_include
 
 begin_include
 include|#

@@ -54,6 +54,12 @@ name|defined
 argument_list|(
 name|IPFILTER_LKM
 argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
 end_if
 
 begin_include
