@@ -63,6 +63,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|"opt_bs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bs.h"
 end_include
 
