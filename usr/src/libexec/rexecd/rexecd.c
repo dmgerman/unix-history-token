@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.11 (Berkeley) %G%"
+literal|"@(#)rexecd.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1143,6 +1143,12 @@ name|pw_shell
 operator|=
 literal|"/bin/sh"
 expr_stmt|;
+if|if
+condition|(
+name|f
+operator|>
+literal|2
+condition|)
 operator|(
 name|void
 operator|)
