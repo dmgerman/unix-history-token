@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	8.2 (Berkeley) %G%"
+literal|"@(#)inet.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -764,6 +764,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (tcpstat.f1 || tcpstat.f2 || sflag<= 1) \     printf(m, tcpstat.f1, plural(tcpstat.f1), tcpstat.f2, plural(tcpstat.f2))
+define|#
+directive|define
+name|p3
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (tcpstat.f || sflag<= 1) \     printf(m, tcpstat.f, plurales(tcpstat.f))
 name|p
 argument_list|(
 name|tcps_sndtotal
@@ -1038,12 +1047,36 @@ argument_list|,
 literal|"\t\t%d connection%s dropped by keepalive\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_predack
+argument_list|,
+literal|"\t%d correct ACK header prediction%s\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
+name|tcps_predack
+argument_list|,
+literal|"\t%d correct data packet header prediction%s\n"
+argument_list|)
+expr_stmt|;
+name|p3
+argument_list|(
+name|tcps_pcbcachemiss
+argument_list|,
+literal|"\t%d cache miss%s\n"
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|p
 undef|#
 directive|undef
 name|p2
+undef|#
+directive|undef
+name|p3
 block|}
 end_function
 
