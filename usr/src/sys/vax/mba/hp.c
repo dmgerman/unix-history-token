@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.23 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -4832,19 +4832,34 @@ operator|->
 name|b_error
 expr_stmt|;
 else|else
+block|{
 name|npf
 operator|=
-name|btodb
-argument_list|(
 name|bp
 operator|->
 name|b_bcount
 operator|-
 name|bcr
-operator|+
+expr_stmt|;
+comment|/* 		 * Watch out for fractional sector at end of transfer; 		 * want to round up if finished, otherwise round down. 		 */
+if|if
+condition|(
+name|bcr
+operator|==
+literal|0
+condition|)
+name|npf
+operator|+=
 literal|511
+expr_stmt|;
+name|npf
+operator|=
+name|btodb
+argument_list|(
+name|npf
 argument_list|)
 expr_stmt|;
+block|}
 name|o
 operator|=
 operator|(
