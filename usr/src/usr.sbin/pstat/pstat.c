@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#) (Berkeley) 82/03/31"
+literal|"@(#) (Berkeley) 82/05/10"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,8 +1151,6 @@ name|major
 argument_list|(
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 argument_list|)
 argument_list|,
@@ -1160,8 +1158,6 @@ name|minor
 argument_list|(
 name|ip
 operator|->
-name|i_un
-operator|.
 name|i_rdev
 argument_list|)
 argument_list|)
