@@ -335,6 +335,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * To ensure the consistency of snapshots across crashes, we must  * synchronously write out copied blocks before allowing the  * originals to be modified. Because of the rather severe speed  * penalty that this imposes, the following flag allows this  * crash persistence to be disabled.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dopersistence
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -346,6 +358,27 @@ include|#
 directive|include
 file|<sys/sysctl.h>
 end_include
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dopersistence
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|dopersistence
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -5525,6 +5558,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|ip
 operator|->
 name|i_effnlink
@@ -5591,6 +5626,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|ip
 operator|->
 name|i_effnlink
@@ -5655,6 +5692,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|VTOI
 argument_list|(
 name|vp
@@ -6630,6 +6669,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|ip
 operator|->
 name|i_effnlink
@@ -6696,6 +6737,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|ip
 operator|->
 name|i_effnlink
@@ -6731,6 +6774,15 @@ name|savedcbp
 operator|=
 name|cbp
 expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* 	 * Note that we need to synchronously write snapshots that 	 * have not been unlinked, and hence will be visible after 	 * a crash, to ensure their integrity. 	 */
 if|if
@@ -6751,6 +6803,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dopersistence
+operator|&&
 name|VTOI
 argument_list|(
 name|vp
@@ -6760,6 +6814,18 @@ name|i_effnlink
 operator|>
 literal|0
 condition|)
+block|{
+name|vn_lock
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -6783,6 +6849,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
