@@ -7,20 +7,6 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *  *	pcvt_vtf.c	VT220 Terminal Emulator Functions  *	-------------------------------------------------  *  *	Last Edit-Date: [Sun Mar 26 10:38:52 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"vt.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NVT
-operator|>
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -9011,15 +8997,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NVT> 0 */
-end_comment
 
 begin_comment
 comment|/* ------------------------- E O F ------------------------------------------*/

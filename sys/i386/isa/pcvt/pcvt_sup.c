@@ -10,20 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"vt.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NVT
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/pcvt/pcvt_hdr.h>
 end_include
 
@@ -8881,15 +8867,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NVT> 0 */
-end_comment
 
 begin_comment
 comment|/* ------------------------- E O F ------------------------------------------*/
