@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.86 1997/03/23 03:34:51 bde Exp $  */
+comment|/*  * Copyright 1993 by Holger Veit (data part)  * Copyright 1993 by Brian Moore (audio part)  * Changes Copyright 1993 by Gary Clark II  * Changes Copyright (C) 1994-1995 by Andrey A. Chernov, Moscow, Russia  *  * Rewrote probe routine to work on newer Mitsumi drives.  * Additional changes (C) 1994 by Jordan K. Hubbard  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This software was developed by Holger Veit and Brian Moore  *	for use with "386BSD" and similar operating systems.  *    "Similar operating systems" includes mainly non-profit oriented  *    systems for research and education, including but not restricted to  *    "NetBSD", "FreeBSD", "Mach" (by CMU).  * 4. Neither the name of the developer(s) nor the name "386BSD"  *    may be used to endorse or promote products derived from this  *    software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE DEVELOPER(S) ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE DEVELOPER(S) BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: mcd.c,v 1.87 1997/03/24 11:23:55 bde Exp $  */
 end_comment
 
 begin_decl_stmt
@@ -832,6 +832,13 @@ name|dly
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|timeout_t
+name|mcd_timeout
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -5165,6 +5172,29 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
+name|mcd_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|mcd_doread
+argument_list|(
+operator|(
+name|int
+operator|)
+name|arg
+argument_list|,
+name|mbxsave
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|mcd_doread
 parameter_list|(
 name|int
@@ -5295,10 +5325,7 @@ name|RDELAY_WAITSTAT
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5317,10 +5344,7 @@ name|MCD_S_WAITSTAT
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5352,10 +5376,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5523,10 +5544,7 @@ argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5559,10 +5577,7 @@ name|MCD_S_WAITMODE
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5605,10 +5620,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5892,10 +5904,7 @@ name|RDELAY_WAITREAD
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5914,10 +5923,7 @@ name|MCD_S_WAITREAD
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -6187,10 +6193,7 @@ goto|;
 block|}
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|mcd_doread
+name|mcd_timeout
 argument_list|,
 operator|(
 name|caddr_t

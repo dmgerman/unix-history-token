@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.27 1997/02/22 09:37:03 peter Exp $ */
+comment|/* $Id: scd.c,v 1.28 1997/03/24 11:24:01 bde Exp $ */
 end_comment
 
 begin_comment
@@ -712,6 +712,13 @@ name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|static
+name|timeout_t
+name|scd_timeout
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -4036,6 +4043,29 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
+name|scd_timeout
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|scd_doread
+argument_list|(
+operator|(
+name|int
+operator|)
+name|arg
+argument_list|,
+name|mbxsave
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|scd_doread
 parameter_list|(
 name|int
@@ -4152,10 +4182,7 @@ name|SCD_S_WAITSTAT
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4196,10 +4223,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4383,10 +4407,7 @@ literal|100
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4405,10 +4426,7 @@ name|SCD_S_WAITSPIN
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4450,10 +4468,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4557,10 +4572,7 @@ name|SCD_S_WAITFIFO
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4602,10 +4614,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4681,10 +4690,7 @@ literal|300
 expr_stmt|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4812,10 +4818,7 @@ expr_stmt|;
 block|}
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4834,10 +4837,7 @@ name|SCD_S_WAITREAD
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -4910,10 +4910,7 @@ name|changed
 goto|;
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5026,10 +5023,7 @@ name|SCD_S_WAITPARAM
 case|:
 name|untimeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -5073,10 +5067,7 @@ condition|)
 block|{
 name|timeout
 argument_list|(
-operator|(
-name|timeout_func_t
-operator|)
-name|scd_doread
+name|scd_timeout
 argument_list|,
 operator|(
 name|caddr_t
