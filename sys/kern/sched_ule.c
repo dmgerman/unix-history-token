@@ -2122,6 +2122,8 @@ expr_stmt|;
 name|sched_add
 argument_list|(
 name|ke
+operator|->
+name|ke_thread
 argument_list|)
 expr_stmt|;
 block|}
