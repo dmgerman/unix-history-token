@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tty_subs.c	1.1 (Berkeley) %G%"
+literal|"@(#)tty_subs.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,19 +175,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* input pointing at control tty */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* errno printable strings */
 end_comment
 
 begin_comment
