@@ -632,9 +632,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: sed script [-Ean] [file ...]"
+literal|"usage: sed script [-Ean] [-i extension] [file ...]"
 argument_list|,
-literal|"       sed [-an] [-e script] ... [-f script_file] ... [file ...]"
+literal|"       sed [-an] [-i extension] [-e script] ... [-f script_file] ... [file ...]"
 argument_list|)
 expr_stmt|;
 name|exit
