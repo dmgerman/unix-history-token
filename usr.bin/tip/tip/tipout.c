@@ -492,6 +492,13 @@ operator|==
 name|ENOENT
 condition|)
 block|{
+if|if
+condition|(
+name|getppid
+argument_list|()
+operator|!=
+literal|1
+condition|)
 name|kill
 argument_list|(
 name|getppid
@@ -521,6 +528,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|getppid
+argument_list|()
+operator|!=
+literal|1
+condition|)
 name|kill
 argument_list|(
 name|getppid
