@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1454,36 +1454,45 @@ begin_function
 name|void
 name|tp_freeref
 parameter_list|(
-name|r
+name|n
 parameter_list|)
+name|RefNum
+name|n
+decl_stmt|;
+block|{
 specifier|register
 name|struct
 name|tp_ref
 modifier|*
 name|r
+init|=
+name|tp_ref
+operator|+
+name|n
 decl_stmt|;
-block|{
 specifier|register
 name|struct
 name|tp_pcb
 modifier|*
 name|tpcb
-init|=
+decl_stmt|;
+name|tpcb
+operator|=
 name|r
 operator|->
 name|tpr_pcb
-decl_stmt|;
+expr_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_TIMER
 argument_list|)
 name|printf
 argument_list|(
-literal|"tp_freeref called for ref %d maxrefopen %d\n"
+literal|"tp_freeref called for ref %d pcb %x maxrefopen %d\n"
 argument_list|,
-name|r
-operator|-
-name|tp_ref
+name|n
+argument_list|,
+name|tpcb
 argument_list|,
 name|tp_refinfo
 operator|.
@@ -1499,28 +1508,27 @@ name|tptrace
 argument_list|(
 name|TPPTmisc
 argument_list|,
-literal|"tp_freeref ref maxrefopen"
+literal|"tp_freeref ref maxrefopen pcb"
 argument_list|,
-name|r
-operator|-
-name|tp_ref
+name|n
 argument_list|,
 name|tp_refinfo
 operator|.
 name|tpr_maxopen
 argument_list|,
-literal|0
+name|tpcb
 argument_list|,
 literal|0
 argument_list|)
 decl_stmt|;
 name|ENDTRACE
-name|r
-operator|->
-name|tpr_state
-init|=
-name|REF_FREE
-decl_stmt|;
+if|if
+condition|(
+name|tpcb
+operator|==
+literal|0
+condition|)
+return|return;
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
@@ -1529,9 +1537,7 @@ name|printf
 argument_list|(
 literal|"tp_freeref: CLEARING tpr_pcb 0x%x\n"
 argument_list|,
-name|r
-operator|->
-name|tpr_pcb
+name|tpcb
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
@@ -1546,15 +1552,11 @@ operator|*
 operator|)
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|tpcb
-condition|)
 name|tpcb
 operator|->
-name|tp_refp
+name|tp_refstate
 operator|=
-literal|0
+name|REF_FREE
 expr_stmt|;
 for|for
 control|(
@@ -1814,17 +1816,11 @@ name|tpr_pcb
 operator|=
 name|tpcb
 expr_stmt|;
-name|r
-operator|->
-name|tpr_state
-operator|=
-name|REF_OPENING
-expr_stmt|;
 name|tpcb
 operator|->
-name|tp_refp
+name|tp_refstate
 operator|=
-name|r
+name|REF_OPENING
 expr_stmt|;
 name|i
 operator|=
@@ -1849,6 +1845,9 @@ operator|=
 name|i
 expr_stmt|;
 return|return
+operator|(
+name|u_long
+operator|)
 name|i
 return|;
 block|}
@@ -2503,7 +2502,7 @@ name|tp_freeref
 parameter_list|(
 name|tpcb
 operator|->
-name|tp_refp
+name|tp_lref
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3030,13 +3029,7 @@ if|if
 condition|(
 name|tpcb
 operator|->
-name|tp_refp
-operator|&&
-name|tpcb
-operator|->
-name|tp_refp
-operator|->
-name|tpr_state
+name|tp_refstate
 operator|==
 name|REF_OPENING
 condition|)
@@ -3048,21 +3041,11 @@ argument|D_CONN
 argument_list|)
 name|printf
 argument_list|(
-literal|"SETTING ref %d, 0x%x to REF_FREE\n"
+literal|"SETTING ref %d to REF_FREE\n"
 argument_list|,
 name|tpcb
 operator|->
 name|tp_lref
-argument_list|,
-name|tpcb
-operator|->
-name|tp_refp
-operator|-
-operator|&
-name|tp_ref
-index|[
-literal|0
-index|]
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
@@ -3070,7 +3053,7 @@ name|tp_freeref
 parameter_list|(
 name|tpcb
 operator|->
-name|tp_refp
+name|tp_lref
 parameter_list|)
 function_decl|;
 block|}

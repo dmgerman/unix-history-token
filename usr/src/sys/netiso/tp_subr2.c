@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.15 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr2.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -265,9 +265,7 @@ literal|"ref 0x%x lcdt 0x%x l_tpdusize 0x%x decbit 0x%x\n"
 argument_list|,
 name|tpcb
 operator|->
-name|tp_refp
-operator|-
-name|tp_ref
+name|tp_lref
 argument_list|,
 name|tpcb
 operator|->

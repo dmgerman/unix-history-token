@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_pcb.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -330,6 +330,12 @@ modifier|*
 name|tp_nextlisten
 decl_stmt|;
 comment|/* chain all listeners */
+name|struct
+name|socket
+modifier|*
+name|tp_sock
+decl_stmt|;
+comment|/* back ptr */
 name|u_short
 name|tp_state
 decl_stmt|;
@@ -338,12 +344,6 @@ name|short
 name|tp_retrans
 decl_stmt|;
 comment|/* # times can still retrans */
-name|struct
-name|tp_ref
-modifier|*
-name|tp_refp
-decl_stmt|;
-comment|/* rest of pcb	*/
 name|caddr_t
 name|tp_npcb
 decl_stmt|;
@@ -355,11 +355,12 @@ name|tp_nlproto
 decl_stmt|;
 comment|/* lower-layer dependent routines */
 name|struct
-name|socket
+name|rtentry
 modifier|*
-name|tp_sock
+modifier|*
+name|tp_routep
 decl_stmt|;
-comment|/* back ptr */
+comment|/* obtain mtu; inside npcb */
 name|RefNum
 name|tp_lref
 decl_stmt|;
