@@ -890,7 +890,7 @@ name|maxmaxcode
 operator|=
 literal|1L
 operator|<<
-name|BITS
+name|maxbits
 expr_stmt|;
 if|if
 condition|(
@@ -3105,9 +3105,9 @@ expr_stmt|;
 comment|/* User settable max # bits/code. */
 name|maxmaxcode
 operator|=
-literal|1
+literal|1L
 operator|<<
-name|BITS
+name|maxbits
 expr_stmt|;
 comment|/* Should NEVER generate this code. */
 name|hsize
