@@ -1425,9 +1425,6 @@ name|sf_buf
 modifier|*
 name|sf_bufs
 decl_stmt|;
-name|vm_offset_t
-name|sf_base
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1459,17 +1456,6 @@ operator|&
 name|sf_freelist
 operator|.
 name|sf_head
-argument_list|)
-expr_stmt|;
-name|sf_base
-operator|=
-name|kmem_alloc_nofault
-argument_list|(
-name|kernel_map
-argument_list|,
-name|nsfbufs
-operator|*
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|sf_bufs
@@ -1504,20 +1490,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-name|sf_bufs
-index|[
-name|i
-index|]
-operator|.
-name|kva
-operator|=
-name|sf_base
-operator|+
-name|i
-operator|*
-name|PAGE_SIZE
-expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
@@ -1525,16 +1497,13 @@ name|sf_freelist
 operator|.
 name|sf_head
 argument_list|,
-operator|&
 name|sf_bufs
-index|[
+operator|+
 name|i
-index|]
 argument_list|,
 name|free_list
 argument_list|)
 expr_stmt|;
-block|}
 name|sf_buf_alloc_want
 operator|=
 literal|0
@@ -1626,7 +1595,7 @@ expr_stmt|;
 name|sf_buf_alloc_want
 operator|--
 expr_stmt|;
-comment|/* 		 * If we got a signal, don't risk going back to sleep.  		 */
+comment|/* If we got a signal, don't risk going back to sleep. */
 if|if
 condition|(
 name|error
@@ -1656,18 +1625,15 @@ name|m
 operator|=
 name|m
 expr_stmt|;
-name|pmap_qenter
-argument_list|(
 name|sf
 operator|->
 name|kva
-argument_list|,
-operator|&
-name|sf
-operator|->
+operator|=
+name|IA64_PHYS_TO_RR7
+argument_list|(
 name|m
-argument_list|,
-literal|1
+operator|->
+name|phys_addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -1688,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detatch mapped page and release resources back to the system.  */
+comment|/*  * Detach mapped page and release resources back to the system.  */
 end_comment
 
 begin_function
@@ -1718,16 +1684,6 @@ name|sf
 operator|=
 name|args
 expr_stmt|;
-name|pmap_qremove
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|sf
@@ -1744,7 +1700,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check for the object going away on us. This can 	 * happen since we don't hold a reference to it. 	 * If so, we're responsible for freeing the page. 	 */
+comment|/* 	 * Check for the object going away on us. This can happen since we 	 * don't hold a reference to it. If so, we're responsible for freeing 	 * the page. 	 */
 if|if
 condition|(
 name|m
