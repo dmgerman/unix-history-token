@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ifconfig.c,v 1.38 1998/08/07 06:36:53 phk Exp $"
+literal|"$Id: ifconfig.c,v 1.39 1999/03/15 01:22:01 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3625,7 +3625,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6b6\7RUNNING" \ "\10NOARP\11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2" \ "\20MULTICAST"
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6SMART\7RUNNING" \ "\10NOARP\11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LINK0\16LINK1\17LINK2" \ "\20MULTICAST"
 end_define
 
 begin_comment
