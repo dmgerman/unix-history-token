@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.2 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6225,14 +6225,14 @@ literal|4
 argument_list|,
 literal|"wanted %s "
 argument_list|,
-literal|"NUMBER?"
+literal|"NUMBER?\\r\\n"
 argument_list|)
 expr_stmt|;
 name|ok
 operator|=
 name|expect
 argument_list|(
-literal|"NUMBER?"
+literal|"NUMBER?\r\n"
 argument_list|,
 name|dh
 argument_list|)
@@ -6289,6 +6289,21 @@ operator|=
 name|expect
 argument_list|(
 name|telno
+argument_list|,
+name|dh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ok
+operator|==
+literal|0
+condition|)
+name|ok
+operator|=
+name|expect
+argument_list|(
+literal|"\r\n"
 argument_list|,
 name|dh
 argument_list|)
@@ -6369,42 +6384,28 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* send telno, send \r */
-name|write
+name|sleep
 argument_list|(
-name|dh
-argument_list|,
-name|telno
-argument_list|,
-name|strlen
-argument_list|(
-name|telno
-argument_list|)
+literal|10
+operator|+
+name|delay
 argument_list|)
 expr_stmt|;
-name|write
-argument_list|(
-name|dh
-argument_list|,
-literal|"\r"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+comment|/* give vadic some time */
 name|DEBUG
 argument_list|(
 literal|4
 argument_list|,
-literal|"wanted %s "
+literal|"wanted ON LINE\\r\\n "
 argument_list|,
-literal|"ON LINE"
+literal|0
 argument_list|)
 expr_stmt|;
 name|ok
 operator|=
 name|expect
 argument_list|(
-literal|"ON LINE"
+literal|"ON LINE\r\n"
 argument_list|,
 name|dh
 argument_list|)
