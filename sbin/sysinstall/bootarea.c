@@ -504,7 +504,7 @@ name|scratch
 argument_list|,
 literal|"\nLoading boot code from %s\n"
 argument_list|,
-name|boot1
+name|boot2
 argument_list|)
 expr_stmt|;
 name|dialog_msgbox
@@ -622,6 +622,9 @@ literal|1
 operator|)
 return|;
 block|}
+name|dialog_clear
+argument_list|()
+expr_stmt|;
 comment|/* Copy DOS partition area into bootblocks */
 name|bcopy
 argument_list|(
@@ -643,9 +646,6 @@ argument_list|)
 operator|*
 literal|4
 argument_list|)
-expr_stmt|;
-name|dialog_clear
-argument_list|()
 expr_stmt|;
 comment|/* Write the disklabel into the bootblocks */
 name|label
