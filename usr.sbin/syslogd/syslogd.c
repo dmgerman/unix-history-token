@@ -3964,7 +3964,7 @@ name|f_prevline
 argument_list|)
 operator|&&
 operator|!
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|from
 argument_list|,
@@ -4448,6 +4448,8 @@ operator|=
 name|facilitynames
 init|;
 name|c
+operator|->
+name|c_name
 condition|;
 name|c
 operator|++
@@ -4478,6 +4480,8 @@ operator|=
 name|prioritynames
 init|;
 name|c
+operator|->
+name|c_name
 condition|;
 name|c
 operator|++
@@ -4764,7 +4768,7 @@ expr_stmt|;
 comment|/* check for local vs remote messages */
 if|if
 condition|(
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|f
 operator|->
@@ -6057,7 +6061,7 @@ literal|'.'
 argument_list|)
 operator|)
 operator|&&
-name|strcmp
+name|strcasecmp
 argument_list|(
 name|p
 operator|+
