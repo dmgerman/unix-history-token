@@ -528,11 +528,14 @@ name|nospace
 goto|;
 if|if
 condition|(
+name|suser_xxx
+argument_list|(
 name|cred
-operator|->
-name|cr_uid
-operator|!=
-literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|PRISON_ROOT
+argument_list|)
 operator|&&
 name|freespace
 argument_list|(
@@ -934,11 +937,14 @@ directive|endif
 comment|/* DIAGNOSTIC */
 if|if
 condition|(
+name|suser_xxx
+argument_list|(
 name|cred
-operator|->
-name|cr_uid
-operator|!=
-literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|PRISON_ROOT
+argument_list|)
 operator|&&
 name|freespace
 argument_list|(
