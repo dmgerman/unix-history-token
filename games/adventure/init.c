@@ -1833,7 +1833,8 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* random seed */
-comment|/* srand(371);				/* non-random seed */
+comment|/* srand(371); */
+comment|/* non-random seed */
 name|hinted
 index|[
 literal|3

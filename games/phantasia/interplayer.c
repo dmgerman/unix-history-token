@@ -10,7 +10,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: checkbattle() / / FUNCTION: check to see if current player should battle another / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: battleplayer(), fread(), fseek() / / GLOBAL INPUTS: Other, Users, Player, Fileloc, *Playersfp / / GLOBAL OUTPUTS: Users / / DESCRIPTION: /	Seach player file for a foe at the same coordinates as the /	current player. /	Also update user count. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: checkbattle() / / FUNCTION: check to see if current player should battle another / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: battleplayer(), fread(), fseek() / / GLOBAL INPUTS: Other, Users, Player, Fileloc, *Playersfp / / GLOBAL OUTPUTS: Users / / DESCRIPTION: /	Seach player file for a foe at the same coordinates as the /	current player. /	Also update user count. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -180,7 +180,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: battleplayer() / / FUNCTION: inter-terminal battle with another player / / AUTHOR: E. A. Estes, 2/15/86 / / ARGUMENTS: /	long foeplace - location in player file of person to battle / / RETURN VALUE: none / / MODULES CALLED: readrecord(), readmessage(), writerecord(), collecttaxes(),  /	displaystats(), fabs(), more(), death(), sleep(), wmove(), waddch(), printw(),  /	myturn(), altercoordinates(), waddstr(), wrefresh(), mvprintw(),  /	getanswer(), wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Foestrikes, LINES, Lines, Other, Shield, Player, *stdscr,  /	Fileloc, *Enemyname / / GLOBAL OUTPUTS: Foestrikes, Lines, Shield, Player, Luckout, *Enemyname / / DESCRIPTION: /	Inter-terminal battle is a very fragile and slightly klugy thing. /	At any time, one player is master and the other is slave. /	We pick who is master first by speed and level.  After that, /	the slave waits for the master to relinquish its turn, and /	the slave becomes master, and so on. / /	The items in the player structure which control the handshake are: /	    p_tampered: /		master increments this to relinquish control /	    p_istat: /		master sets this to specify particular action /	    p_1scratch: /		set to total damage inflicted so far; changes to indicate action / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: battleplayer() / / FUNCTION: inter-terminal battle with another player / / AUTHOR: E. A. Estes, 2/15/86 / / ARGUMENTS: /	long foeplace - location in player file of person to battle / / RETURN VALUE: none / / MODULES CALLED: readrecord(), readmessage(), writerecord(), collecttaxes(),  /	displaystats(), fabs(), more(), death(), sleep(), wmove(), waddch(), printw(),  /	myturn(), altercoordinates(), waddstr(), wrefresh(), mvprintw(),  /	getanswer(), wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Foestrikes, LINES, Lines, Other, Shield, Player, *stdscr,  /	Fileloc, *Enemyname / / GLOBAL OUTPUTS: Foestrikes, Lines, Shield, Player, Luckout, *Enemyname / / DESCRIPTION: /	Inter-terminal battle is a very fragile and slightly klugy thing. /	At any time, one player is master and the other is slave. /	We pick who is master first by speed and level.  After that, /	the slave waits for the master to relinquish its turn, and /	the slave becomes master, and so on. / /	The items in the player structure which control the handshake are: /	    p_tampered: /		master increments this to relinquish control /	    p_istat: /		master sets this to specify particular action /	    p_1scratch: /		set to total damage inflicted so far; changes to indicate action / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1138,7 +1138,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: myturn() / / FUNCTION: process players action against foe in battle / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), inputoption(), floor(), wmove(), drandom(),  /	waddstr(), wrefresh(), mvprintw(), wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Lines, Other, Player, *stdscr, Fileloc, Luckout,  /	*Enemyname / / GLOBAL OUTPUTS: Foestrikes, Lines, Player, Luckout / / DESCRIPTION: /	Take action action against foe, and decide who is master /	for next iteration. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: myturn() / / FUNCTION: process players action against foe in battle / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), inputoption(), floor(), wmove(), drandom(),  /	waddstr(), wrefresh(), mvprintw(), wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Lines, Other, Player, *stdscr, Fileloc, Luckout,  /	*Enemyname / / GLOBAL OUTPUTS: Foestrikes, Lines, Player, Luckout / / DESCRIPTION: /	Take action action against foe, and decide who is master /	for next iteration. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1524,7 +1524,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: checktampered() / / FUNCTION: check if current player has been tampered with / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: readrecord(), fread(), fseek(), tampered(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, Fileloc, Enrgyvoid / / GLOBAL OUTPUTS: Enrgyvoid / / DESCRIPTION: /	Check for energy voids, holy grail, and tampering by other /	players. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: checktampered() / / FUNCTION: check if current player has been tampered with / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: readrecord(), fread(), fseek(), tampered(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, Fileloc, Enrgyvoid / / GLOBAL OUTPUTS: Enrgyvoid / / DESCRIPTION: /	Check for energy voids, holy grail, and tampering by other /	players. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1693,7 +1693,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: tampered() / / FUNCTION: take care of tampering by other players / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int what - what type of tampering /	double arg1, arg2 - rest of tampering info / / RETURN VALUE: none / / MODULES CALLED: writerecord(), more(), fread(), death(), fseek(), sleep(),  /	floor(), wmove(), waddch(), drandom(), printw(), altercoordinates(),  /	waddstr(), wrefresh(), encounter(), writevoid() / / GLOBAL INPUTS: Other, Player, *stdscr, Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed, Enrgyvoid / / DESCRIPTION: /	Take care of energy voids, holy grail, decree and intervention /	action on current player. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: tampered() / / FUNCTION: take care of tampering by other players / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int what - what type of tampering /	double arg1, arg2 - rest of tampering info / / RETURN VALUE: none / / MODULES CALLED: writerecord(), more(), fread(), death(), fseek(), sleep(),  /	floor(), wmove(), waddch(), drandom(), printw(), altercoordinates(),  /	waddstr(), wrefresh(), encounter(), writevoid() / / GLOBAL INPUTS: Other, Player, *stdscr, Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed, Enrgyvoid / / DESCRIPTION: /	Take care of energy voids, holy grail, decree and intervention /	action on current player. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2383,7 +2383,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: userlist() / / FUNCTION: print list of players and locations / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: /	bool ingameflag - set if called while playing / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), descrlocation(), more(), fread(), fseek(),  /	floor(), wmove(), printw(), waddstr(), distance(), wrefresh(),  /	descrtype(), wclrtobot() / / GLOBAL INPUTS: LINES, Other, Circle, Wizard, Player, *stdscr, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	We can only see the coordinate of those closer to the origin /	from us. /	Kings and council of the wise can see and can be seen by everyone. /	Palantirs are good for seeing everyone; and the valar can use /	one to see through a 'cloak' spell. /	The valar has no coordinates, and is completely invisible if /	cloaked. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: userlist() / / FUNCTION: print list of players and locations / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: /	bool ingameflag - set if called while playing / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), descrlocation(), more(), fread(), fseek(),  /	floor(), wmove(), printw(), waddstr(), distance(), wrefresh(),  /	descrtype(), wclrtobot() / / GLOBAL INPUTS: LINES, Other, Circle, Wizard, Player, *stdscr, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	We can only see the coordinate of those closer to the origin /	from us. /	Kings and council of the wise can see and can be seen by everyone. /	Palantirs are good for seeing everyone; and the valar can use /	one to see through a 'cloak' spell. /	The valar has no coordinates, and is completely invisible if /	cloaked. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2688,7 +2688,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: throneroom() / / FUNCTION: king stuff upon entering throne / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), fread(), fseek(), fopen(), wmove(), fclose(),  /	fwrite(), altercoordinates(), waddstr(), fprintf() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, *stdscr, /	Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed / / DESCRIPTION: /	If player is not already king, make him/her so if the old king /	is not playing. /	Clear energy voids with new king. /	Print 'decree' prompt. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: throneroom() / / FUNCTION: king stuff upon entering throne / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), fread(), fseek(), fopen(), wmove(), fclose(),  /	fwrite(), altercoordinates(), waddstr(), fprintf() / / GLOBAL INPUTS: *Energyvoidfp, Other, Player, *stdscr, /	Enrgyvoid, *Playersfp / / GLOBAL OUTPUTS: Other, Player, Changed / / DESCRIPTION: /	If player is not already king, make him/her so if the old king /	is not playing. /	Clear energy voids with new king. /	Print 'decree' prompt. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2954,7 +2954,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: dotampered() / / FUNCTION: king and valar special options / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), fread(), fseek(), fopen(),  /	floor(), wmove(), drandom(), fclose(), fwrite(), sscanf(), strcmp(),  /	infloat(), waddstr(), findname(), distance(), userlist(), mvprintw(),  /	allocvoid(), getanswer(), getstring(), wclrtoeol(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Illcmd[], Wizard, Player, *stdscr,  /	Databuf[], Enrgyvoid / / GLOBAL OUTPUTS: Other, Player, Enrgyvoid / / DESCRIPTION: /	Tamper with other players.  Handle king/valar specific options. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: dotampered() / / FUNCTION: king and valar special options / / AUTHOR: E. A. Estes, 2/28/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), truncstring(), fread(), fseek(), fopen(),  /	floor(), wmove(), drandom(), fclose(), fwrite(), sscanf(), strcmp(),  /	infloat(), waddstr(), findname(), distance(), userlist(), mvprintw(),  /	allocvoid(), getanswer(), getstring(), wclrtoeol(), writevoid() / / GLOBAL INPUTS: *Energyvoidfp, Other, Illcmd[], Wizard, Player, *stdscr,  /	Databuf[], Enrgyvoid / / GLOBAL OUTPUTS: Other, Player, Enrgyvoid / / DESCRIPTION: /	Tamper with other players.  Handle king/valar specific options. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3936,7 +3936,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: writevoid() / / FUNCTION: update energy void entry in energy void file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct energyvoid *vp - pointer to structure to write to file /	long loc - location in file to update / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Energyvoidfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Write out energy void structure at specified location. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: writevoid() / / FUNCTION: update energy void entry in energy void file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct energyvoid *vp - pointer to structure to write to file /	long loc - location in file to update / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Energyvoidfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Write out energy void structure at specified location. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -4009,7 +4009,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: allocvoid() / / FUNCTION: allocate space for a new energy void / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: location of new energy void space / / MODULES CALLED: fread(), fseek() / / GLOBAL INPUTS: *Energyvoidfp, Enrgyvoid / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Search energy void file for an inactive entry and return its /	location. /	If no inactive ones are found, return one more than last location. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: allocvoid() / / FUNCTION: allocate space for a new energy void / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: location of new energy void space / / MODULES CALLED: fread(), fseek() / / GLOBAL INPUTS: *Energyvoidfp, Enrgyvoid / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Search energy void file for an inactive entry and return its /	location. /	If no inactive ones are found, return one more than last location. / *************************************************************************/
 end_comment
 
 begin_function

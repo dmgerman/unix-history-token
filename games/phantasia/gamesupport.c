@@ -10,7 +10,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: changestats() / / FUNCTION: examine/change statistics for a player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	bool ingameflag - set if called while playing game (Wizard only) / / RETURN VALUE: none / / MODULES CALLED: freerecord(), writerecord(), descrstatus(), truncstring(),  /	time(), more(), wmove(), wclear(), strcmp(), printw(), strcpy(),  /	infloat(), waddstr(), cleanup(), findname(), userlist(), mvprintw(),  /	localtime(), getanswer(), descrtype(), getstring() / / GLOBAL INPUTS: LINES, *Login, Other, Wizard, Player, *stdscr, Databuf[],  /	Fileloc / / GLOBAL OUTPUTS: Echo / / DESCRIPTION: /	Prompt for player name to examine/change. /	If the name is NULL, print a list of all players. /	If we are called from within the game, check for the /	desired name being the same as the current player's name. /	Only the 'Wizard' may alter players. /	Items are changed only if a non-zero value is specified. /	To change an item to 0, use 0.1; it will be truncated later. / /	Players may alter their names and passwords, if the following /	are true: /	    - current login matches the character's logins /	    - the password is known /	    - the player is not in the middle of the game (ingameflag == FALSE) / /	The last condition is imposed for two reasons: /	    - the game could possibly get a bit hectic if a player were /	      continually changing his/her name /	    - another player structure would be necessary to check for names /	      already in use / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: changestats() / / FUNCTION: examine/change statistics for a player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	bool ingameflag - set if called while playing game (Wizard only) / / RETURN VALUE: none / / MODULES CALLED: freerecord(), writerecord(), descrstatus(), truncstring(),  /	time(), more(), wmove(), wclear(), strcmp(), printw(), strcpy(),  /	infloat(), waddstr(), cleanup(), findname(), userlist(), mvprintw(),  /	localtime(), getanswer(), descrtype(), getstring() / / GLOBAL INPUTS: LINES, *Login, Other, Wizard, Player, *stdscr, Databuf[],  /	Fileloc / / GLOBAL OUTPUTS: Echo / / DESCRIPTION: /	Prompt for player name to examine/change. /	If the name is NULL, print a list of all players. /	If we are called from within the game, check for the /	desired name being the same as the current player's name. /	Only the 'Wizard' may alter players. /	Items are changed only if a non-zero value is specified. /	To change an item to 0, use 0.1; it will be truncated later. / /	Players may alter their names and passwords, if the following /	are true: /	    - current login matches the character's logins /	    - the password is known /	    - the player is not in the middle of the game (ingameflag == FALSE) / /	The last condition is imposed for two reasons: /	    - the game could possibly get a bit hectic if a player were /	      continually changing his/her name /	    - another player structure would be necessary to check for names /	      already in use / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1950,7 +1950,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: monstlist() / / FUNCTION: print a monster listing / / AUTHOR: E. A. Estes, 2/27/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: puts(), fread(), fseek(), printf() / / GLOBAL INPUTS: Curmonster, *Monstfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read monster file, and print a monster listing on standard output. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: monstlist() / / FUNCTION: print a monster listing / / AUTHOR: E. A. Estes, 2/27/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: puts(), fread(), fseek(), printf() / / GLOBAL INPUTS: Curmonster, *Monstfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read monster file, and print a monster listing on standard output. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2054,7 +2054,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: scorelist() / / FUNCTION: print player score board / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fopen(), printf(), fclose() / / GLOBAL INPUTS:  / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read the scoreboard file and print the contents. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: scorelist() / / FUNCTION: print player score board / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fopen(), printf(), fclose() / / GLOBAL INPUTS:  / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read the scoreboard file and print the contents. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2147,7 +2147,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: activelist() / / FUNCTION: print list of active players to standard output / / AUTHOR: E. A. Estes, 3/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), fread(), fseek(), printf(), descrtype() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read player file, and print list of active records to standard output. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: activelist() / / FUNCTION: print list of active players to standard output / / AUTHOR: E. A. Estes, 3/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), fread(), fseek(), printf(), descrtype() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read player file, and print list of active records to standard output. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2239,7 +2239,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: purgeoldplayers() / / FUNCTION: purge inactive players from player file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: freerecord(), time(), fread(), fseek(), localtime() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Delete characters which have not been used with the last /	three weeks. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: purgeoldplayers() / / FUNCTION: purge inactive players from player file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: freerecord(), time(), fread(), fseek(), localtime() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Delete characters which have not been used with the last /	three weeks. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2366,7 +2366,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: enterscore() / / FUNCTION: enter player into scoreboard / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), error(), strcmp(), fclose(),  /	strcpy(), fwrite(), descrtype() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The scoreboard keeps track of the highest character on a /	per-login basis. /	Search the scoreboard for an entry for the current login, /	if an entry is found, and it is lower than the current player, /	replace it, otherwise create an entry. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: enterscore() / / FUNCTION: enter player into scoreboard / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), error(), strcmp(), fclose(),  /	strcpy(), fwrite(), descrtype() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The scoreboard keeps track of the highest character on a /	per-login basis. /	Search the scoreboard for an entry for the current login, /	if an entry is found, and it is lower than the current player, /	replace it, otherwise create an entry. / *************************************************************************/
 end_comment
 
 begin_macro

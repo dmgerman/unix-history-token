@@ -10,7 +10,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: movelevel() / / FUNCTION: move player to new level / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: death(), floor(), wmove(), drandom(), waddstr(), explevel() / / GLOBAL INPUTS: Player, *stdscr, *Statptr, Stattable[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Use lookup table to increment important statistics when /	progressing to new experience level. /	Players are rested to maximum as a bonus for making a new /	level. /	Check for council of wise, and being too big to be king. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: movelevel() / / FUNCTION: move player to new level / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: death(), floor(), wmove(), drandom(), waddstr(), explevel() / / GLOBAL INPUTS: Player, *stdscr, *Statptr, Stattable[] / / GLOBAL OUTPUTS: Player, Changed / / DESCRIPTION: /	Use lookup table to increment important statistics when /	progressing to new experience level. /	Players are rested to maximum as a bonus for making a new /	level. /	Check for council of wise, and being too big to be king. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -297,7 +297,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: descrlocation() / / FUNCTION: return a formatted description of location / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player playerp - pointer to player structure /	bool shortflag - set if short form is desired / / RETURN VALUE: pointer to string containing result / / MODULES CALLED: fabs(), floor(), sprintf(), distance() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Look at coordinates and return an appropriately formatted /	string. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: descrlocation() / / FUNCTION: return a formatted description of location / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player playerp - pointer to player structure /	bool shortflag - set if short form is desired / / RETURN VALUE: pointer to string containing result / / MODULES CALLED: fabs(), floor(), sprintf(), distance() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Look at coordinates and return an appropriately formatted /	string. / *************************************************************************/
 end_comment
 
 begin_function
@@ -618,7 +618,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: tradingpost() / / FUNCTION: do trading post stuff / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), adjuststats(), fabs(), more(), sqrt(),  /	sleep(), floor(), wmove(), drandom(), wclear(), printw(),  /	altercoordinates(), infloat(), waddstr(), wrefresh(), mvprintw(), getanswer(),  /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Menu[], Circle, Player, *stdscr, Fileloc, Nobetter[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Different trading posts have different items. /	Merchants cannot be cheated, but they can be dishonest /	themselves. / /	Shields, swords, and quicksilver are not cumulative.  This is /	one major area of complaint, but there are two reasons for this: /		1) It becomes MUCH too easy to make very large versions /		   of these items. /		2) In the real world, one cannot simply weld two swords /		   together to make a bigger one. / /	At one time, it was possible to sell old weapons at half the purchase /	price.  This resulted in huge amounts of gold floating around, /	and the game lost much of its challenge. / /	Also, purchasing gems defeats the whole purpose of gold.  Gold /	is small change for lower level players.  They really shouldn't /	be able to accumulate more than enough gold for a small sword or /	a few books.  Higher level players shouldn't even bother to pick /	up gold, except maybe to buy mana once in a while. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: tradingpost() / / FUNCTION: do trading post stuff / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: writerecord(), adjuststats(), fabs(), more(), sqrt(),  /	sleep(), floor(), wmove(), drandom(), wclear(), printw(),  /	altercoordinates(), infloat(), waddstr(), wrefresh(), mvprintw(), getanswer(),  /	wclrtoeol(), wclrtobot() / / GLOBAL INPUTS: Menu[], Circle, Player, *stdscr, Fileloc, Nobetter[] / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Different trading posts have different items. /	Merchants cannot be cheated, but they can be dishonest /	themselves. / /	Shields, swords, and quicksilver are not cumulative.  This is /	one major area of complaint, but there are two reasons for this: /		1) It becomes MUCH too easy to make very large versions /		   of these items. /		2) In the real world, one cannot simply weld two swords /		   together to make a bigger one. / /	At one time, it was possible to sell old weapons at half the purchase /	price.  This resulted in huge amounts of gold floating around, /	and the game lost much of its challenge. / /	Also, purchasing gems defeats the whole purpose of gold.  Gold /	is small change for lower level players.  They really shouldn't /	be able to accumulate more than enough gold for a small sword or /	a few books.  Higher level players shouldn't even bother to pick /	up gold, except maybe to buy mana once in a while. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -1940,7 +1940,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: displaystats() / / FUNCTION: print out important player statistics / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), descrlocation(), mvprintw() / / GLOBAL INPUTS: Users, Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Important player statistics are printed on the screen. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: displaystats() / / FUNCTION: print out important player statistics / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: descrstatus(), descrlocation(), mvprintw() / / GLOBAL INPUTS: Users, Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Important player statistics are printed on the screen. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2054,7 +2054,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: allstatslist() / / FUNCTION: show player items / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: mvprintw(), descrtype() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print out some player statistics of lesser importance. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: allstatslist() / / FUNCTION: show player items / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: mvprintw(), descrtype() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print out some player statistics of lesser importance. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2326,7 +2326,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: descrtype() / / FUNCTION: return a string specifying player type / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player playerp - pointer to structure for player /	bool shortflag - set if short form is desired / / RETURN VALUE: pointer to string describing player type / / MODULES CALLED: strcpy() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: Databuf[] / / DESCRIPTION: /	Return a string describing the player type. /	King, council, valar, supercedes other types. /	The first character of the string is '*' if the player /	has a crown. /	If 'shortflag' is TRUE, return a 3 character string. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: descrtype() / / FUNCTION: return a string specifying player type / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player playerp - pointer to structure for player /	bool shortflag - set if short form is desired / / RETURN VALUE: pointer to string describing player type / / MODULES CALLED: strcpy() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: Databuf[] / / DESCRIPTION: /	Return a string describing the player type. /	King, council, valar, supercedes other types. /	The first character of the string is '*' if the player /	has a crown. /	If 'shortflag' is TRUE, return a 3 character string. / *************************************************************************/
 end_comment
 
 begin_function
@@ -2539,7 +2539,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: findname() / / FUNCTION: find location in player file of given name / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *name - name of character to look for /	struct player *playerp - pointer of structure to fill / / RETURN VALUE: location of player if found, -1 otherwise / / MODULES CALLED: fread(), fseek(), strcmp() / / GLOBAL INPUTS: Wizard, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Search the player file for the player of the given name. /	If player is found, fill structure with player data. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: findname() / / FUNCTION: find location in player file of given name / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *name - name of character to look for /	struct player *playerp - pointer of structure to fill / / RETURN VALUE: location of player if found, -1 otherwise / / MODULES CALLED: fread(), fseek(), strcmp() / / GLOBAL INPUTS: Wizard, *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Search the player file for the player of the given name. /	If player is found, fill structure with player data. / *************************************************************************/
 end_comment
 
 begin_function
@@ -2648,7 +2648,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: allocrecord() / / FUNCTION: find space in the player file for a new character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: location of free space in file / / MODULES CALLED: initplayer(), writerecord(), fread(), fseek() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Search the player file for an unused entry.  If none are found, /	make one at the end of the file. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: allocrecord() / / FUNCTION: find space in the player file for a new character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: location of free space in file / / MODULES CALLED: initplayer(), writerecord(), fread(), fseek() / / GLOBAL INPUTS: Other, *Playersfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Search the player file for an unused entry.  If none are found, /	make one at the end of the file. / *************************************************************************/
 end_comment
 
 begin_function
@@ -2747,7 +2747,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: freerecord() / / FUNCTION: free up a record on the player file / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	struct player playerp - pointer to structure to free /	long loc - location in file to free / / RETURN VALUE: none / / MODULES CALLED: writerecord() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Mark structure as not used, and update player file. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: freerecord() / / FUNCTION: free up a record on the player file / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	struct player playerp - pointer to structure to free /	long loc - location in file to free / / RETURN VALUE: none / / MODULES CALLED: writerecord() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Mark structure as not used, and update player file. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2806,7 +2806,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: leavegame() / / FUNCTION: leave game / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: freerecord(), writerecord(), cleanup() / / GLOBAL INPUTS: Player, Fileloc / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Mark player as inactive, and cleanup. /	Do not save players below level 1. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: leavegame() / / FUNCTION: leave game / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: freerecord(), writerecord(), cleanup() / / GLOBAL INPUTS: Player, Fileloc / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Mark player as inactive, and cleanup. /	Do not save players below level 1. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -2865,7 +2865,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(),  /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(),  /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(),  /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: death() / / FUNCTION: death routine / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *how - pointer to string describing cause of death / / RETURN VALUE: none / / MODULES CALLED: freerecord(), enterscore(), more(), exit(), fread(),  /	fseek(), execl(), fopen(), floor(), wmove(), drandom(), wclear(), strcmp(),  /	fwrite(), fflush(), printw(), strcpy(), fclose(), waddstr(), cleanup(),  /	fprintf(), wrefresh(), getanswer(), descrtype() / / GLOBAL INPUTS: Curmonster, Wizard, Player, *stdscr, Fileloc, *Monstfp / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Kill off current player. /	Handle rings, and multiple lives. /	Print an appropriate message. /	Update scoreboard, lastdead, and let other players know about /	the demise of their comrade. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3418,7 +3418,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: writerecord() / / FUNCTION: update structure in player file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to write out /	long place - location in file to updata / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Update location in player file with given structure. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: writerecord() / / FUNCTION: update structure in player file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to write out /	long place - location in file to updata / / RETURN VALUE: none / / MODULES CALLED: fseek(), fwrite(), fflush() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Update location in player file with given structure. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -3482,7 +3482,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: explevel() / / FUNCTION: calculate level based upon experience / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	double experience - experience to calculate experience level from / / RETURN VALUE: experience level / / MODULES CALLED: pow(), floor() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Experience level is a geometric progression.  This has been finely /	tuned over the years, and probably should not be changed. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: explevel() / / FUNCTION: calculate level based upon experience / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	double experience - experience to calculate experience level from / / RETURN VALUE: experience level / / MODULES CALLED: pow(), floor() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Experience level is a geometric progression.  This has been finely /	tuned over the years, and probably should not be changed. / *************************************************************************/
 end_comment
 
 begin_function
@@ -3545,7 +3545,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: truncstring() / / FUNCTION: truncate trailing blanks off a string / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	char *string - pointer to null terminated string / / RETURN VALUE: none / / MODULES CALLED: strlen() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Put nul characters in place of spaces at the end of the string. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: truncstring() / / FUNCTION: truncate trailing blanks off a string / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	char *string - pointer to null terminated string / / RETURN VALUE: none / / MODULES CALLED: strlen() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION:  /	Put nul characters in place of spaces at the end of the string. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -3600,7 +3600,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: altercoordinates() / / FUNCTION: Alter x, y coordinates and set/check location flags / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS:  /	double xnew, ynew - new x, y coordinates /	int operation - operation to perform with coordinates / / RETURN VALUE: none / / MODULES CALLED: fabs(), floor(), drandom(), distance() / / GLOBAL INPUTS: Circle, Beyond, Player / / GLOBAL OUTPUTS: Marsh, Circle, Beyond, Throne, Player, Changed / / DESCRIPTION:  /	This module is called whenever the player's coordinates are altered. /	If the player is beyond the point of no return, he/she is forced /	to stay there. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: altercoordinates() / / FUNCTION: Alter x, y coordinates and set/check location flags / / AUTHOR: E. A. Estes, 12/16/85 / / ARGUMENTS:  /	double xnew, ynew - new x, y coordinates /	int operation - operation to perform with coordinates / / RETURN VALUE: none / / MODULES CALLED: fabs(), floor(), drandom(), distance() / / GLOBAL INPUTS: Circle, Beyond, Player / / GLOBAL OUTPUTS: Marsh, Circle, Beyond, Throne, Player, Changed / / DESCRIPTION:  /	This module is called whenever the player's coordinates are altered. /	If the player is beyond the point of no return, he/she is forced /	to stay there. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -3915,7 +3915,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: readrecord() / / FUNCTION: read a player structure from file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to fill /	int loc - location of record to read / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read structure information from player file. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: readrecord() / / FUNCTION: read a player structure from file / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to fill /	int loc - location of record to read / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek() / / GLOBAL INPUTS: *Playersfp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read structure information from player file. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -3974,7 +3974,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: adjuststats() / / FUNCTION: adjust player statistics / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: death(), floor(), drandom(), explevel(), movelevel() / / GLOBAL INPUTS: Player, *Statptr / / GLOBAL OUTPUTS: Circle, Player, Timeout / / DESCRIPTION: /	Handle adjustment and maximums on various player characteristics. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: adjuststats() / / FUNCTION: adjust player statistics / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: death(), floor(), drandom(), explevel(), movelevel() / / GLOBAL INPUTS: Player, *Statptr / / GLOBAL OUTPUTS: Circle, Player, Timeout / / DESCRIPTION: /	Handle adjustment and maximums on various player characteristics. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4452,7 +4452,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: initplayer() / / FUNCTION: initialize a character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to init / / RETURN VALUE: none / / MODULES CALLED: floor(), drandom() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Put a bunch of default values in the given structure. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: initplayer() / / FUNCTION: initialize a character / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	struct player *playerp - pointer to structure to init / / RETURN VALUE: none / / MODULES CALLED: floor(), drandom() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Put a bunch of default values in the given structure. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -4732,7 +4732,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: readmessage() / / FUNCTION: read message from other players / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fseek(), fgets(), wmove(), waddstr(), wclrtoeol() / / GLOBAL INPUTS: *stdscr, Databuf[], *Messagefp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	If there is a message from other players, print it. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: readmessage() / / FUNCTION: read message from other players / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fseek(), fgets(), wmove(), waddstr(), wclrtoeol() / / GLOBAL INPUTS: *stdscr, Databuf[], *Messagefp / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	If there is a message from other players, print it. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4788,7 +4788,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: error() / / FUNCTION: process evironment error / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *whichfile - pointer to name of file which caused error / / RETURN VALUE: none / / MODULES CALLED: wclear(), cleanup() / / GLOBAL INPUTS: errno, *stdscr, printw(), printf(), Windows / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print message about offending file, and exit. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: error() / / FUNCTION: process evironment error / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *whichfile - pointer to name of file which caused error / / RETURN VALUE: none / / MODULES CALLED: wclear(), cleanup() / / GLOBAL INPUTS: errno, *stdscr, printw(), printf(), Windows / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print message about offending file, and exit. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4875,7 +4875,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: distance() / / FUNCTION: calculate distance between two points / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	double x1, y1 - x, y coordinates of first point /	double x2, y2 - x, y coordinates of second point / / RETURN VALUE: distance between the two points / / MODULES CALLED: sqrt() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	This function is provided because someone's hypot() library function /	fails if x1 == x2&& y1 == y2. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: distance() / / FUNCTION: calculate distance between two points / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS:  /	double x1, y1 - x, y coordinates of first point /	double x2, y2 - x, y coordinates of second point / / RETURN VALUE: distance between the two points / / MODULES CALLED: sqrt() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	This function is provided because someone's hypot() library function /	fails if x1 == x2&& y1 == y2. / *************************************************************************/
 end_comment
 
 begin_function
@@ -4940,7 +4940,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: ill_sig() / / FUNCTION: exit upon trapping an illegal signal / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int whichsig - signal which occured to cause jump to here / / RETURN VALUE: none / / MODULES CALLED: wclear(), printw(), cleanup() / / GLOBAL INPUTS: *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	When an illegal signal is caught, print a message, and cleanup. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: ill_sig() / / FUNCTION: exit upon trapping an illegal signal / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int whichsig - signal which occured to cause jump to here / / RETURN VALUE: none / / MODULES CALLED: wclear(), printw(), cleanup() / / GLOBAL INPUTS: *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	When an illegal signal is caught, print a message, and cleanup. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -4996,7 +4996,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: descrstatus() / / FUNCTION: return a string describing the player status / / AUTHOR: E. A. Estes, 3/3/86 / / ARGUMENTS: /	struct player playerp - pointer to player structure to describe / / RETURN VALUE: string describing player's status / / MODULES CALLED: none / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Return verbal description of player status. /	If player status is S_PLAYING, check for low energy and blindness. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: descrstatus() / / FUNCTION: return a string describing the player status / / AUTHOR: E. A. Estes, 3/3/86 / / ARGUMENTS: /	struct player playerp - pointer to player structure to describe / / RETURN VALUE: string describing player's status / / MODULES CALLED: none / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Return verbal description of player status. /	If player status is S_PLAYING, check for low energy and blindness. / *************************************************************************/
 end_comment
 
 begin_function
@@ -5128,7 +5128,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: drandom() / / FUNCTION: return a random floating point number from 0.0< 1.0 / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: random() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Convert random integer from library routine into a floating /	point number, and divide by the largest possible random number. /	We mask large integers with 32767 to handle sites that return /	31 bit random integers. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: drandom() / / FUNCTION: return a random floating point number from 0.0< 1.0 / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: random() / / GLOBAL INPUTS: none / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Convert random integer from library routine into a floating /	point number, and divide by the largest possible random number. /	We mask large integers with 32767 to handle sites that return /	31 bit random integers. / *************************************************************************/
 end_comment
 
 begin_function
@@ -5182,7 +5182,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: collecttaxes() / / FUNCTION: collect taxes from current player / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	double gold - amount of gold to tax /	double gems - amount of gems to tax / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), floor(), fwrite(), fclose() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Pay taxes on gold and gems.  If the player does not have enough /	gold to pay taxes on the added gems, convert some gems to gold. /	Add taxes to tax data base; add remaining gold and gems to /	player's cache. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: collecttaxes() / / FUNCTION: collect taxes from current player / / AUTHOR: E. A. Estes, 2/7/86 / / ARGUMENTS: /	double gold - amount of gold to tax /	double gems - amount of gems to tax / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), floor(), fwrite(), fclose() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Pay taxes on gold and gems.  If the player does not have enough /	gold to pay taxes on the added gems, convert some gems to gold. /	Add taxes to tax data base; add remaining gold and gems to /	player's cache. / *************************************************************************/
 end_comment
 
 begin_macro

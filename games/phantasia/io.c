@@ -10,7 +10,7 @@ file|"include.h"
 end_include
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: getstring() / / FUNCTION: read a string from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *cp - pointer to buffer area to fill /	int mx - maximum number of characters to put in buffer / / RETURN VALUE: none / / MODULES CALLED: wmove(), _filbuf(), clearok(), waddstr(), wrefresh(),  /	wclrtoeol() / / GLOBAL INPUTS: Echo, _iob[], Wizard, *stdscr / / GLOBAL OUTPUTS: _iob[] / / DESCRIPTION: /	Read a string from the keyboard. /	This routine is specially designed to: / /	    - strip non-printing characters (unless Wizard) /	    - echo, if desired /	    - redraw the screen if CH_REDRAW is entered /	    - read in only 'mx - 1' characters or less characters /	    - nul-terminate string, and throw away newline / /	'mx' is assumed to be at least 2. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: getstring() / / FUNCTION: read a string from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *cp - pointer to buffer area to fill /	int mx - maximum number of characters to put in buffer / / RETURN VALUE: none / / MODULES CALLED: wmove(), _filbuf(), clearok(), waddstr(), wrefresh(),  /	wclrtoeol() / / GLOBAL INPUTS: Echo, _iob[], Wizard, *stdscr / / GLOBAL OUTPUTS: _iob[] / / DESCRIPTION: /	Read a string from the keyboard. /	This routine is specially designed to: / /	    - strip non-printing characters (unless Wizard) /	    - echo, if desired /	    - redraw the screen if CH_REDRAW is entered /	    - read in only 'mx - 1' characters or less characters /	    - nul-terminate string, and throw away newline / /	'mx' is assumed to be at least 2. / *************************************************************************/
 end_comment
 
 begin_expr_stmt
@@ -199,7 +199,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: more() / / FUNCTION: pause and prompt player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int where - line on screen on which to pause / / RETURN VALUE: none / / MODULES CALLED: wmove(), waddstr(), getanswer() / / GLOBAL INPUTS: *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print a message, and wait for a space character. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: more() / / FUNCTION: pause and prompt player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	int where - line on screen on which to pause / / RETURN VALUE: none / / MODULES CALLED: wmove(), waddstr(), getanswer() / / GLOBAL INPUTS: *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Print a message, and wait for a space character. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -242,7 +242,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: infloat() / / FUNCTION: input a floating point number from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: floating point number from operator / / MODULES CALLED: sscanf(), getstring() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read a string from player, and scan for a floating point /	number. /	If no valid number is found, return 0.0. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: infloat() / / FUNCTION: input a floating point number from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: floating point number from operator / / MODULES CALLED: sscanf(), getstring() / / GLOBAL INPUTS: Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Read a string from player, and scan for a floating point /	number. /	If no valid number is found, return 0.0. / *************************************************************************/
 end_comment
 
 begin_function
@@ -294,7 +294,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: inputoption() / / FUNCTION: input an option value from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: floor(), drandom(), getanswer() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Age increases with every move. /	Refresh screen, and get a single character option from player. /	Return a random value if player's ring has gone bad. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: inputoption() / / FUNCTION: input an option value from player / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: floor(), drandom(), getanswer() / / GLOBAL INPUTS: Player / / GLOBAL OUTPUTS: Player / / DESCRIPTION: /	Age increases with every move. /	Refresh screen, and get a single character option from player. /	Return a random value if player's ring has gone bad. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -366,7 +366,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: interrupt() / / FUNCTION: handle interrupt from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fork(), exit(), wait(), death(), alarm(), execl(), wmove(),  /	getgid(), signal(), getenv(), wclear(), setuid(), getuid(), setgid(),  /	crmode(), clearok(), waddstr(), cleanup(), wrefresh(), leavegame(),  /	getanswer() / / GLOBAL INPUTS: Player, *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Allow player to quit upon hitting the interrupt key. /	If the player wants to quit while in battle, he/she automatically /	dies. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: interrupt() / / FUNCTION: handle interrupt from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fork(), exit(), wait(), death(), alarm(), execl(), wmove(),  /	getgid(), signal(), getenv(), wclear(), setuid(), getuid(), setgid(),  /	crmode(), clearok(), waddstr(), cleanup(), wrefresh(), leavegame(),  /	getanswer() / / GLOBAL INPUTS: Player, *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Allow player to quit upon hitting the interrupt key. /	If the player wants to quit while in battle, he/she automatically /	dies. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -621,7 +621,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: getanswer() / / FUNCTION: get an answer from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *choices - string of (upper case) valid choices /	bool def - set if default answer / / RETURN VALUE: none / / MODULES CALLED: alarm(), wmove(), waddch(), signal(), setjmp(), strchr(),  /	_filbuf(), clearok(), toupper(), wrefresh(), mvprintw(), wclrtoeol() / / GLOBAL INPUTS: catchalarm(), Echo, _iob[], _ctype[], *stdscr, Timeout,  /	Timeoenv[] / / GLOBAL OUTPUTS: _iob[] / / DESCRIPTION: /	Get a single character answer from operator. /	Timeout waiting for response.  If we timeout, or the /	answer in not in the list of valid choices, print choices, /	and wait again, otherwise return the first character in ths /	list of choices. /	Give up after 3 tries. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: getanswer() / / FUNCTION: get an answer from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: /	char *choices - string of (upper case) valid choices /	bool def - set if default answer / / RETURN VALUE: none / / MODULES CALLED: alarm(), wmove(), waddch(), signal(), setjmp(), strchr(),  /	_filbuf(), clearok(), toupper(), wrefresh(), mvprintw(), wclrtoeol() / / GLOBAL INPUTS: catchalarm(), Echo, _iob[], _ctype[], *stdscr, Timeout,  /	Timeoenv[] / / GLOBAL OUTPUTS: _iob[] / / DESCRIPTION: /	Get a single character answer from operator. /	Timeout waiting for response.  If we timeout, or the /	answer in not in the list of valid choices, print choices, /	and wait again, otherwise return the first character in ths /	list of choices. /	Give up after 3 tries. / *************************************************************************/
 end_comment
 
 begin_macro
@@ -921,7 +921,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: catchalarm() / / FUNCTION: catch timer when waiting for input / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: longjmp() / / GLOBAL INPUTS: Timeoenv[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Come here when the alarm expires while waiting for input. /	Simply longjmp() into getanswer(). / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: catchalarm() / / FUNCTION: catch timer when waiting for input / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: longjmp() / / GLOBAL INPUTS: Timeoenv[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Come here when the alarm expires while waiting for input. /	Simply longjmp() into getanswer(). / *************************************************************************/
 end_comment
 
 begin_function

@@ -1107,7 +1107,8 @@ operator|=
 literal|2
 expr_stmt|;
 comment|/* tell the trap functions that they must do a showplayer() 						from here on */
-comment|/* nice(1);	/* games should be run niced */
+comment|/* nice(1); */
+comment|/* games should be run niced */
 name|yrepcount
 operator|=
 name|hit2flag
