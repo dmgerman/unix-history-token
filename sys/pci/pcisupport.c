@@ -5074,6 +5074,15 @@ operator|(
 literal|"AcerLabs M5243 PCI-PCI bridge"
 operator|)
 return|;
+comment|/* AMD -- vendor 0x1022 */
+case|case
+literal|0x70071022
+case|:
+return|return
+operator|(
+literal|"AMD-751 PCI-PCI (AGP) bridge"
+operator|)
+return|;
 comment|/* Others */
 case|case
 literal|0x00221014
@@ -6368,6 +6377,15 @@ case|:
 return|return
 operator|(
 literal|"VIA 83C572 USB controller"
+operator|)
+return|;
+comment|/* AMD -- vendor 0x1022 */
+case|case
+literal|0x70061022
+case|:
+return|return
+operator|(
+literal|"AMD-751 host to PCI bridge"
 operator|)
 return|;
 comment|/* NEC -- vendor 0x1033 */

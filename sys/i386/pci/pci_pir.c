@@ -1329,6 +1329,15 @@ expr_stmt|;
 break|break;
 block|}
 break|break;
+comment|/* AMD -- vendor 0x1022 */
+case|case
+literal|0x70061022
+case|:
+name|s
+operator|=
+literal|"AMD-751 host to PCI bridge"
+expr_stmt|;
+break|break;
 comment|/* SiS -- vendor 0x1039 */
 case|case
 literal|0x04961039
