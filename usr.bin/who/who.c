@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: who.c,v 1.5 1997/08/26 11:14:57 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,6 +315,43 @@ case|case
 literal|3
 case|:
 comment|/* who am i */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"am"
+argument_list|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"I"
+argument_list|)
+operator|&&
+name|strcmp
+argument_list|(
+name|argv
+index|[
+literal|2
+index|]
+argument_list|,
+literal|"i"
+argument_list|)
+operator|)
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 name|ufp
 operator|=
 name|file
