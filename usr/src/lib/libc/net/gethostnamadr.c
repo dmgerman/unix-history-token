@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.8 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1182,6 +1182,7 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|&
 name|host_addr
 expr_stmt|;
 name|h_addr_ptrs
