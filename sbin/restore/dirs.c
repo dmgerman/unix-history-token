@@ -1540,7 +1540,7 @@ operator|&&
 operator|*
 name|name
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 block|{
 if|if

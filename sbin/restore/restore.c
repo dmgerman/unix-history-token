@@ -1511,7 +1511,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 	 * A hard link to a diirectory that has been removed. 	 * Ignore it. 	 */
+comment|/* 	 * A hard link to a directory that has been removed. 	 * Ignore it. 	 */
 case|case
 name|NAMEFND
 case|:
@@ -2292,7 +2292,7 @@ argument_list|,
 literal|"unexpected file on tape"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the file is to be extracted, then the old file must 		 * be removed since its type may change from one leaf type 		 * to another (eg "file" to "character special"). 		 */
+comment|/* 		 * If the file is to be extracted, then the old file must 		 * be removed since its type may change from one leaf type 		 * to another (e.g. "file" to "character special"). 		 */
 if|if
 condition|(
 operator|(
@@ -2341,7 +2341,7 @@ operator||
 name|EXTRACT
 operator|)
 expr_stmt|;
-comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work re quired by the 		 * 'R' command. 		 */
+comment|/* 		 * We checkpoint the restore after every tape reel, so 		 * as to simplify the amount of work required by the 		 * 'R' command. 		 */
 name|next
 label|:
 if|if

@@ -1832,7 +1832,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Canonicalize file names to always start with ``./'' and  * remove any imbedded "." and ".." components.  */
+comment|/*  * Canonicalize file names to always start with ``./'' and  * remove any embedded "." and ".." components.  */
 end_comment
 
 begin_function
@@ -1952,7 +1952,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"canonname: not enough bufferspace\n"
+literal|"canonname: not enough buffer space\n"
 argument_list|)
 expr_stmt|;
 name|done
