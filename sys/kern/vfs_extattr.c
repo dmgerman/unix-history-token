@@ -14098,6 +14098,8 @@ name|struct
 name|mount
 modifier|*
 name|mp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|vnode
@@ -14688,11 +14690,6 @@ operator|.
 name|ni_startdir
 argument_list|)
 expr_stmt|;
-name|vn_finished_write
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
 name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|fromnd
@@ -14731,6 +14728,11 @@ argument_list|)
 expr_stmt|;
 name|out1
 label|:
+name|vn_finished_write
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fromnd
