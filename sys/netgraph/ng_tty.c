@@ -125,12 +125,6 @@ directive|include
 file|<machine/ipl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
