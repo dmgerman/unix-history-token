@@ -194,6 +194,13 @@ begin_comment
 comment|/* Like ticks, but for softclock(). */
 end_comment
 
+begin_decl_stmt
+name|struct
+name|mtx
+name|callout_lock
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -203,8 +210,6 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|mtx
-name|callout_lock
-decl_stmt|,
 name|callout_dont_sleep
 decl_stmt|;
 end_decl_stmt
