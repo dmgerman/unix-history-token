@@ -53,11 +53,22 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<machine/apm_bios.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -863,10 +874,15 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 name|struct
 name|apm_info
 name|info
 decl_stmt|;
+endif|#
+directive|endif
 name|long
 name|idle
 decl_stmt|,
@@ -1208,6 +1224,11 @@ literal|"error reading supported CPU frequencies"
 argument_list|)
 expr_stmt|;
 comment|/* Decide whether to use ACPI or APM to read the AC line status. */
+name|apm_fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|len
 operator|=
 sizeof|sizeof
@@ -1233,6 +1254,9 @@ literal|0
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 comment|/* ACPI disabled, try APM */
 name|apm_fd
 operator|=
@@ -1243,6 +1267,8 @@ argument_list|,
 name|O_RDONLY
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|apm_fd
@@ -1284,11 +1310,6 @@ argument_list|,
 literal|"lookup acline"
 argument_list|)
 expr_stmt|;
-name|apm_fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
 block|}
 comment|/* Run in the background unless in verbose mode. */
 if|if
@@ -1325,6 +1346,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 name|ioctl
@@ -1355,6 +1379,8 @@ name|SRC_AC
 else|:
 name|SRC_BATTERY
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1792,6 +1818,9 @@ expr_stmt|;
 block|}
 block|}
 comment|/* NOTREACHED */
+ifdef|#
+directive|ifdef
+name|__i386__
 if|if
 condition|(
 name|apm_fd
@@ -1804,6 +1833,8 @@ argument_list|(
 name|apm_fd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
