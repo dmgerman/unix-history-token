@@ -35,6 +35,12 @@ begin_comment
 comment|/*  * ACPICA's rather gung-ho approach to hardware resource ownership is a little  * troublesome insofar as there is no easy way for us to know in advance   * exactly which I/O resources it's going to want to use.  *   * In order to deal with this, we ignore resource ownership entirely, and simply  * use the native I/O space accessor functionality.  This is Evil, but it works.  *  * XXX use an intermediate #define for the tag/handle  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -48,6 +54,36 @@ directive|define
 name|ACPI_BUS_HANDLE
 value|0
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_BUS_SPACE_IO
+value|IA64_BUS_SPACE_IO
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BUS_HANDLE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|ACPI_STATUS
