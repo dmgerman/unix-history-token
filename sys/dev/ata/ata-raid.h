@@ -129,11 +129,11 @@ struct|struct
 name|ar_buf
 block|{
 name|struct
-name|bio
+name|buf
 name|bp
 decl_stmt|;
 name|struct
-name|bio
+name|buf
 modifier|*
 name|org
 decl_stmt|;

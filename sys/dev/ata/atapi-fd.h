@@ -174,17 +174,17 @@ modifier|*
 name|atp
 decl_stmt|;
 comment|/* controller structure */
-name|int32_t
+name|int
 name|lun
 decl_stmt|;
 comment|/* logical device unit */
-name|int32_t
+name|int
 name|transfersize
 decl_stmt|;
 comment|/* max size of each transfer */
 name|struct
 name|buf_queue_head
-name|buf_queue
+name|bio_queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct

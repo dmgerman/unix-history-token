@@ -285,6 +285,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_NOP
+value|0x00
+end_define
+
+begin_comment
+comment|/* NOP command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_FLUSHQUEUE
+value|0x00
+end_define
+
+begin_comment
+comment|/* flush queued cmd's */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_AUTOPOLL
+value|0x01
+end_define
+
+begin_comment
+comment|/* start autopoll function */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_ATAPI_RESET
 value|0x08
 end_define
@@ -340,6 +373,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_SERVICE
+value|0xa2
+end_define
+
+begin_comment
+comment|/* service command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_READ_MUL
 value|0xc4
 end_define
@@ -373,6 +417,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_READ_DMA_QUEUED
+value|0xc7
+end_define
+
+begin_comment
+comment|/* read w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_READ_DMA
 value|0xc8
 end_define
@@ -390,6 +445,28 @@ end_define
 
 begin_comment
 comment|/* write w/DMA command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_WRITE_DMA_QUEUED
+value|0xcc
+end_define
+
+begin_comment
+comment|/* write w/DMA QUEUED command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_FLUSHCACHE
+value|0xe7
+end_define
+
+begin_comment
+comment|/* flush cache to disk */
 end_comment
 
 begin_define
@@ -428,6 +505,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_C_F_ENAB_WCACHE
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable write cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_DIS_WCACHE
+value|0x82
+end_define
+
+begin_comment
+comment|/* disable write cache */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_C_F_ENAB_RCACHE
 value|0xaa
 end_define
@@ -439,12 +538,56 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_F_ENAB_WCACHE
-value|0x02
+name|ATA_C_F_DIS_RCACHE
+value|0x55
 end_define
 
 begin_comment
-comment|/* enable write cache */
+comment|/* disable readahead cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_RELIRQ
+value|0x5d
+end_define
+
+begin_comment
+comment|/* enable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_DIS_RELIRQ
+value|0xdd
+end_define
+
+begin_comment
+comment|/* disable release interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_SRVIRQ
+value|0x5e
+end_define
+
+begin_comment
+comment|/* enable service interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_DIS_SRVIRQ
+value|0xde
+end_define
+
+begin_comment
+comment|/* disable service interrupt */
 end_comment
 
 begin_define
@@ -571,23 +714,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_ALTPORT
+name|ATA_ALTOFFSET
 value|0x206
 end_define
 
 begin_comment
-comment|/* alternate status register */
+comment|/* alternate registers offset */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ATA_ALTPORT_PCCARD
-value|0x8
+name|ATA_ALTIOSIZE
+value|0x01
 end_define
 
 begin_comment
-comment|/* ditto on PCCARD devices */
+comment|/* alternate registers size */
 end_comment
 
 begin_define
@@ -622,13 +765,6 @@ end_define
 begin_comment
 comment|/* 4 head bits */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ATA_ALTIOSIZE
-value|0x01
-end_define
 
 begin_comment
 comment|/* misc defines */
@@ -674,9 +810,9 @@ define|#
 directive|define
 name|ATA_DEV
 parameter_list|(
-name|unit
+name|device
 parameter_list|)
-value|((unit == ATA_MASTER) ? 0 : 1)
+value|((device == ATA_MASTER) ? 0 : 1)
 end_define
 
 begin_define
@@ -686,9 +822,9 @@ name|ATA_PARAM
 parameter_list|(
 name|scp
 parameter_list|,
-name|unit
+name|device
 parameter_list|)
-value|scp->dev_param[ATA_DEV(unit)]
+value|(scp->dev_param[ATA_DEV(device)])
 end_define
 
 begin_comment
@@ -924,18 +1060,18 @@ name|u_int16_t
 name|cylinders
 decl_stmt|;
 comment|/* number of cylinders */
-name|int16_t
+name|u_int16_t
 name|reserved2
 decl_stmt|;
 name|u_int16_t
 name|heads
 decl_stmt|;
 comment|/* # heads */
-name|int16_t
+name|u_int16_t
 name|unfbytespertrk
 decl_stmt|;
 comment|/* # unformatted bytes/track */
-name|int16_t
+name|u_int16_t
 name|unfbytes
 decl_stmt|;
 comment|/* # unformatted bytes/sector */
@@ -943,20 +1079,20 @@ name|u_int16_t
 name|sectors
 decl_stmt|;
 comment|/* # sectors/track */
-name|int16_t
+name|u_int16_t
 name|vendorunique0
 index|[
 literal|3
 index|]
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|serial
 index|[
 literal|20
 index|]
 decl_stmt|;
 comment|/* serial number */
-name|int16_t
+name|u_int16_t
 name|buffertype
 decl_stmt|;
 comment|/* buffer type */
@@ -975,36 +1111,36 @@ directive|define
 name|ATA_BT_DUALPORTMULTICACHE
 value|3
 comment|/* above plus track cache */
-name|int16_t
+name|u_int16_t
 name|buffersize
 decl_stmt|;
 comment|/* buf size, 512-byte units */
-name|int16_t
+name|u_int16_t
 name|necc
 decl_stmt|;
 comment|/* ecc bytes appended */
-name|int8_t
+name|u_int8_t
 name|revision
 index|[
 literal|8
 index|]
 decl_stmt|;
 comment|/* firmware revision */
-name|int8_t
+name|u_int8_t
 name|model
 index|[
 literal|40
 index|]
 decl_stmt|;
 comment|/* model name */
-name|int8_t
+name|u_int8_t
 name|nsecperint
 decl_stmt|;
 comment|/* sectors per interrupt */
-name|int8_t
+name|u_int8_t
 name|vendorunique1
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|usedmovsd
 decl_stmt|;
 comment|/* double word read/write? */
@@ -1049,7 +1185,7 @@ literal|1
 decl_stmt|;
 comment|/* standby/overlap supported */
 name|u_int8_t
-name|queuing
+name|queueing
 range|:
 literal|1
 decl_stmt|;
@@ -1060,25 +1196,25 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* interleaved DMA supported */
-name|int16_t
+name|u_int16_t
 name|capvalidate
 decl_stmt|;
 comment|/* validation for above */
-name|int8_t
+name|u_int8_t
 name|vendorunique3
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|opiomode
 decl_stmt|;
 comment|/* PIO modes 0-2 */
-name|int8_t
+name|u_int8_t
 name|vendorunique4
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|odmamode
 decl_stmt|;
 comment|/* old DMA modes, not ATA-3 */
-name|int16_t
+name|u_int16_t
 name|atavalid
 decl_stmt|;
 comment|/* fields valid */
@@ -1097,39 +1233,39 @@ directive|define
 name|ATA_FLAG_88
 value|4
 comment|/* word 88 valid */
-name|int16_t
+name|u_int16_t
 name|currcyls
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|currheads
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|currsectors
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|currsize0
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|currsize1
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|currmultsect
 decl_stmt|;
-name|int8_t
+name|u_int8_t
 name|multsectvalid
 decl_stmt|;
-name|int32_t
+name|u_int32_t
 name|lbasize
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|sdmamodes
 decl_stmt|;
 comment|/* singleword DMA modes */
-name|int16_t
+name|u_int16_t
 name|wdmamodes
 decl_stmt|;
 comment|/* multiword DMA modes */
-name|int16_t
+name|u_int16_t
 name|apiomodes
 decl_stmt|;
 comment|/* advanced PIO modes */
@@ -1149,10 +1285,10 @@ name|u_int16_t
 name|pioiordy
 decl_stmt|;
 comment|/* min. PIO cycle IORDY flow */
-name|int16_t
+name|u_int16_t
 name|reserved69
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved70
 decl_stmt|;
 name|u_int16_t
@@ -1163,65 +1299,127 @@ name|u_int16_t
 name|rlsservice
 decl_stmt|;
 comment|/* rel time (us) for service */
-name|int16_t
+name|u_int16_t
 name|reserved73
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved74
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|queuelen
+range|:
+literal|5
 decl_stmt|;
-name|int16_t
+name|u_int16_t
+label|:
+literal|11
+expr_stmt|;
+name|u_int16_t
 name|reserved76
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved77
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved78
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved79
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|versmajor
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|versminor
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|featsupp1
 decl_stmt|;
-name|int16_t
-name|featsupp2
+comment|/* 82 */
+name|u_int16_t
+name|supmicrocode
+range|:
+literal|1
 decl_stmt|;
-name|int16_t
+name|u_int16_t
+name|supqueued
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|supcfa
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|supapm
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|suprmsn
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+label|:
+literal|11
+expr_stmt|;
+name|u_int16_t
 name|featsupp3
 decl_stmt|;
-name|int16_t
+comment|/* 84 */
+name|u_int16_t
 name|featenab1
 decl_stmt|;
-name|int16_t
-name|featenab2
+comment|/* 85 */
+name|u_int16_t
+name|enabmicrocode
+range|:
+literal|1
 decl_stmt|;
-name|int16_t
+name|u_int16_t
+name|enabqueued
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|enabcfa
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|enabapm
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+name|enabrmsn
+range|:
+literal|1
+decl_stmt|;
+name|u_int16_t
+label|:
+literal|11
+expr_stmt|;
+name|u_int16_t
 name|featenab3
 decl_stmt|;
-name|int16_t
+comment|/* 87 */
+name|u_int16_t
 name|udmamodes
 decl_stmt|;
 comment|/* UltraDMA modes */
-name|int16_t
+name|u_int16_t
 name|erasetime
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|enherasetime
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|apmlevel
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|masterpasswdrev
 decl_stmt|;
 name|u_int16_t
@@ -1244,34 +1442,34 @@ name|reserved93_1415
 range|:
 literal|2
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved94
 index|[
 literal|32
 index|]
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|rmvstat
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|securstat
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved129
 index|[
 literal|30
 index|]
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|cfapwrmode
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|reserved161
 index|[
 literal|84
 index|]
 decl_stmt|;
-name|int16_t
+name|u_int16_t
 name|integrity
 decl_stmt|;
 block|}
@@ -1292,10 +1490,10 @@ modifier|*
 name|dev
 decl_stmt|;
 comment|/* device handle */
-name|int32_t
-name|unit
+name|int
+name|channel
 decl_stmt|;
-comment|/* unit on this controller */
+comment|/* channel on this controller */
 name|struct
 name|resource
 modifier|*
@@ -1325,22 +1523,26 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* interrupt handle */
-name|int32_t
+name|u_int32_t
 name|ioaddr
 decl_stmt|;
 comment|/* physical port addr */
-name|int32_t
+name|u_int32_t
 name|altioaddr
 decl_stmt|;
 comment|/* physical alt port addr */
-name|int32_t
+name|u_int32_t
 name|bmaddr
 decl_stmt|;
 comment|/* physical bus master port */
-name|int32_t
+name|u_int32_t
 name|chiptype
 decl_stmt|;
 comment|/* pciid of controller chip */
+name|u_int32_t
+name|alignment
+decl_stmt|;
+comment|/* dma engine min alignment */
 name|struct
 name|ata_params
 modifier|*
@@ -1358,16 +1560,7 @@ literal|2
 index|]
 decl_stmt|;
 comment|/* ptr to devices softc's */
-name|struct
-name|ata_dmaentry
-modifier|*
-name|dmatab
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* DMA transfer tables */
-name|int32_t
+name|int
 name|mode
 index|[
 literal|2
@@ -1418,7 +1611,7 @@ define|#
 directive|define
 name|ATA_UDMA5
 value|0x45
-name|int32_t
+name|int
 name|flags
 decl_stmt|;
 comment|/* controller flags */
@@ -1438,7 +1631,11 @@ define|#
 directive|define
 name|ATA_ATTACHED
 value|0x08
-name|int32_t
+define|#
+directive|define
+name|ATA_QUEUED
+value|0x10
+name|int
 name|devices
 decl_stmt|;
 comment|/* what is present */
@@ -1466,7 +1663,7 @@ name|u_int8_t
 name|error
 decl_stmt|;
 comment|/* last controller error */
-name|int32_t
+name|int
 name|active
 decl_stmt|;
 comment|/* active processing request */
@@ -1528,7 +1725,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* To convert unit numbers to devices */
+comment|/* externs */
 end_comment
 
 begin_decl_stmt
@@ -1561,14 +1758,14 @@ name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_reinit
 parameter_list|(
 name|struct
@@ -1579,14 +1776,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_wait
 parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
 name|u_int8_t
 parameter_list|)
@@ -1594,28 +1791,28 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_command
 parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 parameter_list|,
-name|u_int32_t
+name|u_int16_t
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 parameter_list|,
-name|u_int32_t
+name|u_int8_t
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1628,7 +1825,7 @@ name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
 specifier|const
 name|char
@@ -1671,20 +1868,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int8_t
+name|char
 modifier|*
 name|ata_mode2str
 parameter_list|(
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int8_t
+name|int
 name|ata_pio2mode
 parameter_list|(
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1731,14 +1928,14 @@ literal|0
 end_if
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_find_dev
 parameter_list|(
 name|device_t
 parameter_list|,
-name|int32_t
+name|u_int32_t
 parameter_list|,
-name|int32_t
+name|u_int32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1750,39 +1947,54 @@ end_endif
 
 begin_function_decl
 name|void
+modifier|*
+name|ata_dmaalloc
+parameter_list|(
+name|struct
+name|ata_softc
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_dmasetup
 parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|,
-name|int8_t
+name|struct
+name|ata_dmaentry
 modifier|*
 parameter_list|,
-name|int32_t
+name|caddr_t
 parameter_list|,
-name|int32_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1794,12 +2006,20 @@ parameter_list|(
 name|struct
 name|ata_softc
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|ata_dmaentry
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_dmastatus
 parameter_list|(
 name|struct
@@ -1810,7 +2030,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|int
 name|ata_dmadone
 parameter_list|(
 name|struct

@@ -471,11 +471,11 @@ modifier|*
 name|atp
 decl_stmt|;
 comment|/* controller structure */
-name|int32_t
+name|int
 name|lun
 decl_stmt|;
 comment|/* logical device unit */
-name|int32_t
+name|int
 name|flags
 decl_stmt|;
 comment|/* device state flags */
@@ -504,13 +504,13 @@ directive|define
 name|F_ONSTREAM
 value|0x0100
 comment|/* OnStream ADR device */
-name|int32_t
+name|int
 name|blksize
 decl_stmt|;
 comment|/* block size (512 | 1024) */
 name|struct
 name|buf_queue_head
-name|buf_queue
+name|bio_queue
 decl_stmt|;
 comment|/* queue of i/o requests */
 name|struct
