@@ -101,6 +101,7 @@ name|u_int32_t
 name|prot32_segment
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -151,6 +152,7 @@ name|u_int32_t
 name|param5
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
