@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.38 1997/09/05 20:23:34 smp Exp smp $  */
+comment|/*  * Copyright (c) 1996, by Steve Passe  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the developer may NOT be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: mp_machdep.c,v 1.52 1997/09/07 22:03:59 fsmp Exp $  */
 end_comment
 
 begin_include
@@ -827,6 +827,13 @@ end_decl_stmt
 begin_comment
 comment|/* NAPICID is more than enough */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nkpt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
@@ -5888,9 +5895,14 @@ decl_stmt|;
 name|int
 modifier|*
 name|newpp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|stack
+decl_stmt|;
+name|pd_entry_t
+modifier|*
+name|myPTD
 decl_stmt|;
 name|POSTCODE
 argument_list|(
@@ -6018,7 +6030,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* store PTD for this AP's boot sequence */
-name|bootPTD
+name|myPTD
 operator|=
 operator|(
 name|pd_entry_t
@@ -6178,18 +6190,35 @@ comment|/* allocate and set up an idle stack data page */
 name|stack
 operator|=
 operator|(
-name|int
+name|char
 operator|*
 operator|)
 name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
+name|UPAGES
+operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|UPAGES
+condition|;
+name|i
+operator|++
+control|)
 name|newpt
 index|[
+name|i
+operator|+
 literal|3
 index|]
 operator|=
@@ -6203,18 +6232,14 @@ name|PG_RW
 operator||
 name|vtophys
 argument_list|(
+name|PAGE_SIZE
+operator|*
+name|i
+operator|+
 name|stack
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|newpt
-index|[
-literal|4
-index|]
-operator|=
-literal|0
-expr_stmt|;
-comment|/* *prv_CMAP1 */
 name|newpt
 index|[
 literal|5
@@ -6222,10 +6247,18 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* *prv_CMAP2 */
+comment|/* *prv_CMAP1 */
 name|newpt
 index|[
 literal|6
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* *prv_CMAP2 */
+name|newpt
+index|[
+literal|7
 index|]
 operator|=
 literal|0
@@ -6306,7 +6339,7 @@ operator|=
 operator|(
 name|int
 operator|)
-name|bootPTD
+name|myPTD
 expr_stmt|;
 comment|/* my_idlePTD */
 name|newpp
@@ -6328,7 +6361,7 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|4
+literal|5
 index|]
 expr_stmt|;
 comment|/* prv_CMAP1 */
@@ -6343,7 +6376,7 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|5
+literal|6
 index|]
 expr_stmt|;
 comment|/* prv_CMAP2 */
@@ -6358,7 +6391,7 @@ operator|)
 operator|&
 name|newpt
 index|[
-literal|6
+literal|7
 index|]
 expr_stmt|;
 comment|/* prv_CMAP3 */
@@ -6406,6 +6439,10 @@ name|BIOS_WARM
 argument_list|)
 expr_stmt|;
 comment|/* 'warm-start' */
+name|bootPTD
+operator|=
+name|myPTD
+expr_stmt|;
 comment|/* attempt to start the Application Processor */
 name|CHECK_INIT
 argument_list|(
@@ -6602,18 +6639,35 @@ comment|/* Allocate and setup BSP idle stack */
 name|stack
 operator|=
 operator|(
-name|int
+name|char
 operator|*
 operator|)
 name|kmem_alloc
 argument_list|(
 name|kernel_map
 argument_list|,
+name|UPAGES
+operator|*
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|UPAGES
+condition|;
+name|i
+operator|++
+control|)
 name|SMP_prvpt
 index|[
+name|i
+operator|+
 literal|3
 index|]
 operator|=
@@ -6627,6 +6681,10 @@ name|PG_RW
 operator||
 name|vtophys
 argument_list|(
+name|PAGE_SIZE
+operator|*
+name|i
+operator|+
 name|stack
 argument_list|)
 argument_list|)
@@ -6634,6 +6692,50 @@ expr_stmt|;
 name|pmap_set_opt_bsp
 argument_list|()
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|mp_ncpus
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|bcopy
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|PTD
+operator|+
+name|KPTDI
+argument_list|,
+operator|(
+name|int
+operator|*
+operator|)
+name|IdlePTDS
+index|[
+name|i
+index|]
+operator|+
+name|KPTDI
+argument_list|,
+name|NKPDE
+operator|*
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* number of APs actually started */
 return|return
 name|mp_ncpus
