@@ -1944,7 +1944,7 @@ comment|/* (b) Vnode of executable. */
 name|sigset_t
 name|p_siglist
 decl_stmt|;
-comment|/* (c) Sigs held for the process */
+comment|/* (c) Sigs not delivered to a td. */
 name|char
 name|p_lock
 decl_stmt|;
@@ -1963,10 +1963,6 @@ name|int
 name|p_sigparent
 decl_stmt|;
 comment|/* (c) Signal to parent on exit. */
-name|sigset_t
-name|p_oldsigmask
-decl_stmt|;
-comment|/* (c) Saved mask from pre-sigpause. */
 name|int
 name|p_sig
 decl_stmt|;
@@ -2016,16 +2012,12 @@ comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
 name|p_endzero
-value|p_sigmask
+value|p_sigstk
 comment|/* The following fields are all copied upon creation in fork. */
 define|#
 directive|define
 name|p_startcopy
 value|p_endzero
-name|sigset_t
-name|p_sigmask
-decl_stmt|;
-comment|/* (c) Current signal mask. */
 name|stack_t
 name|p_sigstk
 decl_stmt|;
@@ -2319,7 +2311,7 @@ value|0x08000
 end_define
 
 begin_comment
-comment|/* Process is using M:N threads. */
+comment|/* Process is using threads. */
 end_comment
 
 begin_define
@@ -2464,19 +2456,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_OLDMASK
-value|0x2000000
-end_define
-
-begin_comment
-comment|/* Need to restore mask after suspend. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_ALTSTACK
-value|0x4000000
+value|0x2000000
 end_define
 
 begin_comment
@@ -2487,7 +2468,7 @@ begin_define
 define|#
 directive|define
 name|P_INEXEC
-value|0x8000000
+value|0x4000000
 end_define
 
 begin_comment
@@ -2584,17 +2565,6 @@ end_define
 
 begin_comment
 comment|/* Process is being swapped. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PS_NEEDSIGCHK
-value|0x02000
-end_define
-
-begin_comment
-comment|/* Process may need signal delivery. */
 end_comment
 
 begin_define
