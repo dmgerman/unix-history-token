@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.24 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.25 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.24 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.25 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1548,15 +1548,16 @@ begin_comment
 comment|/* 	**  Clean up. 	*/
 end_comment
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
 name|fflush
 argument_list|(
 name|tfp
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+operator|<
+literal|0
+operator|||
 name|fsync
 argument_list|(
 name|fileno
@@ -1564,12 +1565,9 @@ argument_list|(
 name|tfp
 argument_list|)
 argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
+operator|<
+literal|0
+operator|||
 name|ferror
 argument_list|(
 name|tfp
