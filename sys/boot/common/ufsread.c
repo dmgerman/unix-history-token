@@ -115,7 +115,6 @@ comment|/* Buffers that must not span a 64k boundary. */
 end_comment
 
 begin_struct
-specifier|static
 struct|struct
 name|dmadat
 block|{
@@ -153,10 +152,17 @@ index|]
 decl_stmt|;
 comment|/* for MBR/disklabel */
 block|}
-modifier|*
-name|dmadat
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|dmadat
+modifier|*
+name|dmadat
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -335,9 +341,9 @@ literal|1
 operator|&&
 name|ls
 condition|)
-name|putchar
+name|printf
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -386,6 +392,20 @@ expr_stmt|;
 name|dt
 operator|=
 name|DT_DIR
+expr_stmt|;
+name|name
+index|[
+literal|0
+index|]
+operator|=
+literal|'/'
+expr_stmt|;
+name|name
+index|[
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 for|for
 control|(
@@ -474,6 +494,26 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|dt
+operator|!=
+name|DT_DIR
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: not a directory.\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|(
