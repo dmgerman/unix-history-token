@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * %sccs.include.redist.c%  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -20,15 +24,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fgetc.c	5.2 (Berkeley) %G%"
+literal|"@(#)fgetc.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|LIBC_SCCS and not lint
 end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
 
 begin_include
 include|#
@@ -54,7 +61,7 @@ begin_block
 block|{
 return|return
 operator|(
-name|getc
+name|__sgetc
 argument_list|(
 name|fp
 argument_list|)
