@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.32 1997/10/19 18:41:23 davidg Exp $"
+literal|"$Id: pstat.c,v 1.33 1997/11/12 05:42:33 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2166,7 +2166,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|VVMIO
+name|VOBJBUF
 condition|)
 operator|*
 name|fp
