@@ -6575,9 +6575,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
 block|}
 else|else
 block|{
@@ -6607,6 +6604,9 @@ name|sched_lock
 argument_list|)
 expr_stmt|;
 block|}
+goto|goto
+name|out
+goto|;
 block|}
 if|if
 condition|(
