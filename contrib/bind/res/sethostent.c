@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sethostent.c,v 8.4 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: sethostent.c,v 8.5 1996/09/28 06:51:07 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,18 +82,6 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
-
-begin_decl_stmt
-name|void
-name|_res_close
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|void
@@ -155,7 +143,7 @@ operator||
 name|RES_USEVC
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 block|}

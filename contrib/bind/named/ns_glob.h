@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.9 1996/05/20 15:10:01 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.12 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -338,36 +338,6 @@ literal|0
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ALLOW_UPDATES
-end_ifdef
-
-begin_comment
-comment|/* need to exit (may need to doadump 	 * first, if database has changed since 	 * it was last dumped/booted). Gets 	 * set by shutdown signal handler 	 *  (onintr) 	 */
-end_comment
-
-begin_decl_stmt
-name|DECL
-name|int
-name|needToExit
-name|INIT
-argument_list|(
-literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ALLOW_UPDATES */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1005,6 +975,14 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|ShortVersion
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* max value of xfers_running */
 end_comment
@@ -1180,6 +1158,18 @@ endif|#
 directive|endif
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|struct
+name|in_addr
+name|inaddr_any
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Inits to 0.0.0.0 */
+end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.4 1996/05/17 09:10:46 vixie Exp $  */
+comment|/*  *	from db.h	4.16 (Berkeley) 6/1/90  *	$Id: db_defs.h,v 8.6 1997/06/01 20:34:34 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -72,6 +72,17 @@ modifier|*
 name|d_next
 decl_stmt|;
 comment|/* linked list */
+ifdef|#
+directive|ifdef
+name|STATS
+name|struct
+name|nameser
+modifier|*
+name|d_ns
+decl_stmt|;
+comment|/* NS from whence this came */
+endif|#
+directive|endif
 name|u_int32_t
 name|d_ttl
 decl_stmt|;
@@ -107,38 +118,24 @@ name|d_type
 decl_stmt|;
 comment|/* type number */
 name|int16_t
-name|d_mark
-decl_stmt|;
-comment|/* place to mark data */
-name|int16_t
 name|d_size
 decl_stmt|;
 comment|/* size of data area */
-ifdef|#
-directive|ifdef
-name|NCACHE
-name|int16_t
-name|d_rcode
-decl_stmt|;
-comment|/* rcode added for negative caching */
-endif|#
-directive|endif
-name|int16_t
+name|u_int32_t
 name|d_rcnt
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|STATS
-name|struct
-name|nameser
-modifier|*
-name|d_ns
+name|NCACHE
+name|unsigned
+name|d_rcode
+range|:
+literal|4
 decl_stmt|;
-comment|/* NS from whence this came */
+comment|/* rcode added for negative caching */
 endif|#
 directive|endif
-comment|/*XXX*/
-name|u_int32_t
+name|u_int16_t
 name|d_nstime
 decl_stmt|;
 comment|/* NS response time, milliseconds */
@@ -180,6 +177,17 @@ end_define
 
 begin_comment
 comment|/* databuf belongs to fcachetab */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DB_F_ACTIVE
+value|0x02
+end_define
+
+begin_comment
+comment|/* databuf is linked into a cache */
 end_comment
 
 begin_comment

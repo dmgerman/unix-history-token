@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_maint.c,v 8.16 1996/08/05 08:31:30 vixie Exp $"
+literal|"$Id: ns_maint.c,v 8.18 1996/09/22 00:13:10 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -259,7 +259,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Invoked at regular intervals by signal interrupt; refresh all secondary  * zones from primary name server and remove old cache entries.  Also,  * ifdef'd ALLOW_UPDATES, dump database if it has changed since last  * dump/bootup.  */
+comment|/*  * Invoked at regular intervals by signal interrupt; refresh all secondary  * zones from primary name server and remove old cache entries.  */
 end_comment
 
 begin_function
@@ -476,41 +476,6 @@ name|zp
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|ALLOW_UPDATES
-case|case
-name|Z_PRIMARY
-case|:
-comment|/* 				 * Checkpoint the zone if it has changed 				 * since we last checkpointed 				 */
-if|if
-condition|(
-name|zp
-operator|->
-name|z_flags
-operator|&
-name|Z_CHANGED
-condition|)
-block|{
-name|zonedump
-argument_list|(
-name|zp
-argument_list|)
-expr_stmt|;
-name|ns_refreshtime
-argument_list|(
-name|zp
-argument_list|,
-name|tt
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-endif|#
-directive|endif
-comment|/* ALLOW_UPDATES */
 block|}
 name|gettime
 argument_list|(
@@ -1619,7 +1584,6 @@ modifier|*
 name|zp
 decl_stmt|;
 block|{
-specifier|static
 name|char
 modifier|*
 name|argv
@@ -4541,7 +4505,20 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"named-xfer exited with signal %d\n"
+literal|"named-xfer \"%s\" exited with signal %d\n"
+argument_list|,
+name|zp
+operator|->
+name|z_origin
+index|[
+literal|0
+index|]
+condition|?
+name|zp
+operator|->
+name|z_origin
+else|:
+literal|"."
 argument_list|,
 name|WTERMSIG
 argument_list|(

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 8.11 1996/12/02 09:17:22 vixie Exp $"
+literal|"$Id: res_comp.c,v 8.12 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,6 +237,10 @@ decl_stmt|,
 name|checked
 init|=
 literal|0
+decl_stmt|,
+name|octets
+init|=
+literal|0
 decl_stmt|;
 name|dn
 operator|=
@@ -245,20 +249,6 @@ expr_stmt|;
 name|cp
 operator|=
 name|comp_dn
-expr_stmt|;
-if|if
-condition|(
-name|length
-operator|>
-name|MAXHOSTNAMELEN
-operator|-
-literal|1
-condition|)
-name|length
-operator|=
-name|MAXHOSTNAMELEN
-operator|-
-literal|1
 expr_stmt|;
 name|eom
 operator|=
@@ -287,6 +277,26 @@ block|{
 case|case
 literal|0
 case|:
+name|octets
+operator|+=
+operator|(
+name|n
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|octets
+operator|>
+name|MAXCDNAME
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 name|dn
@@ -607,6 +617,16 @@ expr_stmt|;
 name|cp
 operator|=
 name|comp_dn
+expr_stmt|;
+if|if
+condition|(
+name|length
+operator|>
+name|MAXCDNAME
+condition|)
+name|length
+operator|=
+name|MAXCDNAME
 expr_stmt|;
 name|eob
 operator|=

@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_secure.c,v 8.6 1996/05/17 09:10:46 vixie Exp $"
+literal|"$Id: db_secure.c,v 8.7 1997/06/01 20:34:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -150,7 +150,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|;
 name|struct

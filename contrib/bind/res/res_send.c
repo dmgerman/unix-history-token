@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.9 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: res_send.c,v 8.13 1997/06/01 20:34:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,18 +206,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|void
-name|_res_close
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1399,7 +1387,7 @@ name|ns
 operator|)
 condition|)
 block|{
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1465,7 +1453,7 @@ break|break;
 case|case
 name|res_nextns
 case|:
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1592,7 +1580,7 @@ name|s
 operator|>=
 literal|0
 condition|)
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 name|s
@@ -1684,7 +1672,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1794,7 +1782,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -1873,7 +1861,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 comment|/* 				 * A long running process might get its TCP 				 * connection reset if the remote server was 				 * restarted.  Requery the server instead of 				 * trying a new one.  When there is only one 				 * server, this means that a query might work 				 * instead of failing.  We only allow one reset 				 * per query to prevent looping. 				 */
@@ -1891,14 +1879,14 @@ name|connreset
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
 name|same_ns
 goto|;
 block|}
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2010,7 +1998,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2177,7 +2165,7 @@ if|if
 condition|(
 name|vc
 condition|)
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 name|s
@@ -2301,7 +2289,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2350,7 +2338,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2527,7 +2515,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2585,6 +2573,31 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|+
+literal|1
+operator|>
+name|FD_SETSIZE
+condition|)
+block|{
+name|Perror
+argument_list|(
+name|stderr
+argument_list|,
+literal|"s+1> FD_SETSIZE"
+argument_list|,
+name|EMFILE
+argument_list|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 name|wait
 label|:
 name|FD_ZERO
@@ -2653,7 +2666,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2687,7 +2700,7 @@ name|gotsomewhere
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -2750,7 +2763,7 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -3006,7 +3019,7 @@ operator|<<
 name|ns
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 comment|/* don't retry if called from dig */
@@ -3057,7 +3070,7 @@ name|v_circuit
 operator|=
 literal|1
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -3170,7 +3183,7 @@ name|RES_STAYOPEN
 operator|)
 condition|)
 block|{
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 block|}
@@ -3233,7 +3246,7 @@ break|break;
 case|case
 name|res_nextns
 case|:
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 goto|goto
@@ -3285,7 +3298,7 @@ block|}
 comment|/*foreach ns*/
 block|}
 comment|/*foreach retry*/
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 if|if
@@ -3329,7 +3342,7 @@ end_comment
 
 begin_function
 name|void
-name|_res_close
+name|res_close
 parameter_list|()
 block|{
 if|if
@@ -3363,6 +3376,87 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ultrix
+end_ifdef
+
+begin_comment
+comment|/* ultrix 4.0 had some icky packaging in its libc.a.  alias for it here.  * there is more gunk of this kind over in res_debug.c.  */
+end_comment
+
+begin_function
+name|void
+name|_res_close
+parameter_list|()
+block|{
+name|res_close
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_undef
+undef|#
+directive|undef
+name|res_send
+end_undef
+
+begin_function
+name|int
+name|res_send
+parameter_list|(
+name|buf
+parameter_list|,
+name|buflen
+parameter_list|,
+name|ans
+parameter_list|,
+name|anssiz
+parameter_list|)
+specifier|const
+name|u_char
+modifier|*
+name|buf
+decl_stmt|;
+name|int
+name|buflen
+decl_stmt|;
+name|u_char
+modifier|*
+name|ans
+decl_stmt|;
+name|int
+name|anssiz
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|__res_send
+argument_list|(
+name|buf
+argument_list|,
+name|buflen
+argument_list|,
+name|ans
+argument_list|,
+name|anssiz
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Ultrix 4.0 hackery */
+end_comment
 
 end_unit
 
