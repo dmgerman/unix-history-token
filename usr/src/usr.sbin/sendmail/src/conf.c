@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.22 (Berkeley) %G%"
+literal|"@(#)conf.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4650,42 +4650,6 @@ begin_comment
 comment|/* **  FREESPACE -- see how much free space is on the queue filesystem ** **	Only implemented if you have statfs. ** **	Parameters: **		dir -- the directory in question. **		bsize -- a variable into which the filesystem **			block size is stored. ** **	Returns: **		The number of bytes free on the queue filesystem. **		-1 if the statfs call fails. ** **	Side effects: **		Puts the filesystem block size into bsize. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HASSTATFS
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BSD4_4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HASSTATFS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -4734,7 +4698,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|sgi
+name|IRIX
 argument_list|)
 operator|||
 name|defined
@@ -4783,6 +4747,11 @@ operator|||
 name|defined
 argument_list|(
 name|_CONVEX_SOURCE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|NeXT
 argument_list|)
 end_if
 
@@ -4954,7 +4923,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|sgi
+name|IRIX
 argument_list|)
 operator|||
 name|defined
