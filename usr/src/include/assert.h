@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	assert.h	4.1	83/05/03	*/
+comment|/*	assert.h	4.2	85/01/21	*/
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_assert
 parameter_list|(
 name|ex
 parameter_list|)
-value|{if (!(ex)){fprintf(stderr,"Assertion failed: file %s, line %d\n", __FILE__, __LINE__);exit(1);}}
+value|{if (!(ex)){fprintf(stderr,"Assertion failed: file \"%s\", line %d\n", __FILE__, __LINE__);exit(1);}}
 end_define
 
 begin_define
@@ -26,7 +26,7 @@ name|assert
 parameter_list|(
 name|ex
 parameter_list|)
-value|{if (!(ex)){fprintf(stderr,"Assertion failed: file %s, line %d\n", __FILE__, __LINE__);exit(1);}}
+value|_assert(ex)
 end_define
 
 begin_else
@@ -41,7 +41,6 @@ name|_assert
 parameter_list|(
 name|ex
 parameter_list|)
-value|;
 end_define
 
 begin_define
@@ -51,7 +50,6 @@ name|assert
 parameter_list|(
 name|ex
 parameter_list|)
-value|;
 end_define
 
 begin_endif
