@@ -2984,6 +2984,11 @@ argument_list|(
 name|tmpfd
 argument_list|)
 expr_stmt|;
+name|tmpfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|tmpblk

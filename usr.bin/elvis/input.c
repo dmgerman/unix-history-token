@@ -2190,6 +2190,10 @@ argument_list|,
 name|to
 argument_list|)
 expr_stmt|;
+name|cursor
+operator|=
+name|from
+expr_stmt|;
 name|delete
 argument_list|(
 name|from
@@ -2198,10 +2202,6 @@ name|to
 argument_list|)
 expr_stmt|;
 block|}
-name|cursor
-operator|=
-name|from
-expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
