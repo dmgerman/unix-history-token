@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Guido van Rossum.  *  * %sccs.include.redist.c%  *  *	@(#)glob.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,49 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* copy of errfunc parameter to glob() */
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|gl_opendir
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* alternate opendir() function for glob() */
+name|struct
+name|dirent
+modifier|*
+function_decl|(
+modifier|*
+name|gl_readdir
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* alternate readdir() function */
+name|void
+function_decl|(
+modifier|*
+name|gl_closedir
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* alternate closedir() function for glob() */
+name|int
+function_decl|(
+modifier|*
+name|gl_lstat
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* alternate lstat() function for glob() */
+name|int
+function_decl|(
+modifier|*
+name|gl_stat
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* alternate stat() function for glob() */
 name|char
 modifier|*
 modifier|*
@@ -157,6 +200,17 @@ end_define
 
 begin_comment
 comment|/* quote special chars with \ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_ALTDIRFUNC
+value|0x200
+end_define
+
+begin_comment
+comment|/* use alternately specified directory funcs */
 end_comment
 
 begin_endif
