@@ -1644,6 +1644,9 @@ name|sig
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 if|if
 condition|(
 name|ps
@@ -1692,6 +1695,8 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|PROC_UNLOCK
 argument_list|(

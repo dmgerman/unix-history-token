@@ -749,6 +749,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -772,6 +778,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1844,6 +1855,12 @@ begin_comment
 comment|/*  * Send an interrupt to process.  *  * Stack is set up to allow sigcode stored  * at top to call routine, followed by kcall  * to sigreturn routine below.  After sigreturn  * resets the signal mask, the stack, and the  * frame pointer, it returns to the user  * specified pc, psl.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -2749,6 +2766,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 name|sendsig
@@ -2817,6 +2839,9 @@ name|p
 operator|->
 name|p_sigacts
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 if|if
 condition|(
 name|SIGISMEMBER
@@ -2847,6 +2872,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
 name|regs
 operator|=
 name|p
@@ -3564,6 +3591,12 @@ begin_comment
 comment|/*  * System call to cleanup state after a signal  * has been taken.  Reset signal mask and  * stack state from context left by sendsig (above).  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * state to gain improper privileges.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_43
+end_ifdef
+
 begin_function
 name|int
 name|osigreturn
@@ -4097,6 +4130,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|sigreturn
@@ -4137,6 +4175,9 @@ name|uap
 operator|->
 name|sigcntxp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|COMPAT_43
 if|if
 condition|(
 operator|!
@@ -4192,6 +4233,8 @@ argument_list|)
 operator|)
 return|;
 comment|/* 	 * Since ucp is not an osigcontext but a ucontext_t, we have to 	 * check again if all of it is accessible.  A ucontext_t is 	 * much larger, so instead of just checking for the pointer 	 * being valid for the size of an osigcontext, now check for 	 * it being valid for a whole, new-style ucontext_t. 	 */
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
