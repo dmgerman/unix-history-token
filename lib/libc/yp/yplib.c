@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.10.4.5 1996/06/05 02:52:10 jkh Exp $"
+literal|"$Id: yplib.c,v 1.10.4.6 1996/06/25 17:53:33 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1821,6 +1821,14 @@ modifier|*
 name|ypb
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|ypb
+operator|->
+name|dom_client
+operator|!=
+name|NULL
+condition|)
 name|clnt_destroy
 argument_list|(
 name|ypb
@@ -3591,6 +3599,23 @@ argument_list|,
 name|tv
 argument_list|)
 expr_stmt|;
+comment|/* 	 * NIS+ in YP compat mode doesn't support the YPPROC_ORDER 	 * procedure. 	 */
+if|if
+condition|(
+name|r
+operator|==
+name|RPC_PROCUNAVAIL
+condition|)
+block|{
+return|return
+operator|(
+name|YPERR_YPERR
+operator|)
+return|;
+goto|goto
+name|bail
+goto|;
+block|}
 if|if
 condition|(
 name|r
@@ -3637,6 +3662,8 @@ operator|&
 name|ypro
 argument_list|)
 expr_stmt|;
+name|bail
+label|:
 name|_yp_unbind
 argument_list|(
 name|ysd
