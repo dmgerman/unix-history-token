@@ -1,10 +1,39 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	netisr.h	4.1	82/10/09	*/
+comment|/*	netisr.h	4.2	82/10/31	*/
 end_comment
 
 begin_comment
 comment|/*  * The networking code runs off software interrupts.  *  * You can switch into the network by doing splnet() and return by splx().  * The software interrupt level for the network is higher than the software  * level for the clock (so you can enter the network in routines called  * at timeout time).  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|sun
+end_if
+
+begin_include
+include|#
+directive|include
+file|"../sun/sir.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|setsoftnet
+parameter_list|()
+value|siron(SIR_NET)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* #include "../vax/mtpr.h" */
 end_comment
 
 begin_define
@@ -14,6 +43,11 @@ name|setsoftnet
 parameter_list|()
 value|mtpr(SIRR, 12)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Each ``pup-level-1'' input queue has a bit in a ``netisr'' status  * word which is used to de-multiplex a single software  * interrupt used for scheduling the network code to calls  * on the lowest level routine of each protocol.  */
