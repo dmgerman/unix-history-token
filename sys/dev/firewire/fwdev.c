@@ -3517,6 +3517,8 @@ name|xfer
 operator|->
 name|dst
 operator|=
+name|FWLOCALBUS
+operator||
 name|fwdev
 operator|->
 name|dst
@@ -3529,8 +3531,6 @@ name|hdr
 operator|.
 name|dst
 operator|=
-name|FWLOCALBUS
-operator||
 name|xfer
 operator|->
 name|dst
