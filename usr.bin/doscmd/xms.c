@@ -2977,7 +2977,7 @@ name|debug
 argument_list|(
 name|D_XMS
 argument_list|,
-literal|"Moved from %08x to %08x, %04x bytes\n"
+literal|"Moved from %08lx to %08lx, %04x bytes\n"
 argument_list|,
 name|srcptr
 argument_list|,

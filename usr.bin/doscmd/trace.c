@@ -617,6 +617,9 @@ name|first
 init|=
 literal|1
 decl_stmt|;
+if|#
+directive|if
+name|BIG_DEBUG
 name|u_char
 modifier|*
 name|addr
@@ -632,6 +635,8 @@ argument_list|,
 name|R_IP
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 name|bigfmt

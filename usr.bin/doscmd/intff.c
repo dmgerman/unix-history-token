@@ -675,7 +675,7 @@ name|debug
 argument_list|(
 name|D_REDIR
 argument_list|,
-literal|"offset now %d\n"
+literal|"offset now %ld\n"
 argument_list|,
 name|r_sft
 operator|->

@@ -492,7 +492,7 @@ name|debug
 argument_list|(
 name|D_PORT
 argument_list|,
-literal|"com_set_line: cdsp = 0x%08X, port = 0x%04x,"
+literal|"com_set_line: cdsp = %8p, port = 0x%04x,"
 literal|"param = 0x%04X.\n"
 argument_list|,
 name|cdsp

@@ -118,7 +118,7 @@ name|D_ITRAPS
 operator||
 name|intnum
 argument_list|,
-literal|"int %02x:%02x %04x:%04x/%08x\n"
+literal|"INT %02x:%02x %04x:%04x/%08lx\n"
 argument_list|,
 name|intnum
 argument_list|,
@@ -185,25 +185,14 @@ name|intnum
 argument_list|)
 expr_stmt|;
 block|}
-name|debug
-argument_list|(
-name|D_ITRAPS
-operator||
-name|intnum
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 comment|/* user_int: */
 name|debug
 argument_list|(
 name|D_TRAPS
-operator||
-name|intnum
 argument_list|,
-literal|"INT %02x:%02x [%04x:%04x] %04x %04x %04x %04x from %04x:%04x\n"
+literal|"INT %02x:%02x [%04lx:%04lx] %04x %04x %04x %04x from %04x:%04x\n"
 argument_list|,
 name|intnum
 argument_list|,
@@ -1193,7 +1182,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* FALLTHRU */
+comment|/* FALLTHROUGH */
 default|default:
 name|dump_regs
 argument_list|(
@@ -1398,7 +1387,7 @@ name|debug
 argument_list|(
 name|D_TRAPS2
 argument_list|,
-literal|"pushf<- 0x%x\n"
+literal|"pushf<- 0x%lx\n"
 argument_list|,
 name|R_EFLAGS
 argument_list|)
@@ -1532,7 +1521,7 @@ name|debug
 argument_list|(
 name|D_TRAPS2
 argument_list|,
-literal|"popf -> 0x%x\n"
+literal|"popf -> 0x%lx\n"
 argument_list|,
 name|R_EFLAGS
 argument_list|)

@@ -108,7 +108,7 @@ name|make_environment
 parameter_list|(
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|char
 modifier|*
@@ -208,7 +208,7 @@ name|total
 operator|+=
 name|strlen
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|)
 operator|+
 literal|1
@@ -351,7 +351,7 @@ name|p
 operator|=
 name|strlen
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|)
 expr_stmt|;
 name|p
@@ -362,7 +362,7 @@ name|strcpy
 argument_list|(
 name|p
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|)
 expr_stmt|;
 while|while
@@ -732,7 +732,7 @@ name|fd
 parameter_list|,
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|u_short
 modifier|*
@@ -817,7 +817,7 @@ name|envseg
 operator|=
 name|make_environment
 argument_list|(
-name|cmdname
+name|cmd_name
 argument_list|,
 name|envs
 argument_list|)
@@ -1853,7 +1853,7 @@ name|fd
 parameter_list|,
 name|char
 modifier|*
-name|cmdname
+name|cmd_name
 parameter_list|,
 name|u_short
 modifier|*
@@ -1965,10 +1965,10 @@ name|debug
 argument_list|(
 name|D_EXEC
 argument_list|,
-literal|"exec_command: cmdname = %s\n"
+literal|"exec_command: cmd_name = %s\n"
 literal|"env = 0x0%x, arg = %04x:%04x(%s)\n"
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 index|[
@@ -2045,7 +2045,7 @@ name|run
 argument_list|,
 name|fd
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 argument_list|,
@@ -2064,7 +2064,7 @@ name|run
 argument_list|,
 name|fd
 argument_list|,
-name|cmdname
+name|cmd_name
 argument_list|,
 name|param
 argument_list|,

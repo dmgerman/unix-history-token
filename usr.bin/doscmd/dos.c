@@ -6518,13 +6518,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-name|char
-modifier|*
-name|fname
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
 name|u_short
 modifier|*
 name|param
@@ -6576,7 +6569,16 @@ name|D_EXEC
 argument_list|,
 literal|"%s: command not found\n"
 argument_list|,
-name|fname
+operator|(
+name|u_char
+operator|*
+operator|)
+name|MAKEPTR
+argument_list|(
+name|R_DS
+argument_list|,
+name|R_DX
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -8702,6 +8704,10 @@ literal|"%d %s, FCB: %d, %.11s\n"
 argument_list|,
 name|nbytes
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|MAKEPTR
 argument_list|(
 name|R_DS
@@ -8721,6 +8727,10 @@ argument_list|,
 name|R_DI
 argument_list|)
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|MAKEPTR
 argument_list|(
 name|R_ES

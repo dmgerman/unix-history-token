@@ -285,7 +285,7 @@ name|debug
 argument_list|(
 name|D_ALWAYS
 argument_list|,
-literal|"%05x: mark %c owner %04x size %04x\n"
+literal|"%8p: mark %c owner %04x size %04x\n"
 argument_list|,
 name|mp
 argument_list|,
@@ -482,7 +482,7 @@ name|debug
 argument_list|(
 name|D_MEMORY
 argument_list|,
-literal|"dosmem = 0x%x base = 0x%x avail = 0x%x (%dK)\n"
+literal|"dosmem = %p base = 0x%x avail = 0x%x (%dK)\n"
 argument_list|,
 name|dosmem
 argument_list|,

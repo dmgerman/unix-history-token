@@ -4574,6 +4574,9 @@ name|path
 argument_list|,
 name|attr
 argument_list|,
+operator|(
+name|int
+operator|)
 name|dta
 argument_list|)
 expr_stmt|;

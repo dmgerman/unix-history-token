@@ -2347,7 +2347,7 @@ name|debug
 argument_list|(
 name|D_EMS
 argument_list|,
-literal|"changed from %d to %d pages\n"
+literal|"changed from %ld to %ld pages\n"
 argument_list|,
 name|ems_handle
 index|[

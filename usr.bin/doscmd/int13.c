@@ -4022,7 +4022,7 @@ name|debug
 argument_list|(
 name|D_DISK
 argument_list|,
-literal|"Verify %2d sectors from %d\n"
+literal|"Verify %2d sectors from %qd\n"
 argument_list|,
 name|sectors
 argument_list|,
