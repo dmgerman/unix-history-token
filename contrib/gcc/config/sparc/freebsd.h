@@ -8,7 +8,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/* FreeBSD needs's the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.  */
+comment|/* FreeBSD needs the platform name (sparc64) defined.    Emacs needs to know if the arch is 64 or 32-bits.  */
 end_comment
 
 begin_undef
