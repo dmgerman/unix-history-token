@@ -180,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -472,12 +478,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/random.h>
 end_include
 
 begin_include
