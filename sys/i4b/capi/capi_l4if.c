@@ -1143,16 +1143,6 @@ name|ifq_maxlen
 operator|=
 name|IFQ_MAXLEN
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>
-literal|4
 if|if
 condition|(
 operator|!
@@ -1227,8 +1217,6 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|sc
 operator|->
 name|sc_bchan
