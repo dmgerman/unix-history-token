@@ -3,6 +3,10 @@ begin_comment
 comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  */
 end_comment
 
+begin_comment
+comment|/*  * Don't split the copyright notice over two lines, it makes mkvers  * unhappy.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -14,7 +18,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +43,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.6 (Berkeley) %G%"
+literal|"@(#)main.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
