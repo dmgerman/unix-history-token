@@ -88,56 +88,6 @@ value|ULONG_MAX
 end_define
 
 begin_comment
-comment|/*  * Compile time symbolic constants for portability specifications:  *  * Note that those commented out are not currently supported by the  * implementation.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREADS
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_ATTR_STACKADDR
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_ATTR_STACKSIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_PRIORITY_SCHEDULING
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_PRIO_INHERIT
-end_define
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_PRIO_PROTECT
-end_define
-
-begin_comment
-comment|/* #define _POSIX_THREAD_PROCESS_SHARED */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_POSIX_THREAD_SAFE_FUNCTIONS
-end_define
-
-begin_comment
 comment|/*  * Flags for threads and thread attributes.  */
 end_comment
 
@@ -548,12 +498,6 @@ name|PTHREAD_PRIO_NONE
 value|0
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_POSIX_THREAD_PRIO_PROTECT
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -567,11 +511,6 @@ directive|define
 name|PTHREAD_PRIO_PROTECT
 value|2
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Mutex types (Single UNIX Specification, Version 2, 1997).  *  * Note that a mutex attribute with one of the following types:  *  *	PTHREAD_MUTEX_NORMAL  *	PTHREAD_MUTEX_RECURSIVE  *      MUTEX_TYPE_FAST (deprecated)  *	MUTEX_TYPE_COUNTING_FAST (deprecated)  *  * will deviate from POSIX specified semantics.  */

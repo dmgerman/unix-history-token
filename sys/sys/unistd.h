@@ -105,6 +105,58 @@ value|0xff
 end_define
 
 begin_comment
+comment|/*  * Threads features:  *  * Note that those commented out are not currently supported by the  * implementation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREADS
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREAD_ATTR_STACKADDR
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREAD_ATTR_STACKSIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREAD_PRIORITY_SCHEDULING
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREAD_PRIO_INHERIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX_THREAD_PRIO_PROTECT
+end_define
+
+begin_comment
+comment|/* #define _POSIX_THREAD_PROCESS_SHARED */
+end_comment
+
+begin_comment
+comment|/*  * 1003.1c-1995 says on page 38 (2.9.3, paragraph 3) that if _POSIX_THREADS is  * defined, then _POSIX_THREAD_SAFE_FUNCTIONS must also be defined.  (This is  * likely a typo (reversed dependency), in which case we would be compliant if  * the typo were officially acknowledged.)  However, we do not support all of  * the required _r() interfaces, which means we cannot legitimately define  * _POSIX_THREAD_SAFE_FUNCTIONS.  Therefore, we are non-compliant here in two  * ways.  */
+end_comment
+
+begin_comment
+comment|/* #define _POSIX_THREAD_SAFE_FUNCTIONS */
+end_comment
+
+begin_comment
 comment|/* access function */
 end_comment
 
