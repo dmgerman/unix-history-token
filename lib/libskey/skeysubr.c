@@ -364,6 +364,19 @@ name|saved_ttymode
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|interrupt
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -422,12 +435,16 @@ name|termios
 name|noecho_ttymode
 decl_stmt|;
 name|void
-function_decl|(
-modifier|*
-name|oldsig
-function_decl|)
-parameter_list|()
-function_decl|;
+argument_list|(
+argument|*oldsig
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Save normal line editing modes */
 name|tcgetattr
 argument_list|(
