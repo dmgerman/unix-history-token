@@ -78,6 +78,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|P_ESP
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_AH
+value|8
+end_define
+
 begin_comment
 comment|/* Operations - f_srcop, f_dstop */
 end_comment
