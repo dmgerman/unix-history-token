@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_simple.c,v 1.3 1995/10/22 14:51:17 phk Exp $"
+literal|"$Id: clnt_simple.c,v 1.4 1996/06/10 20:13:03 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,6 +375,19 @@ name|tv_sec
 operator|=
 literal|5
 expr_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|server_addr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|server_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|hp
@@ -393,6 +406,16 @@ argument_list|,
 name|hp
 operator|->
 name|h_length
+argument_list|)
+expr_stmt|;
+name|server_addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|server_addr

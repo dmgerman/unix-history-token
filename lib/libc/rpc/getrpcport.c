@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: getrpcport.c,v 1.3 1995/10/22 14:51:26 phk Exp $"
+literal|"$Id: getrpcport.c,v 1.4 1996/06/08 22:54:52 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,19 @@ operator|(
 literal|0
 operator|)
 return|;
+name|memset
+argument_list|(
+operator|&
+name|addr
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|addr
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|hp
@@ -161,6 +174,16 @@ argument_list|,
 name|hp
 operator|->
 name|h_length
+argument_list|)
+expr_stmt|;
+name|addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|addr

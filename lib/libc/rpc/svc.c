@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc.c,v 1.4 1996/06/10 00:49:18 jraynard Exp $"
+literal|"$Id: svc.c,v 1.5 1996/06/11 17:22:50 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +238,21 @@ operator|*
 operator|)
 name|mem_alloc
 argument_list|(
+name|FD_SETSIZE
+operator|*
+sizeof|sizeof
+argument_list|(
+name|SVCXPRT
+operator|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|xports
+argument_list|,
+literal|0
+argument_list|,
 name|FD_SETSIZE
 operator|*
 sizeof|sizeof

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pmap_rmt.c,v 1.6 1996/06/10 00:49:17 jraynard Exp $"
+literal|"$Id: pmap_rmt.c,v 1.7 1996/06/10 04:59:05 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1352,6 +1352,16 @@ sizeof|sizeof
 argument_list|(
 name|baddr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|baddr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|baddr

@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_udp.c,v 1.4 1995/10/22 14:51:39 phk Exp $"
+literal|"$Id: svc_udp.c,v 1.5 1996/06/08 22:54:59 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,16 @@ sizeof|sizeof
 argument_list|(
 name|addr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|addr
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
 argument_list|)
 expr_stmt|;
 name|addr

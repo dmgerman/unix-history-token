@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_generic.c,v 1.2 1995/05/30 05:41:14 rgrimes Exp $"
+literal|"$Id: clnt_generic.c,v 1.3 1995/10/22 14:51:12 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,6 +188,29 @@ name|NULL
 operator|)
 return|;
 block|}
+name|memset
+argument_list|(
+operator|&
+name|sin
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sin
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sin
+operator|.
+name|sin_len
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+expr_stmt|;
 name|sin
 operator|.
 name|sin_family
