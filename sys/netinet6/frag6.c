@@ -1530,22 +1530,18 @@ operator|>
 literal|0
 condition|)
 block|{
-name|log
+if|#
+directive|if
+literal|0
+comment|/* suppress the noisy log */
+block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the previous fragment\n", 			    i, ip6_sprintf(&q6->ip6q_src));
+endif|#
+directive|endif
+name|free
 argument_list|(
-name|LOG_ERR
+name|ip6af
 argument_list|,
-literal|"%d bytes of a fragment from %s "
-literal|"overlaps the previous fragment\n"
-argument_list|,
-name|i
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|q6
-operator|->
-name|ip6q_src
-argument_list|)
+name|M_FTABLE
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1588,22 +1584,18 @@ operator|>
 literal|0
 condition|)
 block|{
-name|log
+if|#
+directive|if
+literal|0
+comment|/* suppress the noisy log */
+block|log(LOG_ERR, "%d bytes of a fragment from %s " 			    "overlaps the succeeding fragment", 			    i, ip6_sprintf(&q6->ip6q_src));
+endif|#
+directive|endif
+name|free
 argument_list|(
-name|LOG_ERR
+name|ip6af
 argument_list|,
-literal|"%d bytes of a fragment from %s "
-literal|"overlaps the succeeding fragment"
-argument_list|,
-name|i
-argument_list|,
-name|ip6_sprintf
-argument_list|(
-operator|&
-name|q6
-operator|->
-name|ip6q_src
-argument_list|)
+name|M_FTABLE
 argument_list|)
 expr_stmt|;
 goto|goto
