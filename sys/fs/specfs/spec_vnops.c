@@ -1938,9 +1938,7 @@ name|D_NEEDGIANT
 operator|)
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
+comment|/* XXX: not yet DROP_GIANT(); */
 name|error
 operator|=
 name|dsw
@@ -1958,9 +1956,7 @@ operator|->
 name|a_td
 argument_list|)
 expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
+comment|/* XXX: not yet PICKUP_GIANT(); */
 block|}
 else|else
 name|error
