@@ -101,6 +101,12 @@ name|cdev
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|cdevsw
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|int
@@ -133,6 +139,18 @@ begin_typedef
 typedef|typedef
 name|void
 name|t_oproc_t
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|t_purge_t
 parameter_list|(
 name|struct
 name|tty
@@ -302,6 +320,12 @@ name|struct
 name|cdev
 modifier|*
 name|t_dev
+decl_stmt|;
+comment|/* Device. */
+name|struct
+name|cdev
+modifier|*
+name|t_mdev
 decl_stmt|;
 comment|/* Device. */
 name|int
@@ -507,6 +531,11 @@ modifier|*
 name|t_open
 decl_stmt|;
 comment|/* First open */
+name|t_purge_t
+modifier|*
+name|t_purge
+decl_stmt|;
+comment|/* Purge threads */
 name|t_close_t
 modifier|*
 name|t_close
@@ -1956,6 +1985,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ttyconsolemode
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|int
+name|speed
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|tty_close
 parameter_list|(
@@ -1966,6 +2010,44 @@ name|tp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|int
+name|ttycreate
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|,
+name|struct
+name|cdevsw
+modifier|*
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|5
+operator|,
+function_decl|6
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2002,6 +2084,18 @@ name|tp
 parameter_list|,
 name|int
 name|rw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ttyfree
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
 parameter_list|)
 function_decl|;
 end_function_decl
