@@ -45,20 +45,24 @@ else|#
 directive|else
 end_else
 
+begin_decl_stmt
+specifier|extern
+name|char
+name|__infinity
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bytes for IEEE754 +Infinity */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HUGE_VAL
-value|1.7976931348623157E+308
+value|(*(double *) __infinity)
 end_define
-
-begin_comment
-comment|/* IEEE: positive infinity */
-end_comment
-
-begin_comment
-comment|/*#define	HUGE_VAL	1E+500			/* IEEE: positive infinity */
-end_comment
 
 begin_endif
 endif|#
