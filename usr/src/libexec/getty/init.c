@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	4.2 (Berkeley) 83/07/07"
+literal|"@(#)init.c	4.3 (Berkeley) 83/07/09"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,8 +77,6 @@ init|=
 block|{
 block|{
 literal|"nx"
-block|,
-literal|"default"
 block|}
 block|,
 comment|/* next table */
