@@ -3825,6 +3825,14 @@ operator|==
 name|G_MIRROR_DISK_STATE_SYNCHRONIZING
 condition|)
 block|{
+name|disk
+operator|->
+name|d_genid
+operator|=
+name|sc
+operator|->
+name|sc_genid
+expr_stmt|;
 name|g_mirror_update_metadata
 argument_list|(
 name|disk
