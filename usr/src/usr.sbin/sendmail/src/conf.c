@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.103 (Berkeley) %G%"
+literal|"@(#)conf.c	8.104 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -604,6 +604,24 @@ end_escape
 begin_comment
 comment|/* **  HOST_MAP_INIT -- initialize host class structures */
 end_comment
+
+begin_decl_stmt
+name|bool
+name|host_map_init
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+name|map
+operator|,
+name|char
+operator|*
+name|args
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|bool

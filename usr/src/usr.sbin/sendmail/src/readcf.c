@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.38 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.39 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4147,7 +4147,7 @@ modifier|*
 name|o_name
 decl_stmt|;
 comment|/* long name of option */
-name|char
+name|u_char
 name|o_code
 decl_stmt|;
 comment|/* short name of option */
@@ -4792,6 +4792,7 @@ name|o_name
 operator|==
 name|NULL
 condition|)
+block|{
 name|syserr
 argument_list|(
 literal|"readcf: unknown option name %s"
@@ -4799,6 +4800,8 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 elseif|else
 if|if
 condition|(
