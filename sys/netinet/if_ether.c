@@ -2600,7 +2600,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: runt packet."
+literal|"arp: runt packet\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
