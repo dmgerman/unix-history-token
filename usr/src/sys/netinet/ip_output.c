@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.31	82/03/31	*/
+comment|/*	ip_output.c	1.32	82/04/10	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_macro
@@ -147,6 +153,10 @@ name|ip
 argument_list|)
 decl_stmt|,
 name|off
+decl_stmt|,
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|route
@@ -297,6 +307,14 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|extern
+name|int
+name|ipprintfs
+decl_stmt|;
+if|if
+condition|(
+name|ipprintfs
+condition|)
 name|printf
 argument_list|(
 literal|"no route to %x (from %x, len %d)\n"
@@ -317,6 +335,10 @@ name|ip
 operator|->
 name|ip_len
 argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENETUNREACH
 expr_stmt|;
 goto|goto
 name|bad
@@ -408,9 +430,16 @@ name|ip_dst
 operator|.
 name|s_addr
 condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+comment|/* ??? */
 goto|goto
 name|bad
 goto|;
+block|}
 block|}
 comment|/* 	 * If small enough for interface, can just send directly. 	 */
 if|if
@@ -508,9 +537,15 @@ name|ip_off
 operator|&
 name|IP_DF
 condition|)
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|len
 operator|=
 operator|(
@@ -530,9 +565,15 @@ name|len
 operator|<
 literal|8
 condition|)
+block|{
+name|error
+operator|=
+name|EMSGSIZE
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 comment|/* 	 * Discard IP header from logical mbuf for m_copy's sake. 	 * Loop through length of segment, make a copy of each 	 * part and output. 	 */
 name|m
 operator|->
@@ -594,9 +635,15 @@ name|mh
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
+block|}
 name|mh
 operator|->
 name|m_off
@@ -777,6 +824,11 @@ argument_list|(
 name|mh
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+comment|/* ??? */
 goto|goto
 name|bad
 goto|;
@@ -826,6 +878,8 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|=
 call|(
 modifier|*
 name|ifp
@@ -839,23 +893,9 @@ name|mh
 argument_list|,
 name|dst
 argument_list|)
-operator|==
-literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+break|break;
 block|}
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 name|bad
 label|:
 name|m_freem
@@ -865,7 +905,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

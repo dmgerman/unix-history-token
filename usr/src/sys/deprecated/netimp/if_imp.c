@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.23	82/04/10	*/
+comment|/*	if_imp.c	4.24	82/04/10	*/
 end_comment
 
 begin_include
@@ -139,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"../net/route.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_comment
@@ -1550,6 +1556,11 @@ name|len
 decl_stmt|,
 name|dnet
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|COUNT
 argument_list|(
 name|IMPOUTPUT
@@ -1569,9 +1580,15 @@ name|imp_state
 operator|!=
 name|IMPS_UP
 condition|)
+block|{
+name|error
+operator|=
+name|ENETDOWN
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 switch|switch
 condition|(
 name|dst
@@ -1672,6 +1689,10 @@ operator|->
 name|sa_family
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|EAFNOSUPPORT
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -1711,9 +1732,15 @@ name|m
 operator|==
 literal|0
 condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
+block|}
 name|m
 operator|->
 name|m_next
@@ -1871,7 +1898,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
@@ -2078,9 +2105,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
+comment|/* XXX */
 block|}
 name|enque
 label|:
@@ -2115,9 +2143,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
+comment|/* XXX */
 block|}
 name|IF_ENQUEUE
 argument_list|(
@@ -2170,7 +2199,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}

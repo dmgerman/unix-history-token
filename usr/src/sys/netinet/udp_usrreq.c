@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.24	82/03/29	*/
+comment|/*	udp_usrreq.c	4.25	82/04/10	*/
 end_comment
 
 begin_include
@@ -91,6 +91,12 @@ begin_include
 include|#
 directive|include
 file|"../net/udp_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_comment
@@ -680,9 +686,18 @@ name|m
 operator|==
 literal|0
 condition|)
-goto|goto
-name|bad
-goto|;
+block|{
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
+block|}
 comment|/* 	 * Fill in mbuf with extended UDP header 	 * and addresses and length put into network format. 	 */
 name|m
 operator|->
@@ -857,9 +872,8 @@ name|ip_ttl
 operator|=
 name|MAXTTL
 expr_stmt|;
+return|return
 operator|(
-name|void
-operator|)
 name|ip_output
 argument_list|(
 name|m
@@ -881,15 +895,8 @@ name|so_state
 operator|&
 name|SS_PRIV
 argument_list|)
-expr_stmt|;
-return|return;
-name|bad
-label|:
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -948,6 +955,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -1009,15 +1018,6 @@ operator|)
 name|addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 break|break;
 case|case
 name|PRU_DETACH
@@ -1072,12 +1072,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
 name|soisconnected
 argument_list|(
 name|so
@@ -1180,11 +1177,7 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+break|break;
 block|}
 else|else
 block|{
@@ -1204,6 +1197,8 @@ name|ENOTCONN
 operator|)
 return|;
 block|}
+name|error
+operator|=
 name|udp_output
 argument_list|(
 name|inp
@@ -1271,7 +1266,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.11	82/03/19	*/
+comment|/*	raw_usrreq.c	4.12	82/04/10	*/
 end_comment
 
 begin_include
@@ -949,17 +949,16 @@ operator|(
 name|ENOTCONN
 operator|)
 return|;
+name|error
+operator|=
 call|(
-name|void
-call|)
-argument_list|(
-operator|*
+modifier|*
 name|so
 operator|->
 name|so_proto
 operator|->
 name|pr_output
-argument_list|)
+call|)
 argument_list|(
 name|m
 argument_list|,

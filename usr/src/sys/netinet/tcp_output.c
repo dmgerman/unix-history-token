@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.37	82/03/29	*/
+comment|/*	tcp_output.c	4.38	82/04/10	*/
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../errno.h"
+file|<errno.h>
 end_include
 
 begin_decl_stmt
@@ -249,6 +249,8 @@ decl_stmt|,
 name|flags
 decl_stmt|,
 name|win
+decl_stmt|,
+name|error
 decl_stmt|;
 specifier|register
 name|struct
@@ -319,6 +321,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* ??? */
 comment|/* past FIN */
 if|if
 condition|(
@@ -587,7 +590,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
 end_if
@@ -970,7 +973,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|ENOBUFS
 operator|)
 return|;
 block|}
@@ -1764,6 +1767,8 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+name|error
+operator|=
 name|ip_output
 argument_list|(
 name|m
@@ -1781,12 +1786,10 @@ name|inp_route
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 end_if
@@ -1868,7 +1871,7 @@ end_if
 begin_return
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 end_return
