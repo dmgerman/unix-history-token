@@ -4324,11 +4324,16 @@ expr_stmt|;
 return|return
 operator|(
 name|cp
-operator|!=
-literal|0
+operator|==
+name|NULL
+condition|?
+operator|-
+literal|1
+else|:
+operator|*
+name|cp
 operator|)
 return|;
-comment|/* did someone press the "Any" key? */
 block|}
 endif|#
 directive|endif
