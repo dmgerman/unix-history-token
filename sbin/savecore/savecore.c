@@ -1274,29 +1274,24 @@ if|if
 condition|(
 name|verbose
 condition|)
+operator|(
 name|void
-block|)
-function|printf
-parameter_list|(
-function|"dumplo = %lld (%ld * %d)\n"
-operator|,
-parameter_list|(
+operator|)
+name|printf
+argument_list|(
+literal|"dumplo = %lld (%ld * %d)\n"
+argument_list|,
+operator|(
 name|long
 name|long
-parameter_list|)
-function|dumplo
-operator|,
-function|kdumplo
-operator|,
-function|DEV_BSIZE
-end_function
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+operator|)
+name|dumplo
+argument_list|,
+name|kdumplo
+argument_list|,
+name|DEV_BSIZE
+argument_list|)
+expr_stmt|;
 name|Lseek
 argument_list|(
 name|kmem
@@ -1314,9 +1309,6 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1333,9 +1325,6 @@ name|dumpmag
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ddname
 operator|=
 name|find_dev
@@ -1345,9 +1334,6 @@ argument_list|,
 name|S_IFBLK
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dumpfd
 operator|=
 name|Open
@@ -1357,9 +1343,6 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|fp
 operator|=
 name|fdopen
@@ -1369,9 +1352,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|fp
@@ -1394,17 +1374,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|kernel
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1425,9 +1399,6 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 operator|(
 name|void
 operator|)
@@ -1443,19 +1414,14 @@ argument_list|,
 name|fp
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Don't fclose(fp), we use dumpfd later. */
-end_comment
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|check_kmem
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -1667,7 +1633,7 @@ do|;
 block|}
 comment|/* Don't fclose(fp), we use dumpfd later. */
 block|}
-end_block
+end_function
 
 begin_function
 name|void
