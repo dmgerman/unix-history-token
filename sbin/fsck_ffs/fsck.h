@@ -829,6 +829,16 @@ comment|/* cleared if unresolved changes => not clean */
 end_comment
 
 begin_decl_stmt
+name|int
+name|markclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mark file system clean when done */
+end_comment
+
+begin_decl_stmt
 name|char
 name|havesb
 decl_stmt|;
@@ -836,6 +846,16 @@ end_decl_stmt
 
 begin_comment
 comment|/* superblock has been read */
+end_comment
+
+begin_decl_stmt
+name|char
+name|skipclean
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* skip clean file systems if preening */
 end_comment
 
 begin_decl_stmt
@@ -1264,50 +1284,6 @@ name|name
 operator|,
 name|ino_t
 name|newnum
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|checkfstab
-name|__P
-argument_list|(
-operator|(
-name|int
-name|preen
-operator|,
-name|int
-name|maxrun
-operator|,
-name|int
-argument_list|(
-operator|*
-name|docheck
-argument_list|)
-argument_list|(
-expr|struct
-name|fstab
-operator|*
-argument_list|)
-operator|,
-name|int
-argument_list|(
-operator|*
-name|chkit
-argument_list|)
-argument_list|(
-name|char
-operator|*
-argument_list|,
-name|char
-operator|*
-argument_list|,
-name|long
-argument_list|,
-name|int
-argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
