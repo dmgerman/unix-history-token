@@ -63,7 +63,7 @@ operator|)
 name|util
 operator|.
 name|c
-literal|3.35
+literal|3.36
 operator|%
 name|G
 operator|%
@@ -1944,6 +1944,18 @@ name|LineNumber
 operator|++
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|TimeoutFlag
+condition|)
+name|syserr
+argument_list|(
+literal|"sfgets: timeout on read (mailer may be hung)"
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_return
 return|return
