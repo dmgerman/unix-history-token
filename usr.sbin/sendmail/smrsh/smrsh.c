@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/* **  SMRSH -- sendmail restricted shell ** **	This is a patch to get around the prog mailer bugs in most **	versions of sendmail. ** **	Use this in place of /bin/sh in the "prog" mailer definition **	in your sendmail.cf file.  You then create CMDDIR (owned by **	root, mode 755) and put links to any programs you want **	available to prog mailers in that directory.  This should **	include things like "vacation" and "procmail", but not "sed" **	or "sh". ** **	Leading pathnames are stripped from program names so that **	existing .forward files that reference things like **	"/usr/ucb/vacation" will continue to work. ** **	The following characters are completely illegal: **<>  |  ^  ;&  $  `  (  ) \n \r **	This is more restrictive than strictly necessary. ** **	To use this, edit /etc/sendmail.cf, search for ^Mprog, and **	change P=/bin/sh to P=/usr/local/etc/smrsh, where this compiled **	binary is installed /usr/local/etc/smrsh. ** **	This can be used on any version of sendmail. ** **	In loving memory of RTM.  11/02/93. */
+comment|/* **  SMRSH -- sendmail restricted shell ** **	This is a patch to get around the prog mailer bugs in most **	versions of sendmail. ** **	Use this in place of /bin/sh in the "prog" mailer definition **	in your sendmail.cf file.  You then create CMDDIR (owned by **	root, mode 755) and put links to any programs you want **	available to prog mailers in that directory.  This should **	include things like "vacation" and "procmail", but not "sed" **	or "sh". ** **	Leading pathnames are stripped from program names so that **	existing .forward files that reference things like **	"/usr/ucb/vacation" will continue to work. ** **	The following characters are completely illegal: **<>  |  ^  ;&  $  `  (  ) \n \r **	This is more restrictive than strictly necessary. ** **	To use this, edit /etc/sendmail.cf, search for ^Mprog, and **	change P=/bin/sh to P=/usr/libexec/smrsh, where this compiled **	binary is installed /usr/libexec/smrsh. ** **	This can be used on any version of sendmail. ** **	In loving memory of RTM.  11/02/93. */
 end_comment
 
 begin_include
@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|CMDDIR
-value|"/usr/adm/sm.bin"
+value|"/usr/libexec/sm.bin"
 end_define
 
 begin_endif
@@ -138,7 +138,7 @@ begin_define
 define|#
 directive|define
 name|PATH
-value|"/bin:/usr/bin:/usr/ucb"
+value|"/bin:/usr/bin"
 end_define
 
 begin_endif
