@@ -341,9 +341,14 @@ name|argc
 operator|-=
 name|optind
 expr_stmt|;
-name|argv
-operator|+=
-name|optind
+if|if
+condition|(
+name|argc
+operator|!=
+literal|0
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
