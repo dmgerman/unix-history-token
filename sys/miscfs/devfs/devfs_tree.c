@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.15 1996/01/21 09:43:31 julian Exp $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_tree.c,v 1.16 1996/01/25 07:17:31 phk Exp $  */
 end_comment
 
 begin_include
@@ -3231,6 +3231,9 @@ name|char
 modifier|*
 name|p
 decl_stmt|,
+modifier|*
+name|q
+decl_stmt|,
 name|buf
 index|[
 literal|256
@@ -3284,11 +3287,26 @@ name|NULL
 expr_stmt|;
 for|for
 control|(
+name|q
+operator|=
+name|buf
+init|;
+operator|*
+name|q
+operator|==
+literal|'/'
+condition|;
+name|q
+operator|++
+control|)
+continue|continue;
+for|for
+control|(
 name|i
 operator|=
 literal|0
 init|;
-name|buf
+name|q
 index|[
 name|i
 index|]
@@ -3298,7 +3316,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|buf
+name|q
 index|[
 name|i
 index|]
@@ -3307,9 +3325,7 @@ literal|'/'
 condition|)
 name|p
 operator|=
-name|buf
-operator|+
-literal|1
+name|q
 expr_stmt|;
 if|if
 condition|(
