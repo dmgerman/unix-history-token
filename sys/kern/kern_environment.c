@@ -201,7 +201,7 @@ expr_stmt|;
 if|if
 condition|(
 name|tmp
-operator|==
+operator|!=
 name|NULL
 condition|)
 block|{
