@@ -716,13 +716,6 @@ begin_comment
 comment|/* 114 is old sendmsg */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SYS_vtrace
-value|115
-end_define
-
 begin_comment
 comment|/* 115 is obsolete vtrace */
 end_comment

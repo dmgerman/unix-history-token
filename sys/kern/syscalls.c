@@ -365,19 +365,9 @@ comment|/* 113 = old recvmsg */
 literal|"old.sendmsg"
 block|,
 comment|/* 114 = old sendmsg */
-ifdef|#
-directive|ifdef
-name|TRACE
-literal|"vtrace"
-block|,
-comment|/* 115 = vtrace */
-else|#
-directive|else
 literal|"obs_vtrace"
 block|,
 comment|/* 115 = obsolete vtrace */
-endif|#
-directive|endif
 literal|"gettimeofday"
 block|,
 comment|/* 116 = gettimeofday */

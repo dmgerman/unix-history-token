@@ -646,29 +646,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TRACE
-end_ifdef
-
-begin_function_decl
-name|int
-name|vtrace
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|int
 name|gettimeofday
@@ -1353,22 +1330,6 @@ name|osendmsg
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TRACE
-end_ifdef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2496,18 +2457,6 @@ argument_list|)
 block|}
 block|,
 comment|/* 114 = old sendmsg */
-ifdef|#
-directive|ifdef
-name|TRACE
-block|{
-literal|2
-block|,
-name|vtrace
-block|}
-block|,
-comment|/* 115 = vtrace */
-else|#
-directive|else
 block|{
 literal|0
 block|,
@@ -2515,8 +2464,6 @@ name|nosys
 block|}
 block|,
 comment|/* 115 = obsolete vtrace */
-endif|#
-directive|endif
 block|{
 literal|2
 block|,
