@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lex.c	5.7 (Berkeley) %G%"
+literal|"@(#)lex.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1418,11 +1418,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"\t \n"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 block|{
@@ -1756,11 +1756,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"htrqxe"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 goto|goto
@@ -2165,11 +2165,11 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|":^$*-%"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 goto|goto
@@ -2563,11 +2563,11 @@ argument_list|(
 name|delim
 argument_list|)
 operator|||
-name|any
+name|index
 argument_list|(
-name|delim
-argument_list|,
 literal|" \t\n"
+argument_list|,
+name|delim
 argument_list|)
 condition|)
 block|{
@@ -3494,11 +3494,11 @@ case|:
 if|if
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-literal|'/'
-argument_list|,
 name|cp
+argument_list|,
+literal|'/'
 argument_list|)
 condition|)
 return|return
@@ -4044,11 +4044,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"-$*"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 return|return
@@ -4237,11 +4237,11 @@ return|;
 default|default:
 if|if
 condition|(
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|"(=~"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 block|{
@@ -4278,11 +4278,11 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|any
+name|index
 argument_list|(
-name|c
-argument_list|,
 literal|": \t\\\n}"
+argument_list|,
+name|c
 argument_list|)
 condition|)
 block|{
@@ -5781,16 +5781,16 @@ name|c
 operator|>
 literal|0
 condition|)
-name|copy
+name|bcopy
 argument_list|(
+name|ttyline
+argument_list|,
 name|fbuf
 index|[
 name|buf
 index|]
 operator|+
 name|off
-argument_list|,
-name|ttyline
 argument_list|,
 name|c
 argument_list|)
