@@ -177,6 +177,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|symcnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* symbol count */
+end_comment
+
+begin_decl_stmt
+name|long
+name|tsymlen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* total string length */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|void
 name|rexec
@@ -225,6 +245,14 @@ name|tfd
 operator|=
 name|tmp
 argument_list|()
+expr_stmt|;
+name|symcnt
+operator|=
+literal|0
+expr_stmt|;
+name|tsymlen
+operator|=
+literal|0
 expr_stmt|;
 name|SETCF
 argument_list|(
@@ -404,26 +432,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_decl_stmt
-name|long
-name|symcnt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* symbol count */
-end_comment
-
-begin_decl_stmt
-name|long
-name|tsymlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* total string length */
-end_comment
 
 begin_comment
 comment|/*  * rexec  *	Read the exec structure; ignore any files that don't look  *	exactly right.  */
