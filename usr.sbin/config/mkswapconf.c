@@ -227,6 +227,85 @@ argument_list|,
 literal|"#include \"sys/conf.h\"\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eq
+argument_list|(
+name|fl
+operator|->
+name|f_fn
+argument_list|,
+literal|"nfs"
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../sys/socket.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../sys/mount.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../net/if.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../nfs/nfsv2.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"#include \"../nfs/nfsdiskless.h\"\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\nextern int nfs_mountroot();\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"int (*mountroot)() = nfs_mountroot;\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"\nextern int ufs_mountroot();\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"int (*mountroot)() = ufs_mountroot;\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|fp
@@ -397,6 +476,33 @@ argument_list|,
 literal|"};\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eq
+argument_list|(
+name|fl
+operator|->
+name|f_fn
+argument_list|,
+literal|"nfs"
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"struct nfs_diskless nfs_diskless = {0};\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"int nfs_diskless_size = sizeof(struct nfs_diskless);\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|fclose
 argument_list|(
 name|fp
