@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)long2.c	1.3	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
+comment|/* @(#)long2.c	1.4	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  *      This file contains routines to implement the long text commands  * of the gremlin PICTURE editor.  *  */
 end_comment
 
 begin_include
@@ -2265,6 +2265,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* bug fix 10/10/84 mro */
 name|PICTURE
 operator|=
 name|DBRead
