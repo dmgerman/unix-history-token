@@ -135,49 +135,6 @@ name|SPOFF
 value|2047
 end_define
 
-begin_define
-define|#
-directive|define
-name|_START_ENTRY
-define|\
-value|.text ; \ 	.p2align 4
-end_define
-
-begin_comment
-comment|/*  * Define a function entry point.  *  * The compiler produces #function for the .type pseudo-op, but the '#'  * character has special meaning in cpp macros, so we use @function like  * other architectures.  The assembler seems to accept both.  * The assembler also accepts a .proc pseudo-op, which is used by the  * peep hole optimizer, whose argument is the type code of the return  * value.  Since this is difficult to predict and its expected that  * assembler code is already optimized, we leave it out.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_ENTRY
-parameter_list|(
-name|x
-parameter_list|)
-define|\
-value|_START_ENTRY ; \ 	.globl	CNAME(x) ; \ 	.type	CNAME(x),@function ; \ CNAME(x):
-end_define
-
-begin_define
-define|#
-directive|define
-name|ENTRY
-parameter_list|(
-name|x
-parameter_list|)
-value|_ENTRY(x)
-end_define
-
-begin_define
-define|#
-directive|define
-name|END
-parameter_list|(
-name|x
-parameter_list|)
-value|.size x, . - x
-end_define
-
 begin_comment
 comment|/*  * Kernel RCS ID tag and copyright macros  */
 end_comment
