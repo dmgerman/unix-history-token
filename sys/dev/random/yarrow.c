@@ -155,6 +155,18 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Structure holding the entropy state */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|random_state
+name|random_state
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
@@ -353,17 +365,6 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Structure holding the entropy state */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|random_state
-name|random_state
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* The reseed thread mutex */
