@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getpwinfo.c	5.3 (Berkeley) %G%"
+literal|"@(#)getpwinfo.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,16 +75,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-decl_stmt|;
-name|struct
-name|passwd
-modifier|*
-name|getpwuid
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getpwnam
-argument_list|()
 decl_stmt|;
 name|char
 modifier|*
