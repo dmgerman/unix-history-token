@@ -5519,6 +5519,9 @@ name|pv_ptem
 operator|=
 name|mpte
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
@@ -5551,6 +5554,9 @@ name|md
 operator|.
 name|pv_list_count
 operator|++
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
