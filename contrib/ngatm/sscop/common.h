@@ -15,6 +15,48 @@ directive|define
 name|_SAAL_COMMON_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_LIBBEGEMOT
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<rpoll.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|evFileID
+value|int
+end_define
+
+begin_define
+define|#
+directive|define
+name|evTimerID
+value|int
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<isc/eventlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Writes to a pipe must be in messages (if we don't use framing).  * It is not clear, what is the maximum message size for this. It seems  * to be PIPE_BUF, but be conservative.  */
 end_comment
@@ -121,12 +163,23 @@ begin_comment
 comment|/* talk to me */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_LIBBEGEMOT
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|evContext
 name|evctx
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
