@@ -159,7 +159,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_SYSCALL_NOERROR(x);						\ 	mov r15, r14
+value|_SYSCALL_NOERROR(x);						\ 	RET
 end_define
 
 begin_define
@@ -170,7 +170,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_SYSCALL(x);							\ 	mov r15, r14
+value|_SYSCALL(x);							\ 	RET
 end_define
 
 begin_define
