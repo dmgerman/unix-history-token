@@ -2334,6 +2334,9 @@ name|malloc_type
 modifier|*
 name|t
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|struct
 name|kmembuckets
 modifier|*
@@ -2347,9 +2350,6 @@ decl_stmt|;
 name|long
 name|indx
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INVARIANTS
 name|int
 name|s
 decl_stmt|;
