@@ -107,6 +107,13 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
+comment|/* We cannot trust the device driver to hold Giant for us */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* Keep the process UPAGES from being swapped. XXX: why ? */
 name|PHOLD
 argument_list|(
@@ -546,6 +553,12 @@ expr_stmt|;
 name|PRELE
 argument_list|(
 name|curproc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
