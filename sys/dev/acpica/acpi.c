@@ -3385,7 +3385,7 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"path=%s"
+literal|"handle=%s"
 argument_list|,
 name|acpi_name
 argument_list|(
@@ -3402,7 +3402,7 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"magic=unknown"
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3498,7 +3498,7 @@ name|buf
 argument_list|,
 name|buflen
 argument_list|,
-literal|"Unknown"
+literal|"unknown"
 argument_list|)
 expr_stmt|;
 else|else
@@ -3524,7 +3524,7 @@ name|HardwareId
 operator|.
 name|Value
 else|:
-literal|"UNKNOWN"
+literal|"none"
 argument_list|,
 operator|(
 name|adinfo
