@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_usrreq.c	6.2	84/08/21	*/
+comment|/*	tcp_usrreq.c	6.3	84/08/28	*/
 end_comment
 
 begin_include
@@ -1145,9 +1145,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|error
 operator|=
 name|in_pcballoc
@@ -1162,9 +1164,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -1186,13 +1190,40 @@ operator|==
 literal|0
 condition|)
 block|{
-name|error
-operator|=
-name|ENOBUFS
+name|int
+name|nofd
+init|=
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_NOFDREF
+decl_stmt|;
+comment|/* XXX */
+name|so
+operator|->
+name|so_state
+operator|&=
+operator|~
+name|SS_NOFDREF
 expr_stmt|;
-goto|goto
-name|bad2
-goto|;
+comment|/* don't free the socket yet */
+name|in_pcbdetach
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+name|so
+operator|->
+name|so_state
+operator||=
+name|nofd
+expr_stmt|;
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 block|}
 name|tp
 operator|->
@@ -1203,20 +1234,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-name|bad2
-label|:
-name|in_pcbdetach
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|bad
-label|:
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
