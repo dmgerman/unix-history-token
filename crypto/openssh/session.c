@@ -2546,13 +2546,13 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_PAM
 name|char
 modifier|*
 name|time_string
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|USE_PAM
 name|char
 modifier|*
 name|newcommand
@@ -2567,15 +2567,15 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|USE_PAM
 name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|USE_PAM
 name|socklen_t
 name|fromlen
 decl_stmt|;
@@ -2583,11 +2583,11 @@ name|struct
 name|sockaddr_storage
 name|from
 decl_stmt|;
-endif|#
-directive|endif
 name|time_t
 name|last_login_time
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|passwd
 modifier|*
@@ -2709,6 +2709,9 @@ block|}
 block|}
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|USE_PAM
 comment|/* Get the time and hostname when the user last logged in. */
 if|if
 condition|(
@@ -2745,9 +2748,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|USE_PAM
 comment|/* Record that there was a login on that tty from the remote host. */
 name|record_login
 argument_list|(
@@ -3148,6 +3148,9 @@ block|}
 endif|#
 directive|endif
 comment|/* HAVE_LOGIN_CAP */
+ifndef|#
+directive|ifndef
+name|USE_PAM
 comment|/* 	 * If the user has logged in before, display the time of last 	 * login. However, don't display anything extra if a command 	 * has been specified (so that ssh can be used to execute 	 * commands on a remote machine without users knowing they 	 * are going to another machine). Login(1) will do this for 	 * us as well, so check if login(1) is used 	 */
 if|if
 condition|(
@@ -3233,6 +3236,9 @@ name|hostname
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !USE_PAM */
 ifdef|#
 directive|ifdef
 name|HAVE_LOGIN_CAP
