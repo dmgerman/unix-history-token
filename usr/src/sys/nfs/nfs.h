@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -431,10 +431,25 @@ begin_comment
 comment|/*  * Arguments to mount NFS  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFS_ARGSVERSION
+value|3
+end_define
+
+begin_comment
+comment|/* change when nfs_args changes */
+end_comment
+
 begin_struct
 struct|struct
 name|nfs_args
 block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* args structure version number */
 name|struct
 name|sockaddr
 modifier|*
