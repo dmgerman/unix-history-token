@@ -1516,11 +1516,20 @@ define|#
 directive|define
 name|SSL_SESS_CACHE_NO_AUTO_CLEAR
 value|0x0080
-comment|/* This one, when set, makes the server session-id lookup not look  * in the cache.  If there is an application get_session callback  * defined, this will still get called. */
+comment|/* enough comments already ... see SSL_CTX_set_session_cache_mode(3) */
 define|#
 directive|define
 name|SSL_SESS_CACHE_NO_INTERNAL_LOOKUP
 value|0x0100
+define|#
+directive|define
+name|SSL_SESS_CACHE_NO_INTERNAL_STORE
+value|0x0200
+define|#
+directive|define
+name|SSL_SESS_CACHE_NO_INTERNAL
+define|\
+value|(SSL_SESS_CACHE_NO_INTERNAL_LOOKUP|SSL_SESS_CACHE_NO_INTERNAL_STORE)
 name|struct
 name|lhash_st
 modifier|*
@@ -5329,6 +5338,10 @@ name|SSL_F_CLIENT_CERTIFICATE
 value|100
 define|#
 directive|define
+name|SSL_F_CLIENT_FINISHED
+value|238
+define|#
+directive|define
 name|SSL_F_CLIENT_HELLO
 value|101
 define|#
@@ -5381,8 +5394,16 @@ name|SSL_F_REQUEST_CERTIFICATE
 value|113
 define|#
 directive|define
+name|SSL_F_SERVER_FINISH
+value|239
+define|#
+directive|define
 name|SSL_F_SERVER_HELLO
 value|114
+define|#
+directive|define
+name|SSL_F_SERVER_VERIFY
+value|240
 define|#
 directive|define
 name|SSL_F_SSL23_ACCEPT
@@ -5427,6 +5448,10 @@ define|#
 directive|define
 name|SSL_F_SSL2_ENC_INIT
 value|124
+define|#
+directive|define
+name|SSL_F_SSL2_GENERATE_KEY_MATERIAL
+value|241
 define|#
 directive|define
 name|SSL_F_SSL2_PEEK
@@ -5567,6 +5592,10 @@ define|#
 directive|define
 name|SSL_F_SSL3_SEND_SERVER_CERTIFICATE
 value|154
+define|#
+directive|define
+name|SSL_F_SSL3_SEND_SERVER_HELLO
+value|242
 define|#
 directive|define
 name|SSL_F_SSL3_SEND_SERVER_KEY_EXCHANGE
@@ -6416,6 +6445,10 @@ define|#
 directive|define
 name|SSL_R_SSL23_DOING_SESSION_ID_REUSE
 value|221
+define|#
+directive|define
+name|SSL_R_SSL2_CONNECTION_ID_TOO_LONG
+value|1114
 define|#
 directive|define
 name|SSL_R_SSL3_SESSION_ID_TOO_LONG

@@ -2935,11 +2935,9 @@ if|if
 condition|(
 name|key
 condition|)
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|strlen
 argument_list|(
@@ -3215,6 +3213,9 @@ ifndef|#
 directive|ifndef
 name|VMS
 comment|/* outdir is a directory spec, but access() for VMS demands a 	       filename.  In any case, stat(), below, will catch the problem 	       if outdir is not a directory spec, and the fopen() or open() 	       will catch an error if there is no write access.  	       Presumably, this problem could also be solved by using the DEC 	       C routines to convert the directory syntax to Unixly, and give 	       that to access().  However, time's too short to do that just 	       now.             */
+ifndef|#
+directive|ifndef
+name|VXWORKS
 if|if
 condition|(
 name|access
@@ -3249,6 +3250,8 @@ goto|goto
 name|err
 goto|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|stat
@@ -4323,6 +4326,22 @@ condition|)
 block|{
 if|if
 condition|(
+name|BN_is_zero
+argument_list|(
+name|serial
+argument_list|)
+condition|)
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"next serial number is 00\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 operator|(
 name|f
 operator|=
@@ -4351,6 +4370,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -6781,7 +6801,7 @@ expr_stmt|;
 name|OBJ_cleanup
 argument_list|()
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)
@@ -7164,7 +7184,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"error converting number from bin to BIGNUM"
+literal|"error converting number from bin to BIGNUM\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9318,6 +9338,24 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BN_is_zero
+argument_list|(
+name|serial
+argument_list|)
+condition|)
+name|row
+index|[
+name|DB_serial
+index|]
+operator|=
+name|BUF_strdup
+argument_list|(
+literal|"00"
+argument_list|)
+expr_stmt|;
+else|else
 name|row
 index|[
 name|DB_serial
@@ -11550,6 +11588,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|BN_is_zero
+argument_list|(
+name|bn
+argument_list|)
+condition|)
+name|row
+index|[
+name|DB_serial
+index|]
+operator|=
+name|BUF_strdup
+argument_list|(
+literal|"00"
+argument_list|)
+expr_stmt|;
+else|else
 name|row
 index|[
 name|DB_serial

@@ -1510,7 +1510,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)
@@ -2799,7 +2799,7 @@ literal|"Program not available.\n"
 argument_list|,
 argument|stderr
 argument_list|)
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)

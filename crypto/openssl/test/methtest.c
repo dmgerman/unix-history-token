@@ -200,7 +200,7 @@ argument_list|,
 name|stdout
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|0
 argument_list|)
@@ -215,7 +215,7 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)

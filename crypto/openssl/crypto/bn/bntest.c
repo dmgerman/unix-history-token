@@ -555,7 +555,7 @@ name|ctx
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -574,7 +574,7 @@ name|out
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -614,7 +614,7 @@ argument_list|(
 name|outfile
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -1050,7 +1050,7 @@ name|out
 argument_list|)
 expr_stmt|;
 comment|/**/
-name|exit
+name|EXIT
 argument_list|(
 literal|0
 argument_list|)
@@ -1078,7 +1078,7 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -4183,7 +4183,7 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)

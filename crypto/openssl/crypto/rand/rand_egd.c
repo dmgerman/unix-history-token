@@ -31,12 +31,22 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|MSDOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|VMS
 argument_list|)
 operator|||
 name|defined
 argument_list|(
 name|__VMS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VXWORKS
 argument_list|)
 end_if
 

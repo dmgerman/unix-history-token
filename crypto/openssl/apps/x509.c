@@ -227,7 +227,7 @@ literal|"                   missing, it is assumed to be in the CA file.\n"
 block|,
 literal|" -CAcreateserial - create serial number file if it does not exist\n"
 block|,
-literal|" -CAserial       - serial file\n"
+literal|" -CAserial arg   - serial file\n"
 block|,
 literal|" -text           - print the certificate in text form\n"
 block|,
@@ -2348,6 +2348,9 @@ condition|)
 block|{
 name|long
 name|errorline
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|X509V3_CTX
 name|ctx2
@@ -4880,7 +4883,7 @@ argument_list|(
 name|passin
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

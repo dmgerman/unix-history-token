@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cryptlib.h"
 end_include
 
@@ -480,6 +486,7 @@ init|=
 operator|*
 name|pp
 decl_stmt|;
+name|unsigned
 name|long
 name|ret
 init|=
@@ -613,8 +620,8 @@ block|}
 if|if
 condition|(
 name|ret
-operator|<
-literal|0
+operator|>
+name|LONG_MAX
 condition|)
 return|return
 literal|0
@@ -627,6 +634,9 @@ expr_stmt|;
 operator|*
 name|rl
 operator|=
+operator|(
+name|long
+operator|)
 name|ret
 expr_stmt|;
 return|return

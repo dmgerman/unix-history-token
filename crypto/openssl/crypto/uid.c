@@ -60,6 +60,11 @@ name|defined
 argument_list|(
 name|WIN32
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
 end_elif
 
 begin_function

@@ -546,12 +546,10 @@ operator|)
 condition|)
 break|break;
 block|}
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 name|c
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -559,7 +557,7 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 operator|&
 operator|(
@@ -568,8 +566,6 @@ index|[
 literal|0
 index|]
 operator|)
-argument_list|,
-literal|0
 argument_list|,
 name|EVP_MAX_MD_SIZE
 argument_list|)

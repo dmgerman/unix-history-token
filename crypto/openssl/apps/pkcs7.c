@@ -528,7 +528,7 @@ argument_list|,
 literal|" -noout        don't output encoded data\n"
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -1110,7 +1110,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

@@ -353,11 +353,9 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|key
-argument_list|,
-literal|0
 argument_list|,
 name|EVP_MAX_KEY_LENGTH
 argument_list|)

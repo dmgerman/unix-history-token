@@ -2660,16 +2660,24 @@ name|i
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Free first certificate */
+name|X509_free
+argument_list|(
+name|sk_X509_value
+argument_list|(
+name|chain2
+argument_list|,
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sk_X509_free
 argument_list|(
 name|chain2
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vret
-condition|)
+block|}
+else|else
 block|{
 name|BIO_printf
 argument_list|(
@@ -2811,11 +2819,6 @@ name|X509_free
 argument_list|)
 expr_stmt|;
 name|certs
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* ucert is part of certs so it is already freed */
-name|ucert
 operator|=
 name|NULL
 expr_stmt|;
@@ -3206,15 +3209,6 @@ argument_list|,
 name|PKCS12_SAFEBAG_free
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ucert
-condition|)
-name|X509_free
-argument_list|(
-name|ucert
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CRYPTO_MDEBUG
@@ -3558,7 +3552,7 @@ argument_list|(
 name|passout
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

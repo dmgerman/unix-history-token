@@ -206,6 +206,15 @@ name|NON_MAIN
 end_ifndef
 
 begin_decl_stmt
+name|LHASH
+modifier|*
+name|config
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|BIO
 modifier|*
 name|bio_err
@@ -218,6 +227,14 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|extern
+name|LHASH
+modifier|*
+name|config
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

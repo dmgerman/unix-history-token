@@ -25,6 +25,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../e_os.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -287,7 +293,7 @@ name|out
 operator|==
 name|NULL
 condition|)
-name|exit
+name|EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -846,7 +852,7 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-name|exit
+name|EXIT
 argument_list|(
 name|ret
 argument_list|)

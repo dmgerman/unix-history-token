@@ -2061,7 +2061,7 @@ name|num
 operator|=
 literal|0
 expr_stmt|;
-comment|/* clear stuff, HASH_BLOCK may be leaving some stuff on the stack 	 * but I'm not worried :-) 	memset((void *)c,0,sizeof(HASH_CTX)); 	 */
+comment|/* clear stuff, HASH_BLOCK may be leaving some stuff on the stack 	 * but I'm not worried :-) 	OPENSSL_cleanse((void *)c,sizeof(HASH_CTX)); 	 */
 block|}
 end_function
 

@@ -595,7 +595,7 @@ argument_list|,
 literal|" -nocrl         no crl to load, just certs from '-certfile'\n"
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 literal|1
 argument_list|)
@@ -1139,7 +1139,7 @@ argument_list|(
 name|crl
 argument_list|)
 expr_stmt|;
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)

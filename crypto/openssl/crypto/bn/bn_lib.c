@@ -1564,13 +1564,11 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
 operator|->
 name|d
-argument_list|,
-literal|0
 argument_list|,
 name|a
 operator|->
@@ -1616,11 +1614,9 @@ argument_list|,
 name|BN_FLG_MALLOCED
 argument_list|)
 expr_stmt|;
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|a
-argument_list|,
-literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

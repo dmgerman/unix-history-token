@@ -2415,7 +2415,7 @@ decl_stmt|;
 name|ASN1_TIME
 name|atm
 decl_stmt|;
-name|time_t
+name|long
 name|offset
 decl_stmt|;
 name|char

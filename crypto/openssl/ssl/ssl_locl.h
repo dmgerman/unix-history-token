@@ -1816,7 +1816,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ssl2_generate_key_material
 parameter_list|(
 name|SSL

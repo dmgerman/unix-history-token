@@ -153,11 +153,11 @@ begin_comment
 comment|/*  * This code contains numerious changes and enhancements which were  * made by lots of contributors over the last years to Patrick Powell's  * original code:  *  * o Patrick Powell<papowell@astart.com>      (1995)  * o Brandon Long<blong@fiction.net>          (1996, for Mutt)  * o Thomas Roessler<roessler@guug.de>        (1998, for Mutt)  * o Michael Elkins<me@cs.hmc.edu>            (1998, for Mutt)  * o Andrew Tridgell<tridge@samba.org>        (1998, for Samba)  * o Luke Mewburn<lukem@netbsd.org>           (1999, for LukemFTP)  * o Ralf S. Engelschall<rse@engelschall.com> (1999, for Pth)  * o ...                                       (for OpenSSL)  */
 end_comment
 
-begin_if
-if|#
-directive|if
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_LONG_DOUBLE
-end_if
+end_ifdef
 
 begin_define
 define|#

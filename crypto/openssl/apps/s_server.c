@@ -1362,6 +1362,7 @@ name|BIO
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -1387,7 +1388,7 @@ parameter_list|,
 name|long
 name|num
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|ptr
 parameter_list|)
@@ -1422,6 +1423,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1728,6 +1730,7 @@ name|BIO
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -1920,7 +1923,7 @@ parameter_list|,
 name|long
 name|num
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|ptr
 parameter_list|)
@@ -2001,6 +2004,8 @@ name|int
 name|i
 decl_stmt|,
 name|ret
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -2111,6 +2116,7 @@ name|BIO
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -3914,7 +3920,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|EXIT
+name|OPENSSL_EXIT
 argument_list|(
 name|ret
 argument_list|)
@@ -5359,11 +5365,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|memset
+name|OPENSSL_cleanse
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|,
 name|bufsize
 argument_list|)
@@ -6276,9 +6280,19 @@ argument_list|,
 literal|"read R BLOCK\n"
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
 name|sleep
 argument_list|(
 literal|1
