@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_close.c,v 1.5 1999/06/20 08:28:11 jb Exp $  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
 
 begin_include
 include|#
@@ -66,9 +72,48 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-comment|/* Lock the file descriptor while the file is closed: */
+name|struct
+name|fd_table_entry
+modifier|*
+name|entry
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|fd
+operator|==
+name|_thread_kern_pipe
+index|[
+literal|0
+index|]
+operator|)
+operator|||
+operator|(
+name|fd
+operator|==
+name|_thread_kern_pipe
+index|[
+literal|1
+index|]
+operator|)
+condition|)
+block|{
+comment|/* 		 * Don't allow silly programs to close the kernel pipe. 		 */
+name|errno
+operator|=
+name|EBADF
+expr_stmt|;
+name|ret
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+comment|/* 	 * Lock the file descriptor while the file is closed and get 	 * the file descriptor status: 	 */
+elseif|else
+if|if
+condition|(
+operator|(
 operator|(
 name|ret
 operator|=
@@ -83,9 +128,12 @@ argument_list|)
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-comment|/* Get file descriptor status. */
+operator|)
+operator|&&
+operator|(
+operator|(
+name|ret
+operator|=
 name|_thread_sys_fstat
 argument_list|(
 name|fd
@@ -93,7 +141,12 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
 comment|/* 		 * Check if the file should be left as blocking. 		 * 		 * This is so that the file descriptors shared with a parent 		 * process aren't left set to non-blocking if the child 		 * closes them prior to exit.  An example where this causes 		 * problems with /bin/sh is when a child closes stdin. 		 * 		 * Setting a file as blocking causes problems if a threaded 		 * parent accesses the file descriptor before the child exits. 		 * Once the threaded parent receives a SIGCHLD then it resets 		 * all of its files to non-blocking, and so it is then safe 		 * to access them. 		 * 		 * Pipes are not set to blocking when they are closed, as 		 * the parent and child will normally close the file 		 * descriptor of the end of the pipe that they are not 		 * using, which would then cause any reads to block 		 * indefinitely. 		 */
 if|if
 condition|(
@@ -153,21 +206,14 @@ name|O_NONBLOCK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Close the file descriptor: */
-name|ret
+comment|/* XXX: Assumes well behaved threads. */
+comment|/* XXX: Defer real close to avoid race condition */
+name|entry
 operator|=
-name|_thread_sys_close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
 name|_thread_fd_table
 index|[
 name|fd
 index|]
-argument_list|)
 expr_stmt|;
 name|_thread_fd_table
 index|[
@@ -175,6 +221,19 @@ name|fd
 index|]
 operator|=
 name|NULL
+expr_stmt|;
+name|free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
+comment|/* Close the file descriptor: */
+name|ret
+operator|=
+name|_thread_sys_close
+argument_list|(
+name|fd
+argument_list|)
 expr_stmt|;
 block|}
 return|return

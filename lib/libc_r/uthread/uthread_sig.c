@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_sig.c,v 1.17 1999/06/20 08:28:44 jb Exp $  */
 end_comment
 
 begin_include
@@ -46,95 +46,102 @@ file|"pthread_private.h"
 end_include
 
 begin_comment
-comment|/*  * State change macro for signal handler:  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PTHREAD_SIG_NEW_STATE
-parameter_list|(
-name|thrd
-parameter_list|,
-name|newstate
-parameter_list|)
-value|{				\ 	if ((_thread_run->sched_defer_count == 0)&&			\ 	    (_thread_kern_in_sched == 0)) { 				\ 		PTHREAD_NEW_STATE(thrd, newstate);			\ 	} else {							\ 		_waitingq_check_reqd = 1;				\ 		PTHREAD_SET_STATE(thrd, newstate);			\ 	}								\ }
-end_define
-
-begin_comment
 comment|/* Static variables: */
 end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
-specifier|volatile
-name|yield_on_unlock_thread
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|spinlock_t
-name|thread_link_list_lock
+name|signal_lock
 init|=
 name|_SPINLOCK_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|int
+name|pending_sigs
+index|[
+name|NSIG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|int
+name|handled_sigs
+index|[
+name|NSIG
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+specifier|volatile
+name|check_pending
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Lock the thread list: */
+comment|/* Initialize signal handling facility: */
 end_comment
 
 begin_function
 name|void
-name|_lock_thread_list
-parameter_list|()
-block|{
-comment|/* Lock the thread list: */
-name|_SPINLOCK
-argument_list|(
-operator|&
-name|thread_link_list_lock
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Lock the thread list: */
-end_comment
-
-begin_function
+name|_thread_sig_init
+parameter_list|(
 name|void
-name|_unlock_thread_list
-parameter_list|()
+parameter_list|)
 block|{
-comment|/* Unlock the thread list: */
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|thread_link_list_lock
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Check if a scheduler interrupt occurred while the thread 	 * list was locked: 	 */
-if|if
-condition|(
-name|yield_on_unlock_thread
-condition|)
+name|int
+name|i
+decl_stmt|;
+comment|/* Clear pending and handled signal counts: */
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|NSIG
+condition|;
+name|i
+operator|++
+control|)
 block|{
-comment|/* Reset the interrupt flag: */
-name|yield_on_unlock_thread
+name|pending_sigs
+index|[
+name|i
+operator|-
+literal|1
+index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* This thread has overstayed it's welcome: */
-name|sched_yield
-argument_list|()
+name|handled_sigs
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 block|}
+comment|/* Clear the lock: */
+name|signal_lock
+operator|.
+name|access_lock
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -160,13 +167,80 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|pthread_t
-name|pthread
-decl_stmt|;
-comment|/* 	 * Check if the pthread kernel has unblocked signals (or is about to) 	 * and was on its way into a _select when the current 	 * signal interrupted it:  	 */
+comment|/* Check if an interval timer signal: */
 if|if
 condition|(
-name|_thread_kern_in_select
+name|sig
+operator|==
+name|_SCHED_SIGNAL
+condition|)
+block|{
+if|if
+condition|(
+name|_thread_kern_in_sched
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * The scheduler is already running; ignore this 			 * signal. 			 */
+block|}
+comment|/* 		 * Check if the scheduler interrupt has come when 		 * the currently running thread has deferred thread 		 * signals. 		 */
+elseif|else
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|sig_defer_count
+operator|>
+literal|0
+condition|)
+name|_thread_run
+operator|->
+name|yield_on_sig_undefer
+operator|=
+literal|1
+expr_stmt|;
+else|else
+block|{
+comment|/* 			 * Schedule the next thread. This function is not 			 * expected to return because it will do a longjmp 			 * instead.  			 */
+name|_thread_kern_sched
+argument_list|(
+name|scp
+argument_list|)
+expr_stmt|;
+comment|/* 			 * This point should not be reached, so abort the 			 * process:  			 */
+name|PANIC
+argument_list|(
+literal|"Returned to signal function from scheduler"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Check if the kernel has been interrupted while the scheduler 	 * is accessing the scheduling queues or if there is a currently 	 * running thread that has deferred signals. 	 */
+elseif|else
+if|if
+condition|(
+operator|(
+name|_queue_signals
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|_thread_kern_in_sched
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|_thread_run
+operator|->
+name|sig_defer_count
+operator|>
+literal|0
+operator|)
+operator|)
 condition|)
 block|{
 comment|/* Cast the signal number to a character variable: */
@@ -174,7 +248,7 @@ name|c
 operator|=
 name|sig
 expr_stmt|;
-comment|/* 		 * Write the signal number to the kernel pipe so that it will 		 * be ready to read when this signal handler returns. This 		 * means that the _select call will complete 		 * immediately.  		 */
+comment|/* 		 * Write the signal number to the kernel pipe so that it will 		 * be ready to read when this signal handler returns. 		 */
 name|_thread_sys_write
 argument_list|(
 name|_thread_kern_pipe
@@ -188,7 +262,171 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Indicate that there are queued signals in the pipe. */
+name|_sigq_check_reqd
+operator|=
+literal|1
+expr_stmt|;
 block|}
+else|else
+block|{
+if|if
+condition|(
+name|_atomic_lock
+argument_list|(
+operator|&
+name|signal_lock
+operator|.
+name|access_lock
+argument_list|)
+condition|)
+block|{
+comment|/* There is another signal handler running: */
+name|pending_sigs
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|++
+expr_stmt|;
+name|check_pending
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* It's safe to handle the signal now. */
+name|_thread_sig_handle
+argument_list|(
+name|sig
+argument_list|,
+name|scp
+argument_list|)
+expr_stmt|;
+comment|/* Reset the pending and handled count back to 0: */
+name|pending_sigs
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|handled_sigs
+index|[
+name|sig
+operator|-
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|signal_lock
+operator|.
+name|access_lock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+comment|/* Enter a loop to process pending signals: */
+while|while
+condition|(
+operator|(
+name|check_pending
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|_atomic_lock
+argument_list|(
+operator|&
+name|signal_lock
+operator|.
+name|access_lock
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+name|check_pending
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|NSIG
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|pending_sigs
+index|[
+name|i
+operator|-
+literal|1
+index|]
+operator|>
+name|handled_sigs
+index|[
+name|i
+operator|-
+literal|1
+index|]
+condition|)
+name|_thread_sig_handle
+argument_list|(
+name|i
+argument_list|,
+name|scp
+argument_list|)
+expr_stmt|;
+block|}
+name|signal_lock
+operator|.
+name|access_lock
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|_thread_sig_handle
+parameter_list|(
+name|int
+name|sig
+parameter_list|,
+name|struct
+name|sigcontext
+modifier|*
+name|scp
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+name|pthread_t
+name|pthread
+decl_stmt|,
+name|pthread_next
+decl_stmt|;
 comment|/* Check if the signal requires a dump of thread information: */
 if|if
 condition|(
@@ -209,53 +447,7 @@ operator|==
 name|_SCHED_SIGNAL
 condition|)
 block|{
-comment|/* Check if the scheduler interrupt has come at an 		 * unfortunate time which one of the threads is 		 * modifying the thread list: 		 */
-if|if
-condition|(
-name|thread_link_list_lock
-operator|.
-name|access_lock
-condition|)
-comment|/* 			 * Set a flag so that the thread that has 			 * the lock yields when it unlocks the 			 * thread list: 			 */
-name|yield_on_unlock_thread
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 		 * Check if the scheduler interrupt has come when 		 * the currently running thread has deferred thread 		 * scheduling. 		 */
-elseif|else
-if|if
-condition|(
-name|_thread_run
-operator|->
-name|sched_defer_count
-condition|)
-name|_thread_run
-operator|->
-name|yield_on_sched_undefer
-operator|=
-literal|1
-expr_stmt|;
-comment|/* 		 * Check if the kernel has not been interrupted while 		 * executing scheduler code: 		 */
-elseif|else
-if|if
-condition|(
-operator|!
-name|_thread_kern_in_sched
-condition|)
-block|{
-comment|/* 			 * Schedule the next thread. This function is not 			 * expected to return because it will do a longjmp 			 * instead.  			 */
-name|_thread_kern_sched
-argument_list|(
-name|scp
-argument_list|)
-expr_stmt|;
-comment|/* 			 * This point should not be reached, so abort the 			 * process:  			 */
-name|PANIC
-argument_list|(
-literal|"Returned to signal function from scheduler"
-argument_list|)
-expr_stmt|;
-block|}
+comment|/* 		 * This shouldn't ever occur (should this panic?). 		 */
 block|}
 else|else
 block|{
@@ -330,22 +522,15 @@ name|SIGTTOU
 condition|)
 block|{
 comment|/* 			 * Enter a loop to discard pending SIGCONT 			 * signals: 			 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|pthread
+argument_list|,
+argument|&_thread_list
+argument_list|,
+argument|tle
+argument_list|)
+block|{
 name|sigdelset
 argument_list|(
 operator|&
@@ -357,16 +542,37 @@ name|SIGCONT
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 comment|/* 		 * Enter a loop to process each thread in the waiting 		 * list that is sigwait-ing on a signal.  Since POSIX 		 * doesn't specify which thread will get the signal 		 * if there are multiple waiters, we'll give it to the 		 * first one we find. 		 */
-name|TAILQ_FOREACH
+for|for
+control|(
+name|pthread
+operator|=
+name|TAILQ_FIRST
 argument_list|(
-argument|pthread
-argument_list|,
-argument|&_waitingq
-argument_list|,
-argument|pqe
+operator|&
+name|_waitingq
 argument_list|)
+init|;
+name|pthread
+operator|!=
+name|NULL
+condition|;
+name|pthread
+operator|=
+name|pthread_next
+control|)
 block|{
+comment|/* 			 * Grab the next thread before possibly destroying 			 * the link entry. 			 */
+name|pthread_next
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pthread
+argument_list|,
+name|pqe
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -390,7 +596,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_SIG_NEW_STATE
+name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -423,28 +629,34 @@ operator|!=
 name|SIG_IGN
 condition|)
 comment|/* 			 * Enter a loop to process each thread in the linked 			 * list:  			 */
-for|for
-control|(
-name|pthread
-operator|=
-name|_thread_link_list
-init|;
-name|pthread
-operator|!=
-name|NULL
-condition|;
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|pthread
+argument_list|,
+argument|&_thread_list
+argument_list|,
+argument|tle
+argument_list|)
 block|{
 name|pthread_t
 name|pthread_saved
 init|=
 name|_thread_run
 decl_stmt|;
+comment|/* Current thread inside critical region? */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|sig_defer_count
+operator|>
+literal|0
+condition|)
+name|pthread
+operator|->
+name|sig_defer_count
+operator|++
+expr_stmt|;
 name|_thread_run
 operator|=
 name|pthread
@@ -463,6 +675,20 @@ expr_stmt|;
 name|_thread_run
 operator|=
 name|pthread_saved
+expr_stmt|;
+comment|/* Current thread inside critical region? */
+if|if
+condition|(
+name|_thread_run
+operator|->
+name|sig_defer_count
+operator|>
+literal|0
+condition|)
+name|pthread
+operator|->
+name|sig_defer_count
+operator|--
 expr_stmt|;
 block|}
 block|}
@@ -563,7 +789,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_SIG_NEW_STATE
+name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -584,6 +810,9 @@ name|PS_FDR_WAIT
 case|:
 case|case
 name|PS_FDW_WAIT
+case|:
+case|case
+name|PS_POLL_WAIT
 case|:
 case|case
 name|PS_SLEEP_WAIT
@@ -616,8 +845,21 @@ name|interrupted
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|pthread
+operator|->
+name|flags
+operator|&
+name|PTHREAD_FLAGS_IN_WORKQ
+condition|)
+name|PTHREAD_WORKQ_REMOVE
+argument_list|(
+name|pthread
+argument_list|)
+expr_stmt|;
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_SIG_NEW_STATE
+name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,
@@ -663,7 +905,7 @@ name|SIG_DFL
 condition|)
 block|{
 comment|/* Change the state of the thread to run: */
-name|PTHREAD_SIG_NEW_STATE
+name|PTHREAD_NEW_STATE
 argument_list|(
 name|pthread
 argument_list|,

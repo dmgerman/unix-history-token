@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1995-1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: uthread_fork.c,v 1.10 1999/06/20 08:28:23 jb Exp $  */
 end_comment
 
 begin_include
@@ -64,10 +64,10 @@ name|pthread_t
 name|pthread
 decl_stmt|;
 name|pthread_t
-name|pthread_next
+name|pthread_save
 decl_stmt|;
-comment|/* Lock the thread list: */
-name|_lock_thread_list
+comment|/* 	 * Defer signals to protect the scheduling queues from access 	 * by the signal handler: 	 */
+name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Fork a new process: */
@@ -240,19 +240,15 @@ comment|/* Abort this application: */
 name|abort
 argument_list|()
 expr_stmt|;
-comment|/* Initialize the ready queue: */
 block|}
+comment|/* Reinitialize the GC mutex: */
 elseif|else
 if|if
 condition|(
-name|_pq_init
+name|_mutex_reinit
 argument_list|(
 operator|&
-name|_readyq
-argument_list|,
-name|PTHREAD_MIN_PRIORITY
-argument_list|,
-name|PTHREAD_MAX_PRIORITY
+name|_gc_mutex
 argument_list|)
 operator|!=
 literal|0
@@ -261,18 +257,61 @@ block|{
 comment|/* Abort this application: */
 name|PANIC
 argument_list|(
-literal|"Cannot allocate priority ready queue."
+literal|"Cannot initialize GC mutex for forked process"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Reinitialize the GC condition variable: */
+elseif|else
+if|if
+condition|(
+name|_cond_reinit
+argument_list|(
+operator|&
+name|_gc_cond
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Abort this application: */
+name|PANIC
+argument_list|(
+literal|"Cannot initialize GC condvar for forked process"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Initialize the ready queue: */
+elseif|else
+if|if
+condition|(
+name|_pq_init
+argument_list|(
+operator|&
+name|_readyq
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Abort this application: */
+name|PANIC
+argument_list|(
+literal|"Cannot initialize priority ready queue."
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Point to the first thread in the list: */
+comment|/* 			 * Enter a loop to remove all threads other than 			 * the running thread from the thread list: 			 */
 name|pthread
 operator|=
-name|_thread_link_list
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|)
 expr_stmt|;
-comment|/* 			 * Enter a loop to remove all threads other than 			 * the running thread from the thread list: 			 */
 while|while
 condition|(
 name|pthread
@@ -280,35 +319,43 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|pthread_next
+comment|/* Save the thread to be freed: */
+name|pthread_save
 operator|=
 name|pthread
-operator|->
-name|nxt
 expr_stmt|;
+comment|/* 				 * Advance to the next thread before 				 * destroying the current thread: 				 */
+name|pthread
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pthread
+argument_list|,
+name|dle
+argument_list|)
+expr_stmt|;
+comment|/* Make sure this isn't the running thread: */
 if|if
 condition|(
-name|pthread
-operator|==
+name|pthread_save
+operator|!=
 name|_thread_run
 condition|)
 block|{
-name|_thread_link_list
-operator|=
-name|pthread
+comment|/* Remove this thread from the list: */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|,
+name|pthread_save
+argument_list|,
+name|tle
+argument_list|)
 expr_stmt|;
-name|pthread
-operator|->
-name|nxt
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
 if|if
 condition|(
-name|pthread
+name|pthread_save
 operator|->
 name|attr
 operator|.
@@ -316,7 +363,7 @@ name|stackaddr_attr
 operator|==
 name|NULL
 operator|&&
-name|pthread
+name|pthread_save
 operator|->
 name|stack
 operator|!=
@@ -325,14 +372,14 @@ condition|)
 comment|/* 						 * Free the stack of the 						 * dead thread: 						 */
 name|free
 argument_list|(
-name|pthread
+name|pthread_save
 operator|->
 name|stack
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pthread
+name|pthread_save
 operator|->
 name|specific_data
 operator|!=
@@ -340,29 +387,79 @@ name|NULL
 condition|)
 name|free
 argument_list|(
-name|pthread
+name|pthread_save
 operator|->
 name|specific_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pthread_save
+operator|->
+name|poll_data
+operator|.
+name|fds
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
-name|pthread
+name|pthread_save
+operator|->
+name|poll_data
+operator|.
+name|fds
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|pthread_save
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Point to the next thread: */
-name|pthread
-operator|=
-name|pthread_next
-expr_stmt|;
 block|}
-comment|/* Re-init the waiting queues. */
+comment|/* Re-init the dead thread list: */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|)
+expr_stmt|;
+comment|/* Re-init the waiting and work queues. */
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_waitingq
 argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_workq
+argument_list|)
+expr_stmt|;
+comment|/* Re-init the threads mutex queue: */
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|_thread_run
+operator|->
+name|mutexq
+argument_list|)
+expr_stmt|;
+comment|/* No spinlocks yet: */
+name|_spinblock_count
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Don't queue signals yet: */
+name|_queue_signals
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Initialize signal handling: */
+name|_thread_sig_init
+argument_list|()
 expr_stmt|;
 comment|/* Initialize the scheduling switch hook routine: */
 name|_sched_switch_hook
@@ -495,7 +592,7 @@ literal|0
 expr_stmt|;
 empty_stmt|;
 comment|/* Initialise the read/write queues: */
-name|_thread_queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -506,7 +603,7 @@ operator|->
 name|r_queue
 argument_list|)
 expr_stmt|;
-name|_thread_queue_init
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|_thread_fd_table
@@ -521,8 +618,8 @@ block|}
 block|}
 block|}
 block|}
-comment|/* Unock the thread list: */
-name|_unlock_thread_list
+comment|/* 	 * Undefer and handle pending signals, yielding if necessary: 	 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 comment|/* Return the process ID: */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: uthread_gc.c,v 1.3 1999/03/23 05:07:55 jb Exp $  *  * Garbage collector thread. Frees memory allocated for dead threads.  *  */
+comment|/*  * Copyright (c) 1998 John Birrell<jb@cimlogic.com.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by John Birrell.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JOHN BIRRELL AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: uthread_gc.c,v 1.4 1999/06/20 08:28:25 jb Exp $  *  * Garbage collector thread. Frees memory allocated for dead threads.  *  */
 end_comment
 
 begin_include
@@ -140,20 +140,27 @@ comment|/* Dump thread info to file. */
 name|_thread_dump_info
 argument_list|()
 expr_stmt|;
-comment|/* Lock the thread list: */
-name|_lock_thread_list
+comment|/* 		 * Defer signals to protect the scheduling queues from 		 * access by the signal handler: 		 */
+name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
 comment|/* Check if this is the last running thread: */
 if|if
 condition|(
-name|_thread_link_list
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|)
 operator|==
 name|_thread_run
 operator|&&
-name|_thread_link_list
-operator|->
-name|nxt
+name|TAILQ_NEXT
+argument_list|(
+name|_thread_run
+argument_list|,
+name|tle
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -162,8 +169,8 @@ name|f_done
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Unlock the thread list: */
-name|_unlock_thread_list
+comment|/* 		 * Undefer and handle pending signals, yielding if 		 * necessary: 		 */
+name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Lock the garbage collector mutex which ensures that 		 * this thread sees another thread exit: 		 */
@@ -191,19 +198,17 @@ name|pthread_cln
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Point to the first dead thread (if there are any): */
+comment|/* 		 * Enter a loop to search for the first dead thread that 		 * has memory to free. 		 */
+for|for
+control|(
 name|pthread
 operator|=
-name|_thread_dead
-expr_stmt|;
-comment|/* There is no previous dead thread: */
-name|pthread_prv
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* 		 * Enter a loop to search for the first dead thread that 		 * has memory to free. 		 */
-while|while
-condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|)
+init|;
 name|p_stack
 operator|==
 name|NULL
@@ -215,15 +220,17 @@ operator|&&
 name|pthread
 operator|!=
 name|NULL
-condition|)
-block|{
-comment|/* Save a pointer to the next thread: */
-name|pthread_nxt
-operator|=
+condition|;
 name|pthread
-operator|->
-name|nxt_dead
-expr_stmt|;
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|pthread
+argument_list|,
+name|dle
+argument_list|)
+control|)
+block|{
 comment|/* Check if the initial thread: */
 if|if
 condition|(
@@ -231,11 +238,9 @@ name|pthread
 operator|==
 name|_thread_initial
 condition|)
+block|{
 comment|/* Don't destroy the initial thread. */
-name|pthread_prv
-operator|=
-name|pthread
-expr_stmt|;
+block|}
 comment|/* 			 * Check if this thread has detached: 			 */
 elseif|else
 if|if
@@ -253,27 +258,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 				 * Check if there is no previous dead 				 * thread: 				 */
-if|if
-condition|(
-name|pthread_prv
-operator|==
-name|NULL
-condition|)
-comment|/* 					 * The dead thread is at the head 					 * of the list:  					 */
-name|_thread_dead
-operator|=
-name|pthread_nxt
-expr_stmt|;
-else|else
-comment|/* 					 * The dead thread is not at the 					 * head of the list:  					 */
-name|pthread_prv
-operator|->
-name|nxt_dead
-operator|=
+comment|/* Remove this thread from the dead list: */
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|_dead_list
+argument_list|,
 name|pthread
-operator|->
-name|nxt_dead
+argument_list|,
+name|dle
+argument_list|)
 expr_stmt|;
 comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
 if|if
@@ -309,12 +303,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * This thread has not detached, so do 				 * not destroy it:  				 */
-name|pthread_prv
-operator|=
-name|pthread
-expr_stmt|;
-comment|/* 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
+comment|/* 				 * This thread has not detached, so do 				 * not destroy it. 				 * 				 * Check if the stack was not specified by 				 * the caller to pthread_create and has not 				 * been destroyed yet:  				 */
 if|if
 condition|(
 name|pthread
@@ -348,11 +337,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-comment|/* Point to the next thread: */
-name|pthread
-operator|=
-name|pthread_nxt
-expr_stmt|;
 block|}
 comment|/* 		 * Check if this is not the last thread and there is no 		 * memory to free this time around. 		 */
 if|if
@@ -459,82 +443,12 @@ name|pthread_cln
 operator|!=
 name|NULL
 condition|)
-block|{
-comment|/* Lock the thread list: */
-name|_lock_thread_list
-argument_list|()
-expr_stmt|;
-comment|/* 			 * Check if the thread is at the head of the 			 * linked list. 			 */
-if|if
-condition|(
-name|_thread_link_list
-operator|==
-name|pthread_cln
-condition|)
-comment|/* There is no previous thread: */
-name|_thread_link_list
-operator|=
-name|pthread_cln
-operator|->
-name|nxt
-expr_stmt|;
-else|else
-block|{
-comment|/* Point to the first thread in the list: */
-name|pthread
-operator|=
-name|_thread_link_list
-expr_stmt|;
-comment|/* 				 * Enter a loop to find the thread in the 				 * linked list before the thread that is 				 * about to be freed. 				 */
-while|while
-condition|(
-name|pthread
-operator|!=
-name|NULL
-operator|&&
-name|pthread
-operator|->
-name|nxt
-operator|!=
-name|pthread_cln
-condition|)
-comment|/* Point to the next thread: */
-name|pthread
-operator|=
-name|pthread
-operator|->
-name|nxt
-expr_stmt|;
-comment|/* Check that a previous thread was found: */
-if|if
-condition|(
-name|pthread
-operator|!=
-name|NULL
-condition|)
-block|{
-comment|/* 					 * Point the previous thread to 					 * the one after the thread being 					 * freed:  					 */
-name|pthread
-operator|->
-name|nxt
-operator|=
-name|pthread_cln
-operator|->
-name|nxt
-expr_stmt|;
-block|}
-block|}
-comment|/* Unlock the thread list: */
-name|_unlock_thread_list
-argument_list|()
-expr_stmt|;
 comment|/* 			 * Free the memory allocated for the thread 			 * structure. 			 */
 name|free
 argument_list|(
 name|pthread_cln
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
