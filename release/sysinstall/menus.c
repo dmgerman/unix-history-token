@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.23 1995/06/05 22:18:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.41.2.24 1995/06/06 04:26:00 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -153,7 +153,7 @@ block|,
 literal|"Documentation for FreeBSD 2.0.5"
 block|,
 comment|/* Title */
-literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file.  If you are having other problems, you may find\n\ answers in the FAQ."
+literal|"If you are at all unsure about the configuration of your hardware\n\ or are looking to build a system specifically for FreeBSD, read the\n\ Hardware guide!  New users should also read the Install document for\n\ a step-by-step tutorial on installing FreeBSD.  For general information,\n\ consult the README file."
 block|,
 literal|"Confused?  Press F1 for help."
 block|,
@@ -1047,7 +1047,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Choose a network interface type"
 block|,
-literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may need to first dial your\n\ service provider using a special utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
+literal|"FreeBSD can be installed directly over a network, using NFS or FTP.\n If you are using PPP over a serial device (cuaa0 or cuaa1) as opposed\n\ to a direct ethernet connection, then you may first need to dial your\n\ service provider using the ppp utility we provide for that purpose.\n\ You can also install over a parallel port using a special \"laplink\"\n\ cable, though this only works if you have another FreeBSD machine running\n\ a fairly recent (2.0R or later) release to talk to.\n\n\ To use PPP select one of the serial devices, otherwise select lp0 for\n\ the parallel port or one of the ethernet controllers (if you have one)\n\ for an ethernet installation."
 block|,
 literal|"Press F1 to read network configuration manual"
 block|,
@@ -1643,6 +1643,23 @@ block|,
 literal|0
 block|,
 name|x11FlagCheck
+block|}
+block|,
+block|{
+literal|"Experimental"
+block|,
+literal|"Work in progress!"
+block|,
+name|DMENU_SET_FLAG
+block|,
+operator|&
+name|Dists
+block|,
+name|DIST_EXPERIMENTAL
+block|,
+literal|0
+block|,
+name|dmenuFlagCheck
 block|}
 block|,
 block|{
