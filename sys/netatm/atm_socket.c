@@ -418,6 +418,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Break links and free control blocks 	 */
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so

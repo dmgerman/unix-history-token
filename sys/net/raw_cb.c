@@ -253,6 +253,9 @@ name|rp
 operator|->
 name|rcb_socket
 decl_stmt|;
+name|ACCEPT_LOCK
+argument_list|()
+expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
