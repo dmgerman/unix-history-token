@@ -625,6 +625,94 @@ name|CIOCASYMFEAT
 value|_IOR('c', 105, u_int32_t)
 end_define
 
+begin_struct
+struct|struct
+name|cryptotstat
+block|{
+name|struct
+name|timespec
+name|acc
+decl_stmt|;
+comment|/* total accumulated time */
+name|struct
+name|timespec
+name|min
+decl_stmt|;
+comment|/* min time */
+name|struct
+name|timespec
+name|max
+decl_stmt|;
+comment|/* max time */
+name|u_int32_t
+name|count
+decl_stmt|;
+comment|/* number of observations */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cryptostats
+block|{
+name|u_int32_t
+name|cs_ops
+decl_stmt|;
+comment|/* symmetric crypto ops submitted */
+name|u_int32_t
+name|cs_errs
+decl_stmt|;
+comment|/* symmetric crypto ops that failed */
+name|u_int32_t
+name|cs_kops
+decl_stmt|;
+comment|/* asymetric/key ops submitted */
+name|u_int32_t
+name|cs_kerrs
+decl_stmt|;
+comment|/* asymetric/key ops that failed */
+name|u_int32_t
+name|cs_intrs
+decl_stmt|;
+comment|/* crypto swi thread activations */
+name|u_int32_t
+name|cs_rets
+decl_stmt|;
+comment|/* crypto return thread activations */
+name|u_int32_t
+name|cs_blocks
+decl_stmt|;
+comment|/* symmetric op driver block */
+name|u_int32_t
+name|cs_kblocks
+decl_stmt|;
+comment|/* symmetric op driver block */
+comment|/* 	 * When CRYPTO_TIMING is defined at compile time and the 	 * sysctl debug.crypto is set to 1, the crypto system will 	 * accumulate statistics about how long it takes to process 	 * crypto requests at various points during processing. 	 */
+name|struct
+name|cryptotstat
+name|cs_invoke
+decl_stmt|;
+comment|/* crypto_dipsatch -> crypto_invoke */
+name|struct
+name|cryptotstat
+name|cs_done
+decl_stmt|;
+comment|/* crypto_invoke -> crypto_done */
+name|struct
+name|cryptotstat
+name|cs_cb
+decl_stmt|;
+comment|/* crypto_done -> callback */
+name|struct
+name|cryptotstat
+name|cs_finis
+decl_stmt|;
+comment|/* callback -> callback return */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -780,10 +868,6 @@ name|crp_olen
 decl_stmt|;
 comment|/* Result total length */
 name|int
-name|crp_alloctype
-decl_stmt|;
-comment|/* Type of buf to allocate if needed */
-name|int
 name|crp_etype
 decl_stmt|;
 comment|/* 					 * Error type (zero means no error). 					 * All error codes except EAGAIN 					 * indicate possible data corruption (as in, 					 * the data have been touched). On all 					 * errors, the crp_sid may have changed 					 * (reset to a new one), so the caller 					 * should always check and use the new 					 * value on future requests. 					 */
@@ -839,6 +923,11 @@ comment|/* Callback function */
 name|caddr_t
 name|crp_mac
 decl_stmt|;
+name|struct
+name|bintime
+name|crp_tstamp
+decl_stmt|;
+comment|/* performance time stamp */
 block|}
 struct|;
 end_struct
