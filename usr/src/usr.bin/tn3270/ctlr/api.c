@@ -113,7 +113,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|access
+name|access_api
 parameter_list|(
 name|foo
 parameter_list|,
@@ -125,7 +125,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|unaccess
+name|unaccess_api
 parameter_list|(
 name|foo
 parameter_list|,
@@ -265,10 +265,6 @@ begin_comment
 comment|/* defined(MSDOS) */
 end_comment
 
-begin_comment
-comment|/* No Unix version yet... */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -278,17 +274,18 @@ name|unix
 argument_list|)
 end_if
 
-begin_define
-define|#
-directive|define
-name|access
-parameter_list|(
-name|f
-parameter_list|,
-name|l
-parameter_list|)
-value|(f)
-end_define
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|access_api
+argument_list|()
+decl_stmt|,
+modifier|*
+name|unaccess_api
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2397,7 +2394,7 @@ name|buffer
 expr_stmt|;
 name|output
 operator|=
-name|access
+name|access_api
 argument_list|(
 name|target
 operator|->
@@ -2431,7 +2428,7 @@ name|buffer
 expr_stmt|;
 name|input
 operator|=
-name|access
+name|access_api
 argument_list|(
 name|source
 operator|->
@@ -2548,7 +2545,7 @@ operator|==
 name|USER_IS_TARGET
 condition|)
 block|{
-name|unaccess
+name|unaccess_api
 argument_list|(
 name|target
 operator|->
@@ -2562,7 +2559,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|unaccess
+name|unaccess_api
 argument_list|(
 name|source
 operator|->
