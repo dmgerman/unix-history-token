@@ -55,6 +55,10 @@ directive|if
 name|__STDC_VERSION__
 operator|<
 literal|199901L
+operator|&&
+name|__GNUC__
+operator|<
+literal|3
 end_if
 
 begin_typedef
