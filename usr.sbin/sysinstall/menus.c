@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.52 1996/04/25 17:31:23 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.53 1996/04/26 18:19:36 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -64,6 +64,36 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkSrc
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|Dists
+operator|&
+name|DIST_SRC
+operator|)
+operator|&&
+operator|(
+name|SrcDists
+operator|==
+name|DIST_SRC_ALL
+operator||
+name|DIST_SRC_SMAILCF
+operator|)
+operator|)
 return|;
 block|}
 end_function
@@ -248,6 +278,290 @@ return|return
 name|DITEM_SUCCESS
 operator||
 name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistDeveloper
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|_DIST_DEVELOPER
+operator|&&
+name|SrcDists
+operator|==
+name|DIST_SRC_ALL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistXDeveloper
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|_DIST_DEVELOPER
+operator||
+name|DIST_XF86
+operator|&&
+name|SrcDists
+operator|==
+name|DIST_SRC_ALL
+operator|&&
+name|XF86Dists
+operator|==
+name|DIST_XF86_BIN
+operator||
+name|DIST_XF86_LIB
+operator||
+name|DIST_XF86_PROG
+operator||
+name|DIST_XF86_MAN
+operator||
+name|DIST_XF86_SERVER
+operator||
+name|DIST_XF86_FONTS
+operator|&&
+operator|(
+name|XF86ServerDists
+operator|&
+name|DIST_XF86_SERVER_SVGA
+operator|)
+operator|&&
+operator|(
+name|XF86FontDists
+operator|&
+name|DIST_XF86_FONTS_MISC
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistKernDeveloper
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|_DIST_DEVELOPER
+operator|&&
+name|SrcDists
+operator|==
+name|DIST_SRC_SYS
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistUser
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|_DIST_USER
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistXUser
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|_DIST_USER
+operator|&&
+name|XF86Dists
+operator|==
+name|DIST_XF86_BIN
+operator||
+name|DIST_XF86_LIB
+operator||
+name|DIST_XF86_MAN
+operator||
+name|DIST_XF86_SERVER
+operator||
+name|DIST_XF86_FONTS
+operator|&&
+operator|(
+name|XF86ServerDists
+operator|&
+name|DIST_XF86_SERVER_SVGA
+operator|)
+operator|&&
+operator|(
+name|XF86FontDists
+operator|&
+name|DIST_XF86_FONTS_MISC
+operator|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistMinimum
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|DIST_BIN
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistEverything
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Dists
+operator|==
+name|DIST_ALL
+operator|&&
+name|SrcDists
+operator|==
+name|DIST_SRC_ALL
+operator|&&
+name|XF86Dists
+operator|==
+name|DIST_XF86_ALL
+operator|&&
+name|XF86ServerDists
+operator|==
+name|DIST_XF86_SERVER_ALL
+operator|&&
+name|XF86FontDists
+operator|==
+name|DIST_XF86_FONTS_ALL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|DESFlagCheck
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|DESDists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|srcFlagCheck
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|SrcDists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|x11FlagCheck
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|XF86Dists
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkTrue
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|item
+parameter_list|)
+block|{
+return|return
+name|TRUE
 return|;
 block|}
 end_function
@@ -993,7 +1307,7 @@ name|DMenu
 name|MenuMediaFTP
 init|=
 block|{
-name|DMENU_RADIO_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -2010,7 +2324,7 @@ name|DMenu
 name|MenuDistributions
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_CHECKLIST_TYPE
 block|,
 literal|"Choose Distributions"
 block|,
@@ -2026,7 +2340,7 @@ literal|"1 Developer"
 block|,
 literal|"Full sources, binaries and doc but no games [180MB]"
 block|,
-name|NULL
+name|checkDistDeveloper
 block|,
 name|distSetDeveloper
 block|}
@@ -2036,7 +2350,7 @@ literal|"2 X-Developer"
 block|,
 literal|"Same as above, but includes XFree86 [201MB]"
 block|,
-name|NULL
+name|checkDistXDeveloper
 block|,
 name|distSetXDeveloper
 block|}
@@ -2046,7 +2360,7 @@ literal|"3 Kern-Developer"
 block|,
 literal|"Full binaries and doc, kernel sources only [70MB]"
 block|,
-name|NULL
+name|checkDistKernDeveloper
 block|,
 name|distSetKernDeveloper
 block|}
@@ -2054,9 +2368,9 @@ block|,
 block|{
 literal|"4 User"
 block|,
-literal|"Average user - binaries and doc but no sources [52MB]"
+literal|"Average user - binaries and doc only [52MB]"
 block|,
-name|NULL
+name|checkDistUser
 block|,
 name|distSetUser
 block|}
@@ -2066,7 +2380,7 @@ literal|"5 X-User"
 block|,
 literal|"Same as above, but includes XFree86 [52MB]"
 block|,
-name|NULL
+name|checkDistXUser
 block|,
 name|distSetXUser
 block|}
@@ -2076,7 +2390,7 @@ literal|"6 Minimal"
 block|,
 literal|"The smallest configuration possible [44MB]"
 block|,
-name|NULL
+name|checkDistMinimum
 block|,
 name|distSetMinimum
 block|}
@@ -2086,7 +2400,7 @@ literal|"7 Custom"
 block|,
 literal|"Specify your own distribution set [?]"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuSubmenu
 block|,
@@ -2094,6 +2408,12 @@ name|NULL
 block|,
 operator|&
 name|MenuSubDistributions
+block|,
+literal|'-'
+block|,
+literal|'-'
+block|,
+literal|'-'
 block|}
 block|,
 block|{
@@ -2101,7 +2421,7 @@ literal|"8 All"
 block|,
 literal|"All sources, binaries and XFree86 binaries [700MB]"
 block|,
-name|NULL
+name|checkDistEverything
 block|,
 name|distSetEverything
 block|}
@@ -2114,6 +2434,16 @@ block|,
 name|NULL
 block|,
 name|distReset
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -2121,9 +2451,19 @@ literal|"0 Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
 block|}
 block|,
 block|{
@@ -2133,54 +2473,6 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|int
-name|DESFlagCheck
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-return|return
-name|DESDists
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|srcFlagCheck
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-return|return
-name|SrcDists
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|x11FlagCheck
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-return|return
-name|XF86Dists
-return|;
-block|}
-end_function
 
 begin_decl_stmt
 name|DMenu
@@ -2541,7 +2833,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -2549,11 +2841,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -2679,7 +2971,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -2687,11 +2979,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -3093,19 +3385,9 @@ literal|"All"
 block|,
 literal|"Select all of the above [120MB]"
 block|,
-name|NULL
+name|checkSrc
 block|,
 name|setSrc
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|' '
-block|,
-literal|' '
-block|,
-literal|' '
 block|}
 block|,
 block|{
@@ -3133,7 +3415,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -3141,11 +3423,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -3242,7 +3524,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -3250,11 +3532,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -3627,7 +3909,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -3635,11 +3917,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -3811,7 +4093,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -3819,11 +4101,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -4173,7 +4455,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -4181,11 +4463,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
@@ -4870,7 +5152,7 @@ literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
-name|NULL
+name|checkTrue
 block|,
 name|dmenuCancel
 block|,
@@ -4878,11 +5160,11 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|,
-literal|' '
+literal|'<'
 block|}
 block|,
 block|{
