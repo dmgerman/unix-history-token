@@ -6331,7 +6331,7 @@ name|idt
 operator|->
 name|fixbuf
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return;
 comment|/* no space card disabled */
@@ -6931,7 +6931,7 @@ name|idt
 operator|->
 name|fixbuf
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|kmem_free
 argument_list|(
@@ -6954,7 +6954,7 @@ name|idt
 operator|->
 name|cbr_base
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|kmem_free
 argument_list|(
@@ -9219,7 +9219,7 @@ if|if
 condition|(
 name|scqbase
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(

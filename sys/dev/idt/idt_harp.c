@@ -1243,7 +1243,7 @@ name|iu_config
 operator|.
 name|ac_ram
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|idt
 operator|->
