@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.15 1999/04/25 22:33:30 imp Exp $  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.16 1999/05/13 16:58:31 brian Exp $  */
 end_comment
 
 begin_define
@@ -5127,13 +5127,14 @@ name|remotePort
 operator|!=
 literal|0
 operator|)
+condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
 literal|"redirect_port: remote port must be 0 or equal to local port range in size"
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|i
