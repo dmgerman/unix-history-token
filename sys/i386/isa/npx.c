@@ -1170,6 +1170,7 @@ if|if
 condition|(
 name|npx_exists
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"npx%d: Error reporting broken, using 387 emulator\n"
@@ -1179,7 +1180,13 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
+name|npx_exists
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|else
+block|{
 name|printf
 argument_list|(
 literal|"npx%d: 387 Emulator\n"
@@ -1189,6 +1196,7 @@ operator|->
 name|id_unit
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|npxinit
 argument_list|(
