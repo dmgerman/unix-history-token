@@ -6797,8 +6797,6 @@ operator|->
 name|flags
 operator||=
 name|DMA_AUTOMODE
-operator||
-name|DMA_DUPLEX
 expr_stmt|;
 name|audio_devs
 index|[
