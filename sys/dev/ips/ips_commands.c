@@ -1194,7 +1194,7 @@ literal|30
 operator|*
 name|hz
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
 condition|)
@@ -1726,7 +1726,7 @@ literal|10
 operator|*
 name|hz
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
 condition|)
@@ -3205,7 +3205,7 @@ literal|30
 operator|*
 name|hz
 argument_list|)
-operator|==
+operator|!=
 literal|0
 operator|)
 condition|)

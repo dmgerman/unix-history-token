@@ -437,9 +437,7 @@ name|line
 parameter_list|)
 block|{
 name|int
-name|ret
-decl_stmt|,
-name|timed_out
+name|error
 decl_stmt|;
 name|mtx_lock
 argument_list|(
@@ -452,7 +450,7 @@ expr_stmt|;
 comment|/* 	 * A spurious wakeup will cause the timeout interval to start over. 	 * This isn't a big deal as long as spurious wakeups don't occur 	 * continuously, since the timeout period is merely a lower bound on how 	 * long to wait. 	 */
 for|for
 control|(
-name|timed_out
+name|error
 operator|=
 literal|0
 init|;
@@ -462,7 +460,7 @@ name|sema_value
 operator|==
 literal|0
 operator|&&
-name|timed_out
+name|error
 operator|==
 literal|0
 condition|;
@@ -473,7 +471,7 @@ operator|->
 name|sema_waiters
 operator|++
 expr_stmt|;
-name|timed_out
+name|error
 operator|=
 name|cv_timedwait
 argument_list|(
@@ -511,9 +509,9 @@ operator|->
 name|sema_value
 operator|--
 expr_stmt|;
-name|ret
+name|error
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|CTR6
 argument_list|(
@@ -545,10 +543,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 name|CTR5
 argument_list|(
 name|KTR_LOCK
@@ -583,7 +577,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ret
+name|error
 operator|)
 return|;
 block|}
