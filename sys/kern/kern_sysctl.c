@@ -327,26 +327,14 @@ literal|"out of oids"
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|oidp
-operator|->
-name|oid_number
-operator|>=
-name|CTL_AUTO_START
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"static sysctl oid too high: %d"
-argument_list|,
-name|oidp
-operator|->
-name|oid_number
-argument_list|)
-expr_stmt|;
-block|}
+if|#
+directive|if
+literal|0
+block|else if (oidp->oid_number>= CTL_AUTO_START) {
+comment|/* do not panic; this happens when unregistering sysctl sets */
+block|printf("static sysctl oid too high: %d", oidp->oid_number); 	}
+endif|#
+directive|endif
 comment|/* 	 * Insert the oid into the parent's list in order. 	 */
 name|q
 operator|=
