@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mkmakefile.c	1.18	82/10/24	*/
+comment|/*	mkmakefile.c	1.19	82/10/24	*/
 end_comment
 
 begin_comment
@@ -623,10 +623,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"config: out of memory\n"
 argument_list|)
 expr_stmt|;
@@ -919,10 +917,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: No type for %s.\n"
 argument_list|,
 name|fname
@@ -944,10 +940,8 @@ name|this
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: Duplicate file %s.\n"
 argument_list|,
 name|fname
@@ -996,10 +990,8 @@ literal|"optional"
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: %s must be optional or standard"
 argument_list|,
 name|fname
@@ -1149,10 +1141,8 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: what is %s optional on?\n"
 argument_list|,
 name|fname
@@ -1209,10 +1199,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s: syntax error describing %s\n"
 argument_list|,
 name|fname
@@ -2008,10 +1996,8 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"Don't know rules for %s"
 argument_list|,
 name|np
