@@ -41,44 +41,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PRIu64
-value|"llu"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -1145,12 +1107,9 @@ argument_list|,
 literal|"pf already enabled"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 elseif|else
 if|if
 condition|(
@@ -3560,23 +3519,32 @@ name|PF_OPT_VERBOSE
 condition|)
 name|printf
 argument_list|(
-literal|"  [ Evaluations: %-8"
-name|PRIu64
-literal|"  Packets: %-8"
-name|PRIu64
-literal|"  "
-literal|"Bytes: %-10"
-name|PRIu64
-literal|"  States: %-6u]\n"
+literal|"  [ Evaluations: %-8llu  Packets: %-8llu  "
+literal|"Bytes: %-10llu  States: %-6u]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rule
 operator|->
 name|evaluations
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rule
 operator|->
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|rule
 operator|->
 name|bytes
@@ -3994,26 +3962,35 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%"
-name|PRIu64
-literal|" %"
-name|PRIu64
-literal|" %"
-name|PRIu64
-literal|"\n"
+literal|"%llu %llu %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule
 operator|.
 name|evaluations
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule
@@ -4207,26 +4184,35 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%"
-name|PRIu64
-literal|" %"
-name|PRIu64
-literal|" %"
-name|PRIu64
-literal|"\n"
+literal|"%llu %llu %llu\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule
 operator|.
 name|evaluations
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pr
 operator|.
 name|rule

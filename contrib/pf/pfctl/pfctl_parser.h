@@ -389,14 +389,11 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * XXX  * Absolutely this is not correct location to define this.  * Should we use an another sperate header file?  */

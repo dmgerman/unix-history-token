@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -124,45 +130,6 @@ include|#
 directive|include
 file|<ifaddrs.h>
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PRIu64
-value|"llu"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRId64
-value|"lld"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -3099,14 +3066,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %-25s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n"
+literal|"  %-25s %14llu %16llu\n"
 argument_list|,
 literal|"Bytes In"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bcounters
@@ -3117,6 +3085,11 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bcounters
@@ -3130,14 +3103,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  %-25s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n"
+literal|"  %-25s %14llu %16llu\n"
 argument_list|,
 literal|"Bytes Out"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bcounters
@@ -3148,6 +3122,11 @@ index|[
 literal|1
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|bcounters
@@ -3166,14 +3145,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n"
+literal|"    %-23s %14llu %16llu\n"
 argument_list|,
 literal|"Passed"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3187,6 +3167,11 @@ index|[
 name|PF_PASS
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3203,14 +3188,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n"
+literal|"    %-23s %14llu %16llu\n"
 argument_list|,
 literal|"Blocked"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3224,6 +3210,11 @@ index|[
 name|PF_DROP
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3245,14 +3236,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n"
+literal|"    %-23s %14llu %16llu\n"
 argument_list|,
 literal|"Passed"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3266,6 +3258,11 @@ index|[
 name|PF_PASS
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3282,14 +3279,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"    %-23s %14"
-name|PRIu64
-literal|" %16"
-name|PRIu64
-literal|"\n\n"
+literal|"    %-23s %14llu %16llu\n\n"
 argument_list|,
 literal|"Blocked"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3303,6 +3301,11 @@ index|[
 name|PF_DROP
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|pcounters
@@ -3358,15 +3361,18 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %-25s %14"
-name|PRIu64
-literal|" "
+literal|"  %-25s %14llu "
 argument_list|,
 name|pf_fcounters
 index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|fcounters
@@ -3431,15 +3437,18 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"  %-25s %14"
-name|PRIu64
-literal|" "
+literal|"  %-25s %14llu "
 argument_list|,
 name|pf_reasons
 index|[
 name|i
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|s
 operator|->
 name|counters

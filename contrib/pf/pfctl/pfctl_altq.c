@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -28,27 +28,6 @@ include|#
 directive|include
 file|<sys/socket.h>
 end_include
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sys/limits.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -78,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -469,14 +454,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|u_int32_t
@@ -1381,12 +1363,9 @@ operator|->
 name|bw_absolute
 expr_stmt|;
 elseif|else
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 operator|(
@@ -4875,30 +4854,9 @@ operator|)
 return|;
 block|}
 comment|/*  * admission control using generalized service curve  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-if|#
-directive|if
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|INFINITY
-argument_list|)
-undef|#
-directive|undef
-name|INFINITY
-endif|#
-directive|endif
-define|#
-directive|define
-name|INFINITY
-value|HUGE_VAL
-comment|/* positive infinity defined in<math.h> */
-else|#
-directive|else
 define|#
 directive|define
 name|INFINITY
@@ -5934,13 +5892,10 @@ name|buf
 operator|)
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
-comment|/*  * XXX  * FreeBSD do not have SIOCGIFDATA.  * To emulate this, DIOCGIFSPEED ioctl added to pf.  */
+comment|/*  * XXX  * FreeBSD does not have SIOCGIFDATA.  * To emulate this, DIOCGIFSPEED ioctl added to pf.  */
 name|u_int32_t
 name|getifspeed
 parameter_list|(

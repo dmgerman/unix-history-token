@@ -14,7 +14,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -124,27 +124,6 @@ include|#
 directive|include
 file|"pathnames.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__dead
-value|__volatile
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -367,6 +346,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|__dead2
+name|void
+name|do_death
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_function_decl
 specifier|static
 name|__dead
@@ -377,6 +378,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * User shell for authenticating gateways. Sole purpose is to allow  * a user to ssh to a gateway, and have the gateway modify packet  * filters to allow access, then remove access when the user finishes  * up. Meant to be used only from ssh(1) connections.  */
@@ -1325,18 +1331,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-return|return
-literal|0
-return|;
-comment|/* gcc hack to prevent warning */
-endif|#
-directive|endif
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -3507,10 +3502,23 @@ begin_comment
 comment|/*  * function that removes our stuff when we go away.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
 begin_function
+specifier|static
+name|__dead2
+name|void
+else|#
+directive|else
 specifier|static
 name|__dead
 name|void
+endif|#
+directive|endif
 name|do_death
 parameter_list|(
 name|int

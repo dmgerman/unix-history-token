@@ -107,38 +107,6 @@ directive|include
 file|<altq/altq_hfsc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PRIu64
-value|"llu"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -400,12 +368,9 @@ decl_stmt|,
 modifier|*
 name|node
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -1524,17 +1489,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10"
-name|PRIu64
-literal|"  bytes: %10"
-name|PRIu64
-literal|"  "
-literal|"dropped pkts: %6"
-name|PRIu64
-literal|" bytes: %6"
-name|PRIu64
-literal|" ]\n"
+literal|"  [ pkts: %10llu  bytes: %10llu  "
+literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1545,6 +1507,11 @@ name|xmit_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1555,6 +1522,11 @@ name|xmit_cnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1565,6 +1537,11 @@ name|drop_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1660,17 +1637,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10"
-name|PRIu64
-literal|"  bytes: %10"
-name|PRIu64
-literal|"  "
-literal|"dropped pkts: %6"
-name|PRIu64
-literal|" bytes: %6"
-name|PRIu64
-literal|" ]\n"
+literal|"  [ pkts: %10llu  bytes: %10llu  "
+literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1681,6 +1655,11 @@ name|xmitcnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1691,6 +1670,11 @@ name|xmitcnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1701,6 +1685,11 @@ name|dropcnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1780,17 +1769,14 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"  [ pkts: %10"
-name|PRIu64
-literal|"  bytes: %10"
-name|PRIu64
-literal|"  "
-literal|"dropped pkts: %6"
-name|PRIu64
-literal|" bytes: %6"
-name|PRIu64
-literal|" ]\n"
+literal|"  [ pkts: %10llu  bytes: %10llu  "
+literal|"dropped pkts: %6llu bytes: %6llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1801,6 +1787,11 @@ name|xmit_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1811,6 +1802,11 @@ name|xmit_cnt
 operator|.
 name|bytes
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data
@@ -1821,6 +1817,11 @@ name|drop_cnt
 operator|.
 name|packets
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|cur
 operator|.
 name|data

@@ -101,38 +101,6 @@ directive|include
 file|<time.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<inttypes.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PRIu64
-value|"llu"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -2221,16 +2189,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tEvaluations: [ NoMatch: %-18"
-name|PRIu64
-literal|" Match: %-18"
-name|PRIu64
-literal|" ]\n"
+literal|"\tEvaluations: [ NoMatch: %-18llu Match: %-18llu ]\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ts
 operator|->
 name|pfrts_nomatch
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ts
 operator|->
 name|pfrts_match
@@ -2264,11 +2238,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%-12s [ Packets: %-18"
-name|PRIu64
-literal|" Bytes: %-18"
-name|PRIu64
-literal|" ]\n"
+literal|"\t%-12s [ Packets: %-18llu Bytes: %-18llu ]\n"
 argument_list|,
 name|stats_text
 index|[
@@ -2278,6 +2248,11 @@ index|[
 name|op
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ts
 operator|->
 name|pfrts_packets
@@ -2288,6 +2263,11 @@ index|[
 name|op
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|ts
 operator|->
 name|pfrts_bytes
@@ -2915,11 +2895,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"\t%-12s [ Packets: %-18"
-name|PRIu64
-literal|" Bytes: %-18"
-name|PRIu64
-literal|" ]\n"
+literal|"\t%-12s [ Packets: %-18llu Bytes: %-18llu ]\n"
 argument_list|,
 name|stats_text
 index|[
@@ -2929,6 +2905,11 @@ index|[
 name|op
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|as
 operator|->
 name|pfras_packets
@@ -2939,6 +2920,11 @@ index|[
 name|op
 index|]
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|as
 operator|->
 name|pfras_bytes
