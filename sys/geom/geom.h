@@ -1347,12 +1347,6 @@ name|void
 modifier|*
 name|p
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|malloc
@@ -1362,12 +1356,6 @@ argument_list|,
 name|M_GEOM
 argument_list|,
 name|flags
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 name|g_sanity
@@ -1401,23 +1389,11 @@ name|ptr
 argument_list|)
 expr_stmt|;
 comment|/* printf("free(%p)\n", ptr); */
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|ptr
 argument_list|,
 name|M_GEOM
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 block|}
@@ -1436,7 +1412,8 @@ define|#
 directive|define
 name|g_topology_lock
 parameter_list|()
-value|do { mtx_assert(&Giant, MA_NOTOWNED); sx_xlock(&topology_lock); } while (0)
+define|\
+value|do {							\ 		mtx_assert(&Giant, MA_NOTOWNED);		\ 		sx_xlock(&topology_lock);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1444,7 +1421,8 @@ define|#
 directive|define
 name|g_topology_unlock
 parameter_list|()
-value|do { g_sanity(NULL); sx_xunlock(&topology_lock); } while (0)
+define|\
+value|do {							\ 		g_sanity(NULL);					\ 		sx_xunlock(&topology_lock);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1452,7 +1430,8 @@ define|#
 directive|define
 name|g_topology_assert
 parameter_list|()
-value|do { g_sanity(NULL); sx_assert(&topology_lock, SX_XLOCKED); } while (0)
+define|\
+value|do {							\ 		g_sanity(NULL);					\ 		sx_assert(&topology_lock, SX_XLOCKED);		\ 	} while (0)
 end_define
 
 begin_define
