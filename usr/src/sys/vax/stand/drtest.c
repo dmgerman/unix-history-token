@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	drtest.c	4.11	83/03/02	*/
+comment|/*	drtest.c	4.12	83/03/20	*/
 end_comment
 
 begin_comment
@@ -131,6 +131,10 @@ name|fd
 argument_list|,
 name|SAIODEVDATA
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|st
 argument_list|)
@@ -158,7 +162,10 @@ name|fd
 argument_list|,
 name|SAIODEBUG
 argument_list|,
-operator|&
+operator|(
+name|char
+operator|*
+operator|)
 name|debug
 argument_list|)
 expr_stmt|;
