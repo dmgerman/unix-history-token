@@ -3789,6 +3789,14 @@ name|timo
 operator|=
 literal|0
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_selq
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -3823,15 +3831,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|sellock
-argument_list|)
-expr_stmt|;
-comment|/* XXX Is there a better place for this? */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_selq
 argument_list|)
 expr_stmt|;
 name|error
@@ -4721,6 +4720,14 @@ name|timo
 operator|=
 literal|0
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|td
+operator|->
+name|td_selq
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -4755,15 +4762,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|sellock
-argument_list|)
-expr_stmt|;
-comment|/* XXX Is there a better place for this? */
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|td
-operator|->
-name|td_selq
 argument_list|)
 expr_stmt|;
 name|error
