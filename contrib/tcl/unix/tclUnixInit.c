@@ -486,9 +486,17 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGPIPE */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
 name|fpsetround
 argument_list|(
 name|FP_RN
