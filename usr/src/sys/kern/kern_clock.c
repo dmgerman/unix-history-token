@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.9	%G%	*/
+comment|/*	kern_clock.c	4.10	%G%	*/
 end_comment
 
 begin_include
@@ -696,7 +696,7 @@ block|}
 comment|/* 	 * Drain silos. 	 */
 if|#
 directive|if
-name|NDH11
+name|NDH
 operator|>
 literal|0
 name|s
@@ -716,7 +716,7 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NDZ11
+name|NDZ
 operator|>
 literal|0
 name|s
