@@ -4704,6 +4704,11 @@ condition|(
 operator|!
 operator|*
 name|ptr
+operator|||
+operator|*
+name|ptr
+operator|==
+literal|'_'
 condition|)
 operator|*
 name|ptr
