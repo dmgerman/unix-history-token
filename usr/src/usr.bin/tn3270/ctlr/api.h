@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This file contains header information used by the PC API routines.  *  * @(#)api.h	3.1 (Berkeley) %G%  */
+comment|/*  * This file contains header information used by the PC API routines.  *  * @(#)api.h	3.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -931,6 +931,11 @@ operator|||
 name|defined
 argument_list|(
 name|ibm032
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|pyr
 argument_list|)
 name|ah
 operator|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)system.c	3.1 (Berkeley) %G%"
+literal|"@(#)system.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,10 +37,41 @@ end_include
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|pyr
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|fd_set
+value|fdset_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(pyr) */
+end_comment
+
+begin_if
+if|#
+directive|if
 operator|!
 name|defined
 argument_list|(
 name|sun
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|pyr
 argument_list|)
 end_if
 

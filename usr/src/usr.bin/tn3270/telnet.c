@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	6.5 (Berkeley) %G%"
+literal|"@(#)telnet.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,31 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|pyr
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|fd_set
+value|fdset_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(pyr) */
+end_comment
 
 begin_include
 include|#
