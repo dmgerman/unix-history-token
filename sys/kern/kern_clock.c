@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/timetc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -608,6 +614,9 @@ name|sched_lock
 argument_list|,
 name|MTX_QUIET
 argument_list|)
+expr_stmt|;
+name|tc_ticktock
+argument_list|()
 expr_stmt|;
 comment|/* 	 * If no separate statistics clock is available, run it from here. 	 * 	 * XXX: this only works for UP 	 */
 if|if
