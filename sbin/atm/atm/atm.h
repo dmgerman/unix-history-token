@@ -767,6 +767,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* atm_proatm.c */
+end_comment
+
+begin_function_decl
+name|void
+name|show_proatm_stats
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* atm_inet.c */
 end_comment
 
