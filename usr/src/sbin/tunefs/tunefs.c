@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.15 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,6 +72,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/ffs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1227,11 +1233,14 @@ name|lseek
 argument_list|(
 name|fi
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|blk
 operator|*
 name|dev_bsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
@@ -1311,11 +1320,14 @@ name|lseek
 argument_list|(
 name|fi
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|bno
 operator|*
 name|dev_bsize
 argument_list|,
-literal|0
+name|SEEK_SET
 argument_list|)
 operator|<
 literal|0
