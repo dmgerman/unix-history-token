@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trsp.c	6.5 (Berkeley) %G%"
+literal|"@(#)trsp.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1766,27 +1766,25 @@ name|pf
 parameter_list|(
 name|f
 parameter_list|)
-value|{ if (flags&SP_
-comment|/**/
-value|f) { printf("%s%s", cp, "f"); cp = ","; } }
+value|{ if (flags&f) { printf("%s%s", cp, "f"); cp = ","; } }
 name|pf
 argument_list|(
-name|SP
+name|SP_SP
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|SA
+name|SP_SA
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|OB
+name|SP_OB
 argument_list|)
 expr_stmt|;
 name|pf
 argument_list|(
-name|EM
+name|SP_EM
 argument_list|)
 expr_stmt|;
 name|printf
