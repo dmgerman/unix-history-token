@@ -743,7 +743,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* try standard mode (default) */
+comment|/* try standard mode (dangerous!) */
 end_comment
 
 begin_define
@@ -762,7 +762,7 @@ specifier|static
 name|int
 name|pppoe_mode
 init|=
-name|PPPOE_STANDARD
+name|PPPOE_KEEPSTANDARD
 decl_stmt|;
 end_decl_stmt
 
