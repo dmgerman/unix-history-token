@@ -4,7 +4,7 @@ comment|/* scsi: SCSI user library  */
 end_comment
 
 begin_comment
-comment|/* Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * This product includes software developed by HD Associates  * 4. Neither the name of the HD Associaates nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * $Id: scsi.c,v 1.3 1995/01/26 23:48:41 dufault Exp $  */
+comment|/* Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * This product includes software developed by HD Associates  * 4. Neither the name of the HD Associaates nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * $Id: scsi.c,v 1.4 1995/04/28 19:23:49 dufault Exp $  */
 end_comment
 
 begin_include
@@ -244,7 +244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Decode: Decode the data section of a scsireq.  This decodes  * trivial grammar:  *  * fields : field fields  *        ;  *  * field : field_specifier  *       | control  *       ;  *  * control : 's' seek_value  *       | 's' '+' seek_value  *       ;  *  * seek_value : DECIMAL_NUMBER  *       | 'v'				// For indirect seek, i.e., value from the arg list  *       ;  *  * field_specifier : type_specifier field_width  *       | '{' NAME '}' type_specifier field_width  *       ;  *   * field_width : DECIMAL_NUMBER  *       ;  *  * type_specifier : 'i'	// Integral types (i1, i2, i3, i4)  *       | 'b'				// Bits  *       | 'c'				// Character arrays  *       | 'z'				// Character arrays with zeroed trailing spaces  *       ;  *  * Notes:  * 1. Integral types are swapped into host order.  * 2. Bit fields are allocated MSB to LSB to match the SCSI spec documentation.  * 3. 's' permits "seeking" in the string.  "s+DECIMAL" seeks relative to  *    DECIMAL; "sDECIMAL" seeks absolute to decimal.  * 4. 's' permits an indirect reference.  "sv" or "s+v" will get the  *    next integer value from the arg array.  * 5. Field names can be anything between the braces  *  * BUGS:  * i and b types are promoted to ints.  *  */
+comment|/*  * Decode: Decode the data section of a scsireq.  This decodes  * trivial grammar:  *  * fields : field fields  *        ;  *  * field : field_specifier  *       | control  *       ;  *  * control : 's' seek_value  *       | 's' '+' seek_value  *       ;  *  * seek_value : DECIMAL_NUMBER  *       | 'v'				// For indirect seek, i.e., value from the arg list  *       ;  *  * field_specifier : type_specifier field_width  *       | '{' NAME '}' type_specifier field_width  *       ;  *   * field_width : DECIMAL_NUMBER  *       ;  *  * type_specifier : 'i'	// Integral types (i1, i2, i3, i4)  *       | 'b'				// Bits  *       | 't'				// Bits  *       | 'c'				// Character arrays  *       | 'z'				// Character arrays with zeroed trailing spaces  *       ;  *  * Notes:  * 1. Integral types are swapped into host order.  * 2. Bit fields are allocated MSB to LSB to match the SCSI spec documentation.  * 3. 's' permits "seeking" in the string.  "s+DECIMAL" seeks relative to  *    DECIMAL; "sDECIMAL" seeks absolute to decimal.  * 4. 's' permits an indirect reference.  "sv" or "s+v" will get the  *    next integer value from the arg array.  * 5. Field names can be anything between the braces  *  * BUGS:  * i and b types are promoted to ints.  *  */
 end_comment
 
 begin_function
@@ -360,7 +360,7 @@ parameter_list|(
 name|ARG
 parameter_list|)
 define|\
-value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, letter, \ 				(void *)((long)(ARG)), 1, field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
+value|do \ 	{ \ 		if (!suppress) \ 		{ \ 			if (arg_put) \ 				(*arg_put)(puthook, (letter == 't' ? 'b' : letter), \ 				(void *)((long)(ARG)), 1, field_name); \ 			else \ 				*(va_arg(ap, int *)) = (ARG); \ 			assigned++; \ 		} \ 		field_name[0] = 0; \ 		suppress = 0; \ 	} while (0)
 name|u_char
 name|bits
 init|=
@@ -524,6 +524,10 @@ literal|0
 expr_stmt|;
 block|}
 break|break;
+case|case
+literal|'t'
+case|:
+comment|/* Bit (field) */
 case|case
 literal|'b'
 case|:
@@ -807,7 +811,15 @@ call|)
 argument_list|(
 name|puthook
 argument_list|,
+operator|(
 name|letter
+operator|==
+literal|'t'
+condition|?
+literal|'b'
+else|:
+name|letter
+operator|)
 argument_list|,
 name|databuf
 argument_list|,
@@ -1304,6 +1316,10 @@ parameter_list|,
 name|int
 modifier|*
 name|error_p
+parameter_list|,
+name|int
+modifier|*
+name|suppress_p
 parameter_list|)
 block|{
 name|char
@@ -1345,6 +1361,11 @@ decl_stmt|;
 comment|/* 1 byte wide */
 name|int
 name|is_error
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|suppress
 init|=
 literal|0
 decl_stmt|;
@@ -1526,6 +1547,23 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|*
+name|p
+operator|==
+literal|'*'
+condition|)
+block|{
+name|p
+operator|++
+expr_stmt|;
+name|suppress
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|isxdigit
 argument_list|(
 operator|*
@@ -1581,6 +1619,108 @@ expr_stmt|;
 name|state
 operator|=
 name|START_FIELD
+expr_stmt|;
+block|}
+comment|/* Try to work without the "v".  */
+elseif|else
+if|if
+condition|(
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|==
+literal|'i'
+condition|)
+block|{
+name|something
+operator|=
+literal|2
+expr_stmt|;
+name|value
+operator|=
+operator|*
+name|value_p
+expr_stmt|;
+name|p
+operator|++
+expr_stmt|;
+operator|*
+name|fmt
+operator|=
+literal|'i'
+expr_stmt|;
+name|field_size
+operator|=
+literal|8
+expr_stmt|;
+name|field_width
+operator|=
+name|strtol
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+name|DONE
+expr_stmt|;
+block|}
+comment|/* XXX: B can't work: Sees the 'b' as a hex digit in "isxdigit".  *      try "t" for bit field.  */
+elseif|else
+if|if
+condition|(
+name|tolower
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|==
+literal|'t'
+condition|)
+block|{
+name|something
+operator|=
+literal|2
+expr_stmt|;
+name|value
+operator|=
+operator|*
+name|value_p
+expr_stmt|;
+name|p
+operator|++
+expr_stmt|;
+operator|*
+name|fmt
+operator|=
+literal|'b'
+expr_stmt|;
+name|field_size
+operator|=
+literal|1
+expr_stmt|;
+name|field_width
+operator|=
+name|strtol
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|p
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+name|state
+operator|=
+name|DONE
 expr_stmt|;
 block|}
 elseif|else
@@ -1658,7 +1798,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Invalid starting character\n"
+literal|"Invalid starting character: %c\n"
+argument_list|,
+operator|*
+name|p
 argument_list|)
 expr_stmt|;
 name|is_error
@@ -1884,6 +2027,11 @@ name|value_p
 operator|=
 name|value
 expr_stmt|;
+operator|*
+name|suppress_p
+operator|=
+name|suppress
+expr_stmt|;
 return|return
 name|something
 return|;
@@ -1949,6 +2097,8 @@ decl_stmt|,
 name|value
 decl_stmt|,
 name|error
+decl_stmt|,
+name|suppress
 decl_stmt|;
 name|char
 name|c
@@ -2004,6 +2154,9 @@ argument_list|)
 argument_list|,
 operator|&
 name|error
+argument_list|,
+operator|&
+name|suppress
 argument_list|)
 operator|)
 condition|)
@@ -2017,6 +2170,16 @@ name|ret
 operator|==
 literal|2
 condition|)
+block|{
+if|if
+condition|(
+name|suppress
+condition|)
+name|value
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|value
 operator|=
 name|arg_get
@@ -2038,10 +2201,11 @@ argument_list|,
 name|int
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 literal|0
-block|printf("do_encode: ret %d fmt %c width %d value %d name \"%s\" error %d\n", 		ret, c, width, value, field_name, error);
+block|printf( "do_encode: ret %d fmt %c width %d value %d name \"%s\" error %d suppress %d\n", 		ret, c, width, value, field_name, error, suppress);
 endif|#
 directive|endif
 if|if
@@ -2749,6 +2913,70 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|scsireq_buff_encode_visit
+parameter_list|(
+name|u_char
+modifier|*
+name|buff
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+name|int
+function_decl|(
+modifier|*
+name|arg_get
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|hook
+parameter_list|,
+name|char
+modifier|*
+name|field_name
+parameter_list|)
+parameter_list|,
+name|void
+modifier|*
+name|gethook
+parameter_list|)
+block|{
+name|va_list
+name|ap
+init|=
+operator|(
+name|va_list
+operator|)
+literal|0
+decl_stmt|;
+return|return
+name|do_encode
+argument_list|(
+name|buff
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|,
+name|arg_get
+argument_list|,
+name|gethook
 argument_list|,
 name|fmt
 argument_list|,
@@ -3664,12 +3892,10 @@ name|value
 decl_stmt|,
 name|bit
 decl_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"Illegal parameter in the %s.\n"
-argument_list|,
+name|int
+name|bad_par
+init|=
+operator|(
 operator|(
 name|s
 index|[
@@ -3678,10 +3904,23 @@ index|]
 operator|&
 literal|0x40
 operator|)
+operator|==
+literal|0
+operator|)
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"Illegal value in the %s.\n"
+argument_list|,
+operator|(
+name|bad_par
 condition|?
 literal|"parameter list"
 else|:
 literal|"command descriptor block"
+operator|)
 argument_list|)
 expr_stmt|;
 name|byte
@@ -3704,6 +3943,18 @@ operator|)
 expr_stmt|;
 name|value
 operator|=
+name|bad_par
+condition|?
+operator|(
+name|u_char
+operator|)
+name|scsireq
+operator|->
+name|databuf
+index|[
+name|byte
+index|]
+else|:
 operator|(
 name|u_char
 operator|)
@@ -3888,6 +4139,7 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
+block|}
 name|scsi_dump
 argument_list|(
 name|f
@@ -3907,7 +4159,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
