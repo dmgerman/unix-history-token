@@ -32,7 +32,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)worms.c	5.2 (Berkeley) %G%"
+literal|"@(#)worms.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_define
+define|#
+directive|define
+name|BSD
+end_define
 
 begin_comment
 comment|/*  	 @@@        @@@    @@@@@@@@@@     @@@@@@@@@@@    @@@@@@@@@@@@ 	 @@@        @@@   @@@@@@@@@@@@    @@@@@@@@@@@@   @@@@@@@@@@@@@ 	 @@@        @@@  @@@@      @@@@   @@@@           @@@@ @@@  @@@@ 	 @@@   @@   @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@  @@@@  @@@  @@@        @@@   @@@            @@@  @@@   @@@ 	 @@@@ @@@@ @@@@  @@@        @@@   @@@            @@@  @@@   @@@ 	  @@@@@@@@@@@@   @@@@      @@@@   @@@            @@@  @@@   @@@ 	   @@@@  @@@@     @@@@@@@@@@@@    @@@            @@@  @@@   @@@ 	    @@    @@       @@@@@@@@@@     @@@            @@@  @@@   @@@  				 Eric P. Scott 			  Caltech High Energy Physics 				 October, 1980  */
@@ -52,10 +58,38 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<termio.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sgtty.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_define
@@ -67,25 +101,8 @@ name|col
 parameter_list|,
 name|row
 parameter_list|)
-value|tputs(tgoto(CM,col,row),1,outc)
+value|tputs(tgoto(CM,col,row),1,fputchar)
 end_define
-
-begin_macro
-name|outc
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|putchar
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
-block|}
-end_block
 
 begin_decl_stmt
 specifier|extern
@@ -1187,6 +1204,13 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|char
+modifier|*
+name|TE
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -1235,6 +1259,13 @@ name|tgoto
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|quit
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|float
@@ -1361,12 +1392,35 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|termio
+name|sg
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|struct
 name|sgttyb
 name|sg
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|setbuf
@@ -1855,6 +1909,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TE
+operator|=
+name|tgetstr
+argument_list|(
+literal|"te"
+argument_list|,
+operator|&
+name|tcp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|UP
 operator|=
 name|tgetstr
@@ -1866,6 +1933,44 @@ name|tcp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USG
+end_ifdef
+
+begin_expr_stmt
+name|ioctl
+argument_list|(
+name|fileno
+argument_list|(
+name|stdout
+argument_list|)
+argument_list|,
+name|TCGETA
+argument_list|,
+operator|&
+name|sg
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|ospeed
+operator|=
+name|sg
+operator|.
+name|c_cflag
+operator|&
+name|CBAUD
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_expr_stmt
 name|gtty
@@ -1889,6 +1994,11 @@ operator|.
 name|sg_ospeed
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|Wrap
@@ -2160,6 +2270,34 @@ block|}
 end_for
 
 begin_expr_stmt
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|quit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|tputs
+argument_list|(
+name|tgetstr
+argument_list|(
+literal|"ti"
+argument_list|,
+operator|&
+name|tcp
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|fputchar
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|tputs
 argument_list|(
 name|tgetstr
@@ -2322,11 +2460,13 @@ if|if
 condition|(
 name|BC
 condition|)
-name|fputs
+name|tputs
 argument_list|(
 name|BC
 argument_list|,
-name|stdout
+literal|1
+argument_list|,
+name|fputchar
 argument_list|)
 expr_stmt|;
 else|else
@@ -2339,11 +2479,13 @@ argument_list|,
 name|bottom
 argument_list|)
 expr_stmt|;
-name|fputs
+name|tputs
 argument_list|(
 name|IM
 argument_list|,
-name|stdout
+literal|1
+argument_list|,
+name|fputchar
 argument_list|)
 expr_stmt|;
 if|if
@@ -2377,11 +2519,13 @@ argument_list|,
 name|fputchar
 argument_list|)
 expr_stmt|;
-name|fputs
+name|tputs
 argument_list|(
 name|EI
 argument_list|,
-name|stdout
+literal|1
+argument_list|,
+name|fputchar
 argument_list|)
 expr_stmt|;
 block|}
@@ -2397,11 +2541,13 @@ if|if
 condition|(
 name|HO
 condition|)
-name|fputs
+name|tputs
 argument_list|(
 name|HO
 argument_list|,
-name|stdout
+literal|1
+argument_list|,
+name|fputchar
 argument_list|)
 expr_stmt|;
 else|else
@@ -2940,10 +3086,35 @@ block|}
 end_for
 
 begin_expr_stmt
-unit|} fputchar
+unit|} quit
 operator|(
-name|c
 operator|)
+block|{
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|SIG_IGN
+argument_list|)
+block|;
+name|tputs
+argument_list|(
+name|TE
+argument_list|,
+literal|1
+argument_list|,
+name|fputchar
+argument_list|)
+block|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+block|; }
+name|fputchar
+argument_list|(
+argument|c
+argument_list|)
 name|char
 name|c
 expr_stmt|;
@@ -2964,6 +3135,9 @@ name|float
 name|ranf
 parameter_list|()
 block|{
+ifdef|#
+directive|ifdef
+name|BSD
 return|return
 operator|(
 operator|(
@@ -2975,6 +3149,21 @@ operator|/
 literal|2147483647.
 operator|)
 return|;
+else|#
+directive|else
+return|return
+operator|(
+operator|(
+name|float
+operator|)
+name|rand
+argument_list|()
+operator|/
+literal|32767.
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
