@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sqrt.c	4.4 (Berkeley) %G%"
+literal|"@(#)sqrt.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,7 +35,7 @@ file|"e.h"
 end_include
 
 begin_macro
-name|sqrt
+name|eqsqrt
 argument_list|(
 argument|p2
 argument_list|)
