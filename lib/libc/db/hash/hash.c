@@ -2255,6 +2255,11 @@ operator|->
 name|fp
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|hashp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|save_errno
