@@ -7654,7 +7654,11 @@ operator|+
 sizeof|sizeof
 name|sibuf
 operator|-
+operator|(
 name|sbp
+operator|+
+name|scc
+operator|)
 expr_stmt|;
 if|#
 directive|if
@@ -7697,7 +7701,9 @@ name|recv
 argument_list|(
 name|net
 argument_list|,
-name|sibuf
+name|sbp
+operator|+
+name|scc
 argument_list|,
 name|canread
 argument_list|,
@@ -7726,7 +7732,9 @@ name|read
 argument_list|(
 name|net
 argument_list|,
-name|sibuf
+name|sbp
+operator|+
+name|scc
 argument_list|,
 name|canread
 argument_list|)
@@ -7760,7 +7768,9 @@ name|read
 argument_list|(
 name|net
 argument_list|,
-name|sibuf
+name|sbp
+operator|+
+name|scc
 argument_list|,
 name|canread
 argument_list|)
@@ -7775,7 +7785,9 @@ name|read
 argument_list|(
 name|net
 argument_list|,
-name|sibuf
+name|sbp
+operator|+
+name|scc
 argument_list|,
 name|canread
 argument_list|)
@@ -7796,6 +7808,8 @@ argument_list|(
 name|net
 argument_list|,
 name|sbp
+operator|+
+name|scc
 argument_list|,
 name|canread
 argument_list|)
@@ -7842,6 +7856,8 @@ argument_list|(
 literal|'<'
 argument_list|,
 name|sbp
+operator|+
+name|scc
 argument_list|,
 name|c
 argument_list|)
