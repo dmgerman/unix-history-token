@@ -892,6 +892,11 @@ operator|!
 name|quit
 condition|)
 block|{
+if|if
+condition|(
+name|StartDir
+condition|)
+block|{
 name|use_helpline
 argument_list|(
 literal|"Select directory where the pkg's reside"
@@ -901,10 +906,34 @@ if|if
 condition|(
 name|dialog_dselect
 argument_list|(
-name|StartDir
-condition|?
-name|StartDir
-else|:
+literal|"."
+argument_list|,
+literal|"*.tgz"
+argument_list|)
+condition|)
+block|{
+name|quit
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|install_pkgs_indir
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|use_helpline
+argument_list|(
+literal|"Select directory where the pkg's reside"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dialog_dselect
+argument_list|(
 literal|"."
 argument_list|,
 literal|"*.tgz"
@@ -923,15 +952,10 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+block|}
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/* install_batch() */
-end_comment
-
-begin_function
 name|void
 name|install_pkgs_indir
 parameter_list|(
@@ -2911,13 +2935,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_function
-
-begin_comment
 comment|/* install_batch() */
-end_comment
-
-begin_function
 name|void
 name|run_menu
 parameter_list|(
