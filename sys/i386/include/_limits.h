@@ -160,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|SHRT_MIN
-value|(-0x7ffff - 1)
+value|(-0x7fff - 1)
 end_define
 
 begin_comment
