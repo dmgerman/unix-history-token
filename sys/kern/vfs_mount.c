@@ -6754,7 +6754,7 @@ operator|&
 name|mountlist_mtx
 argument_list|)
 expr_stmt|;
-comment|/* sanity check system clock against root filesystem timestamp */
+comment|/* sanity check system clock against root fs timestamp */
 name|inittodr
 argument_list|(
 name|mp
@@ -6765,6 +6765,17 @@ expr_stmt|;
 name|vfs_unbusy
 argument_list|(
 name|mp
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|VFS_START
+argument_list|(
+name|mp
+argument_list|,
+literal|0
 argument_list|,
 name|curthread
 argument_list|)
