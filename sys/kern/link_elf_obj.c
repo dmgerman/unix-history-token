@@ -736,9 +736,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__ELF__
-ifndef|#
-directive|ifndef
-name|__ia64__
 name|dp
 operator|=
 operator|(
@@ -748,14 +745,6 @@ operator|)
 operator|&
 name|_DYNAMIC
 expr_stmt|;
-else|#
-directive|else
-name|dp
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|modname
 operator|=
 name|NULL
