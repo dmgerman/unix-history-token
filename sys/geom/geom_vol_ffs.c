@@ -471,7 +471,7 @@ block|}
 name|g_topology_lock
 argument_list|()
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

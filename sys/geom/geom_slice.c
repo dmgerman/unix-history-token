@@ -543,7 +543,7 @@ operator|--
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -2546,7 +2546,7 @@ literal|0
 condition|)
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

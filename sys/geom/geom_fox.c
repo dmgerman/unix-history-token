@@ -246,7 +246,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|sc
 operator|->
@@ -288,7 +288,7 @@ expr_stmt|;
 comment|/* 		 * The attempt to reopen it with a exclusive count 		 */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|sc
 operator|->
@@ -480,7 +480,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -743,7 +743,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1354,7 +1354,7 @@ argument_list|)
 block|{
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -1406,7 +1406,7 @@ name|cp1
 operator|->
 name|ace
 condition|)
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -1456,7 +1456,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|sc
 operator|->
@@ -1524,7 +1524,7 @@ argument|&gp->consumer
 argument_list|,
 argument|consumer
 argument_list|)
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -1724,7 +1724,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1934,7 +1934,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp2
 argument_list|,
@@ -2116,7 +2116,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

@@ -885,7 +885,7 @@ expr_stmt|;
 comment|/* XXX: Does this reference register with our selfdestruct code ? */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -918,7 +918,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -966,7 +966,7 @@ return|return;
 comment|/* XXX: Does this reference register with our selfdestruct code ? */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1044,7 +1044,7 @@ name|SUN_SIZE
 argument_list|)
 expr_stmt|;
 block|}
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1297,7 +1297,7 @@ condition|(
 literal|0
 condition|)
 do|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

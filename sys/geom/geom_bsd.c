@@ -2336,7 +2336,7 @@ do|;
 comment|/* Success or failure, we can close our provider now. */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -2679,7 +2679,7 @@ expr_stmt|;
 comment|/* XXX: Does this reference register with our selfdestruct code ? */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -2718,7 +2718,7 @@ name|h0h0
 operator|.
 name|error
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -2766,7 +2766,7 @@ return|return;
 comment|/* XXX: Does this reference register with our selfdestruct code ? */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -2800,7 +2800,7 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

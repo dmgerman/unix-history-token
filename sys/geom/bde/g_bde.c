@@ -376,7 +376,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -526,7 +526,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -957,7 +957,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1160,7 +1160,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

@@ -1238,7 +1238,7 @@ operator|--
 expr_stmt|;
 return|return
 operator|(
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1368,7 +1368,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1792,7 +1792,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

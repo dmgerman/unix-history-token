@@ -2782,67 +2782,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * g_access_abs()  *  * Access-check with absolute new values:  Just fall through  * and use the relative version.  */
+comment|/*  * g_access()  *  * Access-check with delta values.  The question asked is "can provider  * "cp" change the access counters by the relative amounts dc[rwe] ?"  */
 end_comment
 
 begin_function
 name|int
-name|g_access_abs
-parameter_list|(
-name|struct
-name|g_consumer
-modifier|*
-name|cp
-parameter_list|,
-name|int
-name|acr
-parameter_list|,
-name|int
-name|acw
-parameter_list|,
-name|int
-name|ace
-parameter_list|)
-block|{
-name|g_topology_assert
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-name|g_access_rel
-argument_list|(
-name|cp
-argument_list|,
-name|acr
-operator|-
-name|cp
-operator|->
-name|acr
-argument_list|,
-name|acw
-operator|-
-name|cp
-operator|->
-name|acw
-argument_list|,
-name|ace
-operator|-
-name|cp
-operator|->
-name|ace
-argument_list|)
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * g_access_rel()  *  * Access-check with delta values.  The question asked is "can provider  * "cp" change the access counters by the relative amounts dc[rwe] ?"  */
-end_comment
-
-begin_function
-name|int
-name|g_access_rel
+name|g_access
 parameter_list|(
 name|struct
 name|g_consumer
@@ -2884,7 +2829,7 @@ name|g_trace
 argument_list|(
 name|G_T_ACCESS
 argument_list|,
-literal|"g_access_rel(%p(%s), %d, %d, %d)"
+literal|"g_access(%p(%s), %d, %d, %d)"
 argument_list|,
 name|cp
 argument_list|,

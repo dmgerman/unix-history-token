@@ -8069,7 +8069,7 @@ name|cp
 operator|=
 name|arg
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -8324,7 +8324,7 @@ expr_stmt|;
 comment|/* 	 * XXX: Everytime you think you can improve the margin for 	 * footshooting, somebody depends on the ability to do so: 	 * savecore(8) wants to write to our swapdev so we cannot 	 * set an exclusive count :-( 	 */
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

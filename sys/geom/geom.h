@@ -895,7 +895,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|g_access_abs
+name|g_access
 parameter_list|(
 name|struct
 name|g_consumer
@@ -914,26 +914,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|g_access_rel
 parameter_list|(
-name|struct
-name|g_consumer
-modifier|*
-name|cp
+name|a
 parameter_list|,
-name|int
-name|nread
+name|b
 parameter_list|,
-name|int
-name|nwrite
+name|c
 parameter_list|,
-name|int
-name|nexcl
+name|d
 parameter_list|)
-function_decl|;
-end_function_decl
+value|g_access(a, b, c, d)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int

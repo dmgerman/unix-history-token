@@ -874,7 +874,7 @@ comment|/* We were orphaned */
 else|else
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1062,7 +1062,7 @@ comment|/* We were orphaned */
 else|else
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1994,7 +1994,7 @@ name|ace
 operator|>
 literal|0
 condition|)
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

@@ -211,7 +211,7 @@ name|cp
 operator|->
 name|geom
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -551,7 +551,7 @@ argument_list|)
 block|{
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -583,7 +583,7 @@ operator|==
 name|cp1
 condition|)
 break|break;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp2
 argument_list|,
@@ -739,7 +739,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,
@@ -1006,7 +1006,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp
 argument_list|,

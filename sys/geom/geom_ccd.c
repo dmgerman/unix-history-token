@@ -401,7 +401,7 @@ argument_list|)
 block|{
 name|error
 operator|=
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp1
 argument_list|,
@@ -433,7 +433,7 @@ operator|==
 name|cp2
 condition|)
 break|break;
-name|g_access_rel
+name|g_access
 argument_list|(
 name|cp2
 argument_list|,
