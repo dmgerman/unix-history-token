@@ -105,18 +105,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/laptops.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -177,6 +165,18 @@ begin_include
 include|#
 directive|include
 file|<pccard/slot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/laptops.h>
 end_include
 
 begin_decl_stmt
@@ -1324,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* Power off the slot */
+comment|/* Power off the slot 1/2 second after remove of the card */
 name|timeout
 argument_list|(
 name|power_off_slot
@@ -1336,7 +1336,7 @@ name|sp
 argument_list|,
 name|hz
 operator|/
-literal|4
+literal|2
 argument_list|)
 expr_stmt|;
 name|sp
@@ -3050,7 +3050,6 @@ if|if
 condition|(
 name|beepok
 condition|)
-block|{
 name|sysbeep
 argument_list|(
 name|PCCARD_BEEP_PITCH0
@@ -3062,7 +3061,6 @@ name|beepok
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|timeout
 argument_list|(
 name|enable_beep
@@ -3116,7 +3114,6 @@ if|if
 condition|(
 name|beepok
 condition|)
-block|{
 name|sysbeep
 argument_list|(
 name|PCCARD_BEEP_PITCH0
@@ -3128,7 +3125,6 @@ name|beepok
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|timeout
 argument_list|(
 name|enable_beep
@@ -3244,7 +3240,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* 	 *	Device driver interface. 	 */
+comment|/*  *	Device driver interface.  */
 end_comment
 
 begin_function
