@@ -15,10 +15,16 @@ directive|define
 name|_MACHINE_LIMITS_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_if
 if|#
 directive|if
-name|__GNUC__
+name|__CC_SUPPORTS_WARNING
 end_if
 
 begin_warning
