@@ -622,7 +622,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cannot allocate ports 0x%x-0x%x\n"
+literal|"Cannot allocate ports 0x%lx-0x%lx\n"
 argument_list|,
 name|start
 argument_list|,
