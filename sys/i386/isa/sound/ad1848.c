@@ -48,6 +48,16 @@ directive|include
 file|<i386/isa/sound/iwdefs.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CONFIG_CS4232
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -55,6 +65,11 @@ name|isa_driver
 name|mssdriver
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|extern
@@ -138,12 +153,16 @@ name|MD_4231A
 value|3
 define|#
 directive|define
-name|MD_1845
+name|MD_4236
 value|4
 define|#
 directive|define
-name|MD_MAXMODE
+name|MD_1845
 value|5
+define|#
+directive|define
+name|MD_MAXMODE
+value|6
 comment|/* Mixer parameters */
 name|int
 name|recmask
@@ -336,7 +355,16 @@ operator||
 name|AFMT_MU_LAW
 operator||
 name|AFMT_A_LAW
-block|}
+block|,
+comment|/* 5 - CS4236 */
+name|AFMT_U8
+operator||
+name|AFMT_S16_LE
+operator||
+name|AFMT_MU_LAW
+operator||
+name|AFMT_A_LAW
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -578,15 +606,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|adintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * AD_WAIT_INIT waits if we are initializing the board and we cannot modify  * its settings  */
 end_comment
@@ -662,6 +681,26 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_CS4232
+argument_list|)
+name|dev
+operator|=
+name|find_isadev
+argument_list|(
+name|isa_devtab_null
+argument_list|,
+operator|&
+name|cssdriver
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|dev
 operator|=
 name|find_isadev
@@ -674,6 +713,8 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2396,7 +2437,7 @@ name|mixer_operations
 name|ad1848_mixer_operations
 init|=
 block|{
-literal|"AD1848/CS4248/CS4231"
+literal|"AD1848/CS4248/CS4231/CS4236"
 block|,
 name|ad1848_mixer_ioctl
 block|}
@@ -5932,6 +5973,23 @@ case|case
 literal|0x83
 case|:
 comment|/* CS4236 */
+case|case
+literal|0x03
+case|:
+comment|/* Mutant CS4236 on Intel PR440fx board */
+name|devc
+operator|->
+name|chip_name
+operator|=
+literal|"CS4236"
+expr_stmt|;
+name|devc
+operator|->
+name|mode
+operator|=
+name|MD_4236
+expr_stmt|;
+break|break;
 default|default:
 comment|/* Assume CS4231 */
 name|printf

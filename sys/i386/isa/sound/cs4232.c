@@ -319,24 +319,6 @@ literal|0x00
 argument_list|)
 expr_stmt|;
 comment|/* Inactivate logical dev 0 */
-if|if
-condition|(
-name|ad1848_detect
-argument_list|(
-name|hw_config
-operator|->
-name|io_base
-argument_list|,
-name|NULL
-argument_list|,
-name|hw_config
-operator|->
-name|osp
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 comment|/*      * Then set some config bytes. First logical device 0      */
 name|CS_OUT2
 argument_list|(
