@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -65,15 +65,15 @@ modifier|*
 name|n_vnode
 decl_stmt|;
 comment|/* vnode associated with this node */
-name|time_t
-name|n_attrstamp
-decl_stmt|;
-comment|/* Time stamp for cached attributes */
 name|struct
 name|vattr
 name|n_vattr
 decl_stmt|;
 comment|/* Vnode attribute cache */
+name|time_t
+name|n_attrstamp
+decl_stmt|;
+comment|/* Time stamp for cached attributes */
 name|struct
 name|sillyrename
 modifier|*
