@@ -3309,7 +3309,7 @@ name|lkm
 decl_stmt|;
 if|if
 condition|(
-name|if_version
+name|if_revision
 operator|!=
 literal|0
 condition|)
