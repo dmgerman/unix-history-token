@@ -7074,6 +7074,10 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_vol_dev
 argument_list|(
 name|vol
@@ -7792,6 +7796,10 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_vol_dev
 argument_list|(
 name|vol
@@ -8510,6 +8518,10 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_vol_dev
 argument_list|(
 name|vol
@@ -9228,6 +9240,10 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_vol_dev
 argument_list|(
 name|vol
@@ -10110,6 +10126,10 @@ name|type
 argument_list|)
 expr_stmt|;
 comment|/* find the index of the volume */
+if|if
+condition|(
+name|no_devfs
+condition|)
 name|make_vol_dev
 argument_list|(
 name|vol
