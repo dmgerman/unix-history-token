@@ -368,9 +368,6 @@ name|pccard_detach_card
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1468,9 +1465,6 @@ name|pccard_detach_card
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|struct
@@ -4065,8 +4059,6 @@ block|{
 name|pccard_detach_card
 argument_list|(
 name|dev
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -4087,8 +4079,6 @@ block|{
 name|pccard_detach_card
 argument_list|(
 name|self
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return

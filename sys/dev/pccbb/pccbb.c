@@ -4247,6 +4247,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Adding cardbus\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|cbdev
@@ -4293,6 +4298,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"Adding pccard\n"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|pccarddev
@@ -4909,9 +4919,7 @@ name|CARD_DETACH_CARD
 argument_list|(
 name|sc
 operator|->
-name|pccarddev
-argument_list|,
-name|DETACH_FORCE
+name|cbdev
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -4939,8 +4947,6 @@ argument_list|(
 name|sc
 operator|->
 name|cbdev
-argument_list|,
-name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 name|cbb_destroy_res
@@ -9591,6 +9597,14 @@ operator|->
 name|intrhand
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CBB_CARD_OK
+expr_stmt|;
+comment|/* Card is bogus now */
 name|error
 operator|=
 name|bus_generic_suspend
@@ -9780,14 +9794,29 @@ argument_list|,
 name|CBB_SOCKET_MASK_CD
 argument_list|)
 expr_stmt|;
-comment|/* Force us to go query the socket state */
-name|cbb_setb
+comment|/* Signal the thread to wakeup. */
+name|mtx_lock
 argument_list|(
+operator|&
 name|sc
-argument_list|,
-name|CBB_SOCKET_FORCE
-argument_list|,
-name|CBB_SOCKET_EVENT_CD
+operator|->
+name|mtx
+argument_list|)
+expr_stmt|;
+name|cv_signal
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cv
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|mtx
 argument_list|)
 expr_stmt|;
 name|error

@@ -410,9 +410,6 @@ name|cardbus_detach_card
 parameter_list|(
 name|device_t
 name|cbdev
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1076,8 +1073,6 @@ block|{
 name|cardbus_detach_card
 argument_list|(
 name|cbdev
-argument_list|,
-name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1098,8 +1093,6 @@ block|{
 name|cardbus_detach_card
 argument_list|(
 name|self
-argument_list|,
-name|DETACH_FORCE
 argument_list|)
 expr_stmt|;
 return|return
@@ -1350,13 +1343,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|DETACH_NOWARN
-value|0x800
-end_define
-
 begin_function
 specifier|static
 name|int
@@ -1396,8 +1382,6 @@ decl_stmt|;
 name|cardbus_detach_card
 argument_list|(
 name|cbdev
-argument_list|,
-name|DETACH_NOWARN
 argument_list|)
 expr_stmt|;
 comment|/* detach existing cards */
@@ -1647,8 +1631,6 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-comment|/* when fail, release all resources */
 name|cardbus_release_all_resources
 argument_list|(
 name|cbdev
@@ -1656,7 +1638,6 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|cardattached
 operator|++
@@ -1670,7 +1651,9 @@ operator|>
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|POWER_DISABLE_SOCKET
 argument_list|(
@@ -1680,7 +1663,9 @@ name|cbdev
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 end_function
@@ -1692,9 +1677,6 @@ name|cardbus_detach_card
 parameter_list|(
 name|device_t
 name|cbdev
-parameter_list|,
-name|int
-name|flags
 parameter_list|)
 block|{
 name|int
@@ -1730,36 +1712,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|DETACH_NOWARN
-operator|)
-condition|)
-block|{
-name|DEVPRINTF
-argument_list|(
-operator|(
-name|cbdev
-operator|,
-literal|"detach_card: no card to detach!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|POWER_DISABLE_SOCKET
-argument_list|(
-name|device_get_parent
-argument_list|(
-name|cbdev
-argument_list|)
-argument_list|,
-name|cbdev
-argument_list|)
-expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|devlist
@@ -1768,7 +1720,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 for|for
@@ -1820,8 +1774,6 @@ operator|==
 name|DS_BUSY
 condition|)
 block|{
-if|if
-condition|(
 name|device_detach
 argument_list|(
 name|dinfo
@@ -1832,14 +1784,7 @@ name|cfg
 operator|.
 name|dev
 argument_list|)
-operator|==
-literal|0
-operator|||
-name|flags
-operator|&
-name|DETACH_FORCE
-condition|)
-block|{
+expr_stmt|;
 name|cardbus_release_all_resources
 argument_list|(
 name|cbdev
@@ -1857,13 +1802,6 @@ name|tmp
 index|]
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|err
-operator|++
-expr_stmt|;
-block|}
 name|cardbus_freecfg
 argument_list|(
 name|dinfo
@@ -1896,12 +1834,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
 name|POWER_DISABLE_SOCKET
 argument_list|(
 name|device_get_parent
@@ -1920,7 +1852,9 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|err
+operator|)
 return|;
 block|}
 end_function
@@ -1938,7 +1872,6 @@ modifier|*
 name|driver
 parameter_list|)
 block|{
-comment|/* XXX check if 16-bit or cardbus! */
 name|int
 name|numdevs
 decl_stmt|;
@@ -1948,6 +1881,11 @@ name|devlist
 decl_stmt|;
 name|int
 name|tmp
+decl_stmt|;
+name|struct
+name|cardbus_devinfo
+modifier|*
+name|dinfo
 decl_stmt|;
 name|device_get_children
 argument_list|(
@@ -1963,6 +1901,16 @@ expr_stmt|;
 name|DEVICE_IDENTIFY
 argument_list|(
 name|driver
+argument_list|,
+name|cbdev
+argument_list|)
+expr_stmt|;
+name|POWER_ENABLE_SOCKET
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|cbdev
+argument_list|)
 argument_list|,
 name|cbdev
 argument_list|)
@@ -1994,11 +1942,6 @@ operator|==
 name|DS_NOTPRESENT
 condition|)
 block|{
-name|struct
-name|cardbus_devinfo
-modifier|*
-name|dinfo
-decl_stmt|;
 name|dinfo
 operator|=
 name|device_get_ivars
@@ -2009,10 +1952,31 @@ name|tmp
 index|]
 argument_list|)
 expr_stmt|;
-name|cardbus_release_all_resources
+ifdef|#
+directive|ifdef
+name|notyet
+name|cardbus_device_setup_regs
 argument_list|(
-name|cbdev
+name|brdev
 argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+operator|&
+name|dinfo
+operator|->
+name|pci
+operator|.
+name|cfg
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|cardbus_print_verbose
+argument_list|(
 name|dinfo
 argument_list|)
 expr_stmt|;
@@ -2477,8 +2441,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|!=
-operator|-
-literal|1
+literal|0xffffffff
 condition|)
 block|{
 name|devlist_entry
@@ -2956,16 +2919,14 @@ modifier|*
 name|dinfo
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|CARDBUS_DEBUG
 if|if
 condition|(
 name|bootverbose
+operator|||
+name|cardbus_debug
+operator|>
+literal|0
 condition|)
-endif|#
-directive|endif
-comment|/* CARDBUS_DEBUG */
 block|{
 name|pcicfgregs
 modifier|*
@@ -3020,9 +2981,6 @@ operator|->
 name|mfdev
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CARDBUS_DEBUG
 name|printf
 argument_list|(
 literal|"\tcmdreg=0x%04x, statreg=0x%04x, "
@@ -3077,9 +3035,6 @@ operator|*
 literal|250
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CARDBUS_DEBUG */
 if|if
 condition|(
 name|cfg
