@@ -45,11 +45,33 @@ directive|include
 file|<sys/disklabel.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>
+literal|500001
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/bio.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ FreeBSD__ */
+end_comment
 
 begin_include
 include|#

@@ -1066,6 +1066,16 @@ block|,
 name|CLS_STORAGE
 block|}
 block|,
+block|{
+literal|"ct"
+block|,
+literal|"WD33C93 SCSI Interface"
+block|,
+literal|0
+block|,
+name|CLS_STORAGE
+block|}
+block|,
 endif|#
 directive|endif
 block|{
