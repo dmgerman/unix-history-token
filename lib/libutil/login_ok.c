@@ -321,6 +321,12 @@ operator|*
 name|ltptr
 argument_list|,
 name|j
+operator|*
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|login_time
+argument_list|)
 argument_list|)
 operator|)
 operator|!=
@@ -700,7 +706,7 @@ name|login_getcaplist
 argument_list|(
 name|lc
 argument_list|,
-literal|"host.deny"
+name|denycap
 argument_list|,
 name|NULL
 argument_list|)
