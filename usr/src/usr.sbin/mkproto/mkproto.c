@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.8 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -2121,14 +2127,21 @@ name|dinode
 argument_list|)
 index|]
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
+operator|(
+name|void
+operator|)
+name|gettimeofday
+argument_list|(
+operator|&
 name|ip
 operator|->
 name|di_atime
-operator|=
+operator|.
+name|tv_sec
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|di_mtime
@@ -2137,14 +2150,9 @@ name|ip
 operator|->
 name|di_ctime
 operator|=
-name|time
-argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-name|NULL
-argument_list|)
+name|ip
+operator|->
+name|di_atime
 expr_stmt|;
 switch|switch
 condition|(
