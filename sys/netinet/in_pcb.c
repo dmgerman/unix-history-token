@@ -2995,6 +2995,20 @@ literal|0
 condition|)
 block|{
 comment|/* Find out route to destination */
+name|bzero
+argument_list|(
+operator|&
+name|sro
+operator|.
+name|ro_dst
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|sro
 operator|.
 name|ro_dst
