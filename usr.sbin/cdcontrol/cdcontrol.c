@@ -6017,9 +6017,12 @@ name|next
 operator|-
 name|block
 expr_stmt|;
+comment|/* Take into account a start offset time. */
 name|lba2msf
 argument_list|(
 name|len
+operator|-
+literal|150
 argument_list|,
 operator|&
 name|m
