@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_quota.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3552,8 +3552,7 @@ name|dqhash
 operator|<<=
 literal|1
 control|)
-comment|/* void */
-empty_stmt|;
+continue|continue;
 name|dqhash
 operator|=
 operator|(

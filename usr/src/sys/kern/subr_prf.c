@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.37 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1988, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prf.c	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1630,7 +1630,7 @@ condition|;
 operator|++
 name|p
 control|)
-empty_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
