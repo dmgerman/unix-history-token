@@ -787,6 +787,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCIBIOS_BIOS_PRESENT
+value|0xb101
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIBIOS_READ_CONFIG_BYTE
 value|0xb108
 end_define
