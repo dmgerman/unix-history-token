@@ -1173,9 +1173,6 @@ directive|endif
 comment|/* INET */
 ifdef|#
 directive|ifdef
-name|NOT_YET
-ifdef|#
-directive|ifdef
 name|INET6
 case|case
 name|AF_INET6
@@ -1219,9 +1216,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* INET6 */
-endif|#
-directive|endif
-comment|/* NOT_YET */
 ifdef|#
 directive|ifdef
 name|IPX
@@ -2437,9 +2431,6 @@ directive|endif
 comment|/* IPX_SNAP */
 ifdef|#
 directive|ifdef
-name|NOT_YET
-ifdef|#
-directive|ifdef
 name|INET6
 case|case
 name|ETHERTYPE_IPV6
@@ -2464,9 +2455,6 @@ break|break;
 endif|#
 directive|endif
 comment|/* INET6 */
-endif|#
-directive|endif
-comment|/* NOT_YET */
 default|default:
 name|printf
 argument_list|(

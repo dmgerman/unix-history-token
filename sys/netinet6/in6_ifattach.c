@@ -1174,6 +1174,9 @@ case|case
 name|IFT_FDDI
 case|:
 case|case
+name|IFT_ISO88025
+case|:
+case|case
 name|IFT_ATM
 case|:
 case|case

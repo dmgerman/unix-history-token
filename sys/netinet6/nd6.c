@@ -150,6 +150,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/iso88025.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/fddi.h>
 end_include
 
@@ -985,6 +991,23 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|IFT_ISO88025
+case|:
+name|ndi
+operator|->
+name|maxmtu
+operator|=
+name|MIN
+argument_list|(
+name|ISO88025_MAX_MTU
+argument_list|,
+name|ifp
+operator|->
+name|if_mtu
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|ndi
 operator|->
@@ -8042,6 +8065,9 @@ name|IFT_IEEE80211
 case|:
 endif|#
 directive|endif
+case|case
+name|IFT_ISO88025
+case|:
 name|ETHER_MAP_IPV6_MULTICAST
 argument_list|(
 operator|&
