@@ -7,23 +7,6 @@ begin_comment
 comment|/*  * Efficient ENI adapter support  * -----------------------------  *  * Module supports PCI interface to ENI adapter  *  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPILING_LINT
-end_ifdef
-
-begin_warning
-warning|#
-directive|warning
-literal|"The eni driver is broken and is not compiled with LINT"
-end_warning
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -962,11 +945,6 @@ end_endif
 begin_comment
 comment|/* BSD< 199506 */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
