@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.3 %G%"
+literal|"@(#)object.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -727,17 +727,17 @@ block|}
 elseif|else
 if|if
 condition|(
+name|afterlg
+condition|)
+block|{
+if|if
+condition|(
 name|name
 index|[
 literal|0
 index|]
 operator|==
 literal|'_'
-condition|)
-block|{
-if|if
-condition|(
-name|afterlg
 condition|)
 block|{
 name|check_global
@@ -752,14 +752,16 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 elseif|else
 if|if
 condition|(
-name|curblock
-operator|->
 name|name
-operator|!=
-name|nil
+index|[
+literal|0
+index|]
+operator|==
+literal|'_'
 condition|)
 block|{
 name|check_local
@@ -773,7 +775,6 @@ argument_list|,
 name|np
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if
