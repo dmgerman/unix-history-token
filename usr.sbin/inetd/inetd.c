@@ -44,7 +44,7 @@ name|char
 name|inetd_c_rcsid
 index|[]
 init|=
-literal|"$Id: inetd.c,v 1.13 1996/08/09 22:20:24 julian Exp $"
+literal|"$Id: inetd.c,v 1.14 1996/10/28 23:02:38 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1595,10 +1595,7 @@ name|dummy
 argument_list|,
 literal|'x'
 argument_list|,
-sizeof|sizeof
-argument_list|(
 name|DUMMYSIZE
-argument_list|)
 operator|-
 literal|1
 argument_list|)
