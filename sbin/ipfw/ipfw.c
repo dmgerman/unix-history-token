@@ -13072,11 +13072,6 @@ block|{
 name|int
 name|ch
 decl_stmt|;
-specifier|extern
-name|int
-name|optreset
-decl_stmt|;
-comment|/* XXX should be declared in<unistd.h> */
 if|if
 condition|(
 name|ac
