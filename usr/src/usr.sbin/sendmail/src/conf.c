@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.67
+literal|3.68
 operator|%
 name|G
 operator|%
@@ -835,47 +835,13 @@ decl_stmt|;
 block|{
 ifdef|#
 directive|ifdef
-name|ING70
+name|EXAMPLE_CODE
+comment|/* this code is intended as an example only */
 specifier|register
 name|STAB
 modifier|*
 name|s
 decl_stmt|;
-endif|#
-directive|endif
-endif|ING70
-if|if
-condition|(
-name|to
-operator|->
-name|q_mailer
-operator|!=
-name|LocalMailer
-operator|&&
-name|CurEnv
-operator|->
-name|e_msgsize
-operator|>
-literal|100000
-condition|)
-block|{
-name|usrerr
-argument_list|(
-literal|"Message exceeds 100000 bytes"
-argument_list|)
-expr_stmt|;
-name|NoReturn
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-ifdef|#
-directive|ifdef
-name|ING70
 name|s
 operator|=
 name|stab
@@ -915,6 +881,7 @@ argument_list|(
 literal|"No ARPA mail through this machine: see your system administration"
 argument_list|)
 expr_stmt|;
+comment|/* NoReturn = TRUE; to supress return copy */
 return|return
 operator|(
 name|FALSE
@@ -923,7 +890,7 @@ return|;
 block|}
 endif|#
 directive|endif
-endif|ING70
+endif|EXAMPLE_CODE
 return|return
 operator|(
 name|TRUE

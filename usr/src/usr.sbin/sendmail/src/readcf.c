@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -1251,6 +1251,11 @@ name|char
 modifier|*
 name|DelimChar
 decl_stmt|;
+specifier|extern
+name|long
+name|atol
+parameter_list|()
+function_decl|;
 comment|/* allocate a mailer and set up defaults */
 name|m
 operator|=
@@ -1572,6 +1577,20 @@ operator|->
 name|m_argv
 operator|=
 name|makeargv
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+comment|/* maximum message size */
+name|m
+operator|->
+name|m_maxsize
+operator|=
+name|atol
 argument_list|(
 name|p
 argument_list|)

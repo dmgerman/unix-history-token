@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.154
+literal|3.155
 operator|%
 name|G
 operator|%
@@ -1707,7 +1707,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"mailer %d (%s): P=%s S=%d R=%d F="
+literal|"mailer %d (%s): P=%s S=%d R=%d M=%ld F="
 argument_list|,
 name|i
 argument_list|,
@@ -1726,6 +1726,10 @@ argument_list|,
 name|m
 operator|->
 name|m_r_rwset
+argument_list|,
+name|m
+operator|->
+name|m_maxsize
 argument_list|)
 expr_stmt|;
 for|for
