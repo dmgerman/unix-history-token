@@ -176,9 +176,6 @@ expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 return|return
 operator|*
 operator|(
@@ -236,9 +233,6 @@ expr_stmt|;
 name|ia64_mf
 argument_list|()
 expr_stmt|;
-name|ia64_mf_a
-argument_list|()
-expr_stmt|;
 operator|*
 operator|(
 specifier|volatile
@@ -254,9 +248,6 @@ operator|=
 name|value
 expr_stmt|;
 name|ia64_mf
-argument_list|()
-expr_stmt|;
-name|ia64_mf_a
 argument_list|()
 expr_stmt|;
 block|}
