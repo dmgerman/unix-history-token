@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	5.7 (Berkeley) %G%"
+literal|"@(#)str.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,13 +49,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<stddef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stddef.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -1581,7 +1581,14 @@ name|cnt
 operator|==
 literal|3
 condition|)
+block|{
+operator|++
+name|s
+operator|->
+name|str
+expr_stmt|;
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -1592,17 +1599,6 @@ operator|(
 name|val
 operator|)
 return|;
-if|if
-condition|(
-name|ch
-operator|!=
-literal|'\0'
-condition|)
-operator|++
-name|s
-operator|->
-name|str
-expr_stmt|;
 switch|switch
 condition|(
 name|ch
