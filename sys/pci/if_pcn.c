@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * AMD Am79c972 fast ethernet PCI NIC driver. Datatheets are available  * from http://www.amd.com.  *  * The AMD PCnet/PCI controllers are more advanced and functional  * versions of the venerable 7990 LANCE. The PCnet/PCI chips retain  * backwards compatibility with the LANCE and thus can be made  * to work with older LANCE drivers. This is in fact how the  * PCnet/PCI chips were supported in FreeBSD originally. The trouble  * is that the PCnet/PCI devices offer several performance enhancements  * which can't be exploited in LANCE compatibility mode. Chief among  * these enhancements is the ability to perform PCI DMA operations  * using 32-bit addressing (which eliminates the need for ISA  * bounce-buffering), and special receive buffer alignment (which  * allows the receive handler to pass packets to the upper protocol  * layers without copying on both the x86 and alpha platforms).  */
+comment|/*  * AMD Am79c972 fast ethernet PCI NIC driver. Datasheets are available  * from http://www.amd.com.  *  * The AMD PCnet/PCI controllers are more advanced and functional  * versions of the venerable 7990 LANCE. The PCnet/PCI chips retain  * backwards compatibility with the LANCE and thus can be made  * to work with older LANCE drivers. This is in fact how the  * PCnet/PCI chips were supported in FreeBSD originally. The trouble  * is that the PCnet/PCI devices offer several performance enhancements  * which can't be exploited in LANCE compatibility mode. Chief among  * these enhancements is the ability to perform PCI DMA operations  * using 32-bit addressing (which eliminates the need for ISA  * bounce-buffering), and special receive buffer alignment (which  * allows the receive handler to pass packets to the upper protocol  * layers without copying on both the x86 and alpha platforms).  */
 end_comment
 
 begin_include
@@ -1920,7 +1920,7 @@ argument_list|,
 name|PCN_BCR_PCISUBVENID
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Note III: the test for 0x10001000 is a hack to 			 * pacify VMware, who's pseudo-PCnet interface is 			 * broken. Reading the subsystem register from PCI 			 * config space yeilds 0x00000000 while reading the 			 * same value from I/O space yeilds 0x10001000. It's 			 * not supposed to be that way. 			 */
+comment|/* 			 * Note III: the test for 0x10001000 is a hack to 			 * pacify VMware, who's pseudo-PCnet interface is 			 * broken. Reading the subsystem register from PCI 			 * config space yields 0x00000000 while reading the 			 * same value from I/O space yields 0x10001000. It's 			 * not supposed to be that way. 			 */
 if|if
 condition|(
 name|chip_id
@@ -3937,7 +3937,7 @@ name|arpcom
 operator|.
 name|ac_if
 expr_stmt|;
-comment|/* Supress unwanted interrupts */
+comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
 operator|!
