@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.5 %G%"
+literal|"@(#)write.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -923,6 +923,8 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
 name|write
 argument_list|(
 name|fileno
@@ -934,7 +936,23 @@ name|buf
 argument_list|,
 name|i
 argument_list|)
+operator|!=
+name|i
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n\7Write failed (%s logged out?)\n"
+argument_list|,
+name|him
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|buf
