@@ -187,11 +187,11 @@ begin_define
 define|#
 directive|define
 name|CMODE
-value|0666
+value|0644
 end_define
 
 begin_comment
-comment|/* bounds file creation mode */
+comment|/* bounds file creation	mode */
 end_comment
 
 begin_define
@@ -1418,7 +1418,7 @@ name|chmod
 argument_list|(
 name|fname
 argument_list|,
-literal|0644
+name|CMODE
 argument_list|)
 expr_stmt|;
 name|fprintf
