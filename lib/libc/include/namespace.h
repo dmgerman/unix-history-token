@@ -16,7 +16,7 @@ name|_NAMESPACE_H_
 end_define
 
 begin_comment
-comment|/*  * Adjust names so that headers declare "hidden" names.  */
+comment|/*  * Adjust names so that headers declare "hidden" names.  *  * README: When modifying this file don't forget to make the appropriate  *         changes in un-namespace.h!!!  */
 end_comment
 
 begin_comment
@@ -262,13 +262,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pthread_cond_signal
-value|_pthread_cond_signal
-end_define
-
-begin_define
-define|#
-directive|define
 name|pthread_cond_broadcast
 value|_pthread_cond_broadcast
 end_define
@@ -276,8 +269,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|pthread_cond_wait
-value|_pthread_cond_wait
+name|pthread_cond_destroy
+value|_pthread_cond_destroy
 end_define
 
 begin_define
@@ -285,6 +278,27 @@ define|#
 directive|define
 name|pthread_cond_init
 value|_pthread_cond_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_cond_signal
+value|_pthread_cond_signal
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_cond_timedwait
+value|_pthread_cond_timedwait
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_cond_wait
+value|_pthread_cond_wait
 end_define
 
 begin_define
@@ -360,15 +374,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|pthread_mutexattr_init
-value|_pthread_mutexattr_init
+name|pthread_mutexattr_destroy
+value|_pthread_mutexattr_destroy
 end_define
 
 begin_define
 define|#
 directive|define
-name|pthread_mutexattr_destroy
-value|_pthread_mutexattr_destroy
+name|pthread_mutexattr_init
+value|_pthread_mutexattr_init
 end_define
 
 begin_define
@@ -383,6 +397,13 @@ define|#
 directive|define
 name|pthread_once
 value|_pthread_once
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_rwlock_destroy
+value|_pthread_rwlock_destroy
 end_define
 
 begin_define
@@ -404,6 +425,20 @@ define|#
 directive|define
 name|pthread_rwlock_wrlock
 value|_pthread_rwlock_wrlock
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_rwlock_tryrdlock
+value|_pthread_rwlock_tryrdlock
+end_define
+
+begin_define
+define|#
+directive|define
+name|pthread_rwlock_trywrlock
+value|_pthread_rwlock_trywrlock
 end_define
 
 begin_define
@@ -607,27 +642,6 @@ define|#
 directive|define
 name|pause
 value|_pause
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_rwlock_destroy
-value|_pthread_rwlock_destroy
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_rwlock_tryrdlock
-value|_pthread_rwlock_tryrdlock
-end_define
-
-begin_define
-define|#
-directive|define
-name|pthread_rwlock_trywrlock
-value|_pthread_rwlock_trywrlock
 end_define
 
 begin_define
