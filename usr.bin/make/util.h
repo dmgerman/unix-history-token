@@ -21,6 +21,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -32,6 +38,22 @@ name|b
 parameter_list|)
 value|a##b
 end_define
+
+begin_struct
+struct|struct
+name|flag2str
+block|{
+name|u_int
+name|flag
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|str
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * debug control:  *	There is one bit per module.  It is up to the module what debug  *	information to print.  */
@@ -305,6 +327,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|print_flags
+parameter_list|(
+name|FILE
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|flag2str
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
