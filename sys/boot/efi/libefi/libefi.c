@@ -438,6 +438,14 @@ condition|(
 name|img
 operator|->
 name|LoadOptionsSize
+operator|>
+literal|0
+operator|&&
+name|img
+operator|->
+name|LoadOptions
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
