@@ -448,6 +448,24 @@ block|}
 end_function
 
 begin_function
+name|int
+name|vop_panic
+parameter_list|(
+name|struct
+name|vop_generic_args
+modifier|*
+name|ap
+parameter_list|)
+block|{
+name|panic
+argument_list|(
+literal|"illegal vnode op called"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|vop_nostrategy
