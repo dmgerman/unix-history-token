@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.8 (Berkeley) %G%"
+literal|"@(#)hash.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,6 +484,7 @@ name|mode
 parameter_list|,
 name|info
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -494,6 +495,7 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+specifier|const
 name|HASHINFO
 modifier|*
 name|info
@@ -1190,7 +1192,7 @@ name|hash_close
 expr_stmt|;
 name|dbp
 operator|->
-name|delete
+name|del
 operator|=
 name|hash_delete
 expr_stmt|;

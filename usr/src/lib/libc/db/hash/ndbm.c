@@ -81,6 +81,7 @@ name|flags
 parameter_list|,
 name|mode
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|file
@@ -441,7 +442,7 @@ operator|=
 call|(
 name|db
 operator|->
-name|delete
+name|del
 call|)
 argument_list|(
 name|db
