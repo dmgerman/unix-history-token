@@ -2327,11 +2327,6 @@ goto|goto
 name|done1
 goto|;
 block|}
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|SOCK_LOCK
 argument_list|(
 name|so
@@ -2422,11 +2417,6 @@ block|}
 name|SOCK_UNLOCK
 argument_list|(
 name|so
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|bad
