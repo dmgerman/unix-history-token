@@ -4084,7 +4084,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMA_MD_SMALL_ALLOC
+name|UMA_MD_SMALL_ALLOC_broken
 if|if
 condition|(
 name|zone
@@ -4882,7 +4882,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|UMA_MD_SMALL_ALLOC
+name|UMA_MD_SMALL_ALLOC_broken
 name|booted
 operator|=
 literal|1
