@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.37 (Berkeley) %G%"
+literal|"@(#)w.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1969,17 +1969,17 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
+operator|&&
+name|boottime
+operator|.
+name|tv_sec
+operator|!=
+literal|0
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"cannot get kernel bootime"
-argument_list|)
-expr_stmt|;
+block|{
 name|uptime
 operator|=
 name|now
@@ -2122,6 +2122,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Print number of users logged in to system */
 operator|(
