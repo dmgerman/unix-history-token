@@ -136,7 +136,7 @@ value|30
 end_define
 
 begin_comment
-comment|/* Timouts (in seconds) for different link types) */
+comment|/* Timeouts (in seconds) for different link types */
 end_comment
 
 begin_define
@@ -853,7 +853,7 @@ comment|/* packets.           		*/
 end_comment
 
 begin_comment
-comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 outgoing packets     StartPointOut()          -- port table initial search point for                                 incoming packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
+comment|/* Internal utility routines (used only in alias_db.c)  Lookup table starting points:     StartPointIn()           -- link table initial search point for                                 incoming packets     StartPointOut()          -- port table initial search point for                                 outgoing packets      Miscellaneous:     SeqDiff()                -- difference between two TCP sequences     ShowAliasStats()         -- send alias statistics to a monitor file */
 end_comment
 
 begin_comment
@@ -3301,6 +3301,64 @@ operator|->
 name|next_out
 expr_stmt|;
 block|}
+comment|/* Search for partially specified links. */
+if|if
+condition|(
+name|link
+operator|==
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|dst_port
+operator|!=
+literal|0
+condition|)
+block|{
+name|link
+operator|=
+name|FindLinkOut
+argument_list|(
+name|src_addr
+argument_list|,
+name|dst_addr
+argument_list|,
+name|src_port
+argument_list|,
+literal|0
+argument_list|,
+name|link_type
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|dst_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+condition|)
+block|{
+name|link
+operator|=
+name|FindLinkOut
+argument_list|(
+name|src_addr
+argument_list|,
+name|nullAddress
+argument_list|,
+name|src_port
+argument_list|,
+literal|0
+argument_list|,
+name|link_type
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|link
@@ -3410,23 +3468,6 @@ condition|)
 name|flags_in
 operator||=
 name|LINK_UNKNOWN_DEST_PORT
-expr_stmt|;
-comment|/* The following allows permanent links to be    be specified as using the default aliasing address    (i.e. device interface address) without knowing    in advance what that address is. */
-if|if
-condition|(
-name|alias_addr
-operator|.
-name|s_addr
-operator|==
-name|aliasAddress
-operator|.
-name|s_addr
-condition|)
-name|alias_addr
-operator|.
-name|s_addr
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Search loop */
 name|start_point
@@ -3815,6 +3856,42 @@ name|link_type
 argument_list|)
 else|:
 name|link_unknown_all
+return|;
+block|}
+comment|/* The following allows permanent links to be    be specified as using the default aliasing address    (i.e. device interface address) without knowing    in advance what that address is. */
+elseif|else
+if|if
+condition|(
+name|alias_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+operator|&&
+name|alias_addr
+operator|.
+name|s_addr
+operator|==
+name|aliasAddress
+operator|.
+name|s_addr
+condition|)
+block|{
+return|return
+name|FindLinkIn
+argument_list|(
+name|dst_addr
+argument_list|,
+name|nullAddress
+argument_list|,
+name|dst_port
+argument_list|,
+name|alias_port
+argument_list|,
+name|link_type
+argument_list|,
+name|replace_partial_links
+argument_list|)
 return|;
 block|}
 else|else
