@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.30 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4371,6 +4371,15 @@ operator|||
 name|CurHostName
 operator|==
 name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|CurHostName
+argument_list|,
+literal|"localhost"
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|syslog
@@ -4397,7 +4406,10 @@ else|else
 block|{
 name|char
 modifier|*
-name|p
+name|p1
+decl_stmt|,
+modifier|*
+name|p2
 decl_stmt|;
 specifier|extern
 name|char
@@ -4415,7 +4427,7 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|p
+name|p1
 operator|=
 name|macvalue
 argument_list|(
@@ -4426,20 +4438,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|p1
 operator|==
 name|NULL
 operator|||
-name|p
+name|p1
 index|[
 literal|0
 index|]
 operator|==
 literal|'\0'
 condition|)
-name|p
+name|p1
 operator|=
 literal|"local"
+expr_stmt|;
+name|p2
+operator|=
+name|CurHostName
 expr_stmt|;
 block|}
 ifdef|#
@@ -4458,7 +4474,11 @@ modifier|*
 name|inet_ntoa
 parameter_list|()
 function_decl|;
-name|p
+name|p1
+operator|=
+name|CurHostName
+expr_stmt|;
+name|p2
 operator|=
 name|inet_ntoa
 argument_list|(
@@ -4486,9 +4506,9 @@ name|e_to
 argument_list|,
 name|delay
 argument_list|,
-name|p
+name|p1
 argument_list|,
-name|CurHostName
+name|p2
 argument_list|)
 expr_stmt|;
 block|}

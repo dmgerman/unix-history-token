@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.28 (Berkeley) %G%"
+literal|"@(#)main.c	6.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -495,6 +495,15 @@ specifier|extern
 name|char
 modifier|*
 name|arpadate
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getrealhostname
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -2479,6 +2488,34 @@ comment|/* remove things that don't make sense in daemon mode */
 name|FullName
 operator|=
 name|NULL
+expr_stmt|;
+break|break;
+default|default:
+comment|/* find our real host name */
+name|p
+operator|=
+name|getrealhostname
+argument_list|(
+name|STDIN_FILENO
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
+operator|!=
+name|NULL
+condition|)
+name|RealHostName
+operator|=
+name|newstr
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+else|else
+name|RealHostName
+operator|=
+literal|"localhost"
 expr_stmt|;
 break|break;
 block|}

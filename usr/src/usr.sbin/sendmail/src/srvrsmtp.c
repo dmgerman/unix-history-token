@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.17 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.18 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.17 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.18 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -484,16 +484,6 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|RealHostName
-operator|==
-name|NULL
-condition|)
-name|RealHostName
-operator|=
-name|MyHostName
-expr_stmt|;
 name|CurHostName
 operator|=
 name|RealHostName
@@ -870,10 +860,6 @@ break|break;
 block|}
 if|if
 condition|(
-name|RealHostName
-operator|!=
-name|NULL
-operator|&&
 name|strcasecmp
 argument_list|(
 name|p
@@ -1796,10 +1782,6 @@ directive|ifdef
 name|LOG
 if|if
 condition|(
-name|RealHostName
-operator|!=
-name|NULL
-operator|&&
 name|LogLevel
 operator|>
 literal|0
