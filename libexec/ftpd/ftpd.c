@@ -10733,7 +10733,7 @@ name|lreply
 argument_list|(
 name|code
 argument_list|,
-literal|"status of %s:"
+literal|"Status of %s:"
 argument_list|,
 name|filename
 argument_list|)
@@ -10880,7 +10880,7 @@ name|reply
 argument_list|(
 name|code
 argument_list|,
-literal|"End of Status"
+literal|"End of status"
 argument_list|)
 expr_stmt|;
 block|}
