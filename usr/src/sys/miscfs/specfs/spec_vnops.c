@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)spec_vnops.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2648,6 +2648,17 @@ case|:
 comment|/* 		 * Hack: a tty device that is a controlling terminal 		 * has a reference from the session structure. 		 * We cannot easily tell that a character device is 		 * a controlling terminal, unless it is the closing 		 * process' controlling terminal.  In that case, 		 * if the reference count is 2 (this last descriptor 		 * plus the session), release the reference from the session. 		 */
 if|if
 condition|(
+name|vcount
+argument_list|(
+name|vp
+argument_list|)
+operator|==
+literal|2
+operator|&&
+name|ap
+operator|->
+name|a_p
+operator|&&
 name|vp
 operator|==
 name|ap
@@ -2657,13 +2668,6 @@ operator|->
 name|p_session
 operator|->
 name|s_ttyvp
-operator|&&
-name|vcount
-argument_list|(
-name|vp
-argument_list|)
-operator|==
-literal|2
 condition|)
 block|{
 name|vrele
