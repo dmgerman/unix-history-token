@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)getpwent.c	4.6 (Berkeley) 85/01/16 */
+comment|/* @(#)getpwent.c	4.6 (Berkeley) 85/01/21 */
 end_comment
 
 begin_include
@@ -20,16 +20,6 @@ include|#
 directive|include
 file|<ndbm.h>
 end_include
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|PASSWD
-init|=
-literal|"/etc/passwd"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -71,6 +61,19 @@ name|passwd
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The following are shared with getpwnamuid.c  */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|_pw_file
+init|=
+literal|"/etc/passwd"
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|DBM
 modifier|*
@@ -101,7 +104,7 @@ name|pwf
 operator|=
 name|fopen
 argument_list|(
-name|PASSWD
+name|_pw_file
 argument_list|,
 literal|"r"
 argument_list|)
@@ -248,7 +251,7 @@ name|pwf
 operator|=
 name|fopen
 argument_list|(
-name|PASSWD
+name|_pw_file
 argument_list|,
 literal|"r"
 argument_list|)
@@ -429,7 +432,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|PASSWD
+name|_pw_file
 operator|=
 name|file
 expr_stmt|;
