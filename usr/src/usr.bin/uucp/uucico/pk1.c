@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk1.c	5.3 (Berkeley) %G%"
+literal|"@(#)pk1.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
 
 begin_include
 include|#
@@ -36,12 +42,6 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_ifdef
@@ -132,14 +132,14 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
-name|Errorrate
+name|errno
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|int
-name|errno
+name|Retries
 decl_stmt|;
 end_decl_stmt
 
@@ -189,13 +189,12 @@ comment|/*  * packet driver support routines  *  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|pack
 modifier|*
 name|pklines
-index|[
-name|NPLINES
-index|]
+index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -731,6 +730,9 @@ expr_stmt|;
 block|}
 comment|/* set up retransmit or REJ */
 name|tries
+operator|++
+expr_stmt|;
+name|Retries
 operator|++
 expr_stmt|;
 name|pk

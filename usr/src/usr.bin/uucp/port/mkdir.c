@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkdir.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkdir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,6 +113,7 @@ name|void
 operator|)
 name|umask
 argument_list|(
+operator|~
 name|mode
 argument_list|)
 expr_stmt|;
@@ -145,6 +146,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|status
+return|;
 block|}
 end_block
 
