@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998-2001 Luigi Rizzo  *  * Redistribution and use i
 end_comment
 
 begin_comment
-comment|/*  * This code implements bridging in FreeBSD. It only acts on ethernet  * type of interfaces (others are still usable for routing).  * A bridging table holds the source MAC address/dest. interface for each  * known node. The table is indexed using an hash of the source address.  *  * Input packets are tapped near the beginning of ether_input(), and  * analysed by calling bridge_in(). Depending on the result, the packet  * can be forwarded to one or more output interfaces using bdg_forward(),  * and/or sent to the upper layer (e.g. in case of multicast).  *  * Output packets are intercepted near the end of ether_output(),  * the correct destination is selected calling bdg_dst_lookup(),  * and then forwarding is done using bdg_forward().  * Bridging is controlled by the sysctl variable net.link.ether.bridge  *  * The arp code is also modified to let a machine answer to requests  * irrespective of the port the request came from.  *  * In case of loops in the bridging topology, the bridge detects this  * event and temporarily mutes output bridging on one of the ports.  * Periodically, interfaces are unmuted by bdg_timeout().  * Muting is only implemented as a safety measure, and also as  * a mechanism to support a user-space implementation of the spanning  * tree algorithm. In the final release, unmuting will only occur  * because of explicit action of the user-level daemon.  *  * To build a bridging kernel, use the following option  *    option BRIDGE  * and then at runtime set the sysctl variable to enable bridging.  *  * Only one interface is supposed to have addresses set (but  * there are no problems in practice if you set addresses for more  * than one interface).  * Bridging will act before routing, but nothing prevents a machine  * from doing both (modulo bugs in the implementation...).  *  * THINGS TO REMEMBER  *  - bridging requires some (small) modifications to the interface  *    driver. Not all of them have been changed, see the "ed" and "de"  *    drivers as examples on how to operate.  *  - bridging is incompatible with multicast routing on the same  *    machine. There is not an easy fix to this.  *  - loop detection is still not very robust.  *  - the interface of bdg_forward() could be improved.  */
+comment|/*  * This code implements bridging in FreeBSD. It only acts on ethernet  * type of interfaces (others are still usable for routing).  * A bridging table holds the source MAC address/dest. interface for each  * known node. The table is indexed using an hash of the source address.  *  * Input packets are tapped near the beginning of ether_input(), and  * analysed by calling bridge_in(). Depending on the result, the packet  * can be forwarded to one or more output interfaces using bdg_forward(),  * and/or sent to the upper layer (e.g. in case of multicast).  *  * Output packets are intercepted near the end of ether_output(),  * the correct destination is selected calling bridge_dst_lookup(),  * and then forwarding is done using bdg_forward().  * Bridging is controlled by the sysctl variable net.link.ether.bridge  *  * The arp code is also modified to let a machine answer to requests  * irrespective of the port the request came from.  *  * In case of loops in the bridging topology, the bridge detects this  * event and temporarily mutes output bridging on one of the ports.  * Periodically, interfaces are unmuted by bdg_timeout().  * Muting is only implemented as a safety measure, and also as  * a mechanism to support a user-space implementation of the spanning  * tree algorithm. In the final release, unmuting will only occur  * because of explicit action of the user-level daemon.  *  * To build a bridging kernel, use the following option  *    option BRIDGE  * and then at runtime set the sysctl variable to enable bridging.  *  * Only one interface is supposed to have addresses set (but  * there are no problems in practice if you set addresses for more  * than one interface).  * Bridging will act before routing, but nothing prevents a machine  * from doing both (modulo bugs in the implementation...).  *  * THINGS TO REMEMBER  *  - bridging is incompatible with multicast routing on the same  *    machine. There is not an easy fix to this.  *  - loop detection is still not very robust.  *  - the interface of bdg_forward() could be improved.  */
 end_comment
 
 begin_include
@@ -285,49 +285,6 @@ argument|NULL
 argument_list|)
 end_macro
 
-begin_comment
-comment|/*  * We need additional info for the bridge. The bdg_ifp2sc[] array  * provides a pointer to this struct using the if_index.  * bdg_softc has a backpointer to the struct ifnet, the bridge  * flags, and a cluster (bridging occurs only between port of the  * same cluster).  */
-end_comment
-
-begin_struct
-struct|struct
-name|bdg_softc
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-comment|/* ((struct arpcom *)ifp)->ac_enaddr is the eth. addr */
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|IFF_BDG_PROMISC
-value|0x0001
-comment|/* set promisc mode on this if.  */
-define|#
-directive|define
-name|IFF_MUTE
-value|0x0002
-comment|/* mute this if for bridging.   */
-define|#
-directive|define
-name|IFF_USED
-value|0x0004
-comment|/* use this if for bridging.    */
-name|short
-name|cluster_id
-decl_stmt|;
-comment|/* in network format */
-name|u_long
-name|magic
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -337,7 +294,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|bdg_softc
 modifier|*
@@ -354,56 +310,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USED
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp2sc[ifp->if_index].flags& IFF_USED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTED
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp2sc[ifp->if_index].flags& IFF_MUTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MUTE
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp2sc[ifp->if_index].flags |= IFF_MUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|UNMUTE
-parameter_list|(
-name|ifp
-parameter_list|)
-value|ifp2sc[ifp->if_index].flags&= ~IFF_MUTE
-end_define
-
-begin_define
-define|#
-directive|define
-name|CLUSTER
-parameter_list|(
-name|ifp
-parameter_list|)
-value|(ifp2sc[ifp->if_index].cluster_id)
-end_define
-
-begin_define
-define|#
-directive|define
 name|IFP_CHK
 parameter_list|(
 name|ifp
@@ -414,21 +320,8 @@ define|\
 value|if (ifp2sc[ifp->if_index].magic != 0xDEADBEEF) { x ; }
 end_define
 
-begin_define
-define|#
-directive|define
-name|SAMECLUSTER
-parameter_list|(
-name|ifp
-parameter_list|,
-name|src
-parameter_list|)
-define|\
-value|(src == NULL || CLUSTER(ifp) == CLUSTER(src) )
-end_define
-
 begin_comment
-comment|/*  * turn off promisc mode, optionally clear the IFF_USED flag  */
+comment|/*  * turn off promisc mode, optionally clear the IFF_USED flag.  * The flag is turned on by parse_bdg_config  */
 end_comment
 
 begin_function
@@ -520,6 +413,33 @@ operator||
 name|IFF_MUTE
 operator|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|">> now %s%d promisc OFF if_flags 0x%x bdg_flags 0x%x\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_name
+argument_list|,
+name|ifp
+operator|->
+name|if_unit
+argument_list|,
+name|ifp
+operator|->
+name|if_flags
+argument_list|,
+name|ifp2sc
+index|[
+name|ifp
+operator|->
+name|if_index
+index|]
+operator|.
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|clear_used
@@ -554,33 +474,6 @@ literal|0
 index|]
 operator|=
 literal|'\0'
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|">> now %s%d promisc OFF if_flags 0x%x bdg_flags 0x%x\n"
-argument_list|,
-name|ifp
-operator|->
-name|if_name
-argument_list|,
-name|ifp
-operator|->
-name|if_unit
-argument_list|,
-name|ifp
-operator|->
-name|if_flags
-argument_list|,
-name|ifp2sc
-index|[
-name|ifp
-operator|->
-name|if_index
-index|]
-operator|.
-name|flags
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -627,7 +520,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|USED
+name|BDG_USED
 argument_list|(
 name|ifp
 argument_list|)
@@ -741,7 +634,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|MUTED
+name|BDG_MUTED
 argument_list|(
 name|ifp
 argument_list|)
@@ -760,7 +653,7 @@ operator|->
 name|if_unit
 argument_list|)
 expr_stmt|;
-name|UNMUTE
+name|BDG_UNMUTE
 argument_list|(
 name|ifp
 argument_list|)
@@ -825,25 +718,27 @@ operator|!=
 name|do_bridge
 condition|)
 block|{
+name|bdg_promisc_off
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* reset previously used interfaces */
 name|flush_table
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
 name|do_bridge
-operator|==
-literal|0
 condition|)
-name|bdg_promisc_off
-argument_list|(
-literal|0
-argument_list|)
+block|{
+name|parse_bdg_cfg
+argument_list|()
 expr_stmt|;
-comment|/* leave IFF_USED set */
-else|else
 name|bdg_promisc_on
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 return|return
 name|error
@@ -1441,6 +1336,18 @@ name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
+name|verbose
+argument_list|,
+literal|"Be verbose"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
 name|bdg_split_pkts
 argument_list|,
 literal|"Packets split in bdg_forward"
@@ -1780,12 +1687,9 @@ comment|/*  * local MAC addresses are held in a small array. This makes comparis
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|char
+name|bdg_addr
 name|bdg_addresses
 index|[
-literal|6
-operator|*
 name|BDG_MAX_PORTS
 index|]
 decl_stmt|;
@@ -1910,9 +1814,11 @@ name|arpcom
 modifier|*
 name|ac
 decl_stmt|;
-name|u_char
+name|bdg_addr
 modifier|*
-name|eth_addr
+name|p
+init|=
+name|bdg_addresses
 decl_stmt|;
 name|struct
 name|bdg_softc
@@ -1929,10 +1835,6 @@ name|bdg_ports
 operator|=
 literal|0
 expr_stmt|;
-name|eth_addr
-operator|=
-name|bdg_addresses
-expr_stmt|;
 operator|*
 name|bridge_cfg
 operator|=
@@ -1940,7 +1842,7 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"BRIDGE 990810, have %d interfaces\n"
+literal|"BRIDGE 010131, have %d interfaces\n"
 argument_list|,
 name|if_index
 argument_list|)
@@ -2074,14 +1976,15 @@ name|ac
 operator|->
 name|ac_enaddr
 argument_list|,
-name|eth_addr
+name|p
+operator|->
+name|etheraddr
 argument_list|,
 literal|6
 argument_list|)
 expr_stmt|;
-name|eth_addr
-operator|+=
-literal|6
+name|p
+operator|++
 expr_stmt|;
 name|bp
 operator|->
@@ -2183,7 +2086,7 @@ decl_stmt|;
 name|int
 name|dropit
 init|=
-name|MUTED
+name|BDG_MUTED
 argument_list|(
 name|ifp
 argument_list|)
@@ -2310,7 +2213,7 @@ name|old
 operator|->
 name|if_unit
 argument_list|,
-name|MUTED
+name|BDG_MUTED
 argument_list|(
 name|old
 argument_list|)
@@ -2327,7 +2230,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|MUTED
+name|BDG_MUTED
 argument_list|(
 name|old
 argument_list|)
@@ -2340,7 +2243,7 @@ name|bdg_loops
 operator|>
 literal|10
 condition|)
-name|MUTE
+name|BDG_MUTE
 argument_list|(
 name|old
 argument_list|)
@@ -2527,16 +2430,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Forward to dst, excluding src port and muted interfaces.  * The packet is freed if possible (i.e. surely not of interest for  * the upper layer), otherwise a copy is left for use by the caller  * (pointer in *m0).  *  * It would be more efficient to make bdg_forward() always consume  * the packet, leaving to the caller the task to check if it needs a copy  * and get one in case. As it is now, bdg_forward() can sometimes make  * a copy whereas it is not necessary.  *  * XXX be careful about eh, it can be a pointer into *m  */
+comment|/*  * Forward to dst, excluding src port and muted interfaces.  * The packet is freed if possible (i.e. surely not of interest for  * the upper layer), otherwise a copy is left for use by the caller  * (pointer in m0).  *  * It would be more efficient to make bdg_forward() always consume  * the packet, leaving to the caller the task to check if it needs a copy  * and get one in case. As it is now, bdg_forward() can sometimes make  * a copy whereas it is not necessary.  *  * XXX be careful about eh, it can be a pointer into *m  */
 end_comment
 
 begin_function
-name|int
+name|struct
+name|mbuf
+modifier|*
 name|bdg_forward
 parameter_list|(
 name|struct
 name|mbuf
-modifier|*
 modifier|*
 name|m0
 parameter_list|,
@@ -2557,10 +2461,7 @@ name|ifnet
 modifier|*
 name|src
 init|=
-operator|(
-operator|*
 name|m0
-operator|)
 operator|->
 name|m_pkthdr
 operator|.
@@ -2578,26 +2479,21 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|error
-init|=
-literal|0
-decl_stmt|,
 name|s
 decl_stmt|;
 name|int
-name|canfree
+name|shared
 init|=
-operator|!
 name|bdg_copy
 decl_stmt|;
-comment|/* can free the buf at the end if set */
+comment|/* someone else is using the mbuf */
 name|int
 name|once
 init|=
 literal|0
 decl_stmt|;
 comment|/* loop only once */
-comment|/*      * XXX eh might be a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
+comment|/*      * XXX eh is usually a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
 name|save_eh
@@ -2630,10 +2526,7 @@ directive|ifdef
 name|DUMMYNET
 if|if
 condition|(
-operator|(
-operator|*
 name|m0
-operator|)
 operator|->
 name|m_type
 operator|==
@@ -2642,10 +2535,7 @@ condition|)
 comment|/* XXX: Shouldn't have to be doing this. */
 name|m_freem
 argument_list|(
-operator|(
-operator|*
 name|m0
-operator|)
 operator|->
 name|m_next
 argument_list|)
@@ -2655,17 +2545,11 @@ endif|#
 directive|endif
 name|m_freem
 argument_list|(
-operator|*
 name|m0
 argument_list|)
 expr_stmt|;
-operator|*
-name|m0
-operator|=
-name|NULL
-expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
 if|if
@@ -2682,7 +2566,7 @@ literal|"xx ouch, bdg_forward for local pkt\n"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|m0
 return|;
 block|}
 if|if
@@ -2718,9 +2602,9 @@ operator|!=
 name|BDG_UNKNOWN
 condition|)
 comment|/* need a copy for the local stack */
-name|canfree
+name|shared
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -2769,30 +2653,20 @@ name|rule
 init|=
 name|NULL
 decl_stmt|;
+name|struct
+name|ip
+modifier|*
+name|ip
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|ip
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|m
-operator|=
-operator|*
-name|m0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DUMMYNET
 if|if
 condition|(
-name|m
+name|m0
 operator|->
 name|m_type
 operator|==
@@ -2808,34 +2682,29 @@ name|ip_fw_chain
 operator|*
 operator|)
 operator|(
-name|m
+name|m0
 operator|->
 name|m_data
 operator|)
 expr_stmt|;
-operator|(
-operator|*
 name|m0
-operator|)
 operator|=
-name|m
-operator|=
-name|m
+name|m0
 operator|->
 name|m_next
 expr_stmt|;
 name|src
 operator|=
-name|m
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
 comment|/* could be NULL in output */
-name|canfree
+name|shared
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 comment|/* for sure, a copy is not needed later. */
 name|bdg_thru
@@ -2884,102 +2753,61 @@ goto|goto
 name|forward
 goto|;
 comment|/* not an IP packet, ipfw is not appropriate */
-name|i
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip
-argument_list|)
-expr_stmt|;
-comment|/* this is what i need to be contiguous */
 if|if
 condition|(
-name|m
+name|m0
 operator|->
 name|m_pkthdr
 operator|.
 name|len
 operator|<
-name|i
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
 condition|)
 goto|goto
 name|forward
 goto|;
 comment|/* header too short for an IP pkt, cannot filter */
-comment|/* 	 * If canfree==0 we need to make a copy of the pkt because the firewall 	 * might destroy the packet, and in any case we need to swap fields 	 * same as IP does to put them in host order. 	 * In all cases, make sure that the IP header is contiguous and, 	 * in case of a copy, it resides in the mbuf and not in a cluster. 	 */
-if|if
-condition|(
-name|canfree
-operator|==
-literal|0
-condition|)
-block|{
-name|bdg_copied
-operator|++
-expr_stmt|;
-name|m
+comment|/* 	 * i need some amt of data to be contiguous, and in case others need 	 * the packet (shared==1) also better be in the first mbuf. 	 */
+name|i
 operator|=
-name|m_copypacket
+name|min
 argument_list|(
-operator|(
-operator|*
 name|m0
-operator|)
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 argument_list|,
-name|M_DONTWAIT
+name|max_protohdr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"-- bdg: m_copypacket failed.\n"
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOBUFS
-return|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|m
+name|shared
+operator|||
+name|m0
 operator|->
 name|m_len
-operator|>=
+operator|<
 name|i
-condition|)
-name|i
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no need to pullup, header is already contiguous */
-if|if
-condition|(
-name|i
-operator|>
-literal|0
 condition|)
 block|{
-name|m
+name|m0
 operator|=
 name|m_pullup
 argument_list|(
-name|m
+name|m0
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|m0
 operator|==
 name|NULL
 condition|)
@@ -2990,7 +2818,7 @@ literal|"-- bdg: pullup failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOBUFS
+name|NULL
 return|;
 block|}
 block|}
@@ -2999,7 +2827,7 @@ name|ip
 operator|=
 name|mtod
 argument_list|(
-name|m
+name|m0
 argument_list|,
 expr|struct
 name|ip
@@ -3020,7 +2848,7 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The third parameter to the firewall code is the dst.  interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
+comment|/* 	 * The third parameter to the firewall code is the dst. interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
 name|i
 operator|=
 call|(
@@ -3039,7 +2867,7 @@ name|NULL
 comment|/* cookie */
 argument_list|,
 operator|&
-name|m
+name|m0
 argument_list|,
 operator|&
 name|rule
@@ -3049,27 +2877,58 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|m
+name|i
+operator|&
+name|IP_FW_PORT_DENY_FLAG
+condition|)
+block|{
+comment|/* XXX new interface - discard */
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+name|m0
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|m0
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"firewall using old interface\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|m0
 operator|==
 name|NULL
 condition|)
 block|{
 comment|/* pkt discarded by firewall */
-comment|/* 	     * If canfree==1, m and *m0 were the same thing, so just clear 	     * the pointer. Otherwise, leave it alone, the 	     * upper layer might still use the packet somewhere. 	     */
 if|if
 condition|(
-name|canfree
+name|verbose
 condition|)
-operator|*
-name|m0
-operator|=
-name|NULL
+name|printf
+argument_list|(
+literal|"pkt discarded by firewall\n"
+argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|NULL
 return|;
 block|}
-comment|/* 	 * If we get here, the firewall has passed the pkt, but the 	 * mbuf pointer might have changed. Restore the fields NTOHS()'d. 	 * Then, if canfree==1, also restore *m0. 	 */
+comment|/* 	 * If we get here, the firewall has passed the pkt, but the 	 * mbuf pointer might have changed. Restore the fields NTOHS()'d. 	 */
 name|HTONS
 argument_list|(
 name|ip
@@ -3086,38 +2945,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|canfree
-condition|)
-comment|/* m was a reference to *m0, so update *m0 */
-operator|*
-name|m0
-operator|=
-name|m
-expr_stmt|;
-if|if
-condition|(
 name|i
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* a PASS rule.  */
-if|if
-condition|(
-name|canfree
-operator|==
-literal|0
-condition|)
-comment|/* the packet was a copy, so destroy it */
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 goto|goto
 name|forward
 goto|;
-block|}
 ifdef|#
 directive|ifdef
 name|DUMMYNET
@@ -3128,17 +2963,67 @@ operator|&
 literal|0x10000
 condition|)
 block|{
-comment|/* 	     * pass the pkt to dummynet. Need to include m, dst, rule. 	     * Dummynet consumes the packet in all cases. 	     * Also need to prepend the ethernet header. 	     */
-comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
+comment|/* 	     * pass the pkt to dummynet, which consumes it. 	     * If shared, make a copy and keep the origina. 	     * Need to prepend the ethernet header, optimize the common 	     * case of eh pointing already into the original mbuf. 	     */
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
+if|if
+condition|(
+name|shared
+condition|)
+block|{
+name|m
+operator|=
+name|m_copypacket
+argument_list|(
+name|m0
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"bdg_fwd: copy(1) failed\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|m0
+return|;
+block|}
+block|}
+else|else
+block|{
+name|m
+operator|=
+name|m0
+expr_stmt|;
+comment|/* pass the original to dummynet */
+name|m0
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* and nothing back to the caller */
+block|}
 if|if
 condition|(
 operator|(
 name|void
 operator|*
 operator|)
+operator|(
 name|eh
 operator|+
-name|ETHER_HDR_LEN
+literal|1
+operator|)
 operator|==
 operator|(
 name|void
@@ -3186,24 +3071,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|m
+operator|&&
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"M_PREPEND failed\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|m
 operator|==
 name|NULL
 condition|)
-block|{
-if|if
-condition|(
-name|canfree
-condition|)
-operator|*
-name|m0
-operator|=
-name|NULL
-expr_stmt|;
+comment|/* nope... */
 return|return
-name|ENOBUFS
+name|m0
 return|;
-block|}
 name|bcopy
 argument_list|(
 operator|&
@@ -3245,18 +3132,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|canfree
-condition|)
-comment|/* dummynet has consumed the original one */
-operator|*
-name|m0
-operator|=
-name|NULL
-expr_stmt|;
 return|return
-literal|0
+name|m0
 return|;
 block|}
 endif|#
@@ -3266,41 +3143,13 @@ comment|/* if none of the above matches, we have to drop the pkt */
 name|bdg_ipfw_drops
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|canfree
-operator|==
-literal|0
-condition|)
-comment|/* m was a copy */
-name|m_freem
-argument_list|(
-operator|*
-name|m0
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
 name|printf
 argument_list|(
 literal|"bdg_forward: No rules match, so dropping packet!\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-operator|*
-name|m0
-operator|=
-name|NULL
-expr_stmt|;
 return|return
-literal|0
+name|m0
 return|;
 block|}
 name|forward
@@ -3308,54 +3157,37 @@ label|:
 endif|#
 directive|endif
 comment|/* IPFIREWALL */
-comment|/*      * Now *m0 is the only pkt left. If canfree != 0 the pkt might be      * used by the upper layers which could scramble header fields.      * (basically ntoh*() etc.). To avoid problems, make sure that      * all fields that might be changed by the local network stack are not      * in a cluster by calling m_pullup on *m0. We lose some efficiency      * but better than having packets corrupt!      */
+comment|/*      * Again, bring up the headers in case of shared bufs to avoid      * corruptions in the future.      */
 if|if
 condition|(
-name|canfree
-operator|==
-literal|0
+name|shared
 condition|)
 block|{
 name|int
-name|needed
+name|i
 init|=
 name|min
 argument_list|(
-name|MHLEN
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
 argument_list|,
-name|ETHER_HDR_LEN
-operator|+
 name|max_protohdr
 argument_list|)
 decl_stmt|;
-name|needed
-operator|=
-name|min
-argument_list|(
-name|needed
-argument_list|,
-operator|(
-operator|*
-name|m0
-operator|)
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-operator|*
 name|m0
 operator|=
 name|m_pullup
 argument_list|(
-operator|*
 name|m0
 argument_list|,
-name|needed
+name|i
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|m0
 operator|==
 name|NULL
@@ -3363,11 +3195,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"-- bdg: pullup(2) failed.\n"
+literal|"-- bdg: pullup2 failed.\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOBUFS
+name|NULL
 return|;
 block|}
 block|}
@@ -3390,7 +3222,9 @@ name|m
 decl_stmt|;
 if|if
 condition|(
-name|canfree
+name|shared
+operator|==
+literal|0
 operator|&&
 name|once
 condition|)
@@ -3398,10 +3232,8 @@ block|{
 comment|/* no need to copy */
 name|m
 operator|=
-operator|*
 name|m0
 expr_stmt|;
-operator|*
 name|m0
 operator|=
 name|NULL
@@ -3409,11 +3241,11 @@ expr_stmt|;
 comment|/* original is gone */
 block|}
 else|else
+block|{
 name|m
 operator|=
 name|m_copypacket
 argument_list|(
-operator|*
 name|m0
 argument_list|,
 name|M_DONTWAIT
@@ -3432,21 +3264,23 @@ literal|"bdg_forward: sorry, m_copypacket failed!\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|ENOBUFS
+name|m0
 return|;
 comment|/* the original is still there... */
 block|}
-comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	     * output if interface not yet active. 	     */
-comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
+block|}
+comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	     * output if interface not yet active. Optimized for the 	     * common case of eh pointing already into the mbuf 	     */
 if|if
 condition|(
 operator|(
 name|void
 operator|*
 operator|)
+operator|(
 name|eh
 operator|+
-name|ETHER_HDR_LEN
+literal|1
+operator|)
 operator|==
 operator|(
 name|void
@@ -3494,12 +3328,24 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|m
+operator|&&
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"M_PREPEND failed\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|m
 operator|==
 name|NULL
 condition|)
 return|return
-name|ENOBUFS
+name|m0
 return|;
 name|bcopy
 argument_list|(
@@ -3538,14 +3384,10 @@ block|{
 if|#
 directive|if
 literal|0
-block|MUTE(last);
+block|BDG_MUTE(last);
 comment|/* should I also mute ? */
 endif|#
 directive|endif
-name|error
-operator|=
-name|ENOBUFS
-expr_stmt|;
 block|}
 name|BDG_STAT
 argument_list|(
@@ -3578,7 +3420,7 @@ operator|!=
 name|src
 operator|&&
 comment|/* do not send to self */
-name|USED
+name|BDG_USED
 argument_list|(
 name|ifp
 argument_list|)
@@ -3611,7 +3453,7 @@ operator||
 name|IFF_RUNNING
 operator|)
 operator|&&
-name|SAMECLUSTER
+name|BDG_SAMECLUSTER
 argument_list|(
 name|ifp
 argument_list|,
@@ -3619,7 +3461,7 @@ name|src
 argument_list|)
 operator|&&
 operator|!
-name|MUTED
+name|BDG_MUTED
 argument_list|(
 name|ifp
 argument_list|)
@@ -3654,7 +3496,7 @@ literal|0
 argument|) bdg_fw_avg = bdg_fw_ticks/bdg_fw_count;
 argument_list|)
 return|return
-name|error
+name|m0
 return|;
 block|}
 end_function
