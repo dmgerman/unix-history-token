@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.14 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,15 +605,6 @@ operator|==
 name|ESM_MAIL
 condition|)
 block|{
-if|if
-condition|(
-name|e
-operator|->
-name|e_errorqueue
-operator|==
-name|NULL
-condition|)
-block|{
 name|char
 modifier|*
 name|rpath
@@ -675,7 +666,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* deliver a cc: to the postmaster if desired */
 if|if
 condition|(
