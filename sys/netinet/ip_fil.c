@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_fil.c,v 1.1.1.6 1998/03/21 10:11:08 peter Exp $"
+literal|"@(#)$Id: ip_fil.c,v 1.2 1998/03/21 11:34:02 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4299,7 +4299,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-literal|2
+name|IPL_LOGMAX
 operator|<
 name|min
 condition|)
