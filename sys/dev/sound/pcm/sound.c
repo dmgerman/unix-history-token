@@ -3179,7 +3179,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"unregister: channel %s busy (pid %d)"
+literal|"unregister: channel %s busy (pid %d)\n"
 argument_list|,
 name|ch
 operator|->
