@@ -841,12 +841,36 @@ name|saidx
 operator|.
 name|mode
 operator|==
-name|IPSEC_MODE_TRANSPORT
+name|IPSEC_MODE_ANY
+condition|)
+goto|goto
+name|doipsectunnel
+goto|;
+if|if
+condition|(
+name|isr
+operator|->
+name|saidx
+operator|.
+name|mode
+operator|==
+name|IPSEC_MODE_TUNNEL
+condition|)
+goto|goto
+name|doipsectunnel
+goto|;
+block|}
+comment|/* 	 * if there's no need for tunnel mode IPsec, skip. 	 */
+if|if
+condition|(
+operator|!
+name|isr
 condition|)
 goto|goto
 name|skip_ipsec
 goto|;
-block|}
+name|doipsectunnel
+label|:
 comment|/* 	 * All the extension headers will become inaccessible 	 * (since they can be encrypted). 	 * Don't panic, we need no more updates to extension headers 	 * on inner IPv6 packet (since they are now encapsulated). 	 * 	 * IPv6 [ESP|AH] IPv6 [extension headers] payload 	 */
 name|bzero
 argument_list|(
@@ -975,9 +999,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* adjust pointer */
+if|if
+condition|(
 name|ip6
-operator|=
+operator|!=
 name|mtod
 argument_list|(
 name|m
@@ -986,7 +1011,32 @@ expr|struct
 name|ip6_hdr
 operator|*
 argument_list|)
+condition|)
+block|{
+comment|/* 		 * now tunnel mode headers are added.  we are originating 		 * packet instead of forwarding the packet. 		 */
+name|ip6_output
+argument_list|(
+name|m
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|IPV6_FORWARDING
+comment|/*XXX*/
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
+goto|goto
+name|freecopy
+goto|;
+block|}
+comment|/* adjust pointer */
 name|dst
 operator|=
 operator|(
