@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	5.28 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.27		%G%"
+literal|"@(#)sendmail.h	5.28		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,6 +544,10 @@ name|long
 name|m_maxsize
 decl_stmt|;
 comment|/* size limit on message to this mailer */
+name|int
+name|m_linelimit
+decl_stmt|;
+comment|/* max # characters per line */
 block|}
 struct|;
 end_struct
@@ -756,6 +760,28 @@ end_define
 
 begin_comment
 comment|/* use hidden-dot algorithm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_7BITS
+value|'7'
+end_define
+
+begin_comment
+comment|/* use 7-bit path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_8BITS
+value|'8'
+end_define
+
+begin_comment
+comment|/* use 8-bit path */
 end_comment
 
 begin_decl_stmt
@@ -2444,6 +2470,17 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|EightBit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* try to preserve 8-bit data */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|int
 name|SafeAlias
 decl_stmt|;
@@ -3070,6 +3107,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* config file level -- what does .cf expect? */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TimeZoneSpec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* override time zone specification */
 end_comment
 
 begin_escape

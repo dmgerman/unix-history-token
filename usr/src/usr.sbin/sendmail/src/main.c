@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.41 (Berkeley) %G%"
+literal|"@(#)main.c	5.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,28 +491,40 @@ name|canrename
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SYSTEM5
-end_ifndef
-
 begin_comment
-comment|/* Enforce use of local time */
+comment|/* Enforce use of local time (null string overrides this) */
 end_comment
 
-begin_expr_stmt
+begin_if
+if|if
+condition|(
+name|TimeZoneSpec
+operator|==
+name|NULL
+condition|)
 name|unsetenv
 argument_list|(
 literal|"TZ"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+elseif|else
+if|if
+condition|(
+name|TimeZoneSpec
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+name|TimeZoneSpec
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* 	**  Be sure we have enough file descriptors. 	**	But also be sure that 0, 1,& 2 are open. 	*/

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.30 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1775,10 +1775,73 @@ name|p
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'L'
+case|:
+comment|/* maximum line length */
+name|m
+operator|->
+name|m_linelimit
+operator|=
+name|atoi
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
 name|p
 operator|=
 name|DelimChar
+expr_stmt|;
+block|}
+comment|/* do some heuristic cleanup for back compatibility */
+if|if
+condition|(
+name|bitnset
+argument_list|(
+name|M_LIMITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_linelimit
+operator|==
+literal|0
+condition|)
+name|m
+operator|->
+name|m_linelimit
+operator|=
+name|SMTPLINELIM
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitnset
+argument_list|(
+name|M_8BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
+condition|)
+name|setbitn
+argument_list|(
+name|M_7BITS
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* now store the mailer away */
@@ -2306,18 +2369,6 @@ begin_comment
 comment|/* set if option is stuck */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|NetName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of home (local) network */
-end_comment
-
 begin_macro
 name|setoption
 argument_list|(
@@ -2450,6 +2501,18 @@ comment|/* config file generation level */
 name|ConfigLevel
 operator|=
 name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'8'
+case|:
+comment|/* allow eight-bit input */
+name|EightBit
+operator|=
+name|atobool
 argument_list|(
 name|val
 argument_list|)
@@ -2836,24 +2899,6 @@ name|val
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|DAEMON
-case|case
-literal|'N'
-case|:
-comment|/* home (local?) network name */
-name|NetName
-operator|=
-name|newstr
-argument_list|(
-name|val
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
-endif|DAEMON
 case|case
 literal|'o'
 case|:
@@ -2996,6 +3041,13 @@ case|case
 literal|'t'
 case|:
 comment|/* time zone name */
+name|TimeZoneSpec
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|'U'

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -152,6 +152,17 @@ end_define
 
 begin_comment
 comment|/* max # of MX records */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMTPLINELIM
+value|990
+end_define
+
+begin_comment
+comment|/* maximum SMTP line length */
 end_comment
 
 begin_comment

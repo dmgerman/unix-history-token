@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.41 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.42 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.41 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.42 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,7 +109,7 @@ file|<sys/resource.h>
 end_include
 
 begin_comment
-comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	maphostname(hbuf, hbufsize) **		Convert the entry in hbuf into a canonical form.  It **		may not be larger than hbufsize. */
+comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, usesecureport) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	maphostname(hbuf, hbufsize) **		Convert the entry in hbuf into a canonical form.  It **		may not be larger than hbufsize. */
 end_comment
 
 begin_decl_stmt
@@ -132,17 +132,6 @@ comment|/* **  GETREQUESTS -- open mail IPC port and get requests. ** **	Paramet
 end_comment
 
 begin_decl_stmt
-name|struct
-name|sockaddr_in
-name|SendmailAddress
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* internet address of sendmail */
-end_comment
-
-begin_decl_stmt
 name|int
 name|DaemonSocket
 init|=
@@ -153,17 +142,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* fd describing socket */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|NetName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of home (local?) network */
 end_comment
 
 begin_macro
@@ -186,6 +164,10 @@ name|int
 name|on
 init|=
 literal|1
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|srvraddr
 decl_stmt|;
 specifier|extern
 name|void
@@ -218,13 +200,13 @@ goto|goto
 name|severe
 goto|;
 block|}
-name|SendmailAddress
+name|srvraddr
 operator|.
 name|sin_family
 operator|=
 name|AF_INET
 expr_stmt|;
-name|SendmailAddress
+name|srvraddr
 operator|.
 name|sin_addr
 operator|.
@@ -232,7 +214,7 @@ name|s_addr
 operator|=
 name|INADDR_ANY
 expr_stmt|;
-name|SendmailAddress
+name|srvraddr
 operator|.
 name|sin_port
 operator|=
@@ -254,7 +236,7 @@ name|printf
 argument_list|(
 literal|"getrequests: port 0x%x\n"
 argument_list|,
-name|SendmailAddress
+name|srvraddr
 operator|.
 name|sin_port
 argument_list|)
@@ -390,10 +372,10 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|SendmailAddress
+name|srvraddr
 argument_list|,
 sizeof|sizeof
-name|SendmailAddress
+name|srvraddr
 argument_list|)
 operator|<
 literal|0
@@ -517,7 +499,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
+comment|/* **  MAKECONNECTION -- make a connection to an SMTP socket on another machine. ** **	Parameters: **		host -- the name of the host. **		port -- the port number to connect to. **		outfile -- a pointer to a place to put the outfile **			descriptor. **		infile -- ditto for infile. **		usesecureport -- if set, use a low numbered (reserved) **			port to provide some rudimentary authentication. ** **	Returns: **		An exit code telling whether the connection could be **			made and if not why not. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
@@ -530,6 +512,8 @@ argument_list|,
 argument|outfile
 argument_list|,
 argument|infile
+argument_list|,
+argument|usesecureport
 argument_list|)
 end_macro
 
@@ -562,6 +546,12 @@ name|infile
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|bool
+name|usesecureport
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -583,15 +573,19 @@ operator|*
 operator|)
 name|NULL
 decl_stmt|;
+name|struct
+name|sockaddr_in
+name|addr
+decl_stmt|;
+name|int
+name|sav_errno
+decl_stmt|;
 specifier|extern
 name|char
 modifier|*
 name|inet_ntoa
 parameter_list|()
 function_decl|;
-name|int
-name|sav_errno
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NAMED_BIND
@@ -694,7 +688,7 @@ name|EX_NOHOST
 operator|)
 return|;
 block|}
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_addr
 operator|.
@@ -771,7 +765,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_addr
 argument_list|,
@@ -792,7 +786,7 @@ name|port
 operator|!=
 literal|0
 condition|)
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_port
 operator|=
@@ -834,7 +828,7 @@ name|EX_OSFILE
 operator|)
 return|;
 block|}
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_port
 operator|=
@@ -863,7 +857,7 @@ name|host
 argument_list|,
 name|inet_ntoa
 argument_list|(
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_addr
 argument_list|)
@@ -888,6 +882,29 @@ expr_stmt|;
 else|#
 directive|else
 else|NVMUNIX
+if|if
+condition|(
+name|usesecureport
+condition|)
+block|{
+name|int
+name|rport
+init|=
+name|IPPORT_RESERVED
+operator|-
+literal|1
+decl_stmt|;
+name|s
+operator|=
+name|rresvport
+argument_list|(
+operator|&
+name|rport
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|s
 operator|=
 name|socket
@@ -899,6 +916,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 endif|NVMUNIX
@@ -909,14 +927,14 @@ operator|<
 literal|0
 condition|)
 block|{
+name|sav_errno
+operator|=
+name|errno
+expr_stmt|;
 name|syserr
 argument_list|(
 literal|"makeconnection: no socket"
 argument_list|)
-expr_stmt|;
-name|sav_errno
-operator|=
-name|errno
 expr_stmt|;
 goto|goto
 name|failure
@@ -1037,7 +1055,7 @@ condition|)
 else|#
 directive|else
 else|NVMUNIX
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_family
 operator|=
@@ -1055,10 +1073,10 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|SendmailAddress
+name|addr
 argument_list|,
 sizeof|sizeof
-name|SendmailAddress
+name|addr
 argument_list|)
 operator|<
 literal|0
@@ -1106,7 +1124,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_addr
 argument_list|,
@@ -1188,13 +1206,13 @@ name|syserr
 argument_list|(
 literal|"makeconnection: funny failure, addr=%lx, port=%x"
 argument_list|,
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_addr
 operator|.
 name|s_addr
 argument_list|,
-name|SendmailAddress
+name|addr
 operator|.
 name|sin_port
 argument_list|)

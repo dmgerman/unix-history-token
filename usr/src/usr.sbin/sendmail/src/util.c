@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.22 (Berkeley) %G%"
+literal|"@(#)util.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1437,17 +1437,6 @@ begin_comment
 comment|/* **  PUTLINE -- put a line like fputs obeying SMTP conventions ** **	This routine always guarantees outputing a newline (or CRLF, **	as appropriate) at the end of the string. ** **	Parameters: **		l -- line to put. **		fp -- file to put it onto. **		m -- the mailer used to control output. ** **	Returns: **		none ** **	Side Effects: **		output of l to fp. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SMTPLINELIM
-value|990
-end_define
-
-begin_comment
-comment|/* maximum line length */
-end_comment
-
 begin_expr_stmt
 name|putline
 argument_list|(
@@ -1494,7 +1483,7 @@ if|if
 condition|(
 name|bitnset
 argument_list|(
-name|M_LIMITS
+name|M_7BITS
 argument_list|,
 name|m
 operator|->
@@ -1563,22 +1552,21 @@ expr_stmt|;
 comment|/* check for line overflow */
 while|while
 condition|(
+name|m
+operator|->
+name|m_linelimit
+operator|>
+literal|0
+operator|&&
 operator|(
 name|p
 operator|-
 name|l
 operator|)
 operator|>
-name|SMTPLINELIM
-operator|&&
-name|bitnset
-argument_list|(
-name|M_LIMITS
-argument_list|,
 name|m
 operator|->
-name|m_flags
-argument_list|)
+name|m_linelimit
 condition|)
 block|{
 specifier|register
@@ -1589,7 +1577,9 @@ init|=
 operator|&
 name|l
 index|[
-name|SMTPLINELIM
+name|m
+operator|->
+name|m_linelimit
 operator|-
 literal|1
 index|]
@@ -2048,6 +2038,11 @@ name|NULL
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|!
+name|EightBit
+condition|)
 for|for
 control|(
 name|p
@@ -2255,6 +2250,50 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|EightBit
+condition|)
+block|{
+comment|/* headers always have to be 7-bit */
+for|for
+control|(
+name|p
+operator|=
+name|buf
+init|;
+operator|(
+name|i
+operator|=
+operator|*
+name|p
+operator|)
+operator|!=
+literal|'\0'
+condition|;
+operator|*
+name|p
+operator|++
+control|)
+if|if
+condition|(
+name|bitset
+argument_list|(
+literal|0200
+argument_list|,
+name|i
+argument_list|)
+condition|)
+operator|*
+name|p
+operator|=
+name|i
+operator|&
+operator|~
+literal|0200
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|buf
