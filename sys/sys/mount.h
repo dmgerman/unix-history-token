@@ -1999,19 +1999,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|vfs_mountroot
-name|__P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|vfs_mountrootfs
 name|__P
 argument_list|(
