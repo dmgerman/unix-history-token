@@ -5251,6 +5251,8 @@ name|type
 argument_list|,
 name|rid
 argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|rid
 operator|++
