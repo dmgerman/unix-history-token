@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runpcs.c	4.3 %G%"
+literal|"@(#)runpcs.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1036,19 +1036,6 @@ name|ap
 operator|++
 expr_stmt|;
 name|FI
-name|WHILE
-name|lastc
-operator|==
-name|SP
-name|ORF
-name|lastc
-operator|==
-name|TB
-name|DO
-name|readchar
-argument_list|()
-expr_stmt|;
-name|OD
 name|PER
 name|lastc
 operator|!=
