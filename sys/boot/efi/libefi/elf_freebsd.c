@@ -240,8 +240,7 @@ name|Elf_Ehdr
 modifier|*
 name|hdr
 decl_stmt|;
-name|struct
-name|ia64_pte
+name|pt_entry_t
 name|pte
 decl_stmt|;
 name|struct
@@ -517,122 +516,29 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
 name|pte
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pte
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|pte
-operator|.
-name|pte_p
 operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ma
-operator|=
+name|PTE_PRESENT
+operator||
 name|PTE_MA_WB
-expr_stmt|;
-name|pte
-operator|.
-name|pte_a
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_d
-operator|=
-literal|1
-expr_stmt|;
-name|pte
-operator|.
-name|pte_pl
-operator|=
+operator||
+name|PTE_ACCESSED
+operator||
+name|PTE_DIRTY
+operator||
 name|PTE_PL_KERN
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ar
-operator|=
+operator||
 name|PTE_AR_RWX
-expr_stmt|;
-name|pte
-operator|.
-name|pte_ppn
-operator|=
-literal|0
 expr_stmt|;
 asm|__asm __volatile("mov cr.ifa=%0" :: "r"(IA64_RR_BASE(7)));
 asm|__asm __volatile("mov cr.itir=%0" :: "r"(28<< 2));
 asm|__asm __volatile("ptr.i %0,%1" :: "r"(IA64_RR_BASE(7)), "r"(28<<2));
 asm|__asm __volatile("ptr.d %0,%1" :: "r"(IA64_RR_BASE(7)), "r"(28<<2));
 asm|__asm __volatile("srlz.i;;");
-asm|__asm __volatile("itr.i itr[%0]=%1;;"
-operator|::
-literal|"r"
-operator|(
-literal|0
-operator|)
-operator|,
-literal|"r"
-operator|(
-operator|*
-operator|(
-name|u_int64_t
-operator|*
-operator|)
-operator|&
-name|pte
-operator|)
-block|)
-function|;
-end_function
-
-begin_asm
+asm|__asm __volatile("itr.i itr[%0]=%1;;" :: "r"(0), "r"(pte));
 asm|__asm __volatile("srlz.i;;");
-end_asm
-
-begin_asm
-asm|__asm __volatile("itr.d dtr[%0]=%1;;"
-end_asm
-
-begin_expr_stmt
-operator|::
-literal|"r"
-operator|(
-literal|0
-operator|)
-operator|,
-literal|"r"
-operator|(
-operator|*
-operator|(
-name|u_int64_t
-operator|*
-operator|)
-operator|&
-name|pte
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_asm
+asm|__asm __volatile("itr.d dtr[%0]=%1;;" :: "r"(0), "r"(pte));
 asm|__asm __volatile("srlz.i;;");
-end_asm
-
-begin_expr_stmt
 name|enter_kernel
 argument_list|(
 name|hdr
@@ -642,16 +548,13 @@ argument_list|,
 name|bi
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|restore_ic
 argument_list|(
 name|psr
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
-unit|}
 end_unit
 
