@@ -599,7 +599,7 @@ modifier|*
 name|fs_maxcluster
 decl_stmt|;
 comment|/* max cluster in each cyl group */
-name|u_int8_t
+name|u_int32_t
 modifier|*
 name|fs_active
 decl_stmt|;
@@ -871,6 +871,32 @@ name|fs
 parameter_list|)
 define|\
 value|(((fs)->fs_postblformat == FS_42POSTBLFMT) \     ? ((fs)->fs_space) \     : ((u_int8_t *)((u_int8_t *)(fs) + (fs)->fs_rotbloff)))
+end_define
+
+begin_comment
+comment|/*  * Macros to access bits in the fs_active array.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACTIVECGNUM
+parameter_list|(
+name|fs
+parameter_list|,
+name|cg
+parameter_list|)
+value|((fs)->fs_active[(cg) / (NBBY * sizeof(int))])
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACTIVECGOFF
+parameter_list|(
+name|cg
+parameter_list|)
+value|(1<< ((cg) / (NBBY * sizeof(int))))
 end_define
 
 begin_comment
