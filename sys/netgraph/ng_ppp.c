@@ -4350,7 +4350,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Deliver a frame out a link, either a real one or NG_PPP_BUNDLE_LINKNUM  * If the link is not enabled then ENXIO is returned, unless "bypass" is != 0.  */
+comment|/*  * Deliver a frame out a link, either a real one or NG_PPP_BUNDLE_LINKNUM.  * If the link is not enabled then ENXIO is returned, unless "bypass" is != 0.  *  * If the frame is too big for the particular link, return EMSGSIZE.  */
 end_comment
 
 begin_function
@@ -4396,6 +4396,9 @@ name|int
 name|len
 decl_stmt|,
 name|error
+decl_stmt|;
+name|u_int16_t
+name|mru
 decl_stmt|;
 comment|/* If not doing MP, map bundle virtual link to (the only) link */
 if|if
@@ -4495,6 +4498,55 @@ name|ENETDOWN
 operator|)
 return|;
 block|}
+block|}
+comment|/* Check peer's MRU for this link */
+name|mru
+operator|=
+operator|(
+name|link
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|link
+operator|->
+name|conf
+operator|.
+name|mru
+else|:
+name|priv
+operator|->
+name|conf
+operator|.
+name|mrru
+expr_stmt|;
+if|if
+condition|(
+name|mru
+operator|!=
+literal|0
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>
+name|mru
+condition|)
+block|{
+name|NG_FREE_DATA
+argument_list|(
+name|m
+argument_list|,
+name|meta
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EMSGSIZE
+operator|)
+return|;
 block|}
 comment|/* Prepend protocol number, possibly compressed */
 if|if
@@ -6835,6 +6887,20 @@ name|node
 operator|->
 name|private
 decl_stmt|;
+specifier|const
+name|int
+name|hdr_len
+init|=
+name|priv
+operator|->
+name|conf
+operator|.
+name|xmitShortSeq
+condition|?
+literal|2
+else|:
+literal|4
+decl_stmt|;
 name|int
 name|distrib
 index|[
@@ -7164,6 +7230,8 @@ operator|->
 name|conf
 operator|.
 name|mru
+operator|-
+name|hdr_len
 condition|)
 name|len
 operator|=
@@ -7172,6 +7240,8 @@ operator|->
 name|conf
 operator|.
 name|mru
+operator|-
+name|hdr_len
 expr_stmt|;
 name|distrib
 index|[
