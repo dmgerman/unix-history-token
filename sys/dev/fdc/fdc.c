@@ -162,14 +162,385 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/fdc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<isa/rtc.h>
 end_include
+
+begin_enum
+enum|enum
+name|fdc_type
+block|{
+name|FDC_NE765
+block|,
+name|FDC_I82077
+block|,
+name|FDC_NE72065
+block|,
+name|FDC_UNKNOWN
+init|=
+operator|-
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fdc_states
+block|{
+name|DEVIDLE
+block|,
+name|FINDWORK
+block|,
+name|DOSEEK
+block|,
+name|SEEKCOMPLETE
+block|,
+name|IOCOMPLETE
+block|,
+name|RECALCOMPLETE
+block|,
+name|STARTRECAL
+block|,
+name|RESETCTLR
+block|,
+name|SEEKWAIT
+block|,
+name|RECALWAIT
+block|,
+name|MOTORWAIT
+block|,
+name|IOTIMEDOUT
+block|,
+name|RESETCOMPLETE
+block|,
+name|PIOREAD
+block|}
+enum|;
+end_enum
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDC_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+modifier|*
+specifier|const
+name|fdstates
+index|[]
+init|=
+block|{
+literal|"DEVIDLE"
+block|,
+literal|"FINDWORK"
+block|,
+literal|"DOSEEK"
+block|,
+literal|"SEEKCOMPLETE"
+block|,
+literal|"IOCOMPLETE"
+block|,
+literal|"RECALCOMPLETE"
+block|,
+literal|"STARTRECAL"
+block|,
+literal|"RESETCTLR"
+block|,
+literal|"SEEKWAIT"
+block|,
+literal|"RECALWAIT"
+block|,
+literal|"MOTORWAIT"
+block|,
+literal|"IOTIMEDOUT"
+block|,
+literal|"RESETCOMPLETE"
+block|,
+literal|"PIOREAD"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Per controller structure (softc).  */
+end_comment
+
+begin_struct
+struct|struct
+name|fdc_data
+block|{
+name|int
+name|fdcu
+decl_stmt|;
+comment|/* our unit number */
+name|int
+name|dmachan
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FDC_ATTACHED
+value|0x01
+define|#
+directive|define
+name|FDC_STAT_VALID
+value|0x08
+define|#
+directive|define
+name|FDC_HAS_FIFO
+value|0x10
+define|#
+directive|define
+name|FDC_NEEDS_RESET
+value|0x20
+define|#
+directive|define
+name|FDC_NODMA
+value|0x40
+define|#
+directive|define
+name|FDC_ISPNP
+value|0x80
+define|#
+directive|define
+name|FDC_ISPCMCIA
+value|0x100
+name|struct
+name|fd_data
+modifier|*
+name|fd
+decl_stmt|;
+name|int
+name|fdu
+decl_stmt|;
+comment|/* the active drive	*/
+name|enum
+name|fdc_states
+name|state
+decl_stmt|;
+name|int
+name|retry
+decl_stmt|;
+name|int
+name|fdout
+decl_stmt|;
+comment|/* mirror of the w/o digital output reg */
+name|u_int
+name|status
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* copy of the registers */
+name|enum
+name|fdc_type
+name|fdct
+decl_stmt|;
+comment|/* chip version of FDC */
+name|int
+name|fdc_errs
+decl_stmt|;
+comment|/* number of logged errors */
+name|int
+name|dma_overruns
+decl_stmt|;
+comment|/* number of DMA overruns */
+name|struct
+name|bio_queue_head
+name|head
+decl_stmt|;
+name|struct
+name|bio
+modifier|*
+name|bp
+decl_stmt|;
+comment|/* active buffer */
+name|struct
+name|resource
+modifier|*
+name|res_ioport
+decl_stmt|,
+modifier|*
+name|res_ctl
+decl_stmt|,
+modifier|*
+name|res_irq
+decl_stmt|,
+modifier|*
+name|res_drq
+decl_stmt|;
+name|int
+name|rid_ioport
+decl_stmt|,
+name|rid_ctl
+decl_stmt|,
+name|rid_irq
+decl_stmt|,
+name|rid_drq
+decl_stmt|;
+name|int
+name|port_off
+decl_stmt|;
+name|bus_space_tag_t
+name|portt
+decl_stmt|;
+name|bus_space_handle_t
+name|porth
+decl_stmt|;
+name|bus_space_tag_t
+name|ctlt
+decl_stmt|;
+name|bus_space_handle_t
+name|ctlh
+decl_stmt|;
+name|void
+modifier|*
+name|fdc_intr
+decl_stmt|;
+name|struct
+name|device
+modifier|*
+name|fdc_dev
+decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|fdctl_wr
+function_decl|)
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+name|fdc
+parameter_list|,
+name|u_int8_t
+name|v
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|int
+name|fdu_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|fdcu_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|fdsu_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fd_data
+modifier|*
+name|fd_p
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|fdc_data
+modifier|*
+name|fdc_p
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|enum
+name|fdc_type
+name|fdc_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|FDUNIT
+parameter_list|(
+name|s
+parameter_list|)
+value|(((s)>> 6)& 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FDTYPE
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)& 0x3f)
+end_define
+
+begin_comment
+comment|/*  * fdc maintains a set (1!) of ivars per child of each controller.  */
+end_comment
+
+begin_enum
+enum|enum
+name|fdc_device_ivars
+block|{
+name|FDC_IVAR_FDUNIT
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * Simple access macros for the ivars.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FDC_ACCESSOR
+parameter_list|(
+name|A
+parameter_list|,
+name|B
+parameter_list|,
+name|T
+parameter_list|)
+define|\
+value|static __inline T fdc_get_ ## A(device_t dev)				\ {									\ 	uintptr_t v;							\ 	BUS_READ_IVAR(device_get_parent(dev), dev, FDC_IVAR_ ## B,&v);	\ 	return (T) v;							\ }
+end_define
+
+begin_macro
+name|FDC_ACCESSOR
+argument_list|(
+argument|fdunit
+argument_list|,
+argument|FDUNIT
+argument_list|,
+argument|int
+argument_list|)
+end_macro
 
 begin_comment
 comment|/* configuration flags */
@@ -268,10 +639,6 @@ directive|define
 name|NO_TYPE
 value|0
 end_define
-
-begin_comment
-comment|/* must match NO_TYPE in ft.c */
-end_comment
 
 begin_define
 define|#
@@ -874,10 +1241,6 @@ name|MAX_HEAD
 value|1
 end_define
 
-begin_comment
-comment|/***********************************************************************\ * Per controller structure.						* \***********************************************************************/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|devclass_t
@@ -886,7 +1249,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/***********************************************************************\ * Per drive structure.							* * N per controller  (DRVS_PER_CTLR)					* \***********************************************************************/
+comment|/*  * Per drive structure (softc).  */
 end_comment
 
 begin_struct
@@ -1012,19 +1375,359 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/***********************************************************************\ * Throughout this file the following conventions will be used:		* * fd is a pointer to the fd_data struct for the drive in question	* * fdc is a pointer to the fdc_data struct for the controller		* * fdu is the floppy drive unit number					* * fdcu is the floppy controller unit number				* * fdsu is the floppy drive unit number on that controller. (sub-unit)	* \***********************************************************************/
+comment|/*  * Throughout this file the following conventions will be used:  *  * fd is a pointer to the fd_data struct for the drive in question  * fdc is a pointer to the fdc_data struct for the controller  * fdu is the floppy drive unit number  * fdcu is the floppy controller unit number  * fdsu is the floppy drive unit number on that controller. (sub-unit)  */
 end_comment
 
 begin_comment
-comment|/* internal functions */
+comment|/*  * Function declarations, same (chaotic) order as they appear in the  * file.  Re-ordering is too late now, it would only obfuscate the  * diffs against old and offspring versions (like the PC98 one).  *  * Anyone adding functions here, please keep this sequence the same  * as below -- makes locating a particular function in the body much  * easier.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
-name|driver_intr_t
-name|fdc_intr
-decl_stmt|;
-end_decl_stmt
+name|void
+name|fdout_wr
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|u_int8_t
+name|fdsts_rd
+parameter_list|(
+name|fdc_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fddata_wr
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|u_int8_t
+name|fddata_rd
+parameter_list|(
+name|fdc_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fdctl_wr_isa
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|NCARD
+operator|>
+literal|0
+end_if
+
+begin_function_decl
+specifier|static
+name|void
+name|fdctl_wr_pcmcia
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static u_int8_t fdin_rd(fdc_p);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_err
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_cmd
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|enable_fifo
+parameter_list|(
+name|fdc_p
+name|fdc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_sense_drive_status
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_sense_int
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_read_status
+parameter_list|(
+name|fdc_p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_alloc_resources
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fdc_release_resources
+parameter_list|(
+name|struct
+name|fdc_data
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_read_ivar
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|,
+name|int
+parameter_list|,
+name|uintptr_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+name|NCARD
+operator|>
+literal|0
+end_if
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_pccard_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_detach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fdc_add_child
+parameter_list|(
+name|device_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fdc_print_child
+parameter_list|(
+name|device_t
+parameter_list|,
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|fd_clone
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|dev_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_attach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|fd_detach
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1121,6 +1824,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * The open function is named Fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|Fdopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|fdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_strategy_t
+name|fdstrategy
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -1146,6 +1874,29 @@ name|timeout_t
 name|fd_pseudointr
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|driver_intr_t
+name|fdc_intr
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|fdcpio
+parameter_list|(
+name|fdc_p
+parameter_list|,
+name|long
+parameter_list|,
+name|caddr_t
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1173,6 +1924,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|fdbiodone
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|fdmisccmd
 parameter_list|(
@@ -1186,39 +1949,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|int
-name|enable_fifo
-parameter_list|(
-name|fdc_p
-name|fdc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|fd_clone
-parameter_list|(
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|int
-name|namelen
-parameter_list|,
-name|dev_t
-modifier|*
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
+name|d_ioctl_t
+name|fdioctl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -1238,47 +1974,6 @@ ifdef|#
 directive|ifdef
 name|FDC_DEBUG
 end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|char
-specifier|const
-modifier|*
-specifier|const
-name|fdstates
-index|[]
-init|=
-block|{
-literal|"DEVIDLE"
-block|,
-literal|"FINDWORK"
-block|,
-literal|"DOSEEK"
-block|,
-literal|"SEEKCOMPLETE"
-block|,
-literal|"IOCOMPLETE"
-block|,
-literal|"RECALCOMPLETE"
-block|,
-literal|"STARTRECAL"
-block|,
-literal|"RESETCTLR"
-block|,
-literal|"SEEKWAIT"
-block|,
-literal|"RECALWAIT"
-block|,
-literal|"MOTORWAIT"
-block|,
-literal|"IOTIMEDOUT"
-block|,
-literal|"RESETCOMPLETE"
-block|,
-literal|"PIOREAD"
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* CAUTION: fd_debug causes huge amounts of logging output */
@@ -1354,6 +2049,10 @@ end_endif
 
 begin_comment
 comment|/* FDC_DEBUG */
+end_comment
+
+begin_comment
+comment|/*  * Bus space handling (access to low-level IO).  */
 end_comment
 
 begin_function
@@ -1573,38 +2272,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * The open function is named Fdopen() to avoid confusion with fdopen()  * in fd(4).  The difference is now only meaningful for debuggers.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|d_open_t
-name|Fdopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_close_t
-name|fdclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_ioctl_t
-name|fdioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_strategy_t
-name|fdstrategy
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1660,6 +2327,10 @@ name|D_DISK
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Auxiliary functions.  Well, some only.  Others are scattered  * throughout the entire file.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2344,6 +3015,8 @@ for|for
 control|(
 name|i
 operator|=
+name|ret
+operator|=
 literal|0
 init|;
 name|i
@@ -2410,18 +3083,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                      autoconfiguration stuff                             */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
 
 begin_function
 specifier|static
@@ -3040,15 +3701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                      autoconfiguration stuff                             */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
+comment|/*  * Configuration/initialization stuff, per controller.  */
 end_comment
 
 begin_decl_stmt
@@ -3135,10 +3788,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * fdc controller section.  */
-end_comment
 
 begin_function
 specifier|static
@@ -4750,11 +5399,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************/
-end_comment
-
-begin_comment
-comment|/*  * devices attached to the controller section.    */
+comment|/*  * Configuration/initialization, per drive.  */
 end_comment
 
 begin_function
@@ -5785,19 +6430,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/****************************************************************************/
+comment|/*  * More auxiliary functions.  */
 end_comment
 
 begin_comment
-comment|/*                            motor control stuff                           */
-end_comment
-
-begin_comment
-comment|/*		remember to not deselect the drive we're working on         */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
+comment|/*  * Motor control stuff.  * Remember to not deselect the drive we're working on.  */
 end_comment
 
 begin_function
@@ -6251,15 +6888,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                             fdc in/out                                   */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
+comment|/*  * FDC IO functions, take care of the main status register, timeout  * in case the desired status bits are never set.  */
 end_comment
 
 begin_function
@@ -6519,15 +7148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                           fdopen/fdclose                                 */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
+comment|/*  * Block device driver interface functions (interspersed with even more  * auxiliary functions).  */
 end_comment
 
 begin_function
@@ -6916,18 +7537,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
-
-begin_comment
-comment|/*                               fdstrategy                                 */
-end_comment
-
-begin_comment
-comment|/****************************************************************************/
-end_comment
 
 begin_function
 name|void
@@ -7328,7 +7937,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***************************************************************\ *				fdstart				* * We have just queued something.. if the controller is not busy	* * then simulate the case where it has just finished a command	* * So that it (the interrupt routine) looks on the queue for more* * work to do and picks up what we just added.			* * If the controller is already busy, we need do nothing, as it	* * will pick up our work when the present work completes		* \***************************************************************/
+comment|/*  * fdstart  *  * We have just queued something.  If the controller is not busy  * then simulate the case where it has just finished a command  * So that it (the interrupt routine) looks on the queue for more  * work to do and picks up what we just added.  *  * If the controller is already busy, we need do nothing, as it  * will pick up our work when the present work completes.  */
 end_comment
 
 begin_function
@@ -7444,7 +8053,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* just ensure it has the right spl */
+comment|/* Just ensure it has the right spl. */
 end_comment
 
 begin_function
@@ -7479,7 +8088,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************************************\ *                                 fdc_intr				* * keep calling the state machine until it returns a 0			* * ALWAYS called at SPLBIO 						* \***********************************************************************/
+comment|/*  * fdc_intr  *  * Keep calling the state machine until it returns a 0.  * Always called at splbio.  */
 end_comment
 
 begin_function
@@ -7509,7 +8118,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * magic pseudo-DMA initialization for YE FDC. Sets count and  * direction  */
+comment|/*  * Magic pseudo-DMA initialization for YE FDC. Sets count and  * direction.  */
 end_comment
 
 begin_define
@@ -7530,7 +8139,7 @@ value|bus_space_write_1(fdc->portt, fdc->porth, fdc->port_off + port,	 \ 	    ((
 end_define
 
 begin_comment
-comment|/*  * fdcpio(): perform programmed IO read/write for YE PCMCIA floppy  */
+comment|/*  * fdcpio(): perform programmed IO read/write for YE PCMCIA floppy.  */
 end_comment
 
 begin_function
@@ -7666,7 +8275,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***********************************************************************\ * The controller state machine.						* * if it returns a non zero value, it should be called again immediatly	* \***********************************************************************/
+comment|/*  * The controller state machine.  *  * If it returns a non zero value, it should be called again immediately.  */
 end_comment
 
 begin_function
@@ -7796,7 +8405,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/***********************************************\ 		* nothing left for this controller to do	* 		* Force into the IDLE state,			* 		\***********************************************/
+comment|/* 		 * Nothing left for this controller to do, 		 * force into the IDLE state. 		 */
 name|fdc
 operator|->
 name|state
@@ -8073,7 +8682,7 @@ operator|->
 name|trans
 argument_list|)
 expr_stmt|;
-comment|/*******************************************************\ 		* If the next drive has a motor startup pending, then	* 		* it will start up in its own good time			* 		\*******************************************************/
+comment|/* 		 * If the next drive has a motor startup pending, then 		 * it will start up in its own good time. 		 */
 if|if
 condition|(
 name|fd
@@ -8094,9 +8703,9 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* come back later */
+comment|/* will return later */
 block|}
-comment|/*******************************************************\ 		* Maybe if it's not starting, it SHOULD be starting	* 		\*******************************************************/
+comment|/* 		 * Maybe if it's not starting, it SHOULD be starting. 		 */
 if|if
 condition|(
 operator|!
@@ -8125,6 +8734,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* will return later */
 block|}
 else|else
 comment|/* at least make sure we are selected */
@@ -8176,7 +8786,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* come back immediately */
+comment|/* will return immediately */
 case|case
 name|DOSEEK
 case|:
@@ -8230,7 +8840,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* come back immediately */
+comment|/* will return immediately */
 block|}
 if|if
 condition|(
@@ -8258,7 +8868,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-comment|/* 			 * seek command not accepted, looks like 			 * the FDC went off to the Saints... 			 */
+comment|/* 			 * Seek command not accepted, looks like 			 * the FDC went off to the Saints... 			 */
 name|fdc
 operator|->
 name|retry
@@ -8323,7 +8933,7 @@ comment|/* will return later */
 case|case
 name|SEEKCOMPLETE
 case|:
-comment|/* SEEK DONE, START DMA */
+comment|/* seek done, start DMA */
 name|blknum
 operator|=
 name|bp
@@ -8354,7 +8964,7 @@ operator|->
 name|heads
 operator|)
 expr_stmt|;
-comment|/* Make sure seek really happened*/
+comment|/* Make sure seek really happened. */
 if|if
 condition|(
 name|fd
@@ -8394,8 +9004,11 @@ operator|==
 name|FD_NOT_VALID
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
+comment|/* will return later */
 if|if
 condition|(
 name|fdc
@@ -8413,7 +9026,9 @@ operator|==
 name|NE7_ST0_IC_RC
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* hope for a real intr */
 block|}
@@ -8854,6 +9469,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* will return immediately */
 block|}
 block|}
 if|if
@@ -9054,7 +9670,7 @@ operator|&
 name|FDC_NODMA
 condition|)
 block|{
-comment|/* 				 * this seems to be necessary even when 				 * reading data 				 */
+comment|/* 				 * This seems to be necessary even when 				 * reading data. 				 */
 name|SET_BCDR
 argument_list|(
 name|fdc
@@ -9066,7 +9682,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 				 * perform the write pseudo-DMA before 				 * the WRITE command is sent 				 */
+comment|/* 				 * Perform the write pseudo-DMA before 				 * the WRITE command is sent. 				 */
 if|if
 condition|(
 operator|!
@@ -9222,7 +9838,7 @@ operator|&
 name|FDC_NODMA
 operator|)
 condition|)
-comment|/* 			 * if this is a read, then simply await interrupt 			 * before performing PIO 			 */
+comment|/* 			 * If this is a read, then simply await interrupt 			 * before performing PIO. 			 */
 if|if
 condition|(
 name|read
@@ -9268,7 +9884,7 @@ operator|)
 return|;
 comment|/* will return later */
 block|}
-comment|/* 		 * write (or format) operation will fall through and 		 * await completion interrupt 		 */
+comment|/* 		 * Write (or format) operation will fall through and 		 * await completion interrupt. 		 */
 name|fdc
 operator|->
 name|state
@@ -9297,7 +9913,7 @@ comment|/* will return later */
 case|case
 name|PIOREAD
 case|:
-comment|/*  		 * actually perform the PIO read.  The IOCOMPLETE case 		 * removes the timeout for us.   		 */
+comment|/*  		 * Actually perform the PIO read.  The IOCOMPLETE case 		 * removes the timeout for us. 		 */
 operator|(
 name|void
 operator|)
@@ -9330,7 +9946,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|IOCOMPLETE
 case|:
-comment|/* IO DONE, post-analyze */
+comment|/* IO done, post-analyze */
 name|untimeout
 argument_list|(
 name|fd_iotimeout
@@ -9521,6 +10137,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* will return immediately */
 block|}
 comment|/* else fall through */
 block|}
@@ -9768,6 +10385,7 @@ operator|(
 literal|1
 operator|)
 return|;
+comment|/* will return immediately */
 case|case
 name|RESETCTLR
 case|:
@@ -9792,6 +10410,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* will return later */
 case|case
 name|RESETCOMPLETE
 case|:
@@ -9926,8 +10545,11 @@ operator|==
 name|FD_NOT_VALID
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
+comment|/* will return later */
 if|if
 condition|(
 name|fdc
@@ -9945,7 +10567,9 @@ operator|==
 name|NE7_ST0_IC_RC
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 comment|/* hope for a real intr */
 block|}
@@ -9983,7 +10607,7 @@ name|retry
 operator|>
 literal|3
 condition|)
-comment|/* 				 * a recalibrate from beyond cylinder 77 				 * will "fail" due to the FDC limitations; 				 * since people used to complain much about 				 * the failure message, try not logging 				 * this one if it seems to be the first 				 * time in a line 				 */
+comment|/* 				 * A recalibrate from beyond cylinder 77 				 * will "fail" due to the FDC limitations; 				 * since people used to complain much about 				 * the failure message, try not logging 				 * this one if it seems to be the first 				 * time in a line. 				 */
 name|printf
 argument_list|(
 literal|"fd%d: recal failed ST0 %b cyl %d\n"
@@ -10038,7 +10662,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* will return immediatly */
+comment|/* will return immediately */
 case|case
 name|MOTORWAIT
 case|:
@@ -10093,7 +10717,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* will return immediatly */
+comment|/* will return immediately */
 default|default:
 name|device_printf
 argument_list|(
@@ -10199,6 +10823,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* will return later */
 block|}
 name|printf
 argument_list|(
@@ -10214,13 +10839,9 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* will return later */
 block|}
-comment|/* keep the compiler happy -- noone should ever get here */
-return|return
-operator|(
-literal|999999
-operator|)
-return|;
+comment|/* noone should ever get here */
 block|}
 end_function
 
