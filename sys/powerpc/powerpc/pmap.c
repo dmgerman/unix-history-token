@@ -4228,6 +4228,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Remove a wired page from kernel virtual address space.  */
+end_comment
+
 begin_function
 name|void
 name|pmap_kremove
@@ -4236,7 +4240,19 @@ name|vm_offset_t
 name|va
 parameter_list|)
 block|{
-name|TODO
+name|pmap_remove
+argument_list|(
+name|kernel_pmap
+argument_list|,
+name|va
+argument_list|,
+name|roundup
+argument_list|(
+name|va
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5139,6 +5155,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Map a list of wired pages into kernel virtual address space.  This is  * intended for temporary mappings which do not need page modification or  * references recorded.  Existing mappings in the region are overwritten.  */
+end_comment
+
 begin_function
 name|void
 name|pmap_qenter
@@ -5190,6 +5210,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Remove page mappings from kernel virtual address space.  Intended for  * temporary mappings entered by pmap_qenter.  */
+end_comment
+
 begin_function
 name|void
 name|pmap_qremove
@@ -5201,7 +5225,30 @@ name|int
 name|count
 parameter_list|)
 block|{
-name|TODO
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|count
+condition|;
+name|i
+operator|++
+operator|,
+name|va
+operator|+=
+name|PAGE_SIZE
+control|)
+name|pmap_kremove
+argument_list|(
+name|va
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5245,12 +5292,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Remove the given range of addresses from the specified map.  */
+end_comment
+
 begin_function
 name|void
 name|pmap_remove
 parameter_list|(
 name|pmap_t
-name|pmap
+name|pm
 parameter_list|,
 name|vm_offset_t
 name|sva
@@ -5259,8 +5310,54 @@ name|vm_offset_t
 name|eva
 parameter_list|)
 block|{
-name|TODO
+name|struct
+name|pvo_entry
+modifier|*
+name|pvo
+decl_stmt|;
+name|int
+name|pteidx
+decl_stmt|;
+for|for
+control|(
+init|;
+name|sva
+operator|<
+name|eva
+condition|;
+name|sva
+operator|+=
+name|PAGE_SIZE
+control|)
+block|{
+name|pvo
+operator|=
+name|pmap_pvo_find_va
+argument_list|(
+name|pm
+argument_list|,
+name|sva
+argument_list|,
+operator|&
+name|pteidx
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pvo
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pmap_pvo_remove
+argument_list|(
+name|pvo
+argument_list|,
+name|pteidx
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
