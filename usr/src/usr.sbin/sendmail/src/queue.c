@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.67
+literal|3.68
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.67
+literal|3.68
 operator|%
 name|G
 operator|%
@@ -1928,6 +1928,11 @@ operator|)
 name|alarm
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+name|closexscript
+argument_list|(
+name|CurEnv
 argument_list|)
 expr_stmt|;
 name|CurEnv

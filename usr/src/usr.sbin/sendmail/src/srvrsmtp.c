@@ -27,7 +27,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -55,7 +55,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.42
+literal|3.43
 operator|%
 name|G
 operator|%
@@ -1007,7 +1007,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
+comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
 if|if
 condition|(
 name|rcps
@@ -1030,6 +1030,26 @@ name|e_flags
 operator|&=
 operator|~
 name|EF_FATALERRS
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_xfp
+operator|=
+name|freopen
+argument_list|(
+name|queuename
+argument_list|(
+name|CurEnv
+argument_list|,
+literal|'x'
+argument_list|)
+argument_list|,
+literal|"w"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_xfp
+argument_list|)
 expr_stmt|;
 comment|/* send to all recipients */
 name|sendall
