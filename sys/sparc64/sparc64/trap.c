@@ -1366,6 +1366,12 @@ operator|==
 name|MEMBARSYNC_INST
 condition|)
 block|{
+name|cache_flush
+argument_list|()
+expr_stmt|;
+name|cache_enable
+argument_list|()
+expr_stmt|;
 name|tf
 operator|->
 name|tf_tpc

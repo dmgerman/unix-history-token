@@ -94,6 +94,32 @@ file|<machine/tlb.h>
 end_include
 
 begin_comment
+comment|/*  * Enable level 1 caches.  */
+end_comment
+
+begin_function
+name|void
+name|cheetah_cache_enable
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|/*  * Flush all lines from the level 1 caches.  */
+end_comment
+
+begin_function
+name|void
+name|cheetah_cache_flush
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
 comment|/*  * Flush a physical page from the data cache.  */
 end_comment
 
