@@ -6037,7 +6037,7 @@ operator|->
 name|m_pkthdr
 operator|.
 name|len
-operator|<
+operator|<=
 name|ifp
 operator|->
 name|if_mtu
