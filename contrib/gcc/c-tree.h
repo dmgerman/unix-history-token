@@ -3299,6 +3299,13 @@ name|warn_format
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|warn_format_extra_args
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Warn about a subscript that has type char.  */
 end_comment
