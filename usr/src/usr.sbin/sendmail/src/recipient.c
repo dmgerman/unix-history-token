@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.12 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,22 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* previous sibling */
+if|if
+condition|(
+name|list
+operator|==
+name|NULL
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"sendtolist: null list"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|tTd
