@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.222 1999/07/08 17:58:55 mckusick Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.223 1999/07/09 16:41:19 peter Exp $  */
 end_comment
 
 begin_comment
@@ -342,6 +342,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|runningbufspace
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|vmiodirenable
+init|=
+name|FALSE
 decl_stmt|;
 end_decl_stmt
 
@@ -799,6 +807,27 @@ name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|getnewbufrestarts
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|vmiodirenable
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|vmiodirenable
 argument_list|,
 literal|0
 argument_list|,
