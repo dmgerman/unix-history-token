@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	compact.h	4.3	83/05/04	*/
+comment|/*	compact.h	4.4	83/06/03	*/
 end_comment
 
 begin_define
@@ -51,13 +51,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dir.h>
 end_include
 
 begin_include
@@ -70,7 +76,7 @@ begin_define
 define|#
 directive|define
 name|LNAME
-value|1024
+value|(MAXPATHLEN+1)
 end_define
 
 begin_define
