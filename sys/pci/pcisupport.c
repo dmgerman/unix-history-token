@@ -5042,6 +5042,15 @@ operator|(
 literal|"DEC 21154 PCI-PCI bridge"
 operator|)
 return|;
+comment|/* Compaq -- vendor 0x0e11 */
+case|case
+literal|0x60100e11
+case|:
+return|return
+operator|(
+literal|"Compaq HotPlug PCI bridge"
+operator|)
+return|;
 comment|/* Others */
 case|case
 literal|0x00221014
