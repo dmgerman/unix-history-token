@@ -897,7 +897,6 @@ name|struct
 name|disk
 modifier|*
 parameter_list|,
-specifier|const
 name|struct
 name|chunk
 modifier|*

@@ -60,7 +60,6 @@ file|"libdisk.h"
 end_include
 
 begin_function
-specifier|static
 name|struct
 name|chunk
 modifier|*
