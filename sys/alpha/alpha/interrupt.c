@@ -449,6 +449,17 @@ argument_list|,
 literal|"ignoring clock on secondary"
 argument_list|)
 expr_stmt|;
+name|atomic_subtract_int
+argument_list|(
+operator|&
+name|PCPU_GET
+argument_list|(
+name|intr_nesting_level
+argument_list|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|mtx_enter
