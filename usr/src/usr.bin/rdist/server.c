@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)server.c	5.12 (Berkeley) %G%"
+literal|"@(#)server.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3354,7 +3354,7 @@ decl_stmt|;
 specifier|extern
 name|char
 modifier|*
-name|tmpname
+name|tempname
 decl_stmt|;
 name|cp
 operator|=
@@ -3905,7 +3905,7 @@ name|strcpy
 argument_list|(
 name|new
 argument_list|,
-name|tmpname
+name|tempname
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3924,7 +3924,7 @@ name|new
 argument_list|,
 literal|"/%s"
 argument_list|,
-name|tmpname
+name|tempname
 argument_list|)
 expr_stmt|;
 else|else
@@ -3945,7 +3945,7 @@ literal|"%s/%s"
 argument_list|,
 name|target
 argument_list|,
-name|tmpname
+name|tempname
 argument_list|)
 expr_stmt|;
 operator|*
@@ -7936,7 +7936,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 name|exit

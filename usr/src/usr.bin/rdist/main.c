@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,25 +78,32 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|_RDIST_TMP
+value|"/rdistXXXXXX"
+end_define
+
 begin_decl_stmt
 name|char
-name|tmpfile
-index|[]
-init|=
+name|tempfile
+index|[
+sizeof|sizeof
 name|_PATH_TMP
+operator|+
+sizeof|sizeof
+name|_RDIST_TMP
+operator|+
+literal|1
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|char
 modifier|*
-name|tmpname
-init|=
-operator|&
-name|tmpfile
-index|[
-literal|5
-index|]
+name|tempname
 decl_stmt|;
 end_decl_stmt
 
@@ -376,6 +383,43 @@ argument_list|(
 name|host
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tempfile
+argument_list|,
+name|_PATH_TMP
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|tempfile
+argument_list|,
+name|_RDIST_TMP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|tempname
+operator|=
+name|rindex
+argument_list|(
+name|tempfile
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+name|tempname
+operator|++
+expr_stmt|;
+else|else
+name|tempname
+operator|=
+name|tempfile
 expr_stmt|;
 while|while
 condition|(
@@ -670,7 +714,7 @@ argument_list|)
 expr_stmt|;
 name|mktemp
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 if|if

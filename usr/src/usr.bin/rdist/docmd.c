@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)docmd.c	5.6 (Berkeley) %G%"
+literal|"@(#)docmd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -566,7 +566,7 @@ name|lfp
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 literal|"w"
 argument_list|)
@@ -579,7 +579,7 @@ name|fatal
 argument_list|(
 literal|"cannot open %s\n"
 argument_list|,
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 name|exit
@@ -799,7 +799,7 @@ name|NOTIFY
 condition|)
 name|notify
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 name|rhost
 argument_list|,
@@ -821,7 +821,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 for|for
@@ -1750,7 +1750,7 @@ name|tfp
 operator|=
 name|fopen
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1916,7 +1916,7 @@ name|NOTIFY
 condition|)
 name|notify
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|,
 name|NULL
 argument_list|,
@@ -1944,7 +1944,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|tmpfile
+name|tempfile
 argument_list|)
 expr_stmt|;
 block|}
