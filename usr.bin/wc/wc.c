@@ -142,6 +142,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<wctype.h>
+end_include
+
 begin_decl_stmt
 name|uintmax_t
 name|tlinect
@@ -1018,10 +1024,9 @@ condition|)
 operator|++
 name|linect
 expr_stmt|;
-comment|/* XXX Non-portable; should use iswspace() */
 if|if
 condition|(
-name|isspace
+name|iswspace
 argument_list|(
 name|wch
 argument_list|)
