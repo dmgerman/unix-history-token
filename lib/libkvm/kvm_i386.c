@@ -349,6 +349,7 @@ operator|->
 name|PTD
 operator|=
 literal|0
+expr_stmt|;
 name|vm
 operator|->
 name|IdlePTD
