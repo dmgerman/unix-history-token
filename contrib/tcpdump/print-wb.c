@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-wb.c,v 1.20 96/07/14 19:39:05 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-wb.c,v 1.23 96/12/10 23:21:43 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,7 +105,7 @@ parameter_list|(
 name|d
 parameter_list|)
 define|\
-value|((struct dophdr*)((u_char *)(d) + \ 			  DOP_ROUNDUP(ntohs((d)->dh_len) + sizeof(*(d)))))
+value|((struct dophdr *)((u_char *)(d) + \ 			  DOP_ROUNDUP(ntohs((d)->dh_len) + sizeof(*(d)))))
 end_define
 
 begin_comment
@@ -445,7 +446,7 @@ comment|/* start seqno */
 name|u_int32_t
 name|pr_eseq
 decl_stmt|;
-comment|/* end seqno*/
+comment|/* end seqno */
 block|}
 struct|;
 end_struct
@@ -1527,7 +1528,7 @@ name|u_char
 operator|*
 operator|)
 name|dh
-operator|>=
+operator|>
 name|snapend
 condition|)
 block|{

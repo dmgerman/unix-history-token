@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-icmp.c,v 1.36 96/07/23 14:17:24 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-icmp.c,v 1.38 96/09/26 23:36:44 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1290,7 +1291,7 @@ name|strcpy
 argument_list|(
 name|cp
 argument_list|,
-literal|"lifetime "
+literal|" lifetime "
 argument_list|)
 expr_stmt|;
 name|cp

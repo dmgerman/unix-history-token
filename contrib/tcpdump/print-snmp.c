@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Id: print-snmp.c,v 3.10 91/01/17 01:18:13 loverso Exp Locker: loverso $ (jlv)"
+literal|"@(#) $Header: print-snmp.c,v 1.31 96/12/10 23:22:55 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -897,23 +898,29 @@ else|#
 directive|else
 name|form
 operator|=
-operator|(
+call|(
+name|u_char
+call|)
+argument_list|(
 operator|*
 name|p
 operator|&
 name|ASN_FORM_BITS
-operator|)
+argument_list|)
 operator|>>
 name|ASN_FORM_SHIFT
 expr_stmt|;
 name|class
 operator|=
-operator|(
+call|(
+name|u_char
+call|)
+argument_list|(
 operator|*
 name|p
 operator|&
 name|ASN_CLASS_BITS
-operator|)
+argument_list|)
 operator|>>
 name|ASN_CLASS_SHIFT
 expr_stmt|;
@@ -1319,6 +1326,9 @@ return|;
 block|}
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|id
 operator|>=
 name|Class

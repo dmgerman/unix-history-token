@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-bootp.c,v 1.42 96/07/23 14:17:22 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-bootp.c,v 1.43 96/09/26 23:36:42 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

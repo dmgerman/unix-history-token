@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-egp.c,v 1.21 96/07/14 19:38:59 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-egp.c,v 1.23 96/11/05 13:30:35 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -649,6 +650,9 @@ literal|" %s %s "
 argument_list|,
 name|gateways
 operator|<
+operator|(
+name|int
+operator|)
 name|egp
 operator|->
 name|egp_intgw

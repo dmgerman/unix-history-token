@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-nfs.c,v 1.56 96/07/23 14:17:25 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-nfs.c,v 1.63 96/12/10 23:18:07 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +221,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|nfserr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if we error rather than trunc */
+end_comment
+
 begin_function
 name|void
 name|nfsreply_print
@@ -257,6 +269,11 @@ decl_stmt|;
 name|int32_t
 name|proc
 decl_stmt|;
+name|nfserr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* assume no error */
 name|rp
 operator|=
 operator|(
@@ -583,7 +600,7 @@ name|trunc
 label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -635,7 +652,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -688,7 +705,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* Fetch string length; convert to host order */
@@ -743,7 +760,7 @@ name|snapend
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* XXX seems like we should be checking the length */
@@ -806,11 +823,11 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|putchar
@@ -869,6 +886,11 @@ name|u_int32_t
 modifier|*
 name|dp
 decl_stmt|;
+name|nfserr
+operator|=
+literal|0
+expr_stmt|;
+comment|/* assume no error */
 name|rp
 operator|=
 operator|(
@@ -1039,14 +1061,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1071,14 +1093,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1119,14 +1141,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1151,14 +1173,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1183,7 +1205,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1194,7 +1216,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK2
@@ -1269,7 +1291,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1280,7 +1302,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK2
@@ -1374,7 +1396,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1385,7 +1407,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK2
@@ -1477,14 +1499,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1509,14 +1531,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1541,7 +1563,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1552,7 +1574,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -1569,7 +1591,7 @@ argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -1595,7 +1617,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1606,7 +1628,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -1623,7 +1645,7 @@ argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -1649,7 +1671,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1660,7 +1682,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|fputs
@@ -1677,7 +1699,7 @@ argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 block|}
@@ -1703,14 +1725,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1735,14 +1757,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefhn
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1767,7 +1789,7 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|dp
@@ -1778,7 +1800,7 @@ name|dp
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|TCHECK2
@@ -1849,14 +1871,14 @@ name|length
 argument_list|)
 operator|)
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsefh
 argument_list|(
 name|dp
 argument_list|)
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return;
 break|break;
@@ -1882,6 +1904,11 @@ return|return;
 block|}
 name|trunc
 label|:
+if|if
+condition|(
+operator|!
+name|nfserr
+condition|)
 name|fputs
 argument_list|(
 literal|" [|nfs]"
@@ -2013,13 +2040,13 @@ literal|" fh %u,%u/%u"
 argument_list|,
 name|fsid
 operator|.
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 argument_list|,
 name|fsid
 operator|.
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 argument_list|,
@@ -2389,11 +2416,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|len
 operator|=
 name|ntohl
@@ -2412,7 +2434,7 @@ name|length
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 comment|/* 	 * skip past the ar_verf credentials. 	 */
@@ -2479,9 +2501,14 @@ argument_list|(
 literal|" PROG_UNAVAIL"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -2492,9 +2519,14 @@ argument_list|(
 literal|" PROG_MISMATCH"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -2505,9 +2537,14 @@ argument_list|(
 literal|" PROC_UNAVAIL"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -2518,9 +2555,14 @@ argument_list|(
 literal|" GARBAGE_ARGS"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 case|case
@@ -2531,9 +2573,14 @@ argument_list|(
 literal|" SYSTEM_ERR"
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 default|default:
@@ -2544,9 +2591,14 @@ argument_list|,
 name|astat
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -2596,7 +2648,7 @@ name|trunc
 label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -2615,6 +2667,7 @@ modifier|*
 name|dp
 parameter_list|)
 block|{
+specifier|register
 name|int
 name|errnum
 decl_stmt|;
@@ -2643,36 +2696,29 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|char
-modifier|*
-name|errmsg
-decl_stmt|;
 if|if
 condition|(
+operator|!
 name|qflag
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|errmsg
-operator|=
-name|pcap_strerror
-argument_list|(
-name|errnum
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" ERROR: %s"
 argument_list|,
-name|errmsg
+name|pcap_strerror
+argument_list|(
+name|errnum
+argument_list|)
 argument_list|)
 expr_stmt|;
+name|nfserr
+operator|=
+literal|1
+expr_stmt|;
+comment|/* suppress trunc string */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -2687,7 +2733,7 @@ name|trunc
 label|:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -3353,7 +3399,7 @@ if|if
 condition|(
 name|dp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -3531,7 +3577,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parseattrstat
 argument_list|(
@@ -3566,7 +3612,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parseattrstat
 argument_list|(
@@ -3617,7 +3663,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsediropres
 argument_list|(
@@ -3649,7 +3695,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parselinkres
 argument_list|(
@@ -3681,7 +3727,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parseattrstat
 argument_list|(
@@ -3731,7 +3777,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parseattrstat
 argument_list|(
@@ -3765,7 +3811,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsediropres
 argument_list|(
@@ -3797,7 +3843,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatus
 argument_list|(
@@ -3829,7 +3875,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatus
 argument_list|(
@@ -3861,7 +3907,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatus
 argument_list|(
@@ -3893,7 +3939,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatus
 argument_list|(
@@ -3925,7 +3971,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsediropres
 argument_list|(
@@ -3957,7 +4003,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatus
 argument_list|(
@@ -3989,7 +4035,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parserddires
 argument_list|(
@@ -4021,7 +4067,7 @@ if|if
 condition|(
 name|dp
 operator|!=
-literal|0
+name|NULL
 operator|&&
 name|parsestatfs
 argument_list|(
@@ -4042,6 +4088,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|nfserr
+condition|)
 name|fputs
 argument_list|(
 literal|" [|nfs]"

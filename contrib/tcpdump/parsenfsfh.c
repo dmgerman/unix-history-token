@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -7,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
-name|RCSid
+name|rcsid
+index|[]
 init|=
-literal|"$Header: parsenfsfh.c,v 1.9 95/10/19 20:27:44 leres Exp $"
+literal|"@(#) $Header: parsenfsfh.c,v 1.12 96/12/10 23:25:50 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,10 +24,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * parsenfsfh.c - portable parser for NFS file handles  *			uses all sorts of heuristics  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
-end_comment
 
 begin_include
 include|#
@@ -875,7 +876,7 @@ name|FHT_AUSPEX
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -886,7 +887,7 @@ index|]
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -999,7 +1000,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1009,7 +1010,7 @@ literal|0xFFFFF
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1066,7 +1067,7 @@ name|FHT_IRIX4
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1077,7 +1078,7 @@ index|]
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1137,7 +1138,7 @@ name|FHT_IRIX5
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1156,7 +1157,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1258,7 +1259,7 @@ name|FHT_SUNOS4
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1269,7 +1270,7 @@ index|]
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1365,7 +1366,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1399,7 +1400,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1485,7 +1486,7 @@ literal|0
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1496,7 +1497,7 @@ index|]
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1643,7 +1644,7 @@ expr_stmt|;
 comment|/* ensure alignment */
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1663,7 +1664,7 @@ operator|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1750,7 +1751,7 @@ name|FHT_AIX32
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -1769,7 +1770,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1858,7 +1859,7 @@ name|FHT_HPUX9
 case|:
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=
@@ -1889,7 +1890,7 @@ argument_list|)
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -2023,7 +2024,7 @@ literal|0
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Minor
 operator|=
@@ -2031,7 +2032,7 @@ literal|257
 expr_stmt|;
 name|fsidp
 operator|->
-name|fsid_dev
+name|Fsid_dev
 operator|.
 name|Major
 operator|=

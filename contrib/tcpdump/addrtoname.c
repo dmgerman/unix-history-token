@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: addrtoname.c,v 1.49 96/07/02 00:19:35 leres Exp $ (LBL)"
+literal|"@(#) $Header: addrtoname.c,v 1.54 96/12/05 22:10:19 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -597,7 +598,7 @@ name|ap
 expr_stmt|;
 else|#
 directive|else
-comment|/* 	 * Deal with alignment. 	 */
+comment|/* 	 * Extract 32 bits in network order, dealing with alignment. 	 */
 switch|switch
 condition|(
 operator|(
@@ -624,14 +625,25 @@ break|break;
 case|case
 literal|2
 case|:
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
+ifdef|#
+directive|ifdef
+name|WORDS_BIGENDIAN
 name|addr
 operator|=
 operator|(
+operator|(
+name|u_int32_t
+operator|)
+operator|*
+operator|(
+name|u_short
+operator|*
+operator|)
+name|ap
+operator|<<
+literal|16
+operator|)
+operator||
 operator|(
 name|u_int32_t
 operator|)
@@ -645,19 +657,6 @@ name|ap
 operator|+
 literal|2
 operator|)
-operator|<<
-literal|16
-operator|)
-operator||
-operator|(
-name|u_int32_t
-operator|)
-operator|*
-operator|(
-name|u_short
-operator|*
-operator|)
-name|ap
 expr_stmt|;
 else|#
 directive|else
@@ -672,7 +671,11 @@ operator|(
 name|u_short
 operator|*
 operator|)
+operator|(
 name|ap
+operator|+
+literal|2
+operator|)
 operator|<<
 literal|16
 operator|)
@@ -685,21 +688,15 @@ operator|(
 name|u_short
 operator|*
 operator|)
-operator|(
 name|ap
-operator|+
-literal|2
-operator|)
 expr_stmt|;
 endif|#
 directive|endif
 break|break;
 default|default:
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
+ifdef|#
+directive|ifdef
+name|WORDS_BIGENDIAN
 name|addr
 operator|=
 operator|(
@@ -708,7 +705,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|3
+literal|0
 index|]
 operator|<<
 literal|24
@@ -720,7 +717,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|2
+literal|1
 index|]
 operator|<<
 literal|16
@@ -732,7 +729,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|1
+literal|2
 index|]
 operator|<<
 literal|8
@@ -743,7 +740,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|0
+literal|3
 index|]
 expr_stmt|;
 else|#
@@ -756,7 +753,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|0
+literal|3
 index|]
 operator|<<
 literal|24
@@ -768,7 +765,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|1
+literal|2
 index|]
 operator|<<
 literal|16
@@ -780,7 +777,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|2
+literal|1
 index|]
 operator|<<
 literal|8
@@ -791,7 +788,7 @@ name|u_int32_t
 operator|)
 name|ap
 index|[
-literal|3
+literal|0
 index|]
 expr_stmt|;
 endif|#
@@ -3859,7 +3856,9 @@ name|struct
 name|hnamemem
 modifier|*
 name|newhnamemem
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|struct

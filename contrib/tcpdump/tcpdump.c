@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -20,11 +22,12 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: tcpdump.c,v 1.114 96/07/17 00:12:40 leres Exp $ (LBL)"
+literal|"@(#) $Header: tcpdump.c,v 1.118 96/12/10 23:22:27 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,6 +623,8 @@ literal|0
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
@@ -1000,6 +1005,8 @@ name|NULL
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
@@ -1047,6 +1054,8 @@ name|NULL
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
@@ -1075,6 +1084,8 @@ name|NULL
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
@@ -1125,6 +1136,8 @@ literal|0
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
@@ -1179,6 +1192,8 @@ literal|0
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pcap_geterr
 argument_list|(
 name|pd
@@ -1257,6 +1272,8 @@ literal|0
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pcap_geterr
 argument_list|(
 name|pd
@@ -1287,6 +1304,8 @@ name|NULL
 condition|)
 name|error
 argument_list|(
+literal|"%s"
+argument_list|,
 name|pcap_geterr
 argument_list|(
 name|pd
@@ -1814,7 +1833,9 @@ begin_function
 name|__dead
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|extern
 name|char

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ip.c,v 1.56 96/07/23 14:17:24 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-ip.c,v 1.62 96/12/10 23:20:31 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,32 +204,23 @@ name|u_int
 name|tr_raddr
 decl_stmt|;
 comment|/* traceroute response address */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BYTE_ORDER
-argument_list|)
-operator|&&
-operator|(
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|)
+ifdef|#
+directive|ifdef
+name|WORDS_BIGENDIAN
 struct|struct
 block|{
-name|u_int
-name|qid
-range|:
-literal|24
-decl_stmt|;
-comment|/* traceroute query id */
 name|u_int
 name|ttl
 range|:
 literal|8
 decl_stmt|;
 comment|/* traceroute response ttl */
+name|u_int
+name|qid
+range|:
+literal|24
+decl_stmt|;
+comment|/* traceroute query id */
 block|}
 name|q
 struct|;
@@ -237,23 +229,22 @@ directive|else
 struct|struct
 block|{
 name|u_int
-name|ttl
-range|:
-literal|8
-decl_stmt|;
-comment|/* traceroute response ttl */
-name|u_int
 name|qid
 range|:
 literal|24
 decl_stmt|;
 comment|/* traceroute query id */
+name|u_int
+name|ttl
+range|:
+literal|8
+decl_stmt|;
+comment|/* traceroute response ttl */
 block|}
 name|q
 struct|;
 endif|#
 directive|endif
-comment|/* BYTE_ORDER */
 block|}
 struct|;
 end_struct
@@ -1033,8 +1024,7 @@ name|ntohs
 argument_list|(
 operator|*
 operator|(
-name|unsigned
-name|char
+name|u_char
 operator|*
 operator|)
 name|sp
@@ -2129,6 +2119,68 @@ block|{
 name|printf
 argument_list|(
 literal|" (encap)"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+break|break;
+ifndef|#
+directive|ifndef
+name|IPPROTO_GRE
+define|#
+directive|define
+name|IPPROTO_GRE
+value|47
+endif|#
+directive|endif
+case|case
+name|IPPROTO_GRE
+case|:
+if|if
+condition|(
+name|vflag
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"gre %s> %s: "
+argument_list|,
+name|ipaddr_string
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|ip_src
+argument_list|)
+argument_list|,
+name|ipaddr_string
+argument_list|(
+operator|&
+name|ip
+operator|->
+name|ip_dst
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* do it */
+name|gre_print
+argument_list|(
+name|cp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|vflag
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" (gre encap)"
 argument_list|)
 expr_stmt|;
 return|return;

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-arp.c,v 1.39 96/07/17 14:56:17 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-arp.c,v 1.41 96/10/27 14:54:50 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -725,9 +726,7 @@ name|printf
 argument_list|(
 literal|" hardware #%d"
 argument_list|,
-name|ap
-operator|->
-name|arp_hrd
+name|hrd
 argument_list|)
 expr_stmt|;
 block|}

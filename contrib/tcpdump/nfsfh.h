@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Header: nfsfh.h,v 1.4 95/10/19 20:27:44 leres Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
+comment|/*  * $Header: nfsfh.h,v 1.5 96/08/20 14:33:23 leres Exp $  *  * nfsfh.h - NFS file handle definitions (for portable use)  *  * Jeffrey C. Mogul  * Digital Equipment Corporation  * Western Research Laboratory  */
 end_comment
 
 begin_comment
@@ -44,8 +44,9 @@ typedef|typedef
 struct|struct
 block|{
 name|my_devt
-name|fsid_dev
+name|Fsid_dev
 decl_stmt|;
+comment|/* XXX avoid name conflict with AIX */
 name|u_int32_t
 name|fsid_code
 decl_stmt|;
