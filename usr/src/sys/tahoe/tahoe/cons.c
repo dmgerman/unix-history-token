@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	1.9	87/04/16	*/
+comment|/*	cons.c	1.10	87/05/27	*/
 end_comment
 
 begin_comment
@@ -744,14 +744,8 @@ condition|(
 name|tp
 operator|==
 operator|&
-name|cntty
-index|[
-name|CPCONS
-index|]
-condition|)
-block|{
-if|if
-condition|(
+name|cons
+operator|&&
 name|constty
 operator|&&
 operator|(
@@ -776,27 +770,6 @@ name|tp
 operator|=
 name|constty
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|consops
-condition|)
-return|return
-operator|(
-call|(
-modifier|*
-name|consops
-operator|->
-name|d_write
-call|)
-argument_list|(
-name|dev
-argument_list|,
-name|uio
-argument_list|)
-operator|)
-return|;
-block|}
 return|return
 operator|(
 operator|(
