@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ name|int
 name|retry
 decl_stmt|;
 comment|/* number of times to retransmit */
-name|int
+name|long
 name|options
 decl_stmt|;
 comment|/* option flags - see below. */
@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|RES_INIT
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|RES_DEBUG
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -96,7 +96,7 @@ begin_define
 define|#
 directive|define
 name|RES_AAONLY
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -107,7 +107,7 @@ begin_define
 define|#
 directive|define
 name|RES_USEVC
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
@@ -118,7 +118,7 @@ begin_define
 define|#
 directive|define
 name|RES_PRIMARY
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -129,7 +129,7 @@ begin_define
 define|#
 directive|define
 name|RES_IGNTC
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -140,7 +140,7 @@ begin_define
 define|#
 directive|define
 name|RES_RECURSE
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -151,11 +151,22 @@ begin_define
 define|#
 directive|define
 name|RES_DEFNAMES
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
 comment|/* use default domain name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_STAYOPEN
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Keep TCP socket open */
 end_comment
 
 begin_decl_stmt
