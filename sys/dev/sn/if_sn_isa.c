@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -54,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/rman.h>
+file|<net/ethernet.h>
 end_include
 
 begin_include
@@ -72,31 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_media.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/pnpvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/sn/if_snreg.h>
 end_include
 
 begin_include
@@ -134,15 +104,38 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|if (sn_probe(dev, 0) != 0) 		return (0);
-endif|#
-directive|endif
+if|if
+condition|(
+name|isa_get_logicalid
+argument_list|(
+name|dev
+argument_list|)
+condition|)
+comment|/* skip PnP probes */
 return|return
 operator|(
 name|ENXIO
+operator|)
+return|;
+if|if
+condition|(
+name|sn_probe
+argument_list|(
+name|dev
+argument_list|,
+literal|0
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -157,23 +150,28 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
+name|struct
+name|sn_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|sc
+operator|->
+name|pccard_enaddr
+operator|=
 literal|0
-comment|/* currently not tested */
-block|struct sn_softc *sc = device_get_softc(dev);
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-comment|/* currently not tested */
-block|sc->pccard_enaddr = 0;
-endif|#
-directive|endif
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|sn_attach
+argument_list|(
+name|dev
+argument_list|)
 operator|)
 return|;
 block|}
@@ -239,7 +237,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sn
+name|if_sn
 argument_list|,
 name|isa
 argument_list|,
