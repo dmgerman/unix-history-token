@@ -1666,6 +1666,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|_smp_rendezvous_action
+value|smp_rendezvous_action
+end_define
+
+begin_define
+define|#
+directive|define
 name|_soft_imask
 value|soft_imask
 end_define
