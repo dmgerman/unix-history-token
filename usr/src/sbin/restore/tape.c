@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.31 (Berkeley) %G%"
+literal|"@(#)tape.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5421,7 +5421,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Volume header"
+literal|"Volume header (%s inode format) "
+argument_list|,
+name|oldinofmt
+condition|?
+literal|"old"
+else|:
+literal|"new"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5434,7 +5440,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" begins with record %d"
+literal|"begins with record %d"
 argument_list|,
 name|header
 operator|->
