@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.24	81/04/02	*/
+comment|/*	dz.c	4.25	81/05/09	*/
 end_comment
 
 begin_include
@@ -2276,6 +2276,12 @@ operator|->
 name|t_flags
 operator|&
 name|RAW
+operator|||
+name|tp
+operator|->
+name|t_flags
+operator|&
+name|LLITOUT
 condition|)
 name|cc
 operator|=
