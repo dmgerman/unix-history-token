@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fstat.c,v 1.7.2.2 1997/08/29 05:29:13 imp Exp $"
+literal|"$Id: fstat.c,v 1.7.2.3 1997/08/31 01:31:07 alex Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -785,7 +785,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fnp:u:vNM"
+literal|"fnp:u:vN:M:"
 argument_list|)
 operator|)
 operator|!=
