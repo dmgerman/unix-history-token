@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MSG_BSIZE
-value|(4096 - 3 * sizeof(unsigned int))
+value|(8192 - 3 * sizeof(unsigned int))
 end_define
 
 begin_struct
