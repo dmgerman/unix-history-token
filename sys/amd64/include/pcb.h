@@ -71,9 +71,6 @@ decl_stmt|;
 name|register_t
 name|pcb_gsbase
 decl_stmt|;
-name|register_t
-name|pcb_kgsbase
-decl_stmt|;
 name|u_int32_t
 name|pcb_ds
 decl_stmt|;
