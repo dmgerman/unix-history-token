@@ -1,13 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.8 %G%"
+literal|"@(#)write.c	4.9 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * write to another user  */
@@ -17,6 +28,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_include
@@ -107,7 +124,9 @@ begin_decl_stmt
 name|char
 name|me
 index|[
-literal|10
+name|NMAX
+operator|+
+literal|1
 index|]
 init|=
 literal|"???"
@@ -260,9 +279,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"usage: write user [ttyname]\n"
+name|stderr
+argument_list|,
+literal|"Usage: write user [ttyname]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -307,9 +328,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"cannot open /etc/utmp\n"
+literal|"write: Can't open /etc/utmp"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -330,9 +351,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Can't find your tty\n"
+name|stderr
+argument_list|,
+literal|"write: Can't find your tty\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -354,9 +377,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|perror
 argument_list|(
-literal|"Can't stat your tty\n"
+literal|"write: Can't stat your tty"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -378,9 +401,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"You have write permission turned off.\n"
+name|stderr
+argument_list|,
+literal|"write: You have write permission turned off\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -525,16 +550,19 @@ name|him
 index|[
 literal|0
 index|]
-operator|!=
+operator|==
 literal|'-'
-operator|||
+operator|&&
 name|him
 index|[
 literal|1
 index|]
-operator|!=
+operator|==
 literal|0
 condition|)
+goto|goto
+name|nomat
+goto|;
 for|for
 control|(
 name|i
@@ -642,9 +670,11 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s not logged in.\n"
+name|stderr
+argument_list|,
+literal|"write: %s not logged in\n"
 argument_list|,
 name|him
 argument_list|)
@@ -655,6 +685,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|uf
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|uf
@@ -671,9 +707,11 @@ operator|>
 literal|1
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s logged more than once\nwriting to %s\n"
+name|stderr
+argument_list|,
+literal|"write: %s logged in more than once ... writing to %s\n"
 argument_list|,
 name|him
 argument_list|,
@@ -731,9 +769,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"No such tty\n"
+name|stderr
+argument_list|,
+literal|"write: No such tty\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -836,18 +876,11 @@ name|fprintf
 argument_list|(
 name|tf
 argument_list|,
-literal|"\r\nMessage from "
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|tf
-argument_list|,
-literal|"%s!%s on %s at %d:%02d ...\r\n\007\007\007"
-argument_list|,
-name|hostname
+literal|"\r\nMessage from %s@%s on %s at %d:%02d ...\r\n\007\007\007"
 argument_list|,
 name|me
+argument_list|,
+name|hostname
 argument_list|,
 name|mytty
 argument_list|,
@@ -860,12 +893,12 @@ operator|->
 name|tm_min
 argument_list|)
 expr_stmt|;
-block|}
 name|fflush
 argument_list|(
 name|tf
 argument_list|)
 expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -875,8 +908,13 @@ block|{
 name|char
 name|buf
 index|[
-literal|128
+name|BUFSIZ
 index|]
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|bp
 decl_stmt|;
 name|i
 operator|=
@@ -886,7 +924,8 @@ literal|0
 argument_list|,
 name|buf
 argument_list|,
-literal|128
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -922,21 +961,145 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+for|for
+control|(
+name|bp
+operator|=
+name|buf
+init|;
+operator|--
+name|i
+operator|>=
+literal|0
+condition|;
+name|bp
+operator|++
+control|)
+block|{
 if|if
 condition|(
-name|write
+operator|*
+name|bp
+operator|==
+literal|'\n'
+condition|)
+name|putc
 argument_list|(
-name|fileno
+literal|'\r'
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+condition|)
+block|{
+name|putc
+argument_list|(
+literal|'M'
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'-'
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+operator|*
+name|bp
+operator|=
+name|toascii
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|isprint
+argument_list|(
+operator|*
+name|bp
+argument_list|)
+operator|||
+operator|*
+name|bp
+operator|==
+literal|' '
+operator|||
+operator|*
+name|bp
+operator|==
+literal|'\t'
+operator|||
+operator|*
+name|bp
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|putc
+argument_list|(
+operator|*
+name|bp
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|putc
+argument_list|(
+literal|'^'
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+operator|*
+name|bp
+operator|^
+literal|0100
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|bp
+operator|==
+literal|'\n'
+condition|)
+name|fflush
 argument_list|(
 name|tf
 argument_list|)
-argument_list|,
-name|buf
-argument_list|,
-name|i
+expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|tf
 argument_list|)
-operator|!=
-name|i
+operator|||
+name|feof
+argument_list|(
+name|tf
+argument_list|)
 condition|)
 block|{
 name|printf
@@ -952,35 +1115,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|buf
-index|[
-name|i
-operator|-
-literal|1
-index|]
-operator|==
-literal|'\n'
-condition|)
-name|write
-argument_list|(
-name|fileno
-argument_list|(
-name|tf
-argument_list|)
-argument_list|,
-literal|"\r"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 name|perm
 label|:
-name|printf
+name|fprintf
 argument_list|(
-literal|"Permission denied\n"
+name|stderr
+argument_list|,
+literal|"write: Permission denied\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -998,9 +1141,11 @@ end_macro
 
 begin_block
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Timeout opening their tty\n"
+name|stderr
+argument_list|,
+literal|"write: Timeout opening their tty\n"
 argument_list|)
 expr_stmt|;
 name|exit
