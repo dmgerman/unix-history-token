@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.31 (Berkeley) %G%"
+literal|"@(#)ps.c	5.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,14 +261,14 @@ begin_define
 define|#
 directive|define
 name|DFMT
-value|"pid tname state cputime command"
+value|"pid tt state time command"
 end_define
 
 begin_define
 define|#
 directive|define
 name|JFMT
-value|"user pid ppid pgid sess jobc state tname cputime command"
+value|"user pid ppid pgid sess jobc state tt time command"
 end_define
 
 begin_define
@@ -276,14 +276,14 @@ define|#
 directive|define
 name|LFMT
 define|\
-value|"uid pid ppid cpu pri nice vsize rss wchan state tname cputime command"
+value|"uid pid ppid cpu pri nice vsz rss wchan state tt time command"
 end_define
 
 begin_define
 define|#
 directive|define
 name|SFMT
-value|"uid pid sig sigmask sigignore sigcatch state tname command"
+value|"uid pid sig sigmask sigignore sigcatch state tt command"
 end_define
 
 begin_define
@@ -291,7 +291,7 @@ define|#
 directive|define
 name|UFMT
 define|\
-value|"user pid pcpu pmem vsize rss tname state start cputime command"
+value|"user pid %cpu %mem vsz rss tt state start time command"
 end_define
 
 begin_define
@@ -299,7 +299,7 @@ define|#
 directive|define
 name|VFMT
 define|\
-value|"pid tname state cputime sl re pagein vsize rss lim tsiz trs pcpu pmem command"
+value|"pid tt state time sl re pagein vsz rss lim tsiz trs %cpu %mem command"
 end_define
 
 begin_function
@@ -621,7 +621,7 @@ argument_list|)
 expr_stmt|;
 name|parsefmt
 argument_list|(
-literal|"state tname cputime command"
+literal|"tt state time command"
 argument_list|)
 expr_stmt|;
 name|fmt
