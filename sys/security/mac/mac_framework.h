@@ -215,6 +215,19 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mac_get_peer
+parameter_list|(
+name|int
+name|_fd
+parameter_list|,
+name|mac_t
+name|_label
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mac_get_pid
 parameter_list|(
 name|pid_t
