@@ -48,7 +48,7 @@ name|char
 name|STR_IEN
 index|[]
 init|=
-literal|"ps& IPL != IPL_HIGH"
+literal|"ps& IPL == IPL_0"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,7 +66,7 @@ name|char
 name|STR_SIEN
 index|[]
 init|=
-literal|"mpp->mtx_saveintr != IPL_HIGH"
+literal|"mpp->mtx_saveintr == IPL_0"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,14 +125,14 @@ begin_define
 define|#
 directive|define
 name|ASS_IEN
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, STR_IEN)
+value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_0, STR_IEN)
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASS_IDIS
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       != ALPHA_PSL_IPL_HIGH, STR_IDIS)
+value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, STR_IDIS)
 end_define
 
 begin_define
@@ -142,7 +142,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr \ 			       != ALPHA_PSL_IPL_HIGH, STR_SIEN)
+value|MPASS2((mpp)->mtx_saveintr \ 			       == ALPHA_PSL_IPL_0, STR_SIEN)
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ directive|define
 name|mtx_legal2block
 parameter_list|()
 define|\
-value|((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK) == ALPHA_PSL_IPL_HIGH)
+value|((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK) == ALPHA_PSL_IPL_0)
 end_define
 
 begin_comment
