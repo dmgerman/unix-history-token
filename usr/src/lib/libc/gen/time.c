@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)time.c	5.1 (Berkeley) %G%"
+literal|"@(#)time.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ file|<sys/time.h>
 end_include
 
 begin_function
-name|time_t
+name|long
 name|time
 parameter_list|(
 name|t
