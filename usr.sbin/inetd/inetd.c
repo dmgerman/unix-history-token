@@ -1084,7 +1084,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|log
+name|dolog
 init|=
 literal|0
 decl_stmt|;
@@ -1671,7 +1671,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-name|log
+name|dolog
 operator|=
 literal|1
 expr_stmt|;
@@ -1781,7 +1781,7 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Initialize Bind Addrs. 	 *   When hostname is NULL, wild card bind addrs are obtained from 	 *   getaddrinfo(). But getaddrinfo() requires at least one of 	 *   hostname or servname is non NULL. 	 *   So when hostname is NULL, set dummy value to servname. 	 */
+comment|/* 	 * Initialize Bind Addrs. 	 *   When hostname is NULL, wild card bind addrs are obtained from 	 *   getaddrinfo(). But getaddrinfo() requires at least one of 	 *   hostname or servname is non NULL. 	 *   So when hostname is NULL, set dummy value to servname. 	 *   Since getaddrinfo() doesn't accept numeric servname, and 	 *   we doesn't use ai_socktype of struct addrinfo returned 	 *   from getaddrinfo(), we set dummy value to ai_socktype. 	 */
 name|servname
 operator|=
 operator|(
@@ -1790,7 +1790,7 @@ operator|==
 name|NULL
 operator|)
 condition|?
-literal|"discard"
+literal|"0"
 comment|/* dummy */
 else|:
 name|NULL
@@ -1819,6 +1819,13 @@ name|ai_family
 operator|=
 name|AF_UNSPEC
 expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+comment|/* dummy */
 name|error
 operator|=
 name|getaddrinfo
@@ -2087,6 +2094,26 @@ name|argv
 index|[
 literal|0
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|CONFIG
+argument_list|,
+name|R_OK
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Accessing %s: %m, continuing anyway."
+argument_list|,
+name|CONFIG
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3050,7 +3077,7 @@ name|se_fd
 expr_stmt|;
 if|if
 condition|(
-name|log
+name|dolog
 operator|&&
 operator|!
 name|ISWRAP
@@ -3609,7 +3636,7 @@ name|RQ_FILE
 argument_list|,
 name|ctrl
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|fromhost
@@ -3718,7 +3745,7 @@ block|}
 block|}
 if|if
 condition|(
-name|log
+name|dolog
 condition|)
 block|{
 name|syslog
