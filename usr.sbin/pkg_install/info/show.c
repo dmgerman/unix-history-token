@@ -639,7 +639,24 @@ name|Quiet
 condition|?
 literal|"@pkgdep %s\n"
 else|:
-literal|"\t%s\n"
+literal|"Dependency: %s\n"
+argument_list|,
+name|p
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PLIST_DEPORIGIN
+case|:
+name|printf
+argument_list|(
+name|Quiet
+condition|?
+literal|"@comment DEPORIGIN:%s\n"
+else|:
+literal|"\tdependency origin: %s\n"
 argument_list|,
 name|p
 operator|->

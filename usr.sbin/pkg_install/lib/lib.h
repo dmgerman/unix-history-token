@@ -372,6 +372,8 @@ block|,
 name|PLIST_OPTION
 block|,
 name|PLIST_ORIGIN
+block|,
+name|PLIST_DEPORIGIN
 block|}
 enum|;
 end_enum
