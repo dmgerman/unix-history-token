@@ -3236,7 +3236,7 @@ begin_define
 define|#
 directive|define
 name|RL_RX_DESC_CNT
-value|RL_RX_DESC_CNT
+value|RL_TX_DESC_CNT
 end_define
 
 begin_define
