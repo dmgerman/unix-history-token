@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.34 1996/12/08 12:27:55 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1038,8 +1038,8 @@ argument_list|(
 literal|"You haven't specified any distributions yet.  The upgrade procedure will\n"
 literal|"only upgrade those portions of the system for which a distribution has\n"
 literal|"been selected.  In the next screen, we'll go to the Distributions menu\n"
-literal|"to select those portions of 2.1 you wish to install on top of your 2.0.5\n"
-literal|"system."
+literal|"to select those portions of the new system you wish to install on top of\n"
+literal|"the old."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1052,6 +1052,9 @@ name|MenuDistributions
 argument_list|,
 name|FALSE
 argument_list|)
+operator|||
+operator|!
+name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
@@ -1062,7 +1065,7 @@ name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* No bin selected?  Not much of an upgrade.. */
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1073,13 +1076,14 @@ name|DIST_BIN
 operator|)
 condition|)
 block|{
+comment|/* No bin selected?  Not much of an upgrade.. */
 if|if
 condition|(
 name|msgYesNo
 argument_list|(
 literal|"You didn't select the bin distribution as one of the distributons to load.\n"
 literal|"This one is pretty vital to a successful upgrade.  Are you SURE you don't\n"
-literal|"want to select the bin distribution?  Chose _No_ to bring up the Distributions\n"
+literal|"want to select the bin distribution?  Chose No to bring up the Distributions\n"
 literal|"menu."
 argument_list|)
 operator|!=
@@ -1124,7 +1128,8 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaDevice
+name|mediaVerify
+argument_list|()
 condition|)
 block|{
 name|msgConfirm
@@ -1132,6 +1137,8 @@ argument_list|(
 literal|"Now you must specify an installation medium for the upgrade."
 argument_list|)
 expr_stmt|;
+name|media
+label|:
 if|if
 condition|(
 operator|!
@@ -1150,6 +1157,36 @@ return|return
 name|DITEM_FAILURE
 operator||
 name|DITEM_RECREATE
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Couldn't initialize the media.  Would you like\n"
+literal|"to adjust your media selection and try again?"
+argument_list|)
+condition|)
+goto|goto
+name|media
+goto|;
+else|else
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_REDRAW
 return|;
 block|}
 if|if
@@ -1312,7 +1349,6 @@ operator||
 name|DITEM_RECREATE
 return|;
 block|}
-block|}
 if|if
 condition|(
 name|DITEM_STATUS
@@ -1351,6 +1387,7 @@ expr_stmt|;
 name|systemCreateHoloshell
 argument_list|()
 expr_stmt|;
+block|}
 name|saved_etc
 operator|=
 name|NULL
@@ -1503,16 +1540,45 @@ operator|==
 name|DITEM_FAILURE
 condition|)
 block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"should be considered a failure and started from the beginning, sorry!\n"
+literal|"The system will reboot now."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemShutdown
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|extractingBin
 operator|&&
+operator|!
 operator|(
 name|Dists
 operator|&
 name|DIST_BIN
 operator|)
 condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The extraction process seems to have had some problems, but we got most\n"
+literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
+literal|"only non-essential distributions which failed to load."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|msgConfirm
 argument_list|(
@@ -1530,13 +1596,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|msgConfirm
-argument_list|(
-literal|"The extraction process seems to have had some problems, but we got most\n"
-literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
-literal|"only non-essential distributions which failed to load."
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(

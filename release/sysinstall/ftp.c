@@ -403,9 +403,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|msgDebug
+if|if
+condition|(
+name|i
+operator|==
+literal|550
+condition|)
+name|msgConfirm
 argument_list|(
-literal|"Attempt to chdir to distribution in %s returns error code %d\n"
+literal|"No such directory %s, please check your path and try again."
+argument_list|,
+name|dir
+argument_list|)
+expr_stmt|;
+else|else
+name|msgConfirm
+argument_list|(
+literal|"FTP chdir to directory %s returned FTP error status %d\n"
 argument_list|,
 name|dir
 argument_list|,

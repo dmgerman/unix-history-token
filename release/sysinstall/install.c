@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.134.2.16 1997/01/03 06:38:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -2096,6 +2096,7 @@ condition|(
 operator|!
 name|mediaDevice
 operator|&&
+operator|(
 operator|!
 name|dmenuOpenSimple
 argument_list|(
@@ -2104,6 +2105,10 @@ name|MenuMedia
 argument_list|,
 name|FALSE
 argument_list|)
+operator|||
+operator|!
+name|mediaDevice
+operator|)
 condition|)
 return|return
 name|DITEM_FAILURE
@@ -2601,18 +2606,131 @@ name|str
 decl_stmt|;
 name|Boolean
 name|need_bin
-init|=
-name|FALSE
 decl_stmt|;
 if|if
 condition|(
 operator|!
-name|mediaVerify
-argument_list|()
+name|Dists
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"No distributions are selected for installation!  Do you\n"
+literal|"want to do this now?"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuDistributions
+argument_list|,
+name|FALSE
+argument_list|)
+operator|&&
+operator|!
+name|Dists
 condition|)
 return|return
 name|DITEM_FAILURE
+operator||
+name|DITEM_RECREATE
 return|;
+block|}
+else|else
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|&&
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"You need to select a media type first.  Do you want\n"
+literal|"to do this now?"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMedia
+argument_list|,
+name|FALSE
+argument_list|)
+operator|||
+operator|!
+name|mediaDevice
+condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
+argument_list|(
+literal|"Unable to initialize selected media. Would you like to\n"
+literal|"adjust your media configuration?"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMedia
+argument_list|,
+name|FALSE
+argument_list|)
+operator|||
+operator|!
+name|mediaDevice
+condition|)
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+else|else
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
 name|str
 operator|=
 name|variable_get
@@ -2673,15 +2791,11 @@ return|return
 name|i
 return|;
 block|}
-if|if
-condition|(
+name|need_bin
+operator|=
 name|Dists
 operator|&
 name|DIST_BIN
-condition|)
-name|need_bin
-operator|=
-name|TRUE
 expr_stmt|;
 name|i
 operator|=
@@ -2696,9 +2810,10 @@ name|DITEM_STATUS
 argument_list|(
 name|i
 argument_list|)
-operator|!=
-name|DITEM_FAILURE
-operator|||
+operator|==
+name|DITEM_SUCCESS
+operator|&&
+operator|(
 operator|!
 name|need_bin
 operator|||
@@ -2707,6 +2822,7 @@ operator|(
 name|Dists
 operator|&
 name|DIST_BIN
+operator|)
 operator|)
 condition|)
 name|i
@@ -3290,6 +3406,8 @@ expr_stmt|;
 if|if
 condition|(
 name|swapdev
+operator|&&
+name|RunningAsInit
 condition|)
 block|{
 comment|/* As the very first thing, try to get ourselves some swap space */
@@ -3379,6 +3497,8 @@ block|}
 if|if
 condition|(
 name|rootdev
+operator|&&
+name|RunningAsInit
 condition|)
 block|{
 comment|/* Next, create and/or mount the root device */
@@ -3657,6 +3777,8 @@ return|;
 block|}
 if|if
 condition|(
+name|RunningAsInit
+operator|&&
 name|root
 operator|&&
 operator|(
@@ -3686,6 +3808,22 @@ literal|"/mnt/dev"
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|RunningAsInit
+operator|&&
+operator|!
+name|Fake
+condition|)
+name|MakeDevDisk
+argument_list|(
+name|disk
+argument_list|,
+literal|"/dev"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|c1
@@ -3782,11 +3920,17 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"%s /mnt/dev/r%s"
+literal|"%s %s/dev/r%s"
 argument_list|,
 name|tmp
 operator|->
 name|newfs_cmd
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -3800,7 +3944,13 @@ name|tmp
 operator|->
 name|mountpoint
 argument_list|,
-literal|"fsck -y /mnt/dev/r%s"
+literal|"fsck -y %s/dev/r%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -3857,7 +4007,13 @@ name|sprintf
 argument_list|(
 name|fname
 argument_list|,
-literal|"/mnt/dev/%s"
+literal|"%s/dev/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 name|c2
 operator|->
@@ -3935,7 +4091,13 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"/mnt%s"
+literal|"%s/%s"
+argument_list|,
+name|RunningAsInit
+condition|?
+literal|"/mnt"
+else|:
+literal|""
 argument_list|,
 operator|(
 operator|(
@@ -3958,6 +4120,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Copying initial device files.."
@@ -3991,6 +4158,7 @@ expr_stmt|;
 return|return
 name|DITEM_FAILURE
 return|;
+block|}
 block|}
 name|command_sort
 argument_list|()
