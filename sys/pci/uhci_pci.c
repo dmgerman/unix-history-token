@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.8 1999/05/08 21:59:42 dfr Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.9 1999/06/13 20:46:10 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -819,20 +819,9 @@ name|PCI_LEGSUP_USBPIRQDEN
 operator|)
 condition|)
 block|{
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|USBVERBOSE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+ifndef|#
+directive|ifndef
 name|USB_DEBUG
-argument_list|)
-operator|)
 if|if
 condition|(
 name|bootverbose
