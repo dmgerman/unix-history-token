@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: lib.h,v 1.5 1993/09/04 05:06:49 jkh Exp $ */
+comment|/* $Id: lib.h,v 1.3 1993/09/05 04:54:21 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -248,6 +248,8 @@ block|,
 name|PLIST_IGNORE
 block|,
 name|PLIST_NAME
+block|,
+name|PLIST_UNEXEC
 block|}
 enum|;
 end_enum
@@ -556,6 +558,25 @@ begin_function_decl
 name|int
 name|unpack
 parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|format_cmd
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
 name|char
 modifier|*
 parameter_list|,
