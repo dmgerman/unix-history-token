@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsopcode - Dispatcher Op Region support and handling of  *                         "control" opcodes  *              $Revision: 83 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -2725,7 +2725,7 @@ literal|0
 index|]
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 operator|)
 operator|&&
 operator|(

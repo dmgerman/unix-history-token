@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 83 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 85 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -254,26 +254,11 @@ operator|*
 operator|)
 name|Object
 expr_stmt|;
-comment|/* If a valid type (non-ANY) was given, just use it */
-if|if
-condition|(
-name|ACPI_TYPE_ANY
-operator|!=
-name|Type
-condition|)
-block|{
+comment|/* Use the given type */
 name|ObjectType
 operator|=
 name|Type
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ObjectType
-operator|=
-name|INTERNAL_TYPE_DEF_ANY
-expr_stmt|;
-block|}
 block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -378,7 +363,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachObject  *  * PARAMETERS:  Node           - An object whose Value will be deleted  *  * RETURN:      None.  *  * DESCRIPTION: Delete the Value associated with a namespace object.  If the  *              Value is an allocated object, it is freed.  Otherwise, the  *              field is simply cleared.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachObject  *  * PARAMETERS:  Node           - An node whose object will be detached  *  * RETURN:      None.  *  * DESCRIPTION: Detach/delete an object associated with a namespace node.    *              if the object is an allocated object, it is freed.  *              Otherwise, the field is simply cleared.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -416,7 +401,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 condition|)
 block|{
@@ -464,7 +449,7 @@ operator|->
 name|Object
 argument_list|)
 operator|!=
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 condition|)
 block|{
@@ -520,7 +505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedObject  *  * PARAMETERS:  Node             - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedObject  *  * PARAMETERS:  Node             - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed  *  * DESCRIPTION: Obtain the object attached to a namespace node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -600,7 +585,7 @@ operator|->
 name|Object
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 condition|)
 block|{
@@ -621,7 +606,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetSecondaryObject  *  * PARAMETERS:  Node             - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetSecondaryObject  *  * PARAMETERS:  Node             - Parent Node to be examined  *  * RETURN:      Current value of the object field from the Node whose  *              handle is passed.  *  * DESCRIPTION: Obtain a secondary object associated with a namespace node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -654,7 +639,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 operator|||
 operator|(
@@ -676,7 +661,7 @@ operator|.
 name|NextObject
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 condition|)
 block|{
@@ -699,7 +684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsAttachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler to be associated with the data  *              Data            - Data to be attached  *  * RETURN:      Status  *  * DESCRIPTION: Low-level attach data.  Create and attach a Data object.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -730,7 +715,7 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|DataDesc
 decl_stmt|;
-comment|/* */
+comment|/* We only allow one attachment per handler */
 name|PrevObjDesc
 operator|=
 name|NULL
@@ -754,7 +739,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 operator|&&
 operator|(
@@ -792,7 +777,7 @@ name|DataDesc
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -856,7 +841,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsDetachData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *  * RETURN:      Status  *  * DESCRIPTION: Low-level detach data.  Delete the data node, but the caller  *              is responsible for the actual data.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -902,7 +887,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 operator|&&
 operator|(
@@ -980,7 +965,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedData  *  * PARAMETERS:  *  * RETURN:      Status  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetAttachedData  *  * PARAMETERS:  Node            - Namespace node  *              Handler         - Handler associated with the data  *              Data            - Where the data is returned  *  * RETURN:      Status  *  * DESCRIPTION: Low level interface to obtain data previously associated with  *              a namespace node.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1023,7 +1008,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_DATA
+name|ACPI_TYPE_LOCAL_DATA
 operator|)
 operator|&&
 operator|(

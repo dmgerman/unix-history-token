@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 118 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nseval - Object evaluation interfaces -- includes control  *                       method lookup and execution.  *              $Revision: 119 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -799,7 +799,7 @@ name|ACPI_DUMP_PATHNAME
 argument_list|(
 name|MethodNode
 argument_list|,
-literal|"NsExecuteControlMethod: Executing"
+literal|"Execute Method:"
 argument_list|,
 name|ACPI_LV_INFO
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 45 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 46 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1044,7 +1044,7 @@ name|ThreadGate
 argument_list|,
 literal|1
 argument_list|,
-name|WAIT_FOREVER
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 name|i

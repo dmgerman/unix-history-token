@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acdisasm.h - AML disassembler  *       $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdisasm.h - AML disassembler  *       $Revision: 5 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -424,17 +424,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|AcpiDmString
-parameter_list|(
-name|char
-modifier|*
-name|String
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|AcpiDmUnicode
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -777,6 +766,16 @@ name|AcpiDmBitList
 parameter_list|(
 name|UINT16
 name|Mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AcpiDmDecodeAttribute
+parameter_list|(
+name|UINT8
+name|Attribute
 parameter_list|)
 function_decl|;
 end_function_decl

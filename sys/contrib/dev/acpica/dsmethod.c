@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 89 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -516,7 +516,7 @@ name|Method
 operator|.
 name|Semaphore
 argument_list|,
-name|WAIT_FOREVER
+name|ACPI_WAIT_FOREVER
 argument_list|)
 expr_stmt|;
 block|}

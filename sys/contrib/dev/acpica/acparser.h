@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 62 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: acparser.h - AML Parser subcomponent prototypes and defines  *       $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -197,6 +197,10 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiPsGetNextNamepath
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_STATE
 modifier|*
 name|ParserState
@@ -204,10 +208,6 @@ parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*
 name|Arg
-parameter_list|,
-name|UINT32
-modifier|*
-name|ArgCount
 parameter_list|,
 name|BOOLEAN
 name|MethodCall
@@ -231,16 +231,16 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiPsGetNextArg
 parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|,
 name|ACPI_PARSE_STATE
 modifier|*
 name|ParserState
 parameter_list|,
 name|UINT32
 name|ArgType
-parameter_list|,
-name|UINT32
-modifier|*
-name|ArgCount
 parameter_list|,
 name|ACPI_PARSE_OBJECT
 modifier|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbutils - Table manipulation utilities  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -383,16 +383,23 @@ block|{
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Invalid checksum (%X) in table %4.4s\n"
+literal|"Invalid checksum in table [%4.4s] (%02X, sum %02X is not zero)\n"
+operator|,
+name|TableHeader
+operator|->
+name|Signature
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|TableHeader
+operator|->
+name|Checksum
 operator|,
 operator|(
 name|UINT32
 operator|)
 name|Checksum
-operator|,
-name|TableHeader
-operator|->
-name|Signature
 operator|)
 argument_list|)
 expr_stmt|;

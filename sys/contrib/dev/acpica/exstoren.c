@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -87,13 +87,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 comment|/*          * These cases all require only Integers or values that          * can be converted to Integers (Strings or Buffers)          */
 case|case
@@ -113,7 +113,7 @@ argument_list|(
 name|SourceDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 condition|)
 block|{
 comment|/* Resolve a reference object first */
@@ -195,7 +195,7 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 case|:
 comment|/*          * Aliases are resolved by AcpiExPrepOperands          */
 name|ACPI_DEBUG_PRINT

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresolv - AML Interpreter object resolution  *              $Revision: 117 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -265,7 +265,7 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 name|Opcode
 operator|=
@@ -528,13 +528,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -630,7 +630,7 @@ name|Type
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
-literal|"ExGetObjectType"
+literal|"AcpiExResolveMultiple"
 argument_list|)
 expr_stmt|;
 comment|/*      * For reference objects created via the RefOf or Index operators,      * we need to get to the base object (as per the ACPI specification       * of the ObjectType and SizeOf operators).  This means traversing       * the list of possibly many nested references.      */
@@ -641,7 +641,7 @@ argument_list|(
 name|ObjDesc
 argument_list|)
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 condition|)
 block|{
 switch|switch
@@ -878,17 +878,26 @@ name|Type
 condition|)
 block|{
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|Type
 operator|=
 name|ACPI_TYPE_FIELD_UNIT
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_TYPE_LOCAL_SCOPE
+case|:
+comment|/* Per ACPI Specification, Scope is untyped */
+name|Type
+operator|=
+name|ACPI_TYPE_ANY
 expr_stmt|;
 break|break;
 default|default:

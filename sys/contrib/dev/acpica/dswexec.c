@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 95 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -841,9 +841,6 @@ name|ACPI_PARSE_OBJECT
 modifier|*
 name|FirstArg
 decl_stmt|;
-name|UINT32
-name|i
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE_PTR
 argument_list|(
 literal|"DsExecEndOp"
@@ -1098,48 +1095,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Always delete the argument objects and clear the operand stack */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|WalkState
-operator|->
-name|NumOperands
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/*              * Remove a reference to all operands, including both              * "Arguments" and "Targets".              */
-name|AcpiUtRemoveReference
+name|AcpiDsClearOperands
 argument_list|(
 name|WalkState
-operator|->
-name|Operands
-index|[
-name|i
-index|]
 argument_list|)
-expr_stmt|;
-name|WalkState
-operator|->
-name|Operands
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|WalkState
-operator|->
-name|NumOperands
-operator|=
-literal|0
 expr_stmt|;
 comment|/*          * If a result object was returned from above, push it on the          * current result stack          */
 if|if
@@ -1270,6 +1229,12 @@ name|Status
 argument_list|)
 condition|)
 block|{
+comment|/* On error, clear all resolved operands */
+name|AcpiDsClearOperands
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/*              * Tell the walk loop to preempt this running method and              * execute the new method              */

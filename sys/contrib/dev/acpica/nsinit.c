@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 49 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 50 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -728,11 +728,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|AcpiDbgLevel
+operator|<=
+name|ACPI_LV_ALL_EXCEPTIONS
+operator|)
+operator|&&
+operator|(
 operator|!
 operator|(
 name|AcpiDbgLevel
 operator|&
-name|ACPI_LV_INIT
+name|ACPI_LV_INFO
+operator|)
 operator|)
 condition|)
 block|{

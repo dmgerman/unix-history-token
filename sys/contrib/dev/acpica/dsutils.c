@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 95 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 97 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -640,6 +640,78 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDsClearOperands  *  * PARAMETERS:  WalkState           - Current walk state with operands on stack  *  * RETURN:      None  *  * DESCRIPTION: Clear all operands on the current walk state operand stack.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AcpiDsClearOperands
+parameter_list|(
+name|ACPI_WALK_STATE
+modifier|*
+name|WalkState
+parameter_list|)
+block|{
+name|UINT32
+name|i
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE_PTR
+argument_list|(
+literal|"AcpiDsClearOperands"
+argument_list|,
+name|WalkState
+argument_list|)
+expr_stmt|;
+comment|/*      * Remove a reference on each operand on the stack      */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|WalkState
+operator|->
+name|NumOperands
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/*          * Remove a reference to all operands, including both          * "Arguments" and "Targets".          */
+name|AcpiUtRemoveReference
+argument_list|(
+name|WalkState
+operator|->
+name|Operands
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|WalkState
+operator|->
+name|Operands
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|WalkState
+operator|->
+name|NumOperands
+operator|=
+literal|0
+expr_stmt|;
+name|return_VOID
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -1051,7 +1123,7 @@ name|OpInfo
 operator|->
 name|ObjectType
 operator|==
-name|INTERNAL_TYPE_INVALID
+name|ACPI_TYPE_INVALID
 condition|)
 block|{
 name|return_ACPI_STATUS

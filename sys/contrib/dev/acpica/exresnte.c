@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 59 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exresnte - AML Interpreter object resolution  *              $Revision: 61 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -124,13 +124,16 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Entry=%p SourceDesc=%p Type=%X\n"
+literal|"Entry=%p SourceDesc=%p [%s]\n"
 operator|,
 name|Node
 operator|,
 name|SourceDesc
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|EntryType
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -138,7 +141,7 @@ if|if
 condition|(
 name|EntryType
 operator|==
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 condition|)
 block|{
 comment|/* There is always exactly one level of indirection */
@@ -442,13 +445,13 @@ case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -533,7 +536,7 @@ argument_list|)
 expr_stmt|;
 comment|/* Cannot be AE_TYPE */
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 comment|/* No named references are allowed here */
 name|ACPI_DEBUG_PRINT

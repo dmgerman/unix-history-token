@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 113 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 116 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsReportError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print warning message  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsReportError  *  * PARAMETERS:  ModuleName          - Caller's module name (for error output)  *              LineNumber          - Caller's line number (for error output)  *              ComponentId         - Caller's component ID (for error output)  *              Message             - Error message to use on failure  *  * RETURN:      None  *  * DESCRIPTION: Print warning message with full pathname  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -84,6 +84,7 @@ name|char
 modifier|*
 name|Name
 decl_stmt|;
+comment|/* Convert path to external format */
 name|Status
 operator|=
 name|AcpiNsExternalizeName
@@ -107,9 +108,13 @@ argument_list|,
 name|LineNumber
 argument_list|)
 expr_stmt|;
+comment|/* Print target name */
 if|if
 condition|(
-name|Name
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1684,11 +1689,14 @@ name|ACPI_OBJECT_TYPE
 name|Type
 parameter_list|)
 block|{
-name|ACPI_FUNCTION_TRACE_U32
+name|ACPI_FUNCTION_TRACE_STR
 argument_list|(
 literal|"NsOpensScope"
 argument_list|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|Type
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2031,77 +2039,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ACPI_DEBUG_OUTPUT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ACPI_DEBUGGER
-argument_list|)
-end_if
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsExistDownstreamSibling  *  * PARAMETERS:  *Node          - pointer to first Node to examine  *  * RETURN:      TRUE if sibling is found, FALSE otherwise  *  * DESCRIPTION: Searches remainder of scope being processed to determine  *              whether there is a downstream sibling to the current  *              object.  This function is used to determine what type of  *              line drawing character to use when displaying namespace  *              trees.  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|BOOLEAN
-name|AcpiNsExistDownstreamSibling
-parameter_list|(
-name|ACPI_NAMESPACE_NODE
-modifier|*
-name|Node
-parameter_list|)
-block|{
-if|if
-condition|(
-operator|!
-name|Node
-condition|)
-block|{
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-if|if
-condition|(
-name|Node
-operator|->
-name|Name
-operator|.
-name|Integer
-condition|)
-block|{
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|FALSE
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ACPI_DEBUG_OUTPUT */
-end_comment
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsGetParentNode  *  * PARAMETERS:  Node       - Current table entry  *  * RETURN:      Parent entry of the given entry  *  * DESCRIPTION: Obtain the parent entry for a given entry in the namespace.  *  ******************************************************************************/

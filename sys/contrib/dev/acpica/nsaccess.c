@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 161 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 165 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -337,6 +337,9 @@ name|String
 operator|.
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_STRLEN
 argument_list|(
 name|InitVal
@@ -366,6 +369,14 @@ break|break;
 case|case
 name|ACPI_TYPE_MUTEX
 case|:
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Node
+operator|=
+name|NewNode
+expr_stmt|;
 name|ObjDesc
 operator|->
 name|Mutex
@@ -599,6 +610,9 @@ decl_stmt|;
 name|UINT32
 name|NumSegments
 decl_stmt|;
+name|UINT32
+name|NumCarats
+decl_stmt|;
 name|ACPI_NAME
 name|SimpleName
 decl_stmt|;
@@ -760,41 +774,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * This check is explicitly split to relax the TypeToCheckFor      * conditions for BankFieldDefn.  Originally, both BankFieldDefn and      * DefFieldDefn caused TypeToCheckFor to be set to ACPI_TYPE_REGION,      * but the BankFieldDefn may also check for a Field definition as well      * as an OperationRegion.      */
-if|if
-condition|(
-name|INTERNAL_TYPE_FIELD_DEFN
-operator|==
-name|Type
-condition|)
-block|{
-comment|/* DefFieldDefn defines fields in a Region */
-name|TypeToCheckFor
-operator|=
-name|ACPI_TYPE_REGION
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|INTERNAL_TYPE_BANK_FIELD_DEFN
-operator|==
-name|Type
-condition|)
-block|{
-comment|/* BankFieldDefn defines data fields in a Field Object */
-name|TypeToCheckFor
-operator|=
-name|ACPI_TYPE_ANY
-expr_stmt|;
-block|}
-else|else
-block|{
+comment|/* Save type   TBD: may be no longer necessary */
 name|TypeToCheckFor
 operator|=
 name|Type
 expr_stmt|;
-block|}
 comment|/*      * Begin examination of the actual pathname      */
 if|if
 condition|(
@@ -874,7 +858,13 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching relative to prefix scope [%p]\n"
+literal|"Searching relative to prefix scope [%4.4s] (%p)\n"
+operator|,
+name|PrefixNode
+operator|->
+name|Name
+operator|.
+name|Ascii
 operator|,
 name|PrefixNode
 operator|)
@@ -884,6 +874,10 @@ comment|/*              * Handle multiple Parent Prefixes (carat) by just gettin
 name|ThisNode
 operator|=
 name|PrefixNode
+expr_stmt|;
+name|NumCarats
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -906,6 +900,9 @@ name|Path
 operator|++
 expr_stmt|;
 comment|/* Backup to the parent node */
+name|NumCarats
+operator|++
+expr_stmt|;
 name|ThisNode
 operator|=
 name|AcpiNsGetParentNode
@@ -946,7 +943,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Path is absolute with one or more carats\n"
+literal|"Search scope is [%4.4s], path has %d carat(s)\n"
+operator|,
+name|ThisNode
+operator|->
+name|Name
+operator|.
+name|Ascii
+operator|,
+name|NumCarats
 operator|)
 argument_list|)
 expr_stmt|;
@@ -966,6 +971,12 @@ comment|/*              * Null name after a root or parent prefixes. We already 
 name|NumSegments
 operator|=
 literal|0
+expr_stmt|;
+name|Type
+operator|=
+name|ThisNode
+operator|->
+name|Type
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(
@@ -1216,13 +1227,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|*
+name|ReturnNode
+operator|=
+name|ThisNode
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Sanity typecheck of the target object:          *          * If 1) This is the last segment (NumSegments == 0)          *    2) And we are looking for a specific type          *       (Not checking for TYPE_ANY)          *    3) Which is not an alias          *    4) Which is not a local type (TYPE_DEF_ANY)          *    5) Which is not a local type (TYPE_SCOPE)          *    6) Which is not a local type (TYPE_INDEX_FIELD_DEFN)          *    7) And the type of target object is known (not TYPE_ANY)          *    8) And target object does not match what we are looking for          *          * Then we have a type mismatch.  Just warn and ignore it.          */
+comment|/*          * Sanity typecheck of the target object:          *          * If 1) This is the last segment (NumSegments == 0)          *    2) And we are looking for a specific type          *       (Not checking for TYPE_ANY)          *    3) Which is not an alias          *    4) Which is not a local type (TYPE_SCOPE)          *    5) And the type of target object is known (not TYPE_ANY)          *    6) And target object does not match what we are looking for          *          * Then we have a type mismatch.  Just warn and ignore it.          */
 if|if
 condition|(
 operator|(
@@ -1240,25 +1256,13 @@ operator|&&
 operator|(
 name|TypeToCheckFor
 operator|!=
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 operator|)
 operator|&&
 operator|(
 name|TypeToCheckFor
 operator|!=
-name|INTERNAL_TYPE_DEF_ANY
-operator|)
-operator|&&
-operator|(
-name|TypeToCheckFor
-operator|!=
-name|INTERNAL_TYPE_SCOPE
-operator|)
-operator|&&
-operator|(
-name|TypeToCheckFor
-operator|!=
-name|INTERNAL_TYPE_INDEX_FIELD_DEFN
+name|ACPI_TYPE_LOCAL_SCOPE
 operator|)
 operator|&&
 operator|(
@@ -1282,7 +1286,7 @@ comment|/* Complain about a type mismatch */
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"NsLookup: %4.4s, type %X, checking for type %X\n"
+literal|"NsLookup: Type mismatch on %4.4s (%s), searching for (%s)\n"
 operator|,
 operator|(
 name|char
@@ -1291,11 +1295,17 @@ operator|)
 operator|&
 name|SimpleName
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|ThisNode
 operator|->
 name|Type
+argument_list|)
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|TypeToCheckFor
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1353,7 +1363,7 @@ if|if
 condition|(
 name|AcpiNsOpensScope
 argument_list|(
-name|TypeToCheckFor
+name|Type
 argument_list|)
 condition|)
 block|{
@@ -1382,23 +1392,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_NAMES
-operator|,
-literal|"Setting current scope to [%4.4s] (%p)\n"
-operator|,
-name|ThisNode
-operator|->
-name|Name
-operator|.
-name|Ascii
-operator|,
-name|ThisNode
-operator|)
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 operator|*

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 91 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exnames - interpreter/scanner name load/execute  *              $Revision: 92 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -606,15 +606,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 operator|==
 name|DataType
 operator|||
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 operator|==
 name|DataType
 operator|||
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 operator|==
 name|DataType
 condition|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 91 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 92 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -973,7 +973,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_ADDRESS_HANDLER
+name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
 case|:
 comment|/* Must walk list of address handlers */
 name|Next
@@ -1099,7 +1099,7 @@ goto|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 name|Status
 operator|=
@@ -1131,7 +1131,7 @@ goto|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 name|Status
 operator|=
@@ -1191,7 +1191,7 @@ goto|;
 block|}
 break|break;
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 name|Status
 operator|=
@@ -1254,7 +1254,7 @@ case|case
 name|ACPI_TYPE_REGION
 case|:
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 default|default:
 comment|/* No subobjects */

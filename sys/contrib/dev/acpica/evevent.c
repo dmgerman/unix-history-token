@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose Even handling and dispatch  *              $Revision: 96 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -772,6 +772,7 @@ name|AcpiGbl_FADT
 operator|->
 name|Gpe1Base
 expr_stmt|;
+comment|/* Warn and exit if there are no GPE registers */
 name|AcpiGbl_GpeRegisterCount
 operator|=
 name|AcpiGbl_GpeBlockInfo
@@ -797,7 +798,7 @@ block|{
 name|ACPI_REPORT_WARNING
 argument_list|(
 operator|(
-literal|"Zero GPEs are defined in the FADT\n"
+literal|"There are no GPE blocks defined in the FADT\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -807,7 +808,18 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Determine the maximum GPE number for this machine */
+comment|/*       * Determine the maximum GPE number for this machine.      * Note: both GPE0 and GPE1 are optional, and either can exist without      * the other      */
+if|if
+condition|(
+name|AcpiGbl_GpeBlockInfo
+index|[
+literal|0
+index|]
+operator|.
+name|RegisterCount
+condition|)
+block|{
+comment|/* GPE block 0 exists */
 name|AcpiGbl_GpeNumberMax
 operator|=
 name|ACPI_MUL_8
@@ -822,6 +834,7 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|AcpiGbl_GpeBlockInfo
@@ -832,20 +845,56 @@ operator|.
 name|RegisterCount
 condition|)
 block|{
-comment|/* Check for GPE0/GPE1 overlap */
+comment|/* GPE block 1 exists */
+comment|/* Check for GPE0/GPE1 overlap (if both banks exist) */
 if|if
 condition|(
+operator|(
+name|AcpiGbl_GpeBlockInfo
+index|[
+literal|0
+index|]
+operator|.
+name|RegisterCount
+operator|)
+operator|&&
+operator|(
 name|AcpiGbl_GpeNumberMax
 operator|>=
 name|AcpiGbl_FADT
 operator|->
 name|Gpe1Base
+operator|)
 condition|)
 block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"GPE0 block overlaps the GPE1 block\n"
+literal|"GPE0 block (GPE 0 to %d) overlaps the GPE1 block (GPE %d to %d)\n"
+operator|,
+name|AcpiGbl_GpeNumberMax
+operator|,
+name|AcpiGbl_FADT
+operator|->
+name|Gpe1Base
+operator|,
+name|AcpiGbl_FADT
+operator|->
+name|Gpe1Base
+operator|+
+operator|(
+name|ACPI_MUL_8
+argument_list|(
+name|AcpiGbl_GpeBlockInfo
+index|[
+literal|1
+index|]
+operator|.
+name|RegisterCount
+argument_list|)
+operator|-
+literal|1
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -855,7 +904,7 @@ name|AE_BAD_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* GPE0 and GPE1 do not have to be contiguous in the GPE number space */
+comment|/*           * GPE0 and GPE1 do not have to be contiguous in the GPE number space,          * But, GPE0 always starts at zero.          */
 name|AcpiGbl_GpeNumberMax
 operator|=
 name|AcpiGbl_FADT
@@ -900,7 +949,7 @@ name|AE_BAD_VALUE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Allocate the GPE number-to-index translation table      */
+comment|/* Allocate the GPE number-to-index translation table */
 name|AcpiGbl_GpeNumberToIndex
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -966,7 +1015,7 @@ literal|1
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Allocate the GPE register information block      */
+comment|/* Allocate the GPE register information block */
 name|AcpiGbl_GpeRegisterInfo
 operator|=
 name|ACPI_MEM_CALLOCATE
@@ -1344,6 +1393,11 @@ name|GpeRegister
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|i
+condition|)
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1395,18 +1449,19 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_DEBUG_PRINT
+name|ACPI_REPORT_INFO
 argument_list|(
 operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"GPE Block%d Range GPE #%2.2X to GPE #%2.2X\n"
+literal|"GPE Block%d defined as GPE%d to GPE%d\n"
 operator|,
 operator|(
 name|INT32
 operator|)
 name|GpeBlock
 operator|,
+operator|(
+name|UINT32
+operator|)
 name|AcpiGbl_GpeBlockInfo
 index|[
 name|GpeBlock
@@ -1414,6 +1469,10 @@ index|]
 operator|.
 name|BlockBaseNumber
 operator|,
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|AcpiGbl_GpeBlockInfo
 index|[
 name|GpeBlock
@@ -1435,9 +1494,11 @@ operator|)
 operator|-
 literal|1
 operator|)
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|return_ACPI_STATUS
 argument_list|(
@@ -2183,7 +2244,7 @@ block|{
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"%s while evaluated GPE%X method\n"
+literal|"%s while evaluating GPE%X method\n"
 operator|,
 name|AcpiFormatException
 argument_list|(
@@ -2285,7 +2346,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Invalid event, GPE[%X].\n"
+literal|"GPE[%X] is not a valid event\n"
 operator|,
 name|GpeNumber
 operator|)

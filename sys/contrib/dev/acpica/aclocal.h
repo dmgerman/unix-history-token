@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 176 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 179 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,9 +22,13 @@ end_define
 begin_define
 define|#
 directive|define
-name|WAIT_FOREVER
-value|((UINT32) -1)
+name|ACPI_WAIT_FOREVER
+value|0xFFFF
 end_define
+
+begin_comment
+comment|/* UINT16, as per ACPI spec */
+end_comment
 
 begin_typedef
 typedef|typedef
@@ -565,10 +569,6 @@ decl_stmt|;
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Pointer
-decl_stmt|;
-name|void
-modifier|*
-name|BasePointer
 decl_stmt|;
 name|UINT8
 modifier|*
@@ -1632,6 +1632,12 @@ decl_stmt|;
 name|char
 modifier|*
 name|Namepath
+decl_stmt|;
+name|char
+name|NameSeg
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|UINT32
 name|ExtraValue

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 130 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 132 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -712,7 +712,7 @@ name|NotifyObj
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|INTERNAL_TYPE_NOTIFY
+name|ACPI_TYPE_LOCAL_NOTIFY
 argument_list|)
 expr_stmt|;
 if|if
@@ -1518,7 +1518,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiAcquireGlobalLock
 parameter_list|(
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|,
 name|UINT32

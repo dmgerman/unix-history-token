@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 94 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: excreate - Named object creation  *              $Revision: 97 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -92,6 +92,8 @@ name|AliasNode
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -131,7 +133,7 @@ name|TargetNode
 operator|->
 name|Type
 operator|==
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 condition|)
 block|{
 comment|/*           * Dereference an existing alias so that we don't create a chain          * of aliases.  With this code, we guarantee that an alias is          * always exactly one level of indirection away from the           * actual aliased name.          */
@@ -174,17 +176,18 @@ name|AliasNode
 operator|->
 name|Type
 operator|=
-name|INTERNAL_TYPE_ALIAS
+name|ACPI_TYPE_LOCAL_ALIAS
 expr_stmt|;
 name|AliasNode
 operator|->
 name|Object
 operator|=
-operator|(
+name|ACPI_CAST_PTR
+argument_list|(
 name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
+argument_list|,
 name|TargetNode
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -211,7 +214,7 @@ block|}
 comment|/* Since both operands are Nodes, we don't need to delete them */
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_OK
+name|Status
 argument_list|)
 expr_stmt|;
 block|}
@@ -430,10 +433,12 @@ name|Integer
 operator|.
 name|Value
 expr_stmt|;
-name|Status
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Node
 operator|=
-name|AcpiNsAttachObject
-argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
@@ -444,6 +449,16 @@ name|Operands
 index|[
 literal|0
 index|]
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiNsAttachObject
+argument_list|(
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Node
 argument_list|,
 name|ObjDesc
 argument_list|,

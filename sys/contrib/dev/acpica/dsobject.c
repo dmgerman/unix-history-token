@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsobject - Dispatcher object management routines  *              $Revision: 110 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1926,6 +1926,9 @@ name|String
 operator|.
 name|Length
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|ACPI_STRLEN
 argument_list|(
 name|Op
@@ -1952,7 +1955,7 @@ name|ACPI_TYPE_METHOD
 case|:
 break|break;
 case|case
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 case|:
 switch|switch
 condition|(

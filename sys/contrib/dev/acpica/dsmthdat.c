@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 63 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 64 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1317,7 +1317,7 @@ name|Common
 operator|.
 name|Type
 operator|==
-name|INTERNAL_TYPE_REFERENCE
+name|ACPI_TYPE_LOCAL_REFERENCE
 operator|)
 operator|&&
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableCount  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Calculate the number of tables  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetTableCount  *  * PARAMETERS:  RSDP            - Pointer to the RSDP  *              RSDT            - Pointer to the RSDT/XSDT  *  * RETURN:      The number of tables pointed to by the RSDT or XSDT.  *  * DESCRIPTION: Calculate the number of tables.  Automatically handles either  *              an RSDT or XSDT.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -117,7 +117,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  *  * RETURN:  *  * DESCRIPTION: Convert an RSDT to an XSDT (internal common format)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertToXsdt  *  * PARAMETERS:  TableInfo       - Info about the RSDT  *  * RETURN:      Status  *  * DESCRIPTION: Convert an RSDT to an XSDT (internal common format)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -294,16 +294,6 @@ comment|/* Point the table descriptor to the new table */
 name|TableInfo
 operator|->
 name|Pointer
-operator|=
-operator|(
-name|ACPI_TABLE_HEADER
-operator|*
-operator|)
-name|NewTable
-expr_stmt|;
-name|TableInfo
-operator|->
-name|BasePointer
 operator|=
 operator|(
 name|ACPI_TABLE_HEADER
@@ -874,7 +864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFadt  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION:  *    Converts a BIOS supplied ACPI 1.0 FADT to an intermediate  *    ACPI 2.0 FADT. If the BIOS supplied a 2.0 FADT then it is simply  *    copied to the intermediate FADT.  The ACPI CA software uses this  *    intermediate FADT. Thus a significant amount of special #ifdef  *    type codeing is saved. This intermediate FADT will need to be  *    freed at some point.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbConvertTableFadt  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Converts a BIOS supplied ACPI 1.0 FADT to a local  *              ACPI 2.0 FADT. If the BIOS supplied a 2.0 FADT then it is simply  *              copied to the local FADT.  The ACPI CA software uses this  *              local FADT. Thus a significant amount of special #ifdef  *              type codeing is saved.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1078,12 +1068,6 @@ operator|(
 name|ACPI_TABLE_HEADER
 operator|*
 operator|)
-name|AcpiGbl_FADT
-expr_stmt|;
-name|TableDesc
-operator|->
-name|BasePointer
-operator|=
 name|AcpiGbl_FADT
 expr_stmt|;
 name|TableDesc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 89 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nssearch - Namespace search  *              $Revision: 92 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchNode  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting table where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Named obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search a single namespace table.  Performs a simple search,  *              does not add entries or search parents.  *  *  *      Named object lists are built (and subsequently dumped) in the  *      order in which the names are encountered during the namespace load;  *  *      All namespace searching is linear in this implementation, but  *      could be easily modified to support any improved search  *      algorithm.  However, the linear search was chosen for simplicity  *      and because the trees are small and the other interpreter  *      execution overhead is relatively high.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchNode  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting node where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Named obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search a single level of the namespace.  Performs a   *              simple search of the specified level, and does not add   *              entries or search parents.  *  *  *      Named object lists are built (and subsequently dumped) in the  *      order in which the names are encountered during the namespace load;  *  *      All namespace searching is linear in this implementation, but  *      could be easily modified to support any improved search  *      algorithm.  However, the linear search was chosen for simplicity  *      and because the trees are small and the other interpreter  *      execution overhead is relatively high.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -103,7 +103,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Searching %s [%p] For %4.4s (type %s)\n"
+literal|"Searching %s [%p] For %4.4s (%s)\n"
 operator|,
 name|ScopeName
 operator|,
@@ -132,7 +132,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/*      * Search for name in this table, which is to say that we must search      * for the name among the children of this object      */
+comment|/*      * Search for name at this namespace level, which is to say that we       * must search for the name among the children of this object      */
 name|NextNode
 operator|=
 name|Node
@@ -156,59 +156,7 @@ operator|==
 name|TargetName
 condition|)
 block|{
-comment|/*              * Found matching entry.  Capture the type if appropriate, before              * returning the entry.              *              * The DefFieldDefn and BankFieldDefn cases are actually looking up              * the Region in which the field will be defined              */
-if|if
-condition|(
-operator|(
-name|INTERNAL_TYPE_FIELD_DEFN
-operator|==
-name|Type
-operator|)
-operator|||
-operator|(
-name|INTERNAL_TYPE_BANK_FIELD_DEFN
-operator|==
-name|Type
-operator|)
-condition|)
-block|{
-name|Type
-operator|=
-name|ACPI_TYPE_REGION
-expr_stmt|;
-block|}
-comment|/*              * Scope, DefAny, and IndexFieldDefn are bogus "types" which do not              * actually have anything to do with the type of the name being              * looked up.  For any other value of Type, if the type stored in              * the entry is Any (i.e. unknown), save the actual type.              */
-if|if
-condition|(
-name|Type
-operator|!=
-name|INTERNAL_TYPE_SCOPE
-operator|&&
-name|Type
-operator|!=
-name|INTERNAL_TYPE_DEF_ANY
-operator|&&
-name|Type
-operator|!=
-name|INTERNAL_TYPE_INDEX_FIELD_DEFN
-operator|&&
-name|NextNode
-operator|->
-name|Type
-operator|==
-name|ACPI_TYPE_ANY
-condition|)
-block|{
-name|NextNode
-operator|->
-name|Type
-operator|=
-operator|(
-name|UINT8
-operator|)
-name|Type
-expr_stmt|;
-block|}
+comment|/*              * Found matching entry.              */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -266,7 +214,7 @@ operator|->
 name|Peer
 expr_stmt|;
 block|}
-comment|/* Searched entire table, not found */
+comment|/* Searched entire namespace level, not found */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -299,7 +247,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting table where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Named Obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              table.  Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space).  This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchParentTree  *  * PARAMETERS:  *TargetName         - Ascii ACPI name to search for  *              *Node               - Starting node where search will begin  *              Type                - Object type to match  *              **ReturnNode        - Where the matched Named Obj is returned  *  * RETURN:      Status  *  * DESCRIPTION: Called when a name has not been found in the current namespace  *              level.  Before adding it or giving up, ACPI scope rules require  *              searching enclosing scopes in cases identified by AcpiNsLocal().  *  *              "A name is located by finding the matching name in the current  *              name space, and then in the parent name space. If the parent  *              name space does not contain the name, the search continues  *              recursively until either the name is found or the name space  *              does not have a parent (the root of the name space).  This  *              indicates that the name is not found" (From ACPI Specification,  *              section 5.3)  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -342,22 +290,7 @@ argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-comment|/*      * If there is no parent (at the root) or type is "local", we won't be      * searching the parent tree.      */
-if|if
-condition|(
-operator|(
-name|AcpiNsLocal
-argument_list|(
-name|Type
-argument_list|)
-operator|)
-operator|||
-operator|(
-operator|!
-name|ParentNode
-operator|)
-condition|)
-block|{
+comment|/*      * If there is no parent (i.e., we are at the root) or       * type is "local", we won't be searching the parent tree.      */
 if|if
 condition|(
 operator|!
@@ -378,6 +311,11 @@ operator|)
 operator|&
 name|TargetName
 operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_NOT_FOUND
 argument_list|)
 expr_stmt|;
 block|}
@@ -410,7 +348,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_NOT_FOUND
@@ -487,7 +424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchAndEnter  *  * PARAMETERS:  TargetName          - Ascii ACPI name to search for (4 chars)  *              WalkState           - Current state of the walk  *              *Node               - Starting table where search will begin  *              InterpreterMode     - Add names only in MODE_LoadPassX.  *                                    Otherwise,search only.  *              Type                - Object type to match  *              Flags               - Flags describing the search restrictions  *              **ReturnNode        - Where the Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search for a name segment in a single name table,  *              optionally adding it if it is not found.  If the passed  *              Type is not Any and the type previously stored in the  *              entry was Any (i.e. unknown), update the stored type.  *  *              In IMODE_EXECUTE, search only.  *              In other modes, search and add if not found.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsSearchAndEnter  *  * PARAMETERS:  TargetName          - Ascii ACPI name to search for (4 chars)  *              WalkState           - Current state of the walk  *              *Node               - Starting node where search will begin  *              InterpreterMode     - Add names only in ACPI_MODE_LOAD_PASS_x.  *                                    Otherwise,search only.  *              Type                - Object type to match  *              Flags               - Flags describing the search restrictions  *              **ReturnNode        - Where the Node is returned  *  * RETURN:      Status  *  * DESCRIPTION: Search for a name segment in a single namespace level,  *              optionally adding it if it is not found.  If the passed  *              Type is not Any and the type previously stored in the  *              entry was Any (i.e. unknown), update the stored type.  *  *              In ACPI_IMODE_EXECUTE, search only.  *              In other modes, search and add if not found.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -583,21 +520,12 @@ name|TargetName
 argument_list|)
 condition|)
 block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"*** Bad character in name: %08x *** \n"
-operator|,
-name|TargetName
-operator|)
-argument_list|)
-expr_stmt|;
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"NsSearchAndEnter: Bad character in ACPI Name\n"
+literal|"NsSearchAndEnter: Bad character in ACPI Name: %X\n"
+operator|,
+name|TargetName
 operator|)
 argument_list|)
 expr_stmt|;
@@ -607,7 +535,7 @@ name|AE_BAD_CHARACTER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Try to find the name in the table specified by the caller */
+comment|/* Try to find the name in the namespace level specified by the caller */
 operator|*
 name|ReturnNode
 operator|=
@@ -677,7 +605,7 @@ name|ACPI_NS_SEARCH_PARENT
 operator|)
 condition|)
 block|{
-comment|/*          * Not found in table - search parent tree according          * to ACPI specification          */
+comment|/*          * Not found at this level - search parent tree according          * to ACPI specification          */
 name|Status
 operator|=
 name|AcpiNsSearchParentTree

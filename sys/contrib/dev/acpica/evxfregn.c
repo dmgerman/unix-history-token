@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfregn - External Interfaces, ACPI Operation Regions and  *                         Address Spaces.  *              $Revision: 52 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -476,7 +476,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_OPREGION
 operator|,
-literal|"Installing address handler for region %s(%X) on Device %p(%p)\n"
+literal|"Installing address handler for region %s(%X) on Device %4.4s %p(%p)\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -484,6 +484,12 @@ name|SpaceId
 argument_list|)
 operator|,
 name|SpaceId
+operator|,
+name|Node
+operator|->
+name|Name
+operator|.
+name|Ascii
 operator|,
 name|Node
 operator|,
@@ -496,7 +502,7 @@ name|HandlerObj
 operator|=
 name|AcpiUtCreateInternalObject
 argument_list|(
-name|INTERNAL_TYPE_ADDRESS_HANDLER
+name|ACPI_TYPE_LOCAL_ADDRESS_HANDLER
 argument_list|)
 expr_stmt|;
 if|if
