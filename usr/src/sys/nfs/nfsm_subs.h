@@ -332,7 +332,7 @@ parameter_list|,
 name|a
 parameter_list|)
 define|\
-value|if (error = nfs_loadattrcache((v),&md,&dpos, (a))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
+value|if (error = nfs_loadattrcache(&(v),&md,&dpos, (a))) { \ 			m_freem(mrep); \ 			goto nfsmout; \ 		}
 end_define
 
 begin_define
