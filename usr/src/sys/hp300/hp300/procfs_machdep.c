@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993 Jan-Simon Pendry  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_machdep.c	8.2 (Berkeley) %G%  *  * From:  *	$Id: procfs_i386.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1993 Jan-Simon Pendry  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)procfs_machdep.c	8.3 (Berkeley) %G%  *  * From:  *	$Id: procfs_i386.c,v 3.2 1993/12/15 09:40:17 jsp Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Functions to be implemented here are:  *  * procfs_read_regs(proc, regs)  *	Get the current user-visible register set from the process  *	and copy it into the regs structure (<machine/reg.h>).  *	The process is stopped at the time read_regs is called.  *  * procfs_write_regs(proc, regs)  *	Update the current register set from the passed in regs  *	structure.  Take care to avoid clobbering special CPU  *	registers or privileged bits in the PSL.  *	The process is stopped at the time write_regs is called.  *  * procfs_sstep(proc)  *	Arrange for the process to trap after executing a single instruction.  *  * procfs_fix_sstep(proc)  *	Cleanup process state after executing a single-step instruction.  */
+comment|/*  * Functions to be implemented here are:  *  * procfs_read_regs(proc, regs)  *	Get the current user-visible register set from the process  *	and copy it into the regs structure (<machine/reg.h>).  *	The process is stopped at the time read_regs is called.  *  * procfs_write_regs(proc, regs)  *	Update the current register set from the passed in regs  *	structure.  Take care to avoid clobbering special CPU  *	registers or privileged bits in the PSL.  *	The process is stopped at the time write_regs is called.  *  * procfs_read_fpregs, procfs_write_fpregs  *	deal with the floating point register set, otherwise as above.  *  * procfs_sstep(proc)  *	Arrange for the process to trap after executing a single instruction.  *  * procfs_fix_sstep(proc)  *	Cleanup process state after executing a single-step instruction.  */
 end_comment
 
 begin_include
@@ -278,6 +278,60 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|procfs_read_fpregs
+parameter_list|(
+name|p
+parameter_list|,
+name|fpregs
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|fpreg
+modifier|*
+name|fpregs
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|procfs_write_fpregs
+parameter_list|(
+name|p
+parameter_list|,
+name|fpregs
+parameter_list|)
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
+name|struct
+name|fpreg
+modifier|*
+name|fpregs
+decl_stmt|;
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
