@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	8.1 (Berkeley) %G%"
+literal|"@(#)fts.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4002,7 +4002,7 @@ name|ADJUST
 parameter_list|(
 name|p
 parameter_list|)
-value|{							\ 	(p)->fts_accpath = addr + ((p)->fts_accpath - (p)->fts_path);	\ 	(p)->fts_path = addr;						\ }
+value|{							\ 	(p)->fts_accpath =						\ 	    (char *)addr + ((p)->fts_accpath - (p)->fts_path);		\ 	(p)->fts_path = addr;						\ }
 comment|/* Adjust the current set of children. */
 for|for
 control|(
