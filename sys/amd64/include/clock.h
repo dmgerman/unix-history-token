@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.7 1995/12/10 13:38:07 phk Exp $  */
+comment|/*  * Kernel interface to machine-dependent clock driver.  * Garrett Wollman, September 1994.  * This file is in the public domain.  *  *	$Id: clock.h,v 1.8 1995/12/24 08:10:49 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -193,6 +193,14 @@ name|i586_ctr_bias
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|i586_avg_tick
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -279,7 +287,7 @@ name|long
 name|old
 decl_stmt|;
 name|long
-name|rv
+name|len
 decl_stmt|;
 if|if
 condition|(
@@ -295,7 +303,7 @@ argument_list|(
 name|i586_last_tick
 argument_list|)
 expr_stmt|;
-name|rv
+name|len
 operator|=
 operator|(
 operator|(
@@ -309,16 +317,21 @@ operator|)
 operator|/
 name|i586_ctr_rate
 expr_stmt|;
-block|}
-else|else
-block|{
-name|rv
+name|i586_avg_tick
 operator|=
-name|dflt
+name|i586_avg_tick
+operator|*
+literal|15
+operator|/
+literal|16
+operator|+
+name|len
+operator|/
+literal|16
 expr_stmt|;
 block|}
 return|return
-name|rv
+name|dflt
 return|;
 block|}
 end_function
