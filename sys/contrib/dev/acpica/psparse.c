@@ -1220,9 +1220,21 @@ name|ArgTypes
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|PARSER_ONLY
+if|#
+directive|if
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|ACPI_NO_METHOD_EXECUTION
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|ACPI_CONSTANT_EVAL_ONLY
+argument_list|)
+operator|)
 if|if
 condition|(
 name|WalkState
@@ -1649,6 +1661,7 @@ name|WalkState
 operator|->
 name|Opcode
 expr_stmt|;
+comment|/*                  * Get and append arguments until we find the node that contains                  * the name (the type ARGP_NAME).                  */
 while|while
 condition|(
 name|GET_CURRENT_ARG_TYPE

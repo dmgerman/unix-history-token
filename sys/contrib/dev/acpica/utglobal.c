@@ -31,6 +31,12 @@ directive|include
 file|"acnamesp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"amlcode.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -330,15 +336,6 @@ name|BOOLEAN
 name|AcpiGbl_MethodExecuting
 init|=
 name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|NATIVE_CHAR
-modifier|*
-name|AcpiGbl_DbDisasmIndent
-init|=
-literal|"...."
 decl_stmt|;
 end_decl_stmt
 
@@ -741,7 +738,7 @@ name|NUM_ACPI_TABLES
 index|]
 init|=
 block|{
-comment|/***********    Name,   Signature, Global typed pointer     Signature size,      How many allowed?,    Contains valid AML? */
+comment|/***********    Name,   Signature, Global typed pointer     Signature size,      Type                  How many allowed?,    Contains valid AML? */
 comment|/* RSDP 0 */
 block|{
 name|RSDP_NAME
@@ -757,6 +754,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_ROOT
+operator||
 name|ACPI_TABLE_SINGLE
 block|}
 block|,
@@ -781,6 +780,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_SECONDARY
+operator||
 name|ACPI_TABLE_SINGLE
 operator||
 name|ACPI_TABLE_EXECUTABLE
@@ -807,6 +808,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_PRIMARY
+operator||
 name|ACPI_TABLE_SINGLE
 block|}
 block|,
@@ -831,6 +834,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_SECONDARY
+operator||
 name|ACPI_TABLE_SINGLE
 block|}
 block|,
@@ -849,6 +854,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_PRIMARY
+operator||
 name|ACPI_TABLE_MULTIPLE
 operator||
 name|ACPI_TABLE_EXECUTABLE
@@ -869,6 +876,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_PRIMARY
+operator||
 name|ACPI_TABLE_MULTIPLE
 operator||
 name|ACPI_TABLE_EXECUTABLE
@@ -889,6 +898,8 @@ argument_list|)
 operator|-
 literal|1
 block|,
+name|ACPI_TABLE_ROOT
+operator||
 name|ACPI_TABLE_SINGLE
 block|}
 block|, }
@@ -1166,7 +1177,6 @@ comment|/* Region type decoding */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|const
 name|NATIVE_CHAR
 modifier|*
@@ -1180,7 +1190,7 @@ literal|"SystemMemory"
 block|,
 literal|"SystemIO"
 block|,
-literal|"PCIConfig"
+literal|"PCI_Config"
 block|,
 literal|"EmbeddedControl"
 block|,
@@ -1188,7 +1198,7 @@ literal|"SMBus"
 block|,
 literal|"CMOS"
 block|,
-literal|"PCIBarTarget"
+literal|"PCIBARTarget"
 block|,
 literal|"DataTable"
 block|, }
@@ -1314,66 +1324,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ACPI_DEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|ENABLE_DEBUGGER
-argument_list|)
-end_if
-
-begin_comment
-comment|/*  * Strings and procedures used for debug only  *  */
-end_comment
-
-begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetMutexName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ****************************************************************************/
-end_comment
-
-begin_function
-name|NATIVE_CHAR
-modifier|*
-name|AcpiUtGetMutexName
-parameter_list|(
-name|UINT32
-name|MutexId
-parameter_list|)
-block|{
-if|if
-condition|(
-name|MutexId
-operator|>
-name|MAX_MTX
-condition|)
-block|{
-return|return
-operator|(
-literal|"Invalid Mutex ID"
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|AcpiGbl_MutexNames
-index|[
-name|MutexId
-index|]
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetTypeName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a Type ID into a name string (Debug only)  *  ****************************************************************************/
@@ -1606,50 +1556,65 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Various strings for future use */
-end_comment
-
 begin_if
 if|#
 directive|if
-literal|0
+name|defined
+argument_list|(
+name|ACPI_DEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ENABLE_DEBUGGER
+argument_list|)
 end_if
 
-begin_include
-include|#
-directive|include
-file|"amlcode.h"
-end_include
-
 begin_comment
-comment|/* Data used in keeping track of fields */
+comment|/*  * Strings and procedures used for debug only  *  */
 end_comment
 
 begin_comment
-unit|static const NATIVE_CHAR *AcpiGbl_FENames[NUM_FIELD_NAMES] = {     "skip",     "?access?" };
-comment|/* FE = Field Element */
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtGetMutexName  *  * PARAMETERS:  None.  *  * RETURN:      Status  *  * DESCRIPTION: Translate a mutex ID into a name string (Debug only)  *  ****************************************************************************/
 end_comment
 
-begin_comment
-unit|static const NATIVE_CHAR *AcpiGbl_MatchOps[NUM_MATCH_OPS] = {     "Error",     "MTR",     "MEQ",     "MLE",     "MLT",     "MGE",     "MGT" };
-comment|/* Access type decoding */
-end_comment
-
-begin_comment
-unit|static const NATIVE_CHAR *AcpiGbl_AccessTypes[NUM_ACCESS_TYPES] = {     "AnyAcc",     "ByteAcc",     "WordAcc",     "DWordAcc",     "QWordAcc",     "BufferAcc", };
-comment|/* Update rule decoding */
-end_comment
+begin_function
+name|NATIVE_CHAR
+modifier|*
+name|AcpiUtGetMutexName
+parameter_list|(
+name|UINT32
+name|MutexId
+parameter_list|)
+block|{
+if|if
+condition|(
+name|MutexId
+operator|>
+name|MAX_MTX
+condition|)
+block|{
+return|return
+operator|(
+literal|"Invalid Mutex ID"
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|AcpiGbl_MutexNames
+index|[
+name|MutexId
+index|]
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
-unit|static const NATIVE_CHAR *AcpiGbl_UpdateRules[NUM_UPDATE_RULES] = {     "Preserve",     "WriteAsOnes",     "WriteAsZeros" };
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* Future use */
-end_comment
 
 begin_comment
 comment|/*****************************************************************************  *  * FUNCTION:    AcpiUtValidObjectType  *  * PARAMETERS:  None.  *  * RETURN:      TRUE if valid object type  *  * DESCRIPTION: Validate an object type  *  ****************************************************************************/

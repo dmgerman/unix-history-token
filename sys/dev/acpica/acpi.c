@@ -1785,6 +1785,35 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|status
+operator|=
+name|AcpiInitializeObjects
+argument_list|(
+name|flags
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"could not initialize ACPI objects: %s\n"
+argument_list|,
+name|AcpiFormatException
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 comment|/*      * Setup our sysctl tree.      *      * XXX: This doesn't check to make sure that none of these fail.      */
 name|sysctl_ctx_init
 argument_list|(

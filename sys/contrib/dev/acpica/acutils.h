@@ -704,6 +704,36 @@ parameter_list|)
 value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_IS_PRINT
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO | _ACPI_UP | _ACPI_DI | _ACPI_SP | _ACPI_PU))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ALPHA
+parameter_list|(
+name|c
+parameter_list|)
+value|(_acpi_ctype[(unsigned char)(c)]& (_ACPI_LO | _ACPI_UP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_ASCII
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)< 0x80)
+end_define
+
 begin_endif
 endif|#
 directive|endif
