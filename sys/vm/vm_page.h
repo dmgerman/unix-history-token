@@ -137,7 +137,7 @@ comment|/* page usage count */
 name|u_char
 name|busy
 decl_stmt|;
-comment|/* page busy count */
+comment|/* page busy count (O) */
 comment|/* NOTE that these must support one bit per DEV_BSIZE in a page!!! */
 comment|/* so, on normal X86 kernels, they must be at least 8 bits wide */
 if|#
