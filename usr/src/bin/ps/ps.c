@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.43 (Berkeley) %G%"
+literal|"@(#)ps.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1051,6 +1051,27 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+operator|||
+name|swapf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles

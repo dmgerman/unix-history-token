@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsstat.c	5.12 (Berkeley) %G%"
+literal|"@(#)nfsstat.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,24 +199,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|kernel
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|kmemf
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|intpr
 argument_list|()
@@ -263,9 +245,22 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
+name|char
+modifier|*
+name|memf
+decl_stmt|,
+modifier|*
+name|nlistf
+decl_stmt|;
 name|interval
 operator|=
 literal|0
+expr_stmt|;
+name|memf
+operator|=
+name|nlistf
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(
@@ -292,7 +287,7 @@ block|{
 case|case
 literal|'M'
 case|:
-name|kmemf
+name|memf
 operator|=
 name|optarg
 expr_stmt|;
@@ -300,7 +295,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|kernel
+name|nlistf
 operator|=
 name|optarg
 expr_stmt|;
@@ -359,7 +354,7 @@ operator|++
 name|argv
 condition|)
 block|{
-name|kernel
+name|nlistf
 operator|=
 operator|*
 name|argv
@@ -370,7 +365,7 @@ operator|*
 operator|++
 name|argv
 condition|)
-name|kmemf
+name|memf
 operator|=
 operator|*
 name|argv
@@ -379,13 +374,30 @@ block|}
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|kernel
+name|nlistf
 argument_list|,
-name|kmemf
+name|memf
 argument_list|,
 name|NULL
 argument_list|)

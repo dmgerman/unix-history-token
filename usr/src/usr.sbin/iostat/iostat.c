@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iostat.c	5.11 (Berkeley) %G%"
+literal|"@(#)iostat.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -487,10 +487,10 @@ modifier|*
 name|cp
 decl_stmt|,
 modifier|*
-name|memfile
+name|memf
 decl_stmt|,
 modifier|*
-name|namelist
+name|nlistf
 decl_stmt|,
 name|buf
 index|[
@@ -503,9 +503,9 @@ name|reps
 operator|=
 literal|0
 expr_stmt|;
-name|namelist
+name|nlistf
 operator|=
-name|memfile
+name|memf
 operator|=
 name|NULL
 expr_stmt|;
@@ -545,7 +545,7 @@ break|break;
 case|case
 literal|'M'
 case|:
-name|memfile
+name|memf
 operator|=
 name|optarg
 expr_stmt|;
@@ -553,7 +553,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|namelist
+name|nlistf
 operator|=
 name|optarg
 expr_stmt|;
@@ -585,13 +585,30 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|namelist
+name|nlistf
 argument_list|,
-name|memfile
+name|memf
 argument_list|,
 name|NULL
 argument_list|)

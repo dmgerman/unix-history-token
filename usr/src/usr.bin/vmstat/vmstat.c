@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.32 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,15 +477,6 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|vmunix
-init|=
-name|_PATH_UNIX
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
 modifier|*
 name|dr_name
 decl_stmt|;
@@ -656,9 +647,14 @@ name|reps
 decl_stmt|;
 name|char
 modifier|*
-name|kmem
+name|memf
+decl_stmt|,
+modifier|*
+name|nlistf
 decl_stmt|;
-name|kmem
+name|memf
+operator|=
+name|nlistf
 operator|=
 name|NULL
 expr_stmt|;
@@ -728,7 +724,7 @@ break|break;
 case|case
 literal|'M'
 case|:
-name|kmem
+name|memf
 operator|=
 name|optarg
 expr_stmt|;
@@ -744,7 +740,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|vmunix
+name|nlistf
 operator|=
 name|optarg
 expr_stmt|;
@@ -808,13 +804,30 @@ name|todo
 operator|=
 name|VMSTAT
 expr_stmt|;
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|nlistf
+operator|!=
+name|NULL
+operator|||
+name|memf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|vmunix
+name|nlistf
 argument_list|,
-name|kmem
+name|memf
 argument_list|,
 name|NULL
 argument_list|)
@@ -869,9 +882,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"vmstat: undefined symbols in %s:"
-argument_list|,
-name|vmunix
+literal|"vmstat: undefined symbols: "
 argument_list|)
 expr_stmt|;
 for|for
@@ -4644,9 +4655,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"vmstat: %s: symbol %s not defined\n"
-argument_list|,
-name|vmunix
+literal|"vmstat: symbol %s not defined\n"
 argument_list|,
 name|sym
 argument_list|)

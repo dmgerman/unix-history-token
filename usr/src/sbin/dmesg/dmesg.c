@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dmesg.c	5.9 (Berkeley) %G%"
+literal|"@(#)dmesg.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,14 +186,14 @@ name|cur
 decl_stmt|;
 name|char
 modifier|*
-name|core
+name|memf
 decl_stmt|,
 modifier|*
-name|namelist
+name|nlistf
 decl_stmt|;
-name|core
+name|memf
 operator|=
-name|namelist
+name|nlistf
 operator|=
 name|NULL
 expr_stmt|;
@@ -222,7 +222,7 @@ block|{
 case|case
 literal|'M'
 case|:
-name|core
+name|memf
 operator|=
 name|optarg
 expr_stmt|;
@@ -230,7 +230,7 @@ break|break;
 case|case
 literal|'N'
 case|:
-name|namelist
+name|nlistf
 operator|=
 name|optarg
 expr_stmt|;
@@ -251,14 +251,31 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
+comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
+if|if
+condition|(
+name|memf
+operator|!=
+name|NULL
+operator|||
+name|nlistf
+operator|!=
+name|NULL
+condition|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 comment|/* Read in kernel message buffer, do sanity checks. */
 if|if
 condition|(
 name|kvm_openfiles
 argument_list|(
-name|namelist
+name|nlistf
 argument_list|,
-name|core
+name|memf
 argument_list|,
 name|NULL
 argument_list|)
@@ -305,7 +322,13 @@ literal|0
 condition|)
 name|err
 argument_list|(
-literal|"msgbuf not found namelist"
+literal|"s: msgbuf not found"
+argument_list|,
+name|nlistf
+condition|?
+name|nlistf
+else|:
+literal|"namelist"
 argument_list|)
 expr_stmt|;
 name|kvm_read
