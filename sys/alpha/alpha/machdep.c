@@ -9362,6 +9362,15 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+name|mcp
+operator|->
+name|mc_regs
+index|[
+name|FRAME_A3
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 	 * When the thread is the current thread, the user stack pointer 	 * is not in the PCB; it must be read from the PAL. 	 */
 if|if
