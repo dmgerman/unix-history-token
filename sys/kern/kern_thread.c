@@ -595,7 +595,7 @@ index|[
 name|TID_BITMAP_SIZE
 index|]
 decl_stmt|;
-name|int
+name|lwpid_t
 name|bmp_base
 decl_stmt|;
 name|int
@@ -744,12 +744,13 @@ name|tid_bitmap_part
 modifier|*
 name|bmp
 decl_stmt|;
+name|lwpid_t
+name|tid
+decl_stmt|;
 name|int
 name|bit
 decl_stmt|,
 name|idx
-decl_stmt|,
-name|tid
 decl_stmt|;
 name|td
 operator|=
@@ -2241,7 +2242,7 @@ comment|/*  * Assign a thread ID.  */
 end_comment
 
 begin_function
-name|int
+name|lwpid_t
 name|thread_new_tid
 parameter_list|(
 name|void
@@ -2255,12 +2256,13 @@ decl_stmt|,
 modifier|*
 name|new
 decl_stmt|;
+name|lwpid_t
+name|tid
+decl_stmt|;
 name|int
 name|bit
 decl_stmt|,
 name|idx
-decl_stmt|,
-name|tid
 decl_stmt|;
 name|mtx_lock
 argument_list|(

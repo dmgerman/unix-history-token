@@ -777,6 +777,34 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_LWPID_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__lwpid_t
+name|lwpid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Thread ID (a.k.a. LWP) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_LWPID_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_MODE_T_DECLARED
 end_ifndef
 

@@ -472,7 +472,7 @@ modifier|*
 name|td_turnstile
 decl_stmt|;
 comment|/* (k) Associated turnstile. */
-name|int
+name|lwpid_t
 name|td_tid
 decl_stmt|;
 comment|/* (b) Thread ID. */
@@ -4593,7 +4593,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|lwpid_t
 name|thread_new_tid
 parameter_list|(
 name|void

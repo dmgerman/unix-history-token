@@ -109,6 +109,17 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|__int32_t
+name|__lwpid_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Thread ID (a.k.a. LWP) */
+end_comment
+
+begin_typedef
+typedef|typedef
 name|__uint16_t
 name|__mode_t
 typedef|;
