@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.23 (Berkeley) %G%"
+literal|"@(#)collect.c	8.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1138,6 +1138,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|bp
+operator|=
+name|buf
+expr_stmt|;
 name|eatfrom
 argument_list|(
 name|buf
