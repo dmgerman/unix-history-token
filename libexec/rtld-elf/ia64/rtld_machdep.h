@@ -16,11 +16,43 @@ name|RTLD_MACHDEP_H
 value|1
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|Struct_Obj_Entry
-struct_decl|;
-end_struct_decl
+begin_comment
+comment|/*  * Macros for cracking ia64 function pointers.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fptr
+block|{
+name|Elf_Addr
+name|target
+decl_stmt|;
+name|Elf_Addr
+name|gp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FPTR_TARGET
+parameter_list|(
+name|f
+parameter_list|)
+value|(((struct fptr *) (f))->target)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPTR_GP
+parameter_list|(
+name|f
+parameter_list|)
+value|(((struct fptr *) (f))->gp)
+end_define
 
 begin_comment
 comment|/* Return the address of the .dynamic section in the dynamic linker. */
@@ -36,6 +68,12 @@ parameter_list|)
 value|(&_DYNAMIC)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|Struct_Obj_Entry
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|Elf_Addr
 name|reloc_jmpslot
@@ -49,23 +87,26 @@ specifier|const
 name|struct
 name|Struct_Obj_Entry
 modifier|*
-name|obj
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+name|void
+modifier|*
 name|make_function_pointer
 parameter_list|(
-name|def
+specifier|const
+name|Elf_Sym
+modifier|*
 parameter_list|,
-name|defobj
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
 parameter_list|)
-define|\
-value|((defobj)->relocbase + (def)->st_value)
-end_define
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Atomic operations. */

@@ -485,7 +485,7 @@ name|strsize
 decl_stmt|;
 comment|/* Size in bytes of string table */
 specifier|const
-name|Elf_Addr
+name|Elf_Hashelt
 modifier|*
 name|buckets
 decl_stmt|;
@@ -496,7 +496,7 @@ name|nbuckets
 decl_stmt|;
 comment|/* Number of buckets */
 specifier|const
-name|Elf_Addr
+name|Elf_Hashelt
 modifier|*
 name|chains
 decl_stmt|;
@@ -574,6 +574,11 @@ name|ino_t
 name|ino
 decl_stmt|;
 comment|/* Object's inode number */
+name|void
+modifier|*
+name|priv
+decl_stmt|;
+comment|/* Platform-dependant */
 block|}
 name|Obj_Entry
 typedef|;

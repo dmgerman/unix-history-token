@@ -16,6 +16,12 @@ name|RTLD_MACHDEP_H
 value|1
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|Struct_Obj_Entry
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/* Return the address of the .dynamic section in the dynamic linker. */
 end_comment
@@ -35,17 +41,82 @@ begin_comment
 comment|/* Fixup the jump slot at "where" to transfer control to "target". */
 end_comment
 
+begin_function
+specifier|static
+specifier|inline
+name|Elf_Addr
+name|reloc_jmpslot
+parameter_list|(
+name|Elf_Addr
+modifier|*
+name|where
+parameter_list|,
+name|Elf_Addr
+name|target
+parameter_list|,
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+name|obj
+parameter_list|)
+block|{
+name|dbg
+argument_list|(
+literal|"reloc_jmpslot: *%p = %p"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|where
+operator|)
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|target
+operator|)
+argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+operator|(
+name|Elf_Addr
+operator|*
+operator|)
+operator|(
+name|where
+operator|)
+operator|=
+call|(
+name|Elf_Addr
+call|)
+argument_list|(
+name|target
+argument_list|)
+operator|)
+expr_stmt|;
+return|return
+name|target
+return|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
-name|reloc_jmpslot
+name|make_function_pointer
 parameter_list|(
-name|where
+name|def
 parameter_list|,
-name|target
+name|defobj
 parameter_list|)
 define|\
-value|do {						\ 	dbg("reloc_jmpslot: *%p = %p", (void *)(where),	\ 	  (void *)(target));				\ 	(*(Elf_Addr *)(where) = (Elf_Addr)(target));	\     } while (0)
+value|((defobj)->relocbase + (def)->st_value)
 end_define
 
 begin_function

@@ -2304,11 +2304,16 @@ name|path
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/*      * Write the new contents for the jmpslot. Note that depending on      * architecture, the value which we need to return back to the      * lazy binding trampoline may or may not be the target      * address. The value returned from reloc_jmpslot() is the value      * that the trampoline needs.      */
+name|target
+operator|=
 name|reloc_jmpslot
 argument_list|(
 name|where
 argument_list|,
 name|target
+argument_list|,
+name|defobj
 argument_list|)
 expr_stmt|;
 name|rlock_release
@@ -2857,13 +2862,13 @@ name|DT_HASH
 case|:
 block|{
 specifier|const
-name|Elf_Addr
+name|Elf_Hashelt
 modifier|*
 name|hashtab
 init|=
 operator|(
 specifier|const
-name|Elf_Addr
+name|Elf_Hashelt
 operator|*
 operator|)
 operator|(
@@ -4116,6 +4121,14 @@ expr_stmt|;
 block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+name|refobj
+operator|!=
+operator|&
+name|obj_rtld
+condition|)
 name|_rtld_error
 argument_list|(
 literal|"%s: Undefined symbol \"%s\""
@@ -4127,6 +4140,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|def
 return|;
@@ -4773,6 +4787,27 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FPTR_TARGET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FPTR_TARGET
+parameter_list|(
+name|f
+parameter_list|)
+value|((Elf_Addr) (f))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|bool
@@ -4784,7 +4819,7 @@ modifier|*
 name|def
 parameter_list|)
 block|{
-name|func_ptr_type
+name|Elf_Addr
 name|value
 decl_stmt|;
 specifier|const
@@ -4795,7 +4830,7 @@ decl_stmt|;
 name|value
 operator|=
 call|(
-name|func_ptr_type
+name|Elf_Addr
 call|)
 argument_list|(
 name|obj_rtld
@@ -4823,8 +4858,11 @@ operator|++
 control|)
 if|if
 condition|(
+name|FPTR_TARGET
+argument_list|(
 operator|*
 name|p
+argument_list|)
 operator|==
 name|value
 condition|)
@@ -7435,6 +7473,27 @@ block|{
 name|rlock_release
 argument_list|()
 expr_stmt|;
+comment|/* 	 * The value required by the caller is derived from the value 	 * of the symbol. For the ia64 architecture, we need to 	 * construct a function descriptor which the caller can use to 	 * call the function with the right 'gp' value. For other 	 * architectures and for non-functions, the value is simply 	 * the relocated value of the symbol. 	 */
+if|if
+condition|(
+name|ELF_ST_TYPE
+argument_list|(
+name|def
+operator|->
+name|st_info
+argument_list|)
+operator|==
+name|STT_FUNC
+condition|)
+return|return
+name|make_function_pointer
+argument_list|(
+name|def
+argument_list|,
+name|defobj
+argument_list|)
+return|;
+else|else
 return|return
 name|defobj
 operator|->

@@ -986,6 +986,8 @@ block|{
 name|Elf_Addr
 modifier|*
 name|where
+decl_stmt|,
+name|target
 decl_stmt|;
 specifier|const
 name|Elf_Sym
@@ -1056,10 +1058,8 @@ return|return
 operator|-
 literal|1
 return|;
-name|reloc_jmpslot
-argument_list|(
-name|where
-argument_list|,
+name|target
+operator|=
 call|(
 name|Elf_Addr
 call|)
@@ -1072,6 +1072,14 @@ name|def
 operator|->
 name|st_value
 argument_list|)
+expr_stmt|;
+name|reloc_jmpslot
+argument_list|(
+name|where
+argument_list|,
+name|target
+argument_list|,
+name|defobj
 argument_list|)
 expr_stmt|;
 block|}
