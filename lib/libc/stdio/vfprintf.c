@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vfprintf.c,v 1.15 1997/12/24 23:02:43 ache Exp $"
+literal|"$Id: vfprintf.c,v 1.16 1997/12/25 00:32:17 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1769,7 +1769,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|size_t
+name|unsigned
 operator|)
 name|ret
 operator|+
@@ -3095,7 +3095,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|size_t
+name|unsigned
 operator|)
 name|ret
 operator|+
