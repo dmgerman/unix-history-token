@@ -1682,7 +1682,7 @@ name|sa_handler
 operator|=
 name|status
 expr_stmt|;
-name|sigemtpyset
+name|sigemptyset
 argument_list|(
 operator|&
 name|si_sa
