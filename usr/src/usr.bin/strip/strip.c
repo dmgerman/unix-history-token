@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.8 (Berkeley) %G%"
+literal|"@(#)strip.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -547,7 +548,10 @@ name|lseek
 argument_list|(
 name|fd
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -622,8 +626,6 @@ name|int
 name|cnt
 decl_stmt|,
 name|len
-decl_stmt|,
-name|nsymcnt
 decl_stmt|;
 specifier|register
 name|char
@@ -687,6 +689,9 @@ name|mmap
 argument_list|(
 name|NULL
 argument_list|,
+operator|(
+name|int
+operator|)
 name|sb
 operator|.
 name|st_size
