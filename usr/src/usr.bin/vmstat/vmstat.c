@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.26 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3974,6 +3974,7 @@ name|void
 name|zero
 parameter_list|()
 block|{
+specifier|static
 name|struct
 name|nlist
 name|znl
