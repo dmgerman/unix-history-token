@@ -18,18 +18,13 @@ name|lint
 argument_list|)
 end_if
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)syslog.c	8.5 (Berkeley) 4/29/95"; */
-end_comment
-
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)syslog.c	8.5 (Berkeley) 4/29/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -262,35 +271,29 @@ begin_comment
 comment|/* Program name, from crt0. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|disconnectlog
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* disconnect from syslogd */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|connectlog
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* (re)connect to syslogd */
@@ -513,7 +516,6 @@ parameter_list|)
 name|int
 name|pri
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -523,11 +525,9 @@ name|va_list
 name|ap
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 name|ch
 decl_stmt|,
@@ -997,7 +997,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|iovec
 modifier|*
@@ -1140,7 +1139,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-specifier|register
 name|struct
 name|iovec
 modifier|*

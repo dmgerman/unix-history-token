@@ -37,6 +37,20 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Function fnmatch() as specified in POSIX 1003.2-1992, section B.6.  * Compares a filename or pathname to a pattern.  */
 end_comment
@@ -99,28 +113,25 @@ name|RANGE_ERROR
 value|(-1)
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rangematch
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 name|int

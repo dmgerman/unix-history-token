@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: getgrent.c,v 1.34.2.1 1999/04/27 14:10:58 perry Exp $	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * Portions Copyright (c) 1994, Jason Downs. All Rights Reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_if
 if|#
@@ -28,8 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)getgrent.c	8.2 (Berkeley) 3/21/94"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
-unit|static char sccsid[] = "@(#)getgrent.c	8.2 (Berkeley) 3/21/94";
 endif|#
 directive|endif
 end_endif
@@ -38,10 +37,9 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*	$NetBSD: getgrent.c,v 1.34.2.1 1999/04/27 14:10:58 perry Exp $	*/
+end_comment
 
 begin_include
 include|#
@@ -218,98 +216,80 @@ name|_gr_filesdone
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|grcleanup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|gid_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|getline
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|copyline
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|matchline
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|gid_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|start_gr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* initial size for malloc and increase steps for realloc */
@@ -899,24 +879,21 @@ block|}
 block|}
 end_function
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_local_grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1038,24 +1015,21 @@ directive|ifdef
 name|HESIOD
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_dns_grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1344,24 +1318,21 @@ directive|ifdef
 name|YP
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_nis_grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1853,24 +1824,21 @@ begin_comment
 comment|/*  * log an error if "files" or "compat" is specified in group_compat database  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_bad_grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -1937,24 +1905,21 @@ begin_comment
 comment|/*  * when a name lookup in compat mode is required, look it up in group_compat  * nsswitch database. only Hesiod and NIS is supported - it doesn't make  * sense to lookup compat names from 'files' or 'compat'  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__grscancompat
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|gid_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -2063,24 +2028,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_compat_grscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/

@@ -18,32 +18,15 @@ name|lint
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_else
-unit|static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|static
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)fstab.c	8.1 (Berkeley) 6/4/93"
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -53,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -151,44 +148,35 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|error
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|fixfsfile
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|fstabscan
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -1016,7 +1004,6 @@ name|getfsspec
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -1072,7 +1059,6 @@ name|getfsfile
 parameter_list|(
 name|name
 parameter_list|)
-specifier|register
 specifier|const
 name|char
 modifier|*

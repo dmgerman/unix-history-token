@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Martin Birgmeier  * All rights reserved.  *  * You may redistribute unmodified or modified versions of this source  * code provided that the above copyright notice and this and the  * following conditions are retained.  *  * This software is provided ``as is'', and comes with no warranties  * of any kind. I shall in no event be liable for anything that happens  * to anyone/anything when using this software.  */
+comment|/*  * Copyright (c) 1993 Martin Birgmeier  * All rights reserved.  *  * You may redistribute unmodified or modified versions of this source  * code provided that the above copyright notice and this and the  * following conditions are retained.  *  * This software is provided ``as is'', and comes with no warranties  * of any kind. I shall in no event be liable for anything that happens  * to anyone/anything when using this software.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -27,21 +27,18 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|_dorand48
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|short
 index|[
 literal|3
 index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

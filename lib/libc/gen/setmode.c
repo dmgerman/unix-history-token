@@ -18,26 +18,13 @@ name|lint
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static char sccsid[] = "@(#)setmode.c	8.2 (Berkeley) 3/25/94";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
-specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$FreeBSD$"
+literal|"@(#)setmode.c	8.2 (Berkeley) 3/25/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +36,20 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -191,42 +192,36 @@ name|CMD2_UBITS
 value|0x10
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|BITCMD
 modifier|*
 name|addcmd
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BITCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|compress_mode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BITCMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -234,19 +229,16 @@ directive|ifdef
 name|SETMODE_DEBUG
 end_ifdef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dumpmode
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|BITCMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -273,12 +265,10 @@ name|mode_t
 name|omode
 decl_stmt|;
 block|{
-specifier|register
 name|BITCMD
 modifier|*
 name|set
 decl_stmt|;
-specifier|register
 name|mode_t
 name|clrval
 decl_stmt|,
@@ -604,7 +594,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|if (set>= endset) {						\ 		register BITCMD *newset;				\ 		setlen += SET_LEN_INCR;					\ 		newset = realloc(saveset, sizeof(BITCMD) * setlen);	\ 		if (!saveset)						\ 			return (NULL);					\ 		set = newset + (set - saveset);				\ 		saveset = newset;					\ 		endset = newset + (setlen - 2);				\ 	}								\ 	set = addcmd(set, (a), (b), (c), (d))
+value|if (set>= endset) {						\ 		BITCMD *newset;						\ 		setlen += SET_LEN_INCR;					\ 		newset = realloc(saveset, sizeof(BITCMD) * setlen);	\ 		if (!saveset)						\ 			return (NULL);					\ 		set = newset + (set - saveset);				\ 		saveset = newset;					\ 		endset = newset + (setlen - 2);				\ 	}								\ 	set = addcmd(set, (a), (b), (c), (d))
 end_define
 
 begin_define
@@ -621,19 +611,16 @@ name|setmode
 parameter_list|(
 name|p
 parameter_list|)
-specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|perm
 decl_stmt|,
 name|who
 decl_stmt|;
-specifier|register
 name|char
 name|op
 decl_stmt|;
@@ -1353,13 +1340,11 @@ name|BITCMD
 modifier|*
 name|set
 decl_stmt|;
-specifier|register
 name|int
 name|oparg
 decl_stmt|,
 name|who
 decl_stmt|;
-specifier|register
 name|int
 name|op
 decl_stmt|;
@@ -1581,7 +1566,6 @@ name|dumpmode
 parameter_list|(
 name|set
 parameter_list|)
-specifier|register
 name|BITCMD
 modifier|*
 name|set
@@ -1690,18 +1674,15 @@ name|compress_mode
 parameter_list|(
 name|set
 parameter_list|)
-specifier|register
 name|BITCMD
 modifier|*
 name|set
 decl_stmt|;
 block|{
-specifier|register
 name|BITCMD
 modifier|*
 name|nset
 decl_stmt|;
-specifier|register
 name|int
 name|setbits
 decl_stmt|,

@@ -1,17 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: getpwent.c,v 1.40.2.2 1999/04/27 22:09:45 perry Exp $	*/
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * Portions Copyright (c) 1994, 1995, Jason Downs.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
 
 begin_if
 if|#
@@ -28,8 +18,17 @@ name|lint
 argument_list|)
 end_if
 
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"@(#)getpwent.c	8.2 (Berkeley) 4/27/95"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
-unit|static char sccsid[] = "@(#)getpwent.c	8.2 (Berkeley) 4/27/95";
 endif|#
 directive|endif
 end_endif
@@ -38,10 +37,9 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*	$NetBSD: getpwent.c,v 1.40.2.2 1999/04/27 22:09:45 perry Exp $	*/
+end_comment
 
 begin_include
 include|#
@@ -199,69 +197,60 @@ directive|include
 file|"un-namespace.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|setnetgrent
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|getnetgrent
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|innetgr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -364,32 +353,26 @@ begin_comment
 comment|/* keep fd's open */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__hashpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|DBT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__initdb
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -578,79 +561,64 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__pwexclude_add
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__pwexclude_is
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|__pwproto_set
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__ypmaptype
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__pwparse
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|passwd
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* macros for deciding which YP maps to use. */
@@ -1784,24 +1752,21 @@ begin_comment
 comment|/*  * local files implementation of getpw*()  * varargs: type, [ uid (type == _PW_KEYBYUID) | name (type == _PW_KEYBYNAME) ]  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_local_getpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -2126,24 +2091,21 @@ begin_comment
 comment|/*  * hesiod implementation of getpw*()  * varargs: type, [ uid (type == _PW_KEYBYUID) | name (type == _PW_KEYBYNAME) ]  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_dns_getpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -2500,24 +2462,21 @@ begin_comment
 comment|/*  * nis implementation of getpw*()  * varargs: type, [ uid (type == _PW_KEYBYUID) | name (type == _PW_KEYBYNAME) ]  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_nis_getpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -3044,18 +3003,15 @@ begin_comment
 comment|/*  * See if the compat token is in the database.  Only works if pwd_mkdb knows  * about the token.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__has_compatpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -3181,24 +3137,21 @@ begin_comment
 comment|/*  * log an error if "files" or "compat" is specified in passwd_compat database  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_bad_getpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -3265,24 +3218,21 @@ begin_comment
 comment|/*  * when a name lookup in compat mode is required (e.g., '+name', or a name in  * '+@netgroup'), look it up in the 'passwd_compat' nsswitch database.  * only Hesiod and NIS is supported - it doesn't make sense to lookup  * compat names from 'files' or 'compat'.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|__getpwcompat
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|uid_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -3449,24 +3399,21 @@ begin_comment
 comment|/*  * compat implementation of getpwent()  * varargs (ignored):  *	type, [ uid (type == _PW_KEYBYUID) | name (type == _PW_KEYBYNAME) ]  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_compat_getpwent
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*ARGSUSED*/
@@ -4002,24 +3949,21 @@ begin_comment
 comment|/*  * compat implementation of getpwnam() and getpwuid()  * varargs: type, [ uid (type == _PW_KEYBYUID) | name (type == _PW_KEYBYNAME) ]  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|_compat_getpw
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|va_list
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
