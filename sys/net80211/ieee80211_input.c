@@ -1309,23 +1309,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IEEE80211_DISCARD
+name|IEEE80211_DISCARD_MAC
 argument_list|(
 name|ic
 argument_list|,
 name|IEEE80211_MSG_ANY
 argument_list|,
-name|wh
-argument_list|,
-literal|"data"
-argument_list|,
-literal|"too short: len %u, expecting %u"
-argument_list|,
-name|m
+name|ni
 operator|->
-name|m_pkthdr
-operator|.
-name|len
+name|ni_macaddr
+argument_list|,
+name|NULL
+argument_list|,
+literal|"data too short: expecting %u"
 argument_list|,
 name|hdrsize
 argument_list|)
