@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
+file|<sys/buf.h>
 end_include
 
 begin_include

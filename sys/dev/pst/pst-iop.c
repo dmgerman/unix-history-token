@@ -36,7 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bio.h>
+file|<sys/buf.h>
 end_include
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -626,8 +632,6 @@ operator|->
 name|r_irq
 argument_list|,
 name|INTR_TYPE_BIO
-operator||
-name|INTR_ENTROPY
 argument_list|,
 name|iop_intr
 argument_list|,
