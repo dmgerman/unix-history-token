@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.13 (Berkeley) %G%"
+literal|"@(#)order.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2081,6 +2081,10 @@ block|{
 name|offstar
 argument_list|(
 name|p
+operator|->
+name|in
+operator|.
+name|left
 argument_list|)
 expr_stmt|;
 return|return
