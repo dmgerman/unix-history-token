@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.11 (Berkeley) %G%"
+literal|"@(#)stty.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -994,6 +994,7 @@ index|[]
 init|=
 block|{
 block|{
+block|{
 literal|"erase"
 block|,
 literal|"era"
@@ -1002,7 +1003,9 @@ block|,
 name|VERASE
 block|,
 name|CERASE
+block|, }
 block|,
+block|{
 block|{
 literal|"werase"
 block|,
@@ -1012,7 +1015,9 @@ block|,
 name|VWERASE
 block|,
 name|CWERASE
+block|, }
 block|,
+block|{
 block|{
 literal|"kill"
 block|,
@@ -1022,7 +1027,9 @@ block|,
 name|VKILL
 block|,
 name|CKILL
+block|, }
 block|,
+block|{
 block|{
 literal|"intr"
 block|,
@@ -1032,7 +1039,9 @@ block|,
 name|VINTR
 block|,
 name|CINTR
+block|, }
 block|,
+block|{
 block|{
 literal|"quit"
 block|,
@@ -1042,7 +1051,9 @@ block|,
 name|VQUIT
 block|,
 name|CQUIT
+block|, }
 block|,
+block|{
 block|{
 literal|"susp"
 block|,
@@ -1052,7 +1063,9 @@ block|,
 name|VSUSP
 block|,
 name|CSUSP
+block|, }
 block|,
+block|{
 block|{
 literal|"dsusp"
 block|,
@@ -1062,7 +1075,9 @@ block|,
 name|VDSUSP
 block|,
 name|CDSUSP
+block|, }
 block|,
+block|{
 block|{
 literal|"eof"
 block|,
@@ -1072,7 +1087,9 @@ block|,
 name|VEOF
 block|,
 name|CEOF
+block|, }
 block|,
+block|{
 block|{
 literal|"eol"
 block|,
@@ -1084,7 +1101,9 @@ block|,
 name|VEOL
 block|,
 name|CEOL
+block|, }
 block|,
+block|{
 block|{
 literal|"eol2"
 block|,
@@ -1094,7 +1113,9 @@ block|,
 name|VEOL2
 block|,
 name|CEOL
+block|, }
 block|,
+block|{
 block|{
 literal|"stop"
 block|,
@@ -1106,7 +1127,9 @@ block|,
 name|VSTOP
 block|,
 name|CSTOP
+block|, }
 block|,
+block|{
 block|{
 literal|"start"
 block|,
@@ -1118,7 +1141,9 @@ block|,
 name|VSTART
 block|,
 name|CSTART
+block|, }
 block|,
+block|{
 block|{
 literal|"lnext"
 block|,
@@ -1128,7 +1153,9 @@ block|,
 name|VLNEXT
 block|,
 name|CLNEXT
+block|, }
 block|,
+block|{
 block|{
 literal|"flusho"
 block|,
@@ -1140,7 +1167,9 @@ block|,
 name|VFLUSHO
 block|,
 name|CFLUSHO
+block|, }
 block|,
+block|{
 block|{
 literal|"reprint"
 block|,
@@ -1152,7 +1181,9 @@ block|,
 name|VREPRINT
 block|,
 name|CREPRINT
+block|, }
 block|,
+block|{
 block|{
 literal|"info"
 block|,
@@ -1162,6 +1193,7 @@ block|,
 name|VINFO
 block|,
 name|CINFO
+block|, }
 block|,
 literal|0
 block|}
