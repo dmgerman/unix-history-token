@@ -276,6 +276,17 @@ directive|ifdef
 name|TLS_VARIANT_I
 end_ifdef
 
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_free_tls
+end_pragma
+
+begin_comment
+comment|/*  * Free Static TLS using the Variant I method.  */
+end_comment
+
 begin_function
 name|void
 name|_rtld_free_tls
@@ -326,6 +337,13 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|_rtld_allocate_tls
+end_pragma
 
 begin_comment
 comment|/*  * Allocate Static TLS using the Variant I method.  */
