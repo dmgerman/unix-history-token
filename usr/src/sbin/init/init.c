@@ -91,18 +91,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<syslog.h>
 end_include
 
@@ -122,6 +110,24 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
@@ -839,7 +845,7 @@ decl_stmt|;
 name|sigset_t
 name|mask
 decl_stmt|;
-comment|/* 	 * Silently dispose of random users running this program. 	 */
+comment|/* Dispose of random users. */
 if|if
 condition|(
 name|getuid
@@ -847,9 +853,53 @@ argument_list|()
 operator|!=
 literal|0
 condition|)
-return|return
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"init: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|EPERM
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
 literal|1
-return|;
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* System V users like to reexec init. */
+if|if
+condition|(
+name|getpid
+argument_list|()
+operator|!=
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"init: already running\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Note that this does NOT open a file... 	 * Does 'init' deserve its own facility number? 	 */
 name|openlog
 argument_list|(
