@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kdb.c	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kdb.c	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -578,7 +578,7 @@ argument_list|(
 operator|&
 name|tio
 argument_list|,
-name|READ
+name|F_READ
 argument_list|)
 operator|!=
 name|SECTSIZ
@@ -1015,7 +1015,7 @@ name|kdbcmd
 argument_list|(
 name|func
 operator|==
-name|READ
+name|F_READ
 condition|?
 name|M_OP_READ
 else|:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)tmscp.c	7.6 (Berkeley) %G% */
+comment|/*	@(#)tmscp.c	7.7 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -1158,7 +1158,7 @@ name|tmscpcmd
 argument_list|(
 name|func
 operator|==
-name|READ
+name|F_READ
 condition|?
 name|M_OP_READ
 else|:

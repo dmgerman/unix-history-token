@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)uda.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -758,7 +758,7 @@ argument_list|(
 operator|&
 name|tio
 argument_list|,
-name|READ
+name|F_READ
 argument_list|)
 operator|!=
 name|SECTSIZ
@@ -1196,7 +1196,7 @@ name|udcmd
 argument_list|(
 name|func
 operator|==
-name|READ
+name|F_READ
 condition|?
 name|M_OP_READ
 else|:
