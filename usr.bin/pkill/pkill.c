@@ -1394,6 +1394,9 @@ name|regmatch
 operator|.
 name|rm_eo
 operator|==
+operator|(
+name|off_t
+operator|)
 name|strlen
 argument_list|(
 name|mstr
