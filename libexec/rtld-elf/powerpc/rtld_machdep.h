@@ -147,6 +147,31 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * TLS  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_TP_OFFSET
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_DTV_OFFSET
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_TCB_SIZE
+value|8
+end_define
+
 begin_define
 define|#
 directive|define
