@@ -331,8 +331,6 @@ literal|"uhub"
 block|,
 name|uhubroot_methods
 block|,
-name|DRIVER_TYPE_MISC
-block|,
 expr|sizeof
 operator|(
 expr|struct

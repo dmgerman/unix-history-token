@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: nexus.c,v 1.6 1999/05/08 20:24:44 peter Exp $  */
+comment|/*  * Copyright 1998 Massachusetts Institute of Technology  *  * Permission to use, copy, modify, and distribute this software and  * its documentation for any purpose and without fee is hereby  * granted, provided that both the above copyright notice and this  * permission notice appear in all copies, that both the above  * copyright notice and this permission notice appear in all  * supporting documentation, and that the name of M.I.T. not be used  * in advertising or publicity pertaining to distribution of the  * software without specific, written prior permission.  M.I.T. makes  * no representations about the suitability of this software for any  * purpose.  It is provided "as is" without express or implied  * warranty.  *   * THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS  * ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT  * SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: nexus.c,v 1.7 1999/05/08 21:34:34 peter Exp $  */
 end_comment
 
 begin_comment
@@ -321,6 +321,9 @@ name|struct
 name|resource
 modifier|*
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -477,8 +480,6 @@ block|{
 literal|"nexus"
 block|,
 name|nexus_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 literal|1
 block|,
@@ -1320,6 +1321,9 @@ name|resource
 modifier|*
 name|irq
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|void
 function_decl|(
 modifier|*
@@ -1402,13 +1406,11 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|driver
-operator|->
-name|type
+name|flags
 condition|)
 block|{
 case|case
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 case|:
 name|mask
 operator|=
@@ -1418,9 +1420,9 @@ expr_stmt|;
 break|break;
 case|case
 operator|(
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 operator||
-name|DRIVER_TYPE_FAST
+name|INTR_TYPE_FAST
 operator|)
 case|:
 name|mask
@@ -1434,7 +1436,7 @@ name|INTR_FAST
 expr_stmt|;
 break|break;
 case|case
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 case|:
 name|mask
 operator|=
@@ -1443,7 +1445,7 @@ name|bio_imask
 expr_stmt|;
 break|break;
 case|case
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 case|:
 name|mask
 operator|=
@@ -1452,7 +1454,7 @@ name|net_imask
 expr_stmt|;
 break|break;
 case|case
-name|DRIVER_TYPE_CAM
+name|INTR_TYPE_CAM
 case|:
 name|mask
 operator|=
@@ -1461,7 +1463,7 @@ name|cam_imask
 expr_stmt|;
 break|break;
 case|case
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 case|:
 name|mask
 operator|=
@@ -1723,8 +1725,6 @@ block|{
 literal|"pcib"
 block|,
 name|nexus_pcib_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 literal|1
 block|, }

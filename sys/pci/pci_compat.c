@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci_compat.c,v 1.24 1999/04/24 19:55:41 peter Exp $  *  */
+comment|/*  * Copyright (c) 1997, Stefan Esser<se@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice unmodified, this list of conditions, and the following  *    disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: pci_compat.c,v 1.25 1999/05/07 16:33:08 peter Exp $  *  */
 end_comment
 
 begin_include
@@ -643,17 +643,6 @@ name|cfg
 operator|->
 name|intline
 decl_stmt|;
-name|driver_t
-modifier|*
-name|driver
-init|=
-name|device_get_driver
-argument_list|(
-name|cfg
-operator|->
-name|dev
-argument_list|)
-decl_stmt|;
 name|int
 name|rid
 init|=
@@ -663,6 +652,11 @@ name|struct
 name|resource
 modifier|*
 name|res
+decl_stmt|;
+name|int
+name|flags
+init|=
+literal|0
 decl_stmt|;
 name|void
 modifier|*
@@ -707,7 +701,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 		 * This is ugly. Translate the mask into a driver type. 		 */
+comment|/* 		 * This is ugly. Translate the mask into an interrupt type. 		 */
 if|if
 condition|(
 name|maskptr
@@ -715,11 +709,9 @@ operator|==
 operator|&
 name|tty_imask
 condition|)
-name|driver
-operator|->
-name|type
-operator||=
-name|DRIVER_TYPE_TTY
+name|flags
+operator|=
+name|INTR_TYPE_TTY
 expr_stmt|;
 elseif|else
 if|if
@@ -729,11 +721,9 @@ operator|==
 operator|&
 name|bio_imask
 condition|)
-name|driver
-operator|->
-name|type
-operator||=
-name|DRIVER_TYPE_BIO
+name|flags
+operator|=
+name|INTR_TYPE_BIO
 expr_stmt|;
 elseif|else
 if|if
@@ -743,11 +733,9 @@ operator|==
 operator|&
 name|net_imask
 condition|)
-name|driver
-operator|->
-name|type
-operator||=
-name|DRIVER_TYPE_NET
+name|flags
+operator|=
+name|INTR_TYPE_NET
 expr_stmt|;
 elseif|else
 if|if
@@ -757,11 +745,9 @@ operator|==
 operator|&
 name|cam_imask
 condition|)
-name|driver
-operator|->
-name|type
-operator||=
-name|DRIVER_TYPE_CAM
+name|flags
+operator|=
+name|INTR_TYPE_CAM
 expr_stmt|;
 name|error
 operator|=
@@ -779,6 +765,8 @@ operator|->
 name|dev
 argument_list|,
 name|res
+argument_list|,
+name|flags
 argument_list|,
 name|handler
 argument_list|,
@@ -952,6 +940,8 @@ operator|->
 name|dev
 argument_list|,
 name|res
+argument_list|,
+name|flags
 argument_list|,
 name|handler
 argument_list|,

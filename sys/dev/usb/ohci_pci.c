@@ -588,6 +588,8 @@ name|dev
 argument_list|,
 name|res
 argument_list|,
+name|INTR_TYPE_BIO
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*
@@ -929,8 +931,6 @@ block|{
 literal|"ohci"
 block|,
 name|ohci_methods
-block|,
-name|DRIVER_TYPE_BIO
 block|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: isa_compat.h,v 1.4 1999/04/24 04:21:42 kato Exp $  */
+comment|/*-  * Copyright (c) 1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: isa_compat.h,v 1.5 1999/05/08 14:36:47 phk Exp $  */
 end_comment
 
 begin_include
@@ -962,7 +962,7 @@ name|NED
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|eddriver
@@ -976,7 +976,7 @@ name|NFE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|fedriver
@@ -990,7 +990,7 @@ name|NRDP
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|rdpdriver
@@ -1006,7 +1006,7 @@ name|NVT
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|vtdriver
@@ -1020,7 +1020,7 @@ name|NMSE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|msedriver
@@ -1034,7 +1034,7 @@ name|NPCA
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|pcadriver
@@ -1048,7 +1048,7 @@ name|NGP
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|gpdriver
@@ -1062,7 +1062,7 @@ name|NGSC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|gscdriver
@@ -1076,7 +1076,7 @@ name|NCY
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|cydriver
@@ -1090,7 +1090,7 @@ name|NDGB
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|dgbdriver
@@ -1104,7 +1104,7 @@ name|NDGM
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|dgmdriver
@@ -1118,7 +1118,7 @@ name|NLABPC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|labpcdriver
@@ -1132,7 +1132,7 @@ name|NRCD
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|rcdriver
@@ -1146,7 +1146,7 @@ name|NRP
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|rpdriver
@@ -1160,7 +1160,7 @@ name|NTW
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|twdriver
@@ -1174,7 +1174,7 @@ name|NSI
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|sidriver
@@ -1188,7 +1188,7 @@ name|NASC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|ascdriver
@@ -1202,7 +1202,7 @@ name|NSTL
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|stldriver
@@ -1216,7 +1216,7 @@ name|NSTLI
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|stlidriver
@@ -1230,7 +1230,7 @@ name|NLORAN
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|lorandriver
@@ -1244,7 +1244,7 @@ name|NPPC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_TTY
+name|INTR_TYPE_TTY
 block|,
 operator|&
 name|ppcdriver
@@ -1259,7 +1259,7 @@ name|NWDC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 block|,
 operator|&
 name|wdcdriver
@@ -1273,7 +1273,7 @@ name|NMCD
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 block|,
 operator|&
 name|mcddriver
@@ -1287,7 +1287,7 @@ name|NSCD
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 block|,
 operator|&
 name|scddriver
@@ -1301,7 +1301,7 @@ name|NMATCD
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 block|,
 operator|&
 name|matcddriver
@@ -1315,7 +1315,7 @@ name|NWT
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_BIO
+name|INTR_TYPE_BIO
 block|,
 operator|&
 name|wtdriver
@@ -1344,7 +1344,7 @@ name|NIE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|iedriver
@@ -1358,7 +1358,7 @@ name|NEP
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|epdriver
@@ -1372,7 +1372,7 @@ name|NEX
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|exdriver
@@ -1386,7 +1386,7 @@ name|NLE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|ledriver
@@ -1400,7 +1400,7 @@ name|NLNC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|lncdriver
@@ -1414,7 +1414,7 @@ name|NZE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|zedriver
@@ -1428,7 +1428,7 @@ name|NZP
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|zpdriver
@@ -1442,7 +1442,7 @@ name|NCS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|csdriver
@@ -1456,7 +1456,7 @@ name|NAR
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|ardriver
@@ -1470,7 +1470,7 @@ name|NCX
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|cxdriver
@@ -1484,7 +1484,7 @@ name|NEL
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|eldriver
@@ -1498,7 +1498,7 @@ name|NSR
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|srdriver
@@ -1512,7 +1512,7 @@ name|NWL
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|wldriver
@@ -1526,7 +1526,7 @@ name|NPCF
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|pcfdriver
@@ -1540,7 +1540,7 @@ name|NISIC
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|isicdriver
@@ -1554,7 +1554,7 @@ name|NTINA
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_NET
+name|INTR_TYPE_NET
 block|,
 operator|&
 name|tinadriver
@@ -1572,7 +1572,7 @@ name|NADV
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_CAM
+name|INTR_TYPE_CAM
 block|,
 operator|&
 name|advdriver
@@ -1588,7 +1588,7 @@ name|NAHA
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_CAM
+name|INTR_TYPE_CAM
 block|,
 operator|&
 name|ahadriver
@@ -1605,7 +1605,7 @@ name|NBS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_CAM
+name|INTR_TYPE_CAM
 block|,
 operator|&
 name|bsdriver
@@ -1622,7 +1622,7 @@ name|NOLTR
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|oltrdriver
@@ -1636,7 +1636,7 @@ name|NPCM
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|pcmdriver
@@ -1650,7 +1650,7 @@ name|NPAS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|pasdriver
@@ -1664,7 +1664,7 @@ name|NSB
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|sbdriver
@@ -1678,7 +1678,7 @@ name|NSBXVI
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|sbxvidriver
@@ -1692,7 +1692,7 @@ name|NSBMIDI
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|sbmididriver
@@ -1706,7 +1706,7 @@ name|NAWE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|awedriver
@@ -1720,7 +1720,7 @@ name|NGUS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|gusdriver
@@ -1734,7 +1734,7 @@ name|NMSS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|mssdriver
@@ -1748,7 +1748,7 @@ name|NCSS
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|cssdriver
@@ -1762,7 +1762,7 @@ name|NSSCAPE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|sscapedriver
@@ -1776,7 +1776,7 @@ name|NTRIX
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|trixdriver
@@ -1790,7 +1790,7 @@ name|NSSCAPE
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|sscape_mssdriver
@@ -1804,7 +1804,7 @@ name|NOPL
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|opldriver
@@ -1818,7 +1818,7 @@ name|NMPU
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|mpudriver
@@ -1832,7 +1832,7 @@ name|NUART
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|uartdriver
@@ -1846,7 +1846,7 @@ name|NCTX
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|ctxdriver
@@ -1860,7 +1860,7 @@ name|NSPIGOT
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|spigotdriver
@@ -1874,7 +1874,7 @@ name|NJOY
 operator|>
 literal|0
 block|{
-name|DRIVER_TYPE_MISC
+name|INTR_TYPE_MISC
 block|,
 operator|&
 name|joydriver

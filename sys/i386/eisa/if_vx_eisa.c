@@ -564,6 +564,8 @@ name|dev
 argument_list|,
 name|irq
 argument_list|,
+name|INTR_TYPE_NET
+argument_list|,
 name|vxintr
 argument_list|,
 name|sc
@@ -679,8 +681,6 @@ block|{
 literal|"vx"
 block|,
 name|vx_eisa_methods
-block|,
-name|DRIVER_TYPE_NET
 block|,
 literal|1
 block|,

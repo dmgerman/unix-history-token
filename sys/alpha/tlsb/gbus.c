@@ -309,8 +309,6 @@ literal|"gbus"
 block|,
 name|gbus_methods
 block|,
-name|DRIVER_TYPE_MISC
-block|,
 literal|1
 block|,
 comment|/* no softc */

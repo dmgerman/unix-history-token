@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: kftxx.c,v 1.3 1998/07/12 16:23:17 dfr Exp $ */
+comment|/* $Id: kftxx.c,v 1.4 1998/11/15 18:25:16 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -287,8 +287,6 @@ block|{
 literal|"kft"
 block|,
 name|kft_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 literal|1
 block|,

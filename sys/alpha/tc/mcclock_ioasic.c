@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: mcclock_ioasic.c,v 1.1 1998/08/20 08:27:10 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -275,8 +275,6 @@ block|{
 literal|"mcclock"
 block|,
 name|mcclock_ioasic_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: mcclock_isa.c,v 1.2 1998/07/22 08:30:25 dfr Exp $ */
+comment|/* $Id: mcclock_isa.c,v 1.3 1998/07/31 09:20:35 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -190,8 +190,6 @@ block|{
 literal|"mcclock"
 block|,
 name|mcclock_isa_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 literal|1
 block|,

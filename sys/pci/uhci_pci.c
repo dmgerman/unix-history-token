@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.6 1999/04/16 21:22:53 peter Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.7 1999/05/01 23:30:06 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -579,6 +579,8 @@ name|dev
 argument_list|,
 name|res
 argument_list|,
+name|INTR_TYPE_BIO
+argument_list|,
 operator|(
 name|driver_intr_t
 operator|*
@@ -1002,8 +1004,6 @@ block|{
 literal|"uhci"
 block|,
 name|uhci_methods
-block|,
-name|DRIVER_TYPE_BIO
 block|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: tc.c,v 1.1 1998/08/20 08:27:10 dfr Exp $ */
+comment|/* $Id: tc.c,v 1.2 1999/04/16 21:21:40 peter Exp $ */
 end_comment
 
 begin_comment
@@ -325,8 +325,6 @@ block|{
 literal|"tc"
 block|,
 name|tc_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 sizeof|sizeof
 argument_list|(

@@ -8,7 +8,7 @@ comment|/*  * Credits:  Based on and part of the DPT driver for FreeBSD written 
 end_comment
 
 begin_comment
-comment|/*  * $Id: dpt_eisa.c,v 1.4 1998/09/15 08:33:35 gibbs Exp $  */
+comment|/*  * $Id: dpt_eisa.c,v 1.5 1999/04/18 15:50:33 peter Exp $  */
 end_comment
 
 begin_include
@@ -601,6 +601,8 @@ name|dev
 argument_list|,
 name|irq
 argument_list|,
+name|INTR_TYPE_CAM
+argument_list|,
 name|dpt_intr
 argument_list|,
 name|dpt
@@ -842,8 +844,6 @@ block|{
 literal|"dpt"
 block|,
 name|dpt_eisa_methods
-block|,
-name|DRIVER_TYPE_CAM
 block|,
 literal|1
 block|,

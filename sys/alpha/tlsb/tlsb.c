@@ -296,6 +296,9 @@ name|resource
 modifier|*
 name|irq
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|driver_intr_t
 modifier|*
 name|intr
@@ -425,8 +428,6 @@ block|{
 literal|"tlsb"
 block|,
 name|tlsb_methods
-block|,
-name|DRIVER_TYPE_MISC
 block|,
 sizeof|sizeof
 argument_list|(
@@ -924,6 +925,9 @@ name|struct
 name|resource
 modifier|*
 name|irq
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|driver_intr_t
 modifier|*
