@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_close.c	5.4 (Berkeley) %G%"
+literal|"@(#)rec_close.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -171,7 +171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __REC_SYNC -- sync the recno tree to disk.  *  * Parameters:  *	dbp:	pointer to access method  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  *  * XXX  * Currently don't handle a key marked for deletion when the tree is synced.  * Should copy the page and write it out instead of the real page.  */
+comment|/*  * __REC_SYNC -- sync the recno tree to disk.  *  * Parameters:  *	dbp:	pointer to access method  *  * Returns:  *	RET_SUCCESS, RET_ERROR.  */
 end_comment
 
 begin_function
@@ -228,6 +228,13 @@ argument_list|,
 name|BTF_INMEM
 argument_list|)
 operator|||
+name|ISSET
+argument_list|(
+name|t
+argument_list|,
+name|BTF_RDONLY
+argument_list|)
+operator|||
 name|NOTSET
 argument_list|(
 name|t
@@ -240,27 +247,7 @@ operator|(
 name|RET_SUCCESS
 operator|)
 return|;
-if|if
-condition|(
-name|ISSET
-argument_list|(
-name|t
-argument_list|,
-name|BTF_RDONLY
-argument_list|)
-condition|)
-block|{
-name|errno
-operator|=
-name|EPERM
-expr_stmt|;
-return|return
-operator|(
-name|RET_ERROR
-operator|)
-return|;
-block|}
-comment|/* Suck any remaining records into the tree. */
+comment|/* Read any remaining records into the tree. */
 if|if
 condition|(
 name|t
@@ -296,7 +283,7 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 operator|!=
-literal|0L
+literal|0
 condition|)
 return|return
 operator|(
@@ -471,9 +458,8 @@ argument_list|,
 name|SEEK_CUR
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
