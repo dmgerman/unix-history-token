@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dol.c 4.3 %G%"
+literal|"@(#)dol.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -848,7 +848,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Get a character, performing $ substitution unless flag is 0.  * Any QUOTES character which is ret}vned from a $ expansion is  * QUOTEd s/ that it will not be recognized above.  */
+comment|/*  * Get a character, performing $ substitution unless flag is 0.  * Any QUOTES character which is returned from a $ expansion is  * QUOTEd so that it will not be recognized above.  */
 end_comment
 
 begin_expr_stmt
@@ -877,7 +877,7 @@ operator|=
 name|Dpeekc
 condition|)
 block|{
-name|Dpedkc
+name|Dpeekc
 operator|=
 literal|0
 expr_stmt|;
