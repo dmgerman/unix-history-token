@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<machine/fsr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ieeefp.h>
 end_include
 
@@ -39,7 +45,7 @@ decl_stmt|;
 name|fp_except_t
 name|new
 decl_stmt|;
-asm|__asm__("st %%fsr,%0" : "=m" (*&old));
+asm|__asm__("st %%fsr,%0" : "=m" (old));
 name|new
 operator|=
 name|old
@@ -47,33 +53,25 @@ expr_stmt|;
 name|new
 operator|&=
 operator|~
-operator|(
-literal|0x1f
-operator|<<
-literal|23
-operator|)
+name|FSR_TEM_MASK
 expr_stmt|;
 name|new
 operator||=
-operator|(
-operator|(
+name|FSR_TEM
+argument_list|(
 name|mask
 operator|&
-literal|0x1f
-operator|)
-operator|<<
-literal|23
-operator|)
+name|FSR_EXC_MASK
+argument_list|)
 expr_stmt|;
-asm|__asm__("ld %0,%%fsr" : : "m" (*&new));
+asm|__asm__("ld %0,%%fsr" : : "m" (new));
 return|return
 operator|(
+name|FSR_GET_TEM
+argument_list|(
 name|old
-operator|>>
-literal|23
+argument_list|)
 operator|)
-operator|&
-literal|0x1f
 return|;
 block|}
 end_function
