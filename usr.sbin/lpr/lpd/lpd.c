@@ -2162,7 +2162,9 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"startup: duplicate spool directories"
+literal|"startup: duplicate spool directories: %s"
+argument_list|,
+name|spooldir
 argument_list|)
 expr_stmt|;
 name|mcleanup
