@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.11 (Berkeley) %G%  */
+comment|/*   * Copyright (c) Computing Centre, University of British Columbia, 1985   * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992   Regents of the University of California.  * All rights reserved.  *   * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)pk_var.h	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -228,11 +228,22 @@ begin_struct
 struct|struct
 name|pkcb
 block|{
+struct|struct
+name|pkcb_q
+block|{
 name|struct
-name|pkcb
+name|pkcb_q
 modifier|*
-name|pk_next
+name|q_forw
 decl_stmt|;
+name|struct
+name|pkcb_q
+modifier|*
+name|q_backw
+decl_stmt|;
+block|}
+name|pk_q
+struct|;
 name|short
 name|pk_state
 decl_stmt|;
@@ -249,6 +260,14 @@ function_decl|)
 parameter_list|()
 function_decl|;
 comment|/* link level output procedure */
+name|caddr_t
+function_decl|(
+modifier|*
+name|pk_llctlinput
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* link level ctloutput procedure */
 name|caddr_t
 name|pk_llnext
 decl_stmt|;
@@ -272,9 +291,50 @@ modifier|*
 name|pk_chan
 decl_stmt|;
 comment|/* actual size == xc_maxlcn+1 */
+name|short
+name|pk_dxerole
+decl_stmt|;
+comment|/* DXE role of PLE over LLC2 */
+name|short
+name|pk_restartcolls
+decl_stmt|;
+comment|/* counting RESTART collisions til resolved */
+name|struct
+name|rtentry
+modifier|*
+name|pk_rt
+decl_stmt|;
+comment|/* back pointer to route */
+name|struct
+name|rtentry
+modifier|*
+name|pk_llrt
+decl_stmt|;
+comment|/* pointer to reverse mapping */
+name|u_short
+name|pk_refcount
+decl_stmt|;
+comment|/* ref count */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|FOR_ALL_PKCBS
+parameter_list|(
+name|p
+parameter_list|)
+value|for((p) = (struct pkcb *)(pkcb_q.q_forw); \ 			     (pkcb_q.q_forw !=&pkcb_q)&& ((struct pkcb_q *)(p) !=&pkcb_q); \ 			     (p) = (struct pkcb *)((p) -> pk_q.q_forw))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PQEMPTY
+value|(pkcb_q.q_forw ==&pkcb_q)
+end_define
 
 begin_comment
 comment|/*  *	Interface address, x25 version. Exactly one of these structures is   *	allocated for each interface with an x25 address.  *  *	The ifaddr structure conatins the protocol-independent part  *	of the structure, and is assumed to be first.  */
@@ -302,6 +362,11 @@ name|x25config
 name|ia_xc
 decl_stmt|;
 comment|/* network specific configuration */
+name|struct
+name|pkcb
+modifier|*
+name|ia_pkcb
+decl_stmt|;
 define|#
 directive|define
 name|ia_maxlcn
@@ -471,6 +536,167 @@ comment|/* accepting incoming calls */
 end_comment
 
 begin_comment
+comment|/*  * Definitions for accessing bitfields/bitslices inside X.25 structs  */
+end_comment
+
+begin_struct
+struct|struct
+name|x25bitslice
+block|{
+name|unsigned
+name|int
+name|bs_mask
+decl_stmt|;
+name|unsigned
+name|int
+name|bs_shift
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|calling_addrlen
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|called_addrlen
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|q_bit
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_bit
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|fmt_identifier
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|lc_group_number
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_r
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|m_bit
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|p_s
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|zilch
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|X25GBITS
+parameter_list|(
+name|Arg
+parameter_list|,
+name|Index
+parameter_list|)
+value|(((Arg)& x25_bitslice[(Index)].bs_mask)>> x25_bitslice[(Index)].bs_shift)
+end_define
+
+begin_define
+define|#
+directive|define
+name|X25SBITS
+parameter_list|(
+name|Arg
+parameter_list|,
+name|Index
+parameter_list|,
+name|Val
+parameter_list|)
+value|(Arg) |= (((Val)<< x25_bitslice[(Index)].bs_shift)& x25_bitslice[(Index)].bs_mask)
+end_define
+
+begin_define
+define|#
+directive|define
+name|X25CSBITS
+parameter_list|(
+name|Arg
+parameter_list|,
+name|Index
+parameter_list|,
+name|Val
+parameter_list|)
+value|(Arg) = (((Val)<< x25_bitslice[(Index)].bs_shift)& x25_bitslice[(Index)].bs_mask)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|x25bitslice
+name|x25_bitslice
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ISOFIFTTYPE
+parameter_list|(
+name|i
+parameter_list|,
+name|t
+parameter_list|)
+value|((i)->if_type == (t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISISO8802
+parameter_list|(
+name|i
+parameter_list|)
+value|((ISOFIFTTYPE(i, IFT_ETHER) || \ 		       ISOFIFTTYPE(i, IFT_ISO88023) || \ 		       ISOFIFTTYPE(i, IFT_ISO88024) || \ 		       ISOFIFTTYPE(i, IFT_ISO88025) || \ 		       ISOFIFTTYPE(i, IFT_ISO88026) || \ 		       ISOFIFTTYPE(i, IFT_P10) || \ 		       ISOFIFTTYPE(i, IFT_P80) || \ 		       ISOFIFTTYPE(i, IFT_FDDI)))
+end_define
+
+begin_comment
 comment|/*  * miscellenous debugging info  */
 end_comment
 
@@ -512,16 +738,12 @@ argument_list|)
 end_if
 
 begin_decl_stmt
+specifier|extern
 name|struct
-name|pkcb
-modifier|*
-name|pkcbhead
+name|pkcb_q
+name|pkcb_q
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* head of linked list of networks */
-end_comment
 
 begin_decl_stmt
 name|struct

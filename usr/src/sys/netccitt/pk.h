@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)pk.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -123,6 +123,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|X25_RESTART_DTE_ORIGINATED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|X25_RESTART_LOCAL_PROCEDURE_ERROR
 value|1
 end_define
@@ -139,6 +146,13 @@ define|#
 directive|define
 name|X25_RESTART_NETWORK_OPERATIONAL
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|X25_RESTART_DTE_ORIGINATED2
+value|128
 end_define
 
 begin_comment
@@ -268,88 +282,6 @@ begin_comment
 comment|/*  *  X.25 Packet format definitions  *  This will eventually have to be rewritten without reference  *  to bit fields, to be ansi C compliant and allignment safe.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|BIG_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|ORDER2
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|a , b
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORDER4
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|a , b , c , d
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|ORDER2
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|b , a
-end_define
-
-begin_define
-define|#
-directive|define
-name|ORDER4
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|d , c , b , a
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|u_char
@@ -362,16 +294,7 @@ struct|struct
 name|x25_calladdr
 block|{
 name|octet
-name|ORDER2
-argument_list|(
-name|calling_addrlen
-operator|:
-literal|4
-argument_list|,
-name|called_addrlen
-operator|:
-literal|4
-argument_list|)
+name|addrlens
 decl_stmt|;
 name|octet
 name|address_field
@@ -388,24 +311,7 @@ struct|struct
 name|x25_packet
 block|{
 name|octet
-name|ORDER4
-argument_list|(
-name|q_bit
-operator|:
-literal|1
-argument_list|,
-name|d_bit
-operator|:
-literal|1
-argument_list|,
-name|fmt_identifier
-operator|:
-literal|2
-argument_list|,
-name|lc_group_number
-operator|:
-literal|4
-argument_list|)
+name|bits
 decl_stmt|;
 name|octet
 name|logical_channel_number
@@ -420,29 +326,19 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|packet_cause
+value|packet_data
+end_define
+
 begin_struct
 struct|struct
 name|data_packet
 block|{
 name|octet
-name|ORDER4
-argument_list|(
-name|pr
-operator|:
-literal|3
-argument_list|,
-name|m_bit
-operator|:
-literal|1
-argument_list|,
-name|ps
-operator|:
-literal|3
-argument_list|,
-name|z
-operator|:
-literal|1
-argument_list|)
+name|bits
 decl_stmt|;
 block|}
 struct|;
@@ -486,11 +382,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|PR
+name|DP
 parameter_list|(
 name|xp
 parameter_list|)
-value|(((struct data_packet *)&xp -> packet_type)->pr)
+value|(((struct data_packet *)&(xp) -> packet_type) -> bits)
 end_define
 
 begin_define
@@ -500,7 +396,17 @@ name|PS
 parameter_list|(
 name|xp
 parameter_list|)
-value|(((struct data_packet *)&xp -> packet_type)->ps)
+value|X25GBITS(DP(xp), p_s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR
+parameter_list|(
+name|xp
+parameter_list|)
+value|X25GBITS(DP(xp), p_r)
 end_define
 
 begin_define
@@ -510,7 +416,43 @@ name|MBIT
 parameter_list|(
 name|xp
 parameter_list|)
-value|(((struct data_packet *)&xp -> packet_type)->m_bit)
+value|X25GBITS(DP(xp), m_bit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPR
+parameter_list|(
+name|xp
+parameter_list|,
+name|v
+parameter_list|)
+value|X25SBITS(DP(xp), p_r, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPS
+parameter_list|(
+name|xp
+parameter_list|,
+name|v
+parameter_list|)
+value|X25SBITS(DP(xp), p_s, (v))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBIT
+parameter_list|(
+name|xp
+parameter_list|,
+name|v
+parameter_list|)
+value|X25SBITS(DP(xp), m_bit, (v))
 end_define
 
 begin_define
@@ -520,7 +462,7 @@ name|LCN
 parameter_list|(
 name|xp
 parameter_list|)
-value|(xp -> logical_channel_number + \ 	(xp -> lc_group_number ? (xp -> lc_group_number<< 8) : 0))
+value|(xp -> logical_channel_number + \ 	(X25GBITS(xp -> bits, lc_group_number) ? (X25GBITS(xp -> bits, lc_group_number)<< 8) : 0))
 end_define
 
 begin_define
@@ -532,7 +474,7 @@ name|xp
 parameter_list|,
 name|lcn
 parameter_list|)
-value|((xp -> logical_channel_number = lcn), \ 	(xp -> lc_group_number = (lcn> 255 ? (lcn>> 8) : 0)))
+value|((xp -> logical_channel_number = lcn), \ 	(X25SBITS(xp -> bits, lc_group_number, lcn> 255 ? lcn>> 8 : 0)))
 end_define
 
 begin_function_decl
@@ -633,11 +575,22 @@ name|DTE_READY
 value|0
 end_define
 
+begin_comment
+comment|/* Cleaning out ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LCN_ZOMBIE
+value|10
+end_define
+
 begin_define
 define|#
 directive|define
 name|MAXSTATES
-value|10
+value|11
 end_define
 
 begin_comment
@@ -761,6 +714,52 @@ define|#
 directive|define
 name|DELETE_PACKET
 value|INVALID_PACKET
+end_define
+
+begin_comment
+comment|/*  * The following definitions are used by the restart procedures  * for noting wether the PLE is supposed to behave as DTE or DCE  * (essentially necessary for operation over LLC2)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DTE_DXERESOLVING
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTE_PLAYDTE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTE_PLAYDCE
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTE_CONNECTPENDING
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
+name|DTE_PRETENDDTE
+value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXRESTARTCOLLISIONS
+value|10
 end_define
 
 end_unit

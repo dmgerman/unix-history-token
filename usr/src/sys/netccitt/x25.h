@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) Computing Centre, University of British Columbia, 1985   * Copyright (c) 1990, 1992 The Regents of the University of California.  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  *   * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * %sccs.include.redist.c%  *  *	@(#)x25.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -43,6 +43,24 @@ directive|define
 name|PRC_LINKDONTCOPY
 value|7
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PRC_DISCONNECT_REQUEST
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PRC_DISCONNECT_REQUEST
+value|10
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -350,23 +368,27 @@ range|:
 literal|4
 decl_stmt|,
 comment|/* protocol type eg. HDLCPROTO_LAPB */
-name|xc_lwsize
-range|:
-literal|5
-decl_stmt|,
-comment|/* link level window size */
 name|xc_ltrace
 range|:
 literal|1
 decl_stmt|,
 comment|/* link level tracing flag */
+name|xc_lwsize
+range|:
+literal|7
+decl_stmt|;
+comment|/* link level window size */
+name|u_short
+name|xc_lxidxchg
+range|:
+literal|1
+decl_stmt|,
+comment|/* link level XID exchange flag - NOT YET */
+comment|/* packet level parameters */
 name|xc_rsvd1
 range|:
 literal|2
-decl_stmt|;
-comment|/* for use by other link-level protocols */
-comment|/* packet level parameters */
-name|u_short
+decl_stmt|,
 name|xc_pwsize
 range|:
 literal|3
@@ -415,12 +437,8 @@ comment|/* remove our dnic when calling on net */
 name|xc_prepnd0
 range|:
 literal|1
-decl_stmt|,
-comment|/* prepend 0 when making offnet calls */
-name|xc_rsvd2
-range|:
-literal|3
 decl_stmt|;
+comment|/* prepend 0 when making offnet calls */
 name|u_short
 name|xc_maxlcn
 decl_stmt|;
