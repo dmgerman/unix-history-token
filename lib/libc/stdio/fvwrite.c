@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -155,22 +149,18 @@ return|;
 comment|/* make sure we can write */
 if|if
 condition|(
-name|cantwrite
+name|prepwrite
 argument_list|(
 name|fp
 argument_list|)
+operator|!=
+literal|0
 condition|)
-block|{
-name|errno
-operator|=
-name|EBADF
-expr_stmt|;
 return|return
 operator|(
 name|EOF
 operator|)
 return|;
-block|}
 define|#
 directive|define
 name|MIN
