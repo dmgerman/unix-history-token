@@ -5506,7 +5506,7 @@ name|PCN_TFEAT_PAD_TX
 argument_list|)
 expr_stmt|;
 comment|/* Disable MII autoneg (we handle this ourselves). */
-name|PCN_BCR_CLRBIT
+name|PCN_BCR_SETBIT
 argument_list|(
 name|sc
 argument_list|,
