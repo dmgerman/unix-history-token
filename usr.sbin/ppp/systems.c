@@ -284,7 +284,7 @@ name|pwd
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
+name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -823,7 +823,7 @@ name|pwd
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
+name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;

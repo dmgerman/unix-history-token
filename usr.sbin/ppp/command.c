@@ -3197,7 +3197,7 @@ argument_list|)
 expr_stmt|;
 name|setuid
 argument_list|(
-name|geteuid
+name|ID0realuid
 argument_list|()
 argument_list|)
 expr_stmt|;
