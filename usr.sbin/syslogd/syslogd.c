@@ -4806,6 +4806,24 @@ argument_list|(
 name|pri
 argument_list|)
 expr_stmt|;
+comment|/* Check maximum facility number. */
+if|if
+condition|(
+name|fac
+operator|>
+name|LOG_NFACILITIES
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sigsetmask
+argument_list|(
+name|omask
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|prilev
 operator|=
 name|LOG_PRI
