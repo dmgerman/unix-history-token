@@ -366,6 +366,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sep
@@ -650,6 +651,7 @@ name|ask
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -678,6 +680,22 @@ argument_list|(
 operator|(
 name|FILE
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+decl|main
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2150,7 +2168,13 @@ name|Lpp
 operator|=
 name|tgetnum
 argument_list|(
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"li"
+argument_list|)
 argument_list|)
 operator|)
 operator|<=
@@ -3055,6 +3079,7 @@ name|unused
 parameter_list|)
 name|int
 name|unused
+name|__unused
 decl_stmt|;
 block|{
 name|signal
@@ -3150,6 +3175,7 @@ name|unused
 parameter_list|)
 name|int
 name|unused
+name|__unused
 decl_stmt|;
 block|{
 name|signal
@@ -3308,6 +3334,7 @@ name|ask
 parameter_list|(
 name|prompt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt
