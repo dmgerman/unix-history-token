@@ -380,6 +380,9 @@ name|struct
 name|stat
 name|statbuf
 decl_stmt|;
+name|mode_t
+name|oldmask
+decl_stmt|;
 comment|/* See if the _PATH_SKEYFILE exists, and create it if not */
 if|if
 condition|(
@@ -399,6 +402,15 @@ operator|==
 name|ENOENT
 condition|)
 block|{
+name|oldmask
+operator|=
+name|umask
+argument_list|(
+name|S_IRWXG
+operator||
+name|S_IRWXO
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|keyfile
@@ -413,11 +425,9 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|chmod
+name|umask
 argument_list|(
-name|_PATH_SKEYFILE
-argument_list|,
-literal|0644
+name|oldmask
 argument_list|)
 expr_stmt|;
 block|}
