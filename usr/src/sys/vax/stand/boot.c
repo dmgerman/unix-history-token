@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.6 (Berkeley) 1/28/88  */
 end_comment
 
 begin_include
@@ -365,7 +365,9 @@ operator|&
 name|x
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|x
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -373,26 +375,28 @@ condition|(
 name|i
 operator|!=
 sizeof|sizeof
+argument_list|(
 name|x
+argument_list|)
 operator|||
 operator|(
 name|x
 operator|.
 name|a_magic
 operator|!=
-literal|0407
+name|OMAGIC
 operator|&&
 name|x
 operator|.
 name|a_magic
 operator|!=
-literal|0413
+name|ZMAGIC
 operator|&&
 name|x
 operator|.
 name|a_magic
 operator|!=
-literal|0410
+name|NMAGIC
 operator|)
 condition|)
 block|{
@@ -418,7 +422,7 @@ name|x
 operator|.
 name|a_magic
 operator|==
-literal|0413
+name|ZMAGIC
 operator|&&
 name|lseek
 argument_list|(
@@ -426,7 +430,7 @@ name|io
 argument_list|,
 literal|0x400
 argument_list|,
-literal|0
+name|L_SET
 argument_list|)
 operator|==
 operator|-
@@ -475,13 +479,13 @@ name|x
 operator|.
 name|a_magic
 operator|==
-literal|0413
+name|ZMAGIC
 operator|||
 name|x
 operator|.
 name|a_magic
 operator|==
-literal|0410
+name|NMAGIC
 condition|)
 while|while
 condition|(
