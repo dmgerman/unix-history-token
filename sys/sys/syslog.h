@@ -195,6 +195,7 @@ typedef|typedef
 struct|struct
 name|_code
 block|{
+specifier|const
 name|char
 modifier|*
 name|c_name
