@@ -1706,9 +1706,6 @@ parameter_list|,
 name|int
 name|opts
 parameter_list|,
-name|critical_t
-name|mtx_crit
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -1762,9 +1759,7 @@ condition|)
 break|break;
 comment|/* Give interrupts a chance while we spin. */
 name|critical_exit
-argument_list|(
-name|mtx_crit
-argument_list|)
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -1829,18 +1824,10 @@ name|mtx_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_crit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
 block|}
-name|m
-operator|->
-name|mtx_savecrit
-operator|=
-name|mtx_crit
-expr_stmt|;
 if|if
 condition|(
 name|LOCK_LOG_TEST

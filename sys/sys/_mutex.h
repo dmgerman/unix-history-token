@@ -38,10 +38,6 @@ name|u_int
 name|mtx_recurse
 decl_stmt|;
 comment|/* number of recursive holds */
-name|critical_t
-name|mtx_savecrit
-decl_stmt|;
-comment|/* saved flags (for spin locks) */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,

@@ -15,59 +15,11 @@ directive|define
 name|_MACHINE_MUTEX_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|LOCORE
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|mtx_intr_enable
-parameter_list|(
-name|mutex
-parameter_list|)
-value|do (mutex)->mtx_savecrit |= PSL_EE; while (0)
-end_define
-
-begin_comment
-comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_V
-parameter_list|(
-name|x
-parameter_list|)
-value|__STRING(x)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !LOCORE */
-end_comment
 
 begin_comment
 comment|/*  * Simple assembly macros to get and release non-recursive spin locks  */

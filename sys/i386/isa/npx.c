@@ -1966,7 +1966,7 @@ return|return;
 comment|/* 	 * fninit has the same h/w bugs as fnsave.  Use the detoxified 	 * fnsave to throw away any junk in the fpu.  npxsave() initializes 	 * the fpu and sets fpcurthread = NULL as important side effects. 	 */
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|npxsave
@@ -2020,7 +2020,7 @@ expr_stmt|;
 name|start_emulating
 argument_list|()
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2049,7 +2049,7 @@ name|savecrit
 decl_stmt|;
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -2072,7 +2072,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2601,7 +2601,7 @@ expr_stmt|;
 block|}
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Interrupt handling (for another interrupt) may have pushed the 	 * state to memory.  Fetch the relevant parts of the state from 	 * wherever they are. 	 */
@@ -2680,7 +2680,7 @@ else|else
 name|fnclex
 argument_list|()
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -2763,7 +2763,7 @@ expr_stmt|;
 block|}
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|stop_emulating
@@ -2804,7 +2804,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)

@@ -650,7 +650,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -826,7 +826,7 @@ argument_list|()
 expr_stmt|;
 comment|/* XXX */
 block|}
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -976,7 +976,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* 	 * Turn off interrupts, for sanity. 	 */
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Set "boot request" part of the CPU state depending on what 	 * we want to happen when we halt. 	 */

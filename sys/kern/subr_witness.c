@@ -1189,9 +1189,6 @@ block|,
 literal|0
 block|,
 comment|/* mtx_lock, mtx_recurse */
-literal|0
-block|,
-comment|/* mtx_savecrit */
 name|TAILQ_HEAD_INITIALIZER
 argument_list|(
 name|all_mtx
@@ -4269,7 +4266,7 @@ goto|;
 block|}
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|CTR4
@@ -4350,7 +4347,7 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -4558,7 +4555,7 @@ expr_stmt|;
 comment|/* 	 * Preemption bad because we need PCPU_PTR(spinlocks) to not change. 	 */
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|td
@@ -4766,7 +4763,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* DDB */
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -6941,7 +6938,7 @@ block|{
 comment|/* 		 * Preemption bad because we need PCPU_PTR(spinlocks) to not 		 * change. 		 */
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|nheld
@@ -6954,7 +6951,7 @@ name|spinlocks
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

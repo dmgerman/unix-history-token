@@ -144,8 +144,11 @@ name|DECLARE_INTR_MASK
 parameter_list|(
 name|s
 parameter_list|)
-value|critical_t s
 end_define
+
+begin_comment
+comment|/* no need to declare 's' */
+end_comment
 
 begin_define
 define|#
@@ -154,7 +157,7 @@ name|DISABLE_INTR
 parameter_list|(
 name|s
 parameter_list|)
-value|s = critical_enter()
+value|critical_enter()
 end_define
 
 begin_define
@@ -164,7 +167,7 @@ name|ENABLE_INTR
 parameter_list|(
 name|s
 parameter_list|)
-value|critical_exit(s)
+value|critical_exit()
 end_define
 
 begin_else

@@ -315,7 +315,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|cia_hae_mem
@@ -346,7 +346,7 @@ argument_list|(
 name|CIA_CSR_HAE_MEM
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -625,7 +625,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Put the Pyxis into PCI loopback mode. 	 */
@@ -706,7 +706,7 @@ expr_stmt|;
 name|alpha_mb
 argument_list|()
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)

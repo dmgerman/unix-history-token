@@ -15,27 +15,6 @@ directive|define
 name|_MACHINE_MUTEX_H_
 end_define
 
-begin_function
-specifier|static
-name|__inline
-name|void
-name|mtx_intr_enable
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|mtx
-parameter_list|)
-block|{
-name|mtx
-operator|->
-name|mtx_savecrit
-operator|=
-literal|0
-expr_stmt|;
-block|}
-end_function
-
 begin_endif
 endif|#
 directive|endif

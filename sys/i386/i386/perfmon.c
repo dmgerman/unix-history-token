@@ -439,7 +439,7 @@ operator|)
 expr_stmt|;
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|ctl_shadow
@@ -469,7 +469,7 @@ operator|=
 literal|0
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -637,7 +637,7 @@ condition|)
 block|{
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|ctl_shadow
@@ -669,7 +669,7 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -721,7 +721,7 @@ condition|)
 block|{
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|pmc_shadow
@@ -756,7 +756,7 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

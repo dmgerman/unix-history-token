@@ -907,9 +907,6 @@ name|irqp0
 decl_stmt|,
 name|irqp1
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|scp
 operator|=
 name|device_get_softc
@@ -1011,8 +1008,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * At this point, we are likely to have an interface. 	 * 	 * Switching the interface to uart mode gives us an interrupt. 	 * We can make use of it to determine the irq. 	 * Idea-stolen-from: sys/isa/sio.c:sioprobe() 	 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -1038,9 +1033,7 @@ literal|0
 condition|)
 block|{
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1123,9 +1116,7 @@ name|irqp0
 condition|)
 block|{
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1161,9 +1152,7 @@ literal|0
 condition|)
 block|{
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
@@ -1186,9 +1175,7 @@ operator|)
 return|;
 block|}
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

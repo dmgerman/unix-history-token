@@ -2704,7 +2704,7 @@ block|}
 comment|/* Fill in range */
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|error
@@ -2761,7 +2761,7 @@ name|uap
 operator|->
 name|start
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

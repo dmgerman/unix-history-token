@@ -504,6 +504,13 @@ parameter_list|)
 value|do {					\ 	__asm __volatile("wrpr %0, %1, %%" #name			\ 	    : : "r" (val), "rI" (xor));					\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CRITICAL_FORK
+value|(0)
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -521,7 +528,7 @@ begin_function
 specifier|static
 name|__inline
 name|critical_t
-name|critical_enter
+name|cpu_critical_enter
 parameter_list|(
 name|void
 parameter_list|)
@@ -557,7 +564,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|critical_exit
+name|cpu_critical_exit
 parameter_list|(
 name|critical_t
 name|pil

@@ -39,16 +39,6 @@ name|clock_lock
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|mtx_intr_enable
-parameter_list|(
-name|mutex
-parameter_list|)
-value|do (mutex)->mtx_savecrit = ALPHA_PSL_IPL_0; while (0)
-end_define
-
 begin_endif
 endif|#
 directive|endif

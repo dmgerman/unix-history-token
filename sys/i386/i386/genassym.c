@@ -1899,22 +1899,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|MTX_SAVECRIT
-argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|,
-name|mtx_savecrit
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -235,9 +235,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
 name|bcopy
@@ -522,8 +519,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -666,9 +661,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|free
 argument_list|(
@@ -730,9 +723,6 @@ name|nullfunc_loop_profiled_time
 decl_stmt|;
 name|uintfptr_t
 name|tmp_addr
-decl_stmt|;
-name|critical_t
-name|savecrit
 decl_stmt|;
 endif|#
 directive|endif
@@ -1011,8 +1001,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Disable interrupts to avoid interference while we calibrate 	 * things. 	 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -1263,9 +1251,7 @@ end_expr_stmt
 
 begin_expr_stmt
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 end_expr_stmt
 

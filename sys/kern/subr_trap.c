@@ -456,7 +456,7 @@ argument_list|)
 expr_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 while|while
@@ -476,7 +476,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -764,7 +764,7 @@ name|NULL
 expr_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 block|}
@@ -776,7 +776,7 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We need to keep interrupts disabled so that if any further AST's 	 * come in, the interrupt they come in on will be delayed until we 	 * finish returning to userland.  We assume that the return to userland 	 * will perform the equivalent of critical_exit(). 	 */
+comment|/* 	 * We need to keep interrupts disabled so that if any further AST's 	 * come in, the interrupt they come in on will be delayed until we 	 * finish returning to userland.  We assume that the return to userland 	 * will perform the equivalent of cpu_critical_exit(). 	 */
 block|}
 end_function
 

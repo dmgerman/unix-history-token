@@ -2429,7 +2429,7 @@ argument_list|)
 expr_stmt|;
 name|psr
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|addr
@@ -2479,7 +2479,7 @@ operator|+=
 name|pmap_ptc_e_stride1
 expr_stmt|;
 block|}
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|psr
 argument_list|)

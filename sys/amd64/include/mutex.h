@@ -27,12 +27,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<machine/psl.h>
-end_include
-
 begin_comment
 comment|/* Global locks */
 end_comment
@@ -44,16 +38,6 @@ name|mtx
 name|clock_lock
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|mtx_intr_enable
-parameter_list|(
-name|mutex
-parameter_list|)
-value|do (mutex)->mtx_savecrit |= PSL_I; while (0)
-end_define
 
 begin_comment
 comment|/*  * Assembly macros (for internal use only)  *------------------------------------------------------------------------------  */
@@ -358,21 +342,11 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|pushl %eax ;							\ 	pushl %ecx ;							\ 	pushl %ebx ;							\ 	movl $(MTX_UNOWNED) , %eax ;					\ 	movl PCPU(CURTHREAD), %ebx ;					\ 	pushfl ;							\ 	popl %ecx ;							\ 	cli ;								\ 	MPLOCKED cmpxchgl %ebx, lck+MTX_LOCK ;				\ 	jz 2f ;								\ 	cmpl lck+MTX_LOCK, %ebx ;					\ 	je 3f ;								\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl %ecx ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin ;						\ 	addl $0x14, %esp ;						\ 	jmp 1f ;							\ 3:	movl lck+MTX_RECURSECNT, %ebx ;					\ 	incl %ebx ;							\ 	movl %ebx, lck+MTX_RECURSECNT ;					\ 	jmp 1f ;							\ 2:	movl %ecx, lck+MTX_SAVECRIT ;					\ 1:	popl %ebx ;							\ 	popl %ecx ;							\ 	popl %eax
-end_define
-
-begin_define
-define|#
-directive|define
-name|MTX_UNLOCK_SPIN
-parameter_list|(
-name|lck
-parameter_list|)
-define|\
-value|pushl %edx ;							\ 	pushl %eax ;							\ 	movl lck+MTX_SAVECRIT, %edx ;					\ 	movl lck+MTX_RECURSECNT, %eax ;					\ 	testl %eax, %eax ;						\ 	jne 2f ;							\ 	movl $(MTX_UNOWNED), %eax ;					\ 	xchgl %eax, lck+MTX_LOCK ;					\ 	pushl %edx ;							\ 	popfl ;								\ 	jmp 1f ;							\ 2:	decl %eax ;							\ 	movl %eax, lck+MTX_RECURSECNT ;					\ 1:	popl %eax ;							\ 	popl %edx
+value|pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin_flags ;					\ 	addl $0x10, %esp ;						\  #define MTX_UNLOCK_SPIN(lck)						\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl $lck ;							\ 	call _mtx_unlock_spin_flags ;					\ 	addl $0x10, %esp ;
 end_define
 
 begin_comment
+unit|\
 comment|/*  * XXX: These two are broken right now and need to be made to work for  * XXX: sleep locks, as the above two work for spin locks. We're not in  * XXX: too much of a rush to do these as we do not use them right now.  */
 end_comment
 

@@ -1123,7 +1123,7 @@ condition|)
 block|{
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|db_printf
@@ -1136,7 +1136,7 @@ expr_stmt|;
 name|breakpoint
 argument_list|()
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

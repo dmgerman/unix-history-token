@@ -167,7 +167,7 @@ name|tail
 decl_stmt|;
 name|crit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|iq
@@ -281,7 +281,7 @@ name|next
 condition|)
 break|break;
 block|}
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|crit
 argument_list|)

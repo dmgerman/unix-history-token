@@ -906,7 +906,7 @@ name|regs
 expr_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 ifdef|#
@@ -1002,7 +1002,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)

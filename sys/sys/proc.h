@@ -562,6 +562,14 @@ name|vm_offset_t
 name|td_kstack
 decl_stmt|;
 comment|/* Kernel VA of kstack. */
+name|u_int
+name|td_critnest
+decl_stmt|;
+comment|/* (k) Critical section nest level. */
+name|critical_t
+name|td_savecrit
+decl_stmt|;
+comment|/* (k) Saved critical section state. */
 block|}
 struct|;
 end_struct

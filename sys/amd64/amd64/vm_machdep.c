@@ -541,7 +541,7 @@ argument_list|()
 expr_stmt|;
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -563,7 +563,7 @@ operator|->
 name|pcb_save
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

@@ -25,6 +25,12 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 define|#
@@ -75,6 +81,10 @@ parameter_list|,
 name|d
 parameter_list|)
 value|(*(volatile u_int32_t *) (va) = (d))
+define|#
+directive|define
+name|CRITICAL_FORK
+value|(read_eflags() | PSL_I)
 ifdef|#
 directive|ifdef
 name|__GNUC__
@@ -1474,7 +1484,7 @@ begin_function
 specifier|static
 name|__inline
 name|critical_t
-name|critical_enter
+name|cpu_critical_enter
 parameter_list|(
 name|void
 parameter_list|)
@@ -1502,7 +1512,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|critical_exit
+name|cpu_critical_exit
 parameter_list|(
 name|critical_t
 name|eflags
@@ -1986,7 +1996,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|critical_t
-name|critical_enter
+name|cpu_critical_enter
 name|__P
 argument_list|(
 operator|(
@@ -1998,7 +2008,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|critical_exit
+name|cpu_critical_exit
 name|__P
 argument_list|(
 operator|(

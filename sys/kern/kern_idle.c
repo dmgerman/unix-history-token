@@ -226,6 +226,7 @@ name|pc_curthread
 operator|==
 name|NULL
 condition|)
+block|{
 name|pc
 operator|->
 name|pc_curthread
@@ -234,6 +235,15 @@ name|pc
 operator|->
 name|pc_idlethread
 expr_stmt|;
+name|pc
+operator|->
+name|pc_idlethread
+operator|->
+name|td_critnest
+operator|=
+literal|0
+expr_stmt|;
+block|}
 else|#
 directive|else
 name|error

@@ -1881,7 +1881,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We start off holding one spinlock after fork: sched_lock. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p1
@@ -3126,12 +3125,17 @@ name|mtx_recurse
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * XXX: We really shouldn't have to do this. 	 */
-name|mtx_intr_enable
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
+name|td
+operator|->
+name|td_critnest
+operator|=
+literal|1
+expr_stmt|;
+name|td
+operator|->
+name|td_savecrit
+operator|=
+name|CRITICAL_FORK
 expr_stmt|;
 name|CTR3
 argument_list|(

@@ -571,7 +571,7 @@ condition|)
 return|return;
 name|savecrit
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -589,7 +589,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)
@@ -651,7 +651,7 @@ name|ktr_cpu
 operator|=
 name|KTR_CPU
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|savecrit
 argument_list|)

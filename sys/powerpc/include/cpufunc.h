@@ -33,6 +33,13 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|CRITICAL_FORK
+value|(mfmsr() |= PSL_EE)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -227,7 +234,7 @@ begin_function
 specifier|static
 name|__inline
 name|critical_t
-name|critical_enter
+name|cpu_critical_enter
 parameter_list|(
 name|void
 parameter_list|)
@@ -267,7 +274,7 @@ begin_function
 specifier|static
 name|__inline
 name|void
-name|critical_exit
+name|cpu_critical_exit
 parameter_list|(
 name|critical_t
 name|msr

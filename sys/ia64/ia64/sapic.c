@@ -251,7 +251,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void sapic_read_rte(struct sapic *sa, int which, 	       struct sapic_rte *rte) { 	u_int32_t *p = (u_int32_t *) rte; 	critical_t c; 	c = critical_enter(); 	p[0] = sapic_read(sa, SAPIC_RTE_BASE + 2*which); 	p[1] = sapic_read(sa, SAPIC_RTE_BASE + 2*which + 1); 	critical_exit(c); }
+unit|static void sapic_read_rte(struct sapic *sa, int which, 	       struct sapic_rte *rte) { 	u_int32_t *p = (u_int32_t *) rte; 	critical_t c; 	c = cpu_critical_enter(); 	p[0] = sapic_read(sa, SAPIC_RTE_BASE + 2*which); 	p[1] = sapic_read(sa, SAPIC_RTE_BASE + 2*which + 1); 	cpu_critical_exit(c); }
 endif|#
 directive|endif
 end_endif
@@ -290,7 +290,7 @@ name|c
 decl_stmt|;
 name|c
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|sapic_write
@@ -327,7 +327,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|c
 argument_list|)

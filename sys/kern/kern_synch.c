@@ -2722,9 +2722,6 @@ literal|0
 block|register struct rlimit *rlim;
 endif|#
 directive|endif
-name|critical_t
-name|sched_crit
-decl_stmt|;
 name|u_int
 name|sched_nest
 decl_stmt|;
@@ -2903,12 +2900,6 @@ operator|->
 name|p_comm
 argument_list|)
 expr_stmt|;
-name|sched_crit
-operator|=
-name|sched_lock
-operator|.
-name|mtx_savecrit
-expr_stmt|;
 name|sched_nest
 operator|=
 name|sched_lock
@@ -2955,12 +2946,6 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-expr_stmt|;
-name|sched_lock
-operator|.
-name|mtx_savecrit
-operator|=
-name|sched_crit
 expr_stmt|;
 name|sched_lock
 operator|.

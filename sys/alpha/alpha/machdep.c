@@ -9147,7 +9147,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -9176,7 +9176,7 @@ argument_list|(
 literal|"alpha_check_fpcurthread: bogus"
 argument_list|)
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -9230,7 +9230,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -9320,7 +9320,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -9347,7 +9347,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -9391,7 +9391,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)
@@ -9419,7 +9419,7 @@ decl_stmt|;
 comment|/* 	 * Enable FEN so that we can access the fp registers. 	 */
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 name|alpha_pal_wrfen
@@ -9506,7 +9506,7 @@ name|md_flags
 operator||=
 name|MDP_FPUSED
 expr_stmt|;
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)

@@ -2647,7 +2647,7 @@ asm|__asm __volatile("flushrs");
 comment|/* so we can look at them */
 name|s
 operator|=
-name|critical_enter
+name|cpu_critical_enter
 argument_list|()
 expr_stmt|;
 if|#
@@ -2703,7 +2703,7 @@ literal|0
 block|restart_cpus(stopped_cpus);
 endif|#
 directive|endif
-name|critical_exit
+name|cpu_critical_exit
 argument_list|(
 name|s
 argument_list|)

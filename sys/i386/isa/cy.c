@@ -1432,10 +1432,6 @@ expr|struct
 name|com_s
 operator|*
 name|com
-operator|,
-name|critical_t
-operator|*
-name|savecrit
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3108,9 +3104,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|mynor
 operator|=
 name|minor
@@ -3451,7 +3444,7 @@ directive|if
 literal|0
 block|if (com->hasfifo) {
 comment|/* 			 * (Re)enable and flush fifos. 			 * 			 * Certain SMC chips cause problems if the fifos 			 * are enabled while input is ready.  Turn off the 			 * fifo if necessary to clear the input.  We test 			 * the input ready bit after enabling the fifos 			 * since we've already enabled them in comparam() 			 * and to handle races between enabling and fresh 			 * input. 			 */
-block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		savecrit = critical_enter(); 		COM_LOCK(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		COM_UNLOCK(); 		critical_exit(savecrit);
+block|while (TRUE) { 				outb(iobase + com_fifo, 				     FIFO_RCV_RST | FIFO_XMT_RST 				     | com->fifo_image); 				DELAY(100); 				if (!(inb(com->line_status_port)& LSR_RXRDY)) 					break; 				outb(iobase + com_fifo, 0); 				DELAY(100); 				(void) inb(com->data_port); 			} 		}  		critical_enter(); 		COM_LOCK(); 		(void) inb(com->line_status_port); 		(void) inb(com->data_port); 		com->prev_modem_status = com->last_modem_status 		    = inb(com->modem_status_port); 		outb(iobase + com_ier, IER_ERXRDY | IER_ETXRDY | IER_ERLS 				       | IER_EMSC); 		COM_UNLOCK(); 		critical_exit();
 else|#
 directive|else
 comment|/* !0 */
@@ -3474,8 +3467,6 @@ operator|->
 name|channel_control
 argument_list|)
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -3516,9 +3507,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -3919,9 +3908,6 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|unit
 operator|=
 name|com
@@ -3958,8 +3944,6 @@ block|outb(iobase + com_cfcr, com->cfcr_image&= ~CFCR_SBREAK);
 else|#
 directive|else
 comment|/* XXX */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -3993,9 +3977,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|cd1400_channel_cmd
 argument_list|(
@@ -4015,8 +3997,6 @@ literal|0
 block|outb(iobase + com_ier, 0);
 else|#
 directive|else
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -4040,9 +4020,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
@@ -4379,17 +4357,11 @@ name|void
 name|sioinput
 parameter_list|(
 name|com
-parameter_list|,
-name|savecrit
 parameter_list|)
 name|struct
 name|com_s
 modifier|*
 name|com
-decl_stmt|;
-name|critical_t
-modifier|*
-name|savecrit
 decl_stmt|;
 block|{
 name|u_char
@@ -4473,10 +4445,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-operator|*
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|incc
 operator|=
@@ -4625,9 +4594,6 @@ name|tp
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -4654,10 +4620,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-operator|*
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|line_status
 operator|=
@@ -4747,9 +4710,6 @@ operator|,
 name|tp
 operator|)
 expr_stmt|;
-operator|*
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -7857,9 +7817,6 @@ block|{
 name|int
 name|unit
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CyDebug
@@ -7932,8 +7889,6 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * XXX forget any events related to closed devices 			 * (actually never opened devices) so that we don't 			 * loop. 			 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -7987,9 +7942,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8021,8 +7974,6 @@ operator|->
 name|ibuf
 condition|)
 block|{
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -8032,18 +7983,13 @@ expr_stmt|;
 name|sioinput
 argument_list|(
 name|com
-argument_list|,
-operator|&
-name|savecrit
 argument_list|)
 expr_stmt|;
 name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -8058,8 +8004,6 @@ block|{
 name|u_char
 name|delta_modem_status
 decl_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -8069,9 +8013,6 @@ expr_stmt|;
 name|sioinput
 argument_list|(
 name|com
-argument_list|,
-operator|&
-name|savecrit
 argument_list|)
 expr_stmt|;
 name|delta_modem_status
@@ -8107,9 +8048,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8148,8 +8087,6 @@ operator|&
 name|CSE_ODONE
 condition|)
 block|{
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -8171,9 +8108,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -8244,8 +8179,6 @@ operator|&
 name|CS_ODONE
 condition|)
 block|{
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -8267,9 +8200,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 operator|(
 operator|*
@@ -8370,9 +8301,6 @@ name|s
 decl_stmt|;
 name|int
 name|unit
-decl_stmt|;
-name|critical_t
-name|savecrit
 decl_stmt|;
 comment|/* do historical conversions */
 if|if
@@ -9063,8 +8991,6 @@ name|CD1400_COR2_CCTS_OFLOW
 expr_stmt|;
 endif|#
 directive|endif
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -9108,9 +9034,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 	 * set channel option register 3 - 	 *	receiver FIFO interrupt threshold 	 *	flow control 	 */
 name|opt
@@ -9414,8 +9338,6 @@ name|opt
 argument_list|)
 expr_stmt|;
 comment|/* 	 * XXX should have done this long ago, but there is too much state 	 * to change all atomically. 	 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -9659,9 +9581,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|splx
 argument_list|(
@@ -9738,9 +9658,6 @@ name|struct
 name|tty
 modifier|*
 name|tp
-decl_stmt|;
-name|critical_t
-name|savecrit
 decl_stmt|;
 comment|/* 	 * Make the buffer size large enough to handle a softtty interrupt 	 * latency of about 2 ticks without loss of throughput or data 	 * (about 3 ticks if input flow control is not used or not honoured, 	 * but a bit less for CS5-CS7 modes). 	 */
 name|cp4ticks
@@ -9868,8 +9785,6 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* 	 * Read current input buffer, if any.  Continue with interrupts 	 * disabled. 	 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -9889,9 +9804,6 @@ condition|)
 name|sioinput
 argument_list|(
 name|com
-argument_list|,
-operator|&
-name|savecrit
 argument_list|)
 expr_stmt|;
 comment|/*- 	 * Initialize critical variables, including input buffer watermarks. 	 * The external device is asked to stop sending when the buffer 	 * exactly reaches high water, or when the high level requests it. 	 * The high level is notified immediately (rather than at a later 	 * clock tick) when this watermark is reached. 	 * The buffer size is chosen so the watermark should almost never 	 * be reached. 	 * The low watermark is invisibly 0 since the buffer is always 	 * emptied all at once. 	 */
@@ -9935,9 +9847,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -9979,9 +9889,6 @@ directive|endif
 name|int
 name|unit
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|unit
 operator|=
 name|DEV_TO_UNIT
@@ -10017,8 +9924,6 @@ name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -10237,9 +10142,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10361,8 +10264,6 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -10508,9 +10409,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 if|if
@@ -10595,8 +10494,6 @@ name|l_queued
 operator|=
 name|TRUE
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -10742,9 +10639,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|tp
@@ -10771,9 +10666,9 @@ directive|endif
 if|#
 directive|if
 literal|0
-block|savecrit = critical_enter(); 	COM_LOCK(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
+block|critical_enter(); 	COM_LOCK(); 	if (com->state>= (CS_BUSY | CS_TTGO)) 		siointr1(com);
 comment|/* fake interrupt to start output */
-block|COM_UNLOCK(); 	critical_exit(savecrit);
+block|COM_UNLOCK(); 	critical_exit();
 endif|#
 directive|endif
 name|ttwwakeup
@@ -10815,9 +10710,6 @@ decl_stmt|;
 name|bool_t
 name|wakeup_etc
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|com
 operator|=
 name|com_addr
@@ -10834,8 +10726,6 @@ name|wakeup_etc
 operator|=
 name|FALSE
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -10986,9 +10876,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -11059,9 +10947,6 @@ name|mcr
 decl_stmt|;
 name|int
 name|msr
-decl_stmt|;
-name|critical_t
-name|savecrit
 decl_stmt|;
 if|if
 condition|(
@@ -11198,8 +11083,6 @@ name|com
 operator|->
 name|mcr_rts
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -11313,9 +11196,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -11517,7 +11398,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Recover from lost output interrupts. 	 * Poll any lines that don't use interrupts. 	 */
-block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			critical_t	savecrit;  			savecrit = critical_enter(); 			COM_LOCK(); 			siointr1(com); 			COM_UNLOCK(); 			critical_exit(savecrit); 		} 	}
+block|for (unit = 0; unit< NSIO; ++unit) { 		com = com_addr(unit); 		if (com != NULL&& (com->state>= (CS_BUSY | CS_TTGO) || com->poll)) { 			critical_enter(); 			COM_LOCK(); 			siointr1(com); 			COM_UNLOCK(); 			critical_exit(); 		} 	}
 endif|#
 directive|endif
 comment|/* 	 * Check for and log errors, but not too often. 	 */
@@ -11586,11 +11467,6 @@ decl_stmt|;
 name|u_long
 name|total
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -11619,9 +11495,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -12336,12 +12210,7 @@ name|int
 name|etc
 decl_stmt|;
 block|{
-name|critical_t
-name|savecrit
-decl_stmt|;
 comment|/* 	 * We can't change the hardware's ETC state while there are any 	 * characters in the tx fifo, since those characters would be 	 * interpreted as commands!  Unputting characters from the fifo 	 * is difficult, so we wait up to 12 character times for the fifo 	 * to drain.  The command will be delayed for up to 2 character 	 * times for the tx to become empty.  Unputting characters from 	 * the tx holding and shift registers is impossible, so we wait 	 * for the tx to become empty so that the command is sure to be 	 * executed soon after we issue it. 	 */
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -12412,9 +12281,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -12452,9 +12319,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 while|while
 condition|(
@@ -12515,9 +12380,6 @@ decl_stmt|;
 name|int
 name|cy_align
 decl_stmt|;
-name|critical_t
-name|savecrit
-decl_stmt|;
 name|register_t
 name|eflags
 decl_stmt|;
@@ -12568,8 +12430,6 @@ operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -12626,9 +12486,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -12671,9 +12529,6 @@ name|car
 decl_stmt|;
 name|int
 name|cy_align
-decl_stmt|;
-name|critical_t
-name|savecrit
 decl_stmt|;
 name|register_t
 name|eflags
@@ -12722,8 +12577,6 @@ operator|=
 name|read_eflags
 argument_list|()
 expr_stmt|;
-name|savecrit
-operator|=
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -12780,9 +12633,7 @@ name|COM_UNLOCK
 argument_list|()
 expr_stmt|;
 name|critical_exit
-argument_list|(
-name|savecrit
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 end_function
