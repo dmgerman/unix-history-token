@@ -930,9 +930,9 @@ index|[
 name|i
 index|]
 operator|.
-name|ki_flag
+name|ki_sflag
 operator|&
-name|P_INMEM
+name|PS_INMEM
 operator|)
 operator|==
 literal|0
