@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -597,6 +597,22 @@ operator|++
 name|inop
 control|)
 block|{
+if|if
+condition|(
+name|inop
+operator|->
+name|ii_inode
+operator|==
+name|LFS_IFILE_INUM
+condition|)
+name|daddr
+operator|=
+name|fs
+operator|->
+name|lfs_idaddr
+expr_stmt|;
+else|else
+block|{
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -621,6 +637,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|daddr
@@ -1154,8 +1171,12 @@ expr_stmt|;
 name|sup
 operator|->
 name|su_nbytes
-operator|=
-literal|0
+operator|-=
+name|sup
+operator|->
+name|su_nsums
+operator|*
+name|LFS_SUMMARY_SIZE
 expr_stmt|;
 name|sup
 operator|->
@@ -1197,15 +1218,6 @@ name|LFS_UBWRITE
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-comment|/* 	 * Count all the blocks in the segment as being free again. 	 */
-name|fs
-operator|->
-name|lfs_bfree
-operator|+=
-name|fs
-operator|->
-name|lfs_ssize
 expr_stmt|;
 return|return
 operator|(
