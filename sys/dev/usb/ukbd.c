@@ -3159,6 +3159,8 @@ name|ks_ndata
 argument_list|)
 argument_list|,
 name|func
+argument_list|,
+name|USBD_DEFAULT_INTERVAL
 argument_list|)
 expr_stmt|;
 if|if

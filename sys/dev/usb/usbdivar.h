@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdivar.h,v 1.41 1999/11/18 23:32:37 augustss Exp $	*/
+comment|/*	$NetBSD: usbdivar.h,v 1.46 2000/01/19 01:16:40 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -109,6 +109,39 @@ name|usbd_bus
 operator|*
 operator|,
 name|usb_dma_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|struct
+name|usbd_xfer
+modifier|*
+argument_list|(
+operator|*
+name|allocx
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|usbd_bus
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+name|void
+argument_list|(
+argument|*freex
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|usbd_bus
+operator|*
+operator|,
+expr|struct
+name|usbd_xfer
 operator|*
 operator|)
 argument_list|)
@@ -383,33 +416,41 @@ name|usbd_bus
 modifier|*
 name|bus
 decl_stmt|;
+comment|/* our controller */
 name|struct
 name|usbd_pipe
 modifier|*
 name|default_pipe
 decl_stmt|;
+comment|/* pipe 0 */
 name|u_int8_t
 name|address
 decl_stmt|;
+comment|/* device addess */
+name|u_int8_t
+name|config
+decl_stmt|;
+comment|/* current configuration # */
 name|u_int8_t
 name|depth
 decl_stmt|;
+comment|/* distance from root hub */
 name|u_int8_t
 name|lowspeed
 decl_stmt|;
-name|u_int16_t
-name|power
-decl_stmt|;
+comment|/* lowspeed flag */
 name|u_int8_t
 name|self_powered
 decl_stmt|;
-name|int
-name|config
+comment|/* flag for self powered */
+name|u_int16_t
+name|power
 decl_stmt|;
-name|int
+comment|/* mA the device uses */
+name|int16_t
 name|langid
 decl_stmt|;
-comment|/* language to use for strings */
+comment|/* language for strings */
 define|#
 directive|define
 name|USBD_NOLANG
@@ -423,6 +464,7 @@ name|usbd_port
 modifier|*
 name|powersrc
 decl_stmt|;
+comment|/* upstream hub port, or 0 */
 name|struct
 name|usbd_endpoint
 name|def_ep
@@ -437,9 +479,11 @@ name|usbd_interface
 modifier|*
 name|ifaces
 decl_stmt|;
+comment|/* array of all interfaces */
 name|usb_device_descriptor_t
 name|ddesc
 decl_stmt|;
+comment|/* device descriptor */
 name|usb_config_descriptor_t
 modifier|*
 name|cdesc
@@ -450,6 +494,7 @@ name|usbd_quirks
 modifier|*
 name|quirks
 decl_stmt|;
+comment|/* device quirks, always set */
 name|struct
 name|usbd_hub
 modifier|*
@@ -548,6 +593,9 @@ decl_stmt|;
 comment|/* used for repeating requests */
 name|char
 name|repeat
+decl_stmt|;
+name|int
+name|interval
 decl_stmt|;
 comment|/* Filled by HC driver. */
 name|struct
@@ -648,7 +696,6 @@ comment|/* private use by the HC driver */
 name|int
 name|hcprivint
 decl_stmt|;
-comment|/* ditto */
 if|#
 directive|if
 name|defined
@@ -777,6 +824,8 @@ operator|,
 expr|struct
 name|usbd_endpoint
 operator|*
+operator|,
+name|int
 operator|,
 name|usbd_pipe_handle
 operator|*

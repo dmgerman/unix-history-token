@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.16 1999/10/13 08:10:56 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.21 2000/01/18 20:11:01 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -139,7 +139,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Make the size such that it is a multiple of UHCI_TD_ALIGN.  This way  * we can pack a number of soft TD together and have the real TS well  * aligned.  * NOTE: Minimum size is 32 bytes.  */
+comment|/*   * Make the size such that it is a multiple of UHCI_TD_ALIGN.  This way  * we can pack a number of soft TD together and have the real TD well  * aligned.  * NOTE: Minimum size is 32 bytes.  */
 end_comment
 
 begin_define
@@ -223,7 +223,7 @@ comment|/*(PAGE_SIZE / UHCI_QH_SIZE)*/
 end_comment
 
 begin_comment
-comment|/*  * Information about an entry in the virtial frame list.  */
+comment|/*  * Information about an entry in the virtual frame list.  */
 end_comment
 
 begin_struct
@@ -312,10 +312,20 @@ name|uhci_soft_td_t
 modifier|*
 name|sc_freetds
 decl_stmt|;
+comment|/* TD free list */
 name|uhci_soft_qh_t
 modifier|*
 name|sc_freeqhs
 decl_stmt|;
+comment|/* QH free list */
+name|SIMPLEQ_HEAD
+argument_list|(
+argument_list|,
+argument|usbd_xfer
+argument_list|)
+name|sc_free_xfers
+expr_stmt|;
+comment|/* free xfers */
 name|u_int8_t
 name|sc_addr
 decl_stmt|;
@@ -330,9 +340,6 @@ decl_stmt|;
 name|char
 name|sc_suspend
 decl_stmt|;
-name|usbd_xfer_handle
-name|sc_has_timo
-decl_stmt|;
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -344,9 +351,15 @@ comment|/* Info for the root hub interrupt channel. */
 name|int
 name|sc_ival
 decl_stmt|;
+comment|/* time between root hug intrs */
+name|usbd_xfer_handle
+name|sc_has_timo
+decl_stmt|;
+comment|/* root hub interrupt transfer */
 name|char
 name|sc_vflock
 decl_stmt|;
+comment|/* for lock virtual frame list */
 define|#
 directive|define
 name|UHCI_HAS_LOCK
@@ -361,16 +374,25 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+comment|/* vendor string for root hub */
 name|int
 name|sc_id_vendor
 decl_stmt|;
+comment|/* vendor ID for root hub */
 name|void
 modifier|*
 name|sc_powerhook
 decl_stmt|;
+comment|/* cookie from power hook */
+name|void
+modifier|*
+name|sc_shutdownhook
+decl_stmt|;
+comment|/* cookie from shutdown hook */
 name|device_ptr_t
 name|sc_child
 decl_stmt|;
+comment|/* /dev/usb device */
 block|}
 name|uhci_softc_t
 typedef|;

@@ -640,6 +640,9 @@ decl_stmt|;
 name|int
 name|cue_if_flags
 decl_stmt|;
+name|u_int8_t
+name|cue_gone
+decl_stmt|;
 name|u_int16_t
 name|cue_rxfilt
 decl_stmt|;

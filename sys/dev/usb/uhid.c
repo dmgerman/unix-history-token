@@ -1790,6 +1790,8 @@ operator|->
 name|sc_isize
 argument_list|,
 name|uhid_intr
+argument_list|,
+name|USBD_DEFAULT_INTERVAL
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.56 1999/11/18 23:32:32 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.63 2000/01/19 00:23:58 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1969,7 +1969,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -2055,7 +2055,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -2069,7 +2069,7 @@ condition|)
 comment|/* quick exit */
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|curidx
@@ -2135,7 +2135,7 @@ name|UDESC_INTERFACE
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 if|if
@@ -2169,7 +2169,7 @@ block|}
 block|}
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -2287,10 +2287,10 @@ name|bNumEndpoints
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|4
 argument_list|,
 operator|(
-literal|"usbd_fill_iface_data: found idesc n=%d\n"
+literal|"usbd_fill_iface_data: found idesc nendpt=%d\n"
 operator|,
 name|nendpt
 operator|)
@@ -2328,7 +2328,7 @@ name|ifc
 operator|->
 name|endpoints
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2341,13 +2341,13 @@ name|ifc
 operator|->
 name|endpoints
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|ifc
 operator|->
 name|priv
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|p
 operator|=
@@ -2486,19 +2486,44 @@ if|if
 condition|(
 name|ed
 operator|->
+name|bLength
+operator|==
+literal|0
+operator|||
+name|ed
+operator|->
 name|bDescriptorType
 operator|==
 name|UDESC_INTERFACE
-operator|||
+condition|)
+break|break;
+block|}
+comment|/* passed end, or bad desc */
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_fill_iface_data: bad descriptor(s): %s\n"
+operator|,
 name|ed
 operator|->
 name|bLength
 operator|==
 literal|0
-condition|)
-break|break;
-block|}
-comment|/* passed end, or bad desc */
+condition|?
+literal|"0 length"
+else|:
+name|ed
+operator|->
+name|bDescriptorType
+operator|==
+name|UDESC_INTERFACE
+condition|?
+literal|"iface desc"
+else|:
+literal|"out of data"
+operator|)
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -2551,6 +2576,14 @@ operator|)
 return|;
 name|bad
 label|:
+if|if
+condition|(
+name|ifc
+operator|->
+name|endpoints
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|ifc
@@ -3348,7 +3381,7 @@ name|dev
 operator|->
 name|ifaces
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|err
@@ -3471,6 +3504,8 @@ name|iface
 parameter_list|,
 name|ep
 parameter_list|,
+name|ival
+parameter_list|,
 name|pipe
 parameter_list|)
 name|usbd_device_handle
@@ -3483,6 +3518,9 @@ name|struct
 name|usbd_endpoint
 modifier|*
 name|ep
+decl_stmt|;
+name|int
+name|ival
 decl_stmt|;
 name|usbd_pipe_handle
 modifier|*
@@ -3584,6 +3622,12 @@ operator|->
 name|repeat
 operator|=
 literal|0
+expr_stmt|;
+name|p
+operator|->
+name|interval
+operator|=
+name|ival
 expr_stmt|;
 name|SIMPLEQ_INIT
 argument_list|(
@@ -3974,6 +4018,13 @@ name|bcdDevice
 argument_list|)
 expr_stmt|;
 comment|/* First try with device specific drivers. */
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_probe_and_attach: trying device specific drivers\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dv
 operator|=
 name|USB_DO_ATTACH
@@ -4054,6 +4105,17 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"usbd_probe_and_attach: no device specific driver found\n"
+operator|)
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"usbd_probe_and_attach: looping over %d configurations\n"
+operator|,
+name|dd
+operator|->
+name|bNumConfigurations
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4380,7 +4442,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* create another device for the next iface */
+comment|/* create another child for the next iface */
 name|bdev
 operator|=
 name|device_add_child
@@ -4938,6 +5000,8 @@ name|dev
 operator|->
 name|def_ep
 argument_list|,
+name|USBD_DEFAULT_INTERVAL
+argument_list|,
 operator|&
 name|dev
 operator|->
@@ -5178,14 +5242,11 @@ operator|->
 name|bMaxPacketSize
 argument_list|)
 expr_stmt|;
-comment|/* Get the full device descriptor. */
 name|err
 operator|=
-name|usbd_get_device_desc
+name|usbd_reload_device_desc
 argument_list|(
 name|dev
-argument_list|,
-name|dd
 argument_list|)
 expr_stmt|;
 if|if
@@ -5219,16 +5280,6 @@ name|err
 operator|)
 return|;
 block|}
-comment|/* Figure out what's wrong with this device. */
-name|dev
-operator|->
-name|quirks
-operator|=
-name|usbd_find_quirk
-argument_list|(
-name|dd
-argument_list|)
-expr_stmt|;
 comment|/* Set the address */
 name|err
 operator|=
@@ -5237,6 +5288,17 @@ argument_list|(
 name|dev
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|DPRINTFN
+argument_list|(
+literal|5
+argument_list|,
+operator|(
+literal|"usbd_new_device: setting device address=%d\n"
+operator|,
+name|addr
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5359,6 +5421,62 @@ argument_list|(
 name|USB_EVENT_ATTACH
 argument_list|,
 name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|usbd_status
+name|usbd_reload_device_desc
+parameter_list|(
+name|dev
+parameter_list|)
+name|usbd_device_handle
+name|dev
+decl_stmt|;
+block|{
+name|usbd_status
+name|err
+decl_stmt|;
+comment|/* Get the full device descriptor. */
+name|err
+operator|=
+name|usbd_get_device_desc
+argument_list|(
+name|dev
+argument_list|,
+operator|&
+name|dev
+operator|->
+name|ddesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+return|return
+operator|(
+name|err
+operator|)
+return|;
+comment|/* Figure out what's wrong with this device. */
+name|dev
+operator|->
+name|quirks
+operator|=
+name|usbd_find_quirk
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|ddesc
 argument_list|)
 expr_stmt|;
 return|return
@@ -6629,6 +6747,7 @@ endif|#
 directive|endif
 block|}
 block|}
+comment|/*usbd_add_event(USB_EVENT_DETACH, dev);*/
 name|dev
 operator|->
 name|bus

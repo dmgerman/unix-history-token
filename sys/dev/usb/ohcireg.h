@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcireg.h,v 1.8 1999/08/22 23:41:00 augustss Exp $	*/
+comment|/*	$NetBSD: ohcireg.h,v 1.11 2000/01/16 10:35:24 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1030,6 +1030,148 @@ define|#
 directive|define
 name|OHCI_TD_ALIGN
 value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_ITD_NOFFSET
+value|8
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|u_int32_t
+name|itd_flags
+decl_stmt|;
+define|#
+directive|define
+name|OHCI_ITD_GET_SF
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0x0000ffff)
+define|#
+directive|define
+name|OHCI_ITD_SET_SF
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xffff)
+define|#
+directive|define
+name|OHCI_ITD_GET_DI
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 21)& 7)
+comment|/* Delay Interrupt */
+define|#
+directive|define
+name|OHCI_ITD_SET_DI
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)<< 21)
+define|#
+directive|define
+name|OHCI_ITD_NOINTR
+value|0x00e00000
+define|#
+directive|define
+name|OHCI_ITD_GET_FC
+parameter_list|(
+name|x
+parameter_list|)
+value|((((x)>> 24)& 7)+1)
+comment|/* Frame Count */
+define|#
+directive|define
+name|OHCI_ITD_SET_FC
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)-1)<< 24)
+define|#
+directive|define
+name|OHCI_ITD_GET_CC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 28)
+comment|/* Condition Code */
+define|#
+directive|define
+name|OHCI_ITD_NOCC
+value|0xf0000000
+name|ohci_physaddr_t
+name|itd_bp0
+decl_stmt|;
+comment|/* Buffer Page 0 */
+define|#
+directive|define
+name|OHCI_ITD_OFFSET_MASK
+value|0x00000fff
+define|#
+directive|define
+name|OHCI_ITD_PAGE_MASK
+value|(~OHCI_ITD_OFFSET_MASK)
+name|ohci_physaddr_t
+name|itd_nextitd
+decl_stmt|;
+comment|/* Next ITD */
+name|ohci_physaddr_t
+name|itd_be
+decl_stmt|;
+comment|/* Buffer End */
+name|u_int16_t
+name|itd_offset
+index|[
+name|OHCI_ITD_NOFFSET
+index|]
+decl_stmt|;
+comment|/* Buffer offsets */
+define|#
+directive|define
+name|itd_pswn
+value|itd_offset
+comment|/* Packet Status Word*/
+define|#
+directive|define
+name|OHCI_ITD_PAGE_SELECT
+value|0x00001000
+define|#
+directive|define
+name|OHCI_ITD_PSW_LENGTH
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xfff)
+comment|/* Transfer length */
+define|#
+directive|define
+name|OHCI_ITD_PSW_GET_CC
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 12)
+comment|/* Condition Code */
+block|}
+name|ohci_itd_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* #define OHCI_ITD_SIZE 32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OHCI_ITD_ALIGN
+value|32
 end_define
 
 begin_define

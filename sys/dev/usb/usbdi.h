@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.33 1999/11/17 23:00:50 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.39 2000/01/19 00:23:59 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -121,13 +121,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|usbd_lock_token
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|void
 argument_list|(
 argument|*usbd_callback
@@ -154,6 +147,17 @@ define|#
 directive|define
 name|USBD_EXCLUSIVE_USE
 value|0x01
+end_define
+
+begin_comment
+comment|/* Use default (specified by ep. desc.) interval on interrupt pipe */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBD_DEFAULT_INTERVAL
+value|(-1)
 end_define
 
 begin_comment
@@ -188,6 +192,32 @@ end_comment
 
 begin_comment
 comment|/* allow short reads */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBD_FORCE_SHORT_XFER
+value|0x08
+end_define
+
+begin_comment
+comment|/* force last short packet on write */
+end_comment
+
+begin_comment
+comment|/* XXX Temporary hack XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBD_NO_TSLEEP
+value|0x80
+end_define
+
+begin_comment
+comment|/* XXX use busy wait */
 end_comment
 
 begin_define
@@ -662,6 +692,8 @@ name|u_int32_t
 name|length
 operator|,
 name|usbd_callback
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -951,6 +983,66 @@ argument_list|(
 operator|(
 name|int
 operator|,
+name|usbd_device_handle
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|usbd_devinfo
+name|__P
+argument_list|(
+operator|(
+name|usbd_device_handle
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|usbd_quirks
+modifier|*
+name|usbd_get_quirks
+name|__P
+argument_list|(
+operator|(
+name|usbd_device_handle
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|usb_endpoint_descriptor_t
+modifier|*
+name|usbd_get_endpoint_descriptor
+name|__P
+argument_list|(
+operator|(
+name|usbd_interface_handle
+name|iface
+operator|,
+name|u_int8_t
+name|address
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|usbd_status
+name|usbd_reload_device_desc
+name|__P
+argument_list|(
+operator|(
 name|usbd_device_handle
 operator|)
 argument_list|)
@@ -1273,54 +1365,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-name|void
-name|usbd_devinfo
-name|__P
-argument_list|(
-operator|(
-name|usbd_device_handle
-operator|,
-name|int
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|usbd_quirks
-modifier|*
-name|usbd_get_quirks
-name|__P
-argument_list|(
-operator|(
-name|usbd_device_handle
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|usb_endpoint_descriptor_t
-modifier|*
-name|usbd_get_endpoint_descriptor
-name|__P
-argument_list|(
-operator|(
-name|usbd_interface_handle
-name|iface
-operator|,
-name|u_int8_t
-name|address
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -1354,6 +1398,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * XXX  * splusb MUST be the lowest level interrupt so that within USB callbacks  * the level can be raised the appropriate level.  * XXX Should probably use a softsplusb.  */
+end_comment
 
 begin_comment
 comment|/* XXX */

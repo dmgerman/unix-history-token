@@ -985,6 +985,9 @@ decl_stmt|;
 name|u_int8_t
 name|aue_link
 decl_stmt|;
+name|u_int8_t
+name|aue_gone
+decl_stmt|;
 name|int
 name|aue_if_flags
 decl_stmt|;
@@ -1034,6 +1037,17 @@ directive|define
 name|AUE_MIN_FRAMELEN
 value|60
 end_define
+
+begin_define
+define|#
+directive|define
+name|AUE_INTR_INTERVAL
+value|100
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
 
 end_unit
 

@@ -651,6 +651,9 @@ decl_stmt|;
 name|int
 name|kue_if_flags
 decl_stmt|;
+name|u_int8_t
+name|kue_gone
+decl_stmt|;
 name|u_int16_t
 name|kue_rxfilt
 decl_stmt|;

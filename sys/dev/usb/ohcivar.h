@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohcivar.h,v 1.13 1999/10/13 08:10:55 augustss Exp $	*/
+comment|/*	$NetBSD: ohcivar.h,v 1.18 2000/01/18 20:11:00 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -111,6 +111,42 @@ name|OHCI_STD_CHUNK
 value|128
 end_define
 
+begin_typedef
+typedef|typedef
+struct|struct
+name|ohci_soft_itd
+block|{
+name|ohci_itd_t
+name|itd
+decl_stmt|;
+name|struct
+name|ohci_soft_itd
+modifier|*
+name|nextitd
+decl_stmt|;
+comment|/* mirrors nexttd in ITD */
+name|ohci_physaddr_t
+name|physaddr
+decl_stmt|;
+block|}
+name|ohci_soft_itd_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|OHCI_SITD_SIZE
+value|((sizeof (struct ohci_soft_itd) + OHCI_ITD_ALIGN - 1) / OHCI_ITD_ALIGN * OHCI_ITD_ALIGN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|OHCI_SITD_CHUNK
+value|64
+end_define
+
 begin_define
 define|#
 directive|define
@@ -167,6 +203,10 @@ name|sc_eintrs
 decl_stmt|;
 name|ohci_soft_ed_t
 modifier|*
+name|sc_isoc_head
+decl_stmt|;
+name|ohci_soft_ed_t
+modifier|*
 name|sc_ctrl_head
 decl_stmt|;
 name|ohci_soft_ed_t
@@ -202,6 +242,18 @@ name|ohci_soft_td_t
 modifier|*
 name|sc_freetds
 decl_stmt|;
+name|ohci_soft_itd_t
+modifier|*
+name|sc_freeitds
+decl_stmt|;
+name|SIMPLEQ_HEAD
+argument_list|(
+argument_list|,
+argument|usbd_xfer
+argument_list|)
+name|sc_free_xfers
+expr_stmt|;
+comment|/* free xfers */
 name|usbd_xfer_handle
 name|sc_intrxfer
 decl_stmt|;
@@ -218,6 +270,11 @@ name|void
 modifier|*
 name|sc_powerhook
 decl_stmt|;
+name|void
+modifier|*
+name|sc_shutdownhook
+decl_stmt|;
+comment|/* cookie from shutdown hook */
 name|device_ptr_t
 name|sc_child
 decl_stmt|;

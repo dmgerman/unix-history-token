@@ -1125,6 +1125,8 @@ name|sc_status
 argument_list|)
 argument_list|,
 name|uhub_intr
+argument_list|,
+name|USBD_DEFAULT_INTERVAL
 argument_list|)
 expr_stmt|;
 if|if
