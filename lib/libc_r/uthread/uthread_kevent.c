@@ -125,6 +125,14 @@ name|rc
 operator|==
 literal|0
 operator|&&
+name|eventlist
+operator|!=
+name|NULL
+operator|&&
+name|nevents
+operator|>
+literal|0
+operator|&&
 operator|(
 name|timeout
 operator|==
