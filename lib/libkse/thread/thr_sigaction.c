@@ -217,11 +217,7 @@ name|gact
 operator|.
 name|sa_flags
 operator|=
-name|act
-operator|->
-name|sa_flags
-operator||
-name|SA_RESTART
+literal|0
 expr_stmt|;
 comment|/* 			 * Check if the signal handler is being set to 			 * the default or ignore handlers: 			 */
 if|if
