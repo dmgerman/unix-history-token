@@ -27,6 +27,12 @@ directive|include
 file|<sys/selinfo.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_comment
 comment|/*  * Descriptor associated with each open bpf file.  */
 end_comment
@@ -35,11 +41,12 @@ begin_struct
 struct|struct
 name|bpf_d
 block|{
-name|struct
-name|bpf_d
-modifier|*
+name|LIST_ENTRY
+argument_list|(
+argument|bpf_d
+argument_list|)
 name|bd_next
-decl_stmt|;
+expr_stmt|;
 comment|/* Linked list of descriptors */
 comment|/* 	 * Buffer slots: two mbuf clusters buffer the incoming packets. 	 *   The model has three slots.  Sbuf is always occupied. 	 *   sbuf (store) - Receive interrupt puts packets here. 	 *   hbuf (hold) - When sbuf is full, put cluster here and 	 *                 wakeup read (replace sbuf with fbuf). 	 *   fbuf (free) - When read is done, put cluster here. 	 * On receiving, if sbuf is full and fbuf is 0, packet is dropped. 	 */
 name|caddr_t
@@ -265,17 +272,20 @@ begin_struct
 struct|struct
 name|bpf_if
 block|{
-name|struct
-name|bpf_if
-modifier|*
+name|LIST_ENTRY
+argument_list|(
+argument|bpf_if
+argument_list|)
 name|bif_next
-decl_stmt|;
+expr_stmt|;
 comment|/* list of all interfaces */
-name|struct
-name|bpf_d
-modifier|*
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
 name|bif_dlist
-decl_stmt|;
+expr_stmt|;
 comment|/* descriptor list */
 name|struct
 name|bpf_if
