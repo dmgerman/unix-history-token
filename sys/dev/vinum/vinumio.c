@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.31 1999/06/29 04:08:51 grog Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumio.c,v 1.25 1999/06/28 02:37:48 grog Exp grog $  */
 end_comment
 
 begin_include
@@ -764,20 +764,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|drive
-operator|->
-name|partinfo
-operator|.
-name|part
-operator|->
-name|p_fstype
-operator|!=
-name|FS_UNUSED
-operator|)
-comment|/* not plain */
-operator|&&
-operator|(
 name|drive
 operator|->
 name|partinfo
@@ -787,10 +773,9 @@ operator|->
 name|p_fstype
 operator|!=
 name|FS_VINUM
-operator|)
 condition|)
 block|{
-comment|/* and not Vinum */
+comment|/* not Vinum */
 name|drive
 operator|->
 name|lasterror
@@ -880,7 +865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Real drive close code, called with drive already locked.  We have  * also checked that the drive is open.  No errors.  */
+comment|/*  * Real drive close code, called with drive already locked.  * We have also checked that the drive is open.  No errors.  */
 end_comment
 
 begin_function
@@ -2641,102 +2626,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* Kludge: kernel printf doesn't handle quads correctly XXX */
-end_comment
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|lltoa
-parameter_list|(
-name|long
-name|long
-name|l
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|lltoa
-parameter_list|(
-name|long
-name|long
-name|l
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-block|{
-operator|*
-name|s
-operator|++
-operator|=
-literal|'-'
-expr_stmt|;
-name|l
-operator|=
-operator|-
-name|l
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|l
-operator|>
-literal|9
-condition|)
-block|{
-name|s
-operator|=
-name|lltoa
-argument_list|(
-name|l
-operator|/
-literal|10
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|l
-operator|%=
-literal|10
-expr_stmt|;
-block|}
-operator|*
-name|s
-operator|++
-operator|=
-name|l
-operator|+
-literal|'0'
-expr_stmt|;
-return|return
-name|s
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Format the configuration in text form into the buffer  * at config.  Don't go beyond len bytes  * XXX this stinks.  Fix soon.   */
-end_comment
-
 begin_function
 name|void
 name|format_config
@@ -2761,6 +2650,16 @@ name|s
 init|=
 name|config
 decl_stmt|;
+name|char
+modifier|*
+name|configend
+init|=
+operator|&
+name|config
+index|[
+name|len
+index|]
+decl_stmt|;
 name|bzero
 argument_list|(
 name|config
@@ -2768,7 +2667,7 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-comment|/* First, the volume configuration */
+comment|/* First write the volume configuration */
 for|for
 control|(
 name|i
@@ -2832,8 +2731,12 @@ operator|>=
 literal|0
 condition|)
 comment|/* preferences, */
-name|sprintf
+name|snprintf
 argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
 name|s
 argument_list|,
 literal|"volume %s state %s readpol prefer %s"
@@ -2863,8 +2766,12 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* default round-robin */
-name|sprintf
+name|snprintf
 argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
 name|s
 argument_list|,
 literal|"volume %s state %s"
@@ -2899,28 +2806,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|>
-operator|&
-name|config
-index|[
-name|len
-operator|-
-literal|80
-index|]
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: configuration data overflow\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 block|}
 comment|/* Then the plex configuration */
@@ -2978,8 +2863,12 @@ operator|)
 condition|)
 block|{
 comment|/* paranoia */
-name|sprintf
+name|snprintf
 argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
 name|s
 argument_list|,
 literal|"plex name %s state %s org %s "
@@ -3031,11 +2920,15 @@ name|plex_raid5
 operator|)
 condition|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"%db "
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|"%ds "
 argument_list|,
 operator|(
 name|int
@@ -3064,8 +2957,12 @@ operator|>=
 literal|0
 condition|)
 comment|/* we have a volume */
-name|sprintf
+name|snprintf
 argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
 name|s
 argument_list|,
 literal|"vol %s "
@@ -3107,8 +3004,12 @@ name|j
 operator|++
 control|)
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
 name|s
 argument_list|,
 literal|" sd %s"
@@ -3138,28 +3039,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|>
-operator|&
-name|config
-index|[
-name|len
-operator|-
-literal|80
-index|]
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: configuration data overflow\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 block|}
 block|}
 comment|/* And finally the subdisk configuration */
@@ -3215,11 +3094,23 @@ operator|)
 condition|)
 block|{
 comment|/* paranoia */
-name|sprintf
+if|if
+condition|(
+name|sd
+operator|->
+name|plexno
+operator|>=
+literal|0
+condition|)
+name|snprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"sd name %s drive %s plex %s state %s len "
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|"sd name %s drive %s plex %s state %s len %qds driveoffset %qds plexoffset %qds\n"
 argument_list|,
 name|sd
 operator|->
@@ -3255,6 +3146,62 @@ name|sd
 operator|->
 name|state
 argument_list|)
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|,
+name|sd
+operator|->
+name|driveoffset
+argument_list|,
+name|sd
+operator|->
+name|plexoffset
+argument_list|)
+expr_stmt|;
+else|else
+name|snprintf
+argument_list|(
+name|s
+argument_list|,
+name|configend
+operator|-
+name|s
+argument_list|,
+literal|"sd name %s drive %s state %s len %qds driveoffset %qds detached\n"
+argument_list|,
+name|sd
+operator|->
+name|name
+argument_list|,
+name|vinum_conf
+operator|.
+name|drive
+index|[
+name|sd
+operator|->
+name|driveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|,
+name|sd_state
+argument_list|(
+name|sd
+operator|->
+name|state
+argument_list|)
+argument_list|,
+name|sd
+operator|->
+name|sectors
+argument_list|,
+name|sd
+operator|->
+name|driveoffset
 argument_list|)
 expr_stmt|;
 while|while
@@ -3266,66 +3213,8 @@ name|s
 operator|++
 expr_stmt|;
 comment|/* find the end */
-name|s
-operator|=
-name|lltoa
-argument_list|(
-name|sd
-operator|->
-name|sectors
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|sappend
-argument_list|(
-literal|"b driveoffset "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|lltoa
-argument_list|(
-name|sd
-operator|->
-name|driveoffset
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|sappend
-argument_list|(
-literal|"b plexoffset "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|lltoa
-argument_list|(
-name|sd
-operator|->
-name|plexoffset
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|sappend
-argument_list|(
-literal|"b\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 name|s
@@ -3335,21 +3224,14 @@ name|config
 index|[
 name|len
 operator|-
-literal|80
+literal|2
 index|]
 condition|)
-block|{
-name|log
+name|panic
 argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"vinum: configuration data overflow\n"
+literal|"vinum: configuration data overflow"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-block|}
-block|}
 block|}
 end_function
 
@@ -4718,6 +4600,32 @@ name|char
 name|part
 decl_stmt|;
 comment|/* UNIX partition */
+name|int
+name|slice
+decl_stmt|;
+name|int
+name|founddrive
+decl_stmt|;
+comment|/* flag when we find a vinum drive */
+name|founddrive
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no vinum drive found yet on this spindle */
+comment|/* first try the partition table */
+for|for
+control|(
+name|slice
+operator|=
+literal|1
+init|;
+name|slice
+operator|<
+literal|5
+condition|;
+name|slice
+operator|++
+control|)
 for|for
 control|(
 name|part
@@ -4731,6 +4639,128 @@ condition|;
 name|part
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|part
+operator|!=
+literal|'c'
+condition|)
+block|{
+comment|/* don't do the c partition */
+name|snprintf
+argument_list|(
+name|partname
+argument_list|,
+name|DRIVENAMELEN
+argument_list|,
+literal|"%ss%d%c"
+argument_list|,
+name|devicename
+index|[
+name|driveno
+index|]
+argument_list|,
+name|slice
+argument_list|,
+name|part
+argument_list|)
+expr_stmt|;
+name|drive
+operator|=
+name|check_drive
+argument_list|(
+name|partname
+argument_list|)
+expr_stmt|;
+comment|/* try to open it */
+if|if
+condition|(
+name|drive
+operator|->
+name|lasterror
+operator|!=
+literal|0
+condition|)
+comment|/* didn't work, */
+name|free_drive
+argument_list|(
+name|drive
+argument_list|)
+expr_stmt|;
+comment|/* get rid of it */
+elseif|else
+if|if
+condition|(
+name|drive
+operator|->
+name|flags
+operator|&
+name|VF_CONFIGURED
+condition|)
+comment|/* already read this config, */
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum: already read config from %s\n"
+argument_list|,
+comment|/* say so */
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|drivelist
+index|[
+name|gooddrives
+index|]
+operator|=
+name|drive
+operator|->
+name|driveno
+expr_stmt|;
+comment|/* keep the drive index */
+name|drive
+operator|->
+name|flags
+operator|&=
+operator|~
+name|VF_NEWBORN
+expr_stmt|;
+comment|/* which is no longer newly born */
+name|gooddrives
+operator|++
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|founddrive
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* didn't find anything, */
+for|for
+control|(
+name|part
+operator|=
+literal|'a'
+init|;
+name|part
+operator|<
+literal|'i'
+condition|;
+name|part
+operator|++
+control|)
+comment|/* try the compatibility partition */
 if|if
 condition|(
 name|part
@@ -4836,6 +4866,7 @@ comment|/* which is no longer newly born */
 name|gooddrives
 operator|++
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -4969,31 +5000,6 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"vinum: updating configuration from %s\n"
-argument_list|,
-name|drive
-operator|->
-name|devicename
-argument_list|)
-expr_stmt|;
-comment|/* XXX Transition until we can get things changed */
-if|if
-condition|(
-name|drive
-operator|->
-name|partinfo
-operator|.
-name|part
-operator|->
-name|p_fstype
-operator|==
-name|FS_UNUSED
-condition|)
-comment|/* still set to unused */
-name|log
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"vinum: %s partition type is 'unused', should be 'vinum'\n"
 argument_list|,
 name|drive
 operator|->
