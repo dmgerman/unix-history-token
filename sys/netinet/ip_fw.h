@@ -518,7 +518,13 @@ name|ip_fw
 modifier|*
 name|next
 decl_stmt|;
-comment|/* linked list of rules	*/
+comment|/* linked list of rules		*/
+name|struct
+name|ip_fw
+modifier|*
+name|next_rule
+decl_stmt|;
+comment|/* ptr to next [skipto] rule	*/
 name|u_int16_t
 name|act_ofs
 decl_stmt|;
@@ -548,12 +554,6 @@ name|u_int32_t
 name|timestamp
 decl_stmt|;
 comment|/* tv_sec of last match		*/
-name|struct
-name|ip_fw
-modifier|*
-name|next_rule
-decl_stmt|;
-comment|/* ptr to next rule		*/
 name|ipfw_insn
 name|cmd
 index|[
@@ -674,6 +674,15 @@ name|u_int32_t
 name|state
 decl_stmt|;
 comment|/* state of this rule (typically a 					 * combination of TCP flags) 					 */
+name|u_int32_t
+name|ack_fwd
+decl_stmt|;
+comment|/* most recent ACKs in forward	*/
+name|u_int32_t
+name|ack_rev
+decl_stmt|;
+comment|/* and reverse directions (used	*/
+comment|/* to generate keepalives)	*/
 name|u_int16_t
 name|dyn_type
 decl_stmt|;
