@@ -266,6 +266,45 @@ name|EMSG
 value|""
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NO_PREFIX
+value|(-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|D_PREFIX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DD_PREFIX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|W_PREFIX
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -414,10 +453,6 @@ literal|"option requires an argument -- %c"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* From P1003.2 */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -429,11 +464,24 @@ literal|"illegal option -- %c"
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* From P1003.2 */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|GNU_COMPATIBLE
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|dash_prefix
+init|=
+name|NO_PREFIX
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -453,7 +501,7 @@ name|char
 name|recargstring
 index|[]
 init|=
-literal|"option `--%s' requires an argument"
+literal|"option `%s%s' requires an argument"
 decl_stmt|;
 end_decl_stmt
 
@@ -464,7 +512,7 @@ name|char
 name|ambig
 index|[]
 init|=
-literal|"option `--%.*s' is ambiguous"
+literal|"option `%s%.*s' is ambiguous"
 decl_stmt|;
 end_decl_stmt
 
@@ -475,7 +523,7 @@ name|char
 name|noarg
 index|[]
 init|=
-literal|"option `--%.*s' doesn't allow an argument"
+literal|"option `%s%.*s' doesn't allow an argument"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,7 +534,7 @@ name|char
 name|illoptstring
 index|[]
 init|=
-literal|"unrecognized option `--%s'"
+literal|"unrecognized option `%s%s'"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,6 +864,15 @@ decl_stmt|,
 modifier|*
 name|has_equal
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|char
+modifier|*
+name|current_dash
+decl_stmt|;
+endif|#
+directive|endif
 name|size_t
 name|current_argv_len
 decl_stmt|;
@@ -828,6 +885,47 @@ name|current_argv
 operator|=
 name|place
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+switch|switch
+condition|(
+name|dash_prefix
+condition|)
+block|{
+case|case
+name|D_PREFIX
+case|:
+name|current_dash
+operator|=
+literal|"-"
+expr_stmt|;
+break|break;
+case|case
+name|DD_PREFIX
+case|:
+name|current_dash
+operator|=
+literal|"--"
+expr_stmt|;
+break|break;
+case|case
+name|W_PREFIX
+case|:
+name|current_dash
+operator|=
+literal|"-W "
+expr_stmt|;
+break|break;
+default|default:
+name|current_dash
+operator|=
+literal|""
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
 name|match
 operator|=
 operator|-
@@ -961,6 +1059,13 @@ name|warnx
 argument_list|(
 name|ambig
 argument_list|,
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|current_dash
+argument_list|,
+endif|#
+directive|endif
 operator|(
 name|int
 operator|)
@@ -1011,6 +1116,13 @@ name|warnx
 argument_list|(
 name|noarg
 argument_list|,
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|current_dash
+argument_list|,
+endif|#
+directive|endif
 operator|(
 name|int
 operator|)
@@ -1133,6 +1245,13 @@ name|warnx
 argument_list|(
 name|recargstring
 argument_list|,
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|current_dash
+argument_list|,
+endif|#
+directive|endif
 name|current_argv
 argument_list|)
 expr_stmt|;
@@ -1198,6 +1317,13 @@ name|warnx
 argument_list|(
 name|illoptstring
 argument_list|,
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|current_dash
+argument_list|,
+endif|#
+directive|endif
 name|current_argv
 argument_list|)
 expr_stmt|;
@@ -1780,6 +1906,15 @@ name|short_too
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|dash_prefix
+operator|=
+name|D_PREFIX
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|*
@@ -1787,10 +1922,21 @@ name|place
 operator|==
 literal|'-'
 condition|)
+block|{
 name|place
 operator|++
 expr_stmt|;
 comment|/* --foo long option */
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|dash_prefix
+operator|=
+name|DD_PREFIX
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 elseif|else
 if|if
 condition|(
@@ -2038,6 +2184,15 @@ index|[
 name|optind
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|GNU_COMPATIBLE
+name|dash_prefix
+operator|=
+name|W_PREFIX
+expr_stmt|;
+endif|#
+directive|endif
 name|optchar
 operator|=
 name|parse_long_options
