@@ -491,6 +491,9 @@ operator|.
 name|fe_fsr
 operator|=
 name|fsr
+operator|&
+operator|~
+name|FSR_FTT_MASK
 expr_stmt|;
 name|insn
 operator|=
@@ -920,10 +923,11 @@ modifier|*
 name|fe
 parameter_list|)
 block|{
+name|u_long
+name|fsr
+decl_stmt|;
 name|int
 name|cx
-decl_stmt|,
-name|fsr
 decl_stmt|;
 comment|/* 	 * The only possible exception here is NV; catch it 	 * early and get out, as there is no result register. 	 */
 name|cx
@@ -1815,6 +1819,11 @@ argument_list|(
 name|fe
 argument_list|,
 literal|0
+argument_list|,
+name|IF_F3_CC
+argument_list|(
+name|insn
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1866,6 +1875,11 @@ argument_list|(
 name|fe
 argument_list|,
 literal|1
+argument_list|,
+name|IF_F3_CC
+argument_list|(
+name|insn
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

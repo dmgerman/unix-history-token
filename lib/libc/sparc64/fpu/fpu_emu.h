@@ -297,7 +297,7 @@ begin_struct
 struct|struct
 name|fpemu
 block|{
-name|int
+name|u_long
 name|fe_fsr
 decl_stmt|;
 comment|/* fsr copy (modified during op) */
