@@ -330,7 +330,7 @@ name|sprintf
 argument_list|(
 name|req
 argument_list|,
-literal|"HEAD %s/ HTTP/1.0\r\n\r\n"
+literal|"GET %s/ HTTP/1.0\r\n\r\n"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -1043,7 +1043,7 @@ name|sprintf
 argument_list|(
 name|req
 argument_list|,
-literal|"HEAD %s/%s%s HTTP/1.0\r\n\r\n"
+literal|"GET %s/%s%s HTTP/1.0\r\n\r\n"
 argument_list|,
 name|variable_get
 argument_list|(
