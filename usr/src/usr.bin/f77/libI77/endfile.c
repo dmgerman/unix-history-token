@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_endfile[] = "@(#)endfile.c	1.3";  *  * endfile  */
+comment|/* char id_endfile[] = "@(#)endfile.c	1.4";  *  * endfile  */
 end_comment
 
 begin_include
@@ -200,27 +200,6 @@ if|if
 condition|(
 name|b
 operator|->
-name|uwrt
-operator|&&
-operator|!
-name|nowreading
-argument_list|(
-name|b
-argument_list|)
-condition|)
-name|err
-argument_list|(
-name|errflag
-argument_list|,
-name|errno
-argument_list|,
-name|endf
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|b
-operator|->
 name|url
 operator|||
 operator|!
@@ -239,6 +218,27 @@ name|OK
 operator|)
 return|;
 comment|/*don't trunc dir files*/
+if|if
+condition|(
+name|b
+operator|->
+name|uwrt
+operator|&&
+operator|!
+name|nowreading
+argument_list|(
+name|b
+argument_list|)
+condition|)
+name|err
+argument_list|(
+name|errflag
+argument_list|,
+name|errno
+argument_list|,
+name|endf
+argument_list|)
+expr_stmt|;
 name|loc
 operator|=
 name|ftell
