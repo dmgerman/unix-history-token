@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gprof.c	1.17 (Berkeley) %G%"
+literal|"@(#)gprof.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2231,7 +2231,7 @@ literal|0
 operator|,
 name|j
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<
