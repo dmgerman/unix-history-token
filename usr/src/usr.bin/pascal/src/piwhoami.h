@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)piwhoami.h 1.2 %G%"; */
+comment|/* static	char sccsid[] = "@(#)piwhoami.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -30,19 +30,89 @@ name|PTREE
 end_undef
 
 begin_comment
-comment|/*  *	am i the vax or the pdp11 version  */
+comment|/*  *	we assume one of the following will be defined by the preprocessor:  *	vax	for vaxes  *	pdp11	for pdp11's  *	mc68000	for motorola mc68000's  */
 end_comment
+
+begin_comment
+comment|/*  *	hardware characteristics:  *	address size (16 or 32 bits) and byte ordering (normal or dec11 family).  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ADDR16
+end_undef
 
 begin_define
 define|#
 directive|define
-name|VAX
+name|ADDR32
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEC11
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|vax
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|mc68000
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|ADDR16
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ADDR32
 end_define
 
 begin_undef
 undef|#
 directive|undef
-name|PDP11
+name|DEC11
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+endif|mc68000
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|pdp11
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ADDR16
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|ADDR32
 end_undef
 
 begin_define
@@ -50,6 +120,12 @@ define|#
 directive|define
 name|DEC11
 end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|pdp11
+end_endif
 
 begin_comment
 comment|/*  *	am i pi or pxp?  */
