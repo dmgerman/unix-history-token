@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.6	86/11/03	*/
+comment|/*	machdep.c	1.7	86/11/25	*/
 end_comment
 
 begin_include
@@ -361,6 +361,15 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+name|kdb_init
+argument_list|()
+expr_stmt|;
+comment|/* startup kernel debugger */
+endif|#
+directive|endif
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
 argument_list|(
