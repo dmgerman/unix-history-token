@@ -33,6 +33,12 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ndbm.h>
+end_include
+
 begin_comment
 comment|/*  * Internet version.  */
 end_comment
@@ -113,13 +119,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
-name|stayopen
+name|_stayopen
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|DBM
+modifier|*
+name|db
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set by gethostbyname(), gethostbyaddr() */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -148,25 +165,15 @@ block|{
 if|if
 condition|(
 name|hostf
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|hostf
-operator|=
-name|fopen
-argument_list|(
-name|HOSTDB
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-else|else
 name|rewind
 argument_list|(
 name|hostf
 argument_list|)
 expr_stmt|;
-name|stayopen
+name|_stayopen
 operator||=
 name|f
 expr_stmt|;
@@ -183,9 +190,6 @@ block|{
 if|if
 condition|(
 name|hostf
-operator|&&
-operator|!
-name|stayopen
 condition|)
 block|{
 name|fclose
@@ -198,6 +202,29 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|db
+condition|)
+block|{
+name|ndbmclose
+argument_list|(
+name|db
+argument_list|)
+expr_stmt|;
+name|db
+operator|=
+operator|(
+name|DBM
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
+name|_stayopen
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.1	83/12/05	*/
+comment|/*	gethostnamadr.c	4.2	83/12/21	*/
 end_comment
 
 begin_include
@@ -83,6 +83,17 @@ name|MAXALIASES
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_stayopen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set by sethostent(), cleared by endhostent() */
+end_comment
 
 begin_function
 specifier|static
@@ -312,6 +323,14 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
+name|db
+operator|==
+operator|(
+name|DBM
+operator|*
+operator|)
+literal|0
+operator|&&
 operator|(
 name|db
 operator|=
@@ -361,11 +380,26 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|_stayopen
+condition|)
+block|{
 name|ndbmclose
 argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+name|db
+operator|=
+operator|(
+name|DBM
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|hp
@@ -403,6 +437,14 @@ name|hp
 decl_stmt|;
 if|if
 condition|(
+name|db
+operator|==
+operator|(
+name|DBM
+operator|*
+operator|)
+literal|0
+operator|&&
 operator|(
 name|db
 operator|=
@@ -449,11 +491,26 @@ argument_list|(
 name|key
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|_stayopen
+condition|)
+block|{
 name|ndbmclose
 argument_list|(
 name|db
 argument_list|)
 expr_stmt|;
+name|db
+operator|=
+operator|(
+name|DBM
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|hp
