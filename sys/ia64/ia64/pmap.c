@@ -2369,7 +2369,7 @@ block|{
 define|#
 directive|define
 name|PV_BOOTSTRAP_NEEDED
-value|512
+value|2048
 specifier|static
 name|struct
 name|pv_entry
