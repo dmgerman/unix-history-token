@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.18 (Berkeley) %G%"
+literal|"@(#)hash.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1240,6 +1240,12 @@ operator|)
 return|;
 name|error1
 label|:
+if|if
+condition|(
+name|hashp
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
