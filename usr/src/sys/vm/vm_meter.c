@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.17	82/10/31	*/
+comment|/*	vm_meter.c	4.18	83/01/08	*/
 end_comment
 
 begin_include
@@ -1829,10 +1829,10 @@ expr_stmt|;
 if|if
 condition|(
 name|freemem
-operator|>=
+operator|<
 name|lotsfree
 condition|)
-return|return;
+block|{
 name|scanrate
 operator|=
 operator|(
@@ -1883,6 +1883,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 name|timeout
 argument_list|(
 name|schedpaging
