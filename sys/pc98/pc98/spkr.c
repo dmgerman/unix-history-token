@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.11 1998/02/09 15:05:44 kato Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.12 1998/02/21 15:51:51 kato Exp $  */
 end_comment
 
 begin_comment
@@ -2448,7 +2448,7 @@ parameter_list|)
 name|dev_t
 name|dev
 decl_stmt|;
-name|int
+name|u_long
 name|cmd
 decl_stmt|;
 name|caddr_t
