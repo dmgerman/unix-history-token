@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vfsops.c	1.2 (Berkeley) %G%  *  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vfsops.c	1.3 (Berkeley) %G%  *  * $Id: lofs_vfsops.c,v 1.9 1992/05/30 10:26:24 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -119,8 +119,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|int
 name|error
 init|=
@@ -679,27 +677,8 @@ name|FORCECLOSE
 expr_stmt|;
 block|}
 comment|/* 	 * Clear out buffer cache.  I don't think we 	 * ever get anything cached at this level at the 	 * moment, but who knows... 	 */
-name|mntflushbuf
-argument_list|(
-name|mp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mntinvalbuf
-argument_list|(
-name|mp
-argument_list|,
-literal|1
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+comment|/* mntflushbuf(mp, 0);  */
+comment|/* if (mntinvalbuf(mp, 1)) 		return (EBUSY); */
 if|if
 condition|(
 name|rootvp
@@ -817,8 +796,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -1244,14 +1221,16 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * LOFS flat namespace lookup.  * Currently unsupported.  */
+end_comment
+
 begin_macro
-name|lofs_fhtovp
+name|lofs_vget
 argument_list|(
 argument|mp
 argument_list|,
-argument|fhp
-argument_list|,
-argument|setgen
+argument|ino
 argument_list|,
 argument|vpp
 argument_list|)
@@ -1266,16 +1245,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|fid
-modifier|*
-name|fhp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|setgen
+name|ino_t
+name|ino
 decl_stmt|;
 end_decl_stmt
 
@@ -1285,6 +1256,80 @@ name|vnode
 modifier|*
 modifier|*
 name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
+end_block
+
+begin_expr_stmt
+name|lofs_fhtovp
+argument_list|(
+name|mp
+argument_list|,
+name|fhp
+argument_list|,
+name|nam
+argument_list|,
+name|vpp
+argument_list|,
+name|exflagsp
+argument_list|,
+name|credanonp
+argument_list|)
+specifier|register
+expr|struct
+name|mount
+operator|*
+name|mp
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|fid
+modifier|*
+name|fhp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|nam
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|exflagsp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+modifier|*
+name|credanonp
 decl_stmt|;
 end_decl_stmt
 
@@ -1302,9 +1347,13 @@ name|looped_vfs
 argument_list|,
 name|fhp
 argument_list|,
-name|setgen
+name|nam
 argument_list|,
 name|vpp
+argument_list|,
+name|exflagsp
+argument_list|,
+name|credanonp
 argument_list|)
 return|;
 block|}
@@ -1382,6 +1431,8 @@ block|,
 name|lofs_statfs
 block|,
 name|lofs_sync
+block|,
+name|lofs_vget
 block|,
 name|lofs_fhtovp
 block|,

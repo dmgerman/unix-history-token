@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	1.2 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_vnops.c	1.3 (Berkeley) %G%  *  * $Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -132,8 +132,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOOKUP
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -370,8 +368,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_MKNOD
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -478,8 +474,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_CREATE
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -603,8 +597,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_OPEN
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -669,8 +661,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_CLOSE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -735,8 +725,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ACCESS
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -801,8 +789,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -908,8 +894,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SETATTR
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -974,8 +958,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READ
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1040,8 +1022,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_WRITE
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1106,8 +1086,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_IOCTL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1180,8 +1158,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SELECT
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1250,8 +1226,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_MMAP
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1316,8 +1290,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_FSYNC
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1348,10 +1320,6 @@ name|ap
 operator|->
 name|a_vp
 argument_list|)
-argument_list|,
-name|ap
-operator|->
-name|a_fflags
 argument_list|,
 name|ap
 operator|->
@@ -1386,8 +1354,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SEEK
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -1452,8 +1418,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_REMOVE
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1588,8 +1552,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LINK
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1691,8 +1653,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_RENAME
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -2215,8 +2175,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_MKDIR
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2355,8 +2313,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_RMDIR
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -2485,8 +2441,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_SYMLINK
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2593,8 +2547,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READDIR
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -2633,10 +2585,6 @@ argument_list|,
 name|ap
 operator|->
 name|a_cred
-argument_list|,
-name|ap
-operator|->
-name|a_eofflagp
 argument_list|)
 return|;
 block|}
@@ -2659,8 +2607,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READLINK
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -2725,8 +2671,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ABORTOP
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -2786,8 +2730,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_INACTIVE
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -2890,8 +2832,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_RECLAIM
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3000,8 +2940,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_LOCK
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3081,8 +3019,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3148,8 +3084,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOFS_DIAGNOSTIC
@@ -3214,8 +3148,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3300,8 +3232,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_PRINT
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3361,8 +3291,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ISLOCKED
-expr_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3412,8 +3340,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_ADVLOCK
-expr_stmt|;
 return|return
 name|VOP_ADVLOCK
 argument_list|(
@@ -3458,35 +3384,6 @@ end_macro
 begin_decl_stmt
 name|struct
 name|vop_blkatoff_args
-modifier|*
-name|ap
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * LOFS flat namespace lookup.  * Currently unsupported.  */
-end_comment
-
-begin_macro
-name|lofs_vget
-argument_list|(
-argument|ap
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|vop_vget_args
 modifier|*
 name|ap
 decl_stmt|;
@@ -3960,14 +3857,6 @@ name|lofs_blkatoff
 block|}
 block|,
 comment|/* blkatoff */
-block|{
-operator|&
-name|vop_vget_desc
-block|,
-name|lofs_vget
-block|}
-block|,
-comment|/* vget */
 block|{
 operator|&
 name|vop_valloc_desc
