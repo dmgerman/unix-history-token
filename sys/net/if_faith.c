@@ -1105,6 +1105,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET6
+end_ifdef
+
 begin_comment
 comment|/*  * XXX could be slow  * XXX could be layer violation to call sys/net from sys/netinet6  */
 end_comment
@@ -1244,6 +1250,11 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
