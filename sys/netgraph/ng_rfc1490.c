@@ -1185,7 +1185,7 @@ name|private
 operator|=
 name|NULL
 expr_stmt|;
-name|M_FREE
+name|FREE
 argument_list|(
 name|priv
 argument_list|,
