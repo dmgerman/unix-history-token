@@ -168,7 +168,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|int
 name|pccard_beep_select
 name|__P
 argument_list|(

@@ -137,6 +137,17 @@ begin_comment
 comment|/* Set power structure */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PIOCSBEEP
+value|_IOW('P', 11, int)
+end_define
+
+begin_comment
+comment|/* Select Beep */
+end_comment
+
 begin_comment
 comment|/*  *	Debug codes.  */
 end_comment
