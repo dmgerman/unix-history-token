@@ -1,11 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.1	%G%	*/
+comment|/*	ht.c	4.2	%G%	*/
 end_comment
 
 begin_comment
 comment|/*  * TJU16 tape driver  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_include
 include|#
@@ -793,6 +801,27 @@ condition|)
 do|;
 block|}
 end_block
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_macro
+name|htdummy
+argument_list|()
+end_macro
+
+begin_block
+block|{
+empty_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

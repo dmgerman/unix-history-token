@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.3	%G%	*/
+comment|/*	conf.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -201,6 +201,14 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
 begin_decl_stmt
 name|int
 name|hpstrategy
@@ -223,6 +231,11 @@ name|htclose
 argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -248,12 +261,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|rkopen
+argument_list|()
+decl_stmt|,
+name|rkstrategy
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|devsw
 name|devsw
 index|[]
 init|=
 block|{
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 literal|"hp"
 block|,
 name|hpstrategy
@@ -270,6 +298,8 @@ name|htopen
 block|,
 name|htclose
 block|,
+endif|#
+directive|endif
 literal|"up"
 block|,
 name|upstrategy
@@ -286,6 +316,14 @@ name|tmopen
 block|,
 name|tmclose
 block|,
+literal|"rk"
+block|,
+name|rkstrategy
+block|,
+name|rkopen
+block|,
+name|ullsys
+block|,
 literal|0
 block|,
 literal|0
@@ -296,6 +334,14 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
 
 begin_decl_stmt
 name|int
@@ -340,6 +386,11 @@ name|PHYSMBA1
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
