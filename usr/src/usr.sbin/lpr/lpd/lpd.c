@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpd.c	5.9 (Berkeley) %G%"
+literal|"@(#)lpd.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,8 @@ decl_stmt|,
 name|finet
 decl_stmt|,
 name|options
+init|=
+literal|0
 decl_stmt|,
 name|defreadfds
 decl_stmt|,
