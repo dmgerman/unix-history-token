@@ -319,6 +319,10 @@ parameter_list|,
 name|struct
 name|preloaded_file
 modifier|*
+parameter_list|,
+name|UINTN
+modifier|*
+name|mapkey
 parameter_list|)
 function_decl|;
 end_function_decl

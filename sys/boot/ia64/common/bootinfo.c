@@ -830,9 +830,9 @@ name|preloaded_file
 modifier|*
 name|fp
 parameter_list|,
-name|char
+name|UINTN
 modifier|*
-name|args
+name|mapkey
 parameter_list|)
 block|{
 name|char
@@ -1317,7 +1317,15 @@ argument_list|(
 literal|"bi_load: Can't read memory map\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|EINVAL
+return|;
 block|}
+operator|*
+name|mapkey
+operator|=
+name|key
+expr_stmt|;
 return|return
 operator|(
 literal|0
