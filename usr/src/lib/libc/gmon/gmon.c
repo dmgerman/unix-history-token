@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)gmon.c	4.12 (Berkeley) %G%"
+literal|"@(#)gmon.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,16 +107,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|char
-modifier|*
-name|minsbrk
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|ssiz
 decl_stmt|;
@@ -192,6 +182,11 @@ modifier|*
 name|sbrk
 parameter_list|()
 function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|minbrk
+decl_stmt|;
 comment|/* 	 *	round lowpc and highpc to multiples of the density we're using 	 *	so the rest of the scaling (here and in gprof) stays in ints. 	 */
 name|lowpc
 operator|=
@@ -427,7 +422,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|minsbrk
+name|minbrk
 operator|=
 name|sbrk
 argument_list|(
@@ -1393,60 +1388,6 @@ operator|=
 literal|3
 expr_stmt|;
 block|}
-block|}
-end_block
-
-begin_comment
-comment|/*  * This is a stub for the "brk" system call, which we want to  * catch so that it will not deallocate our data space.  * (of which the program is not aware)  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|curbrk
-decl_stmt|;
-end_decl_stmt
-
-begin_macro
-name|brk
-argument_list|(
-argument|addr
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|addr
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-if|if
-condition|(
-name|addr
-operator|<
-name|minsbrk
-condition|)
-name|addr
-operator|=
-name|minsbrk
-expr_stmt|;
-asm|asm("	chmk	$17");
-asm|asm("	jcc	1f");
-asm|asm("	jmp	cerror");
-asm|asm("1:");
-name|curbrk
-operator|=
-name|addr
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_block
 
