@@ -265,6 +265,32 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|SYSCTL_OPAQUE
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|cp_time
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|cp_time
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|cp_time
+argument_list|)
+argument_list|,
+literal|"LU"
+argument_list|,
+literal|"CPU time statistics"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|long
 name|tk_cancc
