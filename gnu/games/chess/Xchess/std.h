@@ -4,7 +4,7 @@ comment|/* This file contains code for X-CHESS.    Copyright (C) 1986 Free Softw
 end_comment
 
 begin_comment
-comment|/* RCS Info: $Revision: 1.2 $ on $Date: 86/11/23 17:18:32 $  *		   $Source: /users/faustus/xchess/RCS/std.h,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Standard definitions.  */
+comment|/* RCS Info: $Revision: 1.1.1.1 $ on $Date: 1993/06/12 14:41:06 $  *		   $Source: /home/ncvs/src/gnu/games/chess/Xchess/std.h,v $  * Copyright (c) 1986 Wayne A. Christopher, U. C. Berkeley CAD Group  *  * Standard definitions.  */
 end_comment
 
 begin_define
@@ -265,14 +265,9 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* extern char *sys_errlist[];  */
+end_comment
 
 begin_comment
 comment|/* Should use BSIZE instead of BUFSIZ... */
