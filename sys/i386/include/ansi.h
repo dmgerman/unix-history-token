@@ -44,6 +44,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_FFLAGS_T_
+value|__uint_least32_t
+end_define
+
+begin_comment
+comment|/* file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_MBSTATE_T_
 value|__mbstate_t
 end_define

@@ -15,6 +15,46 @@ directive|define
 name|_SYS_STAT_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/ansi.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_FFLAGS_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_FFLAGS_T_
+name|fflags_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* file flags */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_FFLAGS_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
@@ -141,7 +181,7 @@ name|int32_t
 name|st_blocks
 decl_stmt|;
 comment|/* blocks allocated for file */
-name|u_int32_t
+name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
@@ -252,7 +292,7 @@ name|u_int32_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
-name|u_int32_t
+name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
@@ -369,7 +409,7 @@ name|u_int32_t
 name|st_blksize
 decl_stmt|;
 comment|/* optimal blocksize for I/O */
-name|u_int32_t
+name|fflags_t
 name|st_flags
 decl_stmt|;
 comment|/* user defined flags for file */
@@ -1129,12 +1169,6 @@ ifndef|#
 directive|ifndef
 name|_KERNEL
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS

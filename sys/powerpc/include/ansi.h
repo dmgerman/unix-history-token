@@ -33,6 +33,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|_BSD_FFLAGS_T_
+value|__uint_least32_t
+end_define
+
+begin_comment
+comment|/* file flags */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_BSD_CLOCKID_T_
 value|int
 end_define
