@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.11 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -800,8 +800,12 @@ argument_list|(
 name|t
 argument_list|)
 operator|)
-operator|<
+operator|>
 name|prec
+operator|&&
+name|prec
+operator|>=
+literal|0
 condition|)
 name|size
 operator|=
