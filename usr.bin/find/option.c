@@ -278,6 +278,16 @@ name|F_EXECDIR
 block|}
 block|,
 block|{
+literal|"-false"
+block|,
+name|c_simple
+block|,
+name|f_not
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|"-flags"
 block|,
 name|c_flags
