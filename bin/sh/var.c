@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: var.c,v 1.12 1998/05/18 06:44:24 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,7 +881,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Set the value of a variable.  The flags argument is ored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
+comment|/*  * Set the value of a variable.  The flags argument is stored with the  * flags of the variable.  If val is NULL, the variable is unset.  */
 end_comment
 
 begin_function
@@ -1246,6 +1246,14 @@ modifier|*
 modifier|*
 name|vpp
 decl_stmt|;
+if|if
+condition|(
+name|aflag
+condition|)
+name|flags
+operator||=
+name|VEXPORT
+expr_stmt|;
 name|vpp
 operator|=
 name|hashvar
