@@ -438,14 +438,6 @@ operator|=
 literal|"Crystal Semiconductor CS4615 Audio accelerator"
 expr_stmt|;
 break|break;
-case|case
-name|CS4281_PCI_ID
-case|:
-name|s
-operator|=
-literal|"Crystal Semiconductor CS4281 Audio controller"
-expr_stmt|;
-break|break;
 block|}
 if|if
 condition|(
@@ -2250,7 +2242,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* notdef */
-comment|/* 	 * Turn off the Processor by turning off the software clock enable flag in  	 * the clock control register. 	 */
+comment|/* 	 * Turn off the Processor by turning off the software clock enable flag in 	 * the clock control register. 	 */
 if|#
 directive|if
 name|notdef
