@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	3.1	%H%	*/
+comment|/*	Locore.c	3.2	%H%	*/
 end_comment
 
 begin_include
@@ -978,7 +978,7 @@ name|struct
 name|pte
 name|Sysmap
 index|[
-literal|4
+literal|6
 operator|*
 name|NPTEPG
 index|]
