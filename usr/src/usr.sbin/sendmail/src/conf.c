@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.8 (Berkeley) %G%"
+literal|"@(#)conf.c	8.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5303,6 +5303,15 @@ name|struct
 name|flock
 name|lfd
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|lfd
+argument_list|,
+sizeof|sizeof
+name|lfd
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bitset
@@ -5358,20 +5367,6 @@ else|else
 name|action
 operator|=
 name|F_SETLKW
-expr_stmt|;
-name|lfd
-operator|.
-name|l_whence
-operator|=
-name|lfd
-operator|.
-name|l_start
-operator|=
-name|lfd
-operator|.
-name|l_len
-operator|=
-literal|0
 expr_stmt|;
 if|if
 condition|(
