@@ -13151,8 +13151,7 @@ comment|/* pr_limit - largest prime in the prime table */
 end_comment
 
 begin_decl_stmt
-name|unsigned
-name|long
+name|ubig
 modifier|*
 name|pr_limit
 init|=
