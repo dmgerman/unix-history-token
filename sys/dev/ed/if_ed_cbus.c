@@ -113,12 +113,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/pnpvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ed/if_edvar.h>
 end_include
 

@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/ethernet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -73,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<isa/pnpvar.h>
 end_include
 
 begin_include
