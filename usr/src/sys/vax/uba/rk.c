@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rk.c	6.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -259,23 +259,25 @@ block|,
 literal|0
 block|,
 comment|/* C=cyl 0 thru 814 */
+literal|15884
+block|,
+literal|393
+block|,
+comment|/* D=cyl 393 thru 633 */
 literal|0
 block|,
 literal|0
 block|,
-literal|0
+literal|11792
 block|,
-literal|0
+literal|634
 block|,
-literal|0
-block|,
-literal|0
-block|,
+comment|/* F=cyl 634 thru 814 */
 literal|27786
 block|,
 literal|393
 block|,
-comment|/* G=cyl 393 thru 813 */
+comment|/* G=cyl 393 thru 814, should be 27698 */
 literal|0
 block|,
 literal|0
