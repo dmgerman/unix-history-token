@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.17 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,10 +114,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
-name|opcodes
+name|_opcodes
 index|[]
 init|=
 block|{
@@ -157,9 +164,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
-name|rcodes
+name|_rcodes
 index|[]
 init|=
 block|{
@@ -197,6 +205,11 @@ literal|"NOCHANGE"
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|p_query
@@ -306,7 +319,7 @@ name|file
 argument_list|,
 literal|"\topcode = %s"
 argument_list|,
-name|opcodes
+name|_opcodes
 index|[
 name|hp
 operator|->
@@ -334,7 +347,7 @@ name|file
 argument_list|,
 literal|", rcode = %s\n"
 argument_list|,
-name|rcodes
+name|_rcodes
 index|[
 name|hp
 operator|->
@@ -1735,7 +1748,7 @@ block|}
 break|break;
 endif|#
 directive|endif
-endif|ALLOW_T_UNSPEC
+comment|/* ALLOW_T_UNSPEC */
 default|default:
 name|fprintf
 argument_list|(
@@ -2039,7 +2052,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|ALLOW_T_UNSPEC
+comment|/* ALLOW_T_UNSPEC */
 default|default:
 return|return
 operator|(
