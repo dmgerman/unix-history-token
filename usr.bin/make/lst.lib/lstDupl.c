@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstDupl.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lstDupl.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,36 +42,34 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_Duplicate --  *	Duplicate an entire list. If a function to copy a ClientData is  *	given, the individual client elements will be duplicated as well.  *  * Results:  *	The new Lst structure or NILLST if failure.  *  * Side Effects:  *	A new list is created.  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|Lst
 name|Lst_Duplicate
-argument_list|(
+parameter_list|(
 name|l
-argument_list|,
+parameter_list|,
 name|copyProc
-argument_list|)
+parameter_list|)
 name|Lst
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* the list to duplicate */
-end_comment
-
-begin_function_decl
-name|ClientData
-function_decl|(
-modifier|*
-name|copyProc
-function_decl|)
-parameter_list|()
-function_decl|;
+comment|/* A function to duplicate each ClientData */
+function_decl|ClientData
+parameter_list|(
+function_decl|*copyProc
 end_function_decl
 
-begin_comment
-comment|/* A function to duplicate each ClientData */
-end_comment
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

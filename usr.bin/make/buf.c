@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)buf.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)buf.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,11 @@ name|int
 name|byte
 decl_stmt|;
 block|{
+name|int
+name|nbytes
+init|=
+literal|1
+decl_stmt|;
 name|bp
 operator|->
 name|left
@@ -153,7 +158,7 @@ name|BufExpand
 argument_list|(
 name|bp
 argument_list|,
-literal|1
+name|nbytes
 argument_list|)
 expr_stmt|;
 operator|*

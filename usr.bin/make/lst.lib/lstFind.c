@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstFind.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lstFind.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,36 +42,39 @@ begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Lst_Find --  *	Find a node on the given list using the given comparison function  *	and the given datum.  *  * Results:  *	The found node or NILLNODE if none matches.  *  * Side Effects:  *	None.  *  *-----------------------------------------------------------------------  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|LstNode
 name|Lst_Find
-argument_list|(
+parameter_list|(
 name|l
-argument_list|,
+parameter_list|,
 name|d
-argument_list|,
+parameter_list|,
 name|cProc
-argument_list|)
+parameter_list|)
 name|Lst
 name|l
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ClientData
 name|d
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|cProc
-function_decl|)
-parameter_list|()
-function_decl|;
+function_decl|int
+parameter_list|(
+function_decl|*cProc
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|,
+name|ClientData
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

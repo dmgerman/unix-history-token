@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstFindFrom.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lstFindFrom.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,16 +73,22 @@ name|d
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
 specifier|register
 name|int
-function_decl|(
-modifier|*
-name|cProc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*cProc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|,
+name|ClientData
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{

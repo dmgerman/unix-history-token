@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	8.2 (Berkeley) 1/2/94"
+literal|"@(#)dir.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,7 +29,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
+comment|/*-  * dir.c --  *	Directory searching using wildcards and/or normal names...  *	Used both for source wildcarding in the Makefile and for finding  *	implicit sources.  *  * The interface for this module is:  *	Dir_Init  	    Initialize the module.  *  *	Dir_End  	    Cleanup the module.  *  *	Dir_HasWildcards    Returns TRUE if the name given it needs to  *	    	  	    be wildcard-expanded.  *  *	Dir_Expand	    Given a pattern and a path, return a Lst of names  *	    	  	    which match the pattern on the search path.  *  *	Dir_FindFile	    Searches for a file on a given search path.  *	    	  	    If it exists, the entire path is returned.  *	    	  	    Otherwise NULL is returned.  *  *	Dir_MTime 	    Return the modification time of a node. The file  *	    	  	    is searched for along the default search path.  *	    	  	    The path and mtime fields of the node are filled  *	    	  	    in.  *  *	Dir_AddDir	    Add a directory to a search path.  *  *	Dir_MakeFlags	    Given a search path and a command flag, create  *	    	  	    a string with each of the directories in the path  *	    	  	    preceded by the command flag and all of them  *	    	  	    separated by a space.  *  *	Dir_Destroy	    Destroy an element of a search path. Frees up all  *	    	  	    things that can be freed for the element as long  *	    	  	    as the element is no longer referenced by any other  *	    	  	    search path.  *	Dir_ClearPath	    Resets a search path to the empty list.  *  * For debugging:  *	Dir_PrintDirectories	Print stats about the directory cache.  */
 end_comment
 
 begin_include
@@ -153,11 +153,9 @@ name|DirFindName
 name|__P
 argument_list|(
 operator|(
-name|Path
-operator|*
+name|ClientData
 operator|,
-name|char
-operator|*
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -228,8 +226,9 @@ name|DirPrintWord
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
+operator|,
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -242,8 +241,9 @@ name|DirPrintDir
 name|__P
 argument_list|(
 operator|(
-name|Path
-operator|*
+name|ClientData
+operator|,
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -310,6 +310,62 @@ block|}
 end_function
 
 begin_comment
+comment|/*-  *-----------------------------------------------------------------------  * Dir_End --  *	cleanup things for this module  *  * Results:  *	none  *  * Side Effects:  *	none  *-----------------------------------------------------------------------  */
+end_comment
+
+begin_function
+name|void
+name|Dir_End
+parameter_list|()
+block|{
+name|dot
+operator|->
+name|refCount
+operator|-=
+literal|1
+expr_stmt|;
+name|Dir_Destroy
+argument_list|(
+operator|(
+name|ClientData
+operator|)
+name|dot
+argument_list|)
+expr_stmt|;
+name|Dir_ClearPath
+argument_list|(
+name|dirSearchPath
+argument_list|)
+expr_stmt|;
+name|Lst_Destroy
+argument_list|(
+name|dirSearchPath
+argument_list|,
+name|NOFREE
+argument_list|)
+expr_stmt|;
+name|Dir_ClearPath
+argument_list|(
+name|openDirectories
+argument_list|)
+expr_stmt|;
+name|Lst_Destroy
+argument_list|(
+name|openDirectories
+argument_list|,
+name|NOFREE
+argument_list|)
+expr_stmt|;
+name|Hash_DeleteTable
+argument_list|(
+operator|&
+name|mtimes
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * DirFindName --  *	See if the Path structure describes the same directory as the  *	given one by comparing their names. Called from Dir_AddDir via  *	Lst_Find when searching the list of open directories.  *  * Results:  *	0 if it is the same. Non-zero otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
 end_comment
 
@@ -322,13 +378,11 @@ name|p
 parameter_list|,
 name|dname
 parameter_list|)
-name|Path
-modifier|*
+name|ClientData
 name|p
 decl_stmt|;
 comment|/* Current name */
-name|char
-modifier|*
+name|ClientData
 name|dname
 decl_stmt|;
 comment|/* Desired name */
@@ -337,10 +391,20 @@ return|return
 operator|(
 name|strcmp
 argument_list|(
+operator|(
+operator|(
+name|Path
+operator|*
+operator|)
 name|p
+operator|)
 operator|->
 name|name
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|dname
 argument_list|)
 operator|)
@@ -1081,21 +1145,33 @@ name|int
 name|DirPrintWord
 parameter_list|(
 name|word
+parameter_list|,
+name|dummy
 parameter_list|)
-name|char
-modifier|*
+name|ClientData
 name|word
+decl_stmt|;
+name|ClientData
+name|dummy
 decl_stmt|;
 block|{
 name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|word
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|dummy
+condition|?
+literal|0
+else|:
 literal|0
 operator|)
 return|;
@@ -1464,7 +1540,10 @@ name|expansions
 argument_list|,
 name|DirPrintWord
 argument_list|,
-name|NULL
+operator|(
+name|ClientData
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 name|fputc
@@ -1819,6 +1898,12 @@ while|while
 condition|(
 name|p2
 operator|>=
+name|name
+operator|&&
+name|p1
+operator|>=
+name|p
+operator|->
 name|name
 operator|&&
 operator|*
@@ -2260,6 +2345,9 @@ name|Hash_SetValue
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stb
 operator|.
 name|st_mtime
@@ -2563,6 +2651,9 @@ name|Hash_SetValue
 argument_list|(
 name|entry
 argument_list|,
+operator|(
+name|long
+operator|)
 name|stb
 operator|.
 name|st_mtime
@@ -2703,9 +2794,12 @@ condition|)
 block|{
 name|fullName
 operator|=
+name|strdup
+argument_list|(
 name|gn
 operator|->
 name|name
+argument_list|)
 expr_stmt|;
 block|}
 name|entry
@@ -2747,6 +2841,9 @@ argument_list|(
 operator|(
 name|time_t
 operator|)
+operator|(
+name|long
+operator|)
 name|Hash_GetValue
 argument_list|(
 name|entry
@@ -2763,6 +2860,9 @@ name|st_mtime
 operator|=
 operator|(
 name|time_t
+operator|)
+operator|(
+name|long
 operator|)
 name|Hash_GetValue
 argument_list|(
@@ -2801,6 +2901,19 @@ operator|&
 name|OP_MEMBER
 condition|)
 block|{
+if|if
+condition|(
+name|fullName
+operator|!=
+name|gn
+operator|->
+name|path
+condition|)
+name|free
+argument_list|(
+name|fullName
+argument_list|)
+expr_stmt|;
 return|return
 name|Arch_MemMTime
 argument_list|(
@@ -3110,7 +3223,7 @@ continue|continue;
 block|}
 endif|#
 directive|endif
-endif|sun
+comment|/* sun */
 operator|(
 name|void
 operator|)
@@ -3196,13 +3309,17 @@ name|Dir_CopyDir
 parameter_list|(
 name|p
 parameter_list|)
-name|Path
-modifier|*
+name|ClientData
 name|p
 decl_stmt|;
-comment|/* Directory descriptor to copy */
 block|{
+operator|(
+operator|(
+name|Path
+operator|*
+operator|)
 name|p
+operator|)
 operator|->
 name|refCount
 operator|+=
@@ -3352,14 +3469,23 @@ begin_function
 name|void
 name|Dir_Destroy
 parameter_list|(
-name|p
+name|pp
 parameter_list|)
-name|Path
-modifier|*
-name|p
+name|ClientData
+name|pp
 decl_stmt|;
 comment|/* The directory descriptor to nuke */
 block|{
+name|Path
+modifier|*
+name|p
+init|=
+operator|(
+name|Path
+operator|*
+operator|)
+name|pp
+decl_stmt|;
 name|p
 operator|->
 name|refCount
@@ -3471,6 +3597,9 @@ argument_list|)
 expr_stmt|;
 name|Dir_Destroy
 argument_list|(
+operator|(
+name|ClientData
+operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -3708,23 +3837,37 @@ name|int
 name|DirPrintDir
 parameter_list|(
 name|p
+parameter_list|,
+name|dummy
 parameter_list|)
-name|Path
-modifier|*
+name|ClientData
 name|p
+decl_stmt|;
+name|ClientData
+name|dummy
 decl_stmt|;
 block|{
 name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
+operator|(
+operator|(
+name|Path
+operator|*
+operator|)
 name|p
+operator|)
 operator|->
 name|name
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|dummy
+condition|?
+literal|0
+else|:
 literal|0
 operator|)
 return|;

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cond.c	8.2 (Berkeley) 1/2/94"
+literal|"@(#)cond.c	8.3 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,11 +151,9 @@ name|CondStrMatch
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
 operator|,
-name|char
-operator|*
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -899,6 +897,10 @@ index|[
 name|argLen
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|p1
+decl_stmt|;
 name|Boolean
 name|result
 decl_stmt|;
@@ -916,6 +918,9 @@ argument_list|(
 name|arg
 argument_list|,
 name|VAR_CMD
+argument_list|,
+operator|&
+name|p1
 argument_list|)
 operator|!=
 operator|(
@@ -937,6 +942,15 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p1
+condition|)
+name|free
+argument_list|(
+name|p1
+argument_list|)
+expr_stmt|;
 name|arg
 index|[
 name|argLen
@@ -968,12 +982,10 @@ name|string
 parameter_list|,
 name|pattern
 parameter_list|)
-name|char
-modifier|*
+name|ClientData
 name|string
 decl_stmt|;
-name|char
-modifier|*
+name|ClientData
 name|pattern
 decl_stmt|;
 block|{
@@ -982,8 +994,16 @@ operator|(
 operator|!
 name|Str_Match
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|string
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|pattern
 argument_list|)
 operator|)
@@ -1662,6 +1682,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|condExpr
 argument_list|)
@@ -1732,6 +1756,10 @@ operator|&&
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|condExpr
 argument_list|)
@@ -1791,6 +1819,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|condExpr
 argument_list|)
@@ -1861,6 +1893,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|condExpr
 argument_list|)
@@ -2441,6 +2477,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|condExpr
 argument_list|)
@@ -2899,10 +2939,7 @@ name|arglen
 operator|+=
 literal|1
 control|)
-block|{
-comment|/* void */
-empty_stmt|;
-block|}
+continue|continue;
 if|if
 condition|(
 name|condExpr
@@ -2966,6 +3003,10 @@ name|p
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)

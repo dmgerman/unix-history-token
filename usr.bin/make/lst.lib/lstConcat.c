@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstConcat.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lstConcat.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,6 +169,17 @@ operator|->
 name|lastPtr
 operator|->
 name|nextPtr
+operator|=
+name|list2
+operator|->
+name|firstPtr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|list1
+operator|->
+name|firstPtr
 operator|=
 name|list2
 operator|->

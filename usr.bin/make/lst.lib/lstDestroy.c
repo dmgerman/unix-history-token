@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lstDestroy.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)lstDestroy.c	8.2 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,16 +55,20 @@ name|l
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_expr_stmt
 specifier|register
 name|void
-function_decl|(
-modifier|*
-name|freeProc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*freeProc
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -100,6 +104,35 @@ block|{
 comment|/* 	 * Note the check for l == (Lst)0 to catch uninitialized static Lst's. 	 * Gross, but useful. 	 */
 return|return;
 block|}
+comment|/* To ease scanning */
+if|if
+condition|(
+name|list
+operator|->
+name|lastPtr
+operator|!=
+name|NilListNode
+condition|)
+name|list
+operator|->
+name|lastPtr
+operator|->
+name|nextPtr
+operator|=
+name|NilListNode
+expr_stmt|;
+else|else
+block|{
+name|free
+argument_list|(
+operator|(
+name|Address
+operator|)
+name|l
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|freeProc
@@ -116,12 +149,6 @@ init|;
 name|ln
 operator|!=
 name|NilListNode
-operator|&&
-name|tln
-operator|!=
-name|list
-operator|->
-name|firstPtr
 condition|;
 name|ln
 operator|=
@@ -167,12 +194,6 @@ init|;
 name|ln
 operator|!=
 name|NilListNode
-operator|&&
-name|tln
-operator|!=
-name|list
-operator|->
-name|firstPtr
 condition|;
 name|ln
 operator|=

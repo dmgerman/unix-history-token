@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nonints.h	8.3 (Berkeley) 3/19/94  */
+comment|/*-  * Copyright (c) 1988, 1989, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  * Copyright (c) 1989 by Berkeley Softworks  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Adam de Boor.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nonints.h	8.4 (Berkeley) 4/28/95  */
 end_comment
 
 begin_comment
@@ -109,6 +109,18 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|Arch_Init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Arch_End
 name|__P
 argument_list|(
 operator|(
@@ -231,7 +243,6 @@ name|Error
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -247,7 +258,6 @@ name|Fatal
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -263,7 +273,6 @@ name|Punt
 name|__P
 argument_list|(
 operator|(
-specifier|const
 name|char
 operator|*
 operator|,
@@ -280,6 +289,20 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|PrintAddr
+name|__P
+argument_list|(
+operator|(
+name|ClientData
+operator|,
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -304,7 +327,7 @@ name|emalloc
 name|__P
 argument_list|(
 operator|(
-name|u_int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -334,7 +357,6 @@ argument_list|(
 operator|(
 name|int
 operator|,
-specifier|const
 name|char
 operator|*
 operator|,
@@ -428,6 +450,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|Parse_End
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|Parse_FromString
 name|__P
 argument_list|(
@@ -454,6 +488,30 @@ end_decl_stmt
 begin_comment
 comment|/* str.c */
 end_comment
+
+begin_decl_stmt
+name|void
+name|str_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|str_end
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -487,6 +545,8 @@ operator|*
 operator|,
 name|int
 operator|*
+operator|,
+name|Boolean
 operator|)
 argument_list|)
 decl_stmt|;
@@ -615,8 +675,9 @@ name|Suff_EndTransform
 name|__P
 argument_list|(
 operator|(
-name|GNode
-operator|*
+name|ClientData
+operator|,
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -726,6 +787,18 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|Suff_End
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|Suff_PrintAll
 name|__P
 argument_list|(
@@ -743,6 +816,18 @@ end_comment
 begin_decl_stmt
 name|void
 name|Targ_Init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Targ_End
 name|__P
 argument_list|(
 operator|(
@@ -854,8 +939,9 @@ name|Targ_PrintCmd
 name|__P
 argument_list|(
 operator|(
-name|char
-operator|*
+name|ClientData
+operator|,
+name|ClientData
 operator|)
 argument_list|)
 decl_stmt|;
@@ -984,6 +1070,10 @@ operator|*
 operator|,
 name|GNode
 operator|*
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1067,6 +1157,18 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|Var_Init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|Var_End
 name|__P
 argument_list|(
 operator|(
