@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)trace.c	5.5 (Berkeley) %G%"
+literal|"@(#)trace.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -468,15 +468,26 @@ if|if
 condition|(
 name|hp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s: unknown\n"
+name|stderr
+argument_list|,
+literal|"trace: %s: "
 argument_list|,
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
