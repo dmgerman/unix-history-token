@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.11 (Berkeley) %G%"
+literal|"@(#)main.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1667,6 +1667,12 @@ name|ep
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|chrsave
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 name|chrsave
