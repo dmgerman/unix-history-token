@@ -4135,11 +4135,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|free
-argument_list|(
-name|datfile
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|2
@@ -4147,8 +4142,37 @@ argument_list|,
 operator|(
 name|stderr
 operator|,
-literal|"FALSE (no \".dat\" file)\n"
+literal|"FALSE (no readable \".dat\" file)\n"
 operator|)
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|<
+literal|2
+condition|)
+name|DPRINTF
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+name|stderr
+operator|,
+literal|"Warning: file \"%s\" unreadable\n"
+operator|,
+name|datfile
+operator|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|free
+argument_list|(
+name|datfile
 argument_list|)
 expr_stmt|;
 return|return
