@@ -602,7 +602,8 @@ name|parent
 argument_list|,
 literal|"acpi_perf"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 operator|!=
 name|NULL
@@ -650,7 +651,8 @@ literal|0
 argument_list|,
 literal|"acpi_perf"
 argument_list|,
-literal|0
+operator|-
+literal|1
 argument_list|)
 operator|==
 name|NULL
