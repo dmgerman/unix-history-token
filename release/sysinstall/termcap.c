@@ -98,6 +98,13 @@ operator|!=
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"SYSINSTALL_DEBUG"
+argument_list|)
+condition|)
 name|DebugFD
 operator|=
 name|open
@@ -112,6 +119,12 @@ name|O_TRUNC
 argument_list|,
 literal|0644
 argument_list|)
+expr_stmt|;
+else|else
+name|DebugFD
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 if|if
 condition|(
