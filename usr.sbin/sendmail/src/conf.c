@@ -5563,7 +5563,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: conf.c,v 1.7 1995/05/30 03:52:08 rgrimes Exp $"
+literal|"@(#)$Id: conf.c,v 1.8 1995/12/02 18:17:13 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6054,34 +6054,6 @@ include|#
 directive|include
 file|<sys/exec.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|PS_STRINGS
-end_undef
-
-begin_comment
-comment|/* XXX This is broken due to needing<machine/pmap.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PROCTITLEPAD
-value|'\0'
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
