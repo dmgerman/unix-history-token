@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.143
+literal|3.144
 operator|%
 name|G
 operator|%
@@ -395,6 +395,13 @@ argument_list|,
 name|m
 operator|->
 name|m_s_rwset
+argument_list|)
+expr_stmt|;
+name|rewrite
+argument_list|(
+name|mvp
+argument_list|,
+literal|4
 argument_list|)
 expr_stmt|;
 name|cataddr
