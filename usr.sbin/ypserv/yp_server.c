@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.28 1999/04/29 20:24:00 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.29 1999/04/30 16:44:17 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1863,6 +1863,12 @@ name|YPXFR_RETURN
 argument_list|(
 argument|YPXFR_XFRERR
 argument_list|)
+comment|/* 		 * Just to safe, prevent PR #10970 from biting us in 		 * the unlikely case that execing ypxfr fails. We don't 		 * want to have any child processes spawned from this 		 * child process. 		 */
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 case|case
@@ -2396,12 +2402,12 @@ operator|&
 name|result
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Returning NULL prevents the dispatcher from calling 	 * svc_sendreply() since we already did it. 	 */
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+comment|/* 	 * Proper fix for PR #10970: exit here so that we don't risk 	 * having a child spawned from this sub-process. 	 */
+name|_exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 name|ypresp_master
 modifier|*
