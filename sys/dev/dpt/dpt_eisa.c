@@ -1,21 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *       Copyright (c) 1997 by Matthew N. Dodd<winter@jurai.net>  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997, 2000 Matthew N. Dodd<winter@jurai.net>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
-
-begin_comment
-comment|/*  * Credits:  Based on and part of the DPT driver for FreeBSD written and  *           maintained by Simon Shapiro<shimon@simon-shapiro.org>  */
-end_comment
-
-begin_comment
-comment|/*  * $FreeBSD$  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_dpt.h"
-end_include
 
 begin_include
 include|#
@@ -27,24 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
 end_include
 
 begin_include
@@ -92,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/eisa/eisaconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cam/scsi/scsi_all.h>
 end_include
 
@@ -99,36 +73,6 @@ begin_include
 include|#
 directive|include
 file|<dev/dpt/dpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/eisa/eisaconf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
 end_include
 
 begin_define
@@ -159,12 +103,20 @@ name|DPT_EISA_DPT2402
 value|0x12142402
 end_define
 
+begin_comment
+comment|/* DPT PM2012A/9X	*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DPT_EISA_DPTA401
 value|0x1214A401
 end_define
+
+begin_comment
+comment|/* DPT PM2012B/9X	*/
+end_comment
 
 begin_define
 define|#
@@ -173,12 +125,20 @@ name|DPT_EISA_DPTA402
 value|0x1214A402
 end_define
 
+begin_comment
+comment|/* DPT PM2012B2/9X	*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DPT_EISA_DPTA410
 value|0x1214A410
 end_define
+
+begin_comment
+comment|/* DPT PM2x22A/9X	*/
+end_comment
 
 begin_define
 define|#
@@ -187,12 +147,20 @@ name|DPT_EISA_DPTA411
 value|0x1214A411
 end_define
 
+begin_comment
+comment|/* DPT Spectre		*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DPT_EISA_DPTA412
 value|0x1214A412
 end_define
+
+begin_comment
+comment|/* DPT PM2021A/9X	*/
+end_comment
 
 begin_define
 define|#
@@ -201,12 +169,20 @@ name|DPT_EISA_DPTA420
 value|0x1214A420
 end_define
 
+begin_comment
+comment|/* DPT Smart Cache IV (PM2042) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DPT_EISA_DPTA501
 value|0x1214A501
 end_define
+
+begin_comment
+comment|/* DPT PM2012B1/9X"	*/
+end_comment
 
 begin_define
 define|#
@@ -215,12 +191,20 @@ name|DPT_EISA_DPTA502
 value|0x1214A502
 end_define
 
+begin_comment
+comment|/* DPT PM2012Bx/9X	*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DPT_EISA_DPTA701
 value|0x1214A701
 end_define
+
+begin_comment
+comment|/* DPT PM2011B1/9X	*/
+end_comment
 
 begin_define
 define|#
@@ -229,19 +213,31 @@ name|DPT_EISA_DPTBC01
 value|0x1214BC01
 end_define
 
-begin_define
-define|#
-directive|define
-name|DPT_EISA_NEC8200
-value|0x12148200
-end_define
+begin_comment
+comment|/* DPT PM3011/7X ESDI	*/
+end_comment
 
 begin_define
 define|#
 directive|define
-name|DPT_EISA_ATT2408
+name|DPT_EISA_DPT8200
+value|0x12148200
+end_define
+
+begin_comment
+comment|/* NEC EATA SCSI	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DPT_EISA_DPT2408
 value|0x12142408
 end_define
+
+begin_comment
+comment|/* ATT EATA SCSI	*/
+end_comment
 
 begin_comment
 comment|/* Function Prototypes */
@@ -255,6 +251,26 @@ modifier|*
 name|dpt_eisa_match
 parameter_list|(
 name|eisa_id_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|dpt_eisa_probe
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|dpt_eisa_attach
+parameter_list|(
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -410,14 +426,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|unit
-init|=
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-name|int
 name|s
 decl_stmt|;
 name|int
@@ -426,6 +434,11 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 name|rid
 operator|=
@@ -465,90 +478,9 @@ argument_list|,
 literal|"No I/O space?!\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
-name|dpt
+name|error
 operator|=
-name|dpt_alloc
-argument_list|(
-name|unit
-argument_list|,
-name|rman_get_bustag
-argument_list|(
-name|io
-argument_list|)
-argument_list|,
-name|rman_get_bushandle
-argument_list|(
-name|io
-argument_list|)
-operator|+
-name|DPT_EISA_EATA_REG_OFFSET
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dpt
-operator|==
-name|NULL
-condition|)
-goto|goto
-name|bad
-goto|;
-comment|/* Allocate a dmatag representing the capabilities of this attachment */
-comment|/* XXX Should be a child of the EISA bus dma tag */
-if|if
-condition|(
-name|bus_dma_tag_create
-argument_list|(
-comment|/*parent*/
-name|NULL
-argument_list|,
-comment|/*alignemnt*/
-literal|1
-argument_list|,
-comment|/*boundary*/
-literal|0
-argument_list|,
-comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR_32BIT
-argument_list|,
-comment|/*highaddr*/
-name|BUS_SPACE_MAXADDR
-argument_list|,
-comment|/*filter*/
-name|NULL
-argument_list|,
-comment|/*filterarg*/
-name|NULL
-argument_list|,
-comment|/*maxsize*/
-name|BUS_SPACE_MAXSIZE_32BIT
-argument_list|,
-comment|/*nsegments*/
-name|BUS_SPACE_UNRESTRICTED
-argument_list|,
-comment|/*maxsegsz*/
-name|BUS_SPACE_MAXSIZE_32BIT
-argument_list|,
-comment|/*flags*/
-literal|0
-argument_list|,
-operator|&
-name|dpt
-operator|->
-name|parent_dmat
-argument_list|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|dpt_free
-argument_list|(
-name|dpt
-argument_list|)
+name|ENOMEM
 expr_stmt|;
 goto|goto
 name|bad
@@ -592,6 +524,105 @@ argument_list|,
 literal|"No irq?!\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+name|dpt
+operator|=
+name|dpt_alloc
+argument_list|(
+name|dev
+argument_list|,
+name|rman_get_bustag
+argument_list|(
+name|io
+argument_list|)
+argument_list|,
+name|rman_get_bushandle
+argument_list|(
+name|io
+argument_list|)
+operator|+
+name|DPT_EISA_EATA_REG_OFFSET
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dpt
+operator|==
+name|NULL
+condition|)
+block|{
+name|error
+operator|=
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
+comment|/* Allocate a dmatag representing the capabilities of this attachment */
+comment|/* XXX Should be a child of the EISA bus dma tag */
+if|if
+condition|(
+name|bus_dma_tag_create
+argument_list|(
+comment|/* parent    */
+name|NULL
+argument_list|,
+comment|/* alignemnt */
+literal|1
+argument_list|,
+comment|/* boundary  */
+literal|0
+argument_list|,
+comment|/* lowaddr   */
+name|BUS_SPACE_MAXADDR_32BIT
+argument_list|,
+comment|/* highaddr  */
+name|BUS_SPACE_MAXADDR
+argument_list|,
+comment|/* filter    */
+name|NULL
+argument_list|,
+comment|/* filterarg */
+name|NULL
+argument_list|,
+comment|/* maxsize   */
+name|BUS_SPACE_MAXSIZE_32BIT
+argument_list|,
+comment|/* nsegments */
+name|BUS_SPACE_UNRESTRICTED
+argument_list|,
+comment|/* maxsegsz  */
+name|BUS_SPACE_MAXSIZE_32BIT
+argument_list|,
+comment|/* flags     */
+literal|0
+argument_list|,
+operator|&
+name|dpt
+operator|->
+name|parent_dmat
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|dpt_free
+argument_list|(
+name|dpt
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -616,6 +647,10 @@ argument_list|(
 name|dpt
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
@@ -626,6 +661,13 @@ argument_list|(
 name|dpt
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|bus_setup_intr
 argument_list|(
 name|dev
@@ -641,14 +683,27 @@ argument_list|,
 operator|&
 name|ih
 argument_list|)
-expr_stmt|;
-name|splx
+condition|)
+block|{
+name|device_printf
 argument_list|(
-name|s
+name|dev
+argument_list|,
+literal|"Unable to register interrupt handler\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 name|bad
 label|:
@@ -683,8 +738,9 @@ name|irq
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
-literal|1
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -710,117 +766,45 @@ block|{
 case|case
 name|DPT_EISA_DPT2402
 case|:
-return|return
-operator|(
-literal|"DPT PM2012A/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA401
 case|:
-return|return
-operator|(
-literal|"DPT PM2012B/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA402
 case|:
-return|return
-operator|(
-literal|"DPT PM2012B2/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA410
 case|:
-return|return
-operator|(
-literal|"DPT PM2x22A/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA411
 case|:
-return|return
-operator|(
-literal|"DPT Spectre"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA412
 case|:
-return|return
-operator|(
-literal|"DPT PM2021A/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA420
 case|:
-return|return
-operator|(
-literal|"DPT Smart Cache IV (PM2042)"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA501
 case|:
-return|return
-operator|(
-literal|"DPT PM2012B1/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA502
 case|:
-return|return
-operator|(
-literal|"DPT PM2012Bx/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTA701
 case|:
-return|return
-operator|(
-literal|"DPT PM2011B1/9X"
-operator|)
-return|;
-break|break;
 case|case
 name|DPT_EISA_DPTBC01
 case|:
-return|return
-operator|(
-literal|"DPT PM3011/7X ESDI"
-operator|)
-return|;
-break|break;
 case|case
-name|DPT_EISA_NEC8200
+name|DPT_EISA_DPT8200
+case|:
+case|case
+name|DPT_EISA_DPT2408
 case|:
 return|return
 operator|(
-literal|"NEC EATA SCSI"
-operator|)
-return|;
-break|break;
-case|case
-name|DPT_EISA_ATT2408
-case|:
-return|return
-operator|(
-literal|"ATT EATA SCSI"
+literal|"DPT SCSI Host Bus Adapter"
 operator|)
 return|;
 break|break;
@@ -876,10 +860,11 @@ literal|"dpt"
 block|,
 name|dpt_eisa_methods
 block|,
-literal|1
-block|,
-comment|/* unused */
-block|}
+sizeof|sizeof
+argument_list|(
+name|dpt_softc_t
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 
