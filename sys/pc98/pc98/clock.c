@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/lock.h>
 end_include
 
@@ -67,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
 end_include
 
 begin_include
@@ -103,6 +91,18 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -1329,16 +1329,6 @@ name|high
 decl_stmt|,
 name|low
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
-if|if
-condition|(
-operator|!
-name|kdb_active
-condition|)
-endif|#
-directive|endif
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -1369,16 +1359,6 @@ argument_list|(
 name|TIMER_CNTR0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KDB
-if|if
-condition|(
-operator|!
-name|kdb_active
-condition|)
-endif|#
-directive|endif
 name|mtx_unlock_spin
 argument_list|(
 operator|&
@@ -1501,7 +1481,21 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 */
+comment|/* 	 * Read the counter first, so that the rest of the setup overhead is 	 * counted.  Guess the initial overhead is 20 usec (on most systems it 	 * takes about 1.5 usec for each of the i/o's in getit().  The loop 	 * takes about 6 usec on a 486/33 and 13 usec on a 386/20.  The 	 * multiplications and divisions to scale the count take a while). 	 * 	 * However, if ddb is active then use a fake counter since reading 	 * the i8254 counter involves acquiring a lock.  ddb must not do 	 * locking for many reasons, but it calls here for at least atkbd 	 * input. 	 */
+ifdef|#
+directive|ifdef
+name|KDB
+if|if
+condition|(
+name|kdb_active
+condition|)
+name|prev_tick
+operator|=
+literal|1
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|prev_tick
 operator|=
 name|getit
@@ -1582,10 +1576,10 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DDB
+name|KDB
 if|if
 condition|(
-name|db_active
+name|kdb_active
 condition|)
 block|{
 name|outb
@@ -1598,8 +1592,18 @@ expr_stmt|;
 name|tick
 operator|=
 name|prev_tick
-operator|+
+operator|-
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|tick
+operator|<=
+literal|0
+condition|)
+name|tick
+operator|=
+name|timer0_max_count
 expr_stmt|;
 block|}
 else|else
