@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.19 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,12 +138,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pte.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/descrip.h>
 end_include
 
 begin_decl_stmt
@@ -4054,25 +4048,9 @@ init|=
 block|{
 literal|"???"
 block|,
-literal|"kernel"
-block|,
-literal|"fsys"
-block|,
-literal|"file"
-block|,
-literal|"dir"
-block|,
-literal|"bdev"
-block|,
-literal|"cdev"
-block|,
-literal|"proc"
+literal|"inode"
 block|,
 literal|"socket"
-block|,
-literal|"domain"
-block|,
-literal|"tty"
 block|}
 decl_stmt|;
 name|nf
@@ -4206,7 +4184,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"   LOC   TYPE    FLG  CNT   INO    OFFS|SOCK\n"
+literal|"   LOC   TYPE    FLG  CNT  MSG    DATA    OFFSET\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -4266,7 +4244,7 @@ name|fp
 operator|->
 name|f_type
 operator|<=
-name|DTYPE_TERMINAL
+name|DTYPE_SOCKET
 condition|)
 name|printf
 argument_list|(
@@ -4325,7 +4303,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%4d"
+literal|"  %3d"
 argument_list|,
 name|mask
 argument_list|(
@@ -4337,20 +4315,32 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%9.1x"
+literal|"  %3d"
+argument_list|,
+name|mask
+argument_list|(
+name|fp
+operator|->
+name|f_msgcount
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"  %8.1x"
 argument_list|,
 name|fp
 operator|->
-name|f_inode
+name|f_data
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|fp
 operator|->
-name|f_type
-operator|==
-name|DTYPE_SOCKET
+name|f_offset
+operator|<
+literal|0
 condition|)
 name|printf
 argument_list|(
@@ -4358,7 +4348,7 @@ literal|"  %x\n"
 argument_list|,
 name|fp
 operator|->
-name|f_socket
+name|f_offset
 argument_list|)
 expr_stmt|;
 else|else
