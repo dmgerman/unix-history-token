@@ -6234,19 +6234,15 @@ operator|!=
 name|NULLVP
 condition|)
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|error
 operator|=
 name|VOP_SYMLINK
 argument_list|(
 name|dvp
 argument_list|,
-operator|&
-name|vp
+name|ap
+operator|->
+name|a_vpp
 argument_list|,
 name|cnp
 argument_list|,
@@ -6258,14 +6254,6 @@ name|ap
 operator|->
 name|a_target
 argument_list|)
-expr_stmt|;
-comment|/* vp is garbage whether an error occurs or not */
-operator|*
-name|ap
-operator|->
-name|a_vpp
-operator|=
-name|NULLVP
 expr_stmt|;
 name|union_unlock_upper
 argument_list|(

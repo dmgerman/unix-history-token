@@ -6898,6 +6898,16 @@ name|cnp
 operator|->
 name|cn_proc
 decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+modifier|*
+name|vpp
+init|=
+name|ap
+operator|->
+name|a_vpp
+decl_stmt|;
 comment|/* locals */
 name|int
 name|error
@@ -6926,7 +6936,6 @@ argument_list|(
 name|path
 argument_list|)
 decl_stmt|;
-comment|/* XXX What about the vpp argument?  Do we need it? */
 comment|/*       * Here's the strategy for the moment: perform the symlink, then      * do a lookup to grab the resulting vnode.  I know this requires      * two communications with Venus for a new sybolic link, but      * that's the way the ball bounces.  I don't yet want to change      * the way the Mach symlink works.  When Mach support is      * deprecated, we should change symlink so that the common case      * returns the resultant vnode in a vpp argument.      */
 name|MARK_ENTRY
 argument_list|(
@@ -7036,30 +7045,23 @@ operator|&=
 operator|~
 name|C_VATTR
 expr_stmt|;
-comment|/*       * Free the name buffer       */
 if|if
 condition|(
-operator|(
-name|cnp
-operator|->
-name|cn_flags
-operator|&
-name|SAVESTART
-operator|)
+name|error
 operator|==
 literal|0
 condition|)
-block|{
-name|zfree
+name|error
+operator|=
+name|VOP_LOOKUP
 argument_list|(
-name|namei_zone
+name|tdvp
+argument_list|,
+name|vpp
 argument_list|,
 name|cnp
-operator|->
-name|cn_pnbuf
 argument_list|)
 expr_stmt|;
-block|}
 name|exit
 label|:
 name|CODADEBUG

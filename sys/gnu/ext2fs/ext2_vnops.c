@@ -4767,6 +4767,10 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
 name|vput
 argument_list|(
 name|vp

@@ -3583,11 +3583,6 @@ name|ap
 parameter_list|)
 comment|/*struct vop_symlink_args {                 struct vnode *a_dvp;                 struct vnode **a_vpp;                 struct componentname *a_cnp;                 struct vattr *a_vap;                 char *a_target;         } */
 block|{
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -3690,8 +3685,9 @@ name|nm_p
 operator|->
 name|dnp
 argument_list|,
-operator|&
-name|vp
+name|ap
+operator|->
+name|a_vpp
 argument_list|)
 operator|)
 operator|!=
@@ -3706,7 +3702,10 @@ return|;
 block|}
 name|VOP_SETATTR
 argument_list|(
-name|vp
+operator|*
+name|ap
+operator|->
+name|a_vpp
 argument_list|,
 name|ap
 operator|->
@@ -3723,18 +3722,6 @@ operator|->
 name|a_cnp
 operator|->
 name|cn_proc
-argument_list|)
-expr_stmt|;
-operator|*
-name|ap
-operator|->
-name|a_vpp
-operator|=
-name|NULL
-expr_stmt|;
-name|vput
-argument_list|(
-name|vp
 argument_list|)
 expr_stmt|;
 return|return
