@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.15 (Berkeley) %G%"
+literal|"@(#)fts.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -708,10 +708,6 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|static
-name|int
-name|need_to_cd
-decl_stmt|;
 specifier|register
 name|int
 name|len
@@ -721,7 +717,7 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-comment|/* 	 * If changing the root level node, load the stream structure for the 	 * next traversal; set the fts_accpath field specially so the chdir 	 * gets done to the right place and the user can access the first node. 	 */
+comment|/* 	 * Load the stream structure for the next traversal.  Since we don't 	 * actually enter the directory until after the preorder visit, set 	 * the fts_accpath field specially so the chdir gets done to the right 	 * place and the user can access the first node. 	 */
 name|len
 operator|=
 name|p
@@ -825,38 +821,6 @@ operator|->
 name|fts_statb
 operator|.
 name|st_dev
-expr_stmt|;
-comment|/* 	 * If not the first time, and it's not an absolute pathname, get back 	 * to starting directory.  If that fails, we're dead. 	 */
-if|if
-condition|(
-name|need_to_cd
-operator|&&
-name|p
-operator|->
-name|fts_path
-index|[
-literal|0
-index|]
-operator|!=
-literal|'/'
-operator|&&
-name|FCHDIR
-argument_list|(
-name|sp
-argument_list|,
-name|sp
-operator|->
-name|fts_rfd
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-name|need_to_cd
-operator|=
-literal|1
 expr_stmt|;
 name|p
 operator|->
@@ -1305,7 +1269,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* 		 * Cd to the subdirectory, reading it if haven't already.  If 		 * the read fails for any reason, or the directory is empty, 		 * the fts_info field of the current node is set by fts_build. 		 * If have already read and fail to chdir, do some quick 		 * whacking to make the names come out right, and set the 		 * parent state so the application will eventually get an 		 * error condition. 		 */
+comment|/* 		 * Cd to the subdirectory, reading it if haven't already.  If 		 * the read fails for any reason, or the directory is empty, 		 * the fts_info field of the current node is set by fts_build. 		 * If have already read and now fail to chdir, whack the list 		 * to make the names come out right, and set the parent state 		 * so the application will eventually get an error condition. 		 * If haven't read and fail to chdir, check to see if we're 		 * at the root node -- if so, we have to get back or the root 		 * node may be inaccessible. 		 */
 if|if
 condition|(
 name|sp
@@ -1378,18 +1342,51 @@ name|BREAD
 argument_list|)
 operator|)
 condition|)
+block|{
+if|if ISSET
+condition|(
+name|FTS_STOP
+condition|)
 return|return
 operator|(
-name|ISSET
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+name|p
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+operator|&&
+name|FCHDIR
+argument_list|(
+name|sp
+argument_list|,
+name|sp
+operator|->
+name|fts_rfd
+argument_list|)
+condition|)
+block|{
+name|SET
 argument_list|(
 name|FTS_STOP
 argument_list|)
-condition|?
+expr_stmt|;
+return|return
+operator|(
 name|NULL
-else|:
+operator|)
+return|;
+block|}
+return|return
+operator|(
 name|p
 operator|)
 return|;
+block|}
 name|p
 operator|=
 name|sp
@@ -1447,18 +1444,11 @@ argument_list|,
 name|p
 argument_list|)
 condition|)
-block|{
-name|SET
-argument_list|(
-name|FTS_STOP
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|sp
@@ -1556,7 +1546,7 @@ name|p
 operator|)
 return|;
 block|}
-comment|/* Move to parent. */
+comment|/* Move up to the parent node. */
 name|p
 operator|=
 name|tmp
@@ -1608,7 +1598,63 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * If had a chdir error, set the info field to reflect this, and 	 * restore errno.  The error indicator has to be reset to 0 so that 	 * if the user does an FTS_AGAIN, it all works.  Can't cd up on 	 * the post-order visit to the root node, otherwise will be in the 	 * wrong directory. 	 */
+comment|/* 	 * Cd back up to the parent directory.  If at a root node, have to cd 	 * back to the original place, otherwise may not be able to access the 	 * original node on post-order. 	 */
+if|if
+condition|(
+name|p
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+condition|)
+block|{
+if|if
+condition|(
+name|FCHDIR
+argument_list|(
+name|sp
+argument_list|,
+name|sp
+operator|->
+name|fts_rfd
+argument_list|)
+condition|)
+block|{
+name|SET
+argument_list|(
+name|FTS_STOP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|CHDIR
+argument_list|(
+name|sp
+argument_list|,
+literal|".."
+argument_list|)
+condition|)
+block|{
+name|SET
+argument_list|(
+name|FTS_STOP
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/*  	 * If had a chdir error when trying to get into the directory, set the 	 * info field to reflect this, and restore errno.  The error indicator 	 * has to be reset to 0 so that if the user does an FTS_AGAIN, it all 	 * works. 	 */
 if|if
 condition|(
 name|p
@@ -1636,41 +1682,12 @@ name|FTS_ERR
 expr_stmt|;
 block|}
 else|else
-block|{
-if|if
-condition|(
-name|p
-operator|->
-name|fts_level
-operator|!=
-name|FTS_ROOTLEVEL
-operator|&&
-name|CHDIR
-argument_list|(
-name|sp
-argument_list|,
-literal|".."
-argument_list|)
-condition|)
-block|{
-name|SET
-argument_list|(
-name|FTS_STOP
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|p
 operator|->
 name|fts_info
 operator|=
 name|FTS_DP
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|sp
@@ -1684,7 +1701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * fts_set takes the stream as an argument although it's not used in this  * implementation; it would be necessary if anyone wanted to add global  * semantics to fts using fts_set.  An error return is allowed for similar  * reasons.  */
+comment|/*  * Fts_set takes the stream as an argument although it's not used in this  * implementation; it would be necessary if anyone wanted to add global  * semantics to fts using fts_set.  An error return is allowed for similar  * reasons.  */
 end_comment
 
 begin_comment
