@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.84		%G%"
+literal|"@(#)sendmail.h	3.85		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -186,6 +186,17 @@ end_define
 
 begin_comment
 comment|/* maximum mailers known to system */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXRWSETS
+value|30
+end_define
+
+begin_comment
+comment|/* max # of sets of rewriting rules */
 end_comment
 
 begin_define
@@ -412,6 +423,10 @@ modifier|*
 name|m_argv
 decl_stmt|;
 comment|/* template argument vector */
+name|short
+name|m_rwset
+decl_stmt|;
+comment|/* apply this rewriting set to addresses */
 block|}
 struct|;
 end_struct
@@ -1163,20 +1178,41 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|extern
+name|EXTERN
 name|struct
 name|rewrite
 modifier|*
 name|RewriteRules
-index|[]
+index|[
+name|MAXRWSETS
+index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* **  Special characters in rewriting rules. **	These are used internally only. **	The COND* rules are actually used in macros rather than in **		rewriting rules, but are given here because they **		cannot conflict. */
+end_comment
+
+begin_comment
+comment|/* left hand side items */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MATCHZANY
+value|'\020'
+end_define
+
+begin_comment
+comment|/* match zero or more tokens */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MATCHANY
-value|'\020'
+value|'\021'
 end_define
 
 begin_comment
@@ -1187,7 +1223,7 @@ begin_define
 define|#
 directive|define
 name|MATCHONE
-value|'\021'
+value|'\022'
 end_define
 
 begin_comment
@@ -1198,7 +1234,7 @@ begin_define
 define|#
 directive|define
 name|MATCHCLASS
-value|'\022'
+value|'\023'
 end_define
 
 begin_comment
@@ -1209,11 +1245,15 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|'\023'
+value|'\024'
 end_define
 
 begin_comment
 comment|/* replacement on RHS for above */
+end_comment
+
+begin_comment
+comment|/* right hand side items */
 end_comment
 
 begin_define
@@ -1252,8 +1292,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CONDIF
+name|CALLSUBR
 value|'\030'
+end_define
+
+begin_comment
+comment|/* call another rewriting set */
+end_comment
+
+begin_comment
+comment|/* conditionals in macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONDIF
+value|'\031'
 end_define
 
 begin_comment
@@ -1264,7 +1319,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|'\031'
+value|'\032'
 end_define
 
 begin_comment
@@ -1275,7 +1330,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|'\032'
+value|'\033'
 end_define
 
 begin_comment
@@ -2076,6 +2131,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* proc id of parent process */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|LineNumber
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* line number in current input */
 end_comment
 
 begin_decl_stmt
