@@ -3526,8 +3526,8 @@ name|linux_send_args
 name|linux_args
 decl_stmt|;
 name|struct
-name|osend_args
-comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
+name|sendto_args
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 		caddr_t to; 		int tolen; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3589,9 +3589,21 @@ name|linux_args
 operator|.
 name|flags
 expr_stmt|;
+name|bsd_args
+operator|.
+name|to
+operator|=
+name|NULL
+expr_stmt|;
+name|bsd_args
+operator|.
+name|tolen
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
-name|osend
+name|sendto
 argument_list|(
 name|td
 argument_list|,
@@ -3645,8 +3657,8 @@ name|linux_recv_args
 name|linux_args
 decl_stmt|;
 name|struct
-name|orecv_args
-comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 	} */
+name|recvfrom_args
+comment|/* { 		int s; 		caddr_t buf; 		int len; 		int flags; 		struct sockaddr *from; 		socklen_t fromlenaddr; 	} */
 name|bsd_args
 decl_stmt|;
 name|int
@@ -3708,9 +3720,21 @@ name|linux_args
 operator|.
 name|flags
 expr_stmt|;
+name|bsd_args
+operator|.
+name|from
+operator|=
+name|NULL
+expr_stmt|;
+name|bsd_args
+operator|.
+name|fromlenaddr
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
-name|orecv
+name|recvfrom
 argument_list|(
 name|td
 argument_list|,
