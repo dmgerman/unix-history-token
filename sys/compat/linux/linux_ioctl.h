@@ -594,6 +594,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_SIOCSIFADDR
+value|0x8916
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_SIOCGIFDSTADDR
 value|0x8917
 end_define
