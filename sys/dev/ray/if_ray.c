@@ -54,13 +54,6 @@ name|XXX_IOCTL
 value|0
 end_define
 
-begin_define
-define|#
-directive|define
-name|XXX_NETBSD_SJ_NET
-value|1
-end_define
-
 begin_comment
 comment|/*  * XXX build options - move to LINT  */
 end_comment
@@ -79,7 +72,7 @@ begin_define
 define|#
 directive|define
 name|RAY_DEBUG
-value|16
+value|6
 end_define
 
 begin_endif
@@ -283,7 +276,7 @@ name|sc
 parameter_list|,
 name|s
 parameter_list|)
-value|do { if (RAY_DEBUG) {			\     printf("ray%d: Current network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_c.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_c.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_c.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_c.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_c.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_c.np_ssid);			\     printf("  ssid %32D\n", (sc)->sc_c.np_ssid, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_c.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_c.np_priv_join);		\     printf("ray%d: Desired network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_d.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_d.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_d.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_d.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_d.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_d.np_ssid);			\     printf("  ssid %32D\n", (sc)->sc_d.np_ssid, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_d.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_d.np_priv_join);		\ } } while (0)
+value|do { if (RAY_DEBUG) {			\     printf("ray%d: Current network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_c.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_c.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_c.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_c.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_c.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_c.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_c.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_c.np_priv_join);		\     printf("ray%d: Desired network parameters%s\n", (sc)->unit, (s));	\     printf("  bss_id %6D\n", (sc)->sc_d.np_bss_id, ":");		\     printf("  inited 0x%02x\n", (sc)->sc_d.np_inited);			\     printf("  def_txrate 0x%02x\n", (sc)->sc_d.np_def_txrate);		\     printf("  encrypt 0x%02x\n", (sc)->sc_d.np_encrypt);		\     printf("  net_type 0x%02x\n", (sc)->sc_d.np_net_type);		\     printf("  ssid \"%.32s\"\n", (sc)->sc_d.np_ssid);			\     printf("       %8D\n", (sc)->sc_c.np_ssid, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+8, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+16, " ");			\     printf("       %8D\n", (sc)->sc_c.np_ssid+24, " ");			\     printf("  priv_start 0x%02x\n", (sc)->sc_d.np_priv_start);		\     printf("  priv_join 0x%02x\n", (sc)->sc_d.np_priv_join);		\ } } while (0)
 end_define
 
 begin_else
@@ -12549,20 +12542,6 @@ modifier|*
 name|sc
 decl_stmt|;
 block|{
-if|#
-directive|if
-name|XXX_NETBSD_SJ_NET
-operator|==
-literal|0
-name|size_t
-name|ccs
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_NETBSD_SJ_NET */
 name|RAY_DPRINTFN
 argument_list|(
 literal|5
@@ -12618,161 +12597,11 @@ argument_list|,
 name|IEEE80211_NWID_LEN
 argument_list|)
 expr_stmt|;
-comment|/* XXX use start_join_net when included? this will allow us to change      * network parameters with ioctl before we ifconfig the card up and      * also for the bss to stay when re-initing the card for some reason      * i.e. a change of IP address      */
-if|#
-directive|if
-name|XXX_NETBSD_SJ_NET
-name|printf
-argument_list|(
-literal|"using start_join_net\n"
-argument_list|)
-expr_stmt|;
 name|ray_start_join_net
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|printf
-argument_list|(
-literal|"not using start_join_net\n"
-argument_list|)
-expr_stmt|;
-comment|/*      * Join the network - don't bother updating the network parameters as      * we've just downloaded them. Issue the start/join command and we      * get interrupted back.      */
-name|ray_cmd_cancel
-argument_list|(
-name|sc
-argument_list|,
-name|SCP_UPD_STARTJOIN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_d
-operator|.
-name|np_net_type
-operator|==
-name|RAY_MIB_NET_TYPE_ADHOC
-condition|)
-name|cmd
-operator|=
-name|RAY_CMD_START_NET
-expr_stmt|;
-else|else
-name|cmd
-operator|=
-name|RAY_CMD_JOIN_NET
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ray_alloc_ccs
-argument_list|(
-name|sc
-argument_list|,
-operator|&
-name|ccs
-argument_list|,
-name|cmd
-argument_list|,
-name|SCP_UPD_STARTJOIN
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ray%d: ray_download_done can't get a CCS to start/join net\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|ray_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-name|SRAM_WRITE_FIELD_1
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|,
-name|ray_cmd_net
-argument_list|,
-name|c_upd_param
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ray_issue_cmd
-argument_list|(
-name|sc
-argument_list|,
-name|ccs
-argument_list|,
-name|SCP_UPD_STARTJOIN
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ray%d: ray_download_done can't issue start/join\n"
-argument_list|,
-name|sc
-operator|->
-name|unit
-argument_list|)
-expr_stmt|;
-name|ray_reset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* XXX_NETBSD_SJ_NET */
-name|RAY_DPRINTFN
-argument_list|(
-literal|15
-argument_list|,
-operator|(
-literal|"ray%d: Start-join awaiting interrupt\n"
-operator|,
-name|sc
-operator|->
-name|unit
-operator|)
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|RAY_NEED_STARTJOIN_TIMO
-name|sc
-operator|->
-name|sj_timerh
-operator|=
-name|timeout
-argument_list|(
-name|ray_start_join_timo
-argument_list|,
-name|sc
-argument_list|,
-name|RAY_SJ_TIMEOUT
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_NEED_STARTJOIN_TIMO */
 block|}
 end_function
 
@@ -12791,9 +12620,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|#
-directive|if
-name|XXX_NETBSD_SJ_NET
 name|struct
 name|ray_net_params
 name|np
@@ -12811,9 +12637,6 @@ name|cmd
 decl_stmt|,
 name|update
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* XXX_NETBSD_SJ_NET */
 name|RAY_DPRINTFN
 argument_list|(
 literal|5
@@ -12832,9 +12655,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX_NETBSD_SJ_NET
 name|ifp
 operator|=
 operator|&
@@ -13153,9 +12973,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* RAY_NEED_STARTJOIN_TIMO */
-endif|#
-directive|endif
-comment|/* XXX_NETBSD_SJ_NET */
 block|}
 end_function
 
