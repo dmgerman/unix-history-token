@@ -3191,6 +3191,42 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|" France #4"
+block|,
+literal|"ftp4.fr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.fr.freebsd.org"
+argument_list|)
+block|}
+block|,
+block|{
+literal|" France #5"
+block|,
+literal|"ftp5.fr.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.fr.freebsd.org"
+argument_list|)
+block|}
+block|,
+block|{
 literal|"Germany"
 block|,
 literal|"ftp.de.freebsd.org"
@@ -8578,7 +8614,7 @@ block|,
 block|{
 literal|"Australia"
 block|,
-literal|"ntp.tip.csiro.au (HP 5071A Cesium Beam)"
+literal|"ntp.nml.csiro.au (HP 5071A Cesium Beam)"
 block|,
 name|dmenuVarsCheck
 block|,
