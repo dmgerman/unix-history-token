@@ -10840,6 +10840,20 @@ literal|"keymap=bg.phonetic.ctrlcaps"
 block|}
 block|,
 block|{
+literal|"Central European ISO"
+block|,
+literal|"Central European ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=ce.iso2"
+block|}
+block|,
+block|{
 literal|" Croatian ISO"
 block|,
 literal|"Croatian ISO keymap"
@@ -11243,6 +11257,20 @@ block|,
 name|NULL
 block|,
 literal|"keymap=ru.koi8-r"
+block|}
+block|,
+block|{
+literal|"Slovak"
+block|,
+literal|"Slovak ISO keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=sk.iso2"
 block|}
 block|,
 block|{
