@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.3	%G%	*/
+comment|/*	trap.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -67,6 +67,12 @@ begin_include
 include|#
 directive|include
 file|"../h/inline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mtpr.h"
 end_include
 
 begin_define
@@ -237,11 +243,62 @@ name|SIGILL
 expr_stmt|;
 break|break;
 case|case
-name|RESCHED
+name|ASTFLT
 operator|+
 name|USER
 case|:
 comment|/* Allow process switch */
+name|astoff
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&
+name|SOWEUPC
+operator|)
+operator|&&
+name|u
+operator|.
+name|u_prof
+operator|.
+name|pr_scale
+condition|)
+block|{
+name|addupc
+argument_list|(
+name|pc
+argument_list|,
+operator|&
+name|u
+operator|.
+name|u_prof
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|SOWEUPC
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|runrun
+operator|==
+literal|0
+condition|)
+return|return;
 goto|goto
 name|out
 goto|;
