@@ -731,6 +731,14 @@ name|tx
 decl_stmt|,
 name|ty
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|TAHOE
+name|double
+name|tahoe_tmp
+decl_stmt|;
+endif|#
+directive|endif
 name|float
 name|sx
 decl_stmt|,
@@ -1100,6 +1108,25 @@ operator|-
 name|sy
 expr_stmt|;
 comment|/* y ~ sy + ty */
+ifdef|#
+directive|ifdef
+name|TAHOE
+name|s
+operator|=
+operator|(
+name|tahoe_tmp
+operator|=
+name|sx
+operator|)
+operator|*
+name|sy
+operator|-
+name|k
+operator|*
+name|ln2hi
+expr_stmt|;
+else|#
+directive|else
 name|s
 operator|=
 operator|(
@@ -1114,6 +1141,8 @@ operator|*
 name|ln2hi
 expr_stmt|;
 comment|/* (sy+ty)*(sx+tx)-kln2 */
+endif|#
+directive|endif
 name|z
 operator|=
 operator|(
