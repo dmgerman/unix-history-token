@@ -196,6 +196,9 @@ modifier|*
 name|kd
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|FBSD_NOT_YET
 name|kd
 operator|->
 name|usrstack
@@ -214,6 +217,8 @@ name|max_uva
 operator|=
 name|VM_MAXUSER_ADDRESS
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
