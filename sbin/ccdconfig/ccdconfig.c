@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ccdconfig.c,v 1.10 1998/09/15 08:15:22 gibbs Exp $"
+literal|"$Id: ccdconfig.c,v 1.11 1999/04/05 06:30:12 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<sys/device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disk.h>
 end_include
 
 begin_include
