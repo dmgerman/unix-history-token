@@ -4865,13 +4865,14 @@ name|devinfo
 modifier|*
 name|tmp_dinfo
 decl_stmt|;
+name|size_t
+name|size
+decl_stmt|;
 name|int
 name|mib
 index|[
 literal|2
 index|]
-decl_stmt|,
-name|size
 decl_stmt|;
 name|NREAD
 argument_list|(
