@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.41 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.42 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -410,7 +410,7 @@ name|uname
 operator|=
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 expr_stmt|;
 break|break;
@@ -703,7 +703,7 @@ goto|;
 block|}
 name|printf
 argument_list|(
-literal|"Changing password for %s.\n"
+literal|"Changing local password for %s.\n"
 argument_list|,
 name|pw
 operator|->
@@ -1920,12 +1920,12 @@ decl_stmt|;
 name|char
 name|pass
 index|[
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 index|]
 decl_stmt|,
 name|password
 index|[
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 index|]
 decl_stmt|;
 name|fd_set
@@ -2915,7 +2915,7 @@ name|secure_msg
 argument_list|,
 name|str
 argument_list|,
-name|MAX_PW_LEN
+name|_PASSWORD_LEN
 argument_list|)
 expr_stmt|;
 name|strncpy
