@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_serv.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3921,6 +3921,9 @@ name|v_flag
 operator|&
 name|VTEXT
 condition|)
+ifdef|#
+directive|ifdef
+name|NVM
 operator|(
 name|void
 operator|)
@@ -3929,6 +3932,16 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|xrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+comment|/* try once to free text */
+endif|#
+directive|endif
 name|out
 label|:
 if|if
@@ -7704,6 +7717,9 @@ return|;
 block|}
 block|}
 comment|/* 		 * If there's shared text associated with 		 * the inode, try to free it up once.  If 		 * we fail, we can't allow writing. 		 */
+ifdef|#
+directive|ifdef
+name|NVM
 if|if
 condition|(
 operator|(
@@ -7725,6 +7741,36 @@ operator|(
 name|ETXTBSY
 operator|)
 return|;
+else|#
+directive|else
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VTEXT
+condition|)
+name|xrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_flag
+operator|&
+name|VTEXT
+condition|)
+return|return
+operator|(
+name|ETXTBSY
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
