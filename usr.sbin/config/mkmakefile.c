@@ -509,7 +509,7 @@ name|fopen
 argument_list|(
 name|path
 argument_list|(
-literal|"Makefile"
+literal|"Makefile.new"
 argument_list|)
 argument_list|,
 literal|"w"
@@ -526,7 +526,7 @@ name|perror
 argument_list|(
 name|path
 argument_list|(
-literal|"Makefile"
+literal|"Makefile.new"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1035,6 +1035,19 @@ operator|)
 name|fclose
 argument_list|(
 name|ofp
+argument_list|)
+expr_stmt|;
+name|moveifchanged
+argument_list|(
+name|path
+argument_list|(
+literal|"Makefile.new"
+argument_list|)
+argument_list|,
+name|path
+argument_list|(
+literal|"Makefile"
+argument_list|)
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -1829,7 +1829,7 @@ name|fopen
 argument_list|(
 name|path
 argument_list|(
-literal|"vector.h"
+literal|"vector.h.new"
 argument_list|)
 argument_list|,
 literal|"w"
@@ -1846,7 +1846,7 @@ name|perror
 argument_list|(
 name|path
 argument_list|(
-literal|"vector.h"
+literal|"vector.h.new"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1978,6 +1978,19 @@ operator|)
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|moveifchanged
+argument_list|(
+name|path
+argument_list|(
+literal|"vector.h.new"
+argument_list|)
+argument_list|,
+name|path
+argument_list|(
+literal|"vector.h"
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
