@@ -34,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/select.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -257,11 +251,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
 
 begin_comment
 comment|/*  * glue for NEWCARD/OLDCARD compat layer  */
@@ -1486,6 +1482,17 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|deltap
+endif|#
+directive|endif
 parameter_list|)
 block|{
 return|return
@@ -1502,6 +1509,15 @@ argument_list|,
 name|rid
 argument_list|,
 name|offset
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+argument_list|,
+name|deltap
+endif|#
+directive|endif
 argument_list|)
 operator|)
 return|;
@@ -1547,11 +1563,13 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+end_if
 
 begin_function
 specifier|static
@@ -1817,9 +1835,11 @@ argument_list|,
 name|pccard_get_memory_offset
 argument_list|)
 block|,
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
 name|DEVMETHOD
 argument_list|(
 name|card_get_function
