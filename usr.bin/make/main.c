@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine	Takes a line of arguments, breaks them and  *				treats them as if they were given when first  *				invoked. Used by the parse module to implement  *				the .MFLAGS target.  */
+comment|/*  * main.c  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine  *			Takes a line of arguments, breaks them and  *			treats them as if they were given when first  *			invoked. Used by the parse module to implement  *			the .MFLAGS target.  */
 end_comment
 
 begin_ifndef
@@ -610,7 +610,7 @@ comment|/* where we chdir'ed to */
 end_comment
 
 begin_comment
-comment|/*  * Append a flag with an optional argument to MAKEFLAGS and MFLAGS  */
+comment|/**  * MFLAGS_append  *	Append a flag with an optional argument to MAKEFLAGS and MFLAGS  */
 end_comment
 
 begin_function
@@ -712,7 +712,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * MainParseArgs --  *	Parse a given argument vector. Called from main() and from  *	Main_ParseArgLine() when the .MAKEFLAGS target is used.  *  *	XXX: Deal with command line overriding .MAKEFLAGS in makefile  *  * Results:  *	None  *  * Side Effects:  *	Various global and local flags will be set depending on the flags  *	given  */
+comment|/**  * MainParseArgs  *	Parse a given argument vector. Called from main() and from  *	Main_ParseArgLine() when the .MAKEFLAGS target is used.  *  *	XXX: Deal with command line overriding .MAKEFLAGS in makefile  *  * Side Effects:  *	Various global and local flags will be set depending on the flags  *	given  */
 end_comment
 
 begin_function
@@ -1079,7 +1079,8 @@ break|break;
 default|default:
 name|warnx
 argument_list|(
-literal|"illegal argument to d option -- %c"
+literal|"illegal argument to d option "
+literal|"-- %c"
 argument_list|,
 operator|*
 name|modules
@@ -1486,7 +1487,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  */
+comment|/**  * Main_ParseArgLine  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Side Effects:  *	Only those that come from the various arguments.  */
 end_comment
 
 begin_function
@@ -1787,7 +1788,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  */
+comment|/**  * main  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  */
 end_comment
 
 begin_function
@@ -3422,7 +3423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * ReadMakefile  --  *	Open and parse the given makefile.  *  * Results:  *	TRUE if ok. FALSE if couldn't open file.  *  * Side Effects:  *	lots  */
+comment|/**  * ReadMakefile  *	Open and parse the given makefile.  *  * Results:  *	TRUE if ok. FALSE if couldn't open file.  *  * Side Effects:  *	lots  */
 end_comment
 
 begin_function
@@ -3769,7 +3770,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*-  * Cmd_Exec --  *	Execute the command in cmd, and return the output of that command  *	in a string.  *  * Results:  *	A string containing the output of the command, or the empty string  *	If error is not NULL, it contains the reason for the command failure  *  * Side Effects:  *	The string must be freed by the caller.  */
+comment|/**  * Cmd_Exec  *	Execute the command in cmd, and return the output of that command  *	in a string.  *  * Results:  *	A string containing the output of the command, or the empty string  *	If error is not NULL, it contains the reason for the command failure  *  * Side Effects:  *	The string must be freed by the caller.  */
 end_comment
 
 begin_expr_stmt
@@ -3833,7 +3834,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*      * Open a pipe for fetching its output      */
+comment|/* 	 * Open a pipe for fetching its output 	 */
 end_comment
 
 begin_if
@@ -3862,7 +3863,7 @@ block|}
 end_if
 
 begin_comment
-comment|/*      * Fork      */
+comment|/* 	 * Fork 	 */
 end_comment
 
 begin_switch
@@ -3877,7 +3878,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* 	 * Close input side of pipe 	 */
+comment|/* 		 * Close input side of pipe 		 */
 name|close
 argument_list|(
 name|fds
@@ -3886,7 +3887,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Duplicate the output stream to the shell's output, then 	 * shut the extra thing down. Note we don't fetch the error 	 * stream...why not? Why? 	 */
+comment|/* 		 * Duplicate the output stream to the shell's output, then 		 * shut the extra thing down. Note we don't fetch the error 		 * stream...why not? Why? 		 */
 name|dup2
 argument_list|(
 name|fds
@@ -3971,7 +3972,7 @@ name|buf
 operator|)
 return|;
 default|default:
-comment|/* 	 * No need for the writing half 	 */
+comment|/* 		 * No need for the writing half 		 */
 name|close
 argument_list|(
 name|fds
@@ -4059,7 +4060,7 @@ name|error
 operator|=
 literal|"Error reading shell's output for \"%s\""
 expr_stmt|;
-comment|/* 	 * Close the input side of the pipe. 	 */
+comment|/* 		 * Close the input side of the pipe. 		 */
 name|close
 argument_list|(
 name|fds
@@ -4068,7 +4069,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Wait for the process to exit. 	 */
+comment|/* 		 * Wait for the process to exit. 		 */
 while|while
 condition|(
 operator|(
