@@ -6597,7 +6597,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pmap_remove: modified page not writable: va: 0x%x, pte: 0x%x\n"
+literal|"pmap_remove: modified page not writable: va: 0x%lx, pte: 0x%lx\n"
 argument_list|,
 name|va
 argument_list|,
@@ -7055,7 +7055,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"pmap_remove_all: illegal for unmanaged page, va: 0x%x"
+literal|"pmap_remove_all: illegal for unmanaged page, va: 0x%lx"
 argument_list|,
 name|VM_PAGE_TO_PHYS
 argument_list|(
@@ -7182,7 +7182,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pmap_remove_all: modified page not writable: va: 0x%x, pte: 0x%x\n"
+literal|"pmap_remove_all: modified page not writable: va: 0x%lx, pte: 0x%lx\n"
 argument_list|,
 name|pv
 operator|->
@@ -7709,7 +7709,7 @@ operator|)
 condition|)
 name|panic
 argument_list|(
-literal|"pmap_enter: invalid to pmap_enter page table pages (va: 0x%x)"
+literal|"pmap_enter: invalid to pmap_enter page table pages (va: 0x%lx)"
 argument_list|,
 name|va
 argument_list|)
@@ -7875,7 +7875,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pmap_enter: modified page not writable: va: 0x%x, pte: 0x%x\n"
+literal|"pmap_enter: modified page not writable: va: 0x%lx, pte: 0x%lx\n"
 argument_list|,
 name|va
 argument_list|,
@@ -10151,7 +10151,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Null pmap (tb) at va: 0x%x\n"
+literal|"Null pmap (tb) at va: 0x%lx\n"
 argument_list|,
 name|pv
 operator|->
@@ -10408,7 +10408,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Null pmap (cb) at va: 0x%x\n"
+literal|"Null pmap (cb) at va: 0x%lx\n"
 argument_list|,
 name|pv
 operator|->
