@@ -216,19 +216,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|aac_map_command
-parameter_list|(
-name|struct
-name|aac_command
-modifier|*
-name|cm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|aac_complete
 parameter_list|(
@@ -2991,11 +2978,21 @@ name|aac_command
 modifier|*
 name|cm
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|debug_called
 argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* 		 * This flag might be set if the card is out of resources. 		 * Checking it here prevents an infinite loop of deferrals. 		 */
 if|if
 condition|(
 name|sc
@@ -3004,13 +3001,7 @@ name|flags
 operator|&
 name|AAC_QUEUE_FRZN
 condition|)
-return|return;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+break|break;
 comment|/* 		 * Try to get a command that's been put off for lack of  		 * resources 		 */
 name|cm
 operator|=
@@ -3042,65 +3033,6 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* 		 * Try to give the command to the controller.  Any error is 		 * catastrophic since it means that bus_dmamap_load() failed. 		 */
-if|if
-condition|(
-name|aac_map_command
-argument_list|(
-name|cm
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"aac: error mapping command %p\n"
-argument_list|,
-name|cm
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|/*  * Deliver a command to the controller; allocate controller resources at the  * last moment when possible.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|aac_map_command
-parameter_list|(
-name|struct
-name|aac_command
-modifier|*
-name|cm
-parameter_list|)
-block|{
-name|struct
-name|aac_softc
-modifier|*
-name|sc
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|debug_called
-argument_list|(
-literal|2
-argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|cm
-operator|->
-name|cm_sc
-expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
 comment|/* don't map more than once */
 if|if
 condition|(
@@ -3117,6 +3049,7 @@ argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Set up the command to go to the controller.  If there are no 		 * data buffers associated with the command then it can bypass 		 * busdma. 		 */
 if|if
 condition|(
 name|cm
@@ -3178,9 +3111,17 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+else|else
+name|panic
+argument_list|(
+literal|"aac_startio: unexpected error %d from "
+literal|"busdma\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 block|}
 else|else
-block|{
 name|aac_map_command_sg
 argument_list|(
 name|cm
@@ -3193,11 +3134,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
@@ -5853,7 +5789,7 @@ name|cm_flags
 operator||=
 name|AAC_CMD_MAPPED
 expr_stmt|;
-comment|/* put the FIB on the outbound queue */
+comment|/* Put the FIB on the outbound queue */
 if|if
 condition|(
 name|aac_enqueue_fib
@@ -5874,6 +5810,12 @@ name|aac_unmap_command
 argument_list|(
 name|cm
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|flags
+operator||=
+name|AAC_QUEUE_FRZN
 expr_stmt|;
 name|aac_requeue_ready
 argument_list|(
