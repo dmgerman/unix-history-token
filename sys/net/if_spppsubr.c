@@ -5905,10 +5905,12 @@ break|break;
 case|case
 name|SIOCSIFADDR
 case|:
-name|if_up
-argument_list|(
+comment|/* set the interface "up" when assigning an IP address */
 name|ifp
-argument_list|)
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
 expr_stmt|;
 comment|/* fall through... */
 case|case
