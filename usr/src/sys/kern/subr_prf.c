@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1563,72 +1563,6 @@ argument_list|,
 literal|"%s: table is full\n"
 argument_list|,
 name|tab
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Hard error is the preface to plaintive error messages  * about failing disk transfers.  */
-end_comment
-
-begin_macro
-name|harderr
-argument_list|(
-argument|bp
-argument_list|,
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|printf
-argument_list|(
-literal|"%s%d%c: hard error sn%d "
-argument_list|,
-name|cp
-argument_list|,
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|>>
-literal|3
-argument_list|,
-literal|'a'
-operator|+
-operator|(
-name|minor
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-operator|&
-literal|07
-operator|)
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
 argument_list|)
 expr_stmt|;
 block|}
