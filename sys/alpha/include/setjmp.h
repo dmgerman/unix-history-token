@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: setjmp.h,v 1.1 1998/01/10 23:00:06 jb Exp $ */
 end_comment
 
 begin_comment
@@ -25,6 +25,65 @@ end_define
 begin_comment
 comment|/* size, in longs, of a jmp_buf */
 end_comment
+
+begin_comment
+comment|/*  * jmp_buf and sigjmp_buf are encapsulated in different structs to force  * compile-time diagnostics for mismatches.  The structs are the same  * internally to avoid some run-time errors for mismatches.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|long
+name|_sjb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|sigjmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not ANSI */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|long
+name|_jb
+index|[
+name|_JBLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|jmp_buf
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
 
 end_unit
 
