@@ -112,6 +112,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|nlm_prog_4
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|svc_req
+operator|*
+operator|,
+name|SVCXPRT
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|usage
@@ -237,6 +254,16 @@ argument_list|,
 name|NLM_VERSX
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|pmap_unset
+argument_list|(
+name|NLM_PROG
+argument_list|,
+name|NLM4_VERS
+argument_list|)
+expr_stmt|;
 name|transp
 operator|=
 name|svcudp_create
@@ -301,6 +328,29 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"unable to register (NLM_PROG, NLM_VERSX, udp)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|svc_register
+argument_list|(
+name|transp
+argument_list|,
+name|NLM_PROG
+argument_list|,
+name|NLM4_VERS
+argument_list|,
+name|nlm_prog_4
+argument_list|,
+name|IPPROTO_UDP
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to register (NLM_PROG, NLM4_VERS, udp)"
 argument_list|)
 expr_stmt|;
 name|transp
@@ -371,6 +421,29 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"unable to register (NLM_PROG, NLM_VERSX, tcp)"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|svc_register
+argument_list|(
+name|transp
+argument_list|,
+name|NLM_PROG
+argument_list|,
+name|NLM4_VERS
+argument_list|,
+name|nlm_prog_4
+argument_list|,
+name|IPPROTO_TCP
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to register (NLM_PROG, NLM4_VERS, tcp)"
 argument_list|)
 expr_stmt|;
 comment|/* Note that it is NOT sensible to run this program from inetd - the 	*/

@@ -1603,6 +1603,29 @@ name|struct
 name|timeval
 name|tim
 decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|2
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"usage: %s<lockd hostname>\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"Creating client for host %s\n"
