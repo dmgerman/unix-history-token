@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx_reg.h,v 1.6 1996/03/10 07:02:32 gibbs Exp $  */
+comment|/*  * Aic7xxx register and scratch ram definitions.  *  * Copyright (c) 1994, 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7xxx_reg.h,v 1.7 1996/03/31 03:02:37 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -2221,8 +2221,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCB_NEXT_WAITING
+name|SCB_TAG
 value|0x0b9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_NEXT
+value|0x0ba
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PREV
+value|0x0bb
 end_define
 
 begin_ifdef
@@ -2432,13 +2446,20 @@ value|0x020
 end_define
 
 begin_comment
-comment|/*  * The sequencer will stick the frist byte of any rejected message here so  * we can see what is getting thrown away.  */
+comment|/*  * The sequencer will stick the frist byte of any rejected message here so  * we can see what is getting thrown away.  Extended messages put the  * extended message type in REJBYTE_EXT.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|REJBYTE
+value|0x030
+end_define
+
+begin_define
+define|#
+directive|define
+name|REJBYTE_EXT
 value|0x031
 end_define
 
@@ -2477,6 +2498,10 @@ directive|define
 name|MSG_LEN
 value|0x034
 end_define
+
+begin_comment
+comment|/* We reserve 8bytes to store outgoing messages */
+end_comment
 
 begin_define
 define|#
@@ -2531,6 +2556,20 @@ name|MSG5
 value|0x03a
 end_define
 
+begin_define
+define|#
+directive|define
+name|MSG6
+value|0x03b
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG7
+value|0x03c
+end_define
+
 begin_comment
 comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
 end_comment
@@ -2539,28 +2578,28 @@ begin_define
 define|#
 directive|define
 name|LASTPHASE
-value|0x049
+value|0x03d
 end_define
 
 begin_define
 define|#
 directive|define
 name|ARG_1
-value|0x04a
+value|0x03e
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXOFFSET
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|RETURN_1
-value|0x04a
-end_define
-
-begin_define
-define|#
-directive|define
-name|SEND_SENSE
-value|0x80
+value|0x03f
 end_define
 
 begin_define
@@ -2574,28 +2613,42 @@ begin_define
 define|#
 directive|define
 name|SEND_SDTR
-value|0x80
+value|0x60
 end_define
 
 begin_define
 define|#
 directive|define
-name|SEND_REJ
+name|SEND_SENSE
 value|0x40
 end_define
 
 begin_define
 define|#
 directive|define
+name|SEND_REJ
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCB_PAGEDIN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIGSTATE
-value|0x04b
+value|0x040
 end_define
 
 begin_define
 define|#
 directive|define
 name|DMAPARAMS
-value|0x04c
+value|0x041
 end_define
 
 begin_comment
@@ -2606,14 +2659,14 @@ begin_define
 define|#
 directive|define
 name|SG_COUNT
-value|0x04d
+value|0x042
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT
-value|0x04e
+value|0x043
 end_define
 
 begin_comment
@@ -2624,35 +2677,35 @@ begin_define
 define|#
 directive|define
 name|SG_NEXT0
-value|0x04e
+value|0x043
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT1
-value|0x04f
+value|0x044
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT2
-value|0x050
+value|0x045
 end_define
 
 begin_define
 define|#
 directive|define
 name|SG_NEXT3
-value|0x051
+value|0x046
 end_define
 
 begin_define
 define|#
 directive|define
 name|SCBCOUNT
-value|0x052
+value|0x047
 end_define
 
 begin_comment
@@ -2662,8 +2715,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|COMP_SCBCOUNT
+value|0x048
+end_define
+
+begin_comment
+comment|/* 					 * Two's compliment of SCBCOUNT 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCNTMASK
+value|0x049
+end_define
+
+begin_comment
+comment|/* 					 * Mask of bits to test against 					 * when looking at the Queue Count 					 * registers.  Works around a bug 					 * on aic7850 chips.  					 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FLAGS
-value|0x053
+value|0x04a
 end_define
 
 begin_define
@@ -2690,15 +2765,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|DPHASE
+name|PAGESCBS
 value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAXOFFSET
-value|0x08
+name|DPHASE
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SELECTED
+value|0x20
 end_define
 
 begin_define
@@ -2718,22 +2800,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACTIVE_A
-value|0x054
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACTIVE_B
-value|0x055
-end_define
-
-begin_define
-define|#
-directive|define
 name|SAVED_TCL
-value|0x056
+value|0x04b
 end_define
 
 begin_comment
@@ -2743,8 +2811,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACTIVE_A
+value|0x04c
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACTIVE_B
+value|0x04d
+end_define
+
+begin_define
+define|#
+directive|define
 name|WAITING_SCBH
-value|0x057
+value|0x04e
 end_define
 
 begin_comment
@@ -2754,26 +2836,33 @@ end_comment
 begin_define
 define|#
 directive|define
-name|QCNTMASK
-value|0x058
+name|DISCONNECTED_SCBH
+value|0x04f
 end_define
 
 begin_comment
-comment|/* 					 * Mask of bits to test against 					 * when looking at the Queue Count 					 * registers.  Works around a bug 					 * on aic7850 chips.  					 */
+comment|/* 					 * head of list of SCBs that are 					 * disconnected.  Used for SCB 					 * paging. 					 */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|COMP_SCBCOUNT
-value|0x059
-end_define
 
 begin_define
 define|#
 directive|define
 name|SCB_LIST_NULL
 value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_LINKPTR
+value|0x050
+end_define
+
+begin_define
+define|#
+directive|define
+name|SAVED_SCBPTR
+value|0x051
 end_define
 
 begin_define
@@ -2897,6 +2986,13 @@ define|#
 directive|define
 name|MSG_BUS_DEVICE_RESET
 value|0x0c
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSG_ABORT_TAG
+value|0x0d
 end_define
 
 begin_define
