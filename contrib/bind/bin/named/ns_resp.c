@@ -1187,6 +1187,8 @@ decl_stmt|,
 name|lastwascname
 decl_stmt|,
 name|externalcname
+decl_stmt|,
+name|cachenegative
 decl_stmt|;
 name|int
 name|count
@@ -4311,6 +4313,10 @@ name|externalcname
 operator|=
 literal|0
 expr_stmt|;
+name|cachenegative
+operator|=
+literal|1
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|aname
@@ -4652,6 +4658,10 @@ name|validanswer
 operator|=
 literal|0
 expr_stmt|;
+name|cachenegative
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -4789,6 +4799,10 @@ name|validanswer
 operator|=
 literal|0
 expr_stmt|;
+name|cachenegative
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 block|}
 if|if
@@ -4861,6 +4875,10 @@ name|validanswer
 operator|=
 literal|0
 expr_stmt|;
+name|cachenegative
+operator|=
+literal|0
+expr_stmt|;
 continue|continue;
 block|}
 elseif|else
@@ -4927,6 +4945,10 @@ name|dp
 argument_list|)
 expr_stmt|;
 name|validanswer
+operator|=
+literal|0
+expr_stmt|;
+name|cachenegative
 operator|=
 literal|0
 expr_stmt|;
@@ -5637,6 +5659,10 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|cachenegative
+condition|)
 name|cache_n_resp
 argument_list|(
 name|msg
