@@ -594,13 +594,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|vm_object_t
-name|kptobj
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|nklev3
 decl_stmt|,
@@ -2070,18 +2063,6 @@ argument_list|(
 name|pvzone
 argument_list|,
 name|initial_pvs
-argument_list|)
-expr_stmt|;
-comment|/* 	 * object for kernel page table pages 	 */
-name|kptobj
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|NKLEV3MAPS
-operator|+
-name|NKLEV2MAPS
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
@@ -5900,10 +5881,12 @@ name|nkpg
 operator|=
 name|vm_page_alloc
 argument_list|(
-name|kptobj
+name|NULL
 argument_list|,
 name|pindex
 argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
 name|VM_ALLOC_INTERRUPT
 operator||
 name|VM_ALLOC_WIRED
@@ -6044,10 +6027,12 @@ name|nkpg
 operator|=
 name|vm_page_alloc
 argument_list|(
-name|kptobj
+name|NULL
 argument_list|,
 name|nklev3
 argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
 name|VM_ALLOC_INTERRUPT
 operator||
 name|VM_ALLOC_WIRED

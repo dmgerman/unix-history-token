@@ -523,13 +523,6 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|vm_object_t
-name|kptobj
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|nkpt
 decl_stmt|;
@@ -2375,16 +2368,6 @@ argument_list|,
 name|initial_pvs
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the object for the kernel's page tables. 	 */
-name|kptobj
-operator|=
-name|vm_object_allocate
-argument_list|(
-name|OBJT_DEFAULT
-argument_list|,
-name|MAXKPT
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Now it is safe to enable pv_table recording. 	 */
 name|pmap_initialized
 operator|=
@@ -3683,10 +3666,12 @@ name|nkpg
 operator|=
 name|vm_page_alloc
 argument_list|(
-name|kptobj
+name|NULL
 argument_list|,
 name|nkpt
 argument_list|,
+name|VM_ALLOC_NOOBJ
+operator||
 name|VM_ALLOC_SYSTEM
 operator||
 name|VM_ALLOC_WIRED
