@@ -18,16 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"ahc.h"
-end_include
-
-begin_comment
-comment|/* for NAHC from config */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|"opt_aic7xxx.h"
 end_include
 
