@@ -282,7 +282,7 @@ operator|.
 name|length
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|r
 operator|->
@@ -321,7 +321,7 @@ operator|.
 name|skill
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|r
 operator|->

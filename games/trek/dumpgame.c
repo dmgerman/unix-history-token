@@ -418,7 +418,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|int
+name|long
 name|junk
 decl_stmt|;
 name|fd

@@ -278,7 +278,7 @@ expr_stmt|;
 switch|switch
 condition|(
 operator|(
-name|int
+name|long
 operator|)
 name|r
 operator|->

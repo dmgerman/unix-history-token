@@ -377,7 +377,7 @@ expr_stmt|;
 name|manual
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|ptr
 operator|->

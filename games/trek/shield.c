@@ -286,7 +286,7 @@ expr_stmt|;
 name|i
 operator|=
 operator|(
-name|int
+name|long
 operator|)
 name|r
 operator|->
