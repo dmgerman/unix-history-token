@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1997 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Structure and function declartaions for the  * SCSI Sequential Access Peripheral driver for CAM.  *  * Copyright (c) 1999, 2000 Matthew Jacob  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -473,6 +473,7 @@ comment|/* 0x0e */
 name|u_int8_t
 name|byte2
 decl_stmt|;
+comment|/* CAP, CAF, Active Format */
 name|u_int8_t
 name|active_partition
 decl_stmt|;
@@ -549,9 +550,25 @@ define|#
 directive|define
 name|SA_COMP_DEFAULT
 value|0x01
+comment|/* the following is 'reserved' in SCSI-2 but is defined in SSC-r22 */
 name|u_int8_t
-name|reserved
+name|extra_wp
 decl_stmt|;
+define|#
+directive|define
+name|SA_ASOC_WP
+value|0x04
+comment|/* Associated Write Protect */
+define|#
+directive|define
+name|SA_PERS_WP
+value|0x02
+comment|/* Persistent Write Protect */
+define|#
+directive|define
+name|SA_PERM_WP
+value|0x01
+comment|/* Permanent Write Protect */
 block|}
 struct|;
 end_struct
@@ -571,6 +588,10 @@ comment|/* 0x0f */
 name|u_int8_t
 name|page_length
 decl_stmt|;
+comment|/* 0x0e */
+name|u_int8_t
+name|dce_and_dcc
+decl_stmt|;
 define|#
 directive|define
 name|SA_DCP_DCE
@@ -582,7 +603,7 @@ name|SA_DCP_DCC
 value|0x40
 comment|/* Data compression capable */
 name|u_int8_t
-name|dce_and_dcc
+name|dde_and_red
 decl_stmt|;
 define|#
 directive|define
@@ -610,9 +631,6 @@ define|#
 directive|define
 name|SA_DCP_RED_2
 value|0x40
-name|u_int8_t
-name|dde_and_red
-decl_stmt|;
 name|u_int8_t
 name|comp_algorithm
 index|[
