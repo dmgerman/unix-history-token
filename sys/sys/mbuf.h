@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $Id: mbuf.h,v 1.20 1997/02/22 09:45:32 peter Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $Id: mbuf.h,v 1.21 1997/02/24 20:32:07 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -485,23 +485,17 @@ begin_comment
 comment|/* packet header */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_SOCKET
-value|3
-end_define
+begin_comment
+comment|/*efine	MT_SOCKET	3*/
+end_comment
 
 begin_comment
 comment|/* socket structure */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_PCB
-value|4
-end_define
+begin_comment
+comment|/*efine	MT_PCB		4*/
+end_comment
 
 begin_comment
 comment|/* protocol control block */
@@ -518,23 +512,17 @@ begin_comment
 comment|/* routing tables */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_HTABLE
-value|6
-end_define
+begin_comment
+comment|/*efine	MT_HTABLE	6*/
+end_comment
 
 begin_comment
 comment|/* IMP host tables */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_ATABLE
-value|7
-end_define
+begin_comment
+comment|/*efine	MT_ATABLE	7*/
+end_comment
 
 begin_comment
 comment|/* address resolution tables */
@@ -573,23 +561,17 @@ begin_comment
 comment|/* fragment reassembly header */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_RIGHTS
-value|12
-end_define
+begin_comment
+comment|/*efine	MT_RIGHTS	12*/
+end_comment
 
 begin_comment
 comment|/* access rights */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MT_IFADDR
-value|13
-end_define
+begin_comment
+comment|/*efine	MT_IFADDR	13*/
+end_comment
 
 begin_comment
 comment|/* interface address */
@@ -1479,21 +1461,21 @@ comment|/* MT_DATA	1	   dynamic (data) allocation */
 name|M_MBUF
 block|,
 comment|/* MT_HEADER	2	   packet header */
-name|M_SOCKET
+literal|0
 block|,
-comment|/* MT_SOCKET	3	   socket structure */
-name|M_PCB
+comment|/*		3 */
+literal|0
 block|,
-comment|/* MT_PCB	4	   protocol control block */
+comment|/*		4 */
 name|M_RTABLE
 block|,
 comment|/* MT_RTABLE	5	   routing tables */
-name|M_HTABLE
-block|,
-comment|/* MT_HTABLE	6	   IMP host tables */
 literal|0
 block|,
-comment|/* MT_ATABLE	7	   address resolution tables */
+comment|/*		6 */
+literal|0
+block|,
+comment|/*		7 */
 name|M_MBUF
 block|,
 comment|/* MT_SONAME	8	   socket name */
@@ -1506,39 +1488,18 @@ comment|/* MT_SOOPTS	10	   socket options */
 name|M_FTABLE
 block|,
 comment|/* MT_FTABLE	11	   fragment reassembly header */
-name|M_MBUF
+literal|0
 block|,
-comment|/* MT_RIGHTS	12	   access rights */
-name|M_IFADDR
+comment|/*		12 */
+literal|0
 block|,
-comment|/* MT_IFADDR	13	   interface address */
+comment|/*		13 */
 name|M_MBUF
 block|,
 comment|/* MT_CONTROL	14	   extra-data protocol message */
 name|M_MBUF
 block|,
 comment|/* MT_OOBDATA	15	   expedited data  */
-ifdef|#
-directive|ifdef
-name|DATAKIT
-literal|25
-block|,
-literal|26
-block|,
-literal|27
-block|,
-literal|28
-block|,
-literal|29
-block|,
-literal|30
-block|,
-literal|31
-block|,
-literal|32
-comment|/* datakit ugliness */
-endif|#
-directive|endif
 block|}
 decl_stmt|;
 end_decl_stmt

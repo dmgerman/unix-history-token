@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.12 (Berkeley) 5/20/95  * $Id: nfs_vfsops.c,v 1.43 1997/06/03 17:22:47 dfr Exp $  */
+comment|/*  * Copyright (c) 1989, 1993, 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)nfs_vfsops.c	8.12 (Berkeley) 5/20/95  * $Id: nfs_vfsops.c,v 1.44 1997/06/27 19:10:46 wpaul Exp $  */
 end_comment
 
 begin_include
@@ -322,7 +322,7 @@ name|mount
 operator|*
 operator|,
 expr|struct
-name|mbuf
+name|sockaddr
 operator|*
 operator|,
 name|char
@@ -567,7 +567,7 @@ operator|*
 name|fhp
 operator|,
 expr|struct
-name|mbuf
+name|sockaddr
 operator|*
 name|nam
 operator|,
@@ -3266,9 +3266,9 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
-name|m
+name|nam
 decl_stmt|;
 name|int
 name|error
@@ -3315,41 +3315,19 @@ name|mnt_flag
 operator|=
 name|mountflag
 expr_stmt|;
-name|MGET
-argument_list|(
-name|m
-argument_list|,
-name|MT_SONAME
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bcopy
+name|nam
+operator|=
+name|dup_sockaddr
 argument_list|(
 operator|(
-name|caddr_t
+expr|struct
+name|sockaddr
+operator|*
 operator|)
 name|sin
 argument_list|,
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
+literal|1
 argument_list|)
-argument_list|,
-name|sin
-operator|->
-name|sin_len
-argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_len
-operator|=
-name|sin
-operator|->
-name|sin_len
 expr_stmt|;
 if|if
 condition|(
@@ -3361,7 +3339,7 @@ name|args
 argument_list|,
 name|mp
 argument_list|,
-name|m
+name|nam
 argument_list|,
 name|which
 argument_list|,
@@ -3401,6 +3379,13 @@ argument_list|(
 name|mp
 argument_list|,
 name|M_MOUNT
+argument_list|)
+expr_stmt|;
+name|FREE
+argument_list|(
+name|nam
+argument_list|,
+name|M_SONAME
 argument_list|)
 expr_stmt|;
 return|return
@@ -3496,7 +3481,7 @@ name|nfs_args
 name|args
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 decl_stmt|;
@@ -3748,7 +3733,7 @@ expr_stmt|;
 comment|/* sockargs() call must be after above copyin() calls */
 name|error
 operator|=
-name|sockargs
+name|getsockaddr
 argument_list|(
 operator|&
 name|nam
@@ -3763,8 +3748,6 @@ argument_list|,
 name|args
 operator|.
 name|addrlen
-argument_list|,
-name|MT_SONAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -3843,7 +3826,7 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 decl_stmt|;
@@ -3904,9 +3887,11 @@ name|mp
 argument_list|)
 expr_stmt|;
 comment|/* update paths, file handles, etc, here	XXX */
-name|m_freem
+name|FREE
 argument_list|(
 name|nam
+argument_list|,
+name|M_SONAME
 argument_list|)
 expr_stmt|;
 return|return
@@ -4772,9 +4757,11 @@ argument_list|,
 name|M_NFSMNT
 argument_list|)
 expr_stmt|;
-name|m_freem
+name|FREE
 argument_list|(
 name|nam
+argument_list|,
+name|M_SONAME
 argument_list|)
 expr_stmt|;
 return|return
@@ -5021,11 +5008,13 @@ argument_list|(
 name|nmp
 argument_list|)
 expr_stmt|;
-name|m_freem
+name|FREE
 argument_list|(
 name|nmp
 operator|->
 name|nm_nam
+argument_list|,
+name|M_SONAME
 argument_list|)
 expr_stmt|;
 if|if
@@ -5426,7 +5415,7 @@ modifier|*
 name|fhp
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 decl_stmt|;

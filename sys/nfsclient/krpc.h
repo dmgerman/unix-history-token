@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc.h,v 1.4 1995/12/19 23:07:11 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc.h,v 1.2 1997/05/11 18:05:39 tegge Exp $	*/
+comment|/*	$Id: krpc.h,v 1.3 1997/06/12 14:03:16 tegge Exp $	*/
 end_comment
 
 begin_include
@@ -40,7 +40,7 @@ operator|*
 name|data
 operator|,
 expr|struct
-name|mbuf
+name|sockaddr
 operator|*
 operator|*
 name|from

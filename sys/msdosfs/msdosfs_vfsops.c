@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.18 1997/03/18 19:50:10 peter Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.19 1997/03/23 03:37:06 bde Exp $ */
 end_comment
 
 begin_comment
@@ -167,7 +167,7 @@ name|fid
 operator|*
 operator|,
 expr|struct
-name|mbuf
+name|sockaddr
 operator|*
 operator|,
 expr|struct
@@ -3431,7 +3431,7 @@ modifier|*
 name|fhp
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 decl_stmt|;

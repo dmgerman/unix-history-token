@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.18 1997/07/14 04:30:22 julian Exp $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.19 1997/08/02 14:31:55 bde Exp $  *  *  */
 end_comment
 
 begin_include
@@ -1216,7 +1216,7 @@ modifier|*
 name|fhp
 parameter_list|,
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 parameter_list|,

@@ -181,7 +181,7 @@ name|fid
 operator|*
 operator|,
 expr|struct
-name|mbuf
+name|sockaddr
 operator|*
 operator|,
 expr|struct
@@ -5283,7 +5283,7 @@ modifier|*
 name|fhp
 decl_stmt|;
 name|struct
-name|mbuf
+name|sockaddr
 modifier|*
 name|nam
 decl_stmt|;
