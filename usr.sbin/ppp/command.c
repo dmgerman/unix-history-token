@@ -848,7 +848,7 @@ name|char
 name|Version
 index|[]
 init|=
-literal|"3.3"
+literal|"3.4"
 decl_stmt|;
 end_decl_stmt
 

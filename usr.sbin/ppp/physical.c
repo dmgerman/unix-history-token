@@ -117,6 +117,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -404,6 +410,12 @@ begin_include
 include|#
 directive|include
 file|"auth.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"main.h"
 end_include
 
 begin_include
@@ -4948,6 +4960,9 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+if|if
+condition|(
+operator|(
 name|iov
 index|[
 operator|*
@@ -4960,7 +4975,26 @@ name|malloc
 argument_list|(
 name|sz
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogALERT
+argument_list|,
+literal|"physical2iov: Out of memory (%d bytes)\n"
+argument_list|,
+name|sz
+argument_list|)
 expr_stmt|;
+name|AbortProgram
+argument_list|(
+name|EX_OSERR
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|h

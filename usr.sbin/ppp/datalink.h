@@ -734,19 +734,6 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|char
-modifier|*
-name|datalink_NextName
-parameter_list|(
-name|struct
-name|datalink
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|int
 name|datalink_RemoveFromSet
 parameter_list|(

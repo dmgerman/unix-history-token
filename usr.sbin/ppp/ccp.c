@@ -2108,6 +2108,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 operator|*
 name|o
 operator|=
@@ -2124,7 +2127,26 @@ expr|struct
 name|ccp_opt
 argument_list|)
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|log_Printf
+argument_list|(
+name|LogERROR
+argument_list|,
+literal|"%s: Not enough memory for CCP REQ !\n"
+argument_list|,
+name|fp
+operator|->
+name|link
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
+break|break;
+block|}
 operator|(
 operator|*
 name|o

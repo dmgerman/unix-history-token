@@ -1267,6 +1267,9 @@ name|len
 operator|=
 name|len
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|c
 operator|->
 name|abort
@@ -1288,7 +1291,11 @@ name|len
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
 name|memcpy
 argument_list|(
 name|c
@@ -1320,6 +1327,7 @@ operator|.
 name|num
 operator|++
 expr_stmt|;
+block|}
 block|}
 else|else
 name|log_Printf
