@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)wait.h	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -455,8 +455,21 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_decl_stmt
+begin_macro
 name|__BEGIN_DECLS
+end_macro
+
+begin_struct_decl
+struct_decl|struct
+name|rusage
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* forward declaration */
+end_comment
+
+begin_decl_stmt
 name|pid_t
 name|wait
 name|__P
