@@ -1440,10 +1440,6 @@ end_macro
 
 begin_block
 block|{
-specifier|register
-name|int
-name|i
-decl_stmt|;
 if|if
 condition|(
 name|tfname
@@ -1478,7 +1474,7 @@ do|while
 condition|(
 name|dfname
 index|[
-name|i
+literal|2
 index|]
 operator|--
 operator|!=
@@ -1487,7 +1483,7 @@ condition|)
 do|;
 name|dfname
 index|[
-name|i
+literal|2
 index|]
 operator|=
 literal|'z'
@@ -1497,9 +1493,7 @@ do|while
 condition|(
 name|dfname
 index|[
-name|i
-operator|-
-literal|2
+literal|0
 index|]
 operator|--
 operator|!=
