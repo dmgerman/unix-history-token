@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.9 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,7 +90,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|edstop
+name|quitcmd
 argument_list|()
 decl_stmt|,
 name|rexit
@@ -824,7 +824,7 @@ literal|1000
 block|,
 literal|"quit"
 block|,
-name|edstop
+name|quitcmd
 block|,
 name|NOLIST
 block|,

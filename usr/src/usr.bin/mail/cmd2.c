@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd2.c	5.10 (Berkeley) %G%"
+literal|"@(#)cmd2.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,13 +947,13 @@ end_decl_stmt
 
 begin_block
 block|{
-return|return
-operator|(
 name|delm
 argument_list|(
 name|msgvec
 argument_list|)
-operator|)
+expr_stmt|;
+return|return
+literal|0
 return|;
 block|}
 end_block
@@ -1060,14 +1060,8 @@ argument_list|(
 literal|"At EOF\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"No more messages\n"
@@ -1078,7 +1072,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
 block|}
 end_block
 

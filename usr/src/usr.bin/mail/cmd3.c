@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.17 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,10 +116,7 @@ operator|<
 literal|0
 condition|)
 return|return
-operator|(
-operator|-
 literal|1
-operator|)
 return|;
 if|if
 condition|(
@@ -2627,7 +2624,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Print out the current edit file, if we are editing.  * Otherwise, print the name of the person who's mail  * we are reading.  */
+comment|/*  * Change to another file.  With no argument, print information about  * the current file.  */
 end_comment
 
 begin_expr_stmt
@@ -2645,7 +2642,6 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -2682,7 +2678,6 @@ operator|==
 name|NOSTR
 condition|)
 return|return
-operator|-
 literal|1
 return|;
 name|strcpy
@@ -2704,18 +2699,12 @@ name|argv
 operator|!=
 literal|'%'
 argument_list|)
+operator|<
+literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-name|cp
-argument_list|)
-expr_stmt|;
 return|return
-operator|-
 literal|1
 return|;
-block|}
 name|announce
 argument_list|()
 expr_stmt|;

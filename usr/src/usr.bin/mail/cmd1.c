@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd1.c	5.17 (Berkeley) %G%"
+literal|"@(#)cmd1.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1914,7 +1914,6 @@ literal|"No value set for \"folder\"\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|-
 literal|1
 return|;
 block|}

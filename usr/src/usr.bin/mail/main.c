@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.19 (Berkeley) %G%"
+literal|"@(#)main.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,6 +115,11 @@ name|ef
 decl_stmt|;
 name|char
 name|nosrc
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|isedit
 init|=
 literal|0
 decl_stmt|;
@@ -640,7 +645,7 @@ name|ef
 operator|!=
 name|NOSTR
 condition|)
-name|edit
+name|isedit
 operator|++
 expr_stmt|;
 else|else
@@ -660,6 +665,15 @@ argument_list|)
 operator|)
 operator|==
 name|NOSTR
+operator|||
+name|setfile
+argument_list|(
+name|ef
+argument_list|,
+name|isedit
+argument_list|)
+operator|<
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -669,26 +683,14 @@ expr_stmt|;
 comment|/* error already reported */
 if|if
 condition|(
-name|setfile
-argument_list|(
-name|ef
-argument_list|,
+operator|!
 name|edit
-argument_list|)
-operator|<
+operator|&&
+name|msgCount
+operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|edit
-condition|)
-name|perror
-argument_list|(
-name|ef
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|stderr
@@ -773,41 +775,9 @@ name|prevint
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|edit
-operator|&&
-name|msgCount
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"No mail\n"
-argument_list|)
-expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|commands
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|edit
-condition|)
-block|{
 name|signal
 argument_list|(
 name|SIGHUP
@@ -832,7 +802,6 @@ expr_stmt|;
 name|quit
 argument_list|()
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 literal|0
