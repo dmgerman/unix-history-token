@@ -526,6 +526,14 @@ operator|->
 name|sin_port
 operator|>=
 name|IPPORT_RESERVED
+operator|||
+name|fromp
+operator|->
+name|sin_port
+operator|<
+name|IPPORT_RESERVED
+operator|/
+literal|2
 condition|)
 name|fatal
 argument_list|(
