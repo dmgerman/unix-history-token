@@ -1123,12 +1123,30 @@ name|s_loading
 decl_stmt|;
 comment|/* Loading .mailrc, etc. */
 block|}
-name|sstack
-index|[
-name|NOFILE
-index|]
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SSTACK_SIZE
+value|64
+end_define
+
+begin_comment
+comment|/* XXX was NOFILE. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sstack
+name|sstack
+index|[
+name|SSTACK_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Pushdown current input file and switch to a new one.  * Set the global flag "sourcing" so that others will realize  * that they are no longer reading from a tty (in all probability).  */
@@ -1204,7 +1222,7 @@ if|if
 condition|(
 name|ssp
 operator|>=
-name|NOFILE
+name|SSTACK_SIZE
 operator|-
 literal|1
 condition|)
