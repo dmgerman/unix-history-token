@@ -886,7 +886,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-5.5s %-5.5s %-13.13s %-15.15s %8.8s %5.5s"
+literal|"%-5.5s %5.5s %-11.11s %-17.17s %8.8s %5.5s"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -1238,7 +1238,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%-5.5s %-5lu "
+literal|"%-5.5s %5lu "
 argument_list|,
 name|name
 argument_list|,
@@ -1249,14 +1249,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-13.13s "
+literal|"%-11.11s "
 argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-15.15s "
+literal|"%-17.17s "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -1360,7 +1360,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%-5.5s %-5lu "
+literal|"%-5.5s %5lu "
 argument_list|,
 name|name
 argument_list|,
@@ -1445,7 +1445,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"%-13.13s "
+literal|"%-11.11s "
 argument_list|,
 name|netname
 argument_list|(
@@ -1470,7 +1470,7 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"%-15.15s "
+literal|"%-17.17s "
 argument_list|,
 name|routename
 argument_list|(
