@@ -7943,6 +7943,20 @@ literal|"apm_enable=YES"
 block|}
 block|,
 block|{
+literal|" diskcheckd"
+block|,
+literal|"Background disk scanner"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"diskcheckd_enable=YES"
+block|}
+block|,
+block|{
 literal|" pccard"
 block|,
 literal|"Enable PCCARD (AKA PCMCIA) services (also laptops)"
