@@ -6434,6 +6434,7 @@ operator|&
 name|must_commit
 argument_list|)
 expr_stmt|;
+comment|/* 		 * When setting B_NEEDCOMMIT also set B_CLUSTEROK to try 		 * to cluster the buffers needing commit.  This will allow 		 * the system to submit a single commit rpc for the whole 		 * cluster. 		 */
 if|if
 condition|(
 operator|!
