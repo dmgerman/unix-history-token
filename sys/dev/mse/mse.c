@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.27 1996/06/08 09:37:51 bde Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.28 1996/09/06 23:07:51 phk Exp $  */
 end_comment
 
 begin_comment
@@ -360,6 +360,17 @@ end_define
 
 begin_comment
 comment|/* and Mouse Types */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSE_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* don't move this! */
 end_comment
 
 begin_define
@@ -1199,6 +1210,19 @@ name|dev
 argument_list|)
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_mousetype
+operator|==
+name|MSE_NONE
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 if|if
 condition|(
 name|sc
