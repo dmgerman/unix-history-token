@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acutab.c	5.1 (Berkeley) %G%"
+literal|"@(#)acutab.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +86,15 @@ name|hay_disconnect
 argument_list|()
 decl_stmt|,
 name|hay_abort
+argument_list|()
+decl_stmt|,
+name|cour_dialer
+argument_list|()
+decl_stmt|,
+name|cour_disconnect
+argument_list|()
+decl_stmt|,
+name|cour_abort
 argument_list|()
 decl_stmt|,
 name|v3451_dialer
@@ -227,6 +236,19 @@ block|,
 name|hay_disconnect
 block|,
 name|hay_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|COURIER
+literal|"courier"
+block|,
+name|cour_dialer
+block|,
+name|cour_disconnect
+block|,
+name|cour_abort
 block|,
 endif|#
 directive|endif
