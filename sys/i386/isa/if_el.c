@@ -551,7 +551,7 @@ name|EL_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->el_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->el_mtx)
 end_define
 
 begin_define
@@ -561,7 +561,7 @@ name|EL_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->el_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->el_mtx)
 end_define
 
 begin_comment

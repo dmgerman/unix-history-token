@@ -4,6 +4,10 @@ comment|/*-  * Copyright (c) 1998 Berkeley Software Design, Inc. All rights rese
 end_comment
 
 begin_comment
+comment|/*  * Machine independent bits of mutex implementation and implementation of  * `witness' structure& related debugging routines.  */
+end_comment
+
+begin_comment
 comment|/*  *	Main Entry: witness  *	Pronunciation: 'wit-n&s  *	Function: noun  *	Etymology: Middle English witnesse, from Old English witnes knowledge,  *	    testimony, witness, from 2wit  *	Date: before 12th century  *	1 : attestation of a fact or event : TESTIMONY  *	2 : one that gives evidence; specifically : one who testifies in  *	    a cause or before a judicial tribunal  *	3 : one asked to be present at a transaction so as to be able to  *	    testify to its having taken place  *	4 : one who has personal knowledge of something  *	5 a : something serving as evidence or proof : SIGN  *	  b : public affirmation by word or example of usually  *	      religious faith or conviction<the heroic witness to divine  *	      life -- Pilot>  *	6 capitalized : a member of the Jehovah's Witnesses   */
 end_comment
 
@@ -18,16 +22,6 @@ include|#
 directive|include
 file|"opt_witness.h"
 end_include
-
-begin_comment
-comment|/*  * Cause non-inlined mtx_*() to be compiled.  * Must be defined early because other system headers may include mutex.h.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_KERN_MUTEX_C_
-end_define
 
 begin_include
 include|#
@@ -132,7 +126,7 @@ file|<sys/mutex.h>
 end_include
 
 begin_comment
-comment|/*  * Machine independent bits of the mutex implementation  */
+comment|/*  * The WITNESS-enabled mutex debug structure.  */
 end_comment
 
 begin_ifdef
@@ -206,280 +200,64 @@ comment|/* WITNESS */
 end_comment
 
 begin_comment
-comment|/*  * Assembly macros  *------------------------------------------------------------------------------  */
+comment|/*  * Internal utility macros.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_V
+name|mtx_unowned
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->mtx_lock == MTX_UNOWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_owner
+parameter_list|(
+name|m
+parameter_list|)
+value|(mtx_unowned((m)) ? NULL \ 	: (struct proc *)((m)->mtx_lock& MTX_FLAGMASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RETIP
 parameter_list|(
 name|x
 parameter_list|)
-value|__STRING(x)
+value|*(((uintptr_t *)(&x)) - 1)
 end_define
-
-begin_comment
-comment|/*  * Default, unoptimized mutex micro-operations  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_obtain_lock
-end_ifndef
-
-begin_comment
-comment|/* Actually obtain mtx_lock */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|_obtain_lock
+name|SET_PRIO
 parameter_list|(
-name|mp
+name|p
 parameter_list|,
-name|tid
+name|pri
 parameter_list|)
-define|\
-value|atomic_cmpset_acq_ptr(&(mp)->mtx_lock, (void *)MTX_UNOWNED, (tid))
+value|(p)->p_priority = (pri)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_release_lock
-end_ifndef
 
 begin_comment
-comment|/* Actually release mtx_lock */
+comment|/*  * Early WITNESS-enabled declarations.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_release_lock
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|)
-define|\
-value|atomic_cmpset_rel_ptr(&(mp)->mtx_lock, (tid), (void *)MTX_UNOWNED)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_release_lock_quick
-end_ifndef
-
-begin_comment
-comment|/* Actually release mtx_lock quickly assuming that we own it */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_release_lock_quick
-parameter_list|(
-name|mp
-parameter_list|)
-define|\
-value|atomic_store_rel_ptr(&(mp)->mtx_lock, (void *)MTX_UNOWNED)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_getlock_sleep
-end_ifndef
-
-begin_comment
-comment|/* Get a sleep lock, deal with recursion inline. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_getlock_sleep
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|type
-parameter_list|)
-value|do {				\ 	if (!_obtain_lock(mp, tid)) {					\ 		if (((mp)->mtx_lock& MTX_FLAGMASK) != ((uintptr_t)(tid)))\ 			mtx_enter_hard(mp, (type)& MTX_HARDOPTS, 0);	\ 		else {							\ 			atomic_set_ptr(&(mp)->mtx_lock, MTX_RECURSED);	\ 			(mp)->mtx_recurse++;				\ 		}							\ 	}								\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_getlock_spin_block
-end_ifndef
-
-begin_comment
-comment|/* Get a spin lock, handle recursion inline (as the less common case) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_getlock_spin_block
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|type
-parameter_list|)
-value|do {				\ 	u_int _mtx_intr = save_intr();					\ 	disable_intr();							\ 	if (!_obtain_lock(mp, tid))					\ 		mtx_enter_hard(mp, (type)& MTX_HARDOPTS, _mtx_intr);	\ 	else								\ 		(mp)->mtx_saveintr = _mtx_intr;				\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_getlock_norecurse
-end_ifndef
-
-begin_comment
-comment|/*  * Get a lock without any recursion handling. Calls the hard enter function if  * we can't get it inline.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_getlock_norecurse
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|type
-parameter_list|)
-value|do {				\ 	if (!_obtain_lock(mp, tid))					\ 		mtx_enter_hard((mp), (type)& MTX_HARDOPTS, 0);		\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_exitlock_norecurse
-end_ifndef
-
-begin_comment
-comment|/*  * Release a sleep lock assuming we haven't recursed on it, recursion is handled  * in the hard function.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_exitlock_norecurse
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|type
-parameter_list|)
-value|do {				\ 	if (!_release_lock(mp, tid))					\ 		mtx_exit_hard((mp), (type)& MTX_HARDOPTS);		\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_exitlock
-end_ifndef
-
-begin_comment
-comment|/*  * Release a sleep lock when its likely we recursed (the code to  * deal with simple recursion is inline).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_exitlock
-parameter_list|(
-name|mp
-parameter_list|,
-name|tid
-parameter_list|,
-name|type
-parameter_list|)
-value|do {					\ 	if (!_release_lock(mp, tid)) {					\ 		if ((mp)->mtx_lock& MTX_RECURSED) {			\ 			if (--((mp)->mtx_recurse) == 0)			\ 				atomic_clear_ptr(&(mp)->mtx_lock,	\ 				    MTX_RECURSED);			\ 		} else {						\ 			mtx_exit_hard((mp), (type)& MTX_HARDOPTS);	\ 		}							\ 	}								\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_exitlock_spin
-end_ifndef
-
-begin_comment
-comment|/* Release a spin lock (with possible recursion). */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_exitlock_spin
-parameter_list|(
-name|mp
-parameter_list|)
-value|do {						\ 	if (!mtx_recursed((mp))) {					\ 		int _mtx_intr = (mp)->mtx_saveintr;			\ 									\ 		_release_lock_quick(mp);				\ 		restore_intr(_mtx_intr);				\ 	} else {							\ 		(mp)->mtx_recurse--;					\ 	}								\ } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITNESS
 end_ifdef
+
+begin_comment
+comment|/*  * Internal WITNESS routines which must be prototyped early.  *  * XXX: When/if witness code is cleaned up, it would be wise to place all  *	witness prototyping early in this file.  */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -529,6 +307,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_WITNESS
+argument_list|,
+literal|"witness"
+argument_list|,
+literal|"witness mtx_debug structure"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* All mutexes in system (used for debug/panic) */
 end_comment
@@ -556,7 +346,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set to 0 once mutexes have been fully initialized so that witness code can be  * safely executed.  */
+comment|/*  * This global is set to 0 once it becomes safe to use the witness code.  */
 end_comment
 
 begin_decl_stmt
@@ -578,7 +368,7 @@ comment|/* WITNESS */
 end_comment
 
 begin_comment
-comment|/*  * flag++ is slezoid way of shutting up unused parameter warning  * in mtx_init()  */
+comment|/* XXX XXX XXX  * flag++ is sleazoid way of shuting up warning  */
 end_comment
 
 begin_define
@@ -627,7 +417,7 @@ comment|/* WITNESS */
 end_comment
 
 begin_comment
-comment|/* All mutexes in system (used for debug/panic) */
+comment|/*  * All mutex locks in system are kept on the all_mtx list.  */
 end_comment
 
 begin_decl_stmt
@@ -680,6 +470,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Global variables for book keeping.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
@@ -694,6 +488,10 @@ name|mtx_max_cnt
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Prototypes for non-exported routines.  *  * NOTE: Prototypes for witness routines are placed at the bottom of the file.   */
+end_comment
+
 begin_function_decl
 specifier|static
 name|void
@@ -705,81 +503,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mtx_enter_hard
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|saveintr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|mtx_exit_hard
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|mtx_unowned
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->mtx_lock == MTX_UNOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mtx_owner
-parameter_list|(
-name|m
-parameter_list|)
-value|(mtx_unowned(m) ? NULL \ 			    : (struct proc *)((m)->mtx_lock& MTX_FLAGMASK))
-end_define
-
-begin_define
-define|#
-directive|define
-name|RETIP
-parameter_list|(
-name|x
-parameter_list|)
-value|*(((uintptr_t *)(&x)) - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_PRIO
-parameter_list|(
-name|p
-parameter_list|,
-name|pri
-parameter_list|)
-value|(p)->p_priority = (pri)
-end_define
 
 begin_function
 specifier|static
@@ -954,7 +677,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"XXX: moving process %d(%s) to a new run queue\n"
+literal|"XXX: moving proc %d(%s) to a new run queue\n"
 argument_list|,
 name|p
 operator|->
@@ -1182,20 +905,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get lock 'm', the macro handles the easy (and most common cases) and leaves  * the slow stuff to the mtx_enter_hard() function.  *  * Note: since type is usually a constant much of this code is optimized out.  */
+comment|/*  * The important part of mtx_trylock{,_flags}()  * Tries to acquire lock `m.' We do NOT handle recursion here; we assume that  * if we're called, it's because we know we don't already own this lock.  */
 end_comment
 
 begin_function
-name|void
-name|_mtx_enter
+name|int
+name|_mtx_trylock
 parameter_list|(
 name|struct
 name|mtx
 modifier|*
-name|mtxp
+name|m
 parameter_list|,
 name|int
-name|type
+name|opts
 parameter_list|,
 specifier|const
 name|char
@@ -1206,282 +929,37 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|struct
-name|mtx
-modifier|*
-name|mpp
-init|=
-name|mtxp
-decl_stmt|;
-comment|/* bits only valid on mtx_exit() */
-name|MPASS4
-argument_list|(
-operator|(
-operator|(
-name|type
-operator|)
-operator|&
-operator|(
-name|MTX_NORECURSE
-operator||
-name|MTX_NOSWITCH
-operator|)
-operator|)
-operator|==
-literal|0
-argument_list|,
-name|STR_mtx_bad_type
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_SPIN
-condition|)
-block|{
-comment|/* 		 * Easy cases of spin locks: 		 * 		 * 1) We already own the lock and will simply recurse on it (if 		 *    RLIKELY) 		 * 		 * 2) The lock is free, we just get it 		 */
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_RLIKELY
-condition|)
-block|{
-comment|/* 			 * Check for recursion, if we already have this 			 * lock we just bump the recursion count. 			 */
-if|if
-condition|(
-name|mpp
-operator|->
-name|mtx_lock
-operator|==
-operator|(
-name|uintptr_t
-operator|)
-name|CURTHD
-condition|)
-block|{
-name|mpp
-operator|->
-name|mtx_recurse
-operator|++
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
-block|}
-if|if
-condition|(
-operator|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_TOPHALF
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* 			 * If an interrupt thread uses this we must block 			 * interrupts here. 			 */
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_FIRST
-condition|)
-block|{
-name|ASS_IEN
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
-name|_getlock_norecurse
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|_getlock_spin_block
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|_getlock_norecurse
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Sleep locks */
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_RLIKELY
-condition|)
-name|_getlock_sleep
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-else|else
-name|_getlock_norecurse
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-block|}
-name|done
-label|:
-name|WITNESS_ENTER
-argument_list|(
-name|mpp
-argument_list|,
-name|type
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_QUIET
-operator|)
-operator|==
-literal|0
-condition|)
-name|CTR5
-argument_list|(
-name|KTR_LOCK
-argument_list|,
-name|STR_mtx_enter_fmt
-argument_list|,
-name|mpp
-operator|->
-name|mtx_description
-argument_list|,
-name|mpp
-argument_list|,
-name|mpp
-operator|->
-name|mtx_recurse
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Attempt to get MTX_DEF lock, return non-zero if lock acquired.  *  * XXX DOES NOT HANDLE RECURSION  */
-end_comment
-
-begin_function
-name|int
-name|_mtx_try_enter
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|mtxp
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-block|{
-name|struct
-name|mtx
-modifier|*
-specifier|const
-name|mpp
-init|=
-name|mtxp
-decl_stmt|;
 name|int
 name|rval
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|CURPROC
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"curproc is NULL in _mtx_trylock"
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 	 * _mtx_trylock does not accept MTX_NOSWITCH option. 	 */
+name|MPASS
+argument_list|(
+operator|(
+name|opts
+operator|&
+name|MTX_NOSWITCH
+operator|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|_obtain_lock
 argument_list|(
-name|mpp
+name|m
 argument_list|,
 name|CURTHD
 argument_list|)
@@ -1493,27 +971,34 @@ if|if
 condition|(
 name|rval
 operator|&&
-name|mpp
+name|m
 operator|->
 name|mtx_witness
 operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* 		 * We do not handle recursion in _mtx_trylock; see the 		 * note at the top of the routine. 		 */
 name|MPASS
 argument_list|(
-name|mpp
-operator|->
-name|mtx_recurse
-operator|==
-literal|0
+operator|!
+name|mtx_recursed
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|witness_try_enter
 argument_list|(
-name|mpp
+name|m
 argument_list|,
-name|type
+operator|(
+name|opts
+operator||
+name|m
+operator|->
+name|mtx_flags
+operator|)
 argument_list|,
 name|file
 argument_list|,
@@ -1527,9 +1012,7 @@ comment|/* WITNESS */
 if|if
 condition|(
 operator|(
-operator|(
-name|type
-operator|)
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -1540,13 +1023,13 @@ name|CTR5
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-name|STR_mtx_try_enter_fmt
+literal|"TRY_ENTER %s [%p] result=%d at %s:%d"
 argument_list|,
-name|mpp
+name|m
 operator|->
 name|mtx_description
 argument_list|,
-name|mpp
+name|m
 argument_list|,
 name|rval
 argument_list|,
@@ -1562,20 +1045,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release lock m.  */
+comment|/*  * _mtx_lock_sleep: the tougher part of acquiring an MTX_DEF lock.  *  * We call this if the lock is either contested (i.e. we need to go to  * sleep waiting for it), or if we need to recurse on it.  */
 end_comment
 
 begin_function
 name|void
-name|_mtx_exit
+name|_mtx_lock_sleep
 parameter_list|(
 name|struct
 name|mtx
 modifier|*
-name|mtxp
+name|m
 parameter_list|,
 name|int
-name|type
+name|opts
 parameter_list|,
 specifier|const
 name|char
@@ -1587,274 +1070,12 @@ name|line
 parameter_list|)
 block|{
 name|struct
-name|mtx
-modifier|*
-specifier|const
-name|mpp
-init|=
-name|mtxp
-decl_stmt|;
-name|MPASS4
-argument_list|(
-name|mtx_owned
-argument_list|(
-name|mpp
-argument_list|)
-argument_list|,
-name|STR_mtx_owned
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|WITNESS_EXIT
-argument_list|(
-name|mpp
-argument_list|,
-name|type
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_QUIET
-operator|)
-operator|==
-literal|0
-condition|)
-name|CTR5
-argument_list|(
-name|KTR_LOCK
-argument_list|,
-name|STR_mtx_exit_fmt
-argument_list|,
-name|mpp
-operator|->
-name|mtx_description
-argument_list|,
-name|mpp
-argument_list|,
-name|mpp
-operator|->
-name|mtx_recurse
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_SPIN
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_NORECURSE
-condition|)
-block|{
-name|int
-name|mtx_intr
-init|=
-name|mpp
-operator|->
-name|mtx_saveintr
-decl_stmt|;
-name|MPASS4
-argument_list|(
-name|mpp
-operator|->
-name|mtx_recurse
-operator|==
-literal|0
-argument_list|,
-name|STR_mtx_recurse
-argument_list|,
-name|file
-argument_list|,
-name|line
-argument_list|)
-expr_stmt|;
-name|_release_lock_quick
-argument_list|(
-name|mpp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_TOPHALF
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_FIRST
-condition|)
-block|{
-name|ASS_IDIS
-expr_stmt|;
-name|enable_intr
-argument_list|()
-expr_stmt|;
-block|}
-else|else
-name|restore_intr
-argument_list|(
-name|mtx_intr
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-operator|(
-operator|(
-name|type
-operator|&
-name|MTX_TOPHALF
-operator|)
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|type
-operator|&
-name|MTX_FIRST
-operator|)
-condition|)
-block|{
-name|ASS_IDIS
-expr_stmt|;
-name|ASS_SIEN
-argument_list|(
-name|mpp
-argument_list|)
-expr_stmt|;
-block|}
-name|_exitlock_spin
-argument_list|(
-name|mpp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-comment|/* Handle sleep locks */
-if|if
-condition|(
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_RLIKELY
-condition|)
-name|_exitlock
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-else|else
-block|{
-name|_exitlock_norecurse
-argument_list|(
-name|mpp
-argument_list|,
-name|CURTHD
-argument_list|,
-operator|(
-name|type
-operator|)
-operator|&
-name|MTX_HARDOPTS
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|mtx_enter_hard
-parameter_list|(
-name|struct
-name|mtx
-modifier|*
-name|m
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-name|saveintr
-parameter_list|)
-block|{
-name|struct
 name|proc
 modifier|*
 name|p
 init|=
 name|CURPROC
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"curproc is NULL in mutex"
-operator|)
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|MTX_DEF
-case|:
 if|if
 condition|(
 operator|(
@@ -1889,7 +1110,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -1900,7 +1121,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p recurse"
+literal|"_mtx_lock_sleep: %p recurse"
 argument_list|,
 name|m
 argument_list|)
@@ -1910,7 +1131,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -1921,7 +1142,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p contested (lock=%p) [%p]"
+literal|"mtx_lock: %p contested (lock=%p) [%p]"
 argument_list|,
 name|m
 argument_list|,
@@ -1943,7 +1164,7 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Save our priority.  Even though p_nativepri is protected 		 * by sched_lock, we don't obtain it here as it can be 		 * expensive.  Since this is the only place p_nativepri is 		 * set, and since two CPUs will not be executing the same 		 * process concurrently, we know that no other CPU is going 		 * to be messing with this.  Also, p_nativepri is only read 		 * when we are blocked on a mutex, so that can't be happening 		 * right now either. 		 */
+comment|/* 	 * Save our priority. Even though p_nativepri is protected by 	 * sched_lock, we don't obtain it here as it can be expensive. 	 * Since this is the only place p_nativepri is set, and since two 	 * CPUs will not be executing the same process concurrently, we know 	 * that no other CPU is going to be messing with this. Also, 	 * p_nativepri is only read when we are blocked on a mutex, so that 	 * can't be happening right now either. 	 */
 name|p
 operator|->
 name|p_nativepri
@@ -1971,17 +1192,13 @@ name|proc
 modifier|*
 name|p1
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
-operator||
-name|MTX_RLIKELY
 argument_list|)
 expr_stmt|;
-comment|/* 			 * check if the lock has been released while 			 * waiting for the schedlock. 			 */
+comment|/* 		 * Check if the lock has been released while spinning for 		 * the sched_lock. 		 */
 if|if
 condition|(
 operator|(
@@ -1995,17 +1212,15 @@ operator|==
 name|MTX_UNOWNED
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * The mutex was marked contested on release. This 			 * means that there are processes blocked on it. 			 */
+comment|/* 		 * The mutex was marked contested on release. This means that 		 * there are processes blocked on it. 		 */
 if|if
 condition|(
 name|v
@@ -2034,17 +1249,6 @@ literal|"contested mutex has no contesters"
 operator|)
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|p
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"curproc is NULL for contested mutex"
-operator|)
-argument_list|)
-expr_stmt|;
 name|m
 operator|->
 name|mtx_lock
@@ -2066,7 +1270,6 @@ name|p
 operator|->
 name|p_priority
 condition|)
-block|{
 name|SET_PRIO
 argument_list|(
 name|p
@@ -2076,18 +1279,15 @@ operator|->
 name|p_priority
 argument_list|)
 expr_stmt|;
-block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 			 * If the mutex isn't already contested and 			 * a failure occurs setting the contested bit the 			 * mutex was either release or the 			 * state of the RECURSION bit changed. 			 */
+comment|/* 		 * If the mutex isn't already contested and a failure occurs 		 * setting the contested bit, the mutex was either released 		 * or the state of the MTX_RECURSED bit changed. 		 */
 if|if
 condition|(
 operator|(
@@ -2124,17 +1324,15 @@ operator|)
 argument_list|)
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We definitely have to sleep for this lock */
+comment|/* 		 * We deffinately must sleep for this lock. 		 */
 name|mtx_assert
 argument_list|(
 name|m
@@ -2145,7 +1343,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notyet
-comment|/* 			 * If we're borrowing an interrupted thread's VM 			 * context must clean up before going to sleep. 			 */
+comment|/* 		 * If we're borrowing an interrupted thread's VM context, we 		 * must clean up before going to sleep. 		 */
 if|if
 condition|(
 name|p
@@ -2179,7 +1377,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2190,7 +1388,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: 0x%x interrupted 0x%x"
+literal|"mtx_lock: 0x%x interrupted 0x%x"
 argument_list|,
 name|it
 argument_list|,
@@ -2208,7 +1406,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* Put us on the list of procs blocked on this mutex */
+comment|/* 		 * Put us on the list of threads blocked on this mutex. 		 */
 if|if
 condition|(
 name|TAILQ_EMPTY
@@ -2308,13 +1506,13 @@ name|p_procq
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Save who we're blocked on. 		 */
 name|p
 operator|->
 name|p_blocked
 operator|=
 name|m
 expr_stmt|;
-comment|/* Who we're blocked on */
 name|p
 operator|->
 name|p_mtxname
@@ -2338,7 +1536,7 @@ directive|endif
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2349,7 +1547,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p %p blocked on [%p] %s"
+literal|"_mtx_lock_sleep: p %p blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -2366,7 +1564,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2377,7 +1575,7 @@ name|CTR3
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: p %p free from blocked on [%p] %s"
+literal|"_mtx_lock_sleep: p %p free from blocked on [%p] %s"
 argument_list|,
 name|p
 argument_list|,
@@ -2388,29 +1586,44 @@ operator|->
 name|mtx_description
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
 return|return;
-case|case
-name|MTX_SPIN
-case|:
-case|case
-name|MTX_SPIN
-operator||
-name|MTX_FIRST
-case|:
-case|case
-name|MTX_SPIN
-operator||
-name|MTX_TOPHALF
-case|:
+block|}
+end_function
+
+begin_comment
+comment|/*  * _mtx_lock_spin: the tougher part of acquiring an MTX_SPIN lock.  *  * This is only called if we need to actually spin for the lock. Recursion  * is handled inline.  */
+end_comment
+
+begin_function
+name|void
+name|_mtx_lock_spin
+parameter_list|(
+name|struct
+name|mtx
+modifier|*
+name|m
+parameter_list|,
+name|int
+name|opts
+parameter_list|,
+name|u_int
+name|mtx_intr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2419,27 +1632,8 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|m
-operator|->
-name|mtx_lock
-operator|==
 operator|(
-name|uintptr_t
-operator|)
-name|p
-condition|)
-block|{
-name|m
-operator|->
-name|mtx_recurse
-operator|++
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2450,7 +1644,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p spinning"
+literal|"mtx_lock_spin: %p spinning"
 argument_list|,
 name|m
 argument_list|)
@@ -2467,7 +1661,7 @@ name|_obtain_lock
 argument_list|(
 name|m
 argument_list|,
-name|p
+name|CURPROC
 argument_list|)
 condition|)
 break|break;
@@ -2533,34 +1727,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-if|if
-condition|(
-name|type
-operator|!=
-name|MTX_SPIN
-condition|)
 name|m
 operator|->
 name|mtx_saveintr
 operator|=
-literal|0xbeefface
-expr_stmt|;
-else|else
-endif|#
-directive|endif
-name|m
-operator|->
-name|mtx_saveintr
-operator|=
-name|saveintr
+name|mtx_intr
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2571,20 +1747,22 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_enter: %p spin done"
+literal|"_mtx_lock_spin: %p spin done"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-block|}
 end_function
+
+begin_comment
+comment|/*  * _mtx_unlock_sleep: the tougher part of releasing an MTX_DEF lock.  *  * We are only called here if the lock is recursed or contested (i.e. we  * need to wake up a blocked thread).  */
+end_comment
 
 begin_function
 name|void
-name|mtx_exit_hard
+name|_mtx_unlock_sleep
 parameter_list|(
 name|struct
 name|mtx
@@ -2592,7 +1770,15 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|type
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|struct
@@ -2615,19 +1801,51 @@ name|p
 operator|=
 name|CURPROC
 expr_stmt|;
-switch|switch
+name|MPASS4
+argument_list|(
+name|mtx_owned
+argument_list|(
+name|m
+argument_list|)
+argument_list|,
+literal|"mtx_owned(mpp)"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+if|if
 condition|(
-name|type
+operator|(
+name|opts
+operator|&
+name|MTX_QUIET
+operator|)
+operator|==
+literal|0
 condition|)
-block|{
-case|case
-name|MTX_DEF
-case|:
-case|case
-name|MTX_DEF
-operator||
-name|MTX_NOSWITCH
-case|:
+name|CTR5
+argument_list|(
+name|KTR_LOCK
+argument_list|,
+literal|"REL %s [%p] r=%d at %s:%d"
+argument_list|,
+name|m
+operator|->
+name|mtx_description
+argument_list|,
+name|m
+argument_list|,
+name|m
+operator|->
+name|mtx_recurse
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mtx_recursed
@@ -2660,7 +1878,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2671,25 +1889,23 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p unrecurse"
+literal|"_mtx_unlock_sleep: %p unrecurse"
 argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2700,7 +1916,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p contested"
+literal|"_mtx_unlock_sleep: %p contested"
 argument_list|,
 name|m
 argument_list|)
@@ -2771,7 +1987,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2782,7 +1998,7 @@ name|CTR1
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p not held"
+literal|"_mtx_unlock_sleep: %p not held"
 argument_list|,
 name|m
 argument_list|)
@@ -2864,7 +2080,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2875,7 +2091,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p contested setrunqueue %p"
+literal|"_mtx_unlock_sleep: %p contested setrunqueue %p"
 argument_list|,
 name|m
 argument_list|,
@@ -2908,7 +2124,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_NOSWITCH
 operator|)
@@ -2958,7 +2174,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -2969,7 +2185,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: 0x%x interruped 0x%x"
+literal|"_mtx_unlock_sleep: 0x%x interrupted 0x%x"
 argument_list|,
 name|it
 argument_list|,
@@ -2995,7 +2211,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -3006,7 +2222,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p switching out lock=%p"
+literal|"_mtx_unlock_sleep: %p switching out lock=%p"
 argument_list|,
 name|m
 argument_list|,
@@ -3025,7 +2241,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|type
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -3036,7 +2252,7 @@ name|CTR2
 argument_list|(
 name|KTR_LOCK
 argument_list|,
-literal|"mtx_exit: %p resuming lock=%p"
+literal|"_mtx_unlock_sleep: %p resuming lock=%p"
 argument_list|,
 name|m
 argument_list|,
@@ -3050,126 +2266,23 @@ name|mtx_lock
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|MTX_SPIN
-case|:
-case|case
-name|MTX_SPIN
-operator||
-name|MTX_FIRST
-case|:
-if|if
-condition|(
-name|mtx_recursed
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-name|m
-operator|->
-name|mtx_recurse
-operator|--
 expr_stmt|;
 return|return;
-block|}
-name|MPASS
-argument_list|(
-name|mtx_owned
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|_release_lock_quick
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|type
-operator|&
-name|MTX_FIRST
-condition|)
-name|enable_intr
-argument_list|()
-expr_stmt|;
-comment|/* XXX is this kosher? */
-else|else
-block|{
-name|MPASS
-argument_list|(
-name|m
-operator|->
-name|mtx_saveintr
-operator|!=
-literal|0xbeefface
-argument_list|)
-expr_stmt|;
-name|restore_intr
-argument_list|(
-name|m
-operator|->
-name|mtx_saveintr
-argument_list|)
-expr_stmt|;
-block|}
-break|break;
-case|case
-name|MTX_SPIN
-operator||
-name|MTX_TOPHALF
-case|:
-if|if
-condition|(
-name|mtx_recursed
-argument_list|(
-name|m
-argument_list|)
-condition|)
-block|{
-name|m
-operator|->
-name|mtx_recurse
-operator|--
-expr_stmt|;
-return|return;
-block|}
-name|MPASS
-argument_list|(
-name|mtx_owned
-argument_list|(
-name|m
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|_release_lock_quick
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|panic
-argument_list|(
-literal|"mtx_exit_hard: unsupported type 0x%x\n"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * All the unlocking of MTX_SPIN locks is done inline.  * See the _rel_spin_lock() macro for the details.   */
+end_comment
+
+begin_comment
+comment|/*  * The INVARIANTS-enabled mtx_assert()  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -3359,6 +2472,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The MUTEX_DEBUG-enabled mtx_validate()  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3453,12 +2570,10 @@ condition|)
 return|return
 literal|0
 return|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/*  * XXX - When kernacc() is fixed on the alpha to handle K0_SEG memory properly  * we can re-enable the kernacc() checks.  */
@@ -3686,12 +2801,10 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3707,6 +2820,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Mutex initialization routine; initialize lock `m' of type contained in  * `opts' with options contained in `opts' and description `description.'  * Place on "all_mtx" queue.  */
+end_comment
+
 begin_function
 name|void
 name|mtx_init
@@ -3719,16 +2836,16 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|t
+name|description
 parameter_list|,
 name|int
-name|flag
+name|opts
 parameter_list|)
 block|{
 if|if
 condition|(
 operator|(
-name|flag
+name|opts
 operator|&
 name|MTX_QUIET
 operator|)
@@ -3743,12 +2860,13 @@ literal|"mtx_init %p (%s)"
 argument_list|,
 name|m
 argument_list|,
-name|t
+name|description
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MUTEX_DEBUG
+comment|/* Diagnostic and error correction */
 if|if
 condition|(
 name|mtx_validate
@@ -3758,7 +2876,6 @@ argument_list|,
 name|MV_INIT
 argument_list|)
 condition|)
-comment|/* diagnostic and error correction */
 return|return;
 endif|#
 directive|endif
@@ -3792,7 +2909,6 @@ operator|!
 name|witness_cold
 condition|)
 block|{
-comment|/* XXX - should not use DEVBUF */
 name|m
 operator|->
 name|mtx_debug
@@ -3805,7 +2921,7 @@ expr|struct
 name|mtx_debug
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_WITNESS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -3828,13 +2944,13 @@ name|m
 operator|->
 name|mtx_description
 operator|=
-name|t
+name|description
 expr_stmt|;
 name|m
 operator|->
 name|mtx_flags
 operator|=
-name|flag
+name|opts
 expr_stmt|;
 name|m
 operator|->
@@ -3843,12 +2959,10 @@ operator|=
 name|MTX_UNOWNED
 expr_stmt|;
 comment|/* Put on all mutex queue */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|m
@@ -3891,12 +3005,10 @@ name|mtx_max_cnt
 operator|=
 name|mtx_cur_cnt
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3911,13 +3023,17 @@ name|witness_init
 argument_list|(
 name|m
 argument_list|,
-name|flag
+name|opts
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 block|}
 end_function
+
+begin_comment
+comment|/*  * Remove lock `m' from all_mtx queue.  */
+end_comment
 
 begin_function
 name|void
@@ -4020,6 +3136,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* diagnostic */
 name|mtx_validate
 argument_list|(
 name|m
@@ -4027,7 +3144,6 @@ argument_list|,
 name|MV_DESTROY
 argument_list|)
 expr_stmt|;
-comment|/* diagnostic */
 endif|#
 directive|endif
 ifdef|#
@@ -4048,12 +3164,10 @@ endif|#
 directive|endif
 comment|/* WITNESS */
 comment|/* Remove from the all mutex queue */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|m
@@ -4100,7 +3214,7 @@ name|m
 operator|->
 name|mtx_debug
 argument_list|,
-name|M_DEVBUF
+name|M_WITNESS
 argument_list|)
 expr_stmt|;
 name|m
@@ -4114,19 +3228,17 @@ directive|endif
 name|mtx_cur_cnt
 operator|--
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * The non-inlined versions of the mtx_*() functions are always built (above),  * but the witness code depends on the WITNESS kernel option being specified.  */
+comment|/*  * The WITNESS-enabled diagnostic code.  */
 end_comment
 
 begin_ifdef
@@ -4152,12 +3264,10 @@ modifier|*
 name|mp
 decl_stmt|;
 comment|/* 	 * We have to release Giant before initializing its witness 	 * structure so that WITNESS doesn't get confused. 	 */
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -4168,12 +3278,10 @@ argument_list|,
 name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Iterate through all mutexes and finish up mutex initialization. */
@@ -4197,7 +3305,6 @@ operator|->
 name|mtx_next
 control|)
 block|{
-comment|/* XXX - should not use DEVBUF */
 name|mp
 operator|->
 name|mtx_debug
@@ -4210,7 +3317,7 @@ expr|struct
 name|mtx_debug
 argument_list|)
 argument_list|,
-name|M_DEVBUF
+name|M_WITNESS
 argument_list|,
 name|M_NOWAIT
 operator||
@@ -4236,12 +3343,10 @@ name|mtx_flags
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|all_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Mark the witness code as being ready for use. */
@@ -4253,12 +3358,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -4536,6 +3639,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Witness-enabled globals  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4591,235 +3698,203 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_comment
+comment|/*  * Internal witness routine prototypes  */
+end_comment
+
+begin_function_decl
 specifier|static
 name|struct
 name|witness
 modifier|*
 name|enroll
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|description
-operator|,
+parameter_list|,
 name|int
 name|flag
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|itismychild
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|parent
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|witness
-operator|*
+modifier|*
 name|child
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|removechild
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|parent
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|witness
-operator|*
+modifier|*
 name|child
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|isitmychild
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|parent
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|witness
-operator|*
+modifier|*
 name|child
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|isitmydescendant
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|parent
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|witness
-operator|*
+modifier|*
 name|child
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dup_ok
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|blessed
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|witness
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|witness_displaydescendants
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|fmt
-argument_list|,
-operator|...
-argument_list|)
-operator|,
-expr|struct
+parameter_list|,
+modifier|...
+parameter_list|)
+parameter_list|,
+name|struct
 name|witness
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|witness_leveldescendents
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|parent
-operator|,
+parameter_list|,
 name|int
 name|level
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|witness_levelall
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|struct
 name|witness
 modifier|*
 name|witness_get
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|witness_free
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|witness
-operator|*
+modifier|*
 name|m
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|static
@@ -5368,13 +4443,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_enter
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5398,13 +4471,11 @@ operator|<
 name|i
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5450,13 +4521,11 @@ operator|->
 name|w_level
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5569,7 +4638,7 @@ argument_list|()
 condition|)
 name|panic
 argument_list|(
-literal|"blockable mtx_enter() of %s when not legal @ %s:%d"
+literal|"blockable mtx_lock() of %s when not legal @ %s:%d"
 argument_list|,
 name|m
 operator|->
@@ -5688,13 +4757,11 @@ name|w_mtx
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5714,13 +4781,11 @@ operator|->
 name|w_level
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5740,13 +4805,11 @@ name|w
 argument_list|)
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5800,13 +4863,11 @@ name|w1
 argument_list|)
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -5959,13 +5020,11 @@ argument_list|,
 name|w
 argument_list|)
 condition|)
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -6158,13 +5217,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_enter
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -6182,13 +5239,11 @@ operator|->
 name|w_level
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -6452,13 +5507,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|mtx_enter
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -6477,13 +5530,11 @@ operator|->
 name|w_level
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -6569,7 +5620,7 @@ name|cold
 condition|)
 name|panic
 argument_list|(
-literal|"switchable mtx_exit() of %s when not legal @ %s:%d"
+literal|"switchable mtx_unlock() of %s when not legal @ %s:%d"
 argument_list|,
 name|m
 operator|->
@@ -7000,13 +6051,11 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|mtx_enter
+name|mtx_lock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -7039,13 +6088,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -7088,13 +6135,11 @@ name|w_description
 operator|=
 name|description
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;
@@ -8331,13 +7376,11 @@ name|witness_dead
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin_flags
 argument_list|(
 operator|&
 name|w_mtx
 argument_list|,
-name|MTX_SPIN
-operator||
 name|MTX_QUIET
 argument_list|)
 expr_stmt|;

@@ -1011,7 +1011,7 @@ name|AUE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->aue_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->aue_mtx)
 end_define
 
 begin_define
@@ -1021,7 +1021,7 @@ name|AUE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->aue_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->aue_mtx)
 end_define
 
 begin_define

@@ -1080,12 +1080,10 @@ argument|ng_hook
 argument_list|)
 name|temp
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|hook
@@ -1151,12 +1149,10 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|hook
@@ -1168,12 +1164,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_NG_ALLOC_HOOK
@@ -1192,12 +1186,10 @@ name|hk_magic
 operator|=
 name|HK_MAGIC
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -1210,12 +1202,10 @@ argument_list|,
 name|hk_all
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1246,12 +1236,10 @@ argument|ng_node
 argument_list|)
 name|temp
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|node
@@ -1317,12 +1305,10 @@ name|temp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|node
@@ -1334,12 +1320,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|_NG_ALLOC_NODE
@@ -1358,12 +1342,10 @@ name|nd_magic
 operator|=
 name|ND_MAGIC
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -1376,12 +1358,10 @@ argument_list|,
 name|nd_all
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -1422,7 +1402,7 @@ parameter_list|(
 name|hook
 parameter_list|)
 define|\
-value|do {								\ 		mtx_enter(&ng_nodelist_mtx, MTX_DEF);			\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_exit(&ng_nodelist_mtx, MTX_DEF);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
 end_define
 
 begin_define
@@ -1433,7 +1413,7 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|do {								\ 		mtx_enter(&ng_nodelist_mtx, MTX_DEF);			\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_exit(&ng_nodelist_mtx, MTX_DEF);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
 end_define
 
 begin_else
@@ -2515,12 +2495,10 @@ name|nd_hooks
 argument_list|)
 expr_stmt|;
 comment|/* Link us into the node linked list */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -2533,21 +2511,17 @@ argument_list|,
 name|nd_nodes
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* get an ID and put us in the hash chain */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -2619,12 +2593,10 @@ argument_list|,
 name|nd_idnodes
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Done */
@@ -2880,12 +2852,10 @@ literal|1
 condition|)
 block|{
 comment|/* we were the last */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|node
@@ -2903,20 +2873,16 @@ argument_list|,
 name|nd_nodes
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -2926,12 +2892,10 @@ argument_list|,
 name|nd_idnodes
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -2969,12 +2933,10 @@ block|{
 name|node_p
 name|node
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|NG_IDHASH_FIND
@@ -2993,12 +2955,10 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_idhash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -3268,12 +3228,10 @@ operator|)
 return|;
 block|}
 comment|/* Find node by name */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -3324,12 +3282,10 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4262,12 +4218,10 @@ operator|)
 return|;
 block|}
 comment|/* Link in new type */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_INSERT_HEAD
@@ -4287,12 +4241,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* first ref is linked list */
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4324,12 +4276,10 @@ name|ng_type
 modifier|*
 name|type
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -4356,12 +4306,10 @@ literal|0
 condition|)
 break|break;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -6721,7 +6669,7 @@ name|READER_INCREMENT
 argument_list|)
 expr_stmt|;
 comment|/* ######### End Hack alert ######### */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|(
 operator|&
@@ -6729,8 +6677,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Try again. Another processor (or interrupt for that matter) may 	 * have removed the last queued item that was stopping us from 	 * running, between the previous test, and the moment that we took 	 * the mutex. (Or maybe a writer completed.) 	 */
@@ -6757,7 +6703,7 @@ argument_list|,
 name|READER_INCREMENT
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|(
 operator|&
@@ -6765,8 +6711,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return
@@ -6799,7 +6743,7 @@ argument_list|(
 name|ngq
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 operator|(
@@ -6807,8 +6751,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return
@@ -6836,7 +6778,7 @@ parameter_list|)
 block|{
 name|restart
 label|:
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 operator|(
@@ -6844,8 +6786,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If there are no readers, no writer, and no pending packets, then 	 * we can just go ahead. In all other situations we need to queue the 	 * request 	 */
@@ -6872,7 +6812,7 @@ argument_list|,
 name|WRITER_ACTIVE
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|(
 operator|&
@@ -6880,8 +6820,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -6939,7 +6877,7 @@ argument_list|(
 name|ngq
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 operator|(
@@ -6947,8 +6885,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return
@@ -7026,14 +6962,12 @@ decl_stmt|;
 name|u_int
 name|add_arg
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 for|for
@@ -7158,14 +7092,12 @@ argument_list|,
 name|add_arg
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|NG_FREE_ITEM
@@ -7173,14 +7105,12 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -7192,14 +7122,12 @@ operator|->
 name|q_node
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -7566,7 +7494,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 operator|(
@@ -7574,8 +7502,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|ng_queue_rw
@@ -7604,7 +7530,7 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 operator|(
@@ -7612,8 +7538,6 @@ name|ngq
 operator|->
 name|q_mtx
 operator|)
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return
@@ -7714,14 +7638,12 @@ condition|;
 control|)
 block|{
 comment|/* 		 * dequeue acquires and adjusts the input_queue as it dequeues 		 * packets. It acquires the rw lock as needed. 		 */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|item
@@ -7738,14 +7660,12 @@ operator|!
 name|item
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return
@@ -7754,14 +7674,12 @@ name|error
 operator|)
 return|;
 block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ngq
 operator|->
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We have the appropriate lock, so run the item. 		 * When finished it will drop the lock accordingly 		 */
@@ -9187,12 +9105,10 @@ name|num
 init|=
 literal|0
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Count number of nodes */
@@ -9227,12 +9143,10 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Get response struct */
@@ -9292,12 +9206,10 @@ name|numnames
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -9428,12 +9340,10 @@ name|numnames
 operator|++
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_nodelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9457,12 +9367,10 @@ name|num
 init|=
 literal|0
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Count number of types */
@@ -9479,12 +9387,10 @@ name|num
 operator|++
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Get response struct */
@@ -9544,12 +9450,10 @@ name|numtypes
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
@@ -9629,12 +9533,10 @@ name|numtypes
 operator|++
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10720,12 +10622,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|type
@@ -10741,12 +10641,10 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -10840,12 +10738,10 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|LIST_REMOVE
@@ -10855,12 +10751,10 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ng_typelist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -12169,12 +12063,10 @@ init|;
 condition|;
 control|)
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|node
@@ -12191,12 +12083,10 @@ operator|!
 name|node
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12218,12 +12108,10 @@ argument_list|,
 name|nd_work
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 		 * We have the node. We also take over the reference 		 * that the list had on it. 		 * Now process as much as you can, until it won't 		 * let you have another item off the queue. 		 * All this time, keep the reference 		 * that lets us be sure that the node still exists. 		 * Let the reference go at the last minute. 		 * ng_dequeue will put us back on the worklist 		 * if there is more too do. This may be of use if there 		 * are Multiple Processors and multiple Net threads in the  		 * future. 		 */
@@ -12233,7 +12121,7 @@ init|;
 condition|;
 control|)
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|node
@@ -12241,8 +12129,6 @@ operator|->
 name|nd_input_queue
 operator|.
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|item
@@ -12262,7 +12148,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|node
@@ -12270,8 +12156,6 @@ operator|->
 name|nd_input_queue
 operator|.
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|NG_NODE_UNREF
@@ -12284,7 +12168,7 @@ comment|/* go look for another node */
 block|}
 else|else
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|node
@@ -12292,8 +12176,6 @@ operator|->
 name|nd_input_queue
 operator|.
 name|q_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|ng_apply_item
@@ -12316,12 +12198,10 @@ name|node_p
 name|node
 parameter_list|)
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -12356,12 +12236,10 @@ operator|&=
 operator|~
 name|NG_WORKQ
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}
@@ -12376,12 +12254,10 @@ name|node_p
 name|node
 parameter_list|)
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -12420,12 +12296,10 @@ name|node
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ng_worklist_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|schednetisr

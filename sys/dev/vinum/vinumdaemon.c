@@ -167,12 +167,10 @@ argument_list|(
 name|curproc
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|curproc
@@ -181,12 +179,10 @@ name|p_sflag
 operator||=
 name|PS_INMEM
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|daemon_save_config

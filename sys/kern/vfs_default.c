@@ -1443,7 +1443,7 @@ name|a_flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ap
@@ -1451,8 +1451,6 @@ operator|->
 name|a_vp
 operator|->
 name|v_interlock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -1491,7 +1489,7 @@ name|a_flags
 operator|&
 name|LK_INTERLOCK
 condition|)
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ap
@@ -1499,8 +1497,6 @@ operator|->
 name|a_vp
 operator|->
 name|v_interlock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return

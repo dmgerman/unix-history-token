@@ -1866,7 +1866,7 @@ name|WB_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->wb_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->wb_mtx)
 end_define
 
 begin_define
@@ -1876,7 +1876,7 @@ name|WB_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->wb_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->wb_mtx)
 end_define
 
 begin_comment

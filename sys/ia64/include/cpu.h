@@ -132,7 +132,7 @@ name|need_proftick
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	mtx_enter(&sched_lock, MTX_SPIN);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston();							\ 	mtx_exit(&sched_lock, MTX_SPIN);				\ } while (0)
+value|do {						\ 	mtx_lock_spin(&sched_lock);				\ 	(p)->p_sflag |= PS_OWEUPC;					\ 	aston();							\ 	mtx_unlock_spin(&sched_lock);				\ } while (0)
 end_define
 
 begin_comment

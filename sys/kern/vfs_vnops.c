@@ -3142,14 +3142,12 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -3175,14 +3173,12 @@ name|v_flag
 operator||=
 name|VXWANT
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vp
 operator|->
 name|v_interlock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|tsleep
@@ -3951,7 +3947,7 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|vp
@@ -3959,8 +3955,6 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_INSERT_HEAD
@@ -3979,7 +3973,7 @@ argument_list|,
 name|kn_selnext
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vp
@@ -3987,8 +3981,6 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -4026,7 +4018,7 @@ name|kn_fp
 operator|->
 name|f_data
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|vp
@@ -4034,8 +4026,6 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|SLIST_REMOVE
@@ -4056,7 +4046,7 @@ argument_list|,
 name|kn_selnext
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vp
@@ -4064,8 +4054,6 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

@@ -1890,7 +1890,7 @@ name|SIS_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->sis_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->sis_mtx)
 end_define
 
 begin_define
@@ -1900,7 +1900,7 @@ name|SIS_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->sis_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->sis_mtx)
 end_define
 
 begin_comment

@@ -280,7 +280,7 @@ name|FXP_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->sc_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->sc_mtx)
 end_define
 
 begin_define
@@ -290,7 +290,7 @@ name|FXP_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->sc_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->sc_mtx)
 end_define
 
 end_unit

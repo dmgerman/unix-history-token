@@ -421,7 +421,7 @@ name|ISP_LOCK
 parameter_list|(
 name|x
 parameter_list|)
-value|mtx_enter(&(x)->isp_osinfo.lock, MTX_DEF)
+value|mtx_lock(&(x)->isp_osinfo.lock)
 end_define
 
 begin_define
@@ -431,7 +431,7 @@ name|ISP_UNLOCK
 parameter_list|(
 name|x
 parameter_list|)
-value|mtx_exit(&(x)->isp_osinfo.lock, MTX_DEF)
+value|mtx_unlock(&(x)->isp_osinfo.lock)
 end_define
 
 begin_else

@@ -662,7 +662,7 @@ name|CUE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->cue_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->cue_mtx)
 end_define
 
 begin_define
@@ -672,7 +672,7 @@ name|CUE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->cue_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->cue_mtx)
 end_define
 
 end_unit

@@ -8410,12 +8410,10 @@ operator||
 name|MTX_RECURSE
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* make ldt memory segments */

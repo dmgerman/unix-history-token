@@ -2717,12 +2717,10 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|calcru
@@ -2742,12 +2740,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|tms

@@ -6825,12 +6825,10 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This process needs to be suspended prior to shutdown sync. 	 */

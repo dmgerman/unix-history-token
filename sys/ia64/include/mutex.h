@@ -43,102 +43,18 @@ directive|ifdef
 name|MUTEX_DEBUG
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERN_MUTEX_C_
-end_ifdef
-
-begin_decl_stmt
-name|char
-name|STR_IEN
-index|[]
-init|=
-literal|"psr.i"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_IDIS
-index|[]
-init|=
-literal|"!psr.i"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_SIEN
-index|[]
-init|=
-literal|"mpp->mtx_saveintr& IA64_PSR_I"
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IDIS
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_SIEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASS_IEN
-value|MPASS2((save_intr()& IA64_PSR_I), STR_IEN)
+value|MPASS2((save_intr()& IA64_PSR_I), "psr.i")
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASS_IDIS
-value|MPASS2(!(save_intr()& IA64_PSR_I), STR_IDIS)
+value|MPASS2(!(save_intr()& IA64_PSR_I), "!psr.i")
 end_define
 
 begin_define
@@ -148,7 +64,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2(((mpp)->mtx_saveintr& IA64_PSR_I), STR_SIEN)
+value|MPASS2(((mpp)->mtx_saveintr& IA64_PSR_I),	\ 			"mpp->mtx_saveintr& IA64_PSR_I")
 end_define
 
 begin_define

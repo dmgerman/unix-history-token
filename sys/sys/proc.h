@@ -1608,7 +1608,7 @@ name|PROC_LOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|mtx_enter(&(p)->p_mtx, MTX_DEF)
+value|mtx_lock(&(p)->p_mtx)
 end_define
 
 begin_define
@@ -1618,7 +1618,7 @@ name|PROC_UNLOCK
 parameter_list|(
 name|p
 parameter_list|)
-value|mtx_exit(&(p)->p_mtx, MTX_DEF)
+value|mtx_unlock(&(p)->p_mtx)
 end_define
 
 begin_comment

@@ -920,12 +920,10 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|buftimelock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|locktype
@@ -1052,12 +1050,10 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|buftimelock
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|locktype

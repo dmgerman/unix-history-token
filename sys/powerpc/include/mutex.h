@@ -31,108 +31,18 @@ begin_comment
 comment|/*  * Debugging  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERN_MUTEX_C_
-end_ifdef
-
-begin_decl_stmt
-name|char
-name|STR_IEN
-index|[]
-init|=
-literal|"ps& IPL == IPL_0"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_IDIS
-index|[]
-init|=
-literal|"ps& IPL == IPL_HIGH"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_SIEN
-index|[]
-init|=
-literal|"mpp->mtx_saveintr == IPL_0"
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IDIS
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_SIEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASS_IEN
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_0, STR_IEN)
+value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_0, "ps& IPL == IPL_0")
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASS_IDIS
-value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, STR_IDIS)
+value|MPASS2((alpha_pal_rdps()& ALPHA_PSL_IPL_MASK)	\ 			       == ALPHA_PSL_IPL_HIGH, "ps& IPL == IPL_HIGH")
 end_define
 
 begin_define
@@ -142,7 +52,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr \ 			       == ALPHA_PSL_IPL_0, STR_SIEN)
+value|MPASS2((mpp)->mtx_saveintr \ 			       == ALPHA_PSL_IPL_0, "mpp->mtx_saveintr == IPL_0")
 end_define
 
 begin_define
@@ -158,54 +68,23 @@ begin_comment
 comment|/*  * Assembly macros (for internal use only)  *--------------------------------------------------------------------------  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERN_MUTEX_C_
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_V
-parameter_list|(
-name|x
-parameter_list|)
-value|__STRING(x)
-end_define
-
 begin_comment
-comment|/*  * Get a spin lock, handle recusion inline (as the less common case)  */
+comment|/*  * Get a spin lock, handle recusion inline.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|_getlock_spin_block
+name|_get_spin_lock
 parameter_list|(
 name|mp
 parameter_list|,
 name|tid
 parameter_list|,
-name|type
+name|opts
 parameter_list|)
-value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (!_obtain_lock(mp, tid))					\ 		mtx_enter_hard(mp, (type)& MTX_HARDOPTS, _ipl);	\ 	else {								\ 		alpha_mb();						\ 		(mp)->mtx_saveintr = _ipl;				\ 	}								\ } while (0)
+value|do {				\ 	u_int _ipl = alpha_pal_swpipl(ALPHA_PSL_IPL_HIGH);		\ 	if (!_obtain_lock((mp), (tid))) {				\ 		if ((mp)->mtx_lock == (uintptr_t)(tid))			\ 			(mp)->mtx_recurse++;				\ 		else							\ 			_mtx_lock_spin((mp), (opts), _ipl, __FILE__,	\ 			    __LINE__);					\ 	} else {							\ 		alpha_mb();						\ 		(mp)->mtx_saveintr = _ipl;				\ 	}								\ } while (0)
 end_define
-
-begin_undef
-undef|#
-directive|undef
-name|_V
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
 
 begin_endif
 endif|#
@@ -226,7 +105,7 @@ comment|/* !LOCORE */
 end_comment
 
 begin_comment
-comment|/*  * Simple assembly macros to get and release non-recursive spin locks  */
+comment|/*  * Simple assembly macros to get and release non-recursive spin locks  *  * XXX: These are presently unused and cannot be used right now. Need to be  *	re-written (they are wrong). If you plan to use this and still see  *	this message, know not to unless you fix them first! :-)  */
 end_comment
 
 begin_define

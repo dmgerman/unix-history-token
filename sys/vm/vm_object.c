@@ -1433,12 +1433,10 @@ name|object
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove the object from the global object list. 	 */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|vm_object_list_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1451,12 +1449,10 @@ argument_list|,
 name|object_list
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_object_list_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|wakeup

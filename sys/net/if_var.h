@@ -708,7 +708,7 @@ name|IF_LOCK
 parameter_list|(
 name|ifq
 parameter_list|)
-value|mtx_enter(&(ifq)->ifq_mtx, MTX_DEF)
+value|mtx_lock(&(ifq)->ifq_mtx)
 end_define
 
 begin_define
@@ -718,7 +718,7 @@ name|IF_UNLOCK
 parameter_list|(
 name|ifq
 parameter_list|)
-value|mtx_exit(&(ifq)->ifq_mtx, MTX_DEF)
+value|mtx_unlock(&(ifq)->ifq_mtx)
 end_define
 
 begin_define

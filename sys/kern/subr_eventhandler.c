@@ -209,12 +209,10 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* lock the eventhandler lists */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Do we need to find/create the (slow) list? */
@@ -270,12 +268,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -393,12 +389,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -533,12 +527,10 @@ argument_list|,
 name|CURPROC
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -695,12 +687,10 @@ modifier|*
 name|list
 decl_stmt|;
 comment|/* scan looking for the requested list */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 for|for
@@ -741,12 +731,10 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|eventhandler_mutex
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return

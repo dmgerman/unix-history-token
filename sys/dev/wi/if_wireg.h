@@ -369,7 +369,7 @@ name|WI_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->wi_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->wi_mtx)
 end_define
 
 begin_define
@@ -379,7 +379,7 @@ name|WI_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->wi_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->wi_mtx)
 end_define
 
 begin_define

@@ -1105,12 +1105,10 @@ name|error
 operator|)
 return|;
 block|}
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
@@ -1123,12 +1121,10 @@ argument_list|,
 name|mnt_list
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 operator|(

@@ -3699,7 +3699,7 @@ name|DC_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->dc_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->dc_mtx)
 end_define
 
 begin_define
@@ -3709,7 +3709,7 @@ name|DC_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->dc_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->dc_mtx)
 end_define
 
 begin_define

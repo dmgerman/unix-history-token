@@ -9646,12 +9646,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* lock against other AP's that are waking up */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|ap_boot_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* BSP may have changed PTD while we're waiting for the lock */
@@ -9816,12 +9814,10 @@ expr_stmt|;
 comment|/* historic */
 block|}
 comment|/* let other AP's wake up now */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|ap_boot_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* wait until all the AP's are up */
@@ -9852,12 +9848,10 @@ comment|/* ok, now grab sched_lock and enter the scheduler */
 name|enable_intr
 argument_list|()
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|cpu_throw
@@ -11137,12 +11131,10 @@ operator|!
 name|forward_signal_enabled
 condition|)
 return|return;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 while|while
@@ -11159,12 +11151,10 @@ operator|!=
 name|SRUN
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11175,12 +11165,10 @@ name|p
 operator|->
 name|p_oncpu
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -11246,12 +11234,10 @@ directive|endif
 break|break;
 block|}
 block|}
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -11263,12 +11249,10 @@ operator|->
 name|p_oncpu
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return;
@@ -11818,12 +11802,10 @@ name|arg
 parameter_list|)
 block|{
 comment|/* obtain rendezvous lock */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* set static function pointers */
@@ -11868,12 +11850,10 @@ name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
 comment|/* release lock */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

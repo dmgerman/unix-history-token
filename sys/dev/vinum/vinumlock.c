@@ -310,14 +310,12 @@ comment|/*      * we can't use 0 as a valid address, so      * increment all add
 name|stripe
 operator|++
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|plex
 operator|->
 name|lockmtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* Wait here if the table is full */
@@ -568,14 +566,12 @@ name|usedlocks
 operator|++
 expr_stmt|;
 comment|/* one more lock */
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|plex
 operator|->
 name|lockmtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#

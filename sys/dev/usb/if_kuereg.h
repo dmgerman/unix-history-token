@@ -673,7 +673,7 @@ name|KUE_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->kue_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->kue_mtx)
 end_define
 
 begin_define
@@ -683,7 +683,7 @@ name|KUE_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->kue_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->kue_mtx)
 end_define
 
 end_unit

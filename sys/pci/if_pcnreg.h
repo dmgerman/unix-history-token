@@ -2301,7 +2301,7 @@ name|PCN_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->pcn_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->pcn_mtx)
 end_define
 
 begin_define
@@ -2311,7 +2311,7 @@ name|PCN_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->pcn_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->pcn_mtx)
 end_define
 
 begin_comment

@@ -11301,12 +11301,10 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* Pick interesting process. */
@@ -11407,12 +11405,10 @@ name|p_vmspace
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|ttyprintf

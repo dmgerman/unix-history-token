@@ -1012,12 +1012,10 @@ name|subiter
 operator|++
 control|)
 block|{
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|setrunqueue
@@ -1029,12 +1027,10 @@ name|mi_switch
 argument_list|()
 expr_stmt|;
 comment|/* Allow interrupt threads to run */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|DELAY
@@ -2061,12 +2057,10 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* Only 1 CPU can panic at a time */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|panic_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#

@@ -6200,7 +6200,7 @@ name|SK_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->sk_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->sk_mtx)
 end_define
 
 begin_define
@@ -6210,7 +6210,7 @@ name|SK_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->sk_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->sk_mtx)
 end_define
 
 begin_define
@@ -6220,7 +6220,7 @@ name|SK_IF_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->sk_softc->sk_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->sk_softc->sk_mtx)
 end_define
 
 begin_define
@@ -6230,7 +6230,7 @@ name|SK_IF_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->sk_softc->sk_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->sk_softc->sk_mtx)
 end_define
 
 begin_comment

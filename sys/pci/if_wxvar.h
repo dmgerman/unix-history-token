@@ -1057,7 +1057,7 @@ name|WX_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->wx_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->wx_mtx)
 end_define
 
 begin_define
@@ -1067,7 +1067,7 @@ name|WX_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->wx_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->wx_mtx)
 end_define
 
 begin_define
@@ -1077,7 +1077,7 @@ name|WX_ILOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->wx_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->wx_mtx)
 end_define
 
 begin_define
@@ -1087,7 +1087,7 @@ name|WX_IUNLK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->wx_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->wx_mtx)
 end_define
 
 begin_else

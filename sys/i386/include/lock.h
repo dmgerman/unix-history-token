@@ -42,14 +42,14 @@ begin_define
 define|#
 directive|define
 name|IMASK_LOCK
-value|MTX_ENTER(_imen_mtx, MTX_SPIN)
+value|MTX_LOCK_SPIN(_imen_mtx, 0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMASK_UNLOCK
-value|MTX_EXIT(_imen_mtx, MTX_SPIN)
+value|MTX_UNLOCK_SPIN(_imen_mtx)
 end_define
 
 begin_else
@@ -140,7 +140,7 @@ define|#
 directive|define
 name|COM_LOCK
 parameter_list|()
-value|mtx_enter(&com_mtx, MTX_SPIN)
+value|mtx_lock_spin(&com_mtx)
 end_define
 
 begin_define
@@ -148,7 +148,7 @@ define|#
 directive|define
 name|COM_UNLOCK
 parameter_list|()
-value|mtx_exit(&com_mtx, MTX_SPIN)
+value|mtx_unlock_spin(&com_mtx)
 end_define
 
 begin_else

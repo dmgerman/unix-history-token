@@ -725,7 +725,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		mtx_enter((map)->lock.lk_interlock, MTX_DEF); \ 		(map)->lock.lk_flags |= LK_CANRECURSE; \ 		mtx_exit((map)->lock.lk_interlock, MTX_DEF); \ 	} while(0)
+value|do { \ 		mtx_lock((map)->lock.lk_interlock); \ 		(map)->lock.lk_flags |= LK_CANRECURSE; \ 		mtx_unlock((map)->lock.lk_interlock); \ 	} while(0)
 end_define
 
 begin_define
@@ -736,7 +736,7 @@ parameter_list|(
 name|map
 parameter_list|)
 define|\
-value|do { \ 		mtx_enter((map)->lock.lk_interlock, MTX_DEF); \ 		(map)->lock.lk_flags&= ~LK_CANRECURSE; \ 		mtx_exit((map)->lock.lk_interlock, MTX_DEF); \ 	} while(0)
+value|do { \ 		mtx_lock((map)->lock.lk_interlock); \ 		(map)->lock.lk_flags&= ~LK_CANRECURSE; \ 		mtx_unlock((map)->lock.lk_interlock); \ 	} while(0)
 end_define
 
 begin_comment

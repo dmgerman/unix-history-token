@@ -316,12 +316,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -341,12 +339,10 @@ name|sched_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -438,12 +434,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG1
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -471,12 +465,10 @@ operator|->
 name|somecounter
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -711,12 +703,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -724,12 +714,10 @@ argument_list|(
 literal|"Random kthread setting terminate\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -760,12 +748,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -773,12 +759,10 @@ argument_list|(
 literal|"Random initialise\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -908,12 +892,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -921,12 +903,10 @@ argument_list|(
 literal|"Random initialise finish\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -947,12 +927,10 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -960,12 +938,10 @@ argument_list|(
 literal|"Random deinitialise\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -977,12 +953,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -990,25 +964,21 @@ argument_list|(
 literal|"Random deinitialise waiting for thread to terminate\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* Command the hash/reseed thread to end and wait for it to finish */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|harvestring
 operator|.
 name|lockout_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|random_kthread_control
@@ -1037,25 +1007,21 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|harvestring
 operator|.
 name|lockout_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1063,12 +1029,10 @@ argument_list|(
 literal|"Random deinitialise removing mutexes\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1091,12 +1055,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1104,12 +1066,10 @@ argument_list|(
 literal|"Random deinitialise finish\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1164,12 +1124,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1179,23 +1137,19 @@ argument_list|,
 name|fastslow
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
 comment|/* The reseed task must not be jumped on */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|random_reseed_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 1. Hash the accumulated entropy into v[0] */
@@ -1617,23 +1571,19 @@ expr_stmt|;
 comment|/* 7. Dump to seed file */
 comment|/* XXX Not done here yet */
 comment|/* Release the reseed mutex */
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|random_reseed_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1641,12 +1591,10 @@ argument_list|(
 literal|"Reseed finish\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1718,12 +1666,10 @@ name|u_int
 name|retval
 decl_stmt|;
 comment|/* The reseed task must not be jumped on */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|random_reseed_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -1990,12 +1936,10 @@ name|retval
 expr_stmt|;
 block|}
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|random_reseed_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 return|return
@@ -2125,12 +2069,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2138,12 +2080,10 @@ argument_list|(
 literal|"Generator gate\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2230,12 +2170,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2243,12 +2181,10 @@ argument_list|(
 literal|"Generator gate finish\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2299,12 +2235,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG1
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2312,12 +2246,10 @@ argument_list|(
 literal|"Random harvest\n"
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2332,14 +2264,12 @@ block|{
 comment|/* Add the harvested data to the ring buffer, but 		 * do not block. 		 */
 if|if
 condition|(
-name|mtx_try_enter
+name|mtx_trylock
 argument_list|(
 operator|&
 name|harvestring
 operator|.
 name|lockout_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 condition|)
 block|{
@@ -2470,14 +2400,12 @@ name|head
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|harvestring
 operator|.
 name|lockout_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

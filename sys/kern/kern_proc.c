@@ -1777,12 +1777,10 @@ operator|->
 name|ps_sigcatch
 expr_stmt|;
 block|}
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -2168,12 +2166,10 @@ name|p
 operator|->
 name|p_lastcpu
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|sp

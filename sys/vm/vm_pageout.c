@@ -4191,12 +4191,10 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -4214,22 +4212,18 @@ operator|!=
 name|SSLEEP
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* 			 * get the process size 			 */
@@ -4279,12 +4273,10 @@ argument_list|,
 literal|"out of swap space"
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|bigproc
@@ -4304,12 +4296,10 @@ argument_list|(
 name|bigproc
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -4906,12 +4896,10 @@ block|{
 name|int
 name|pass
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize some paging parameters. 	 */
@@ -5394,12 +5382,10 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 while|while
@@ -5471,12 +5457,10 @@ block|{
 continue|continue;
 block|}
 comment|/* 			 * if the process is in a non-running type state, 			 * don't touch it. 			 */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -5494,12 +5478,10 @@ operator|!=
 name|SSLEEP
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -5549,12 +5531,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|size

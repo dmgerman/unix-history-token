@@ -769,12 +769,10 @@ block|}
 else|else
 block|{
 comment|/* register with list of mounted filesystems */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD
@@ -787,12 +785,10 @@ argument_list|,
 name|mnt_list
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|mountlist_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* sanity check system clock against root filesystem timestamp */

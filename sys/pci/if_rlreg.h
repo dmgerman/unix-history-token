@@ -1915,7 +1915,7 @@ name|RL_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->rl_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->rl_mtx)
 end_define
 
 begin_define
@@ -1925,7 +1925,7 @@ name|RL_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->rl_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->rl_mtx)
 end_define
 
 begin_comment

@@ -2186,7 +2186,7 @@ name|VR_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->vr_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->vr_mtx)
 end_define
 
 begin_define
@@ -2196,7 +2196,7 @@ name|VR_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->vr_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->vr_mtx)
 end_define
 
 begin_comment

@@ -642,12 +642,10 @@ argument_list|,
 name|ALPHA_KENTRY_SYS
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|printf
@@ -695,12 +693,10 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -2568,12 +2564,10 @@ operator|!
 name|forward_signal_enabled
 condition|)
 return|return;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 while|while
@@ -2590,12 +2584,10 @@ operator|!=
 name|SRUN
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2606,12 +2598,10 @@ name|p
 operator|->
 name|p_oncpu
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -2675,12 +2665,10 @@ directive|endif
 break|break;
 block|}
 block|}
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -2692,12 +2680,10 @@ operator|->
 name|p_oncpu
 condition|)
 block|{
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3149,12 +3135,10 @@ name|arg
 parameter_list|)
 block|{
 comment|/* obtain rendezvous lock */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* set static function pointers */
@@ -3199,12 +3183,10 @@ name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
 comment|/* release lock */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

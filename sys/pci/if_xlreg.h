@@ -2997,7 +2997,7 @@ name|XL_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->xl_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->xl_mtx)
 end_define
 
 begin_define
@@ -3007,7 +3007,7 @@ name|XL_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->xl_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->xl_mtx)
 end_define
 
 begin_define

@@ -1185,7 +1185,7 @@ name|m_cnt
 parameter_list|,
 name|how
 parameter_list|)
-value|do {				\ 	union mext_refcnt *__mcnt;					\ 									\ 	mtx_enter(&mcntfree.m_mtx, MTX_DEF);				\ 	if (mcntfree.m_head == NULL)					\ 		m_alloc_ref(1, (how));					\ 	__mcnt = mcntfree.m_head;					\ 	if (__mcnt != NULL) {						\ 		mcntfree.m_head = __mcnt->next_ref;			\ 		mbstat.m_refree--;					\ 		__mcnt->refcnt = 0;					\ 	}								\ 	mtx_exit(&mcntfree.m_mtx, MTX_DEF);				\ 	(m_cnt) = __mcnt;						\ } while (0)
+value|do {				\ 	union mext_refcnt *__mcnt;					\ 									\ 	mtx_lock(&mcntfree.m_mtx);				\ 	if (mcntfree.m_head == NULL)					\ 		m_alloc_ref(1, (how));					\ 	__mcnt = mcntfree.m_head;					\ 	if (__mcnt != NULL) {						\ 		mcntfree.m_head = __mcnt->next_ref;			\ 		mbstat.m_refree--;					\ 		__mcnt->refcnt = 0;					\ 	}								\ 	mtx_unlock(&mcntfree.m_mtx);				\ 	(m_cnt) = __mcnt;						\ } while (0)
 end_define
 
 begin_define
@@ -1195,7 +1195,7 @@ name|_MEXT_DEALLOC_CNT
 parameter_list|(
 name|m_cnt
 parameter_list|)
-value|do {					\ 	union mext_refcnt *__mcnt = (m_cnt);				\ 									\ 	mtx_enter(&mcntfree.m_mtx, MTX_DEF);				\ 	__mcnt->next_ref = mcntfree.m_head;				\ 	mcntfree.m_head = __mcnt;					\ 	mbstat.m_refree++;						\ 	mtx_exit(&mcntfree.m_mtx, MTX_DEF);				\ } while (0)
+value|do {					\ 	union mext_refcnt *__mcnt = (m_cnt);				\ 									\ 	mtx_lock(&mcntfree.m_mtx);				\ 	__mcnt->next_ref = mcntfree.m_head;				\ 	mcntfree.m_head = __mcnt;					\ 	mbstat.m_refree++;						\ 	mtx_unlock(&mcntfree.m_mtx);				\ } while (0)
 end_define
 
 begin_define
@@ -1253,7 +1253,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
+value|do {						\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);			\ 		_MGET_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_unlock(&mmbfree.m_mtx);			\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_define
@@ -1279,7 +1279,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_exit(&mmbfree.m_mtx, MTX_DEF);			\ 	(m) = _mm;							\ } while (0)
+value|do {					\ 	struct mbuf *_mm;						\ 	int _mhow = (how);						\ 	int _mtype = (type);						\ 									\ 	mtx_lock(&mmbfree.m_mtx);				\ 	_MGET(_mm, _mhow);						\ 	if (_mm != NULL) {						\ 		mbtypes[_mtype]++;					\ 		mtx_unlock(&mmbfree.m_mtx);			\ 		_MGETHDR_SETUP(_mm, _mtype);				\ 	} else								\ 		mtx_unlock(&mmbfree.m_mtx);			\ 	(m) = _mm;							\ } while (0)
 end_define
 
 begin_comment
@@ -1307,7 +1307,7 @@ name|m
 parameter_list|,
 name|how
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF);				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 			_mm->m_ext.ext_type = EXT_CLUSTER;		\ 		}							\ 	}								\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	mtx_lock(&mclfree.m_mtx);				\ 	_MCLALLOC(_mm->m_ext.ext_buf, (how));				\ 	mtx_unlock(&mclfree.m_mtx);				\ 	if (_mm->m_ext.ext_buf != NULL) {				\ 		MEXT_INIT_REF(_mm, (how));				\ 		if (_mm->m_ext.ref_cnt == NULL) {			\ 			_MCLFREE(_mm->m_ext.ext_buf);			\ 			_mm->m_ext.ext_buf = NULL;			\ 		} else {						\ 			_mm->m_data = _mm->m_ext.ext_buf;		\ 			_mm->m_flags |= M_EXT;				\ 			_mm->m_ext.ext_free = NULL;			\ 			_mm->m_ext.ext_args = NULL;			\ 			_mm->m_ext.ext_size = MCLBYTES;			\ 			_mm->m_ext.ext_type = EXT_CLUSTER;		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1339,7 +1339,7 @@ name|_MCLFREE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	mtx_enter(&mclfree.m_mtx, MTX_DEF);				\ 	_mp->mcl_next = mclfree.m_head;					\ 	mclfree.m_head = _mp;						\ 	mbstat.m_clfree++;						\ 	MBWAKEUP(m_clalloc_wid);					\ 	mtx_exit(&mclfree.m_mtx, MTX_DEF); 				\ } while (0)
+value|do {						\ 	union mcluster *_mp = (union mcluster *)(p);			\ 									\ 	mtx_lock(&mclfree.m_mtx);				\ 	_mp->mcl_next = mclfree.m_head;					\ 	mclfree.m_head = _mp;						\ 	mbstat.m_clfree++;						\ 	MBWAKEUP(m_clalloc_wid);					\ 	mtx_unlock(&mclfree.m_mtx); 				\ } while (0)
 end_define
 
 begin_comment
@@ -1369,7 +1369,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_enter(&mmbfree.m_mtx, MTX_DEF);				\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid);					\ 	mtx_exit(&mmbfree.m_mtx, MTX_DEF); 				\ } while (0)
+value|do {						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE(_mm);						\ 	mtx_lock(&mmbfree.m_mtx);				\ 	mbtypes[_mm->m_type]--;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	(n) = _mm->m_next;						\ 	_mm->m_next = mmbfree.m_head;					\ 	mmbfree.m_head = _mm;						\ 	MBWAKEUP(m_mballoc_wid);					\ 	mtx_unlock(&mmbfree.m_mtx); 				\ } while (0)
 end_define
 
 begin_comment

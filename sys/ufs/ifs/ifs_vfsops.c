@@ -493,12 +493,10 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Lock out the creation of new entries in the FFS hash table in 	 * case getnewvnode() or MALLOC() blocks, otherwise a duplicate 	 * may occur! 	 */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -532,12 +530,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -548,12 +544,10 @@ name|ifs_inode_hash_lock
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If this MALLOC() is performed after the getnewvnode() 	 * it might block, leaving a vnode with a NULL v_data to be 	 * found by ffs_sync() if a sync happens to fire right then, 	 * which will cause a panic because ffs_sync() blindly 	 * dereferences vp->v_data (as well it should). 	 */
@@ -599,12 +593,10 @@ name|error
 condition|)
 block|{
 comment|/* 		 * Do not wake up processes while holding the mutex, 		 * otherwise the processes waken up immediately hit 		 * themselves into the mutex. 		 */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|want_wakeup
@@ -617,12 +609,10 @@ name|ifs_inode_hash_lock
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -767,12 +757,10 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do not wake up processes while holding the mutex, 	 * otherwise the processes waken up immediately hit 	 * themselves into the mutex. 	 */
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|want_wakeup
@@ -785,12 +773,10 @@ name|ifs_inode_hash_lock
 operator|=
 literal|0
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|ifs_inode_hash_mtx
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if

@@ -3466,7 +3466,7 @@ name|AN_LOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_enter(&(_sc)->an_mtx, MTX_DEF)
+value|mtx_lock(&(_sc)->an_mtx)
 end_define
 
 begin_define
@@ -3476,7 +3476,7 @@ name|AN_UNLOCK
 parameter_list|(
 name|_sc
 parameter_list|)
-value|mtx_exit(&(_sc)->an_mtx, MTX_DEF)
+value|mtx_unlock(&(_sc)->an_mtx)
 end_define
 
 begin_decl_stmt

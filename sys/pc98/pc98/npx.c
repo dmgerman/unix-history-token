@@ -2551,12 +2551,10 @@ name|intrframe
 modifier|*
 name|frame
 decl_stmt|;
-name|mtx_enter
+name|mtx_lock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 if|if
@@ -2767,12 +2765,10 @@ name|SIGFPE
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_exit
+name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}

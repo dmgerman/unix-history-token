@@ -712,12 +712,10 @@ operator|+
 name|pin
 expr_stmt|;
 comment|/* IDT vec */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|imen_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|io_apic_write
@@ -746,12 +744,10 @@ operator||
 name|vector
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|imen_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* we only deal with vectored INTs here */
@@ -932,12 +928,10 @@ operator|+
 name|irq
 expr_stmt|;
 comment|/* IDT vec */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|imen_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|io_apic_write
@@ -962,12 +956,10 @@ argument_list|,
 name|target
 argument_list|)
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|imen_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

@@ -2295,12 +2295,10 @@ name|arg
 parameter_list|)
 block|{
 comment|/* obtain rendezvous lock */
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 comment|/* set static function pointers */
@@ -2345,12 +2343,10 @@ name|smp_rendezvous_action
 argument_list|()
 expr_stmt|;
 comment|/* release lock */
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|smp_rv_mtx
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 block|}

@@ -1655,12 +1655,10 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|DROP_GIANT_NOSWITCH
@@ -1691,12 +1689,10 @@ expr_stmt|;
 name|mi_switch
 argument_list|()
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|PICKUP_GIANT

@@ -2301,12 +2301,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|mtx_enter
+name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 if|if
@@ -2342,12 +2340,10 @@ operator|->
 name|p_stat
 index|]
 expr_stmt|;
-name|mtx_exit
+name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
-argument_list|,
-name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 name|PROCTREE_LOCK

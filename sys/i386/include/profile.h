@@ -141,7 +141,7 @@ name|MCOUNT_ENTER
 parameter_list|(
 name|s
 parameter_list|)
-value|{ s = read_eflags(); \  			  __asm __volatile("cli" : : : "memory"); \ 			  mtx_enter(&mcount_mtx, MTX_DEF); }
+value|{ s = read_eflags(); \  			  __asm __volatile("cli" : : : "memory"); \ 			  mtx_lock(&mcount_mtx); }
 end_define
 
 begin_define
@@ -151,7 +151,7 @@ name|MCOUNT_EXIT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ mtx_exit(&mcount_mtx, MTX_DEF); write_eflags(s); }
+value|{ mtx_unlock(&mcount_mtx); write_eflags(s); }
 end_define
 
 begin_else

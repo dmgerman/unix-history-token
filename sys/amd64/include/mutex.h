@@ -49,108 +49,18 @@ begin_comment
 comment|/*  * Debugging  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MUTEX_DEBUG
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERN_MUTEX_C_
-end_ifdef
-
-begin_decl_stmt
-name|char
-name|STR_IEN
-index|[]
-init|=
-literal|"fl& PSL_I"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_IDIS
-index|[]
-init|=
-literal|"!(fl& PSL_I)"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|STR_SIEN
-index|[]
-init|=
-literal|"mpp->mtx_saveintr& PSL_I"
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_IDIS
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|STR_SIEN
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MUTEX_DEBUG */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|ASS_IEN
-value|MPASS2(read_eflags()& PSL_I, STR_IEN)
+value|MPASS2(read_eflags()& PSL_I, "fl& PSL_I")
 end_define
 
 begin_define
 define|#
 directive|define
 name|ASS_IDIS
-value|MPASS2((read_eflags()& PSL_I) == 0, STR_IDIS)
+value|MPASS2((read_eflags()& PSL_I) == 0, "!(fl& PSL_I)")
 end_define
 
 begin_define
@@ -160,7 +70,7 @@ name|ASS_SIEN
 parameter_list|(
 name|mpp
 parameter_list|)
-value|MPASS2((mpp)->mtx_saveintr& PSL_I, STR_SIEN)
+value|MPASS2((mpp)->mtx_saveintr& PSL_I,		\ 			"mpp->mtx_saveintr& PSL_I")
 end_define
 
 begin_define
@@ -174,12 +84,6 @@ end_define
 begin_comment
 comment|/*  * Assembly macros (for internal use only)  *------------------------------------------------------------------------------  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERN_MUTEX_C_
-end_ifdef
 
 begin_define
 define|#
@@ -454,15 +358,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERN_MUTEX_C_ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* _KERNEL */
 end_comment
 
@@ -476,7 +371,35 @@ comment|/* !LOCORE */
 end_comment
 
 begin_comment
-comment|/*  * Simple assembly macros to get and release mutexes.  */
+comment|/*  * Simple assembly macros to get and release mutexes.  *  * Note: All of these macros accept a "flags" argument and are analoguous  *	 to the mtx_lock_flags and mtx_unlock_flags general macros. If one  *	 desires to not pass a flag, the value 0 may be passed as second  *	 argument.  *  * XXX: We only have MTX_LOCK_SPIN and MTX_UNLOCK_SPIN for now, since that's  *	all we use right now. We should add MTX_LOCK and MTX_UNLOCK (for sleep  *	locks) in the near future, however.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTX_LOCK_SPIN
+parameter_list|(
+name|lck
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|pushl %eax ;							\ 	pushl %ecx ;							\ 	pushl %ebx ;							\ 	movl $(MTX_UNOWNED) , %eax ;					\ 	movl PCPU(CURPROC), %ebx ;					\ 	pushfl ;							\ 	popl %ecx ;							\ 	cli ;								\ 	MPLOCKED cmpxchgl %ebx, lck+MTX_LOCK ;				\ 	jz 2f ;								\ 	cmpl lck+MTX_LOCK, %ebx ;					\ 	je 3f ;								\ 	pushl $0 ;							\ 	pushl $0 ;							\ 	pushl %ecx ;							\ 	pushl $flags ;							\ 	pushl $lck ;							\ 	call _mtx_lock_spin ;						\ 	addl $0x14, %esp ;						\ 	jmp 1f ;							\ 3:	movl lck+MTX_RECURSECNT, %ebx ;					\ 	incl %ebx ;							\ 	movl %ebx, lck+MTX_RECURSECNT ;					\ 	jmp 1f ;							\ 2:	movl %ecx, lck+MTX_SAVEINTR ;					\ 1:	popl %ebx ;							\ 	popl %ecx ;							\ 	popl %eax
+end_define
+
+begin_define
+define|#
+directive|define
+name|MTX_UNLOCK_SPIN
+parameter_list|(
+name|lck
+parameter_list|)
+define|\
+value|pushl %edx ;							\ 	pushl %eax ;							\ 	movl lck+MTX_SAVEINTR, %edx ;					\ 	movl lck+MTX_RECURSECNT, %eax ;					\ 	testl %eax, %eax ;						\ 	jne 2f ;							\ 	movl $(MTX_UNOWNED), %eax ;					\ 	xchgl %eax, lck+MTX_LOCK ;					\ 	pushl %edx ;							\ 	popfl ;								\ 	jmp 1f ;							\ 2:	decl %eax ;							\ 	movl %eax, lck+MTX_RECURSECNT ;					\ 1:	popl %eax ;							\ 	popl %edx
+end_define
+
+begin_comment
+comment|/*  * XXX: These two are broken right now and need to be made to work for  * XXX: sleep locks, as the above two work for spin locks. We're not in  * XXX: too much of a rush to do these as we do not use them right now.  */
 end_comment
 
 begin_define
@@ -493,7 +416,7 @@ value|pushl	$0 ;
 comment|/* dummy __LINE__ */
 value|\ 	pushl	$0 ;
 comment|/* dummy __FILE__ */
-value|\ 	pushl	$type ;							\ 	pushl	$lck ;							\ 	call	_mtx_enter ;						\ 	addl	$16,%esp
+value|\ 	pushl	$type ;							\ 	pushl	$lck ;							\ 	call	_mtx_lock_XXX ;						\ 	addl	$16,%esp
 end_define
 
 begin_define
@@ -510,7 +433,7 @@ value|pushl	$0 ;
 comment|/* dummy __LINE__ */
 value|\ 	pushl	$0 ;
 comment|/* dummy __FILE__ */
-value|\ 	pushl	$type ;							\ 	pushl	$lck ;							\ 	call	_mtx_exit ;						\ 	addl	$16,%esp
+value|\ 	pushl	$type ;							\ 	pushl	$lck ;							\ 	call	_mtx_unlock_XXX ;					\ 	addl	$16,%esp
 end_define
 
 begin_endif
