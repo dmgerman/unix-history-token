@@ -1907,36 +1907,61 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
-block|{
-name|unsigned
 name|int
-name|mode64
-decl_stmt|;
-name|unsigned
-name|int
-name|extX
-decl_stmt|;
-comment|/* Used to extend modrm reg field.  */
-name|unsigned
-name|int
-name|extY
-decl_stmt|;
-comment|/* Used to extend SIB index field.  */
-name|unsigned
-name|int
-name|extZ
-decl_stmt|;
-comment|/* Used to extend modrm reg/mem, SIB base, modrm base fields.  */
-name|unsigned
-name|int
-name|empty
-decl_stmt|;
-comment|/* Used to old-style byte registers to new style.  */
-block|}
 name|rex_byte
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|REX_OPCODE
+value|0x40
+end_define
+
+begin_comment
+comment|/* Indicates 64 bit operand size.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_MODE64
+value|8
+end_define
+
+begin_comment
+comment|/* High extension to reg field of modrm byte.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTX
+value|4
+end_define
+
+begin_comment
+comment|/* High extension to SIB index field.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTY
+value|2
+end_define
+
+begin_comment
+comment|/* High extension to base field of modrm or SIB, or reg field of opcode.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REX_EXTZ
+value|1
+end_define
 
 begin_comment
 comment|/* 386 opcode byte to code indirect addressing.  */
