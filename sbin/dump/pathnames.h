@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_RMT
-value|"/etc/rmt"
+value|"/usr/sbin/rmt"
 end_define
 
 end_unit
