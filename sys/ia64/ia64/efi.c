@@ -472,7 +472,7 @@ specifier|static
 name|EFI_GUID
 name|acpi20
 init|=
-name|ACPI_TABLE_GUID
+name|ACPI_20_TABLE_GUID
 decl_stmt|;
 if|if
 condition|(
