@@ -2767,9 +2767,11 @@ name|sysctl
 argument_list|(
 name|mib
 argument_list|,
-operator|(
-name|u_int
-operator|)
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|mib
@@ -2781,6 +2783,7 @@ name|mib
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 argument_list|,
 operator|&
