@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.15 1995/06/28 16:02:05 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.16 1995/07/27 22:04:57 se Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_define
@@ -217,7 +217,7 @@ literal|0x04838086
 case|:
 return|return
 operator|(
-literal|"Intel 82424ZX cache DRAM controller"
+literal|"Intel 82424ZX (Saturn) cache DRAM controller"
 operator|)
 return|;
 case|case
@@ -226,6 +226,14 @@ case|:
 return|return
 operator|(
 literal|"Intel 82375EB PCI-EISA bridge"
+operator|)
+return|;
+case|case
+literal|0x04868086
+case|:
+return|return
+operator|(
+literal|"Intel 82430ZX (Aries)"
 operator|)
 return|;
 case|case
@@ -257,12 +265,68 @@ literal|17
 condition|)
 return|return
 operator|(
-literal|"Intel 82434NX PCI cache memory controller"
+literal|"Intel 82434NX (Neptune) PCI cache memory controller"
 operator|)
 return|;
 return|return
 operator|(
-literal|"Intel 82434LX PCI cache memory controller"
+literal|"Intel 82434LX (Mercury) PCI cache memory controller"
+operator|)
+return|;
+case|case
+literal|0x122d8086
+case|:
+return|return
+operator|(
+literal|"Intel 82437 (Triton)"
+operator|)
+return|;
+case|case
+literal|0x122e8086
+case|:
+return|return
+operator|(
+literal|"Intel 82371 (Triton)"
+operator|)
+return|;
+case|case
+literal|0x12308086
+case|:
+return|return
+operator|(
+literal|"Intel 82438 (Triton)"
+operator|)
+return|;
+case|case
+literal|0x04961039
+case|:
+return|return
+operator|(
+literal|"SiS 85c496"
+operator|)
+return|;
+case|case
+literal|0x04061039
+case|:
+return|return
+operator|(
+literal|"SiS 85c501"
+operator|)
+return|;
+case|case
+literal|0x00081039
+case|:
+return|return
+operator|(
+literal|"SiS 85c503"
+operator|)
+return|;
+case|case
+literal|0x06011039
+case|:
+return|return
+operator|(
+literal|"SiS 85c601"
 operator|)
 return|;
 case|case
@@ -2544,6 +2608,7 @@ operator|(
 literal|""
 operator|)
 return|;
+comment|/*		return ("SMC FDC 37c665");*/
 block|}
 empty_stmt|;
 return|return
