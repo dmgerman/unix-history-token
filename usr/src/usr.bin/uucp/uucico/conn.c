@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conn.c	5.17 (Berkeley) %G%"
+literal|"@(#)conn.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,8 +157,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;

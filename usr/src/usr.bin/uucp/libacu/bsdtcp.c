@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bsdtcp.c	4.6 (Berkeley) %G%"
+literal|"@(#)bsdtcp.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -98,8 +98,10 @@ name|int
 name|errno
 decl_stmt|;
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;
