@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)machAsmDefs.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -39,23 +39,8 @@ begin_define
 define|#
 directive|define
 name|MCOUNT
-value|.set noreorder; \ 		.set noat; \ 		move $1,$31; \ 		jal _mount; \ 		subu sp,sp,8;
+value|.set noreorder; \ 		.set noat; \ 		move $1,$31; \ 		jal _mcount; \ 		subu sp,sp,8; \ 		.set reorder; \ 		.set at;
 end_define
-
-begin_expr_stmt
-operator|.
-name|set
-name|reorder
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|\
-operator|.
-name|set
-name|at
-expr_stmt|;
-end_expr_stmt
 
 begin_else
 else|#
@@ -86,7 +71,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|.globl x; \ 	.ent x, 0; \ x: ; \ 	.frame sp, 0, ra \ 	MCOUNT
+value|.globl x; \ 	.ent x, 0; \ x: ; \ 	.frame sp, 0, ra; \ 	MCOUNT
 end_define
 
 begin_comment
@@ -135,7 +120,7 @@ parameter_list|,
 name|retpc
 parameter_list|)
 define|\
-value|.globl x; \ 	.ent x, 0; \ x: ; \ 	.frame sp, fsize, retpc \ 	MCOUNT
+value|.globl x; \ 	.ent x, 0; \ x: ; \ 	.frame sp, fsize, retpc; \ 	MCOUNT
 end_define
 
 begin_comment
