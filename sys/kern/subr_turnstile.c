@@ -561,7 +561,7 @@ operator|->
 name|tc_lock
 argument_list|)
 expr_stmt|;
-comment|/* 		 * This thread may not be blocked on this turnstile anymore 		 * but instead might already be woken up on another CPU 		 * that is waiting on sched_lock in turnstile_unpend() to 		 * finish waking this thread up.  We can detect this case 		 * by checking to see if this thread has been given a 		 * turnstile by either turnstile_signal() or 		 * turnstile_wakeup().  In this case, treat the thread as 		 * if it was already running. 		 */
+comment|/* 		 * This thread may not be blocked on this turnstile anymore 		 * but instead might already be woken up on another CPU 		 * that is waiting on sched_lock in turnstile_unpend() to 		 * finish waking this thread up.  We can detect this case 		 * by checking to see if this thread has been given a 		 * turnstile by either turnstile_signal() or 		 * turnstile_broadcast().  In this case, treat the thread as 		 * if it was already running. 		 */
 if|if
 condition|(
 name|td
@@ -1989,7 +1989,7 @@ end_comment
 
 begin_function
 name|void
-name|turnstile_wakeup
+name|turnstile_broadcast
 parameter_list|(
 name|struct
 name|turnstile
