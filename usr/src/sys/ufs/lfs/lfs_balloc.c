@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.23 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.24 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -82,7 +82,6 @@ file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|lfs_getlbns
 name|__P
