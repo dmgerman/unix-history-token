@@ -1846,11 +1846,9 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"new provider on geom(%s) without ->start (class:%s)"
+literal|"new provider on geom(%s) without ->start (class %s)"
 operator|,
 name|gp
-operator|->
-name|class
 operator|->
 name|name
 operator|,
@@ -1874,11 +1872,9 @@ name|G_GEOM_WITHER
 operator|)
 argument_list|,
 operator|(
-literal|"new provider on WITHERing geom(%s) (class:%s)"
+literal|"new provider on WITHERing geom(%s) (class %s)"
 operator|,
 name|gp
-operator|->
-name|class
 operator|->
 name|name
 operator|,
@@ -3024,7 +3020,7 @@ operator|<=
 literal|0
 argument_list|,
 operator|(
-literal|"spoiled but dce = %d"
+literal|"spoiled but dcw = %d"
 operator|,
 name|dcw
 operator|)
@@ -3037,7 +3033,7 @@ operator|<=
 literal|0
 argument_list|,
 operator|(
-literal|"spoiled but dcw = %d"
+literal|"spoiled but dce = %d"
 operator|,
 name|dce
 operator|)
