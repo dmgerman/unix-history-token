@@ -81,6 +81,18 @@ directive|include
 file|<dev/acpica/acpiio.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_ACPICMBAT
+argument_list|,
+literal|"acpicmbat"
+argument_list|,
+literal|"ACPI control method battery data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -300,6 +312,19 @@ parameter_list|)
 value|do {              	\ 	size_t	length;							\ 	length = size;							\ 	tmp =&res->Package.Elements[idx]; 				\ 	if (tmp == NULL) {						\ 		device_printf(dev, "%s: PKG_GETSTR idx = %d\n.",	\ 		    __func__, idx);					\ 		goto label;						\ 	}								\ 	bzero(dest, sizeof(dest));					\ 	switch (tmp->Type) {						\ 	case ACPI_TYPE_STRING:						\ 		if (tmp->String.Length< length) {			\ 			length = tmp->String.Length;			\ 		}							\ 		strncpy(dest, tmp->String.Pointer, length);		\ 		break;							\ 	case ACPI_TYPE_BUFFER:						\ 		if (tmp->Buffer.Length< length) {			\ 			length = tmp->Buffer.Length;			\ 		}							\ 		strncpy(dest, tmp->Buffer.Pointer, length);		\ 		break;							\ 	default:							\ 		goto label;						\ 	}								\ 	dest[sizeof(dest)-1] = '\0';					\ } while(0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CMBAT_DPRINT
+parameter_list|(
+name|dev
+parameter_list|,
+name|x
+modifier|...
+parameter_list|)
+value|do {					\ 	if (acpi_get_verbose(acpi_device_get_parent_softc(dev)))	\ 		device_printf(dev, x);					\ } while (0)
+end_define
+
 begin_comment
 comment|/*  * Poll the battery info.  */
 end_comment
@@ -360,13 +385,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|BATTERY_INFO_EXPIRE
-value|5
-end_define
 
 begin_function
 specifier|static
@@ -439,7 +457,8 @@ name|curtime
 operator|.
 name|tv_sec
 operator|>
-name|BATTERY_INFO_EXPIRE
+name|acpi_battery_get_info_expire
+argument_list|()
 operator|)
 operator|)
 return|;
@@ -531,6 +550,20 @@ condition|)
 block|{
 return|return;
 block|}
+name|untimeout
+argument_list|(
+name|acpi_cmbat_timeout
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|cmbat_timeout
+argument_list|)
+expr_stmt|;
 name|retry
 label|:
 if|if
@@ -544,6 +577,28 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|bst_buffer
+operator|.
+name|Pointer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|sc
+operator|->
+name|bst_buffer
+operator|.
+name|Pointer
+argument_list|,
+name|M_ACPICMBAT
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|bst_buffer
@@ -552,6 +607,7 @@ name|Pointer
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|as
 operator|=
 name|AcpiEvaluateObject
@@ -575,16 +631,21 @@ operator|!=
 name|AE_BUFFER_OVERFLOW
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BST (%d)\n"
+literal|"CANNOT FOUND _BST - %s\n"
 argument_list|,
+name|AcpiFormatException
+argument_list|(
 name|as
 argument_list|)
+argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|sc
 operator|->
@@ -600,7 +661,7 @@ name|bst_buffer
 operator|.
 name|Length
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -623,7 +684,9 @@ argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 block|}
 name|bzero
@@ -681,11 +744,19 @@ name|bst_buffer
 operator|.
 name|Pointer
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bst_buffer
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
 block|}
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
@@ -718,16 +789,21 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BST (%d)\n"
+literal|"CANNOT FOUND _BST - %s\n"
 argument_list|,
+name|AcpiFormatException
+argument_list|(
 name|as
 argument_list|)
+argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|res
 operator|=
@@ -762,14 +838,16 @@ literal|4
 operator|)
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
 literal|"Battery status corrupted\n"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|PKG_GETINT
 argument_list|(
@@ -849,6 +927,19 @@ argument_list|)
 expr_stmt|;
 name|end
 label|:
+name|sc
+operator|->
+name|cmbat_timeout
+operator|=
+name|timeout
+argument_list|(
+name|acpi_cmbat_timeout
+argument_list|,
+name|dev
+argument_list|,
+name|CMBAT_POLLRATE
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -936,6 +1027,28 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|bif_buffer
+operator|.
+name|Pointer
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|sc
+operator|->
+name|bif_buffer
+operator|.
+name|Pointer
+argument_list|,
+name|M_ACPICMBAT
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|bif_buffer
@@ -944,6 +1057,7 @@ name|Pointer
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|as
 operator|=
 name|AcpiEvaluateObject
@@ -967,13 +1081,16 @@ operator|!=
 name|AE_BUFFER_OVERFLOW
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BIF (%d)\n"
+literal|"CANNOT FOUND _BIF - %s\n"
 argument_list|,
+name|AcpiFormatException
+argument_list|(
 name|as
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -994,7 +1111,7 @@ name|bif_buffer
 operator|.
 name|Length
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|,
 name|M_NOWAIT
 argument_list|)
@@ -1077,11 +1194,19 @@ name|bif_buffer
 operator|.
 name|Pointer
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|bif_buffer
+operator|.
+name|Pointer
+operator|=
+name|NULL
+expr_stmt|;
 block|}
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
@@ -1114,13 +1239,16 @@ operator|!=
 name|AE_OK
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
-literal|"CANNOT FOUND _BIF (%d)\n"
+literal|"CANNOT FOUND _BIF - %s\n"
 argument_list|,
+name|AcpiFormatException
+argument_list|(
 name|as
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1160,7 +1288,7 @@ literal|13
 operator|)
 condition|)
 block|{
-name|device_printf
+name|CMBAT_DPRINT
 argument_list|(
 name|dev
 argument_list|,
@@ -1762,15 +1890,6 @@ operator|&
 name|acpi_cmbat_info_lastupdated
 argument_list|)
 expr_stmt|;
-name|AcpiOsQueueForExecution
-argument_list|(
-name|OSD_PRIORITY_LO
-argument_list|,
-name|acpi_cmbat_get_bif
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|cmbat_timeout
@@ -2350,8 +2469,12 @@ name|free
 argument_list|(
 name|bat
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|)
+expr_stmt|;
+name|bat
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 name|bat_units
@@ -2383,7 +2506,7 @@ argument_list|)
 operator|*
 name|bat_units
 argument_list|,
-name|M_DEVBUF
+name|M_ACPICMBAT
 argument_list|,
 name|M_NOWAIT
 argument_list|)

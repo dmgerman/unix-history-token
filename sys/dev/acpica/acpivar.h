@@ -1679,6 +1679,16 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|acpi_battery_get_info_expire
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|acpi_battery_get_battdesc
 parameter_list|(
 name|int
