@@ -120,6 +120,7 @@ comment|/*  * Extended non-POSIX.1e interfaces that offer additional services  *
 end_comment
 
 begin_function_decl
+name|__BEGIN_DECLS
 name|int
 name|mac_execve
 parameter_list|(
@@ -400,6 +401,10 @@ name|_text
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_else
 else|#
