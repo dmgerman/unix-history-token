@@ -224,6 +224,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFP2NG_SET
+parameter_list|(
+name|ifp
+parameter_list|,
+name|val
+parameter_list|)
+value|ifp->if_afdata[AF_NETGRAPH] = (val);
+end_define
+
+begin_define
+define|#
+directive|define
 name|FEC_INC
 parameter_list|(
 name|x

@@ -3967,6 +3967,11 @@ argument_list|(
 name|rt
 argument_list|)
 operator|=
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 name|new
 expr_stmt|;
 name|rt

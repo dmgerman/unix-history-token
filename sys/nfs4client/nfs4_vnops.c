@@ -7839,6 +7839,12 @@ name|len
 operator|-
 name|rlen
 expr_stmt|;
+name|uiop
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+operator|=
 operator|(
 name|char
 operator|*
@@ -7848,7 +7854,7 @@ operator|->
 name|uio_iov
 operator|->
 name|iov_base
-operator|-=
+operator|-
 name|backup
 expr_stmt|;
 name|uiop
@@ -11301,6 +11307,12 @@ name|uio_resid
 operator|-=
 name|len
 expr_stmt|;
+name|uiop
+operator|->
+name|uio_iov
+operator|->
+name|iov_base
+operator|=
 operator|(
 name|char
 operator|*
@@ -11310,7 +11322,7 @@ operator|->
 name|uio_iov
 operator|->
 name|iov_base
-operator|+=
+operator|+
 name|len
 expr_stmt|;
 name|uiop

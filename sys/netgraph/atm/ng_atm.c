@@ -1189,6 +1189,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFP2NG_SET
+parameter_list|(
+name|IFP
+parameter_list|,
+name|val
+parameter_list|)
+value|(((struct ifatm *)(IFP))->ngpriv = (val))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IFFLAGS
 value|"\020\001UP\002BROADCAST\003DEBUG\004LOOPBACK" \ 		 "\005POINTOPOINT\006SMART\007RUNNING\010NOARP" \ 		 "\011PROMISC\012ALLMULTI\013OACTIVE\014SIMPLEX" \ 		 "\015LINK0\016LINK1\017LINK2\020MULTICAST"
 end_define
@@ -5641,12 +5653,12 @@ operator|->
 name|vccs
 argument_list|)
 expr_stmt|;
-name|IFP2NG
+name|IFP2NG_SET
 argument_list|(
 name|ifp
-argument_list|)
-operator|=
+argument_list|,
 name|node
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5723,14 +5735,14 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|IFP2NG
+name|IFP2NG_SET
 argument_list|(
 name|priv
 operator|->
 name|ifp
-argument_list|)
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|priv
 operator|->
@@ -5820,14 +5832,14 @@ expr_stmt|;
 comment|/* we persist */
 else|else
 block|{
-name|IFP2NG
+name|IFP2NG_SET
 argument_list|(
 name|priv
 operator|->
 name|ifp
-argument_list|)
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|NG_NODE_SET_PRIVATE
 argument_list|(

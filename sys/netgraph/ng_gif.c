@@ -119,6 +119,18 @@ parameter_list|)
 value|((struct ng_node *)((struct gif_softc *)(ifp))->gif_netgraph)
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFP2NG_SET
+parameter_list|(
+name|ifp
+parameter_list|,
+name|val
+parameter_list|)
+value|(((struct gif_softc *)(ifp))->gif_netgraph = (val))
+end_define
+
 begin_comment
 comment|/* Per-node private data */
 end_comment
@@ -864,12 +876,12 @@ name|ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|IFP2NG
+name|IFP2NG_SET
 argument_list|(
 name|ifp
-argument_list|)
-operator|=
+argument_list|,
 name|node
+argument_list|)
 expr_stmt|;
 comment|/* Try to give the node the same name as the interface */
 if|if
@@ -952,12 +964,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Force real removal of node */
 comment|/* 	 * We can't assume the ifnet is still around when we run shutdown 	 * So zap it now. XXX We HOPE that anything running at this time 	 * handles it (as it should in the non netgraph case). 	 */
-name|IFP2NG
+name|IFP2NG_SET
 argument_list|(
 name|ifp
-argument_list|)
-operator|=
+argument_list|,
 name|NULL
+argument_list|)
 expr_stmt|;
 name|priv
 operator|->

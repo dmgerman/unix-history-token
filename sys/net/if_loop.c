@@ -1254,12 +1254,9 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
-name|mtod
-argument_list|(
 name|m
-argument_list|,
-name|vm_offset_t
-argument_list|)
+operator|->
+name|m_data
 operator|-=
 operator|(
 name|mtod

@@ -194,14 +194,14 @@ name|rt_key
 parameter_list|(
 name|r
 parameter_list|)
-value|((struct sockaddr *)((r)->rt_nodes->rn_key))
+value|(*((struct sockaddr **)(&(r)->rt_nodes->rn_key)))
 define|#
 directive|define
 name|rt_mask
 parameter_list|(
 name|r
 parameter_list|)
-value|((struct sockaddr *)((r)->rt_nodes->rn_mask))
+value|(*((struct sockaddr **)(&(r)->rt_nodes->rn_mask)))
 name|struct
 name|sockaddr
 modifier|*

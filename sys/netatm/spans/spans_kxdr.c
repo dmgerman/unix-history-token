@@ -1717,7 +1717,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Advance the data stream 	 */
-operator|(
+name|xdrs
+operator|->
+name|x_private
+operator|=
 operator|(
 name|long
 operator|*
@@ -1725,8 +1728,8 @@ operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|)
-operator|++
+operator|+
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -1925,7 +1928,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Advance the data stream 	 */
-operator|(
+name|xdrs
+operator|->
+name|x_private
+operator|=
 operator|(
 name|long
 operator|*
@@ -1933,8 +1939,8 @@ operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|)
-operator|++
+operator|+
+literal|1
 expr_stmt|;
 return|return
 operator|(
@@ -2090,7 +2096,10 @@ name|copy
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update data stream controls 		 */
-operator|(
+name|xdrs
+operator|->
+name|x_private
+operator|=
 operator|(
 name|char
 operator|*
@@ -2098,8 +2107,7 @@ operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|)
-operator|+=
+operator|+
 name|copy
 expr_stmt|;
 name|xdrs
@@ -2273,7 +2281,10 @@ name|copy
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Update data stream controls 		 */
-operator|(
+name|xdrs
+operator|->
+name|x_private
+operator|=
 operator|(
 name|char
 operator|*
@@ -2281,9 +2292,10 @@ operator|)
 name|xdrs
 operator|->
 name|x_private
-operator|)
-operator|++
+operator|+
+literal|1
 expr_stmt|;
+comment|/*XXXKAN:copy? */
 name|xdrs
 operator|->
 name|x_handy
