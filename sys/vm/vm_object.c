@@ -6387,6 +6387,9 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|m_in
@@ -6396,6 +6399,9 @@ operator|==
 literal|0
 condition|)
 block|{
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|rv
 operator|=
 name|vm_pager_get_pages
@@ -6439,14 +6445,14 @@ argument_list|(
 name|m_in
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
-expr_stmt|;
 block|}
 name|pmap_remove_all
 argument_list|(
 name|m_in
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|pmap_copy_page
 argument_list|(
