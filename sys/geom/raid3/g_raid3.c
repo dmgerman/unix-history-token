@@ -13846,6 +13846,16 @@ operator|->
 name|sc_ndisks
 operator|-
 literal|1
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_RAID3_DEVICE_FLAG_DESTROY
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if

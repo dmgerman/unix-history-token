@@ -12013,6 +12013,16 @@ name|sc
 operator|->
 name|sc_disks
 argument_list|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|G_MIRROR_DEVICE_FLAG_DESTROY
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
