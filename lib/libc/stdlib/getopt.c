@@ -312,6 +312,10 @@ operator|*
 name|ostr
 operator|!=
 literal|':'
+operator|&&
+name|optopt
+operator|!=
+name|BADCH
 condition|)
 operator|(
 name|void
