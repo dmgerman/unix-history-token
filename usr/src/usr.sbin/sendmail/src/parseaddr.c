@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.27 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7028,6 +7028,15 @@ name|FALSE
 operator|)
 return|;
 comment|/* if we have good uids for both but they differ, these are different */
+if|if
+condition|(
+name|a
+operator|->
+name|q_mailer
+operator|==
+name|ProgMailer
+condition|)
+block|{
 name|ca
 operator|=
 name|getctladdr
@@ -7078,6 +7087,7 @@ operator|(
 name|FALSE
 operator|)
 return|;
+block|}
 comment|/* otherwise compare hosts (but be careful for NULL ptrs) */
 if|if
 condition|(
