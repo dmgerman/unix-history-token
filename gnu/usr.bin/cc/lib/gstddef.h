@@ -1023,7 +1023,7 @@ end_ifdef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GCC_PTRDIFF_T_
+name|_GCC_PTRDIFF_T
 end_ifdef
 
 begin_undef
@@ -1040,7 +1040,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GCC_SIZE_T_
+name|_GCC_SIZE_T
 end_ifdef
 
 begin_undef
@@ -1057,7 +1057,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_GCC_WCHAR_T_
+name|_GCC_WCHAR_T
 end_ifdef
 
 begin_undef

@@ -654,6 +654,16 @@ name|HAVE_absdf2
 value|(TARGET_80387)
 end_define
 
+begin_comment
+comment|/* XXX missing emulator instructions.     Use NOFPU to prevent them being generated on non-fpu machines. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NOFPU
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -695,6 +705,11 @@ directive|define
 name|HAVE_cossf2
 value|(TARGET_80387&& (TARGET_IEEE_FP || flag_fast_math))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
