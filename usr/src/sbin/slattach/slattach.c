@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)slattach.c	8.1 (Berkeley) %G%"
+literal|"@(#)slattach.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,11 +273,16 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|devname
 argument_list|,
-literal|"%s/%s"
+sizeof|sizeof
+argument_list|(
+name|devname
+argument_list|)
+argument_list|,
+literal|"%s%s"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
