@@ -365,12 +365,7 @@ literal|2
 decl_stmt|;
 block|}
 name|PeripDev
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -389,12 +384,7 @@ literal|2
 decl_stmt|;
 block|}
 name|LogDev
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -420,12 +410,7 @@ literal|2
 decl_stmt|;
 block|}
 name|LogUnit
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 block|}
 name|SCSI3Addr_struct
@@ -459,10 +444,8 @@ index|]
 decl_stmt|;
 block|}
 name|PhysDevAddr_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -487,10 +470,8 @@ index|]
 decl_stmt|;
 block|}
 name|LogDevAddr_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -517,10 +498,8 @@ name|LogDev
 decl_stmt|;
 block|}
 name|LUNAddr_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -549,12 +528,7 @@ literal|2
 decl_stmt|;
 block|}
 name|Type
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 name|u_int16_t
 name|Timeout
@@ -567,10 +541,8 @@ index|]
 decl_stmt|;
 block|}
 name|RequestBlock_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -593,12 +565,7 @@ name|ErrorInfo
 decl_stmt|;
 block|}
 name|Common_Info
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 struct|struct
 block|{
@@ -619,19 +586,12 @@ name|offense_value
 decl_stmt|;
 block|}
 name|Invalid_Cmd
-name|__attribute__
-argument_list|(
-operator|(
-name|__packed__
-operator|)
-argument_list|)
+name|__packed
 struct|;
 block|}
 name|MoreErrInfo_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -661,10 +621,8 @@ index|]
 decl_stmt|;
 block|}
 name|ErrorInfo_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_typedef
@@ -694,10 +652,8 @@ decl_stmt|;
 comment|/* 4 */
 block|}
 name|IOCTL_Command_struct
-name|__attribute__
-typedef|((
-name|__packed__
-typedef|));
+name|__packed
+typedef|;
 end_typedef
 
 begin_comment

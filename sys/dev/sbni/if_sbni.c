@@ -5372,14 +5372,9 @@ specifier|static
 name|u_int32_t
 name|crc32tab
 index|[]
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|8
-argument_list|)
-operator|)
 argument_list|)
 init|=
 block|{
