@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sysctl.c,v 1.8 1995/11/17 16:28:42 phk Exp $"
+literal|"$Id: sysctl.c,v 1.9 1995/12/21 12:39:25 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -556,6 +556,16 @@ name|strlen
 argument_list|(
 name|cp
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|wflag
+condition|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|len
