@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.9	81/11/26	*/
+comment|/*	uipc_syscalls.c	4.10	81/12/02	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|sockproto
 name|localproto
 init|=
 block|{
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|}
@@ -1463,11 +1463,19 @@ return|return;
 block|}
 while|while
 condition|(
+operator|(
 name|so
 operator|->
 name|so_state
 operator|&
 name|SS_ISDISCONNECTING
+operator|)
+operator|&&
+name|so
+operator|->
+name|so_error
+operator|==
+literal|0
 condition|)
 name|sleep
 argument_list|(

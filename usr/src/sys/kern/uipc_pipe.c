@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_pipe.c	4.9	81/11/26	*/
+comment|/*	uipc_pipe.c	4.10	81/12/02	*/
 end_comment
 
 begin_include
@@ -81,7 +81,7 @@ init|=
 block|{
 name|SOCK_STREAM
 block|,
-name|PF_LOCAL
+name|PF_UNIX
 block|,
 literal|0
 block|,
@@ -98,10 +98,6 @@ block|,
 literal|0
 block|,
 name|piusrreq
-block|,
-literal|0
-block|,
-literal|0
 block|,
 literal|0
 block|,

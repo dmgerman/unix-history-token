@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.16	81/11/29	*/
+comment|/*	Locore.c	4.17	81/12/02	*/
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.24	81/11/26	*/
+comment|/*	ubareg.h	4.25	81/12/02	*/
 end_comment
 
 begin_comment
@@ -669,7 +669,7 @@ name|uba
 parameter_list|,
 name|bdp
 parameter_list|)
-value|{ \ 	switch (cpu) { \ 	case VAX_780: UBA_PURGE780(uba, bdp); break; \ 	case VAX_750: UBA_PURGE750(uba, bdp); break; \ 	} \ }
+value|{ \ 	switch (cpu) { \ 	case VAX_780: UBA_PURGE780((uba), (bdp)); break; \ 	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \ 	} \ }
 end_define
 
 begin_endif
@@ -707,9 +707,13 @@ end_define
 begin_expr_stmt
 name|UBA_PURGE780
 argument_list|(
+operator|(
 name|uba
+operator|)
 argument_list|,
+operator|(
 name|bdp
+operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -754,9 +758,13 @@ end_define
 begin_expr_stmt
 name|UBA_PURGE750
 argument_list|(
+operator|(
 name|uba
+operator|)
 argument_list|,
+operator|(
 name|bdp
+operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
