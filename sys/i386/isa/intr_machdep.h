@@ -311,42 +311,6 @@ end_define
 
 begin_decl_stmt
 specifier|extern
-name|char
-name|eintrnames
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* end of intrnames[] */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|intrcnt
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* counts for for each device and stray */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|intrnames
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* string table containing device names */
-end_comment
-
-begin_decl_stmt
-specifier|extern
 name|u_long
 modifier|*
 name|intr_countp
