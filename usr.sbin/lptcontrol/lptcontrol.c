@@ -154,7 +154,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
@@ -262,6 +264,7 @@ name|irq_status
 init|=
 name|IRQ_INVALID
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|device
