@@ -1645,13 +1645,31 @@ begin_comment
 comment|/* CBI protocol */
 end_comment
 
+begin_comment
+comment|/*  * XXX Pat LaVarre (Iomega): there are Bulk-Only devices using 0x02,  * but recent versions of the Mass Storage spec. require it to be 0x50.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UPROTO_MASS_BULK
-comment|/*TBD*/
-value|/ * Bulk only transport * /
+value|80
 end_define
+
+begin_comment
+comment|/* 'P' for prototype, used by ZIP 100 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_BULK2
+value|2
+end_define
+
+begin_comment
+comment|/* Bulk only transport */
+end_comment
 
 begin_define
 define|#
