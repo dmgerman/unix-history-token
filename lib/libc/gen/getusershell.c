@@ -58,6 +58,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -166,6 +172,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_comment
 comment|/*  * Local shells should NOT be added here.  They should be added in  * /etc/shells.  */
@@ -1059,7 +1071,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 name|NULL
 argument_list|,
