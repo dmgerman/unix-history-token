@@ -497,7 +497,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|magic_connection
+name|ratelim_connection
 block|{
 name|struct
 name|timeval
@@ -509,38 +509,47 @@ name|connections_this_period
 decl_stmt|;
 block|}
 modifier|*
-name|magic_connections
+name|ratelim_connections
 struct|;
 end_struct
 
-begin_comment
-comment|/* Magic number, too!  TODO: this doesn't have to be static. */
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|size_t
-name|MAGIC_CONNECTIONS_SIZE
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
-name|__inline
-name|int
-name|magic_hash
+name|void
+name|ratelim_init
 parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-name|sa
+name|void
 parameter_list|)
 block|{
-return|return
-literal|0
-return|;
+name|ratelim_connections
+operator|=
+name|calloc
+argument_list|(
+name|num_listen_socks
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ratelim_connection
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ratelim_connections
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"calloc: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1662,6 +1671,11 @@ name|socklen_t
 name|fromlen
 decl_stmt|;
 name|int
+name|ratelim_exceeded
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|silent
 init|=
 literal|0
@@ -1710,11 +1724,6 @@ name|int
 name|listen_sock
 decl_stmt|,
 name|maxfd
-decl_stmt|;
-name|int
-name|connections_per_period_exceeded
-init|=
-literal|0
 decl_stmt|;
 comment|/* Save argv[0]. */
 name|saved_argv
@@ -3248,35 +3257,8 @@ argument_list|(
 name|fdsetsz
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the magic_connections table.  It's magical! */
-name|magic_connections
-operator|=
-name|calloc
-argument_list|(
-name|MAGIC_CONNECTIONS_SIZE
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|magic_connection
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|magic_connections
-operator|==
-name|NULL
-condition|)
-name|fatal
-argument_list|(
-literal|"calloc: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
+name|ratelim_init
+argument_list|()
 expr_stmt|;
 comment|/* 		 * Stay listening for connections until the system crashes or 		 * the daemon is killed with a signal. 		 */
 for|for
@@ -3490,9 +3472,9 @@ decl_stmt|,
 name|connections_end
 decl_stmt|;
 name|struct
-name|magic_connection
+name|ratelim_connection
 modifier|*
-name|mc
+name|rc
 decl_stmt|;
 operator|(
 name|void
@@ -3505,28 +3487,20 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|mc
+name|rc
 operator|=
 operator|&
-name|magic_connections
+name|ratelim_connections
 index|[
-name|magic_hash
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-block|)
-literal|0
-block|)
-for|]
-empty_stmt|;
+name|i
+index|]
+expr_stmt|;
 name|diff
 operator|=
 name|timevaldiff
 argument_list|(
 operator|&
-name|mc
+name|rc
 operator|->
 name|connections_begin
 argument_list|,
@@ -3545,14 +3519,14 @@ operator|.
 name|connections_period
 condition|)
 block|{
-comment|/* 					 * Slide the window forward only after completely 					 * leaving it. 					 */
-name|mc
+comment|/* 					 * Slide the window forward only after 					 * completely leaving it. 					 */
+name|rc
 operator|->
 name|connections_begin
 operator|=
 name|connections_end
 expr_stmt|;
-name|mc
+name|rc
 operator|->
 name|connections_this_period
 operator|=
@@ -3564,7 +3538,7 @@ block|{
 if|if
 condition|(
 operator|++
-name|mc
+name|rc
 operator|->
 name|connections_this_period
 operator|>
@@ -3572,7 +3546,7 @@ name|options
 operator|.
 name|connections_per_period
 condition|)
-name|connections_per_period_exceeded
+name|ratelim_exceeded
 operator|=
 literal|1
 expr_stmt|;
@@ -3611,13 +3585,25 @@ block|}
 elseif|else
 if|if
 condition|(
-name|connections_per_period_exceeded
+name|ratelim_exceeded
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|myaddr
+decl_stmt|;
+name|myaddr
+operator|=
+name|get_ipaddr
+argument_list|(
+name|newsock
+argument_list|)
+expr_stmt|;
 name|log
 argument_list|(
-literal|"Connection rate limit of %u/%us has been exceeded; "
-literal|"dropping connection from %s."
+literal|"rate limit (%u/%u) on %s port %d "
+literal|"exceeded by %s"
 argument_list|,
 name|options
 operator|.
@@ -3627,13 +3613,32 @@ name|options
 operator|.
 name|connections_period
 argument_list|,
+name|myaddr
+argument_list|,
+name|get_sock_port
+argument_list|(
+name|newsock
+argument_list|,
+literal|1
+argument_list|)
+argument_list|,
 name|ntop
 argument_list|)
 expr_stmt|;
-name|connections_per_period_exceeded
+name|free
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|myaddr
+argument_list|)
+expr_stmt|;
+name|ratelim_exceeded
 operator|=
 literal|0
 expr_stmt|;
+continue|continue;
 block|}
 else|else
 block|{
@@ -3730,26 +3735,14 @@ literal|0
 condition|)
 break|break;
 block|}
-end_function
-
-begin_comment
-unit|}
+block|}
 comment|/* This is the child processing a new connection. */
-end_comment
-
-begin_comment
 comment|/* 	 * Disable the key regeneration alarm.  We will not regenerate the 	 * key since we are no longer in a position to give it to anyone. We 	 * will not restart on SIGHUP since it no longer makes sense. 	 */
-end_comment
-
-begin_expr_stmt
-unit|alarm
-operator|(
+name|alarm
+argument_list|(
 literal|0
-operator|)
+argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGALRM
@@ -3757,9 +3750,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGHUP
@@ -3767,9 +3757,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGTERM
@@ -3777,9 +3764,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -3787,9 +3771,6 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGCHLD
@@ -3797,35 +3778,20 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Set socket options for the connection.  We want the socket to 	 * close as fast as possible without waiting for anything.  If the 	 * connection is not a socket, these will do nothing. 	 */
-end_comment
-
-begin_comment
 comment|/* setsockopt(sock_in, SOL_SOCKET, SO_REUSEADDR, (void *)&on, sizeof(on)); */
-end_comment
-
-begin_expr_stmt
 name|linger
 operator|.
 name|l_onoff
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|linger
 operator|.
 name|l_linger
 operator|=
 literal|5
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|setsockopt
 argument_list|(
 name|sock_in
@@ -3847,13 +3813,7 @@ name|linger
 argument_list|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Register our connection.  This turns encryption off because we do 	 * not have a key. 	 */
-end_comment
-
-begin_expr_stmt
 name|packet_set_connection
 argument_list|(
 name|sock_in
@@ -3861,35 +3821,20 @@ argument_list|,
 name|sock_out
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|remote_port
 operator|=
 name|get_remote_port
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|remote_ip
 operator|=
 name|get_remote_ipaddr
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Check whether logins are denied from this host. */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|LIBWRAP
-end_ifdef
-
-begin_block
 block|{
 name|struct
 name|request_info
@@ -3958,22 +3903,10 @@ name|remote_port
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* LIBWRAP */
-end_comment
-
-begin_comment
 comment|/* Log the connection. */
-end_comment
-
-begin_expr_stmt
 name|verbose
 argument_list|(
 literal|"Connection from %.500s port %d"
@@ -3983,13 +3916,7 @@ argument_list|,
 name|remote_port
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * We don\'t want to listen forever unless the other side 	 * successfully authenticates itself.  So we set up an alarm which is 	 * cleared after successful authentication.  A limit of zero 	 * indicates no limit. Note that we don\'t set the alarm in debugging 	 * mode; it is just annoying to have the server exit just when you 	 * are about to discover the bug. 	 */
-end_comment
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGALRM
@@ -3997,9 +3924,6 @@ argument_list|,
 name|grace_alarm_handler
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -4012,9 +3936,6 @@ operator|.
 name|login_grace_time
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|sshd_exchange_identification
 argument_list|(
 name|sock_in
@@ -4022,13 +3943,7 @@ argument_list|,
 name|sock_out
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* 	 * Check that the connection comes from a privileged port.  Rhosts- 	 * and Rhosts-RSA-Authentication only make sense from priviledged 	 * programs.  Of course, if the intruder has root access on his local 	 * machine, he can connect from any port.  So do not use these 	 * authentication methods from machines that you do not trust. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|remote_port
@@ -4055,15 +3970,9 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KRB4
-end_ifdef
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -4087,32 +3996,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* KRB4 */
-end_comment
-
-begin_expr_stmt
 name|packet_set_nonblocking
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* perform the key exchange */
-end_comment
-
-begin_comment
 comment|/* authenticate user and start session */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|compat20
@@ -4134,19 +4025,10 @@ name|do_authentication
 argument_list|()
 expr_stmt|;
 block|}
-end_if
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|KRB4
-end_ifdef
-
-begin_comment
 comment|/* Cleanup user's ticket cache file. */
-end_comment
-
-begin_if
 if|if
 condition|(
 name|options
@@ -4159,22 +4041,10 @@ operator|)
 name|dest_tkt
 argument_list|()
 expr_stmt|;
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* KRB4 */
-end_comment
-
-begin_comment
 comment|/* The connection has been terminated. */
-end_comment
-
-begin_expr_stmt
 name|verbose
 argument_list|(
 literal|"Closing connection to %.100s"
@@ -4182,34 +4052,25 @@ argument_list|,
 name|remote_ip
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|packet_close
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * SSH1 key exchange  */
 end_comment
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|do_ssh1_kex
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -5035,7 +4896,7 @@ name|packet_write_wait
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * SSH2 key exchange: diffie-hellman-group1-sha1  */
