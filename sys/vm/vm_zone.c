@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.2 1997/08/05 22:24:30 dyson Exp $  */
+comment|/*  * Copyright (c) 1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice immediately at the beginning of the file, without modification,  *	this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *	John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *	is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *	are met.  *  * $Id: vm_zone.c,v 1.3 1997/08/06 04:58:04 dyson Exp $  */
 end_comment
 
 begin_include
@@ -220,6 +220,12 @@ operator|->
 name|zname
 operator|=
 name|name
+expr_stmt|;
+name|z
+operator|->
+name|znalloc
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -609,6 +615,12 @@ expr_stmt|;
 name|z
 operator|->
 name|zalloc
+operator|=
+literal|0
+expr_stmt|;
+name|z
+operator|->
+name|znalloc
 operator|=
 literal|0
 expr_stmt|;
@@ -1183,7 +1195,7 @@ decl_stmt|;
 name|char
 name|tmpname
 index|[
-literal|16
+literal|14
 index|]
 decl_stmt|;
 for|for
@@ -1222,6 +1234,30 @@ name|curzone
 operator|->
 name|zname
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|>=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|tmpname
+argument_list|)
+operator|-
+literal|1
+operator|)
+condition|)
+name|len
+operator|=
+operator|(
+sizeof|sizeof
+argument_list|(
+name|tmpname
+argument_list|)
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 for|for
 control|(
@@ -1266,6 +1302,13 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+name|tmpname
+index|[
+name|len
+index|]
+operator|=
+literal|':'
+expr_stmt|;
 name|offset
 operator|=
 literal|0
@@ -1295,7 +1338,7 @@ name|tmpbuf
 operator|+
 name|offset
 argument_list|,
-literal|"%s: maxpossible=%6.6d, total=%6.6d, free=%6.6d\n"
+literal|"%s limit=%8.8u, used=%6.6u, free=%6.6u, requests=%8.8u\n"
 argument_list|,
 name|tmpname
 argument_list|,
@@ -1303,13 +1346,23 @@ name|curzone
 operator|->
 name|zmax
 argument_list|,
+operator|(
 name|curzone
 operator|->
 name|ztotal
+operator|-
+name|curzone
+operator|->
+name|zfreecnt
+operator|)
 argument_list|,
 name|curzone
 operator|->
 name|zfreecnt
+argument_list|,
+name|curzone
+operator|->
+name|znalloc
 argument_list|)
 expr_stmt|;
 name|len
