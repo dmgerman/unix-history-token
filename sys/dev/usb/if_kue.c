@@ -268,6 +268,12 @@ name|USB_PRODUCT_PERACOM_ENET3
 block|}
 block|,
 block|{
+name|USB_VENDOR_IODATA
+block|,
+name|USB_PRODUCT_IODATA_USBETT
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
