@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qsort.c	5.6 (Berkeley) %G%"
+literal|"@(#)qsort.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,20 +121,18 @@ begin_comment
 comment|/*  * qsort:  * First, set up some global parameters for qst to share.  Then, quicksort  * with qst(), and then a cleanup insertion sort ourselves.  Sound simple?  * It's not...  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|qsort
 argument_list|(
-argument|base
+name|base
 argument_list|,
-argument|n
+name|n
 argument_list|,
-argument|size
+name|size
 argument_list|,
-argument|compar
+name|compar
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|char
 modifier|*
 name|base
