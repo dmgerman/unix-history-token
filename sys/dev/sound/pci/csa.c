@@ -468,11 +468,6 @@ decl_stmt|;
 name|bus_space_tag_t
 name|btag
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"clkrun_hack: "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -487,11 +482,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"can't find devclass 'pci'\n"
-argument_list|)
-expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -584,22 +574,6 @@ operator|==
 literal|0x7113
 condition|)
 block|{
-name|run
-operator|=
-operator|!
-name|run
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"found bx chipset, %sabling clkrun\n"
-argument_list|,
-name|run
-condition|?
-literal|"en"
-else|:
-literal|"dis"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|pci_devices
@@ -678,11 +652,6 @@ return|;
 block|}
 block|}
 block|}
-name|printf
-argument_list|(
-literal|"can't find bx chipset\n"
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|pci_devices
