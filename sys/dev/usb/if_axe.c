@@ -234,6 +234,12 @@ name|USB_PRODUCT_SYSTEMTALKS_SGCX2UL
 block|}
 block|,
 block|{
+name|USB_VENDOR_SITECOM
+block|,
+name|USB_PRODUCT_SITECOM_LN029
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
