@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	1.10 %G%"
+literal|"@(#)fio.c	1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1443,12 +1443,8 @@ condition|(
 name|readonly
 condition|)
 return|return;
-name|sigsave
-argument_list|(
-name|sigs
-argument_list|,
-name|SIG_IGN
-argument_list|)
+name|holdsigs
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -1584,10 +1580,8 @@ argument_list|(
 name|tempname
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1626,10 +1620,8 @@ argument_list|(
 name|tempname
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1693,10 +1685,8 @@ argument_list|(
 name|tempname
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1741,10 +1731,8 @@ argument_list|(
 name|editfile
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1811,10 +1799,8 @@ argument_list|(
 name|editfile
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1886,10 +1872,8 @@ argument_list|(
 name|editfile
 argument_list|)
 expr_stmt|;
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 name|reset
 argument_list|(
@@ -1929,37 +1913,20 @@ argument_list|()
 expr_stmt|;
 name|done
 label|:
-name|sigret
-argument_list|(
-name|sigs
-argument_list|)
+name|relsesigs
+argument_list|()
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Save signals SIGHUP - SIGQUIT in sigs, set them all to action.  */
+comment|/*  * Hold signals SIGHUP - SIGQUIT.  */
 end_comment
 
 begin_macro
-name|sigsave
-argument_list|(
-argument|sigs
-argument_list|,
-argument|action
-argument_list|)
+name|holdsigs
+argument_list|()
 end_macro
-
-begin_function_decl
-name|int
-function_decl|(
-modifier|*
-name|sigs
-index|[]
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_block
 block|{
@@ -1980,39 +1947,22 @@ condition|;
 name|i
 operator|++
 control|)
-name|sigs
-index|[
-name|i
-operator|-
-name|SIGHUP
-index|]
-operator|=
-name|sigset
+name|sighold
 argument_list|(
 name|i
-argument_list|,
-name|action
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/*  * Restore SIGHUP - SIGQUIT from sigs.  */
+comment|/*  * Release signals SIGHUP - SIGQUIT  */
 end_comment
 
-begin_function_decl
-name|sigret
-function_decl|(
-name|sigs
-function_decl|)
-name|int
-argument_list|(
-argument|*sigs[]
-argument_list|)
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_macro
+name|relsesigs
+argument_list|()
+end_macro
 
 begin_block
 block|{
@@ -2033,16 +1983,9 @@ condition|;
 name|i
 operator|++
 control|)
-name|sigset
+name|sigrelse
 argument_list|(
 name|i
-argument_list|,
-name|sigs
-index|[
-name|i
-operator|-
-name|SIGHUP
-index|]
 argument_list|)
 expr_stmt|;
 block|}
