@@ -1622,6 +1622,13 @@ return|return
 name|PacketAliasProxyRule
 argument_list|(
 name|cmd
+operator|+
+name|strspn
+argument_list|(
+name|cmd
+argument_list|,
+literal|" \t"
+argument_list|)
 argument_list|)
 return|;
 block|}
