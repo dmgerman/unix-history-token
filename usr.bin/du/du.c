@@ -359,7 +359,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HI:LPasd:chkrx"
+literal|"HI:LPasd:chkmrx"
 argument_list|)
 operator|)
 operator|!=
@@ -506,6 +506,19 @@ expr_stmt|;
 name|putenv
 argument_list|(
 literal|"BLOCKSIZE=1024"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'m'
+case|:
+name|hflag
+operator|=
+literal|0
+expr_stmt|;
+name|putenv
+argument_list|(
+literal|"BLOCKSIZE=1048576"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1830,7 +1843,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k] [-x] [-I mask] [file ...]\n"
+literal|"usage: du [-H | -L | -P] [-a | -s | -d depth] [-c] [-h | -k | -m] [-x] [-I mask] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
