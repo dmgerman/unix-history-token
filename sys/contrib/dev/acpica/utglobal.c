@@ -1296,6 +1296,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_RegionTypes
 index|[
 name|SpaceId
@@ -1364,6 +1367,9 @@ operator|(
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|AcpiGbl_EventTypes
 index|[
@@ -1532,6 +1538,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_BadType
 operator|)
 return|;
@@ -1541,6 +1550,9 @@ operator|(
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|AcpiGbl_NsTypeNames
 index|[
@@ -1803,6 +1815,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_BadType
 operator|)
 return|;
@@ -1812,6 +1827,9 @@ operator|(
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|AcpiGbl_DescTypeNames
 index|[

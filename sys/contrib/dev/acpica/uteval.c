@@ -158,6 +158,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_ValidOsiStrings
 index|[
 name|i
@@ -1375,6 +1378,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_HighestDstateNames
 index|[
 name|i
@@ -1411,6 +1417,9 @@ operator|,
 operator|(
 name|char
 operator|*
+operator|)
+operator|(
+name|uintptr_t
 operator|)
 name|AcpiGbl_HighestDstateNames
 index|[

@@ -279,6 +279,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|AcpiGbl_SleepStateNames
 index|[
 name|SleepState
