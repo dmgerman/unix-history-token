@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	3.3	%H%	*/
+comment|/*	kern_clock.c	3.4	%H%	*/
 end_comment
 
 begin_include
@@ -106,6 +106,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * We handle regular calls to the dh and dz silo input processors  * without using timeouts to save a little time.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rintvl
+init|=
+literal|4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* every 1/15'th of sec check receivers */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rcnt
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|clock
@@ -301,9 +323,31 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|rcnt
+operator|>=
+name|rintvl
+condition|)
+block|{
+name|dhtimer
+argument_list|()
+expr_stmt|;
+name|dztimer
+argument_list|()
+expr_stmt|;
+name|rcnt
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
 comment|/* 	 * lightning bolt time-out 	 * and time of day 	 */
 name|out
 label|:
+operator|++
+name|rcnt
+expr_stmt|;
 if|if
 condition|(
 operator|!
