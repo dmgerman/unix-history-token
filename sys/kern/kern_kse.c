@@ -7198,12 +7198,6 @@ operator|->
 name|kg_numupcalls
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|upcalls
@@ -7211,6 +7205,12 @@ operator|>=
 name|max_threads_per_proc
 condition|)
 break|break;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_maxthrwaits
