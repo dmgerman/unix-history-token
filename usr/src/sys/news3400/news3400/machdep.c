@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, The Mach Operating System project at  * Carnegie-Mellon University, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -129,19 +129,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_page.h>
 end_include
 
 begin_include
@@ -436,16 +424,6 @@ decl_stmt|,
 name|MachExceptionEnd
 index|[]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ATTR
-specifier|extern
-name|char
-modifier|*
-name|pmap_attributes
-decl_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Save parameters into kernel work area. 	 */
 operator|*
 operator|(
@@ -693,18 +671,27 @@ name|p_md
 operator|.
 name|md_regs
 operator|=
-operator|(
-operator|(
-expr|struct
-name|user
-operator|*
-operator|)
-name|v
-operator|)
+name|nullproc
+operator|.
+name|p_addr
 operator|->
 name|u_pcb
 operator|.
 name|pcb_regs
+expr_stmt|;
+name|bcopy
+argument_list|(
+literal|"nullproc"
+argument_list|,
+name|nullproc
+operator|.
+name|p_comm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"nullproc"
+argument_list|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -921,21 +908,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ATTR
-comment|/* this is allocated here just to save a few bytes */
-name|valloc
-argument_list|(
-name|pmap_attributes
-argument_list|,
-name|char
-argument_list|,
-name|physmem
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Determine how many buffers to allocate. 	 * We allocate more buffer space than the BSD standard of 	 * using 10% of memory for the first 2 Meg, 5% of remaining. 	 * We just allocate a flat 10%.  Insure a minimum of 16 buffers. 	 * We allocate 1/2 as many swap buffer headers as file i/o buffers. 	 */
 if|if
 condition|(
@@ -1025,16 +997,6 @@ name|nbuf
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear allocated memory. 	 */
-name|v
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|pmax_round_page
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
 name|bzero
 argument_list|(
 name|start
@@ -1050,10 +1012,7 @@ argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
-name|MACH_CACHED_TO_PHYS
-argument_list|(
 name|v
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1293,15 +1252,13 @@ name|base
 decl_stmt|,
 name|residual
 decl_stmt|;
-specifier|extern
-name|long
-name|Usrptsize
+name|vm_offset_t
+name|minaddr
+decl_stmt|,
+name|maxaddr
 decl_stmt|;
-specifier|extern
-name|struct
-name|map
-modifier|*
-name|useriomap
+name|vm_size_t
+name|size
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1315,19 +1272,6 @@ name|opmapdebug
 init|=
 name|pmapdebug
 decl_stmt|;
-endif|#
-directive|endif
-name|vm_offset_t
-name|minaddr
-decl_stmt|,
-name|maxaddr
-decl_stmt|;
-name|vm_size_t
-name|size
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 name|pmapdebug
 operator|=
 literal|0

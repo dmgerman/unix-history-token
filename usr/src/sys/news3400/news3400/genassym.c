@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -51,12 +51,6 @@ directive|include
 file|<machine/pte.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/pmap.h>
-end_include
-
 begin_function
 name|main
 parameter_list|()
@@ -73,15 +67,6 @@ name|proc
 operator|*
 operator|)
 literal|0
-decl_stmt|;
-specifier|register
-name|pmap_hash_t
-name|hp
-init|=
-operator|(
-name|pmap_hash_t
-operator|)
-name|PMAP_HASH_UADDR
 decl_stmt|;
 specifier|register
 name|struct
@@ -341,81 +326,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tPMAP_HASH_LOW_OFFSET 0x%x\n"
+literal|"#define\tU_PCB_SEGTAB %d\n"
 argument_list|,
 operator|&
-name|hp
+name|up
 operator|->
-name|pmh_pte
-index|[
-literal|0
-index|]
+name|u_pcb
 operator|.
-name|low
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_HIGH_OFFSET 0x%x\n"
-argument_list|,
-operator|&
-name|hp
-operator|->
-name|pmh_pte
-index|[
-literal|0
-index|]
-operator|.
-name|high
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_KPAGES %d\n"
-argument_list|,
-name|PMAP_HASH_KPAGES
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_KADDR 0x%x\n"
-argument_list|,
-name|PMAP_HASH_KADDR
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_SIZE_SHIFT %d\n"
-argument_list|,
-name|PMAP_HASH_SIZE_SHIFT
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_SHIFT1 %d\n"
-argument_list|,
-name|PMAP_HASH_SHIFT1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_SHIFT2 %d\n"
-argument_list|,
-name|PMAP_HASH_SHIFT2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_MASK1 0x%x\n"
-argument_list|,
-name|PMAP_HASH_MASK1
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tPMAP_HASH_MASK2 0x%x\n"
-argument_list|,
-name|PMAP_HASH_MASK2
+name|pcb_segtab
 argument_list|)
 expr_stmt|;
 name|printf
@@ -423,6 +341,13 @@ argument_list|(
 literal|"#define\tVM_MIN_ADDRESS 0x%x\n"
 argument_list|,
 name|VM_MIN_ADDRESS
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tVM_MIN_KERNEL_ADDRESS 0x%x\n"
+argument_list|,
+name|VM_MIN_KERNEL_ADDRESS
 argument_list|)
 expr_stmt|;
 name|printf
