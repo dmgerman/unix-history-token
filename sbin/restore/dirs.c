@@ -2513,7 +2513,7 @@ comment|/*  * Simulate the opening of a directory  */
 end_comment
 
 begin_function
-name|RST_DIR
+name|void
 modifier|*
 name|rst_opendir
 parameter_list|(
@@ -2602,11 +2602,19 @@ begin_function
 name|void
 name|rst_closedir
 parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+block|{
 name|RST_DIR
 modifier|*
 name|dirp
-parameter_list|)
-block|{
+decl_stmt|;
+name|dirp
+operator|=
+name|arg
+expr_stmt|;
 operator|(
 name|void
 operator|)

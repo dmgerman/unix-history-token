@@ -297,9 +297,8 @@ name|dirent
 modifier|*
 name|glob_readdir
 parameter_list|(
-name|RST_DIR
+name|void
 modifier|*
-name|dirp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -420,10 +419,6 @@ name|glob
 operator|.
 name|gl_opendir
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|rst_opendir
 expr_stmt|;
 name|arglist
@@ -432,10 +427,6 @@ name|glob
 operator|.
 name|gl_readdir
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|glob_readdir
 expr_stmt|;
 name|arglist
@@ -444,10 +435,6 @@ name|glob
 operator|.
 name|gl_closedir
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|rst_closedir
 expr_stmt|;
 name|arglist
@@ -3333,7 +3320,7 @@ name|dirent
 modifier|*
 name|glob_readdir
 parameter_list|(
-name|RST_DIR
+name|void
 modifier|*
 name|dirp
 parameter_list|)

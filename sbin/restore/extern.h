@@ -608,7 +608,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|RST_DIR
+name|void
 modifier|*
 name|rst_opendir
 parameter_list|(
@@ -635,9 +635,8 @@ begin_function_decl
 name|void
 name|rst_closedir
 parameter_list|(
-name|RST_DIR
+name|void
 modifier|*
-name|dirp
 parameter_list|)
 function_decl|;
 end_function_decl
