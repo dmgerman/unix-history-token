@@ -15,6 +15,43 @@ directive|define
 name|_CSA_VAR_H
 end_define
 
+begin_struct
+struct|struct
+name|csa_card
+block|{
+name|u_int16_t
+name|subvendor
+decl_stmt|,
+name|subdevice
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|void
+modifier|*
+name|amp
+decl_stmt|;
+name|void
+modifier|*
+name|amp_init
+decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|active
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+name|int
+name|inv_eapd
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Resources. */
 end_comment
@@ -77,6 +114,11 @@ name|u_int32_t
 name|hisr
 decl_stmt|;
 comment|/* The value of HISR on this interrupt. */
+name|struct
+name|csa_card
+modifier|*
+name|card
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -95,6 +137,18 @@ end_function_decl
 begin_comment
 comment|/* Common functions for csa. */
 end_comment
+
+begin_function_decl
+name|struct
+name|csa_card
+modifier|*
+name|csa_findsubcard
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

@@ -411,7 +411,7 @@ value|if(0) printf
 end_define
 
 begin_comment
-comment|/* static int fm801ch_setup(pcm_channel *c); */
+comment|/* static int fm801ch_setup(struct pcm_channel *c); */
 end_comment
 
 begin_decl_stmt
@@ -440,6 +440,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|fm801ch_caps
 init|=
@@ -470,10 +471,12 @@ name|fm801_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -1419,10 +1422,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -2539,6 +2544,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|fm801ch_getcaps
@@ -3186,7 +3192,7 @@ name|fm801
 operator|->
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -3194,7 +3200,7 @@ name|fm801
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|fm801_intr
 argument_list|,
@@ -3666,16 +3672,10 @@ name|fm801_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 

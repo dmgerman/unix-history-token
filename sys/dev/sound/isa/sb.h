@@ -3,6 +3,46 @@ begin_comment
 comment|/*  * file: sbcard.h  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SB_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SB_H
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|sbc_softc
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|sbc_lock
+parameter_list|(
+name|struct
+name|sbc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbc_unlock
+parameter_list|(
+name|struct
+name|sbc_softc
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * sound blaster registers  */
 end_comment
@@ -975,6 +1015,11 @@ directive|define
 name|SB16_OMASK
 value|0x3c
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2001 Scott Long<scottl@freebsd.org>  * Copyright (c
 end_comment
 
 begin_comment
-comment|/*  * Maestro-3/Allegro FreeBSD pcm sound driver  *  * executive status summary:  * (+) /dev/dsp multiple concurrent play channels.  * (+) /dev/dsp config (speed, mono/stereo, 8/16 bit).  * (+) /dev/mixer sets left/right volumes.  * (+) /dev/dsp recording works.  Tested successfully with the cdrom channel  * (+) apm suspend/resume works, and works properly!.  * (-) hardware volme controls don't work =-(  * (-) setblocksize() does nothing.  *  * The real credit goes to:  *  * Zach Brown for his Linux driver core and helpful technical comments.  *<zab@zabbo.net>, http://www.zabbo.net/maestro3  *  * Cameron Grant created the pcm framework used here nearly verbatim.  *<cg@freebsd.org>, http://people.freebsd.org/~cg/template.c  *  * Taku YAMAMOTO for his Maestro-1/2 FreeBSD driver and sanity reference.  *<taku@cent.saitama-u.ac.jp>  *   * ESS docs explained a few magic registers and numbers.  * http://virgo.caltech.edu/~dmoore/maestro3.pdf.gz   */
+comment|/*  * Maestro-3/Allegro FreeBSD pcm sound driver  *  * executive status summary:  * (+) /dev/dsp multiple concurrent play channels.  * (+) /dev/dsp config (speed, mono/stereo, 8/16 bit).  * (+) /dev/mixer sets left/right volumes.  * (+) /dev/dsp recording works.  Tested successfully with the cdrom channel  * (+) apm suspend/resume works, and works properly!.  * (-) hardware volme controls don't work =-(  * (-) setblocksize() does nothing.  *  * The real credit goes to:  *  * Zach Brown for his Linux driver core and helpful technical comments.  *<zab@zabbo.net>, http://www.zabbo.net/maestro3  *  * Cameron Grant created the pcm framework used here nearly verbatim.  *<cg@freebsd.org>, http://people.freebsd.org/~cg/template.c  *  * Taku YAMAMOTO for his Maestro-1/2 FreeBSD driver and sanity reference.  *<taku@cent.saitama-u.ac.jp>  *  * ESS docs explained a few magic registers and numbers.  * http://virgo.caltech.edu/~dmoore/maestro3.pdf.gz  */
 end_comment
 
 begin_include
@@ -243,10 +243,12 @@ decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -282,10 +284,12 @@ decl_stmt|;
 name|u_int32_t
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -412,9 +416,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 parameter_list|,
@@ -511,6 +517,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_pchan_getcaps
@@ -538,9 +545,11 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 parameter_list|,
@@ -637,6 +646,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_rchan_getcaps
@@ -898,6 +908,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|m3_playcaps
 init|=
@@ -1019,6 +1030,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|m3_reccaps
 init|=
@@ -1561,7 +1573,7 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-literal|21
+literal|50
 argument_list|)
 expr_stmt|;
 comment|/* ac97 cycle = 20.8 usec */
@@ -1676,6 +1688,12 @@ operator|&
 literal|0x7f
 argument_list|)
 expr_stmt|;
+name|DELAY
+argument_list|(
+literal|50
+argument_list|)
+expr_stmt|;
+comment|/* ac97 cycle = 20.8 usec */
 return|return
 literal|0
 return|;
@@ -1723,10 +1741,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3292,6 +3312,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_pchan_getcaps
@@ -3352,10 +3373,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -4878,6 +4901,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|m3_rchan_getcaps
@@ -6169,7 +6193,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -6177,7 +6201,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|m3_intr
 argument_list|,
@@ -6506,6 +6530,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|mixer_hwvol_init
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 comment|/* Create the buffer for saving the card state during suspend */
 name|len
 operator|=
@@ -8146,16 +8175,10 @@ name|m3_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 

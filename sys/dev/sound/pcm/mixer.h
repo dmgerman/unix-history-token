@@ -4,7 +4,6 @@ comment|/*  * Copyright (c) 1999 Cameron Grant<gandalf@vilnya.demon.co.uk>  * Al
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|mixer_init
 parameter_list|(
@@ -22,7 +21,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|mixer_uninit
 parameter_list|(
@@ -33,7 +31,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|mixer_reinit
 parameter_list|(
@@ -44,46 +41,25 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|mixer_ioctl
 parameter_list|(
-name|snddev_info
-modifier|*
-name|d
+name|dev_t
+name|i_dev
 parameter_list|,
 name|u_long
 name|cmd
 parameter_list|,
 name|caddr_t
 name|arg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|mixer_busy
-parameter_list|(
-name|snd_mixer
-modifier|*
-name|m
 parameter_list|,
 name|int
-name|busy
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|mixer_isbusy
-parameter_list|(
-name|snd_mixer
+name|mode
+parameter_list|,
+name|struct
+name|proc
 modifier|*
-name|m
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -125,34 +101,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
-name|void
-name|change_bits
-parameter_list|(
-name|mixer_tab
-modifier|*
-name|t
-parameter_list|,
-name|u_char
-modifier|*
-name|regval
-parameter_list|,
-name|int
-name|dev
-parameter_list|,
-name|int
-name|chn
-parameter_list|,
-name|int
-name|newval
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|mix_setdevs
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -167,6 +119,7 @@ begin_function_decl
 name|void
 name|mix_setrecdevs
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -181,6 +134,7 @@ begin_function_decl
 name|u_int32_t
 name|mix_getdevs
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -192,6 +146,7 @@ begin_function_decl
 name|u_int32_t
 name|mix_getrecdevs
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -204,12 +159,24 @@ name|void
 modifier|*
 name|mix_getdevinfo
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*  * this is a kludge to allow hiding of the struct snd_mixer definition  * 512 should be enough for all architectures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIXER_SIZE
+value|(512 + sizeof(struct kobj))
+end_define
 
 begin_define
 define|#
@@ -218,7 +185,7 @@ name|MIXER_DECLARE
 parameter_list|(
 name|name
 parameter_list|)
-value|DEFINE_CLASS(name, name ## _methods, sizeof(snd_mixer))
+value|DEFINE_CLASS(name, name ## _methods, MIXER_SIZE)
 end_define
 
 end_unit

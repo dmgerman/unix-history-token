@@ -133,10 +133,12 @@ name|agg_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -213,6 +215,10 @@ name|struct
 name|ac97_info
 modifier|*
 name|codec
+decl_stmt|;
+name|void
+modifier|*
+name|lock
 decl_stmt|;
 name|u_int
 name|playchns
@@ -3408,10 +3414,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3564,16 +3572,11 @@ name|dma_free
 argument_list|(
 name|ess
 argument_list|,
+name|sndbuf_getbuf
+argument_list|(
 name|b
-operator|->
-name|buf
 argument_list|)
-expr_stmt|;
-name|b
-operator|->
-name|buf
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 name|NULL
@@ -4143,6 +4146,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|aggch_getcaps
@@ -4183,6 +4187,7 @@ literal|0
 block|}
 decl_stmt|;
 specifier|static
+name|struct
 name|pcmchan_caps
 name|playcaps
 init|=
@@ -4218,6 +4223,7 @@ literal|0
 block|}
 decl_stmt|;
 specifier|static
+name|struct
 name|pcmchan_caps
 name|reccaps
 init|=
@@ -5322,13 +5328,13 @@ name|irq
 operator|==
 name|NULL
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|agg_intr
 argument_list|,
@@ -6147,16 +6153,10 @@ name|agg_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 

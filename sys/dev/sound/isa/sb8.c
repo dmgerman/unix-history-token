@@ -50,6 +50,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sb200_playcaps
 init|=
@@ -67,6 +68,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sb200_reccaps
 init|=
@@ -84,6 +86,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sb201_playcaps
 init|=
@@ -101,6 +104,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sb201_reccaps
 init|=
@@ -136,6 +140,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sbpro_playcaps
 init|=
@@ -153,6 +158,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sbpro_reccaps
 init|=
@@ -183,10 +189,12 @@ name|sb_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -209,6 +217,9 @@ begin_struct
 struct|struct
 name|sb_info
 block|{
+name|device_t
+name|parent_dev
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -463,16 +474,57 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  *  * sb_cmd write a single byte to the CMD port.  * sb_cmd1 write a CMD + 1 byte arg  * sb_cmd2 write a CMD + 2 byte arg  * sb_get_byte returns a single byte from the DSP data port  */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|sb_lock
+parameter_list|(
+name|struct
+name|sb_info
+modifier|*
+name|sb
+parameter_list|)
+block|{
+name|sbc_lock
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|sb
+operator|->
+name|parent_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sb_unlock
+parameter_list|(
+name|struct
+name|sb_info
+modifier|*
+name|sb
+parameter_list|)
+block|{
+name|sbc_unlock
+argument_list|(
+name|device_get_softc
+argument_list|(
+name|sb
+operator|->
+name|parent_dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 specifier|static
@@ -865,7 +917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * in the SB, there is a set of indirect "mixer" registers with  * address at offset 4, data at offset 5  */
+comment|/*  * in the SB, there is a set of indirect "mixer" registers with  * address at offset 4, data at offset 5  *  * we don't need to interlock these, the mixer lock will suffice.  */
 end_comment
 
 begin_function
@@ -885,14 +937,6 @@ name|u_int
 name|value
 parameter_list|)
 block|{
-name|u_long
-name|flags
-decl_stmt|;
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|sb_wr
 argument_list|(
 name|sb
@@ -936,11 +980,6 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -961,14 +1000,6 @@ block|{
 name|int
 name|val
 decl_stmt|;
-name|u_long
-name|flags
-decl_stmt|;
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|sb_wr
 argument_list|(
 name|sb
@@ -1003,11 +1034,6 @@ expr_stmt|;
 name|DELAY
 argument_list|(
 literal|10
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -1472,6 +1498,7 @@ specifier|static
 name|int
 name|sbpromix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1536,6 +1563,7 @@ specifier|static
 name|int
 name|sbpromix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1735,6 +1763,7 @@ specifier|static
 name|int
 name|sbpromix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1870,6 +1899,7 @@ specifier|static
 name|int
 name|sbmix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -1926,6 +1956,7 @@ specifier|static
 name|int
 name|sbmix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2054,6 +2085,7 @@ specifier|static
 name|int
 name|sbmix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2139,6 +2171,11 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sndbuf_runsz
@@ -2191,6 +2228,11 @@ name|DSP_DATA_AVAIL
 argument_list|)
 expr_stmt|;
 comment|/* int ack */
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2340,6 +2382,11 @@ name|speed
 operator|=
 name|max
 expr_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|sb
 operator|->
 name|bd_flags
@@ -2409,6 +2456,11 @@ name|spd
 operator|=
 name|speed
 expr_stmt|;
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 return|return
 name|speed
 return|;
@@ -2477,6 +2529,11 @@ name|i
 decl_stmt|;
 name|l
 operator|--
+expr_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2549,6 +2606,11 @@ name|bd_flags
 operator||=
 name|BD_F_DMARUN
 expr_stmt|;
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2590,6 +2652,11 @@ literal|1
 else|:
 literal|0
 decl_stmt|;
+name|sb_lock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sb
@@ -2623,6 +2690,11 @@ name|DSP_CMD_SPKOFF
 argument_list|)
 expr_stmt|;
 comment|/* speaker off */
+name|sb_unlock
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|sb
 operator|->
 name|bd_flags
@@ -2653,10 +2725,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -2966,6 +3040,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|sbchan_getcaps
@@ -3323,6 +3398,15 @@ condition|)
 return|return
 name|ENXIO
 return|;
+name|sb
+operator|->
+name|parent_dev
+operator|=
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|BUS_READ_IVAR
 argument_list|(
 name|device_get_parent
@@ -3408,7 +3492,7 @@ name|no
 goto|;
 if|if
 condition|(
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -3416,7 +3500,7 @@ name|sb
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_MPSAFE
 argument_list|,
 name|sb_intr
 argument_list|,
@@ -3696,6 +3780,7 @@ name|sb_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
@@ -3732,6 +3817,22 @@ argument_list|,
 name|PCM_PREFVER
 argument_list|,
 name|PCM_MAXVER
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_sb8
+argument_list|,
+name|snd_sbc
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -139,12 +139,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USING_MUTEX
-end_ifdef
-
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -155,28 +149,6 @@ name|sndstat_verbose
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_expr_stmt
-name|TUNABLE_INT_DECL
-argument_list|(
-literal|"hw.snd.verbose"
-argument_list|,
-literal|0
-argument_list|,
-name|sndstat_verbose
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static

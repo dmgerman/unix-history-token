@@ -114,6 +114,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ess_playcaps
 init|=
@@ -171,6 +172,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ess_reccaps
 init|=
@@ -201,10 +203,12 @@ name|ess_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -593,13 +597,6 @@ name|go
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Common code for the midi and pcm functions  *  * ess_cmd write a single byte to the CMD port.  * ess_cmd1 write a CMD + 1 byte arg  * ess_cmd2 write a CMD + 2 byte arg  * ess_get_byte returns a single byte from the DSP data port  *  * ess_write is actually ess_cmd1  * ess_read access ext. regs via ess_cmd(0xc0, reg) followed by ess_get_byte  */
@@ -2768,10 +2765,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3208,6 +3207,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|esschan_getcaps
@@ -3327,6 +3327,7 @@ specifier|static
 name|int
 name|essmix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3395,6 +3396,7 @@ specifier|static
 name|int
 name|essmix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3699,6 +3701,7 @@ specifier|static
 name|int
 name|essmix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -5166,7 +5169,7 @@ argument_list|,
 literal|0x2a
 argument_list|)
 expr_stmt|;
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -5174,7 +5177,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+literal|0
 argument_list|,
 name|ess_intr
 argument_list|,
@@ -5479,6 +5482,7 @@ name|ess_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }

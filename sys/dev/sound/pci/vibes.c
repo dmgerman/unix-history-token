@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  *  * $FreeBSD$ */
+comment|/*  * Copyright (c) 2001 Orion Hodson<O.Hodson@cs.ucl.ac.uk>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This card has the annoying habit of "clicking" when attached and  * detached, haven't been able to remedy this with any combination of  * muting.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -116,10 +116,12 @@ name|sc_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -251,6 +253,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|sc_caps
 init|=
@@ -706,10 +709,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -830,6 +835,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|svchan_getcaps
@@ -1081,7 +1087,7 @@ name|err
 decl_stmt|,
 name|min_err
 decl_stmt|;
-comment|/* This algorithm is a variant of that described in 	 * sonicvibes.pdf appendix A.  This search is marginally more 	 * extensive and results in (nominally) better sample rate 	 * matching. */
+comment|/* This algorithm is a variant described in sonicvibes.pdf 	 * appendix A.  This search is marginally more extensive and 	 * results in (nominally) better sample rate matching. */
 name|f_out
 operator|=
 name|SV_F_SCALE
@@ -2632,6 +2638,7 @@ specifier|static
 name|int
 name|sv_mix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2735,6 +2742,7 @@ specifier|static
 name|int
 name|sv_mix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2779,6 +2787,7 @@ specifier|static
 name|int
 name|sv_mix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -3963,7 +3972,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_TYPE_AV
 argument_list|,
 name|sv_intr
 argument_list|,
@@ -4088,7 +4097,7 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  We go 	 * for space between midi and game ports. 	 */
+comment|/* XXX This is a hack, and it's ugly.  Okay, the deal is this 	 * card has two more io regions that available for automatic 	 * configuration by the pci code.  These need to be allocated 	 * to used as control registers for the DMA engines. 	 * Unfortunately FBSD has no bus_space_foo() functions so we 	 * have to grab port space in region of existing resources.  Go 	 * for space between midi and game ports. 	 */
 name|bus_get_resource
 argument_list|(
 name|dev
@@ -4158,7 +4167,7 @@ name|sdmaa
 operator|+
 literal|0x40
 expr_stmt|;
-comment|/* Add resources to list of pci resources for this device. 	 * From here on they look like normal pci resources. */
+comment|/* Add resources to list of pci resources for this device - from here on 	 * they look like normal pci resources. */
 name|bus_set_resource
 argument_list|(
 name|dev
@@ -4920,16 +4929,10 @@ name|sc_methods
 block|,
 expr|sizeof
 operator|(
+expr|struct
 name|snddev_info
 operator|)
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 

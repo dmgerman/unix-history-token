@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Orion Hodson<oho@acm.org>  * All rights reserve
 end_comment
 
 begin_comment
-comment|/*  * als4000.c - driver for the Avance Logic ALS 4000 chipset.  *  * The ALS4000 is a effectively an SB16 with a PCI interface.  *  * This driver derives from ALS4000a.PDF, Bart Hartgers alsa driver, and  * SB16 register descriptions.    */
+comment|/*  * als4000.c - driver for the Avance Logic ALS 4000 chipset.  *  * The ALS4000 is a effectively an SB16 with a PCI interface.  *  * This driver derives from ALS4000a.PDF, Bart Hartgers alsa driver, and  * SB16 register descriptions.  */
 end_comment
 
 begin_include
@@ -104,10 +104,12 @@ name|sc_info
 modifier|*
 name|parent
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
@@ -213,6 +215,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|als_caps
 init|=
@@ -788,10 +791,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -1171,6 +1176,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|alschan_getcaps
@@ -2492,6 +2498,7 @@ specifier|static
 name|int
 name|alsmix_init
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2591,6 +2598,7 @@ specifier|static
 name|int
 name|alsmix_set
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -2825,6 +2833,7 @@ specifier|static
 name|int
 name|alsmix_setrecsrc
 parameter_list|(
+name|struct
 name|snd_mixer
 modifier|*
 name|m
@@ -4356,16 +4365,10 @@ name|als_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 

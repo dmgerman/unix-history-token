@@ -246,10 +246,12 @@ name|dir
 decl_stmt|,
 name|fmt
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -292,10 +294,12 @@ name|fmt
 decl_stmt|,
 name|num
 decl_stmt|;
+name|struct
 name|snd_dbuf
 modifier|*
 name|buffer
 decl_stmt|;
+name|struct
 name|pcm_channel
 modifier|*
 name|channel
@@ -364,6 +368,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|ih
+decl_stmt|;
+name|void
+modifier|*
+name|lock
 decl_stmt|;
 name|void
 modifier|*
@@ -700,6 +708,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ds_reccaps
 init|=
@@ -740,6 +749,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|pcmchan_caps
 name|ds_playcaps
 init|=
@@ -2616,10 +2626,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3020,6 +3032,13 @@ argument_list|,
 name|stereo
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|ds_wr
 argument_list|(
 name|sc
@@ -3029,6 +3048,13 @@ argument_list|,
 literal|0x00000003
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -3168,6 +3194,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|ds1pchan_getcaps
@@ -3281,10 +3308,12 @@ name|void
 modifier|*
 name|devinfo
 parameter_list|,
+name|struct
 name|snd_dbuf
 modifier|*
 name|b
 parameter_list|,
+name|struct
 name|pcm_channel
 modifier|*
 name|c
@@ -3639,6 +3668,13 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|x
 operator|=
 name|ds_rd
@@ -3686,6 +3722,13 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -3694,6 +3737,13 @@ operator|->
 name|run
 operator|=
 literal|0
+expr_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
 expr_stmt|;
 name|x
 operator|=
@@ -3732,6 +3782,13 @@ argument_list|,
 name|x
 argument_list|,
 literal|4
+argument_list|)
+expr_stmt|;
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -3787,6 +3844,7 @@ end_function
 
 begin_function
 specifier|static
+name|struct
 name|pcmchan_caps
 modifier|*
 name|ds1rchan_getcaps
@@ -3914,6 +3972,13 @@ name|i
 decl_stmt|,
 name|x
 decl_stmt|;
+name|snd_mtxlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 name|ds_rd
@@ -4096,6 +4161,13 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|snd_mtxunlock
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5321,7 +5393,9 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -5339,14 +5413,15 @@ return|return
 name|ENXIO
 return|;
 block|}
-name|bzero
-argument_list|(
 name|sc
-argument_list|,
-sizeof|sizeof
+operator|->
+name|lock
+operator|=
+name|snd_mtxcreate
 argument_list|(
-operator|*
-name|sc
+name|device_get_nameunit
+argument_list|(
+name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5665,7 +5740,7 @@ name|sc
 operator|->
 name|irq
 operator|||
-name|bus_setup_intr
+name|snd_setup_intr
 argument_list|(
 name|dev
 argument_list|,
@@ -5673,7 +5748,7 @@ name|sc
 operator|->
 name|irq
 argument_list|,
-name|INTR_TYPE_TTY
+name|INTR_MPSAFE
 argument_list|,
 name|ds_intr
 argument_list|,
@@ -5881,6 +5956,19 @@ operator|->
 name|parent_dmat
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|lock
+condition|)
+name|snd_mtxfree
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|sc
@@ -6058,6 +6146,13 @@ operator|->
 name|parent_dmat
 argument_list|)
 expr_stmt|;
+name|snd_mtxfree
+argument_list|(
+name|sc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|sc
@@ -6128,16 +6223,10 @@ name|ds1_methods
 block|,
 sizeof|sizeof
 argument_list|(
+expr|struct
 name|snddev_info
 argument_list|)
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|pcm_devclass
 decl_stmt|;
 end_decl_stmt
 
