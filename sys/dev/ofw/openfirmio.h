@@ -74,12 +74,6 @@ name|OFIOCGET
 value|_IOWR(OFIOC_BASE, 1, struct ofiocdesc)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_comment
 comment|/* Set openprom field. */
 end_comment
@@ -88,13 +82,8 @@ begin_define
 define|#
 directive|define
 name|OFIOCSET
-value|_IOW(OFIOC_BASE, 2, struct ofiocdesc)
+value|_IOWR(OFIOC_BASE, 2, struct ofiocdesc)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Get next property. */
@@ -160,6 +149,28 @@ define|#
 directive|define
 name|OFIOCGETPROPLEN
 value|_IOWR(OFIOC_BASE, 8, struct ofiocdesc)
+end_define
+
+begin_comment
+comment|/* Maximum accepted name length. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFIOCMAXNAME
+value|8191
+end_define
+
+begin_comment
+comment|/* Maximum accepted value length (maximum of nvramrc property). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OFIOCMAXVALUE
+value|8192
 end_define
 
 begin_endif
