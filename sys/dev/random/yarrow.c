@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2000 Mark R V Murray  * All rights reserved.  *  * 
 end_comment
 
 begin_comment
-comment|/* NOTE NOTE NOTE - This is not finished! It will supply numbers, but                     it is not yet cryptographically secure!! */
+comment|/* NOTE NOTE NOTE - This is not finished! It will supply numbers, but  *                  it is not yet cryptographically secure!!  */
 end_comment
 
 begin_include
@@ -111,20 +111,15 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|nanotime
 parameter_list|,
 name|u_int64_t
-name|entropy
 parameter_list|,
 name|u_int
-name|bits
 parameter_list|,
 name|u_int
-name|frac
 parameter_list|,
 name|enum
 name|esource
-name|source
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -141,11 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* When enough entropy has been harvested, asynchronously "stir" it in */
-end_comment
-
-begin_comment
-comment|/* The regate task is run at splsofttq()                               */
+comment|/* When enough entropy has been harvested, asynchronously "stir" it in.  * The regate task is run at splsofttq()  */
 end_comment
 
 begin_decl_stmt
@@ -375,9 +366,7 @@ name|int
 name|fastslow
 parameter_list|)
 block|{
-comment|/* Interrupt-context stack is a limited resource; make static */
-comment|/* large structures; XXX Revisit - needs to move to the large */
-comment|/* random_state structure.                                    */
+comment|/* Interrupt-context stack is a limited resource; make static 	 * large structures; XXX Revisit - needs to move to the large 	 * random_state structure. 	 */
 specifier|static
 name|unsigned
 name|char
@@ -727,8 +716,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 2. Compute hash values for all v. _Supposed_ to be computationally */
-comment|/*    intensive.                                                      */
+comment|/* 2. Compute hash values for all v. _Supposed_ to be computationally 	 *    intensive. 	 */
 if|if
 condition|(
 name|random_state
@@ -1203,7 +1191,7 @@ name|hash
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 7. Dump to seed file (XXX done by external process?) */
+comment|/* 7. Dump to seed file (done by external process) */
 block|}
 end_function
 
@@ -1576,7 +1564,7 @@ name|mask
 decl_stmt|;
 name|struct
 name|timespec
-name|nanotime
+name|timebuf
 decl_stmt|;
 comment|/* The reseed task must not be jumped on */
 name|mask
@@ -1603,16 +1591,16 @@ name|i
 operator|++
 control|)
 block|{
-name|getnanotime
+name|nanotime
 argument_list|(
 operator|&
-name|nanotime
+name|timebuf
 argument_list|)
 expr_stmt|;
 name|random_harvest_internal
 argument_list|(
 operator|&
-name|nanotime
+name|timebuf
 argument_list|,
 operator|*
 operator|(
@@ -1785,11 +1773,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Entropy harvesting routine. This is supposed to be fast; do */
-end_comment
-
-begin_comment
-comment|/* not do anything slow in here!                               */
+comment|/* Entropy harvesting routine. This is supposed to be fast; do  * not do anything slow in here!  */
 end_comment
 
 begin_function
@@ -1800,7 +1784,7 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|nanotime
+name|timep
 parameter_list|,
 name|u_int64_t
 name|entropy
@@ -1941,7 +1925,7 @@ operator|->
 name|nanotime
 operator|=
 operator|*
-name|nanotime
+name|timep
 expr_stmt|;
 comment|/* the harvested entropy */
 name|bucket
@@ -2000,7 +1984,7 @@ operator|->
 name|thresh
 condition|)
 block|{
-comment|/* XXX Slowoverthresh nees to be considered */
+comment|/* XXX Slowoverthresh needs to be considered */
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_swi

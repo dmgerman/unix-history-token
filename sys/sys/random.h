@@ -33,18 +33,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|write_random
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_enum
 enum|enum
 name|esource
@@ -54,6 +42,8 @@ block|,
 name|RANDOM_KEYBOARD
 block|,
 name|RANDOM_MOUSE
+block|,
+name|ENTROPYSOURCE
 block|}
 enum|;
 end_enum
@@ -68,7 +58,8 @@ name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
-name|u_int
+name|enum
+name|esource
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -70,11 +70,7 @@ file|<dev/randomdev/yarrow.h>
 end_include
 
 begin_comment
-comment|/* hold the address of the routine which is actually called if */
-end_comment
-
-begin_comment
-comment|/* the ramdomdev is loaded                                     */
+comment|/* hold the address of the routine which is actually called if  * the ramdomdev is loaded  */
 end_comment
 
 begin_function_decl
@@ -156,19 +152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Entropy harvesting routine. This is supposed to be fast; do */
-end_comment
-
-begin_comment
-comment|/* not do anything slow in here!                               */
-end_comment
-
-begin_comment
-comment|/* Implemented as in indirect call to allow non-inclusion of   */
-end_comment
-
-begin_comment
-comment|/* the entropy device.                                         */
+comment|/* Entropy harvesting routine. This is supposed to be fast; do  * not do anything slow in here!  * Implemented as in indirect call to allow non-inclusion of  * the entropy device.  */
 end_comment
 
 begin_function
@@ -185,22 +169,22 @@ name|u_int
 name|frac
 parameter_list|,
 name|u_int
-name|source
+name|origin
 parameter_list|)
 block|{
 name|struct
 name|timespec
-name|nanotime
+name|timebuf
 decl_stmt|;
 if|if
 condition|(
 name|reap
 condition|)
 block|{
-name|getnanotime
+name|nanotime
 argument_list|(
 operator|&
-name|nanotime
+name|timebuf
 argument_list|)
 expr_stmt|;
 call|(
@@ -209,7 +193,7 @@ name|reap
 call|)
 argument_list|(
 operator|&
-name|nanotime
+name|timebuf
 argument_list|,
 name|entropy
 argument_list|,
@@ -217,7 +201,7 @@ name|bits
 argument_list|,
 name|frac
 argument_list|,
-name|source
+name|origin
 argument_list|)
 expr_stmt|;
 block|}
