@@ -2300,6 +2300,8 @@ name|error
 operator|||
 operator|*
 name|vpp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|vput
