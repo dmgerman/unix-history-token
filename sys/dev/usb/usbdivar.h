@@ -422,9 +422,9 @@ name|depth
 decl_stmt|;
 comment|/* distance from root hub */
 name|u_int8_t
-name|lowspeed
+name|speed
 decl_stmt|;
-comment|/* lowspeed flag */
+comment|/* low/full/high speed */
 name|u_int8_t
 name|self_powered
 decl_stmt|;

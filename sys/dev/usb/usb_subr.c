@@ -4847,7 +4847,7 @@ name|int
 name|depth
 parameter_list|,
 name|int
-name|lowspeed
+name|speed
 parameter_list|,
 name|int
 name|port
@@ -4877,7 +4877,7 @@ decl_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_new_device bus=%p port=%d depth=%d lowspeed=%d\n"
+literal|"usbd_new_device bus=%p port=%d depth=%d speed=%d\n"
 operator|,
 name|bus
 operator|,
@@ -4885,7 +4885,7 @@ name|port
 operator|,
 name|depth
 operator|,
-name|lowspeed
+name|speed
 operator|)
 argument_list|)
 expr_stmt|;
@@ -5051,14 +5051,6 @@ literal|0
 expr_stmt|;
 name|dev
 operator|->
-name|lowspeed
-operator|=
-name|lowspeed
-operator|!=
-literal|0
-expr_stmt|;
-name|dev
-operator|->
 name|depth
 operator|=
 name|depth
@@ -5074,6 +5066,12 @@ operator|->
 name|langid
 operator|=
 name|USBD_NOLANG
+expr_stmt|;
+name|dev
+operator|->
+name|speed
+operator|=
+name|speed
 expr_stmt|;
 name|dev
 operator|->
@@ -5217,7 +5215,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"usbd_new_device: adding unit addr=%d, rev=%02x, class=%d, "
-literal|"subclass=%d, protocol=%d, maxpacket=%d, len=%d, ls=%d\n"
+literal|"subclass=%d, protocol=%d, maxpacket=%d, len=%d, speed=%d\n"
 operator|,
 name|addr
 operator|,
@@ -5250,7 +5248,7 @@ name|bLength
 operator|,
 name|dev
 operator|->
-name|lowspeed
+name|speed
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6280,11 +6278,11 @@ name|power
 expr_stmt|;
 name|di
 operator|->
-name|lowspeed
+name|speed
 operator|=
 name|dev
 operator|->
-name|lowspeed
+name|speed
 expr_stmt|;
 if|if
 condition|(

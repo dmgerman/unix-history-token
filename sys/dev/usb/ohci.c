@@ -8915,7 +8915,9 @@ operator||
 operator|(
 name|dev
 operator|->
-name|lowspeed
+name|speed
+operator|==
+name|USB_SPEED_LOW
 condition|?
 name|OHCI_ED_SPEED
 else|:
@@ -10982,6 +10984,7 @@ break|break;
 case|case
 name|UHF_PORT_POWER
 case|:
+comment|/* Yes, writing to the LOW_SPEED bit clears power. */
 name|OWRITE4
 argument_list|(
 name|sc

@@ -8141,7 +8141,7 @@ argument_list|(
 literal|8
 argument_list|,
 operator|(
-literal|"uhci_alloc_std_chain: addr=%d endpt=%d len=%d ls=%d "
+literal|"uhci_alloc_std_chain: addr=%d endpt=%d len=%d speed=%d "
 literal|"flags=0x%x\n"
 operator|,
 name|addr
@@ -8159,7 +8159,7 @@ name|pipe
 operator|.
 name|device
 operator|->
-name|lowspeed
+name|speed
 operator|,
 name|flags
 operator|)
@@ -8328,7 +8328,9 @@ name|pipe
 operator|.
 name|device
 operator|->
-name|lowspeed
+name|speed
+operator|==
+name|USB_SPEED_LOW
 condition|)
 name|status
 operator||=
@@ -10520,7 +10522,9 @@ name|ls
 operator|=
 name|dev
 operator|->
-name|lowspeed
+name|speed
+operator|==
+name|USB_SPEED_LOW
 condition|?
 name|UHCI_TD_LS
 else|:
@@ -10986,7 +10990,9 @@ if|if
 condition|(
 name|dev
 operator|->
-name|lowspeed
+name|speed
+operator|==
+name|USB_SPEED_LOW
 condition|)
 name|uhci_add_ls_ctrl
 argument_list|(
@@ -13239,7 +13245,9 @@ name|pipe
 operator|.
 name|device
 operator|->
-name|lowspeed
+name|speed
+operator|==
+name|USB_SPEED_LOW
 condition|)
 name|uhci_remove_ls_ctrl
 argument_list|(
