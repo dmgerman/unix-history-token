@@ -8,15 +8,15 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: clnp_input.c,v 4.4 88/09/08 08:38:15 hagens Exp $ */
+comment|/* $Header: /var/src/sys/netiso/RCS/clnp_input.c,v 5.1 89/02/09 16:20:32 hagens Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /usr/argo/sys/netiso/RCS/clnp_input.c,v $ */
+comment|/* $Source: /var/src/sys/netiso/RCS/clnp_input.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_input.c	7.2 (Berkeley) %G% */
+comment|/*	@(#)clnp_input.c	7.3 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Header: clnp_input.c,v 4.4 88/09/08 08:38:15 hagens Exp $"
+literal|"$Header: /var/src/sys/netiso/RCS/clnp_input.c,v 5.1 89/02/09 16:20:32 hagens Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -878,13 +878,21 @@ name|int
 name|iso_systype
 decl_stmt|;
 comment|/* used by ESIS config resp */
+name|int
+name|need_afrin
+init|=
+literal|0
+decl_stmt|;
+comment|/* true if congestion experienced */
+comment|/* which means you need afrin nose */
+comment|/* spray. How clever! */
 name|IFDEBUG
 argument_list|(
 argument|D_INPUT
 argument_list|)
 name|printf
 argument_list|(
-literal|"clnp_input: proccessing dg; First mbuf m_len %d, m_type x%x, data:\n"
+literal|"clnp_input: proccessing dg; First mbuf m_len %d, m_type x%x, %s\n"
 argument_list|,
 name|m
 operator|->
@@ -893,33 +901,22 @@ argument_list|,
 name|m
 operator|->
 name|m_type
+argument_list|,
+name|IS_CLUSTER
+argument_list|(
+name|m
+argument_list|)
+condition|?
+literal|"cluster"
+else|:
+literal|"normal"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-name|IFDEBUG
-argument_list|(
-name|D_DUMPIN
-argument_list|)
-name|printf
-argument_list|(
-literal|"clnp_input: first mbuf:\n"
-argument_list|)
+name|need_afrin
+init|=
+literal|0
 decl_stmt|;
-name|dump_buf
-argument_list|(
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-name|caddr_t
-argument_list|)
-argument_list|,
-name|m
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|ENDDEBUG
 comment|/* 	 *	If no iso addresses have been set, there is nothing 	 *	to do with the packet. 	 */
 if|if
 condition|(
@@ -953,6 +950,87 @@ name|clnp_fixed
 operator|*
 argument_list|)
 expr_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_DUMPIN
+argument_list|)
+name|struct
+name|mbuf
+modifier|*
+name|mhead
+decl_stmt|;
+name|int
+name|total_len
+init|=
+literal|0
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"clnp_input: clnp header:\n"
+argument_list|)
+expr_stmt|;
+name|dump_buf
+argument_list|(
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+name|caddr_t
+argument_list|)
+argument_list|,
+name|clnp
+operator|->
+name|cnf_hdr_len
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"clnp_input: mbuf chain:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|mhead
+operator|=
+name|m
+init|;
+name|mhead
+operator|!=
+name|NULL
+condition|;
+name|mhead
+operator|=
+name|mhead
+operator|->
+name|m_next
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"m x%x, len %d\n"
+argument_list|,
+name|mhead
+argument_list|,
+name|mhead
+operator|->
+name|m_len
+argument_list|)
+expr_stmt|;
+name|total_len
+operator|+=
+name|mhead
+operator|->
+name|m_len
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"clnp_input: total length of mbuf chain %d:\n"
+argument_list|,
+name|total_len
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 comment|/* 	 *	Compute checksum (if necessary) and drop packet if 	 *	checksum does not match 	 */
 if|if
 condition|(
@@ -983,7 +1061,9 @@ argument_list|,
 name|GEN_BADCSUM
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -1006,7 +1086,9 @@ argument_list|,
 name|DISC_UNSUPPVERS
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* check mbuf data length: clnp_data_ck will free mbuf upon error */
 name|CTOH
@@ -1037,7 +1119,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 name|clnp
 operator|=
 name|mtod
@@ -1133,7 +1217,9 @@ argument_list|,
 name|GEN_INCOMPLETE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|CLNP_EXTRACT_ADDR
 argument_list|(
@@ -1166,7 +1252,9 @@ argument_list|,
 name|GEN_INCOMPLETE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|IFDEBUG
 argument_list|(
@@ -1238,7 +1326,9 @@ argument_list|,
 name|GEN_INCOMPLETE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 else|else
 block|{
@@ -1394,6 +1484,68 @@ name|errcode
 operator|=
 name|DISC_UNSUPPOPT
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DECBIT
+comment|/* check if the congestion experienced bit is set */
+if|if
+condition|(
+name|oidxp
+operator|->
+name|cni_qos_formatp
+condition|)
+block|{
+name|caddr_t
+name|qosp
+init|=
+name|CLNP_OFFTOOPT
+argument_list|(
+name|m
+argument_list|,
+name|oidxp
+operator|->
+name|cni_qos_formatp
+argument_list|)
+decl_stmt|;
+name|u_char
+name|qos
+init|=
+operator|*
+name|qosp
+decl_stmt|;
+name|need_afrin
+operator|=
+operator|(
+operator|(
+name|qos
+operator|&
+operator|(
+name|CLNPOVAL_GLOBAL
+operator||
+name|CLNPOVAL_CONGESTED
+operator|)
+operator|)
+operator|==
+operator|(
+name|CLNPOVAL_GLOBAL
+operator||
+name|CLNPOVAL_CONGESTED
+operator|)
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|need_afrin
+condition|)
+name|INCSTAT
+argument_list|(
+name|cns_congest_rcvd
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+endif|DECBIT
 if|if
 condition|(
 name|errcode
@@ -1423,7 +1575,9 @@ name|errcode
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
 comment|/* 	 *	check if this packet is for us. if not, then forward 	 */
@@ -1464,7 +1618,9 @@ argument_list|,
 name|shp
 argument_list|)
 decl_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 comment|/* 	 *	ESIS Configuration Response Function 	 * 	 *	If the packet received was sent to the multicast address 	 *	all end systems, then send an esh to the source 	 */
 if|if
@@ -1579,10 +1735,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-return|return;
+return|return
+literal|0
+return|;
 block|}
 block|}
-comment|/* 	 *	give the packet to the higher layer 	 *	TODO: how do we tell TP that congestion bit is on in QOS option? 	 * 	 *	Note: the total length of packet 	 *	is the total length field of the segmentation part, 	 *	or, if absent, the segment length field of the 	 *	header. 	 */
+comment|/* 	 *	give the packet to the higher layer 	 * 	 *	Note: the total length of packet 	 *	is the total length field of the segmentation part, 	 *	or, if absent, the segment length field of the 	 *	header. 	 */
 switch|switch
 condition|(
 name|clnp
@@ -1634,6 +1792,37 @@ break|break;
 case|case
 name|CLNP_DT
 case|:
+if|if
+condition|(
+name|need_afrin
+condition|)
+block|{
+comment|/* NOTE: do this before TP gets the packet so tp ack can use info*/
+name|IFDEBUG
+argument_list|(
+argument|D_INPUT
+argument_list|)
+name|printf
+argument_list|(
+literal|"clnp_input: Calling tpclnp_ctlinput(%s)\n"
+argument_list|,
+name|clnp_iso_addrp
+argument_list|(
+operator|&
+name|src
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
+name|tpclnp_ctlinput1
+argument_list|(
+name|PRC_QUENCH2
+argument_list|,
+operator|&
+name|src
+argument_list|)
+decl_stmt|;
+block|}
 operator|(
 operator|*
 name|isosw
@@ -1809,13 +1998,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_function
-
-begin_function
-name|int
-name|clnp_ctlinput
-parameter_list|()
-block|{ }
 end_function
 
 begin_endif
