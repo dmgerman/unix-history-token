@@ -1781,11 +1781,6 @@ operator|.
 name|tcps_sc_stale
 operator|++
 expr_stmt|;
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * syncache_respond() may call back into the syncache to 		 * to modify another entry, so do not obtain the next 		 * entry on the timer chain until it has completed. 		 */
