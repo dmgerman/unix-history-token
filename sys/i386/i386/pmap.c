@@ -11150,8 +11150,6 @@ operator||
 name|PG_RW
 operator||
 name|PG_V
-operator||
-name|PG_N
 expr_stmt|;
 name|size
 operator|-=
