@@ -3328,6 +3328,9 @@ name|page_shortage
 operator|+=
 name|addl_page_shortage
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Scan the active queue for things we can deactivate. We nominally 	 * track the per-page activity counter and use it to locate 	 * deactivation candidates. 	 */
 name|pcount
 operator|=
@@ -3630,6 +3633,9 @@ operator|=
 name|next
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|s
 operator|=
 name|splvm
@@ -4211,6 +4217,9 @@ operator|=
 name|splvm
 argument_list|()
 expr_stmt|;
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|pcount
 operator|=
 name|cnt
@@ -4468,6 +4477,9 @@ operator|=
 name|next
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s0
