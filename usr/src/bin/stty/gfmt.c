@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gfmt.c	5.1 (Berkeley) %G%"
+literal|"@(#)gfmt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,18 +32,6 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
 end_include
 
 begin_include
@@ -108,12 +96,6 @@ name|int
 name|ldisc
 decl_stmt|;
 block|{
-specifier|extern
-name|struct
-name|cchar
-name|cchars1
-index|[]
-decl_stmt|;
 specifier|register
 name|struct
 name|cchar

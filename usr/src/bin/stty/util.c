@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	5.1 (Berkeley) %G%"
+literal|"@(#)util.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,18 +38,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
 end_include
 
 begin_include
