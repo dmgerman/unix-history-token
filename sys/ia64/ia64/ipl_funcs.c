@@ -15,49 +15,5 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_decl_stmt
-name|unsigned
-name|int
-name|bio_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
-name|cam_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
-name|net_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|int
-name|tty_imask
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 end_unit
 

@@ -791,13 +791,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_bio_imask
-value|bio_imask
-end_define
-
-begin_define
-define|#
-directive|define
 name|_bioscall_vector
 value|bioscall_vector
 end_define
@@ -877,13 +870,6 @@ define|#
 directive|define
 name|_bzero
 value|bzero
-end_define
-
-begin_define
-define|#
-directive|define
-name|_cam_imask
-value|cam_imask
 end_define
 
 begin_define
@@ -1421,13 +1407,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|_net_imask
-value|net_imask
-end_define
-
-begin_define
-define|#
-directive|define
 name|_nfs_diskless
 value|nfs_diskless
 end_define
@@ -1694,29 +1673,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_soft_imask
-value|soft_imask
-end_define
-
-begin_define
-define|#
-directive|define
 name|_softclock
 value|softclock
-end_define
-
-begin_define
-define|#
-directive|define
-name|_softnet_imask
-value|softnet_imask
-end_define
-
-begin_define
-define|#
-directive|define
-name|_softtty_imask
-value|softtty_imask
 end_define
 
 begin_define
@@ -1864,13 +1822,6 @@ define|#
 directive|define
 name|_trapwrite
 value|trapwrite
-end_define
-
-begin_define
-define|#
-directive|define
-name|_tty_imask
-value|tty_imask
 end_define
 
 begin_define
