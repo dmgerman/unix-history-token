@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.1 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -555,12 +555,6 @@ operator|<
 literal|2
 condition|)
 block|{
-if|if
-condition|(
-name|flags
-operator|==
-literal|1
-condition|)
 name|printf
 argument_list|(
 literal|"Please use %s.\n"
