@@ -11,13 +11,19 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)admin.c	4.3	%G%"
+literal|"@(#)admin.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,15 +121,6 @@ name|Comments
 decl_stmt|,
 modifier|*
 name|Mrs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|Valpgm
-index|[]
-init|=
-literal|"/usr/local/val"
 decl_stmt|;
 end_decl_stmt
 
@@ -1363,16 +1360,18 @@ name|sprintf
 argument_list|(
 name|command
 argument_list|,
-literal|"/usr/local/val -s %s"
+literal|"%s -s %s"
 argument_list|,
 name|afile
+argument_list|,
+name|_PATH_VAL
 argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
-literal|"/bin/sh"
+literal|"sh"
 argument_list|,
 literal|"-c"
 argument_list|,
@@ -1387,7 +1386,7 @@ name|Error
 argument_list|,
 literal|"cannot execute '%s'"
 argument_list|,
-name|Valpgm
+name|_PATH_VAL
 argument_list|)
 expr_stmt|;
 name|fatal

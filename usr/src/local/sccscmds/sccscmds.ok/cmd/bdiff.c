@@ -5,13 +5,19 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)bdiff.c	4.5	%G%"
+literal|"@(#)bdiff.c	4.6	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,15 +34,6 @@ end_decl_stmt
 begin_comment
 comment|/* limit of size of file segment to be generated */
 end_comment
-
-begin_decl_stmt
-name|char
-name|diff
-index|[]
-init|=
-literal|"/usr/bin/diff"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -690,9 +687,9 @@ expr_stmt|;
 comment|/* 			Execute 'diff' on the segment files. 			*/
 name|execl
 argument_list|(
-name|diff
+name|_PATH_DIFF
 argument_list|,
-name|diff
+literal|"diff"
 argument_list|,
 name|otmp
 argument_list|,
@@ -712,7 +709,7 @@ name|Error
 argument_list|,
 literal|"cannot execute '%s' (bd5)"
 argument_list|,
-name|diff
+name|_PATH_DIFF
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -809,7 +806,7 @@ name|Error
 argument_list|,
 literal|"'%s' failed (bd6)"
 argument_list|,
-name|diff
+name|_PATH_DIFF
 argument_list|)
 expr_stmt|;
 name|fatal

@@ -5,37 +5,25 @@ directive|include
 file|"../hdr/defines.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)help.c	4.3	%G%"
+literal|"@(#)help.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 	Program to locate helpful info in an ascii file. 	The program accepts a variable number of arguments.  	The file to be searched is determined from the argument. If the 	argument does not contain numerics, the search 	will be attempted on '/usr/local/lib/help/cmds', with the search key 	being the whole argument. 	If the argument begins with non-numerics but contains 	numerics (e.g, zz32) the search will be attempted on 	'/usr/local/lib/help/<non-numeric prefix>', (e.g,/usr/lib/help/zz), 	with the search key being<remainder of arg>, (e.g., 32). 	If the argument is all numeric, or if the file as 	determined above does not exist, the search will be attempted on 	'/usr/local/lib/sccs.hf', which is the old help file, with the 	search key being the entire argument. 	In no case will more than one search per argument be performed.  	File is formatted as follows:  		* comment 		* comment 		-str1 		text 		-str2 		text 		* comment 		text 		-str3 		text  	The "str?" that matches the key is found and 	the following text lines are printed. 	Comments are ignored.  	If the argument is omitted, the program requests it. */
+comment|/* 	Program to locate helpful info in an ascii file. 	The program accepts a variable number of arguments.  	The file to be searched is determined from the argument. If the 	argument does not contain numerics, the search 	will be attempted on '/usr/local/lib/help/cmds', with the search key 	being the whole argument. 	If the argument begins with non-numerics but contains 	numerics (e.g, zz32) the search will be attempted on 	'/usr/local/lib/help/<non-numeric prefix>', (e.g,/usr/lib/help/zz), 	with the search key being<remainder of arg>, (e.g., 32). 	If the argument is all numeric, or if the file as 	determined above does not exist, the search will be attempted on 	_PATH_OLDHELP, which is the old help file, with the 	search key being the entire argument. 	In no case will more than one search per argument be performed.  	File is formatted as follows:  		* comment 		* comment 		-str1 		text 		-str2 		text 		* comment 		text 		-str3 		text  	The "str?" that matches the key is found and 	the following text lines are printed. 	Comments are ignored.  	If the argument is omitted, the program requests it. */
 end_comment
-
-begin_decl_stmt
-name|char
-name|oldfile
-index|[]
-init|=
-literal|"/usr/local/lib/sccs.hf"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|helpdir
-index|[]
-init|=
-literal|"/usr/local/lib/help/"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -232,7 +220,7 @@ name|cat
 argument_list|(
 name|hfile
 argument_list|,
-name|helpdir
+name|_PATH_HELPDIR
 argument_list|,
 literal|"cmds"
 argument_list|,
@@ -249,7 +237,7 @@ argument_list|)
 condition|)
 name|copy
 argument_list|(
-name|oldfile
+name|_PATH_OLDHELP
 argument_list|,
 name|hfile
 argument_list|)
@@ -273,7 +261,7 @@ argument_list|)
 expr_stmt|;
 name|copy
 argument_list|(
-name|oldfile
+name|_PATH_OLDHELP
 argument_list|,
 name|hfile
 argument_list|)
@@ -307,7 +295,7 @@ name|cat
 argument_list|(
 name|hfile
 argument_list|,
-name|helpdir
+name|_PATH_HELPDIR
 argument_list|,
 name|key
 argument_list|,
@@ -339,7 +327,7 @@ argument_list|)
 expr_stmt|;
 name|copy
 argument_list|(
-name|oldfile
+name|_PATH_OLDHELP
 argument_list|,
 name|hfile
 argument_list|)

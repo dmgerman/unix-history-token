@@ -39,13 +39,19 @@ directive|include
 file|"../hdr/had.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)prs.c	4.3	%G%"
+literal|"@(#)prs.c	4.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,15 +61,6 @@ name|had
 index|[
 literal|26
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|Getpgm
-index|[]
-init|=
-literal|"/usr/local/get"
 decl_stmt|;
 end_decl_stmt
 
@@ -3139,11 +3136,6 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
-specifier|extern
-name|char
-name|Getpgm
-index|[]
-decl_stmt|;
 name|char
 name|str
 index|[
@@ -3216,9 +3208,9 @@ block|{
 comment|/* 		perform 'get' and redirect output 		to standard output 		*/
 name|execl
 argument_list|(
-name|Getpgm
+name|_PATH_GET
 argument_list|,
-name|Getpgm
+literal|"get"
 argument_list|,
 literal|"-s"
 argument_list|,
@@ -3239,7 +3231,7 @@ name|Error
 argument_list|,
 literal|"cannot execute '%s'"
 argument_list|,
-name|Getpgm
+name|_PATH_GET
 argument_list|)
 expr_stmt|;
 name|fatal

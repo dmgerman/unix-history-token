@@ -23,7 +23,7 @@ name|char
 name|Sccsid
 index|[]
 init|=
-literal|"@(#)delta.c	4.11	%G%"
+literal|"@(#)delta.c	4.12	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,15 +59,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|char
-name|Diffpgm
-index|[]
-init|=
-literal|"/usr/local/bdiff"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|FILE
@@ -1318,7 +1309,7 @@ name|Error
 argument_list|,
 literal|"cannot execute '%s' (de12)"
 argument_list|,
-name|Diffpgm
+name|_PATH_BDIFF
 argument_list|)
 expr_stmt|;
 name|fatal
@@ -1342,7 +1333,7 @@ name|stderr
 argument_list|,
 literal|"'%s' failed, re-trying, segmentation = %d (de13)\n"
 argument_list|,
-name|Diffpgm
+name|_PATH_BDIFF
 argument_list|,
 name|difflim
 argument_list|)
@@ -2846,11 +2837,6 @@ name|FILE
 modifier|*
 name|iop
 decl_stmt|;
-specifier|extern
-name|char
-name|Diffpgm
-index|[]
-decl_stmt|;
 name|char
 name|num
 index|[
@@ -2969,9 +2955,9 @@ argument_list|)
 expr_stmt|;
 name|execl
 argument_list|(
-name|Diffpgm
+name|_PATH_BDIFF
 argument_list|,
-name|Diffpgm
+literal|"bdiff"
 argument_list|,
 name|oldf
 argument_list|,
