@@ -5660,6 +5660,9 @@ case|:
 case|case
 name|IPV6_BINDV6ONLY
 case|:
+case|case
+name|IPV6_PORTRANGE
+case|:
 switch|switch
 condition|(
 name|optname
