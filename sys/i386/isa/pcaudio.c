@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.9 1994/09/29 21:11:29 sos Exp $   */
+comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: pcaudio.c,v 1.10 1994/10/27 08:03:12 sos Exp $   */
 end_comment
 
 begin_include
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/devconf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -248,8 +254,10 @@ begin_function_decl
 name|void
 name|pcaintr
 parameter_list|(
-name|int
-name|regs
+name|struct
+name|clockframe
+modifier|*
+name|frame
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -860,12 +868,15 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|pca_wait
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 while|while
 condition|(
 name|pca_status
@@ -887,11 +898,10 @@ name|pca_sleep
 operator|=
 literal|1
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|pca_sleep
 argument_list|,
@@ -904,7 +914,32 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|pca_sleep
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
+name|ERESTART
+condition|)
+block|{
+name|pca_stop
+argument_list|()
+expr_stmt|;
+return|return
+name|error
+return|;
 block|}
+block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
@@ -1271,6 +1306,8 @@ block|{
 name|int
 name|count
 decl_stmt|,
+name|error
+decl_stmt|,
 name|which
 decl_stmt|;
 comment|/* only audio device can be written */
@@ -1325,11 +1362,10 @@ name|pca_sleep
 operator|=
 literal|1
 expr_stmt|;
+name|error
+operator|=
 name|tsleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|pca_sleep
 argument_list|,
@@ -1342,6 +1378,28 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|pca_sleep
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|error
+operator|!=
+name|ERESTART
+condition|)
+block|{
+name|pca_stop
+argument_list|()
+expr_stmt|;
+return|return
+name|error
+return|;
+block|}
 block|}
 name|which
 operator|=
@@ -1772,11 +1830,9 @@ return|;
 case|case
 name|AUDIO_DRAIN
 case|:
+return|return
 name|pca_wait
 argument_list|()
-expr_stmt|;
-return|return
-literal|0
 return|;
 case|case
 name|AUDIO_FLUSH
@@ -1798,8 +1854,10 @@ begin_function
 name|void
 name|pcaintr
 parameter_list|(
-name|int
-name|regs
+name|struct
+name|clockframe
+modifier|*
+name|frame
 parameter_list|)
 block|{
 if|if
@@ -1910,9 +1968,6 @@ condition|)
 block|{
 name|wakeup
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|pca_sleep
 argument_list|)
