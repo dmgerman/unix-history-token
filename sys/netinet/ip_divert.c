@@ -884,7 +884,7 @@ operator|(
 name|caddr_t
 operator|)
 operator|(
-name|int
+name|uintptr_t
 operator|)
 name|sin
 operator|->
