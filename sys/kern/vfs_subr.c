@@ -10222,7 +10222,6 @@ name|v_object
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|printf
 argument_list|(
 literal|"    v_object %p ref %d pages %d\n"
