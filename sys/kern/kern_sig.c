@@ -285,9 +285,9 @@ name|int
 name|killpg1
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|cp
+name|td
 parameter_list|,
 name|int
 name|sig
@@ -778,14 +778,6 @@ argument_list|(
 name|p
 argument_list|,
 name|MA_OWNED
-argument_list|)
-expr_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|,
-name|MA_NOTOWNED
 argument_list|)
 expr_stmt|;
 name|mtx_lock_spin
@@ -4847,7 +4839,7 @@ begin_function
 name|int
 name|killpg1
 parameter_list|(
-name|cp
+name|td
 parameter_list|,
 name|sig
 parameter_list|,
@@ -4857,9 +4849,9 @@ name|all
 parameter_list|)
 specifier|register
 name|struct
-name|proc
+name|thread
 modifier|*
-name|cp
+name|td
 decl_stmt|;
 name|int
 name|sig
@@ -4927,7 +4919,9 @@ name|P_SYSTEM
 operator|||
 name|p
 operator|==
-name|cp
+name|td
+operator|->
+name|td_proc
 condition|)
 block|{
 name|PROC_UNLOCK
@@ -4941,7 +4935,9 @@ if|if
 condition|(
 name|p_cansignal
 argument_list|(
-name|cp
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|,
@@ -4994,7 +4990,9 @@ block|{
 comment|/* 			 * zero pgid means send to my process group. 			 */
 name|pgrp
 operator|=
-name|cp
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pgrp
 expr_stmt|;
@@ -5069,12 +5067,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -5084,12 +5076,6 @@ operator|==
 name|SZOMB
 condition|)
 block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -5097,17 +5083,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p_cansignal
 argument_list|(
-name|cp
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|,
@@ -5214,16 +5196,6 @@ specifier|register
 name|struct
 name|proc
 modifier|*
-name|cp
-init|=
-name|td
-operator|->
-name|td_proc
-decl_stmt|;
-specifier|register
-name|struct
-name|proc
-modifier|*
 name|p
 decl_stmt|;
 name|int
@@ -5289,7 +5261,9 @@ if|if
 condition|(
 name|p_cansignal
 argument_list|(
-name|cp
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|p
 argument_list|,
@@ -5355,7 +5329,7 @@ name|error
 operator|=
 name|killpg1
 argument_list|(
-name|cp
+name|td
 argument_list|,
 name|uap
 operator|->
@@ -5375,7 +5349,7 @@ name|error
 operator|=
 name|killpg1
 argument_list|(
-name|cp
+name|td
 argument_list|,
 name|uap
 operator|->
@@ -5393,7 +5367,7 @@ name|error
 operator|=
 name|killpg1
 argument_list|(
-name|cp
+name|td
 argument_list|,
 name|uap
 operator|->
@@ -5521,8 +5495,6 @@ operator|=
 name|killpg1
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 name|uap
 operator|->
@@ -6299,18 +6271,18 @@ argument_list|,
 name|sig
 argument_list|)
 expr_stmt|;
-name|signotify
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Defer further processing for signals which are held, 	 * except that stopped processes must be continued by SIGCONT. 	 */
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|signotify
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Defer further processing for signals which are held, 	 * except that stopped processes must be continued by SIGCONT. 	 */
 if|if
 condition|(
 name|action
@@ -6364,17 +6336,9 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
-block|}
 comment|/* 		 * Process is sleeping and traced... make it runnable 		 * so it can discover the signal in issignal() and stop 		 * for the parent. 		 */
 if|if
 condition|(
@@ -6387,12 +6351,6 @@ condition|)
 goto|goto
 name|run
 goto|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If SIGCONT is default (or ignored) and process is 		 * asleep, we are finished; the process should not 		 * be awakened. 		 */
 if|if
 condition|(
@@ -6449,6 +6407,12 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|)
+expr_stmt|;
 name|SIGDELSET
 argument_list|(
 name|p
@@ -6514,12 +6478,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -6532,12 +6490,6 @@ comment|/* NOTREACHED */
 case|case
 name|SSTOP
 case|:
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 comment|/* 		 * If traced process is already stopped, 		 * then no further action is necessary. 		 */
 if|if
 condition|(
@@ -6592,12 +6544,6 @@ condition|)
 goto|goto
 name|runfast
 goto|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 comment|/* 			 * XXXKSE 			 * do this for each thread. 			 */
 if|if
 condition|(
@@ -6646,12 +6592,6 @@ block|{
 comment|/* mark it as sleeping */
 block|}
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -6671,12 +6611,6 @@ operator|->
 name|p_stat
 operator|=
 name|SSLEEP
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
 expr_stmt|;
 block|}
 goto|goto
@@ -6705,12 +6639,6 @@ name|out
 goto|;
 block|}
 comment|/* 		 * If process is sleeping interruptibly, then simulate a 		 * wakeup so that when it is continued, it will be made 		 * runnable and can look at the signal.  But don't make 		 * the process runnable, leave it stopped. 		 * XXXKSE should we wake ALL blocked threads? 		 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -6802,12 +6730,6 @@ expr_stmt|;
 comment|/* XXXKSE */
 block|}
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -6875,12 +6797,6 @@ block|}
 endif|#
 directive|endif
 block|}
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -6889,12 +6805,6 @@ comment|/*NOTREACHED*/
 name|runfast
 label|:
 comment|/* 	 * Raise priority to at least PUSER. 	 * XXXKSE Should we make them all run fast? 	 * Maybe just one would be enough? 	 */
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|sched_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|FIRST_THREAD_IN_PROC
@@ -6936,15 +6846,15 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+name|out
+label|:
 name|mtx_unlock_spin
 argument_list|(
 operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|out
-label|:
-comment|/* If we jump here, sched_lock should not be owned. */
+comment|/* Once we get here, sched_lock should not be owned. */
 name|mtx_assert
 argument_list|(
 operator|&
@@ -8177,13 +8087,13 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 condition|?
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 else|:
@@ -8705,9 +8615,9 @@ name|ucred
 modifier|*
 name|cred
 init|=
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 decl_stmt|;
 name|struct
 name|flock
@@ -8830,9 +8740,9 @@ name|p
 operator|->
 name|p_comm
 argument_list|,
-name|p
+name|td
 operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 argument_list|,
