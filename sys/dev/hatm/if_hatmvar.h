@@ -562,13 +562,6 @@ begin_struct
 struct|struct
 name|mbuf_page_hdr
 block|{
-name|uint8_t
-name|card
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* bitmap for on-card */
 name|uint16_t
 name|nchunks
 decl_stmt|;
@@ -589,6 +582,10 @@ name|uint32_t
 name|chunksize
 decl_stmt|;
 comment|/* chunk size */
+name|u_int
+name|pool
+decl_stmt|;
+comment|/* pool number */
 block|}
 struct|;
 end_struct
@@ -633,42 +630,6 @@ define|#
 directive|define
 name|MBUF1_PER_PAGE
 value|((MBUF_ALLOC_SIZE - sizeof(struct mbuf_page_hdr)) / \     MBUF1_CHUNK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBUF_CLR_BIT
-parameter_list|(
-name|ARRAY
-parameter_list|,
-name|BIT
-parameter_list|)
-value|((ARRAY)[(BIT) / 8]&= ~(1<< ((BIT) % 8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBUF_SET_BIT
-parameter_list|(
-name|ARRAY
-parameter_list|,
-name|BIT
-parameter_list|)
-value|((ARRAY)[(BIT) / 8] |= (1<< ((BIT) % 8)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBUF_TST_BIT
-parameter_list|(
-name|ARRAY
-parameter_list|,
-name|BIT
-parameter_list|)
-value|((ARRAY)[(BIT) / 8]& (1<< ((BIT) % 8)))
 end_define
 
 begin_comment
@@ -741,7 +702,7 @@ value|0x80000000
 end_define
 
 begin_comment
-comment|/* chunks have the following structure at the end (4 byte) */
+comment|/* chunks have the following structure at the end (8 byte) */
 end_comment
 
 begin_struct
@@ -751,8 +712,11 @@ block|{
 name|uint16_t
 name|pageno
 decl_stmt|;
-name|uint16_t
+name|uint8_t
 name|chunkno
+decl_stmt|;
+name|uint8_t
+name|flags
 decl_stmt|;
 name|u_int
 name|ref_cnt
@@ -760,6 +724,28 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MBUF_CARD
+value|0x01
+end_define
+
+begin_comment
+comment|/* buffer is on card */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MBUF_USED
+value|0x02
+end_define
+
+begin_comment
+comment|/* buffer is somewhere in the system */
+end_comment
 
 begin_define
 define|#
@@ -2060,6 +2046,22 @@ name|cid
 parameter_list|,
 name|int
 name|reopen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hatm_ext_free
+parameter_list|(
+name|struct
+name|mbufx_free
+modifier|*
+modifier|*
+parameter_list|,
+name|struct
+name|mbufx_free
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
