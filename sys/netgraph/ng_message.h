@@ -177,9 +177,7 @@ comment|/* command identifier */
 name|u_char
 name|cmdstr
 index|[
-name|NG_CMDSTRLEN
-operator|+
-literal|1
+name|NG_CMDSTRSIZ
 index|]
 decl_stmt|;
 comment|/* cmd string + \0 */
@@ -622,27 +620,21 @@ block|{
 name|char
 name|type
 index|[
-name|NG_TYPELEN
-operator|+
-literal|1
+name|NG_TYPESIZ
 index|]
 decl_stmt|;
 comment|/* peer type */
 name|char
 name|ourhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* hook name */
 name|char
 name|peerhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* peer hook name */
@@ -673,27 +665,21 @@ block|{
 name|char
 name|path
 index|[
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 index|]
 decl_stmt|;
 comment|/* peer path */
 name|char
 name|ourhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* hook name */
 name|char
 name|peerhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* peer hook name */
@@ -724,9 +710,7 @@ block|{
 name|char
 name|name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* node name */
@@ -757,9 +741,7 @@ block|{
 name|char
 name|ourhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* hook name */
@@ -790,18 +772,14 @@ block|{
 name|char
 name|name
 index|[
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 index|]
 decl_stmt|;
 comment|/* node name (if any) */
 name|char
 name|type
 index|[
-name|NG_TYPELEN
-operator|+
-literal|1
+name|NG_TYPESIZ
 index|]
 decl_stmt|;
 comment|/* peer type */
@@ -840,18 +818,14 @@ block|{
 name|char
 name|ourhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* hook name */
 name|char
 name|peerhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* peer hook */
@@ -957,9 +931,7 @@ block|{
 name|char
 name|type_name
 index|[
-name|NG_TYPELEN
-operator|+
-literal|1
+name|NG_TYPESIZ
 index|]
 decl_stmt|;
 comment|/* name of type */

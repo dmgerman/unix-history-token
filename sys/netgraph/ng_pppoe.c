@@ -3702,7 +3702,9 @@ name|tlen
 operator|=
 name|min
 argument_list|(
-name|NG_HOOKLEN
+name|NG_HOOKSIZ
+operator|-
+literal|1
 argument_list|,
 name|ntohs
 argument_list|(
@@ -7330,9 +7332,7 @@ operator|->
 name|hook
 argument_list|)
 argument_list|,
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 argument_list|)
 expr_stmt|;
 name|NG_SEND_MSG_ID

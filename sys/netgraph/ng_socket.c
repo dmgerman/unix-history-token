@@ -1476,9 +1476,7 @@ decl_stmt|;
 name|char
 name|hookname
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 if|if
@@ -1597,8 +1595,8 @@ block|{
 if|if
 condition|(
 name|len
-operator|>
-name|NG_HOOKLEN
+operator|>=
+name|NG_HOOKSIZ
 condition|)
 block|{
 name|error
@@ -2966,9 +2964,9 @@ operator|->
 name|sg_len
 operator|>
 operator|(
-name|NG_NODELEN
+name|NG_NODESIZ
 operator|+
-literal|3
+literal|2
 operator|)
 operator|)
 operator|||
@@ -3691,9 +3689,7 @@ name|char
 modifier|*
 name|addrbuf
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 operator|+
 literal|4
 index|]
@@ -3754,7 +3750,7 @@ name|hook
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*<= NG_HOOKLEN */
+comment|/*<= NG_HOOKSIZ - 1 */
 name|addr
 operator|=
 operator|(

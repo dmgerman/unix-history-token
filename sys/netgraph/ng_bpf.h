@@ -44,27 +44,21 @@ block|{
 name|char
 name|thisHook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* name of hook */
 name|char
 name|ifMatch
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* match dest hook */
 name|char
 name|ifNotMatch
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* !match dest hook */
@@ -165,13 +159,13 @@ block|,
 comment|/* returns a struct ng_bpf_hookprog */
 name|NGM_BPF_GET_STATS
 block|,
-comment|/* supply name as char[NG_HOOKLEN+1] */
+comment|/* supply name as char[NG_HOOKSIZ] */
 name|NGM_BPF_CLR_STATS
 block|,
-comment|/* supply name as char[NG_HOOKLEN+1] */
+comment|/* supply name as char[NG_HOOKSIZ] */
 name|NGM_BPF_GETCLR_STATS
 block|,
-comment|/* supply name as char[NG_HOOKLEN+1] */
+comment|/* supply name as char[NG_HOOKSIZ] */
 block|}
 enum|;
 end_enum

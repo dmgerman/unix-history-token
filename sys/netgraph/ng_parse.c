@@ -3842,9 +3842,7 @@ name|ng_parse_fixedstring_info
 name|ng_parse_nodebuf_info
 init|=
 block|{
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3872,9 +3870,7 @@ name|ng_parse_fixedstring_info
 name|ng_parse_hookbuf_info
 init|=
 block|{
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3902,9 +3898,7 @@ name|ng_parse_fixedstring_info
 name|ng_parse_pathbuf_info
 init|=
 block|{
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3932,9 +3926,7 @@ name|ng_parse_fixedstring_info
 name|ng_parse_typebuf_info
 init|=
 block|{
-name|NG_TYPELEN
-operator|+
-literal|1
+name|NG_TYPESIZ
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3962,9 +3954,7 @@ name|ng_parse_fixedstring_info
 name|ng_parse_cmdbuf_info
 init|=
 block|{
-name|NG_CMDSTRLEN
-operator|+
-literal|1
+name|NG_CMDSTRSIZ
 block|}
 decl_stmt|;
 end_decl_stmt

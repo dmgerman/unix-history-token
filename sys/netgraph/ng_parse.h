@@ -452,7 +452,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NG_NODELEN + 1 */
+comment|/* NG_NODESIZ */
 end_comment
 
 begin_decl_stmt
@@ -465,7 +465,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NG_HOOKLEN + 1 */
+comment|/* NG_HOOKSIZ */
 end_comment
 
 begin_decl_stmt
@@ -478,7 +478,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NG_PATHLEN + 1 */
+comment|/* NG_PATHSIZ */
 end_comment
 
 begin_decl_stmt
@@ -491,7 +491,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NG_TYPELEN + 1 */
+comment|/* NG_TYPESIZ */
 end_comment
 
 begin_decl_stmt
@@ -504,7 +504,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NG_CMDSTRLEN + 1 */
+comment|/* NG_CMDSTRSIZ */
 end_comment
 
 begin_comment

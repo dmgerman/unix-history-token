@@ -115,9 +115,7 @@ block|{
 name|char
 name|matchhook
 index|[
-name|NG_HOOKLEN
-operator|+
-literal|1
+name|NG_HOOKSIZ
 index|]
 decl_stmt|;
 comment|/* hook name */

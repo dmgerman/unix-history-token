@@ -2200,9 +2200,9 @@ block|{
 name|char
 name|filename
 index|[
-name|NG_TYPELEN
+name|NG_TYPESIZ
 operator|+
-literal|4
+literal|3
 index|]
 decl_stmt|;
 name|linker_file_t
@@ -3071,9 +3071,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NG_NODELEN
-operator|+
-literal|1
+name|NG_NODESIZ
 condition|;
 name|i
 operator|++
@@ -3179,7 +3177,7 @@ operator|)
 return|;
 block|}
 comment|/* copy it */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|NG_NODE_NAME
 argument_list|(
@@ -3188,7 +3186,7 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|NG_NODELEN
+name|NG_NODESIZ
 argument_list|)
 expr_stmt|;
 return|return
@@ -3715,7 +3713,7 @@ argument_list|)
 expr_stmt|;
 comment|/* each hook counts as a reference */
 comment|/* Set hook name */
-name|strncpy
+name|strlcpy
 argument_list|(
 name|NG_HOOK_NAME
 argument_list|(
@@ -3724,7 +3722,7 @@ argument_list|)
 argument_list|,
 name|name
 argument_list|,
-name|NG_HOOKLEN
+name|NG_HOOKSIZ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Check if the node type code has something to say about it 	 * If it fails, the unref of the hook will also unref the node. 	 */
@@ -4224,8 +4222,8 @@ operator|)
 operator|||
 operator|(
 name|namelen
-operator|>
-name|NG_TYPELEN
+operator|>=
+name|NG_TYPESIZ
 operator|)
 condition|)
 block|{
@@ -4899,7 +4897,7 @@ operator|=
 operator|&
 name|ng_deadnode
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|NG_HOOK_NAME
 argument_list|(
@@ -4908,7 +4906,7 @@ argument_list|)
 argument_list|,
 name|name2
 argument_list|,
-name|NG_HOOKLEN
+name|NG_HOOKSIZ
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Queue the function above. 	 * Procesing continues in that function in the lock context of 	 * the other node. 	 */
@@ -5756,9 +5754,7 @@ block|{
 name|char
 name|fullpath
 index|[
-name|NG_PATHLEN
-operator|+
-literal|1
+name|NG_PATHSIZ
 index|]
 decl_stmt|;
 name|char
@@ -8865,7 +8861,7 @@ argument_list|(
 name|here
 argument_list|)
 condition|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|ni
 operator|->
@@ -8875,11 +8871,9 @@ name|NG_NODE_NAME
 argument_list|(
 name|here
 argument_list|)
-argument_list|,
-name|NG_NODELEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|ni
 operator|->
@@ -8890,8 +8884,6 @@ operator|->
 name|nd_type
 operator|->
 name|name
-argument_list|,
-name|NG_TYPELEN
 argument_list|)
 expr_stmt|;
 name|ni
@@ -9003,7 +8995,7 @@ argument_list|(
 name|here
 argument_list|)
 condition|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|ni
 operator|->
@@ -9013,11 +9005,9 @@ name|NG_NODE_NAME
 argument_list|(
 name|here
 argument_list|)
-argument_list|,
-name|NG_NODELEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|ni
 operator|->
@@ -9028,8 +9018,6 @@ operator|->
 name|nd_type
 operator|->
 name|name
-argument_list|,
-name|NG_TYPELEN
 argument_list|)
 expr_stmt|;
 name|ni
@@ -9103,7 +9091,7 @@ name|hook
 argument_list|)
 condition|)
 continue|continue;
-name|strncpy
+name|strcpy
 argument_list|(
 name|link
 operator|->
@@ -9113,11 +9101,9 @@ name|NG_HOOK_NAME
 argument_list|(
 name|hook
 argument_list|)
-argument_list|,
-name|NG_HOOKLEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|link
 operator|->
@@ -9127,8 +9113,6 @@ name|NG_PEER_HOOK_NAME
 argument_list|(
 name|hook
 argument_list|)
-argument_list|,
-name|NG_HOOKLEN
 argument_list|)
 expr_stmt|;
 if|if
@@ -9143,7 +9127,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|link
 operator|->
@@ -9155,11 +9139,9 @@ name|NG_PEER_NODE_NAME
 argument_list|(
 name|hook
 argument_list|)
-argument_list|,
-name|NG_NODELEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|link
 operator|->
@@ -9175,8 +9157,6 @@ operator|->
 name|nd_type
 operator|->
 name|name
-argument_list|,
-name|NG_TYPELEN
 argument_list|)
 expr_stmt|;
 name|link
@@ -9431,7 +9411,7 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|np
 operator|->
@@ -9441,11 +9421,9 @@ name|NG_NODE_NAME
 argument_list|(
 name|node
 argument_list|)
-argument_list|,
-name|NG_NODELEN
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strcpy
 argument_list|(
 name|np
 operator|->
@@ -9456,8 +9434,6 @@ operator|->
 name|nd_type
 operator|->
 name|name
-argument_list|,
-name|NG_TYPELEN
 argument_list|)
 expr_stmt|;
 name|np
@@ -9646,7 +9622,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|strncpy
+name|strcpy
 argument_list|(
 name|tp
 operator|->
@@ -9655,8 +9631,6 @@ argument_list|,
 name|type
 operator|->
 name|name
-argument_list|,
-name|NG_TYPELEN
 argument_list|)
 expr_stmt|;
 name|tp
