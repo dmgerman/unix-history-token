@@ -4462,10 +4462,6 @@ condition|(
 name|type
 operator|==
 name|OBJT_DEVICE
-operator|||
-name|type
-operator|==
-name|OBJT_PHYS
 condition|)
 block|{
 name|flags
