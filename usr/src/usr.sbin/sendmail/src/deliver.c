@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.74 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.75 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4890,14 +4890,7 @@ condition|(
 name|m
 operator|==
 name|LocalMailer
-condition|)
-name|_exit
-argument_list|(
-name|EX_TEMPFAIL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|transienterror
 argument_list|(
 name|saveerrno
@@ -4905,7 +4898,7 @@ argument_list|)
 condition|)
 name|_exit
 argument_list|(
-name|EX_TEMPFAIL
+name|EX_OSERR
 argument_list|)
 expr_stmt|;
 name|_exit
