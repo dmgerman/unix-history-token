@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)trap.c	5.3 (Berkeley) %G%  */
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1989, 1990 William F. Jolitz  */
+end_comment
+
+begin_comment
 comment|/*  * 386 Trap and System call handleing  */
 end_comment
 
@@ -103,7 +111,7 @@ begin_define
 define|#
 directive|define
 name|USER
-value|040
+value|0x100
 end_define
 
 begin_comment
@@ -389,8 +397,51 @@ index|]
 argument_list|)
 operator|==
 name|SEL_UPL
+comment|/*&& cpl == 0*/
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|cpl
+condition|)
+name|pg
+argument_list|(
+literal|"user cpl %x trap %d"
+argument_list|,
+name|cpl
+argument_list|,
+name|frame
+operator|.
+name|tf_trapno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|(
+name|unsigned
+operator|)
+name|frame
+operator|.
+name|tf_eip
+operator|)
+operator|>=
+literal|0xfe000000
+condition|)
+name|pg
+argument_list|(
+literal|"user eip %x"
+argument_list|,
+name|frame
+operator|.
+name|tf_eip
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|type
 operator||=
 name|USER
@@ -424,6 +475,9 @@ condition|)
 return|return;
 endif|#
 directive|endif
+name|splhigh
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"trap type %d, code = %x, pc = %x cs = %x, eflags = %x\n"
@@ -1175,6 +1229,12 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1473,6 +1533,22 @@ literal|"syscall"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|cpl
+condition|)
+name|pg
+argument_list|(
+literal|"User cpl %x"
+argument_list|,
+name|cpl
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|u
 operator|.
 name|u_ar0
@@ -1563,7 +1639,21 @@ name|code
 index|]
 expr_stmt|;
 block|}
-comment|/*dprintf(DALLSYSC,"%d. call %d\n", u.u_procp->p_pid, code);*/
+name|dprintf
+argument_list|(
+name|DALLSYSC
+argument_list|,
+literal|"%d. call %d\n"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1838,6 +1928,12 @@ expr_stmt|;
 name|swtch
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|spl0
+argument_list|()
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1920,6 +2016,52 @@ name|p
 operator|->
 name|p_pri
 expr_stmt|;
+name|dprintf
+argument_list|(
+name|DALLSYSC
+argument_list|,
+literal|"%d. rtn to %x %x\n"
+argument_list|,
+name|u
+operator|.
+name|u_procp
+operator|->
+name|p_pid
+argument_list|,
+name|frame
+operator|.
+name|sf_eip
+argument_list|,
+name|frame
+operator|.
+name|sf_cs
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|cpl
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uSer cpl %x syscall %d\n"
+argument_list|,
+name|cpl
+argument_list|,
+name|callp
+operator|-
+name|sysent
+argument_list|)
+expr_stmt|;
+name|spl0
+argument_list|()
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_block
 
