@@ -180,6 +180,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_LUCENT
+value|0x04b8
+end_define
+
+begin_comment
+comment|/* Lucent Technologies */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_3COM
 value|0x04c1
 end_define
@@ -649,6 +660,21 @@ end_define
 
 begin_comment
 comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* Lucent Technologies products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LUCENT_1284_BRIDGE
+value|0x0003
+end_define
+
+begin_comment
+comment|/* printer adapter */
 end_comment
 
 begin_comment

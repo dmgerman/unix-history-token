@@ -235,6 +235,18 @@ literal|"mouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_LUCENT
+block|,
+name|USB_PRODUCT_LUCENT_1284_BRIDGE
+block|,
+literal|0
+block|,
+literal|"Lucent Technologies"
+block|,
+literal|"USB Smart Cable"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_3COM
 block|,
 name|USB_PRODUCT_3COM_USR56K
