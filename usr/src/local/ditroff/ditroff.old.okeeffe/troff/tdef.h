@@ -434,6 +434,14 @@ comment|/* next several chars describe arb drawing fcn */
 end_comment
 
 begin_comment
+comment|/* style: 's' m */
+end_comment
+
+begin_comment
+comment|/* thickness: 't' w */
+end_comment
+
+begin_comment
 comment|/* line: 'l' dx dy char */
 end_comment
 
@@ -452,6 +460,24 @@ end_comment
 begin_comment
 comment|/* wiggly line '~' x y x y ... */
 end_comment
+
+begin_comment
+comment|/*	or     'g' x y x y ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWTHICK
+value|'t'
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRAWSTYLE
+value|'s'
+end_define
 
 begin_define
 define|#
@@ -487,6 +513,17 @@ end_define
 
 begin_comment
 comment|/* arbitrary arc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DRAWCURVE
+value|'g'
+end_define
+
+begin_comment
+comment|/* gremlin spline */
 end_comment
 
 begin_define
