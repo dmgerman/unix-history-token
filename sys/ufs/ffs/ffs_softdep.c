@@ -14778,7 +14778,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|UFS_TRUNCATE
+name|ffs_truncate
 argument_list|(
 name|vp
 argument_list|,
