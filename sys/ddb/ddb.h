@@ -60,7 +60,7 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_SET(cmd_name, func_name, db_cmd_set)
+value|DB_SET(cmd_name, func_name, db_cmd_set, 0, NULL)
 end_define
 
 begin_define
@@ -73,7 +73,7 @@ parameter_list|,
 name|func_name
 parameter_list|)
 define|\
-value|DB_SET(cmd_name, func_name, db_show_cmd_set)
+value|DB_SET(cmd_name, func_name, db_show_cmd_set, 0, NULL)
 end_define
 
 begin_define
@@ -86,9 +86,13 @@ parameter_list|,
 name|func_name
 parameter_list|,
 name|set
+parameter_list|,
+name|flag
+parameter_list|,
+name|more
 parameter_list|)
 define|\
-value|static db_cmdfcn_t	func_name;				\ 								\ static const struct command __CONCAT(func_name,_cmd) = {	\ 	__STRING(cmd_name),					\ 	func_name,						\ 	0,							\ 	0,							\ };								\ TEXT_SET(set, __CONCAT(func_name,_cmd));			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
+value|static db_cmdfcn_t	func_name;				\ 								\ static const struct command __CONCAT(func_name,_cmd) = {	\ 	__STRING(cmd_name),					\ 	func_name,						\ 	flag,							\ 	more							\ };								\ TEXT_SET(set, __CONCAT(func_name,_cmd));			\ 								\ static void							\ func_name(addr, have_addr, count, modif)			\ 	db_expr_t addr;						\ 	boolean_t have_addr;					\ 	db_expr_t count;					\ 	char *modif;
 end_define
 
 begin_decl_stmt
