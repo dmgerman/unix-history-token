@@ -57,7 +57,7 @@ comment|/*  * This implementation minimizes copying of data and is sparse-file a
 end_comment
 
 begin_function
-name|ssize_t
+name|int
 name|archive_read_data_into_fd
 parameter_list|(
 name|struct
@@ -242,13 +242,12 @@ name|ARCHIVE_EOF
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|r
 operator|)
 return|;
 return|return
 operator|(
-name|total_written
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}

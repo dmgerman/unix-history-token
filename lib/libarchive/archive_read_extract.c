@@ -1505,9 +1505,6 @@ name|fd
 decl_stmt|,
 name|r
 decl_stmt|;
-name|ssize_t
-name|s
-decl_stmt|;
 name|r
 operator|=
 name|ARCHIVE_OK
@@ -1553,7 +1550,7 @@ name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
-name|s
+name|r
 operator|=
 name|archive_read_data_into_fd
 argument_list|(
@@ -1562,31 +1559,6 @@ argument_list|,
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|s
-operator|<
-name|archive_entry_size
-argument_list|(
-name|entry
-argument_list|)
-condition|)
-block|{
-comment|/* Didn't read enough data?  Complain but keep going. */
-name|archive_set_error
-argument_list|(
-name|a
-argument_list|,
-name|EIO
-argument_list|,
-literal|"Archive data truncated"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|ARCHIVE_WARN
-expr_stmt|;
-block|}
 name|set_ownership
 argument_list|(
 name|a

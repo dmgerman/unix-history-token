@@ -636,7 +636,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*-  * Some convenience functions that are built on archive_read_data:  *  'skip': skips entire entry  *  'into_buffer': writes data into memory buffer that you provide  *  'into_file': writes data to specified filedes  */
+comment|/*-  * Some convenience functions that are built on archive_read_data:  *  'skip': skips entire entry  *  'into_buffer': writes data into memory buffer that you provide  *  'into_fd': writes data to specified filedes  */
 end_comment
 
 begin_function_decl
@@ -651,7 +651,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ssize_t
+name|int
 name|archive_read_data_into_buffer
 parameter_list|(
 name|struct
@@ -669,7 +669,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ssize_t
+name|int
 name|archive_read_data_into_fd
 parameter_list|(
 name|struct

@@ -30,7 +30,7 @@ file|"archive.h"
 end_include
 
 begin_function
-name|ssize_t
+name|int
 name|archive_read_data_into_buffer
 parameter_list|(
 name|struct
@@ -103,7 +103,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|total_bytes
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}
