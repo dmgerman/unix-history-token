@@ -35,15 +35,30 @@ directive|include
 file|<sys/filio.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_43
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|COMPAT_SUNOS
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/ioctl_compat.h>
 end_include
 
-begin_comment
-comment|/* Oooh..We need O/NTTYDISC	 */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -66,12 +81,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/conf.h>
 end_include
 
@@ -79,12 +88,6 @@ begin_include
 include|#
 directive|include
 file|<sys/poll.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/uio.h>
 end_include
 
 begin_include
@@ -118,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<sys/snoop.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vnode.h>
 end_include
 
 begin_decl_stmt
@@ -706,17 +715,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|snp
-operator|->
-name|snp_flags
+name|flag
 operator|&
-name|SNOOP_NBIO
+name|IO_NDELAY
 condition|)
-block|{
 return|return
+operator|(
 name|EWOULDBLOCK
+operator|)
 return|;
-block|}
 name|snp
 operator|->
 name|snp_flags
@@ -1004,18 +1011,14 @@ begin_function
 name|int
 name|snpinc
 parameter_list|(
-name|snp
-parameter_list|,
-name|c
-parameter_list|)
 name|struct
 name|snoop
 modifier|*
 name|snp
-decl_stmt|;
+parameter_list|,
 name|char
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -2219,29 +2222,6 @@ break|break;
 case|case
 name|FIONBIO
 case|:
-if|if
-condition|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
-condition|)
-name|snp
-operator|->
-name|snp_flags
-operator||=
-name|SNOOP_NBIO
-expr_stmt|;
-else|else
-name|snp
-operator|->
-name|snp_flags
-operator|&=
-operator|~
-name|SNOOP_NBIO
-expr_stmt|;
 break|break;
 case|case
 name|FIOASYNC
