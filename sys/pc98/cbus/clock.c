@@ -461,7 +461,7 @@ begin_decl_stmt
 name|u_int
 name|stat_imask
 init|=
-name|SWI_CLOCK_MASK
+name|SWI_LOW_MASK
 decl_stmt|;
 end_decl_stmt
 
