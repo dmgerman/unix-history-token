@@ -195,5 +195,49 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Error return codes from gethostbyname() and gethostbyaddr()  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|HOST_NOT_FOUND
+value|1
+end_define
+
+begin_comment
+comment|/* Authoritive Answer Host not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRY_AGAIN
+value|2
+end_define
+
+begin_comment
+comment|/* Non-Authoritive Host not found, or SERVERFAIL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_RECOVERY
+value|3
+end_define
+
+begin_comment
+comment|/* Non recoverable errors, FORMERR, REFUSED, NOTIMP */
+end_comment
+
 end_unit
 
