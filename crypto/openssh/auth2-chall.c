@@ -17,6 +17,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|RCSID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_include
 include|#
 directive|include
@@ -115,16 +123,30 @@ name|bsdauth_device
 decl_stmt|;
 end_decl_stmt
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+end_elif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_decl_stmt
+specifier|extern
+name|KbdintDevice
+name|pam_device
+decl_stmt|;
+end_decl_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|SKEY
-end_ifdef
+argument_list|)
+end_elif
 
 begin_decl_stmt
 specifier|extern
@@ -132,11 +154,6 @@ name|KbdintDevice
 name|skey_device
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -156,16 +173,24 @@ name|BSD_AUTH
 operator|&
 name|bsdauth_device
 block|,
-else|#
-directive|else
-ifdef|#
-directive|ifdef
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|USE_PAM
+argument_list|)
+operator|&
+name|pam_device
+block|,
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|SKEY
+argument_list|)
 operator|&
 name|skey_device
 block|,
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|NULL
