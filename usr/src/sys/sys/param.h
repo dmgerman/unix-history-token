@@ -1,142 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.7	81/02/23	*/
+comment|/*	param.h	4.8	81/02/27	*/
 end_comment
 
 begin_comment
-comment|/*  * tunable variables  *  * NB: NBUF must be less than MAXNBUF in locore.s.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NBUF
-value|64
-end_define
-
-begin_comment
-comment|/* size of buffer cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NINODE
-value|200
-end_define
-
-begin_comment
-comment|/* number of in core inodes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFILE
-value|175
-end_define
-
-begin_comment
-comment|/* number of in core file structures */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NMOUNT
-value|7
-end_define
-
-begin_comment
-comment|/* number of mountable file systems */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSWAPX
-value|7
-end_define
-
-begin_comment
-comment|/* pseudo mount table index for swapdev */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPROC
-value|125
-end_define
-
-begin_comment
-comment|/* max number of processes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTEXT
-value|40
-end_define
-
-begin_comment
-comment|/* max number of pure texts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCLIST
-value|250
-end_define
-
-begin_comment
-comment|/* max total clist size */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|NBUF
-value|128
-end_define
-
-begin_comment
-comment|/* size of buffer cache */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NINODE
-value|400
-end_define
-
-begin_comment
-comment|/* number of in core inodes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NFILE
-value|350
-end_define
-
-begin_comment
-comment|/* number of in core file structures */
+comment|/*  * Tunable variables which do not usually vary per system.  *  * The sizes of most system tables are configured  * into each system description.  The file system buffer  * cache size is assigned based on available memory.  * The tables whose sizes don't vary often are given here.  */
 end_comment
 
 begin_define
@@ -159,39 +27,6 @@ end_define
 
 begin_comment
 comment|/* pseudo mount table index for swapdev */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NPROC
-value|250
-end_define
-
-begin_comment
-comment|/* max number of processes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTEXT
-value|60
-end_define
-
-begin_comment
-comment|/* max number of pure texts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCLIST
-value|500
-end_define
-
-begin_comment
-comment|/* max total clist size */
 end_comment
 
 begin_define
@@ -238,6 +73,10 @@ begin_comment
 comment|/* max open files per process */
 end_comment
 
+begin_comment
+comment|/* NOFILE MUST NOT BE>= 31; SEE pte.h */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -247,72 +86,6 @@ end_define
 
 begin_comment
 comment|/* max size of typewriter line */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SMAPSIZ
-value|(4*NPROC)
-end_define
-
-begin_comment
-comment|/* size of swap allocation area */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NCALL
-value|40
-end_define
-
-begin_comment
-comment|/* max simultaneous time callouts */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HZ
-value|60
-end_define
-
-begin_comment
-comment|/* Ticks/second of the clock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIMEZONE
-value|(8*60)
-end_define
-
-begin_comment
-comment|/* Minutes westward from Greenwich */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSTFLAG
-value|1
-end_define
-
-begin_comment
-comment|/* Daylight Saving Time applies in this locality */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MSGBUFS
-value|128
-end_define
-
-begin_comment
-comment|/* Characters saved from error messages */
 end_comment
 
 begin_define
@@ -459,7 +232,7 @@ comment|/* asynchronous signal wakeup */
 end_comment
 
 begin_comment
-comment|/*  * fundamental constants of the implementation--  * cannot be changed easily.  * note: UPAGES is well known in locore.s  */
+comment|/*  * fundamental constants of the implementation--  * cannot be changed easily.  */
 end_comment
 
 begin_define
@@ -583,7 +356,7 @@ comment|/* max characters per directory */
 end_comment
 
 begin_comment
-comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each... BSIZE must  * be CLSIZE*NBPG in the current implementation, that is the paging subsystem  * deals with the same size blocks that the file system uses.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  *  * NB: CLSIZE is well known in locore.s.  */
+comment|/*  * Clustering of hardware pages on machines with ridiculously small  * page sizes is done here.  The paging subsystem deals with units of  * CLSIZE pte's describing NBPG (from vm.h) pages each... BSIZE must  * be CLSIZE*NBPG in the current implementation, that is the paging subsystem  * deals with the same size blocks that the file system uses.  *  * NOTE: SSIZE, SINCR and UPAGES must be multiples of CLSIZE  */
 end_comment
 
 begin_define
