@@ -558,11 +558,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|unlock_mutex
-init|=
-literal|1
-decl_stmt|;
-name|int
 name|seqno
 decl_stmt|;
 name|_thread_enter_cancellation_point
@@ -783,13 +778,6 @@ comment|/* Unlock the mutex: */
 if|if
 condition|(
 operator|(
-name|unlock_mutex
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
 name|rval
 operator|=
 name|_mutex_cv_unlock
@@ -799,7 +787,6 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue: 					 */
@@ -851,11 +838,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Don't unlock the mutex in the event 					 * this thread has to be requeued in 					 * condition variable queue: 					 */
-name|unlock_mutex
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
@@ -887,18 +869,31 @@ operator|->
 name|c_seqno
 operator|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
+name|interrupted
+operator|=
 name|curthread
 operator|->
-name|flags
-operator|&
-name|PTHREAD_FLAGS_IN_CONDQ
-operator|)
+name|interrupted
+expr_stmt|;
+comment|/* 					 * Check if the wait was interrupted 					 * (canceled) or needs to be resumed 					 * after handling a signal. 					 */
+if|if
+condition|(
+name|interrupted
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 						 * Lock the mutex and ignore any 						 * errors.  Note that even 						 * though this thread may have 						 * been canceled, POSIX requires 						 * that the mutex be reaquired 						 * prior to cancellation. 						 */
+operator|(
+name|void
+operator|)
+name|_mutex_cv_lock
+argument_list|(
+name|mutex
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 comment|/* 						 * Lock the condition variable 						 * while removing the thread. 						 */
 name|_SPINLOCK
@@ -956,15 +951,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 					 * Save the interrupted flag; locking 					 * the mutex will destroy it. 					 */
-name|interrupted
-operator|=
-name|curthread
-operator|->
-name|interrupted
-expr_stmt|;
-comment|/* 					 * Note that even though this thread may have 					 * been canceled, POSIX requires that the mutex 					 * be reaquired prior to cancellation. 					 */
+comment|/* Lock the mutex: */
 name|rval
 operator|=
 name|_mutex_cv_lock
@@ -972,6 +959,7 @@ argument_list|(
 name|mutex
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 break|break;
@@ -1092,11 +1080,6 @@ name|int
 name|interrupted
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|unlock_mutex
-init|=
-literal|1
 decl_stmt|;
 name|int
 name|seqno
@@ -1348,13 +1331,6 @@ comment|/* Unlock the mutex: */
 if|if
 condition|(
 operator|(
-name|unlock_mutex
-operator|!=
-literal|0
-operator|)
-operator|&&
-operator|(
-operator|(
 name|rval
 operator|=
 name|_mutex_cv_unlock
@@ -1364,7 +1340,6 @@ argument_list|)
 operator|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 comment|/* 					 * Cannot unlock the mutex, so remove 					 * the running thread from the condition 					 * variable queue:  					 */
@@ -1416,11 +1391,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 					 * Don't unlock the mutex in the event 					 * this thread has to be requeued in 					 * condition variable queue: 					 */
-name|unlock_mutex
-operator|=
-literal|0
-expr_stmt|;
 comment|/* 					 * Schedule the next thread and unlock 					 * the condition variable structure: 					 */
 name|_thread_kern_sched_state_unlock
 argument_list|(
@@ -1452,35 +1422,24 @@ operator|->
 name|c_seqno
 operator|)
 expr_stmt|;
-comment|/* 					 * Check if the wait timedout, was 					 * interrupted (canceled), or needs to 					 * be resumed after handling a signal. 					 */
-if|if
-condition|(
-operator|(
-name|curthread
-operator|->
-name|timeout
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
+name|interrupted
+operator|=
 name|curthread
 operator|->
 name|interrupted
-operator|==
-literal|0
-operator|)
-operator|&&
-operator|(
-name|done
+expr_stmt|;
+comment|/* 					 * Check if the wait was interrupted 					 * (canceled) or needs to be resumed 					 * after handling a signal. 					 */
+if|if
+condition|(
+name|interrupted
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
-comment|/* Lock the mutex: */
-name|rval
-operator|=
+comment|/* 						 * Lock the mutex and ignore any 						 * errors.  Note that even 						 * though this thread may have 						 * been canceled, POSIX requires 						 * that the mutex be reaquired 						 * prior to cancellation. 						 */
+operator|(
+name|void
+operator|)
 name|_mutex_cv_lock
 argument_list|(
 name|mutex
@@ -1489,7 +1448,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Lock the CV structure: */
+comment|/* 						 * Lock the condition variable 						 * while removing the thread. 						 */
 name|_SPINLOCK
 argument_list|(
 operator|&
@@ -1501,7 +1460,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 						 * The wait timed out; remove 						 * the thread from the condition 						 * variable queue: 						 */
 name|cond_queue_remove
 argument_list|(
 operator|*
@@ -1535,7 +1493,6 @@ name|c_mutex
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Unock the CV structure: */
 name|_SPINUNLOCK
 argument_list|(
 operator|&
@@ -1547,34 +1504,32 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* Return a timeout error: */
+comment|/* Lock the mutex: */
+name|rval
+operator|=
+name|_mutex_cv_lock
+argument_list|(
+name|mutex
+argument_list|)
+expr_stmt|;
+comment|/* 						 * Return ETIMEDOUT if the wait 						 * timed out and there wasn't an 						 * error locking the mutex: 						 */
 if|if
 condition|(
+operator|(
 name|curthread
 operator|->
 name|timeout
 operator|!=
 literal|0
+operator|)
+operator|&&
+name|rval
+operator|==
+literal|0
 condition|)
 name|rval
 operator|=
 name|ETIMEDOUT
-expr_stmt|;
-comment|/* 						 * Save the interrupted flag; 						 * locking the mutex will 						 * destroy it. 						 */
-name|interrupted
-operator|=
-name|curthread
-operator|->
-name|interrupted
-expr_stmt|;
-comment|/* 						 * Lock the mutex and ignore any 						 * errors.  Note that even though 						 * this thread may have been 						 * canceled, POSIX requires that 						 * the mutex be reaquired prior 						 * to cancellation. 						 */
-operator|(
-name|void
-operator|)
-name|_mutex_cv_lock
-argument_list|(
-name|mutex
-argument_list|)
 expr_stmt|;
 block|}
 block|}
