@@ -6576,14 +6576,6 @@ return|return;
 block|}
 name|bp
 operator|->
-name|bio_pblkno
-operator|=
-name|bp
-operator|->
-name|bio_blkno
-expr_stmt|;
-name|bp
-operator|->
 name|bio_resid
 operator|=
 name|bp
