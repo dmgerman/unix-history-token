@@ -1336,6 +1336,11 @@ name|ssize_t
 name|wlen
 decl_stmt|;
 comment|/* XXX should enforce timeout */
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|0
@@ -1343,12 +1348,9 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|str
 expr_stmt|;
+comment|/* XXX */
 name|iov
 index|[
 literal|0
@@ -1358,6 +1360,11 @@ name|iov_len
 operator|=
 name|len
 expr_stmt|;
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|iov
 index|[
 literal|1
@@ -1365,12 +1372,9 @@ index|]
 operator|.
 name|iov_base
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|ENDL
 expr_stmt|;
+comment|/* XXX */
 name|iov
 index|[
 literal|1
@@ -1378,6 +1382,11 @@ index|]
 operator|.
 name|iov_len
 operator|=
+sizeof|sizeof
+name|ENDL
+expr_stmt|;
+name|len
+operator|+=
 sizeof|sizeof
 name|ENDL
 expr_stmt|;
@@ -1392,6 +1401,23 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|wlen
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|wlen
+operator|!=
+name|len
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|DEBUG
 argument_list|(
 name|fprintf
@@ -1405,11 +1431,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|wlen
-operator|!=
-name|len
-operator|)
+literal|0
 return|;
 block|}
 end_function
@@ -1444,7 +1466,7 @@ parameter_list|,
 name|struct
 name|url_stat
 modifier|*
-name|stat
+name|us
 parameter_list|)
 block|{
 name|struct
@@ -1592,7 +1614,7 @@ argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|stat
+name|us
 argument_list|,
 operator|&
 name|tmp
@@ -1601,7 +1623,7 @@ name|stat
 argument_list|,
 sizeof|sizeof
 expr|*
-name|stat
+name|us
 argument_list|)
 expr_stmt|;
 operator|(

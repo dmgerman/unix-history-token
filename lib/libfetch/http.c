@@ -231,7 +231,7 @@ decl_stmt|;
 name|size_t
 name|b_size
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|b_len
 decl_stmt|;
 name|int
@@ -243,13 +243,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|long
+name|size_t
 name|chunksize
 decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|long
+name|size_t
 name|total
 decl_stmt|;
 endif|#
@@ -453,12 +453,20 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\033[1m_http_fillbuf(): "
-literal|"new chunk: %ld (%ld)\033[m\n"
+literal|"new chunk: %lu (%lu)\033[m\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|->
 name|chunksize
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|c
 operator|->
 name|total
@@ -1099,7 +1107,7 @@ name|hdr_transfer_encoding
 block|,
 name|hdr_www_authenticate
 block|}
-name|hdr
+name|hdr_t
 typedef|;
 end_typedef
 
@@ -1111,7 +1119,7 @@ begin_struct
 specifier|static
 struct|struct
 block|{
-name|hdr
+name|hdr_t
 name|num
 decl_stmt|;
 specifier|const
@@ -1575,7 +1583,7 @@ end_comment
 
 begin_function
 specifier|static
-name|hdr
+name|hdr_t
 name|_http_next_header
 parameter_list|(
 name|int
@@ -1891,6 +1899,15 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|DEBUG
 argument_list|(
 name|fprintf
@@ -1899,6 +1916,10 @@ name|stderr
 argument_list|,
 literal|"content length: [\033[1m%lld\033[m]\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|len
 argument_list|)
 argument_list|)
@@ -1941,7 +1962,7 @@ modifier|*
 name|size
 parameter_list|)
 block|{
-name|int
+name|off_t
 name|first
 decl_stmt|,
 name|last
@@ -2090,6 +2111,9 @@ literal|'0'
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|p
+operator|||
 name|len
 operator|<
 name|last
@@ -2108,12 +2132,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"content range: [\033[1m%d-%d/%d\033[m]\n"
+literal|"content range: [\033[1m%lld-%lld/%lld\033[m]\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|first
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|last
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|len
 argument_list|)
 argument_list|)
@@ -3165,7 +3201,7 @@ name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|hdr
+name|hdr_t
 name|h
 decl_stmt|;
 name|char
@@ -3694,6 +3730,10 @@ name|fd
 argument_list|,
 literal|"Range: bytes=%lld-"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|url
 operator|->
 name|offset
@@ -4206,14 +4246,31 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"offset %lld, length %lld, size %lld, clength %lld\n"
+literal|"offset %lld, length %lld,"
+literal|" size %lld, clength %lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|offset
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|length
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|clength
 argument_list|)
 argument_list|)
@@ -4551,11 +4608,13 @@ name|struct
 name|url
 modifier|*
 name|URL
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|warnx
@@ -4648,11 +4707,13 @@ name|struct
 name|url
 modifier|*
 name|url
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|warnx

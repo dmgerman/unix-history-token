@@ -1076,6 +1076,10 @@ name|stderr
 argument_list|,
 literal|"size: [\033[1m%lld\033[m]\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|->
 name|size
@@ -1741,9 +1745,11 @@ name|v
 parameter_list|,
 name|fpos_t
 name|pos
+name|__unused
 parameter_list|,
 name|int
 name|whence
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -2078,7 +2084,7 @@ parameter_list|)
 block|{
 name|struct
 name|sockaddr_storage
-name|sin
+name|sa
 decl_stmt|;
 name|struct
 name|sockaddr_in6
@@ -2174,7 +2180,7 @@ comment|/* find our own address, bind, and listen */
 name|l
 operator|=
 sizeof|sizeof
-name|sin
+name|sa
 expr_stmt|;
 if|if
 condition|(
@@ -2188,7 +2194,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
 operator|&
 name|l
@@ -2202,7 +2208,7 @@ name|sysouch
 goto|;
 if|if
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 operator|==
@@ -2216,7 +2222,7 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|)
 expr_stmt|;
 comment|/* open data socket */
@@ -2227,7 +2233,7 @@ name|sd
 operator|=
 name|socket
 argument_list|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 argument_list|,
@@ -2266,6 +2272,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
@@ -2284,7 +2291,7 @@ argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 condition|)
@@ -2635,7 +2642,7 @@ comment|/* construct sockaddr for data socket */
 name|l
 operator|=
 sizeof|sizeof
-name|sin
+name|sa
 expr_stmt|;
 if|if
 condition|(
@@ -2649,7 +2656,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
 operator|&
 name|l
@@ -2663,7 +2670,7 @@ name|sysouch
 goto|;
 if|if
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 operator|==
@@ -2677,12 +2684,12 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 condition|)
@@ -2698,7 +2705,7 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 expr_stmt|;
 if|if
 condition|(
@@ -2766,7 +2773,7 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 expr_stmt|;
 if|if
 condition|(
@@ -2851,9 +2858,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
-name|sin
+name|sa
 operator|.
 name|ss_len
 argument_list|)
@@ -2929,7 +2936,7 @@ index|]
 decl_stmt|;
 switch|switch
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 condition|)
@@ -2944,7 +2951,7 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 operator|)
 operator|->
 name|sin6_port
@@ -3004,7 +3011,7 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 operator|)
 operator|->
 name|sin_port
@@ -3069,9 +3076,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
-name|sin
+name|sa
 operator|.
 name|ss_len
 argument_list|)
@@ -3110,7 +3117,7 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
 operator|&
 name|l
@@ -3124,7 +3131,7 @@ name|sysouch
 goto|;
 switch|switch
 condition|(
-name|sin
+name|sa
 operator|.
 name|ss_family
 condition|)
@@ -3140,7 +3147,7 @@ name|sockaddr_in
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 expr_stmt|;
 name|a
 operator|=
@@ -3235,7 +3242,7 @@ name|sockaddr_in6
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 expr_stmt|;
 if|if
 condition|(
@@ -3247,9 +3254,9 @@ name|sockaddr
 operator|*
 operator|)
 operator|&
-name|sin
+name|sa
 argument_list|,
-name|sin
+name|sa
 operator|.
 name|ss_len
 argument_list|,
@@ -3692,6 +3699,7 @@ modifier|*
 name|purl
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|user
@@ -5208,11 +5216,13 @@ name|struct
 name|url
 modifier|*
 name|url
+name|__unused
 parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|flags
+name|__unused
 parameter_list|)
 block|{
 name|warnx
