@@ -526,6 +526,18 @@ name|PCCBB_PCIC_MEM_32
 block|}
 block|,
 block|{
+name|PCI_DEVICE_ID_PCIC_TI4410
+block|,
+literal|"TI4410 PCI-CardBus Bridge"
+block|,
+name|CB_TI12XX
+block|,
+name|PCCBB_PCIC_IO_RELOC
+operator||
+name|PCCBB_PCIC_MEM_32
+block|}
+block|,
+block|{
 name|PCI_DEVICE_ID_PCIC_TI4451
 block|,
 literal|"TI4451 PCI-CardBus Bridge"
