@@ -1579,6 +1579,27 @@ block|}
 end_function
 
 begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vm
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nswapdev
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nswdev
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of swap devices"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_NODE
 argument_list|(
 name|_vm
