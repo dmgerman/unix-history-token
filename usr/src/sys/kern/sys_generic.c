@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sys_generic.c	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -201,14 +195,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -549,14 +543,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -1050,14 +1044,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -1409,14 +1403,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -1932,14 +1926,14 @@ operator|||
 operator|(
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|)
 operator|==
 name|NULL
@@ -1983,14 +1977,14 @@ operator|==
 name|FIOCLEX
 condition|)
 block|{
-name|OFILEFLAGS
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofileflags
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator||=
 name|UF_EXCLOSE
 expr_stmt|;
@@ -2007,14 +2001,14 @@ operator|==
 name|FIONCLEX
 condition|)
 block|{
-name|OFILEFLAGS
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofileflags
+index|[
 name|uap
 operator|->
 name|fdes
-argument_list|)
+index|]
 operator|&=
 operator|~
 name|UF_EXCLOSE
@@ -3023,14 +3017,14 @@ operator|)
 expr_stmt|;
 name|fp
 operator|=
-name|OFILE
-argument_list|(
 name|fdp
-argument_list|,
+operator|->
+name|fd_ofiles
+index|[
 name|i
 operator|+
 name|j
-argument_list|)
+index|]
 expr_stmt|;
 if|if
 condition|(
@@ -3101,6 +3095,28 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_macro
+name|seltrue
+argument_list|(
+argument|dev_t dev
+argument_list|,
+argument|int which
+argument_list|,
+argument|struct proc *p
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|seltrue
 argument_list|(
@@ -3131,6 +3147,11 @@ modifier|*
 name|p
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_block
 block|{
