@@ -2185,7 +2185,22 @@ name|NULL
 block|,
 block|{
 block|{
-literal|"1 COM1"
+literal|"1 PS/2"
+block|,
+literal|"PS/2 style mouse (/dev/psm0)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_MOUSED_PORT
+literal|"=/dev/psm0"
+block|}
+block|,
+block|{
+literal|"2 COM1"
 block|,
 literal|"Serial mouse on COM1 (/dev/cuaa0)"
 block|,
@@ -2200,7 +2215,7 @@ literal|"=/dev/cuaa0"
 block|}
 block|,
 block|{
-literal|"2 COM2"
+literal|"3 COM2"
 block|,
 literal|"Serial mouse on COM2 (/dev/cuaa1)"
 block|,
@@ -2215,7 +2230,7 @@ literal|"=/dev/cuaa1"
 block|}
 block|,
 block|{
-literal|"3 COM3"
+literal|"4 COM3"
 block|,
 literal|"Serial mouse on COM3 (/dev/cuaa2)"
 block|,
@@ -2230,7 +2245,7 @@ literal|"=/dev/cuaa2"
 block|}
 block|,
 block|{
-literal|"4 COM4"
+literal|"5 COM4"
 block|,
 literal|"Serial mouse on COM4 (/dev/cuaa3)"
 block|,
@@ -2245,7 +2260,7 @@ literal|"=/dev/cuaa3"
 block|}
 block|,
 block|{
-literal|"5 BusMouse"
+literal|"6 BusMouse"
 block|,
 literal|"Logitech, ATI or MS bus mouse (/dev/mse0)"
 block|,
@@ -2257,21 +2272,6 @@ name|NULL
 block|,
 name|VAR_MOUSED_PORT
 literal|"=/dev/mse0"
-block|}
-block|,
-block|{
-literal|"6 PS/2"
-block|,
-literal|"PS/2 style mouse (/dev/psm0)"
-block|,
-name|dmenuVarCheck
-block|,
-name|dmenuSetVariable
-block|,
-name|NULL
-block|,
-name|VAR_MOUSED_PORT
-literal|"=/dev/psm0"
 block|}
 block|,
 block|{
@@ -2316,7 +2316,21 @@ name|dmenuExit
 block|}
 block|,
 block|{
-literal|"1 Type"
+literal|"1 Enable"
+block|,
+literal|"Test and run the mouse daemon"
+block|,
+name|NULL
+block|,
+name|mousedTest
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"2 Type"
 block|,
 literal|"Select mouse protocol type"
 block|,
@@ -2331,7 +2345,7 @@ name|MenuMouseType
 block|}
 block|,
 block|{
-literal|"2 Port"
+literal|"3 Port"
 block|,
 literal|"Select mouse port"
 block|,
@@ -2343,20 +2357,6 @@ name|NULL
 block|,
 operator|&
 name|MenuMousePort
-block|}
-block|,
-block|{
-literal|"3 Enable"
-block|,
-literal|"Test and run the mouse daemon"
-block|,
-name|NULL
-block|,
-name|mousedTest
-block|,
-name|NULL
-block|,
-name|NULL
 block|}
 block|,
 block|{

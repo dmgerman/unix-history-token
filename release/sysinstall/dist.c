@@ -2225,17 +2225,16 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Do you wish to install DES cryptographic software?\n\n"
+literal|"Do you wish to install cryptographic software?\n\n"
 literal|"If you choose No, FreeBSD will use an MD5 based password scheme which,\n"
 literal|"while perhaps more secure, is not interoperable with the traditional\n"
-literal|"UNIX DES passwords on other non-FreeBSD systems.\n\n"
+literal|"UNIX DES passwords on other Unix systems.  There will also be some\n"
+literal|"differences in the type of RSA code you use.\n\n"
 literal|"Please do NOT choose Yes at this point if you are outside the\n"
 literal|"United States and Canada yet are installing from a U.S. FTP server.\n"
-literal|"This will violate U.S. export restrictions and possibly get the\n"
-literal|"server site into trouble!  In such cases, install everything but the\n"
-literal|"DES distribution from the U.S. server then switch your media type to\n"
-literal|"point to an international FTP server, using the Custom installation\n"
-literal|"option to select and extract the DES distribution in a second pass."
+literal|"Instead, install everything BUT the crypto bits from the U.S. site\n"
+literal|"and then switch to an international FTP server to install them on\n"
+literal|"a second pass using the Custom Installation option."
 argument_list|)
 condition|)
 block|{
@@ -2287,13 +2286,13 @@ operator|!
 name|msgYesNo
 argument_list|(
 literal|"Would you like to install the FreeBSD ports collection?\n\n"
-literal|"This will give you ready access to over 2000 ported software packages,\n"
-literal|"though at a cost of around 90MB of disk space when \"clean\" and possibly\n"
-literal|"much more than that if a lot of the distribution tarballs are loaded\n"
+literal|"This will give you ready access to over 3000 ported software packages,\n"
+literal|"at a cost of around 70MB of disk space when \"clean\" and possibly\n"
+literal|"much more than that when a lot of the distribution tarballs are loaded\n"
 literal|"(unless you have the extra CDs available from a FreeBSD CDROM distribution\n"
 literal|"and can mount them on /cdrom, in which case this is far less of a problem).\n\n"
-literal|"The ports collection is a very valuable resource and, if you have at least\n"
-literal|"100MB to spare in your /usr partition, well worth having around.\n\n"
+literal|"The ports collection is a very valuable resource and well worth having"
+literal|"on your /usr partition, so it is advisable to say Yes to this option.\n\n"
 literal|"For more information on the ports collection& the latest ports, visit:\n"
 literal|"    http://www.freebsd.org/ports\n"
 argument_list|)
@@ -4720,10 +4719,6 @@ decl_stmt|,
 name|status
 init|=
 name|DITEM_SUCCESS
-decl_stmt|,
-name|want_x_package
-init|=
-literal|0
 decl_stmt|;
 name|char
 name|buf
@@ -4735,6 +4730,16 @@ name|WINDOW
 modifier|*
 name|w
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|X_AS_PKG
+name|int
+name|want_x_package
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 comment|/* paranoia */
 if|if
 condition|(
