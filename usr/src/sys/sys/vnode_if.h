@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_if.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode_if.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -913,9 +913,6 @@ name|vnode
 modifier|*
 name|a_vp
 decl_stmt|;
-name|int
-name|a_fflags
-decl_stmt|;
 name|struct
 name|ucred
 modifier|*
@@ -960,11 +957,9 @@ parameter_list|,
 name|A2
 parameter_list|,
 name|A3
-parameter_list|,
-name|A4
 parameter_list|)
 define|\
-value|( vop_fsync_a.a_desc = VDESC(vop_fsync), \ 		vop_fsync_a.a_vp=(A0), \ 		vop_fsync_a.a_fflags=(A1), \ 		vop_fsync_a.a_cred=(A2), \ 		vop_fsync_a.a_waitfor=(A3), \ 		vop_fsync_a.a_p=(A4), \ 		(VCALL((A0),VOFFSET(vop_fsync),&vop_fsync_a)))
+value|( vop_fsync_a.a_desc = VDESC(vop_fsync), \ 		vop_fsync_a.a_vp=(A0), \ 		vop_fsync_a.a_cred=(A1), \ 		vop_fsync_a.a_waitfor=(A2), \ 		vop_fsync_a.a_p=(A3), \ 		(VCALL((A0),VOFFSET(vop_fsync),&vop_fsync_a)))
 end_define
 
 begin_comment
@@ -1475,10 +1470,6 @@ name|ucred
 modifier|*
 name|a_cred
 decl_stmt|;
-name|int
-modifier|*
-name|a_eofflagp
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1508,11 +1499,9 @@ parameter_list|,
 name|A1
 parameter_list|,
 name|A2
-parameter_list|,
-name|A3
 parameter_list|)
 define|\
-value|( vop_readdir_a.a_desc = VDESC(vop_readdir), \ 		vop_readdir_a.a_vp=(A0), \ 		vop_readdir_a.a_uio=(A1), \ 		vop_readdir_a.a_cred=(A2), \ 		vop_readdir_a.a_eofflagp=(A3), \ 		(VCALL((A0),VOFFSET(vop_readdir),&vop_readdir_a)))
+value|( vop_readdir_a.a_desc = VDESC(vop_readdir), \ 		vop_readdir_a.a_vp=(A0), \ 		vop_readdir_a.a_uio=(A1), \ 		vop_readdir_a.a_cred=(A2), \ 		(VCALL((A0),VOFFSET(vop_readdir),&vop_readdir_a)))
 end_define
 
 begin_comment
@@ -1650,11 +1639,6 @@ name|vnode
 modifier|*
 name|a_vp
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|a_p
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1680,11 +1664,9 @@ directive|define
 name|VOP_INACTIVE
 parameter_list|(
 name|A0
-parameter_list|,
-name|A1
 parameter_list|)
 define|\
-value|( vop_inactive_a.a_desc = VDESC(vop_inactive), \ 		vop_inactive_a.a_vp=(A0), \ 		vop_inactive_a.a_p=(A1), \ 		(VCALL((A0),VOFFSET(vop_inactive),&vop_inactive_a)))
+value|( vop_inactive_a.a_desc = VDESC(vop_inactive), \ 		vop_inactive_a.a_vp=(A0), \ 		(VCALL((A0),VOFFSET(vop_inactive),&vop_inactive_a)))
 end_define
 
 begin_comment
@@ -2385,7 +2367,7 @@ name|vnode
 modifier|*
 name|a_vp
 decl_stmt|;
-name|u_long
+name|off_t
 name|a_length
 decl_stmt|;
 name|int
@@ -2395,6 +2377,11 @@ name|struct
 name|ucred
 modifier|*
 name|a_cred
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|a_p
 decl_stmt|;
 block|}
 struct|;
@@ -2427,9 +2414,11 @@ parameter_list|,
 name|A2
 parameter_list|,
 name|A3
+parameter_list|,
+name|A4
 parameter_list|)
 define|\
-value|( vop_truncate_a.a_desc = VDESC(vop_truncate), \ 		vop_truncate_a.a_vp=(A0), \ 		vop_truncate_a.a_length=(A1), \ 		vop_truncate_a.a_flags=(A2), \ 		vop_truncate_a.a_cred=(A3), \ 		(VCALL((A0),VOFFSET(vop_truncate),&vop_truncate_a)))
+value|( vop_truncate_a.a_desc = VDESC(vop_truncate), \ 		vop_truncate_a.a_vp=(A0), \ 		vop_truncate_a.a_length=(A1), \ 		vop_truncate_a.a_flags=(A2), \ 		vop_truncate_a.a_cred=(A3), \ 		vop_truncate_a.a_p=(A4), \ 		(VCALL((A0),VOFFSET(vop_truncate),&vop_truncate_a)))
 end_define
 
 begin_comment
