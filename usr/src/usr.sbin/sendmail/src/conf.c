@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.68 (Berkeley) %G%"
+literal|"@(#)conf.c	8.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6839,7 +6839,7 @@ argument_list|()
 expr_stmt|;
 name|fstat
 argument_list|(
-name|fildes
+name|fd
 argument_list|,
 operator|&
 name|stbuf
