@@ -98,6 +98,8 @@ literal|"/usr/include"
 block|,
 literal|"/usr/libexec"
 block|,
+literal|"/usr/libexec/uucp"
+block|,
 literal|"/usr/sbin"
 block|,
 literal|"/usr/share"
@@ -231,6 +233,8 @@ block|,
 literal|"/usr/src/gnu/lib"
 block|,
 literal|"/usr/src/gnu/libexec"
+block|,
+literal|"/usr/src/gnu/libexec/uucp"
 block|,
 literal|"/usr/src/gnu/usr.bin"
 block|,
