@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|4.8
+literal|4.9
 operator|%
 name|G
 operator|%
@@ -2289,6 +2289,17 @@ specifier|extern
 name|int
 name|RefuseLA
 decl_stmt|;
+specifier|extern
+name|bool
+name|trusteduser
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|username
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2367,17 +2378,44 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 	**  Check to see if this option can be specified by this user. 	*/
 if|if
 condition|(
+operator|!
+name|safe
+operator|&&
+operator|(
 name|getruid
 argument_list|()
 operator|==
 literal|0
+operator|||
+name|trusteduser
+argument_list|(
+name|username
+argument_list|()
+argument_list|)
+operator|)
 condition|)
 name|safe
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|safe
+operator|&&
+name|index
+argument_list|(
+literal|"deiLmorsv"
+argument_list|,
+name|opt
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return;
 switch|switch
 condition|(
 name|opt
@@ -2410,6 +2448,32 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'a'
+case|:
+comment|/* look N minutes for "@:@" in alias file */
+if|if
+condition|(
+name|val
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|SafeAlias
+operator|=
+literal|5
+expr_stmt|;
+else|else
+name|SafeAlias
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'B'
 case|:
 comment|/* substitution for blank character */
@@ -2429,18 +2493,6 @@ condition|)
 name|SpaceSub
 operator|=
 literal|' '
-expr_stmt|;
-break|break;
-case|case
-literal|'a'
-case|:
-comment|/* look for "@:@" in alias file */
-name|SafeAlias
-operator|=
-name|atobool
-argument_list|(
-name|val
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2602,10 +2654,6 @@ case|case
 literal|'g'
 case|:
 comment|/* default gid */
-if|if
-condition|(
-name|safe
-condition|)
 name|DefGid
 operator|=
 name|atoi
@@ -2885,10 +2933,6 @@ case|case
 literal|'u'
 case|:
 comment|/* set default uid */
-if|if
-condition|(
-name|safe
-condition|)
 name|DefUid
 operator|=
 name|atoi
@@ -2916,10 +2960,6 @@ case|case
 literal|'W'
 case|:
 comment|/* set the wizards password */
-if|if
-condition|(
-name|safe
-condition|)
 name|WizWord
 operator|=
 name|newstr

@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|4.13
+literal|4.14
 operator|%
 name|G
 operator|%
@@ -2501,6 +2501,10 @@ name|int
 name|i
 decl_stmt|;
 name|char
+modifier|*
+name|olddelimchar
+decl_stmt|;
+name|char
 name|buf
 index|[
 name|MAXNAME
@@ -2522,6 +2526,11 @@ name|pvpbuf
 index|[
 name|PSBUFSIZE
 index|]
+decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|DelimChar
 decl_stmt|;
 if|if
 condition|(
@@ -2622,6 +2631,10 @@ name|buf
 argument_list|)
 expr_stmt|;
 comment|/* scan the new host name */
+name|olddelimchar
+operator|=
+name|DelimChar
+expr_stmt|;
 name|xpvp
 operator|=
 name|prescan
@@ -2632,6 +2645,10 @@ literal|'\0'
 argument_list|,
 name|pvpbuf
 argument_list|)
+expr_stmt|;
+name|DelimChar
+operator|=
+name|olddelimchar
 expr_stmt|;
 if|if
 condition|(

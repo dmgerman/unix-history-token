@@ -21,7 +21,7 @@ operator|)
 name|clock
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -468,6 +468,12 @@ name|EVENT
 modifier|*
 name|ev
 decl_stmt|;
+name|int
+name|pid
+init|=
+name|getpid
+argument_list|()
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -534,8 +540,7 @@ name|ev
 operator|->
 name|ev_pid
 operator|!=
-name|getpid
-argument_list|()
+name|pid
 operator|)
 condition|)
 block|{

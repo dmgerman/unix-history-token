@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.6
+literal|4.7
 operator|%
 name|G
 operator|%
@@ -508,12 +508,19 @@ argument_list|)
 expr_stmt|;
 name|atcnt
 operator|=
-literal|10
+name|SafeAlias
+operator|*
+literal|2
 expr_stmt|;
+if|if
+condition|(
+name|atcnt
+operator|>
+literal|0
+condition|)
+block|{
 while|while
 condition|(
-name|SafeAlias
-operator|&&
 operator|!
 name|init
 operator|&&
@@ -533,6 +540,12 @@ name|sleep
 argument_list|(
 literal|30
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|atcnt
+operator|=
+literal|1
 expr_stmt|;
 comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM 	**	version or if the mode of the database is 666 -- this 	**	is an attempt to avoid protection problems.  Note the 	**	unpalatable hack to see if the stat succeeded. 	*/
 name|modtime
