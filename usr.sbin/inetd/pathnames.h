@@ -16,5 +16,12 @@ name|_PATH_INETDCONF
 value|"/etc/inetd.conf"
 end_define
 
+begin_define
+define|#
+directive|define
+name|_PATH_INETDPID
+value|_PATH_VARRUN "inetd.pid"
+end_define
+
 end_unit
 
