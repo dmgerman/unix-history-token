@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.10 1998/10/17 09:50:09 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.11 1998/10/17 10:35:15 rnordier Exp $  */
 end_comment
 
 begin_include
@@ -4168,6 +4168,10 @@ argument_list|()
 condition|)
 block|{
 case|case
+literal|0
+case|:
+break|break;
+case|case
 literal|'\b'
 case|:
 if|if
@@ -4178,6 +4182,11 @@ name|str
 condition|)
 name|s
 operator|--
+expr_stmt|;
+else|else
+name|c
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -4207,6 +4216,10 @@ operator|=
 name|c
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|c
+condition|)
 name|putchar
 argument_list|(
 name|c
