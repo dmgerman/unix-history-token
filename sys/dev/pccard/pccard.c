@@ -508,18 +508,6 @@ name|NULL
 expr_stmt|;
 name|pf
 operator|->
-name|ih_fct
-operator|=
-name|NULL
-expr_stmt|;
-name|pf
-operator|->
-name|ih_arg
-operator|=
-name|NULL
-expr_stmt|;
-name|pf
-operator|->
 name|dev
 operator|=
 name|NULL
@@ -574,6 +562,15 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+name|ivar
+argument_list|,
+sizeof|sizeof
+expr|*
+name|ivar
+argument_list|)
+expr_stmt|;
 name|child
 operator|=
 name|device_add_child
@@ -599,6 +596,7 @@ name|fcn
 operator|=
 name|pf
 expr_stmt|;
+comment|/* 		 * XXX We might want to move the next two lines into 		 * XXX the pccard interface layer.  For the moment, this 		 * XXX is OK, but some drivers want to pick the config 		 * XXX entry to use as well as some address tweaks (mostly 		 * XXX due to bugs in decode logic that makes some 		 * XXX addresses illegal or broken). 		 */
 name|pccard_function_init
 argument_list|(
 name|pf
@@ -726,6 +724,16 @@ argument_list|,
 literal|0x12
 argument_list|)
 operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|device_delete_child
+argument_list|(
+name|dev
+argument_list|,
+name|child
 argument_list|)
 expr_stmt|;
 block|}
@@ -1259,6 +1267,8 @@ argument_list|)
 expr_stmt|;
 comment|/* Remember which configuration entry we are using. */
 comment|/* XXX 	 * need to look for one we can allocate the resources 	 * and then set them so the alloc_resources work later. 	 */
+for|for
+control|(
 name|cfe
 operator|=
 name|STAILQ_FIRST
@@ -1268,13 +1278,120 @@ name|pf
 operator|->
 name|cfe_head
 argument_list|)
-expr_stmt|;
+init|;
+name|cfe
+operator|!=
+name|NULL
+condition|;
+name|cfe
+operator|=
+name|STAILQ_NEXT
+argument_list|(
+name|cfe
+argument_list|,
+name|cfe_list
+argument_list|)
+control|)
+block|{
 name|pf
 operator|->
 name|cfe
 operator|=
 name|cfe
 expr_stmt|;
+comment|/* 		 * XXX Need to try to allocate resources for this cfe and 		 * XXX if we succeed in getting ALL of them, we will break 		 * XXX out of the loop and use the reset of the resource 		 * XXX mechanism to make sure that the values that we get 		 * XXX here to work later. 		 */
+name|printf
+argument_list|(
+literal|"%d: f %d type %d iospace %d 0x%lx-0x%lx mask 0x%lx memspace %d 0x%lx-0x%lx irqmask 0x%x\n"
+argument_list|,
+name|cfe
+operator|->
+name|number
+argument_list|,
+name|cfe
+operator|->
+name|flags
+argument_list|,
+name|cfe
+operator|->
+name|iftype
+argument_list|,
+name|cfe
+operator|->
+name|num_iospace
+argument_list|,
+name|cfe
+operator|->
+name|iospace
+index|[
+literal|0
+index|]
+operator|.
+name|start
+argument_list|,
+name|cfe
+operator|->
+name|iospace
+index|[
+literal|0
+index|]
+operator|.
+name|start
+operator|+
+name|cfe
+operator|->
+name|iospace
+index|[
+literal|0
+index|]
+operator|.
+name|length
+operator|-
+literal|1
+argument_list|,
+name|cfe
+operator|->
+name|iomask
+argument_list|,
+name|cfe
+operator|->
+name|num_memspace
+argument_list|,
+name|cfe
+operator|->
+name|memspace
+index|[
+literal|0
+index|]
+operator|.
+name|hostaddr
+argument_list|,
+name|cfe
+operator|->
+name|memspace
+index|[
+literal|0
+index|]
+operator|.
+name|hostaddr
+operator|+
+name|cfe
+operator|->
+name|memspace
+index|[
+literal|0
+index|]
+operator|.
+name|length
+operator|-
+literal|1
+argument_list|,
+name|cfe
+operator|->
+name|irqmask
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -1666,16 +1783,13 @@ operator||
 name|PCCARD_CCR_OPTION_ADDR_DECODE
 operator|)
 expr_stmt|;
-if|if
-condition|(
-name|pf
-operator|->
-name|ih_fct
-condition|)
-name|reg
-operator||=
-name|PCCARD_CCR_OPTION_IREQ_ENABLE
-expr_stmt|;
+comment|/*  		 * XXX Need to enable PCCARD_CCR_OPTION_IRQ_ENABLE if 		 * XXX we have an interrupt handler, but we don't know that 		 * XXX at this point. 		 */
+if|#
+directive|if
+literal|0
+block|if (pf->ih_fct) 			reg |= PCCARD_CCR_OPTION_IREQ_ENABLE;
+endif|#
+directive|endif
 block|}
 name|pccard_ccr_write
 argument_list|(
@@ -2215,7 +2329,7 @@ comment|/* XXX These functions are needed, but not like this XXX */
 end_comment
 
 begin_comment
-unit|int pccard_io_map(struct pccard_function *pf, int width, bus_addr_t offset,     bus_size_t size, struct pccard_io_handle *pcihp, int *windowp) { 	int reg;  	if (pccard_chip_io_map(pf->sc->pct, pf->sc->pch, 	    width, offset, size, pcihp, windowp)) 		return (1);
+unit|int pccard_io_map(struct pccard_function *pf, int width, bus_addr_t offset,     bus_size_t size, struct pccard_io_handle *pcihp, int *windowp) { 	int reg;  	if (pccard_chip_io_map(pf->sc->pct, pf->sc->pch, width, offset, size, 	    pcihp, windowp)) 		return (1);
 comment|/* 	 * XXX in the multifunction multi-iospace-per-function case, this 	 * needs to cooperate with io_alloc to make sure that the spaces 	 * don't overlap, and that the ccr's are set correctly 	 */
 end_comment
 
@@ -2695,14 +2809,6 @@ argument_list|,
 literal|"%ld"
 argument_list|)
 expr_stmt|;
-name|retval
-operator|+=
-name|printf
-argument_list|(
-literal|" slot ?"
-argument_list|)
-expr_stmt|;
-comment|/* XXX imp */
 block|}
 name|retval
 operator|+=
@@ -3292,6 +3398,27 @@ literal|2
 index|]
 expr_stmt|;
 break|break;
+case|case
+name|PCCARD_IVAR_CIS4_STR
+case|:
+operator|*
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|result
+operator|=
+name|sc
+operator|->
+name|card
+operator|.
+name|cis1_info
+index|[
+literal|2
+index|]
+expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
@@ -3314,8 +3441,7 @@ modifier|*
 name|driver
 parameter_list|)
 block|{
-comment|/* XXX eventually we need to attach stuff when we know we */
-comment|/* XXX have kids. */
+comment|/* 	 * XXX eventually we need to attach stuff when we know we 	 * XXX have kids.  For now we do nothing because we normally 	 * XXX add children ourselves.  We don't want to necessarily 	 * XXX force a reprobe. 	 */
 block|}
 end_function
 

@@ -364,23 +364,6 @@ name|long
 name|pf_mfc_iomax
 decl_stmt|;
 name|int
-function_decl|(
-modifier|*
-name|ih_fct
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-modifier|*
-name|ih_arg
-decl_stmt|;
-name|int
-name|ih_ipl
-decl_stmt|;
-name|int
 name|pf_flags
 decl_stmt|;
 block|}
@@ -1102,7 +1085,8 @@ name|PCCARD_IVAR_PRODUCT_STR
 block|,
 comment|/* CIS strnig for "Product" */
 name|PCCARD_IVAR_CIS3_STR
-comment|/* Some cards need this */
+block|,
+name|PCCARD_IVAR_CIS4_STR
 block|}
 enum|;
 end_enum
