@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.4	81/02/19	*/
+comment|/*	user.h	4.5	81/02/23	*/
 end_comment
 
 begin_ifdef
@@ -27,24 +27,11 @@ directive|include
 file|"../h/vtimes.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FASTVAX
-end_ifdef
-
-begin_asm
-asm|asm(".set U_ARG,120");
-end_asm
-
-begin_asm
-asm|asm(".set U_QSAV,140");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|"assym.s"
+end_include
 
 begin_else
 else|#
@@ -238,11 +225,6 @@ directive|define
 name|EXCLOSE
 value|01
 comment|/* auto-close on exec */
-define|#
-directive|define
-name|ISPORT
-value|02
-comment|/* is a port */
 name|label_t
 name|u_ssav
 decl_stmt|;
@@ -479,6 +461,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* 					 * kernel stack per user 					 * extends from u + UPAGES*512 					 * backward not to reach here 					 */
+comment|/* SHOULD INSTEAD GROW STACK BACKWARDS ABOVE u. TOWARDS A VIRTUAL HOLE */
 block|}
 struct|;
 end_struct
