@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.h	7.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)iso_pcb.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -115,6 +115,10 @@ name|u_short
 name|isop_lport
 decl_stmt|;
 comment|/* MISLEADLING work var */
+name|u_short
+name|isop_tuba_cached
+decl_stmt|;
+comment|/* for tuba address ref cnts */
 name|int
 name|isop_x25crud_len
 decl_stmt|;
