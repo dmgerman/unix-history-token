@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infblock.h -- header to use infblock.c  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* infblock.h -- header to use infblock.c  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -104,17 +104,10 @@ name|inflate_blocks_statef
 operator|*
 operator|,
 name|z_streamp
-operator|,
-name|uLongf
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* check value on output */
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -143,6 +136,21 @@ end_decl_stmt
 begin_comment
 comment|/* dictionary length */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inflate_blocks_sync_point
+name|OF
+argument_list|(
+operator|(
+name|inflate_blocks_statef
+operator|*
+name|s
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

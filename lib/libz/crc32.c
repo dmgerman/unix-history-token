@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* crc32.c -- compute the CRC-32 of a data stream  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
-comment|/* $Id: crc32.c,v 1.8 1996/01/30 21:59:10 me Exp $ */
+comment|/* @(#) $Id$ */
 end_comment
 
 begin_include
@@ -82,6 +82,7 @@ decl_stmt|;
 comment|/* polynomial exclusive-or pattern */
 comment|/* terms of polynomial defining this crc (except x^32): */
 specifier|static
+specifier|const
 name|Byte
 name|p
 index|[]
@@ -233,6 +234,7 @@ end_comment
 
 begin_decl_stmt
 name|local
+specifier|const
 name|uLongf
 name|crc_table
 index|[
@@ -765,8 +767,10 @@ comment|/* =====================================================================
 end_comment
 
 begin_function
+specifier|const
 name|uLongf
 modifier|*
+name|ZEXPORT
 name|get_crc_table
 parameter_list|()
 block|{
@@ -784,6 +788,7 @@ endif|#
 directive|endif
 return|return
 operator|(
+specifier|const
 name|uLongf
 operator|*
 operator|)
@@ -842,6 +847,7 @@ end_comment
 
 begin_function
 name|uLong
+name|ZEXPORT
 name|crc32
 parameter_list|(
 name|crc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-1996 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* deflate.h -- internal compression state  * Copyright (C) 1995-1998 Jean-loup Gailly  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* $Id: deflate.h,v 1.10 1996/07/02 12:41:00 me Exp $ */
+comment|/* @(#) $Id$ */
 end_comment
 
 begin_ifndef
@@ -281,6 +281,10 @@ modifier|*
 name|pending_buf
 decl_stmt|;
 comment|/* output still pending */
+name|ulg
+name|pending_buf_size
+decl_stmt|;
+comment|/* size of pending_buf */
 name|Bytef
 modifier|*
 name|pending_out
@@ -709,6 +713,163 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|d_code
+parameter_list|(
+name|dist
+parameter_list|)
+define|\
+value|((dist)< 256 ? _dist_code[dist] : _dist_code[256+((dist)>>7)])
+end_define
+
+begin_comment
+comment|/* Mapping from a distance to a distance code. dist is the distance - 1 and  * must not have side effects. _dist_code[256] and _dist_code[257] are never  * used.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEBUG
+end_ifndef
+
+begin_comment
+comment|/* Inline versions of _tr_tally for speed: */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|GEN_TREES_H
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|uch
+name|_length_code
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uch
+name|_dist_code
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uch
+name|_length_code
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uch
+name|_dist_code
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_tr_tally_lit
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|,
+name|flush
+parameter_list|)
+define|\
+value|{ uch cc = (c); \     s->d_buf[s->last_lit] = 0; \     s->l_buf[s->last_lit++] = cc; \     s->dyn_ltree[cc].Freq++; \     flush = (s->last_lit == s->lit_bufsize-1); \    }
+end_define
+
+begin_define
+define|#
+directive|define
+name|_tr_tally_dist
+parameter_list|(
+name|s
+parameter_list|,
+name|distance
+parameter_list|,
+name|length
+parameter_list|,
+name|flush
+parameter_list|)
+define|\
+value|{ uch len = (length); \     ush dist = (distance); \     s->d_buf[s->last_lit] = dist; \     s->l_buf[s->last_lit++] = len; \     dist--; \     s->dyn_ltree[_length_code[len]+LITERALS+1].Freq++; \     s->dyn_dtree[d_code(dist)].Freq++; \     flush = (s->last_lit == s->lit_bufsize-1); \   }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_tr_tally_lit
+parameter_list|(
+name|s
+parameter_list|,
+name|c
+parameter_list|,
+name|flush
+parameter_list|)
+value|flush = _tr_tally(s, 0, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_tr_tally_dist
+parameter_list|(
+name|s
+parameter_list|,
+name|distance
+parameter_list|,
+name|length
+parameter_list|,
+name|flush
+parameter_list|)
+define|\
+value|flush = _tr_tally(s, distance, length)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

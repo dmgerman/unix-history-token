@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inflate.c -- zlib interface to inflate modules  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inflate.c -- zlib interface to inflate modules  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
@@ -30,15 +30,8 @@ begin_comment
 comment|/* for buggy compilers */
 end_comment
 
-begin_comment
-comment|/* inflate private state */
-end_comment
-
-begin_struct
-struct|struct
-name|internal_state
-block|{
-comment|/* mode */
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|METHOD
@@ -83,8 +76,22 @@ comment|/* finished check, done */
 name|BAD
 block|}
 comment|/* got an error--stay here */
+name|inflate_mode
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* inflate private state */
+end_comment
+
+begin_struct
+struct|struct
+name|internal_state
+block|{
+comment|/* mode */
+name|inflate_mode
 name|mode
-enum|;
+decl_stmt|;
 comment|/* current inflate mode */
 comment|/* mode dependent information */
 union|union
@@ -135,6 +142,7 @@ end_struct
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateReset
 parameter_list|(
 name|z
@@ -143,9 +151,6 @@ name|z_streamp
 name|z
 decl_stmt|;
 block|{
-name|uLong
-name|c
-decl_stmt|;
 if|if
 condition|(
 name|z
@@ -203,11 +208,10 @@ name|blocks
 argument_list|,
 name|z
 argument_list|,
-operator|&
-name|c
+name|Z_NULL
 argument_list|)
 expr_stmt|;
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -224,6 +228,7 @@ end_function
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateEnd
 parameter_list|(
 name|z
@@ -232,9 +237,6 @@ name|z_streamp
 name|z
 decl_stmt|;
 block|{
-name|uLong
-name|c
-decl_stmt|;
 if|if
 condition|(
 name|z
@@ -275,9 +277,6 @@ operator|->
 name|blocks
 argument_list|,
 name|z
-argument_list|,
-operator|&
-name|c
 argument_list|)
 expr_stmt|;
 name|ZFREE
@@ -295,7 +294,7 @@ name|state
 operator|=
 name|Z_NULL
 expr_stmt|;
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -312,6 +311,7 @@ end_function
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateInit2_
 parameter_list|(
 name|z
@@ -565,7 +565,7 @@ return|return
 name|Z_MEM_ERROR
 return|;
 block|}
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -588,6 +588,7 @@ end_function
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateInit_
 parameter_list|(
 name|z
@@ -627,7 +628,7 @@ begin_define
 define|#
 directive|define
 name|NEEDBYTE
-value|{if(z->avail_in==0)return r;r=Z_OK;}
+value|{if(z->avail_in==0)return r;r=f;}
 end_define
 
 begin_define
@@ -639,6 +640,7 @@ end_define
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflate
 parameter_list|(
 name|z
@@ -675,14 +677,20 @@ operator|->
 name|next_in
 operator|==
 name|Z_NULL
-operator|||
-name|f
-operator|<
-literal|0
 condition|)
 return|return
 name|Z_STREAM_ERROR
 return|;
+name|f
+operator|=
+name|f
+operator|==
+name|Z_FINISH
+condition|?
+name|Z_BUF_ERROR
+else|:
+name|Z_OK
+expr_stmt|;
 name|r
 operator|=
 name|Z_BUF_ERROR
@@ -878,7 +886,7 @@ expr_stmt|;
 comment|/* can't try inflateSync */
 break|break;
 block|}
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -1130,6 +1138,16 @@ block|}
 if|if
 condition|(
 name|r
+operator|==
+name|Z_OK
+condition|)
+name|r
+operator|=
+name|f
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|!=
 name|Z_STREAM_END
 condition|)
@@ -1138,7 +1156,7 @@ name|r
 return|;
 name|r
 operator|=
-name|Z_OK
+name|f
 expr_stmt|;
 name|inflate_blocks_reset
 argument_list|(
@@ -1349,7 +1367,7 @@ expr_stmt|;
 comment|/* can't try inflateSync */
 break|break;
 block|}
-name|Trace
+name|Tracev
 argument_list|(
 operator|(
 name|stderr
@@ -1383,11 +1401,21 @@ return|return
 name|Z_STREAM_ERROR
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|NEED_DUMMY_RETURN
+return|return
+name|Z_STREAM_ERROR
+return|;
+comment|/* Some dumb compilers complain without this */
+endif|#
+directive|endif
 block|}
 end_function
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateSetDictionary
 parameter_list|(
 name|z
@@ -1528,6 +1556,7 @@ end_function
 
 begin_function
 name|int
+name|ZEXPORT
 name|inflateSync
 parameter_list|(
 name|z
@@ -1642,23 +1671,33 @@ operator|<
 literal|4
 condition|)
 block|{
+specifier|static
+specifier|const
+name|Byte
+name|mark
+index|[
+literal|4
+index|]
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|}
+decl_stmt|;
 if|if
 condition|(
 operator|*
 name|p
 operator|==
-call|(
-name|Byte
-call|)
-argument_list|(
+name|mark
+index|[
 name|m
-operator|<
-literal|2
-condition|?
-literal|0
-else|:
-literal|0xff
-argument_list|)
+index|]
 condition|)
 name|m
 operator|++
@@ -1769,6 +1808,57 @@ name|BLOCKS
 expr_stmt|;
 return|return
 name|Z_OK
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns true if inflate is currently at the end of a block generated  * by Z_SYNC_FLUSH or Z_FULL_FLUSH. This function is used by one PPP  * implementation to provide an additional safety check. PPP uses Z_SYNC_FLUSH  * but removes the length bytes of the resulting empty stored block. When  * decompressing, PPP checks that at the end of input packet, inflate is  * waiting for these length bytes.  */
+end_comment
+
+begin_function
+name|int
+name|ZEXPORT
+name|inflateSyncPoint
+parameter_list|(
+name|z
+parameter_list|)
+name|z_streamp
+name|z
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|z
+operator|==
+name|Z_NULL
+operator|||
+name|z
+operator|->
+name|state
+operator|==
+name|Z_NULL
+operator|||
+name|z
+operator|->
+name|state
+operator|->
+name|blocks
+operator|==
+name|Z_NULL
+condition|)
+return|return
+name|Z_STREAM_ERROR
+return|;
+return|return
+name|inflate_blocks_sync_point
+argument_list|(
+name|z
+operator|->
+name|state
+operator|->
+name|blocks
+argument_list|)
 return|;
 block|}
 end_function

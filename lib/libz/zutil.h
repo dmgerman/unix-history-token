@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-1996 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zutil.h -- internal interface and configuration of the compression library  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* WARNING: this file should *not* be used by applications. It is    par
 end_comment
 
 begin_comment
-comment|/* $Id: zutil.h,v 1.16 1996/07/24 13:41:13 me Exp $ */
+comment|/* @(#) $Id$ */
 end_comment
 
 begin_ifndef
@@ -29,69 +29,17 @@ directive|include
 file|"zlib.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|VMS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CRAY
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|RISCOS
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|STDC
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|STDC
-end_ifdef
 
 begin_include
 include|#
@@ -103,6 +51,35 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_ERRNO_H
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_endif
@@ -358,11 +335,72 @@ directive|ifdef
 name|__TURBOC__
 end_ifdef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__STDC__
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
+name|defined
+argument_list|(
+name|__LARGE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__COMPACT__
+argument_list|)
+operator|)
+end_if
+
+begin_comment
+comment|/* Allow compilation with ANSI keywords only enabled */
+end_comment
+
+begin_function_decl
+name|void
+name|_Cdecl
+name|farfree
+parameter_list|(
+name|void
+modifier|*
+name|block
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|_Cdecl
+name|farmalloc
+parameter_list|(
+name|unsigned
+name|long
+name|nbytes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<alloc.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -453,7 +491,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|FOPEN
+name|F_OPEN
 parameter_list|(
 name|name
 parameter_list|,
@@ -512,11 +550,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|MACOS
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|TARGET_OS_MAC
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -524,6 +570,82 @@ directive|define
 name|OS_CODE
 value|0x07
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|fdopen
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|fdopen
+parameter_list|(
+name|fd
+parameter_list|,
+name|mode
+parameter_list|)
+value|NULL
+end_define
+
+begin_comment
+comment|/* No fdopen() */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__MWERKS__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|fdopen
+argument_list|)
+end_if
+
+begin_if
+if|#
+directive|if
+name|__dest_os
+operator|!=
+name|__be_os
+operator|&&
+name|__dest_os
+operator|!=
+name|__win32_os
+end_if
+
+begin_define
+define|#
+directive|define
+name|fdopen
+parameter_list|(
+name|fd
+parameter_list|,
+name|mode
+parameter_list|)
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -605,6 +727,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
+name|_MSC_VER
+argument_list|)
+operator|&&
+operator|(
+name|_MSC_VER
+operator|>=
+literal|600
+operator|)
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|fdopen
+parameter_list|(
+name|fd
+parameter_list|,
+name|type
+parameter_list|)
+value|_fdopen(fd,type)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Common defaults */
 end_comment
@@ -634,13 +790,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|FOPEN
+name|F_OPEN
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|FOPEN
+name|F_OPEN
 parameter_list|(
 name|name
 parameter_list|,
@@ -731,27 +887,26 @@ end_endif
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|M_I86SM
+name|SMALL_MEDIUM
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|M_I86MM
-argument_list|)
-operator|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__SC__
+argument_list|)
 end_if
 
 begin_comment
-comment|/* Use our own functions for small and medium model with MSC<= 5.0.   * You may have to use the same strategy for Borland C (untested).   */
+comment|/* Use our own functions for small and medium model with MSC<= 5.0.   * You may have to use the same strategy for Borland C (untested).   * The __SC__ check is for Symantec.   */
 end_comment
 
 begin_define
@@ -963,23 +1118,12 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|verbose
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|verbose
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|int
+name|z_verbose
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1015,7 +1159,7 @@ name|Trace
 parameter_list|(
 name|x
 parameter_list|)
-value|fprintf x
+value|{if (z_verbose>=0) fprintf x ;}
 end_define
 
 begin_define
@@ -1025,7 +1169,7 @@ name|Tracev
 parameter_list|(
 name|x
 parameter_list|)
-value|{if (verbose) fprintf x ;}
+value|{if (z_verbose>0) fprintf x ;}
 end_define
 
 begin_define
@@ -1035,7 +1179,7 @@ name|Tracevv
 parameter_list|(
 name|x
 parameter_list|)
-value|{if (verbose>1) fprintf x ;}
+value|{if (z_verbose>1) fprintf x ;}
 end_define
 
 begin_define
@@ -1047,7 +1191,7 @@ name|c
 parameter_list|,
 name|x
 parameter_list|)
-value|{if (verbose&& (c)) fprintf x ;}
+value|{if (z_verbose>0&& (c)) fprintf x ;}
 end_define
 
 begin_define
@@ -1059,7 +1203,7 @@ name|c
 parameter_list|,
 name|x
 parameter_list|)
-value|{if (verbose>1&& (c)) fprintf x ;}
+value|{if (z_verbose>1&& (c)) fprintf x ;}
 end_define
 
 begin_else
@@ -1136,7 +1280,7 @@ begin_typedef
 typedef|typedef
 name|uLong
 argument_list|(
-argument|*check_func
+argument|ZEXPORT *check_func
 argument_list|)
 name|OF
 argument_list|(
