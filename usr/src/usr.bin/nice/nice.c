@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1989, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1989, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1989, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nice.c	8.1 (Berkeley) %G%"
+literal|"@(#)nice.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -145,11 +151,9 @@ decl_stmt|;
 block|{
 name|int
 name|niceness
-decl_stmt|;
-name|niceness
-operator|=
+init|=
 name|DEFNICE
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
 name|argv
@@ -164,6 +168,16 @@ literal|'-'
 condition|)
 if|if
 condition|(
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|1
+index|]
+operator|==
+literal|'-'
+operator|||
 name|isdigit
 argument_list|(
 name|argv
@@ -193,36 +207,26 @@ name|argv
 expr_stmt|;
 block|}
 else|else
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"nice: illegal option -- %c\n"
+literal|"illegal option -- %s"
 argument_list|,
 name|argv
-index|[
-literal|1
-index|]
 index|[
 literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|usage
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
-operator|!
 name|argv
 index|[
 literal|1
 index|]
+operator|==
+name|NULL
 condition|)
 name|usage
 argument_list|()
@@ -244,28 +248,13 @@ if|if
 condition|(
 name|errno
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"nice: getpriority: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"getpriority"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|setpriority
@@ -277,28 +266,13 @@ argument_list|,
 name|niceness
 argument_list|)
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"nice: setpriority: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"setpriority"
 argument_list|)
 expr_stmt|;
-block|}
 name|execvp
 argument_list|(
 name|argv
@@ -313,29 +287,16 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"nice: %s: %s\n"
+literal|"%s"
 argument_list|,
 name|argv
 index|[
 literal|1
 index|]
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
