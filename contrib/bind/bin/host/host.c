@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 8.53 2002/06/18 02:34:02 marka Exp $"
+literal|"$Id: host.c,v 8.55.8.1 2003/06/02 09:24:38 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,12 +313,8 @@ begin_define
 define|#
 directive|define
 name|MY_PACKETSZ
-value|64*1024
+value|NS_MAXMSG
 end_define
-
-begin_comment
-comment|/* need this to hold tcp answers */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -914,10 +910,10 @@ name|struct
 name|sockaddr_storage
 name|addr
 decl_stmt|;
-name|struct
-name|hostent
-modifier|*
-name|hp
+name|int
+name|ok
+init|=
+literal|0
 decl_stmt|;
 name|char
 modifier|*
@@ -1707,10 +1703,6 @@ name|answer
 argument_list|)
 expr_stmt|;
 block|}
-name|hp
-operator|=
-name|NULL
-expr_stmt|;
 name|res
 operator|.
 name|res_h_errno
@@ -1753,9 +1745,9 @@ literal|18
 expr_stmt|;
 while|while
 condition|(
-name|hp
+name|ok
 operator|==
-name|NULL
+literal|0
 operator|&&
 name|res
 operator|.
@@ -1774,13 +1766,8 @@ name|cname
 operator|=
 name|NULL
 expr_stmt|;
-name|hp
+name|ok
 operator|=
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
 name|gethostinfo
 argument_list|(
 name|getdomain
@@ -1885,7 +1872,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|hp
+name|ok
+operator|!=
+literal|0
 operator|&&
 operator|!
 operator|(
@@ -2026,9 +2015,9 @@ name|getdomain
 argument_list|)
 expr_stmt|;
 block|}
-name|hp
+name|ok
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|res
 operator|.
@@ -2040,33 +2029,14 @@ continue|continue;
 block|}
 block|}
 else|else
-block|{
-if|if
-condition|(
+name|ok
+operator|=
 name|addrinfo
 argument_list|(
 operator|&
 name|addr
 argument_list|)
-operator|==
-literal|0
-condition|)
-name|hp
-operator|=
-name|NULL
 expr_stmt|;
-else|else
-name|hp
-operator|=
-operator|(
-expr|struct
-name|hostent
-operator|*
-operator|)
-literal|1
-expr_stmt|;
-comment|/* XXX */
-block|}
 if|if
 condition|(
 operator|!
@@ -2076,9 +2046,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|hp
+name|ok
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|hperror
@@ -5400,7 +5370,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"(\n\t\t\t%lu\t;serial (version)"
+literal|" (\n\t\t\t%lu\t;serial (version)"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6761,7 +6731,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %ld"
+literal|" %lu"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6784,7 +6754,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %ld"
+literal|" %lu"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -6807,7 +6777,7 @@ name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|" %ld"
+literal|" %lu"
 argument_list|,
 name|ns_get32
 argument_list|(
@@ -7237,6 +7207,12 @@ expr_stmt|;
 break|break;
 block|}
 default|default:
+if|if
+condition|(
+name|doprint
+operator|&&
+name|verbose
+condition|)
 name|fprintf
 argument_list|(
 name|stderr

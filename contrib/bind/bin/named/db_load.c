@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_load.c,v 8.121 2001/11/12 21:22:22 marka Exp $"
+literal|"$Id: db_load.c,v 8.123 2002/08/20 04:27:23 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5275,6 +5275,10 @@ argument_list|(
 literal|"opaque length"
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|n
 operator|=
 name|strtoul
@@ -5289,6 +5293,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|errno
+operator|!=
+literal|0
+operator|||
 name|n
 operator|>
 literal|0xffff
@@ -5796,8 +5804,6 @@ operator|+=
 name|purge_nonglue
 argument_list|(
 name|zp
-operator|->
-name|z_origin
 argument_list|,
 operator|(
 name|dataflags
@@ -5808,10 +5814,6 @@ condition|?
 name|fcachetab
 else|:
 name|hashtab
-argument_list|,
-name|zp
-operator|->
-name|z_class
 argument_list|,
 name|zp
 operator|->
@@ -5927,16 +5929,6 @@ expr_stmt|;
 name|do_reload
 argument_list|(
 name|zp
-operator|->
-name|z_origin
-argument_list|,
-name|zp
-operator|->
-name|z_type
-argument_list|,
-name|zp
-operator|->
-name|z_class
 argument_list|,
 name|loading
 argument_list|)

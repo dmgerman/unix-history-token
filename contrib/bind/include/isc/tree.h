@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 8.2 1996/10/25 18:11:03 vixie Exp $  */
+comment|/* tree.h - declare structures used by tree library  *  * vix 22jan93 [revisited; uses RCS, ANSI, POSIX; has bug fixes]  * vix 27jun86 [broken out of tree.c]  *  * $Id: tree.h,v 8.3 2002/12/03 05:26:48 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,52 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * Do not taint namespace  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tree_add
+value|__tree_add
+end_define
+
+begin_define
+define|#
+directive|define
+name|tree_delete
+value|__tree_delete
+end_define
+
+begin_define
+define|#
+directive|define
+name|tree_init
+value|__tree_init
+end_define
+
+begin_define
+define|#
+directive|define
+name|tree_mung
+value|__tree_mung
+end_define
+
+begin_define
+define|#
+directive|define
+name|tree_srch
+value|__tree_srch
+end_define
+
+begin_define
+define|#
+directive|define
+name|tree_trav
+value|__tree_trav
+end_define
 
 begin_typedef
 typedef|typedef

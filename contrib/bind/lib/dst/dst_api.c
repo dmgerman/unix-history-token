@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.20 2001/07/26 01:20:08 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.21 2002/06/28 06:58:19 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,7 +772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * dst_sign_data  *	An incremental signing function.  Data is signed in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	itself is created (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be   *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  * Parameters  *	mode    A bit mask used to specify operation(s) to be performed.  *		  SIG_MODE_INIT	   1   Initialize digest  *		  SIG_MODE_UPDATE	 2   Add data to digest  *		  SIG_MODE_FINAL	  4   Generate signature  *					      from signature  *		  SIG_MODE_ALL (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL  *	data    Data to be signed.  *	len     The length in bytes of data to be signed.  *	in_key  Contains a private key to sign with.  *		  KEY structures should be handled (created, converted,  *		  compared, stored, freed) by the DST.  *	signature  *	      The location to which the signature will be written.  *	sig_len Length of the signature field in bytes.  * Return  *	 0      Successfull INIT or Update operation  *>0      success FINAL (sign) operation  *<0      failure  */
+comment|/*  * dst_sign_data  *	An incremental signing function.  Data is signed in steps.  *	First the context must be initialized (SIG_MODE_INIT).  *	Then data is hashed (SIG_MODE_UPDATE).  Finally the signature  *	itself is created (SIG_MODE_FINAL).  This function can be called  *	once with INIT, UPDATE and FINAL modes all set, or it can be  *	called separately with a different mode set for each step.  The  *	UPDATE step can be repeated.  * Parameters  *	mode    A bit mask used to specify operation(s) to be performed.  *		  SIG_MODE_INIT	   1   Initialize digest  *		  SIG_MODE_UPDATE	 2   Add data to digest  *		  SIG_MODE_FINAL	  4   Generate signature  *					      from signature  *		  SIG_MODE_ALL (SIG_MODE_INIT,SIG_MODE_UPDATE,SIG_MODE_FINAL  *	data    Data to be signed.  *	len     The length in bytes of data to be signed.  *	in_key  Contains a private key to sign with.  *		  KEY structures should be handled (created, converted,  *		  compared, stored, freed) by the DST.  *	signature  *	      The location to which the signature will be written.  *	sig_len Length of the signature field in bytes.  * Return  *	 0      Successfull INIT or Update operation  *>0      success FINAL (sign) operation  *<0      failure  */
 end_comment
 
 begin_function
@@ -1641,7 +1641,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* *  *  dst_read_public_key  *	Read a public key from disk and store in a DST key structure.  *  Parameters  *	in_name	 K<in_name><in_id>.<public key suffix> is the  *		      filename of the key file to be read.  *  Returns  *	NULL	    If the key does not exist or no name is supplied.  *	NON-NULL	Initalized key structure if the key exists.  */
+comment|/* *  *  dst_read_public_key  *	Read a public key from disk and store in a DST key structure.  *  Parameters  *	in_name	 K<in_name><in_id>.<public key suffix> is the  *		      filename of the key file to be read.  *  Returns  *	NULL	    If the key does not exist or no name is supplied.  *	NON-NULL	Initialized key structure if the key exists.  */
 end_comment
 
 begin_function

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_lexer.c,v 8.31 2002/05/24 03:05:03 marka Exp $"
+literal|"$Id: ns_lexer.c,v 8.31.10.1 2003/06/02 09:56:35 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1122,6 +1122,12 @@ block|{
 literal|"edns"
 block|,
 name|T_EDNS
+block|}
+block|,
+block|{
+literal|"edns-udp-size"
+block|,
+name|T_EDNS_UDP_SIZE
 block|}
 block|,
 block|{

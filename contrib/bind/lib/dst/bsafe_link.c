@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/bsafe_link.c,v 1.15 2001/09/25 04:50:28 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/bsafe_link.c,v 1.16 2002/12/03 05:26:49 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6210,6 +6210,13 @@ end_else
 begin_comment
 comment|/* BSAFE NOT available */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|dst_bsafe_init
+value|__dst_bsafe_init
+end_define
 
 begin_function
 name|int

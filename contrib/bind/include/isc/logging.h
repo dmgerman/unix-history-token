@@ -426,6 +426,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
 begin_function_decl
 name|void
 name|log_vwrite
@@ -443,14 +449,21 @@ parameter_list|,
 name|va_list
 name|args
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__format__
+parameter_list|(
+name|__printf__
+parameter_list|,
+function_decl|4
+operator|,
+function_decl|0
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -488,6 +501,26 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_function_decl
+name|void
+name|log_vwrite
+parameter_list|(
+name|log_context
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|va_list
+name|args
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

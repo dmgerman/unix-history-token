@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nsupdate.c,v 8.27 2001/06/18 14:43:46 marka Exp $"
+literal|"$Id: nsupdate.c,v 8.30 2003/04/03 05:51:07 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -757,24 +757,6 @@ name|rrecp
 decl_stmt|;
 name|ns_updque
 name|listuprec
-decl_stmt|;
-specifier|extern
-name|int
-name|getopt
-parameter_list|()
-function_decl|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|,
-name|opterr
-decl_stmt|,
-name|optopt
 decl_stmt|;
 name|ns_tsig_key
 name|key
@@ -2054,7 +2036,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* ttl */
-name|r_ttl
+name|u_long
+name|tmp_ttl
+decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|tmp_ttl
 operator|=
 name|strtoul
 argument_list|(
@@ -2067,13 +2056,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|errno
 operator|==
 name|ERANGE
 operator|&&
-name|r_ttl
+name|tmp_ttl
 operator|==
 name|ULONG_MAX
+operator|)
+operator|||
+name|tmp_ttl
+operator|>
+literal|0x7fffffffUL
 condition|)
 block|{
 name|fprintf
@@ -2091,6 +2086,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|r_ttl
+operator|=
+name|tmp_ttl
+expr_stmt|;
 operator|(
 name|void
 operator|)

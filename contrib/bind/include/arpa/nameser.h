@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1996-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  *	$Id: nameser.h,v 8.47 2002/04/30 03:43:53 marka Exp $  */
+comment|/*  *	$Id: nameser.h,v 8.48.8.2 2003/06/02 09:24:40 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -108,7 +108,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* maximum packet size */
+comment|/* default UDP packet size */
 end_comment
 
 begin_define
@@ -120,6 +120,17 @@ end_define
 
 begin_comment
 comment|/* maximum domain name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_MAXMSG
+value|65535
+end_define
+
+begin_comment
+comment|/* maximum message size */
 end_comment
 
 begin_define
@@ -1086,6 +1097,11 @@ init|=
 literal|41
 block|,
 comment|/* EDNS0 option (meta-RR) */
+name|ns_t_apl
+init|=
+literal|42
+block|,
+comment|/* Address prefix list (RFC 3123) */
 name|ns_t_tkey
 init|=
 literal|249
@@ -1701,7 +1717,7 @@ begin_define
 define|#
 directive|define
 name|NS_MD5RSA_MAX_BITS
-value|2552
+value|4096
 end_define
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1996 by Internet Software Consortium.  *  * Permissi
 end_comment
 
 begin_comment
-comment|/*  * $Id: irp_p.h,v 8.2 2001/08/10 02:40:52 marka Exp $  */
+comment|/*  * $Id: irp_p.h,v 8.2.10.1 2003/06/02 05:55:14 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -293,34 +293,6 @@ name|bodylen
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|int
-name|irs_irp_send_command
-parameter_list|(
-name|struct
-name|irp_p
-modifier|*
-name|pvt
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|ISC_FORMAT_PRINTF
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|3
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.117 2002/04/25 05:27:07 marka Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.120.8.1 2003/06/02 05:19:56 marka Exp $  */
 end_comment
 
 begin_comment
@@ -463,32 +463,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-name|void
-name|dprintf
-parameter_list|(
-name|int
-name|level
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|format
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|ISC_FORMAT_PRINTF
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|3
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_ifdef
 ifdef|#
@@ -938,6 +912,10 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2111,15 +2089,13 @@ begin_function_decl
 name|void
 name|purge_zone
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|zoneinfo
 modifier|*
 parameter_list|,
 name|struct
 name|hashbuf
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2416,18 +2392,14 @@ begin_function_decl
 name|int
 name|purge_nonglue
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|zoneinfo
 modifier|*
-name|dname
 parameter_list|,
 name|struct
 name|hashbuf
 modifier|*
 name|htp
-parameter_list|,
-name|int
-name|class
 parameter_list|,
 name|int
 name|log
@@ -2503,18 +2475,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|purgeandload
-parameter_list|(
-name|struct
-name|zoneinfo
-modifier|*
-name|zp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2614,13 +2574,9 @@ begin_function_decl
 name|void
 name|do_reload
 parameter_list|(
-specifier|const
-name|char
+name|struct
+name|zoneinfo
 modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|,
 name|int
 parameter_list|)

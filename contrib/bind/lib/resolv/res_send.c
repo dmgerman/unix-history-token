@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 8.49 2002/03/29 21:50:51 marka Exp $"
+literal|"$Id: res_send.c,v 8.51.2.1 2003/06/02 05:59:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +666,19 @@ name|in6p
 operator|->
 name|sin6_port
 operator|&&
+ifdef|#
+directive|ifdef
+name|HAVE_SIN6_SCOPE_ID
+name|srv6
+operator|->
+name|sin6_scope_id
+operator|==
+name|in6p
+operator|->
+name|sin6_scope_id
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|IN6_IS_ADDR_UNSPECIFIED
 argument_list|(
@@ -1931,6 +1944,23 @@ argument_list|(
 name|nsap
 argument_list|)
 expr_stmt|;
+name|statp
+operator|->
+name|_flags
+operator|&=
+operator|~
+name|RES_F_LASTMASK
+expr_stmt|;
+name|statp
+operator|->
+name|_flags
+operator||=
+operator|(
+name|ns
+operator|<<
+name|RES_F_LASTSHIFT
+operator|)
+expr_stmt|;
 name|same_ns
 label|:
 if|if
@@ -3007,7 +3037,7 @@ name|RES_F_VC
 expr_stmt|;
 block|}
 comment|/* 	 * Send length& message 	 */
-name|putshort
+name|ns_put16
 argument_list|(
 operator|(
 name|u_short

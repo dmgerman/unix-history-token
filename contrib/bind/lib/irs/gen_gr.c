@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gen_gr.c,v 1.25 2001/06/07 02:12:26 marka Exp $"
+literal|"$Id: gen_gr.c,v 1.26 2002/07/18 02:07:44 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1881,6 +1881,9 @@ name|p
 decl_stmt|,
 modifier|*
 name|oldmembuf
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|int
 name|n
@@ -2158,6 +2161,14 @@ block|{
 comment|/* No harm done, no work done. */
 return|return;
 block|}
+name|ep
+operator|=
+name|cp
+operator|+
+name|used
+operator|+
+name|n
+expr_stmt|;
 if|if
 condition|(
 name|used
@@ -2279,6 +2290,23 @@ name|p
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRLCPY
+name|strlcpy
+argument_list|(
+name|cp
+argument_list|,
+operator|*
+name|m
+argument_list|,
+name|ep
+operator|-
+name|cp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|cp
@@ -2287,6 +2315,8 @@ operator|*
 name|m
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|+=
 name|strlen
@@ -2353,6 +2383,24 @@ name|gr_name
 operator|=
 name|cp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRLCPY
+name|strlcpy
+argument_list|(
+name|cp
+argument_list|,
+name|src
+operator|->
+name|gr_name
+argument_list|,
+name|ep
+operator|-
+name|cp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|cp
@@ -2362,6 +2410,8 @@ operator|->
 name|gr_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|+=
 name|strlen
@@ -2381,6 +2431,24 @@ name|gr_passwd
 operator|=
 name|cp
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_STRLCPY
+name|strlcpy
+argument_list|(
+name|cp
+argument_list|,
+name|src
+operator|->
+name|gr_passwd
+argument_list|,
+name|ep
+operator|-
+name|cp
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|strcpy
 argument_list|(
 name|cp
@@ -2390,6 +2458,8 @@ operator|->
 name|gr_passwd
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|cp
 operator|+=
 name|strlen

@@ -59,7 +59,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 8.24 2002/05/26 03:12:20 marka Exp $"
+literal|"$Id: main.c,v 8.25 2003/01/26 11:38:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2029,6 +2029,11 @@ operator|&
 name|servAddr
 argument_list|,
 name|defaultPtr
+operator|->
+name|servers
+index|[
+literal|0
+index|]
 operator|->
 name|addrList
 index|[
