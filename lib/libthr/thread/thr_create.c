@@ -654,6 +654,8 @@ condition|)
 block|{
 name|_thread_printf
 argument_list|(
+name|STDERR_FILENO
+argument_list|,
 literal|"thr_create() == %d\n"
 argument_list|,
 name|ret

@@ -435,6 +435,8 @@ condition|)
 block|{
 name|_thread_printf
 argument_list|(
+name|STDERR_FILENO
+argument_list|,
 literal|"ret = %d"
 argument_list|,
 name|ret
