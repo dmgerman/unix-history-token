@@ -472,10 +472,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_struct
 specifier|static
-name|struct
-name|cpu_nameclass
+struct|struct
+block|{
+name|char
+modifier|*
+name|cpu_name
+decl_stmt|;
+name|int
+name|cpu_class
+decl_stmt|;
+block|}
 name|i386_cpus
 index|[]
 init|=
@@ -600,8 +608,8 @@ block|}
 block|,
 comment|/* CPU_P4 */
 block|}
-decl_stmt|;
-end_decl_stmt
+struct|;
+end_struct
 
 begin_if
 if|#
