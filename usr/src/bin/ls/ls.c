@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.2 82/03/05"
+literal|"@(#)ls.c	4.3 82/03/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -2718,6 +2718,21 @@ name|dp
 operator|++
 operator|=
 literal|'/'
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fp
+operator|->
+name|ftype
+operator|==
+literal|'l'
+condition|)
+operator|*
+name|dp
+operator|++
+operator|=
+literal|'@'
 expr_stmt|;
 elseif|else
 if|if
