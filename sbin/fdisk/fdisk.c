@@ -1599,6 +1599,9 @@ parameter_list|(
 name|int
 name|sec
 parameter_list|,
+name|int
+name|size
+parameter_list|,
 name|unsigned
 name|char
 modifier|*
@@ -2515,6 +2518,10 @@ name|partp
 operator|->
 name|dp_start
 argument_list|,
+name|partp
+operator|->
+name|dp_size
+argument_list|,
 operator|&
 name|partp
 operator|->
@@ -2537,6 +2544,12 @@ name|partp
 operator|->
 name|dp_start
 operator|+
+name|partp
+operator|->
+name|dp_size
+operator|-
+literal|1
+argument_list|,
 name|partp
 operator|->
 name|dp_size
@@ -2878,6 +2891,10 @@ name|partp
 operator|->
 name|dp_start
 argument_list|,
+name|partp
+operator|->
+name|dp_size
+argument_list|,
 operator|&
 name|partp
 operator|->
@@ -2905,6 +2922,10 @@ operator|->
 name|dp_size
 operator|-
 literal|1
+argument_list|,
+name|partp
+operator|->
+name|dp_size
 argument_list|,
 operator|&
 name|partp
@@ -3215,6 +3236,8 @@ name|dos
 parameter_list|(
 name|sec
 parameter_list|,
+name|size
+parameter_list|,
 name|c
 parameter_list|,
 name|s
@@ -3223,6 +3246,8 @@ name|h
 parameter_list|)
 name|int
 name|sec
+decl_stmt|,
+name|size
 decl_stmt|;
 name|unsigned
 name|char
@@ -3248,6 +3273,10 @@ decl_stmt|;
 if|if
 condition|(
 name|sec
+operator|==
+literal|0
+operator|&&
+name|size
 operator|==
 literal|0
 condition|)
