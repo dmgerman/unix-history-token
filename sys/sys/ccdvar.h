@@ -58,17 +58,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Mask of user-settable ccd flags. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_USERMASK
-value|(CCDF_SWAP|CCDF_UNIFORM|CCDF_MIRROR|CCDF_PARITY)
-end_define
-
-begin_comment
 comment|/*  * Component info table.  * Describes a single component of a concatenated disk.  */
 end_comment
 
@@ -261,17 +250,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CCDF_SWAP
-value|0x01
-end_define
-
-begin_comment
-comment|/* interleave should be dmmax */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|CCDF_UNIFORM
 value|0x02
 end_define
@@ -289,17 +267,6 @@ end_define
 
 begin_comment
 comment|/* use mirroring */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CCDF_PARITY
-value|0x08
-end_define
-
-begin_comment
-comment|/* use parity (RAID level 5) */
 end_comment
 
 begin_define
@@ -356,6 +323,17 @@ end_define
 begin_comment
 comment|/* unit is locked */
 end_comment
+
+begin_comment
+comment|/* Mask of user-settable ccd flags. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CCDF_USERMASK
+value|(CCDF_UNIFORM|CCDF_MIRROR)
+end_define
 
 begin_comment
 comment|/*  * Before you can use a unit, it must be configured with CCDIOCSET.  * The configuration persists across opens and closes of the device;  * a CCDIOCCLR must be used to reset a configuration.  An attempt to  * CCDIOCSET an already active unit will return EBUSY.  Attempts to  * CCDIOCCLR an inactive unit will return ENXIO.  */
