@@ -1405,7 +1405,7 @@ operator|||
 operator|(
 name|__FreeBSD_Version
 operator|>=
-literal|50011
+literal|500011
 operator|)
 end_if
 
@@ -1631,7 +1631,7 @@ operator|||
 operator|(
 name|__FreeBSD_Version
 operator|>=
-literal|50011
+literal|500011
 operator|)
 operator|)
 operator|)
@@ -1730,7 +1730,7 @@ operator|||
 operator|(
 name|__FreeBSD_Version
 operator|>=
-literal|50011
+literal|500011
 operator|)
 name|error
 operator|=
@@ -2159,7 +2159,7 @@ operator|||
 operator|(
 name|__FreeBSD_Version
 operator|>=
-literal|50011
+literal|500011
 operator|)
 operator|)
 name|int
@@ -2301,7 +2301,7 @@ operator|||
 operator|(
 name|__FreeBSD_Version
 operator|>=
-literal|50011
+literal|500011
 operator|)
 operator|)
 name|error
