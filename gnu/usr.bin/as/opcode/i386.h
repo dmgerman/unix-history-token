@@ -4,7 +4,7 @@ comment|/* i386-opcode.h -- Intel 80386 opcode table    Copyright (C) 1989, 1991
 end_comment
 
 begin_comment
-comment|/* $Id: i386.h,v 1.7 1997/02/22 15:44:29 peter Exp $ */
+comment|/* $Id: i386.h,v 1.8 1997/07/15 07:56:53 dyson Exp $ */
 end_comment
 
 begin_decl_stmt
@@ -5822,6 +5822,25 @@ block|}
 block|,
 comment|/* %st0<-- mem dword */
 block|{
+literal|"fildll"
+block|,
+literal|1
+block|,
+literal|0xdf
+block|,
+literal|5
+block|,
+name|Modrm
+block|,
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* %st0<-- mem qword */
+block|{
 literal|"fildq"
 block|,
 literal|1
@@ -6108,6 +6127,25 @@ literal|0
 block|}
 block|,
 comment|/* %st0 --> mem dword */
+block|{
+literal|"fistpll"
+block|,
+literal|1
+block|,
+literal|0xdf
+block|,
+literal|7
+block|,
+name|Modrm
+block|,
+name|Mem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* %st0 --> mem qword */
 block|{
 literal|"fistpq"
 block|,
