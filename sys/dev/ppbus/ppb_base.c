@@ -403,7 +403,6 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|PPBUS_SETMODE
 argument_list|(
 name|device_get_parent
@@ -414,7 +413,10 @@ argument_list|,
 name|mode
 argument_list|)
 condition|)
-block|{
+return|return
+operator|-
+literal|1
+return|;
 comment|/* XXX yet device mode = ppbus mode = chipset mode */
 name|ppb
 operator|->
@@ -426,7 +428,6 @@ operator|&
 name|PPB_MASK
 operator|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|old_mode
