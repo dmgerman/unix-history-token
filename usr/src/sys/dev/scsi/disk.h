@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.2 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.2 92/05/15 11:23:58 torek Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratories.  *  * %sccs.include.redist.c%  *  *	@(#)disk.h	5.3 (Berkeley) %G%  *  * from: $Header: disk.h,v 1.3 92/12/02 03:43:24 torek Exp $ (LBL)  */
 end_comment
 
 begin_comment
-comment|/*  * SCSI definitions for Direct Access Devices (disks).  * This includes WORMs and CD-ROMs (although a few commands, such as  * format or write, are nonsensical on some).  *  * Commands defined in the common header (scsi.h) appear here as comments.  */
+comment|/*  * SCSI definitions for Direct Access Devices (disks).  * This includes WORMs and CD-ROMs (although a few commands, such as  * format or write, are nonsensical on some).  *  * Commands defined in common headers (scsi.h or disktape.h) appear here  * as comments.  */
 end_comment
 
 begin_comment
@@ -27,7 +27,7 @@ comment|/* rezero unit */
 end_comment
 
 begin_comment
-comment|/*	CMD_REQUEST_SENSE	0x03	/* request sense */
+comment|/*	CMD_REQUEST_SENSE	0x03	   request sense */
 end_comment
 
 begin_define
@@ -89,15 +89,8 @@ begin_comment
 comment|/*	CMD_INQUIRY		0x12	   inquiry */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CMD_MODE_SELECT
-value|0x15
-end_define
-
 begin_comment
-comment|/* mode select */
+comment|/*	CMD_MODE_SELECT		0x15	   mode select */
 end_comment
 
 begin_define
@@ -126,15 +119,8 @@ begin_comment
 comment|/*	CMD_COPY		0x18	   copy */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CMD_MODE_SENSE
-value|0x1a
-end_define
-
 begin_comment
-comment|/* mode sense */
+comment|/*	CMD_MODE_SENSE		0x1a	   mode sense */
 end_comment
 
 begin_define
@@ -551,226 +537,889 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure of data passed via a MODE SELECT command.  */
+comment|/*  * For MODE SENSE and MODE SELECT: Mode page codes for disks.  */
+end_comment
+
+begin_comment
+comment|/*				0x00	   vendor specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_RWERRREC
+value|0x01
+end_define
+
+begin_comment
+comment|/* r/w error recovery parameters */
+end_comment
+
+begin_comment
+comment|/*	SCSI_MS_PC_DR		0x02	   disconnect/reconnect control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_FMT
+value|0x03
+end_define
+
+begin_comment
+comment|/* format parameters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_RDGEOM
+value|0x04
+end_define
+
+begin_comment
+comment|/* Rigid Disk geometry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_FD
+value|0x05
+end_define
+
+begin_comment
+comment|/* flexible disk page */
+end_comment
+
+begin_comment
+comment|/*				0x06	   reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_VERRREC
+value|0x07
+end_define
+
+begin_comment
+comment|/* verify error recovery page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_CACHE
+value|0x08
+end_define
+
+begin_comment
+comment|/* cache page */
+end_comment
+
+begin_comment
+comment|/*	SCSI_MS_PC_PDEV		0x09	   peripheral device page */
+end_comment
+
+begin_comment
+comment|/*	SCSI_MS_PC_CTLMODE	0x0a	   control mode page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_MTSUPP
+value|0x0b
+end_define
+
+begin_comment
+comment|/* medium types supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_MS_PC_NOTCH
+value|0x0c
+end_define
+
+begin_comment
+comment|/* notch page */
+end_comment
+
+begin_comment
+comment|/*				0x0d..0x1f reserved */
+end_comment
+
+begin_comment
+comment|/*				0x20..0x3e vendor specific */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Read/Write Error Recovery mode page.  * N.B.: CDC Wren V, at least, does not include write retry& time limit.  */
 end_comment
 
 begin_struct
 struct|struct
-name|scsi_ms
+name|scsi_page_rwerrrec
 block|{
 name|u_char
-name|ms_xxx0
+name|rw_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x01) */
+name|rw_len
+decl_stmt|,
+comment|/* length (0x0a) */
+name|rw_flags
+decl_stmt|,
+comment|/* flags, see below */
+name|rw_read_retry
+decl_stmt|,
+comment|/* read retry count */
+name|rw_corr_span
+decl_stmt|,
+comment|/* correction span */
+name|rw_hd_off
+decl_stmt|,
+comment|/* head offset count */
+name|rw_ds_off
+decl_stmt|,
+comment|/* data strobe offset count */
+name|rw_xxx0
 decl_stmt|,
 comment|/* reserved */
-name|ms_mt
+name|rw_write_retry
 decl_stmt|,
-comment|/* medium type */
-name|ms_xxx1
+comment|/* write retry count */
+name|rw_xxx1
 decl_stmt|,
 comment|/* reserved */
-name|ms_bdl
+name|rw_rtlh
+decl_stmt|,
+comment|/* recovery time limit (MSB) */
+name|rw_rtll
 decl_stmt|;
-comment|/* block descriptor length */
-struct|struct
-name|scsi_ms_b_desc
-block|{
-name|u_char
-name|dc
-decl_stmt|,
-comment|/* density code */
-name|nbh
-decl_stmt|,
-comment|/* number of blocks (MSB) */
-name|nbm
-decl_stmt|,
-comment|/* number of blocks */
-name|nbl
-decl_stmt|,
-comment|/* number of blocks (LSB) */
-name|xxx
-decl_stmt|,
-comment|/* reserved */
-name|blh
-decl_stmt|,
-comment|/* block length (MSB) */
-name|blm
-decl_stmt|,
-comment|/* block length */
-name|bll
-decl_stmt|;
-comment|/* block length (LSB) */
-block|}
-name|ms_bd
-index|[
-literal|1
-index|]
-struct|;
-comment|/* actually longer */
-comment|/* followed by vendor unique bytes */
+comment|/* recovery time limit (LSB) */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* values for the Medium Type field - disks */
+comment|/* rw_flags */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCSI_CMD_MS_MT_DEFAULT
-value|0x00
+name|SCSI_RWE_AWRE
+value|0x80
 end_define
 
 begin_comment
-comment|/* whatever is current */
+comment|/* reallocate defective blocks on write */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCSI_CMD_MS_MT_SS
-value|0x01
-end_define
-
-begin_comment
-comment|/* single sided, unspecified medium */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_DS
-value|0x02
-end_define
-
-begin_comment
-comment|/* double sided, unspecified medium */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_8SSSD
-value|0x05
-end_define
-
-begin_comment
-comment|/* 8" floppy, SSSD (X3.73-1980) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_8DSSD
-value|0x06
-end_define
-
-begin_comment
-comment|/* 8" floppy, DSSD (X3B8-140) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_8SSDD
-value|0x09
-end_define
-
-begin_comment
-comment|/* 8" floppy, SSDD (X3B8/78-139) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_8DSDD
-value|0x0a
-end_define
-
-begin_comment
-comment|/* 8" floppy, DSDD (X3.121-1984) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_5SSSD
-value|0x0d
-end_define
-
-begin_comment
-comment|/* 5.25" floppy, SSSD (X3.82-1980) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_5DSDD
-value|0x12
-end_define
-
-begin_comment
-comment|/* 5.25" floppy, DSDD (X3.125-1984) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_5DSDD96
-value|0x16
-end_define
-
-begin_comment
-comment|/* 5.25", DSDD, 96tpi (X3.126-198X) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_5DSQD
-value|0x1a
-end_define
-
-begin_comment
-comment|/* 5.25", DSQD, 96tpi (DIS 8630) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_3DS
-value|0x1e
-end_define
-
-begin_comment
-comment|/* 3.5", double sided (X3.137-198X) */
-end_comment
-
-begin_comment
-comment|/* values for the Medium Type field - tapes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCSI_CMD_MS_MT_QIC_12T
+name|SCSI_RWE_ARRE
 value|0x40
 end_define
 
 begin_comment
-comment|/* 0.25", 12 tracks */
+comment|/* reallocate defective blocks on read */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCSI_CMD_MS_MT_QIC_24T
-value|0x44
+name|SCSI_RWE_TB
+value|0x20
 end_define
 
 begin_comment
-comment|/* 0.25", 24 tracks */
+comment|/* transfer unrecoverable block */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RWE_RC
+value|0x10
+end_define
+
+begin_comment
+comment|/* recovery may not cause delay: may lie */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RWE_EER
+value|0x08
+end_define
+
+begin_comment
+comment|/* use most expedient recovery, not best */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RWE_PER
+value|0x04
+end_define
+
+begin_comment
+comment|/* report recovered errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RWE_DTE
+value|0x02
+end_define
+
+begin_comment
+comment|/* stop after recovered error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RWE_DCR
+value|0x01
+end_define
+
+begin_comment
+comment|/* use ECC for detection only */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Format Device mode page.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_fmt
+block|{
+name|u_char
+name|fmt_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x03) */
+name|fmt_len
+decl_stmt|,
+comment|/* length (0x16) */
+name|fmt_tpzh
+decl_stmt|,
+comment|/* tracks per zone (MSB) */
+name|fmt_tpzl
+decl_stmt|,
+comment|/* tracks per zone (LSB) */
+name|fmt_aspzh
+decl_stmt|,
+comment|/* alternate sectors per zone (MSB) */
+name|fmt_aspzl
+decl_stmt|,
+comment|/* alternate sectors per zone (LSB) */
+name|fmt_atpzh
+decl_stmt|,
+comment|/* alternate tracks per zone (MSB) */
+name|fmt_atpzl
+decl_stmt|,
+comment|/* alternate tracks per zone (LSB) */
+name|fmt_atpvh
+decl_stmt|,
+comment|/* alternate tracks per volume (MSB) */
+name|fmt_atpvl
+decl_stmt|,
+comment|/* alternate tracks per volume (LSB) */
+name|fmt_spth
+decl_stmt|,
+comment|/* sectors per track (MSB) */
+name|fmt_sptl
+decl_stmt|,
+comment|/* sectors per track (LSB) */
+name|fmt_dbppsh
+decl_stmt|,
+comment|/* data bytes per physical sector (MSB) */
+name|fmt_dbppsl
+decl_stmt|,
+comment|/* data bytes per physical sector (LSB) */
+name|fmt_ilh
+decl_stmt|,
+comment|/* interleave (MSB) */
+name|fmt_ill
+decl_stmt|,
+comment|/* interleave (LSB) */
+name|fmt_tsfh
+decl_stmt|,
+comment|/* track skew factor (MSB) */
+name|fmt_tsfl
+decl_stmt|,
+comment|/* track skew factor (LSB) */
+name|fmt_csfh
+decl_stmt|,
+comment|/* cylinder skew factor (MSB) */
+name|fmt_csfl
+decl_stmt|,
+comment|/* cylinder skew factor (LSB) */
+name|fmt_flags
+decl_stmt|,
+comment|/* flags, see below */
+name|fmt_xxx
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* reserved */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* fmt_flags. Note, HSEC|SSEC meaning varies all over the map! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_FMT_HSEC
+value|0x80
+end_define
+
+begin_comment
+comment|/* hard sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_FMT_SSEC
+value|0x40
+end_define
+
+begin_comment
+comment|/* soft sector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_FMT_RMB
+value|0x20
+end_define
+
+begin_comment
+comment|/* removable media */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_FMT_SURF
+value|0x10
+end_define
+
+begin_comment
+comment|/* format by surface (vs. by cylinder) */
+end_comment
+
+begin_comment
+comment|/*			0x0f	   reserved */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Rigid Disk Geometry mode page.  * N.B.: CDC Wren V, at least, does not include rpm.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_rdgeom
+block|{
+name|u_char
+name|rd_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x04) */
+name|rd_len
+decl_stmt|,
+comment|/* length (0x16) */
+name|rd_ncylh
+decl_stmt|,
+comment|/* number of cylinders (MSB) */
+name|rd_ncylm
+decl_stmt|,
+comment|/* number of cylinders */
+name|rd_ncyll
+decl_stmt|,
+comment|/* number of cylinders (LSB) */
+name|rd_nheads
+decl_stmt|,
+comment|/* number of heads */
+name|rd_wpcylh
+decl_stmt|,
+comment|/* start cyl for write precomp. (MSB) */
+name|rd_wpcylm
+decl_stmt|,
+comment|/* start cyl for write precomp. */
+name|rd_wpcyll
+decl_stmt|,
+comment|/* start cyl for write precomp. (LSB) */
+name|rd_rwcylh
+decl_stmt|,
+comment|/* start cyl for reduced write current (MSB) */
+name|rd_rwcylm
+decl_stmt|,
+comment|/* start cyl for reduced write current */
+name|rd_rwcyll
+decl_stmt|,
+comment|/* start cyl for reduced write current (LSB) */
+name|rd_steph
+decl_stmt|,
+comment|/* drive step rate (.1 us units) (MSB) */
+name|rd_stepl
+decl_stmt|,
+comment|/* drive step rate (LSB) */
+name|rd_lcylh
+decl_stmt|,
+comment|/* landing zone cylinder (MSB) */
+name|rd_lcylm
+decl_stmt|,
+comment|/* landing zone cylinder */
+name|rd_lcyll
+decl_stmt|,
+comment|/* landing zone cylinder (LSB) */
+name|rd_rpl
+decl_stmt|,
+comment|/* spindle synch control, see below */
+name|rd_roff
+decl_stmt|,
+comment|/* rotational offset (for rpl) */
+name|rd_xxx1
+decl_stmt|,
+comment|/* reserved */
+name|rd_rpmh
+decl_stmt|,
+comment|/* medium rotation rate (rpm) (MSB) */
+name|rd_rpml
+decl_stmt|,
+comment|/* medium rotation rate (rpm) (LSB) */
+name|rd_xxx2
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* reserved */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* values for rd_rpl. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RD_RPL_MASK
+value|0x03
+end_define
+
+begin_comment
+comment|/* mask for RPL field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RD_RPL_NONE
+value|0x00
+end_define
+
+begin_comment
+comment|/* sync disabled or not supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RD_RPL_SLAVE
+value|0x01
+end_define
+
+begin_comment
+comment|/* disk is a Slave */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RD_RPL_MASTER
+value|0x02
+end_define
+
+begin_comment
+comment|/* disk is a Master */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_RD_RPL_MCONTROL
+value|0x03
+end_define
+
+begin_comment
+comment|/* disk is a Master Control */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Verify Error Recovery mode page.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_verrrec
+block|{
+name|u_char
+name|v_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x07) */
+name|v_len
+decl_stmt|,
+comment|/* length (0x0a) */
+name|v_flags
+decl_stmt|,
+comment|/* flags, see below */
+name|v_verify_retry
+decl_stmt|,
+comment|/* verify retry count */
+name|v_corr_span
+decl_stmt|,
+comment|/* verify correction span */
+name|v_xxx
+index|[
+literal|5
+index|]
+decl_stmt|,
+comment|/* reserved */
+name|v_rtlh
+decl_stmt|,
+comment|/* verify recovery time limit (MSB) */
+name|v_rtll
+decl_stmt|;
+comment|/* verify recovery time limit (LSB) */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCSI_V_EER
+value|0x08
+end_define
+
+begin_comment
+comment|/* use most expedient recovery, not best */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_V_PER
+value|0x04
+end_define
+
+begin_comment
+comment|/* report recovered errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_V_DTE
+value|0x02
+end_define
+
+begin_comment
+comment|/* stop after recovered error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_V_DCR
+value|0x01
+end_define
+
+begin_comment
+comment|/* use ECC for detection only */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Caching mode page.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_cache
+block|{
+name|u_char
+name|cache_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x08) */
+name|cache_len
+decl_stmt|,
+comment|/* length (0x0a) */
+name|cache_flags
+decl_stmt|,
+comment|/* flags, see below */
+name|cache_reten
+decl_stmt|,
+comment|/* cache retention priorities (rd + wr) */
+name|cache_dptlh
+decl_stmt|,
+comment|/* disable prefetch transfer length (MSB) */
+name|cache_dptll
+decl_stmt|,
+comment|/* disable prefetch transfer length (LSB) */
+name|cache_minpfh
+decl_stmt|,
+comment|/* minimum prefetch (MSB) */
+name|cache_minpfl
+decl_stmt|,
+comment|/* minimum prefetch (LSB) */
+name|cache_maxpfh
+decl_stmt|,
+comment|/* maximum prefetch (MSB) */
+name|cache_maxpfl
+decl_stmt|,
+comment|/* maximum prefetch (LSB) */
+name|cache_mpch
+decl_stmt|,
+comment|/* maximum prefetch ceiling (MSB) */
+name|cache_mpcl
+decl_stmt|;
+comment|/* maximum prefetch ceiling (LSB) */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_WCE
+value|0x04
+end_define
+
+begin_comment
+comment|/* write cache enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_MF
+value|0x02
+end_define
+
+begin_comment
+comment|/* if set, prefetch depends on xfer length */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_RCD
+value|0x01
+end_define
+
+begin_comment
+comment|/* read cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_RDPOLICY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_WRPOLICY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* use target default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_KEEPPF
+value|1
+end_define
+
+begin_comment
+comment|/* keep prefetch data over cmd data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CACHE_KEEPCMD
+value|15
+end_define
+
+begin_comment
+comment|/* keep cmd data over prefetch data */
+end_comment
+
+begin_comment
+comment|/*  * Structure of a Control Mode mode page.  */
+end_comment
+
+begin_struct
+struct|struct
+name|scsi_page_ctlmode
+block|{
+name|u_char
+name|cm_psc
+decl_stmt|,
+comment|/* saveable flag + code (0x0a) */
+name|cm_len
+decl_stmt|,
+comment|/* length (0x06) */
+name|cm_rlec
+decl_stmt|,
+comment|/* report log-activity exception condition */
+name|cm_qctl
+decl_stmt|,
+comment|/* queue control (below) */
+name|cm_ecaaen
+decl_stmt|,
+comment|/* ECA and AEN flags (below) */
+name|cm_xxx
+decl_stmt|,
+comment|/* reserved */
+name|cm_aenholdh
+decl_stmt|,
+comment|/* AEN holdoff period (ms) (MSB) */
+name|cm_aenholdl
+decl_stmt|;
+comment|/* AEN holdoff period (ms) (LSB) */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_RLEC
+value|0x01
+end_define
+
+begin_comment
+comment|/* RLEC flag occupies only low bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_QMOD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> 4)
+end_define
+
+begin_comment
+comment|/* queue algorithm modifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_QERR
+value|0x02
+end_define
+
+begin_comment
+comment|/* abort cmd queue after error */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_DQUE
+value|0x01
+end_define
+
+begin_comment
+comment|/* disable tagged queueing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_ECA
+value|0x80
+end_define
+
+begin_comment
+comment|/* enable Extended Contingent Alliance */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_RAENP
+value|0x04
+end_define
+
+begin_comment
+comment|/* target may do Async Err Notif after init */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_UAAENP
+value|0x02
+end_define
+
+begin_comment
+comment|/* target may do AEN for Unit Attention */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCSI_CM_EAENP
+value|0x01
+end_define
+
+begin_comment
+comment|/* target may do AEN for deferred errors */
 end_comment
 
 begin_comment
