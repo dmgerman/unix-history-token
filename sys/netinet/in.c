@@ -2109,11 +2109,21 @@ return|;
 case|case
 name|SIOCDIFADDR
 case|:
+comment|/* 		 * in_ifscrub kills the interface route. 		 */
 name|in_ifscrub
 argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|)
+expr_stmt|;
+comment|/* 		 * in_ifadown gets rid of all the rest of 		 * the routes.  This is not quite the right 		 * thing to do, but at least if we are running 		 * a routing process they will come back. 		 */
+name|in_ifadown
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Protect from ipintr() traversing address list 		 * while we're modifying it. 		 */

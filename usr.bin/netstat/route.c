@@ -2932,12 +2932,14 @@ name|addr
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/* 	 * Don't print protocol-cloned routes unless -a. 	 */
+comment|/* 	 * Don't print cloned routes unless -a. 	 */
 if|if
 condition|(
 name|rt
 operator|->
-name|rt_parent
+name|rt_flags
+operator|&
+name|RTF_WASCLONED
 operator|&&
 operator|!
 name|aflag

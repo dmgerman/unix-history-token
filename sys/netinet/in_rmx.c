@@ -1439,7 +1439,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * This zaps old routes when the interface goes down.  * Currently it doesn't delete static routes; there are  * arguments one could make for both behaviors.  For the moment,  * we will adopt the Principle of Least Surprise and leave them  * alone (with the knowledge that this will not be enough for some  * people).  The ones we really want to get rid of are things like ARP  * entries, since the user might down the interface, walk over to a completely  * different network, and plug back in.  */
+comment|/*  * This zaps old routes (including ARP entries) when the interface  * address is deleted.  Previously it didn't delete static routes,  * and this caused some weird things to happen.  In particular, if  * you changed the address on an interface, and the default route  * was using this interface and address, outgoing datagrams still  * used the old address.  */
 end_comment
 
 begin_struct
@@ -1506,15 +1506,6 @@ operator|==
 name|ap
 operator|->
 name|ifa
-operator|&&
-operator|!
-operator|(
-name|rt
-operator|->
-name|rt_flags
-operator|&
-name|RTF_STATIC
-operator|)
 condition|)
 block|{
 comment|/* 		 * We need to disable the automatic prune that happens 		 * in this case in rtrequest() because it will blow 		 * away the pointers that rn_walktree() needs in order 		 * continue our descent.  We will end up deleting all 		 * the routes that rtrequest() would have in any case, 		 * so that behavior is not needed there. 		 */
@@ -1523,7 +1514,11 @@ operator|->
 name|rt_flags
 operator|&=
 operator|~
+operator|(
+name|RTF_CLONING
+operator||
 name|RTF_PRCLONING
+operator|)
 expr_stmt|;
 name|err
 operator|=
