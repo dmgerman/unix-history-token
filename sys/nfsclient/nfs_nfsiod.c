@@ -1178,12 +1178,7 @@ name|bp
 operator|->
 name|b_rcred
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 else|else
@@ -1198,12 +1193,7 @@ name|bp
 operator|->
 name|b_wcred
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 		 * If there are more than one iod on this mount, then defect 		 * so that the iods can be shared out fairly between the mounts 		 */

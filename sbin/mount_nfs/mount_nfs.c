@@ -543,12 +543,7 @@ init|=
 block|{
 name|NFS_ARGSVERSION
 block|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 sizeof|sizeof
 argument_list|(
@@ -560,11 +555,7 @@ name|SOCK_DGRAM
 block|,
 literal|0
 block|,
-operator|(
-name|u_char
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 literal|0
 block|,
@@ -590,11 +581,7 @@ comment|/* was: NQ_DEFLEASE */
 name|NFS_MAXDEADTHRESH
 block|,
 comment|/* was: NQ_DEADTHRESH */
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 block|,
 comment|/* args version 4 */
 name|NFS_MINATTRTIMO

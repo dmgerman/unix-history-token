@@ -624,12 +624,7 @@ literal|0
 condition|)
 name|nam
 operator|=
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 else|else
 block|{
@@ -832,7 +827,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|tslp = (struct nfssvc_sock *)0;
+block|tslp = NULL;
 comment|/* 	 * Add it to the list, as required. 	 */
 block|if (so->so_proto->pr_protocol == IPPROTO_UDP) { 		tslp = nfs_udpsock; 		if (tslp->ns_flag& SLP_VALID) { 			if (mynam != NULL) 				FREE(mynam, M_SONAME); 			return (EPERM); 		} 	}
 endif|#
@@ -1279,12 +1274,7 @@ if|if
 condition|(
 name|nfsd
 operator|==
-operator|(
-expr|struct
-name|nfsd
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 block|{
 name|nsd
@@ -1370,12 +1360,7 @@ name|nfsd
 operator|->
 name|nfsd_slp
 operator|==
-operator|(
-expr|struct
-name|nfssvc_sock
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|nfsd_head_flag
@@ -1430,12 +1415,7 @@ name|nfsd
 operator|->
 name|nfsd_slp
 operator|==
-operator|(
-expr|struct
-name|nfssvc_sock
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|nfsd_head_flag
@@ -1519,12 +1499,7 @@ operator|->
 name|nfsd_slp
 operator|)
 operator|==
-operator|(
-expr|struct
-name|nfssvc_sock
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 continue|continue;
 if|if
@@ -1716,12 +1691,7 @@ name|nfsd
 operator|->
 name|nfsd_slp
 operator|=
-operator|(
-expr|struct
-name|nfssvc_sock
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|nfsd
 operator|->
@@ -2055,12 +2025,7 @@ name|nd
 operator|->
 name|nd_mrep
 operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 case|case
 name|RC_REPLY
@@ -2133,12 +2098,7 @@ name|m_pkthdr
 operator|.
 name|rcvif
 operator|=
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 comment|/* 			 * For stream protocols, prepend a Sun RPC 			 * Record Mark. 			 */
 if|if
@@ -2499,12 +2459,7 @@ name|nsd
 operator|->
 name|nsd_nfsd
 operator|=
-operator|(
-expr|struct
-name|nfsd
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2590,12 +2545,7 @@ name|slp
 operator|->
 name|ns_fp
 operator|=
-operator|(
-expr|struct
-name|file
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 name|so
 operator|=
@@ -2635,12 +2585,7 @@ name|closef
 argument_list|(
 name|fp
 argument_list|,
-operator|(
-expr|struct
-name|thread
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
