@@ -163,10 +163,10 @@ name|printf_unfiltered
 argument_list|(
 literal|"Fetching register %s, got %0x\n"
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|regno
-index|]
+argument_list|)
 argument_list|,
 name|reg_buf
 index|[
@@ -196,10 +196,10 @@ name|printf_unfiltered
 argument_list|(
 literal|"fetch_interior_registers: fetching register %s\n"
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|regno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errno
@@ -354,7 +354,7 @@ condition|)
 block|{
 name|fprintf_unfiltered
 argument_list|(
-name|stderr
+name|gdb_stderr
 argument_list|,
 literal|"skipped %d frames from %x to %x; cfp was %x, now %x\n"
 argument_list|,
@@ -1144,10 +1144,10 @@ name|alloca
 argument_list|(
 name|strlen
 argument_list|(
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|regno
-index|]
+argument_list|)
 argument_list|)
 operator|+
 literal|30
@@ -1164,10 +1164,10 @@ name|strcat
 argument_list|(
 name|buffer
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|regno
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|perror_with_name
@@ -1194,10 +1194,10 @@ name|printf_unfiltered
 argument_list|(
 literal|"[reg %s(%d), offset in file %s=0x%0x, addr =0x%0x, =%0x]\n"
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|regno
-index|]
+argument_list|)
 argument_list|,
 name|regno
 argument_list|,

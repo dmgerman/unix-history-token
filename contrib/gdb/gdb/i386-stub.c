@@ -55,27 +55,25 @@ begin_comment
 comment|/* pointer to a function */
 end_comment
 
-begin_extern
-extern|extern putDebugChar(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|putDebugChar
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* write a single character      */
 end_comment
 
-begin_extern
-extern|extern getDebugChar(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|int
+name|getDebugChar
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* read and return a single char */
@@ -163,6 +161,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Number of registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUMREGS
+value|16
+end_define
+
+begin_comment
 comment|/* Number of bytes of registers.  */
 end_comment
 
@@ -170,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|NUMREGBYTES
-value|64
+value|(NUMREGS * 4)
 end_define
 
 begin_enum
@@ -222,9 +231,7 @@ begin_decl_stmt
 name|int
 name|registers
 index|[
-name|NUMREGBYTES
-operator|/
-literal|4
+name|NUMREGS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1816,15 +1823,11 @@ name|count
 index|]
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|putDebugChar
 argument_list|(
 name|ch
 argument_list|)
-condition|)
-return|return;
+expr_stmt|;
 name|checksum
 operator|+=
 name|ch
@@ -2788,6 +2791,87 @@ literal|"OK"
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'P'
+case|:
+comment|/* set the value of a single CPU register - return OK */
+block|{
+name|int
+name|regno
+decl_stmt|;
+name|ptr
+operator|=
+operator|&
+name|remcomInBuffer
+index|[
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|hexToInt
+argument_list|(
+operator|&
+name|ptr
+argument_list|,
+operator|&
+name|regno
+argument_list|)
+operator|&&
+operator|*
+name|ptr
+operator|++
+operator|==
+literal|'='
+condition|)
+if|if
+condition|(
+name|regno
+operator|>=
+literal|0
+operator|&&
+name|regno
+operator|<
+name|NUMREGS
+condition|)
+block|{
+name|hex2mem
+argument_list|(
+name|ptr
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|registers
+index|[
+name|regno
+index|]
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|remcomOutBuffer
+argument_list|,
+literal|"OK"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|strcpy
+argument_list|(
+name|remcomOutBuffer
+argument_list|,
+literal|"E01"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 comment|/* mAA..AA,LLLL  Read LLLL bytes at address AA..AA */
 case|case
 literal|'m'
@@ -3337,18 +3421,6 @@ init|=
 literal|1000000
 decl_stmt|;
 end_decl_stmt
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|void bogon() {   waitabit(); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void

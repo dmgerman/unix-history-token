@@ -1361,7 +1361,7 @@ condition|(
 literal|0
 comment|/* custom buffer */
 condition|)
-name|SetSetBuf
+name|SerSetBuf
 argument_list|(
 name|input_refnum
 argument_list|,
@@ -1424,7 +1424,11 @@ block|,
 name|mac_set_baud_rate
 block|,
 name|mac_set_stop_bits
-block|, }
+block|,
+name|mac_noop
+block|,
+comment|/* wait for output to drain */
+block|}
 decl_stmt|;
 end_decl_stmt
 

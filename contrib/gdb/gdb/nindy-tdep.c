@@ -25,6 +25,12 @@ directive|include
 file|"frame.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
 begin_comment
 comment|/* 'start_frame' is a variable in the NINDY runtime startup routine    that contains the frame pointer of the 'start' routine (the routine    that calls 'main').  By reading its contents out of remote memory,    we can tell where the frame chain ends:  backtraces should halt before    they display this frame.  */
 end_comment
@@ -37,8 +43,7 @@ name|chain
 parameter_list|,
 name|curframe
 parameter_list|)
-name|unsigned
-name|int
+name|CORE_ADDR
 name|chain
 decl_stmt|;
 name|struct

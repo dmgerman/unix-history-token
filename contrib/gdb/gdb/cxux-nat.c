@@ -2283,6 +2283,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|minsym
@@ -2390,6 +2394,10 @@ argument_list|,
 name|lms
 operator|.
 name|l_addr
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|,

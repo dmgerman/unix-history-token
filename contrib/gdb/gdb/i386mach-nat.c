@@ -93,6 +93,26 @@ directive|include
 file|<sys/core.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|fetch_core_registers
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|int
+operator|,
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|fetch_inferior_registers
@@ -484,8 +504,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 comment|/* Unused in this version */

@@ -51,6 +51,9 @@ begin_define
 define|#
 directive|define
 name|SIGTRAMP_START
+parameter_list|(
+name|pc
+parameter_list|)
 value|0xfdbfdfc0
 end_define
 
@@ -58,6 +61,9 @@ begin_define
 define|#
 directive|define
 name|SIGTRAMP_END
+parameter_list|(
+name|pc
+parameter_list|)
 value|0xfdbfe000
 end_define
 

@@ -82,6 +82,33 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* The m88k kernel aligns all instructions on 4-byte boundaries.  The    kernel also uses the least significant two bits for its own hocus    pocus.  When gdb receives an address from the kernel, it needs to    preserve those right-most two bits, but gdb also needs to be careful    to realize that those two bits are not really a part of the address    of an instruction.  Shrug.  */
+end_comment
+
+begin_function
+name|CORE_ADDR
+name|m88k_addr_bits_remove
+parameter_list|(
+name|addr
+parameter_list|)
+name|CORE_ADDR
+name|addr
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+name|addr
+operator|)
+operator|&
+operator|~
+literal|3
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* Given a GDB frame, determine the address of the calling function's frame.    This will be used to create a new GDB frame struct, and then    INIT_EXTRA_FRAME_INFO and INIT_FRAME_PC will be called for the new frame.     For us, the frame address is its stack pointer value, so we look up    the function prologue to determine the caller's sp value, and return it.  */
 end_comment
 
@@ -1252,7 +1279,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Put here the code to store, into a struct frame_saved_regs,    the addresses of the saved registers of frame described by FRAME_INFO.    This includes special registers such as pc and fp saved in special    ways in the stack frame.  sp is even more special:    the address we return for it IS the sp for the next frame.     We cache the result of doing this in the frame_cache_obstack, since    it is fairly expensive.  */
+comment|/* Put here the code to store, into a struct frame_saved_regs,    the addresses of the saved registers of frame described by FRAME_INFO.    This includes special registers such as pc and fp saved in special    ways in the stack frame.  sp is even more special:    the address we return for it IS the sp for the next frame.     We cache the result of doing this in the frame_obstack, since it is    fairly expensive.  */
 end_comment
 
 begin_function
@@ -1280,11 +1307,6 @@ name|frame_saved_regs
 modifier|*
 name|cache_fsr
 decl_stmt|;
-specifier|extern
-name|struct
-name|obstack
-name|frame_cache_obstack
-decl_stmt|;
 name|CORE_ADDR
 name|ip
 decl_stmt|;
@@ -1310,11 +1332,8 @@ expr|struct
 name|frame_saved_regs
 operator|*
 operator|)
-name|obstack_alloc
+name|frame_obstack_alloc
 argument_list|(
-operator|&
-name|frame_cache_obstack
-argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -1614,8 +1633,7 @@ parameter_list|)
 name|CORE_ADDR
 name|sp
 decl_stmt|;
-name|unsigned
-name|LONGEST
+name|ULONGEST
 name|word
 decl_stmt|;
 block|{

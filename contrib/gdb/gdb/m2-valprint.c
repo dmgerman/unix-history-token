@@ -33,6 +33,12 @@ directive|include
 file|"valprint.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"m2-lang.h"
+end_include
+
 begin_comment
 comment|/* FIXME:  For now, just explicitly declare c_val_print and use it instead */
 end_comment
@@ -44,6 +50,8 @@ parameter_list|(
 name|type
 parameter_list|,
 name|valaddr
+parameter_list|,
+name|embedded_offset
 parameter_list|,
 name|address
 parameter_list|,
@@ -65,6 +73,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|valaddr
+decl_stmt|;
+name|int
+name|embedded_offset
 decl_stmt|;
 name|CORE_ADDR
 name|address
@@ -100,6 +111,8 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
 name|CORE_ADDR
 operator|,
 name|GDB_FILE
@@ -123,6 +136,8 @@ argument_list|(
 name|type
 argument_list|,
 name|valaddr
+argument_list|,
+literal|0
 argument_list|,
 name|address
 argument_list|,

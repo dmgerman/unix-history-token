@@ -50,6 +50,36 @@ directive|include
 file|"inferior.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"command.h"
+end_include
+
+begin_comment
+comment|/* Hook to relocate symbols at runtime.  If gdb is build natively, this    hook is initialized in by rs6000-nat.c.  If not, it is currently left    NULL and never called. */
+end_comment
+
+begin_macro
+name|void
+argument_list|(
+argument|*xcoff_relocate_symtab_hook
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+name|int
+operator|)
+argument_list|)
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -589,7 +619,16 @@ init|=
 name|vmap
 decl_stmt|;
 comment|/* Check for new shared libraries loaded with load ().  */
-name|xcoff_relocate_symtab
+if|if
+condition|(
+name|xcoff_relocate_symtab_hook
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|xcoff_relocate_symtab_hook
+call|)
 argument_list|(
 name|inferior_pid
 argument_list|)
@@ -719,7 +758,16 @@ name|dont_repeat
 argument_list|()
 expr_stmt|;
 comment|/* Check for new shared libraries loaded with load ().  */
-name|xcoff_relocate_symtab
+if|if
+condition|(
+name|xcoff_relocate_symtab_hook
+operator|!=
+name|NULL
+condition|)
+call|(
+modifier|*
+name|xcoff_relocate_symtab_hook
+call|)
 argument_list|(
 name|inferior_pid
 argument_list|)

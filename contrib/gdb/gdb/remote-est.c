@@ -296,156 +296,383 @@ specifier|static
 name|struct
 name|monitor_ops
 name|est_cmds
-init|=
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_est_cmds
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|est_cmds
+operator|.
+name|flags
+operator|=
 name|MO_CLR_BREAK_USES_ADDR
 operator||
 name|MO_FILL_USES_ADDR
 operator||
 name|MO_NEED_REGDUMP_AFTER_CONT
-block|,
+operator||
+name|MO_SREC_ACK
+operator||
+name|MO_SREC_ACK_PLUS
+expr_stmt|;
+name|est_cmds
+operator|.
+name|init
+operator|=
 name|est_inits
-block|,
+expr_stmt|;
 comment|/* Init strings */
+name|est_cmds
+operator|.
+name|cont
+operator|=
 literal|"go\r"
-block|,
+expr_stmt|;
 comment|/* continue command */
+name|est_cmds
+operator|.
+name|step
+operator|=
 literal|"sidr\r"
-block|,
+expr_stmt|;
 comment|/* single step */
+name|est_cmds
+operator|.
+name|stop
+operator|=
 literal|"\003"
-block|,
+expr_stmt|;
 comment|/* ^C interrupts the program */
+name|est_cmds
+operator|.
+name|set_break
+operator|=
 literal|"sb %x\r"
-block|,
+expr_stmt|;
 comment|/* set a breakpoint */
+name|est_cmds
+operator|.
+name|clr_break
+operator|=
 literal|"rb %x\r"
-block|,
+expr_stmt|;
 comment|/* clear a breakpoint */
+name|est_cmds
+operator|.
+name|clr_all_break
+operator|=
 literal|"rb\r"
-block|,
+expr_stmt|;
 comment|/* clear all breakpoints */
+name|est_cmds
+operator|.
+name|fill
+operator|=
 literal|"bfb %x %x %x\r"
-block|,
+expr_stmt|;
 comment|/* fill (start end val) */
-block|{
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdb
+operator|=
 literal|"smb %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdb (addr, value) */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdw
+operator|=
 literal|"smw %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdw (addr, value) */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdl
+operator|=
 literal|"sml %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdl (addr, value) */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdll (addr, value) */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|est_cmds
+operator|.
+name|setmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdb
+operator|=
 literal|"dmb %x %x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdb (addr, len) */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdw
+operator|=
 literal|"dmw %x %x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdw (addr, len) */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdl
+operator|=
 literal|"dml %x %x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdl (addr, len) */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdll (addr, len) */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|resp_delim
+operator|=
 literal|": "
-block|,
+expr_stmt|;
 comment|/* getmem.resp_delim */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term */
+name|est_cmds
+operator|.
+name|getmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term_cmd */
-block|}
-block|,
-block|{
+name|est_cmds
+operator|.
+name|setreg
+operator|.
+name|cmd
+operator|=
 literal|"sr %s %x\r"
-block|,
+expr_stmt|;
 comment|/* setreg.cmd (name, value) */
+name|est_cmds
+operator|.
+name|setreg
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|est_cmds
+operator|.
+name|setreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|est_cmds
+operator|.
+name|setreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
+expr_stmt|;
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|est_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+operator|=
 literal|"dr %s\r"
-block|,
+expr_stmt|;
 comment|/* getreg.cmd (name) */
+name|est_cmds
+operator|.
+name|getreg
+operator|.
+name|resp_delim
+operator|=
 literal|" = "
-block|,
+expr_stmt|;
 comment|/* getreg.resp_delim */
+name|est_cmds
+operator|.
+name|getreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getreg.term */
+name|est_cmds
+operator|.
+name|getreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
+expr_stmt|;
 comment|/* getreg.term_cmd */
-block|}
-block|,
+name|est_cmds
+operator|.
+name|dump_registers
+operator|=
 literal|"dr\r"
-block|,
+expr_stmt|;
 comment|/* dump_registers */
+name|est_cmds
+operator|.
+name|register_pattern
+operator|=
 literal|"\\(\\w+\\) = \\([0-9a-fA-F]+\\)"
-block|,
+expr_stmt|;
 comment|/* register_pattern */
+name|est_cmds
+operator|.
+name|supply_register
+operator|=
 name|est_supply_register
-block|,
+expr_stmt|;
 comment|/* supply_register */
+name|est_cmds
+operator|.
+name|load_routine
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load_routine (defaults to SRECs) */
+name|est_cmds
+operator|.
+name|load
+operator|=
 literal|"dl\r"
-block|,
+expr_stmt|;
 comment|/* download command */
+name|est_cmds
+operator|.
+name|loadresp
+operator|=
 literal|"+"
-block|,
+expr_stmt|;
 comment|/* load response */
+name|est_cmds
+operator|.
+name|prompt
+operator|=
 literal|">BKM>"
-block|,
+expr_stmt|;
 comment|/* monitor command prompt */
+name|est_cmds
+operator|.
+name|line_term
+operator|=
 literal|"\r"
-block|,
+expr_stmt|;
 comment|/* end-of-line terminator */
+name|est_cmds
+operator|.
+name|cmd_end
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* optional command terminator */
+name|est_cmds
+operator|.
+name|target
+operator|=
 operator|&
 name|est_ops
-block|,
+expr_stmt|;
 comment|/* target operations */
+name|est_cmds
+operator|.
+name|stopbits
+operator|=
 name|SERIAL_1_STOPBITS
-block|,
+expr_stmt|;
 comment|/* number of stop bits */
+name|est_cmds
+operator|.
+name|regnames
+operator|=
 name|est_regnames
-block|,
+expr_stmt|;
 comment|/* registers names */
+name|est_cmds
+operator|.
+name|magic
+operator|=
 name|MONITOR_OPS_MAGIC
+expr_stmt|;
 comment|/* magic */
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
+
+begin_comment
+comment|/* init_est_cmds */
+end_comment
 
 begin_function
 specifier|static
@@ -482,6 +709,9 @@ name|void
 name|_initialize_est
 parameter_list|()
 block|{
+name|init_est_cmds
+argument_list|()
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Common things used by the various *gnu-nat.c files     Copyright (C) 1995 Free Software Foundation, Inc.     Written by Miles Bader<miles@gnu.ai.mit.edu>     The GNU Hurd is free software; you can redistribute it and/or    modify it under the terms of the GNU General Public License as    published by the Free Software Foundation; either version 2, or (at    your option) any later version.     The GNU Hurd is distributed in the hope that it will be useful, but    WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+comment|/* Common things used by the various *gnu-nat.c files    Copyright (C) 1995, 1996 Free Software Foundation, Inc.  Written by Miles Bader<miles@gnu.ai.mit.edu>  The GNU Hurd is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  The GNU Hurd is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,11 @@ comment|/* Default sc when gdb has control. */
 name|int
 name|resume_sc
 decl_stmt|;
-comment|/* Sc resulting form the last resume. */
+comment|/* Sc resulting from the last resume. */
+name|int
+name|detach_sc
+decl_stmt|;
+comment|/* SC to leave around when detaching 				   from program. */
 name|thread_state_data_t
 name|state
 decl_stmt|;
@@ -132,6 +136,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* True if thread_abort has been called.  */
+name|int
+name|dead
+range|:
+literal|1
+decl_stmt|;
+comment|/* We happen to know it's actually dead. */
 comment|/* Bit mask of registers fetched by gdb.  This is used when we re-fetch      STATE after aborting the thread, to detect that gdb may have out-of-date      information.  */
 name|unsigned
 name|long

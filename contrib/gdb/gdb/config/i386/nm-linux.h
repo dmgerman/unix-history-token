@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native support for linux, for GDB, the GNU debugger.    Copyright (C) 1986, 1987, 1989, 1992, 1996    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native support for GNU/Linux, for GDB, the GNU debugger.    Copyright (C) 1986, 1987, 1989, 1992, 1996, 1998    Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -63,17 +63,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Linux uses the SYSV i386v-nat.c support, but doesn't have<sys/reg.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NO_SYS_REG_H
-end_define
-
-begin_comment
-comment|/* Linux supports the 386 hardware debugging registers.  */
+comment|/* GNU/Linux supports the 386 hardware debugging registers.  */
 end_comment
 
 begin_define
@@ -133,7 +123,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|i386_insert_watchpoint (inferior_pid, addr, len, 2)
+value|i386_insert_watchpoint (inferior_pid, addr, len, type)
 end_define
 
 begin_define
@@ -161,6 +151,12 @@ directive|ifdef
 name|HAVE_LINK_H
 end_ifdef
 
+begin_define
+define|#
+directive|define
+name|SVR4_SHARED_LIBS
+end_define
+
 begin_include
 include|#
 directive|include
@@ -171,32 +167,66 @@ begin_comment
 comment|/* Support for shared libraries. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SVR4_SHARED_LIBS
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_decl_stmt
+specifier|extern
+name|CORE_ADDR
+name|i386_stopped_by_watchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|/* We need prototypes for these somewhere, and this file is the logical    spot, but they can't go here because CORE_ADDR is not defined at the    time this file is included in defs.h.  FIXME - fnf */
-end_comment
+begin_decl_stmt
+specifier|extern
+name|int
+name|i386_insert_watchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|pid
+operator|,
+name|CORE_ADDR
+name|addr
+operator|,
+name|int
+name|len
+operator|,
+name|int
+name|rw
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_endif
-unit|extern CORE_ADDR i386_stopped_by_watchpoint PARAM ((int)); extern int i386_insert_watchpoint PARAMS ((int pid, CORE_ADDR addr, int len, int rw)); extern int i386_remove_watchpoint PARAMS ((int pid, CORE_ADDR addr, int len));
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+specifier|extern
+name|int
+name|i386_remove_watchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|pid
+operator|,
+name|CORE_ADDR
+name|addr
+operator|,
+name|int
+name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

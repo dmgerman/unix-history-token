@@ -220,60 +220,144 @@ specifier|static
 name|struct
 name|monitor_ops
 name|op50n_cmds
-init|=
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_op50n_cmds
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|op50n_cmds
+operator|.
+name|flags
+operator|=
 name|MO_CLR_BREAK_USES_ADDR
 comment|/*| MO_GETMEM_READ_SINGLE*/
-block|,
+expr_stmt|;
 comment|/* flags */
+name|op50n_cmds
+operator|.
+name|init
+operator|=
 name|op50n_inits
-block|,
+expr_stmt|;
 comment|/* Init strings */
+name|op50n_cmds
+operator|.
+name|cont
+operator|=
 literal|"g\r"
-block|,
+expr_stmt|;
 comment|/* continue command */
+name|op50n_cmds
+operator|.
+name|step
+operator|=
 literal|"t\r"
-block|,
+expr_stmt|;
 comment|/* single step */
+name|op50n_cmds
+operator|.
+name|stop
+operator|=
 literal|"\003.\r"
-block|,
+expr_stmt|;
 comment|/* Interrupt char */
+name|op50n_cmds
+operator|.
+name|set_break
+operator|=
 literal|"b %x\r"
-block|,
+expr_stmt|;
 comment|/* set a breakpoint */
-literal|"b %x,0\r"
-block|,
+name|op50n_cmds
+operator|.
+name|clr_break
+operator|=
+literal|"b %x;0\r"
+expr_stmt|;
 comment|/* clear breakpoint at addr */
+name|op50n_cmds
+operator|.
+name|clr_all_break
+operator|=
 literal|"bx\r"
-block|,
+expr_stmt|;
 comment|/* clear all breakpoints */
+name|op50n_cmds
+operator|.
+name|fill
+operator|=
 literal|"fx %x s%x %x\r"
-block|,
+expr_stmt|;
 comment|/* memory fill cmd (addr, len, val) */
-block|{
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdb
+operator|=
 literal|"sx %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdb (addr, value) */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdw
+operator|=
 literal|"sh %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdw (addr, value) */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdl
+operator|=
 literal|"s %x %x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdl (addr, value) */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdll (addr, value) */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.resp_delim */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.term */
+name|op50n_cmds
+operator|.
+name|setmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.term_cmd */
-block|}
-block|,
 if|#
 directive|if
 literal|0
@@ -291,107 +375,244 @@ block|" ",
 comment|/* getmem.term */
 block|".\r",
 comment|/* getmem.term_cmd */
-block|},
+block|} ;
 else|#
 directive|else
-block|{
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdb
+operator|=
 literal|"dx %x s%x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdb (addr, len) */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdw
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdw (addr, len) */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdl
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdl (addr, len) */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdll (addr, len) */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|resp_delim
+operator|=
 literal|" : "
-block|,
+expr_stmt|;
 comment|/* getmem.resp_delim */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term */
+name|op50n_cmds
+operator|.
+name|getmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term_cmd */
-block|}
-block|,
 endif|#
 directive|endif
-block|{
+name|op50n_cmds
+operator|.
+name|setreg
+operator|.
+name|cmd
+operator|=
 literal|"x %s %x\r"
-block|,
+expr_stmt|;
 comment|/* setreg.cmd (name, value) */
+name|op50n_cmds
+operator|.
+name|setreg
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|op50n_cmds
+operator|.
+name|setreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|op50n_cmds
+operator|.
+name|setreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|op50n_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+operator|=
 literal|"x %s\r"
-block|,
+expr_stmt|;
 comment|/* getreg.cmd (name) */
+name|op50n_cmds
+operator|.
+name|getreg
+operator|.
+name|resp_delim
+operator|=
 literal|"="
-block|,
+expr_stmt|;
 comment|/* getreg.resp_delim */
+name|op50n_cmds
+operator|.
+name|getreg
+operator|.
+name|term
+operator|=
 literal|" "
-block|,
+expr_stmt|;
 comment|/* getreg.term */
+name|op50n_cmds
+operator|.
+name|getreg
+operator|.
+name|term_cmd
+operator|=
 literal|".\r"
-block|,
+expr_stmt|;
 comment|/* getreg.term_cmd */
-block|}
-block|,
+name|op50n_cmds
+operator|.
+name|dump_registers
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* dump_registers */
+name|op50n_cmds
+operator|.
+name|register_pattern
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* register_pattern */
+name|op50n_cmds
+operator|.
+name|supply_register
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* supply_register */
+name|op50n_cmds
+operator|.
+name|load_routine
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load routine */
+name|op50n_cmds
+operator|.
+name|load
+operator|=
 literal|"r 0\r"
-block|,
+expr_stmt|;
 comment|/* download command */
+name|op50n_cmds
+operator|.
+name|loadresp
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load response */
+name|op50n_cmds
+operator|.
+name|prompt
+operator|=
 literal|"\n#"
-block|,
+expr_stmt|;
 comment|/* monitor command prompt */
+name|op50n_cmds
+operator|.
+name|line_term
+operator|=
 literal|"\r"
-block|,
+expr_stmt|;
 comment|/* end-of-command delimitor */
+name|op50n_cmds
+operator|.
+name|cmd_end
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* optional command terminator */
+name|op50n_cmds
+operator|.
+name|target
+operator|=
 operator|&
 name|op50n_ops
-block|,
+expr_stmt|;
 comment|/* target operations */
+name|op50n_cmds
+operator|.
+name|stopbits
+operator|=
 name|SERIAL_1_STOPBITS
-block|,
+expr_stmt|;
 comment|/* number of stop bits */
+name|op50n_cmds
+operator|.
+name|regnames
+operator|=
 name|op50n_regnames
-block|,
+expr_stmt|;
 comment|/* register names */
+name|op50n_cmds
+operator|.
+name|magic
+operator|=
 name|MONITOR_OPS_MAGIC
+expr_stmt|;
 comment|/* magic */
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -428,6 +649,9 @@ name|void
 name|_initialize_op50n
 parameter_list|()
 block|{
+name|init_op50n_cmds
+argument_list|()
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&

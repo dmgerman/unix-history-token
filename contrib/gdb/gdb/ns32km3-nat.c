@@ -137,7 +137,7 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
-name|l1a
+name|l0b
 argument_list|)
 block|,
 name|REG_F_OFFSET
@@ -147,7 +147,7 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
-name|l3a
+name|l2b
 argument_list|)
 block|,
 name|REG_F_OFFSET
@@ -157,7 +157,7 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
-name|l5a
+name|l4b
 argument_list|)
 block|,
 name|REG_F_OFFSET
@@ -167,7 +167,7 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
-name|l7a
+name|l6b
 argument_list|)
 block|,
 name|REG_N_OFFSET
@@ -202,7 +202,17 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
+name|l1a
+argument_list|)
+block|,
+name|REG_F_OFFSET
+argument_list|(
 name|l2a
+argument_list|)
+block|,
+name|REG_F_OFFSET
+argument_list|(
+name|l3a
 argument_list|)
 block|,
 name|REG_F_OFFSET
@@ -212,12 +222,33 @@ argument_list|)
 block|,
 name|REG_F_OFFSET
 argument_list|(
-argument|l6a
+name|l5a
 argument_list|)
-comment|/* @@@ 532 has more double length floating point regs, not accessed currently */
-block|}
+block|,
+name|REG_F_OFFSET
+argument_list|(
+name|l6a
+argument_list|)
+block|,
+name|REG_F_OFFSET
+argument_list|(
+name|l7a
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|REG_ADDRESS
+parameter_list|(
+name|state
+parameter_list|,
+name|regnum
+parameter_list|)
+value|((char *)(state)+reg_offset[regnum])
+end_define
 
 begin_comment
 comment|/* Fetch COUNT contiguous registers from thread STATE starting from REGNUM  * Caller knows that the regs handled in one transaction are of same size.  */
@@ -333,7 +364,7 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|message
+name|warning
 argument_list|(
 literal|"fetch_inferior_registers: %s "
 argument_list|,
@@ -475,7 +506,7 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
-name|message
+name|warning
 argument_list|(
 literal|"store_inferior_registers (get): %s"
 argument_list|,
@@ -549,7 +580,7 @@ name|ret
 operator|!=
 name|KERN_SUCCESS
 condition|)
-name|message
+name|warning
 argument_list|(
 literal|"store_inferior_registers (set): %s"
 argument_list|,

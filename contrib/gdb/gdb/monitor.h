@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface ROM monitors.  *  Copyright 1990, 1991, 1992, 1996 Free Software Foundation, Inc.  *  Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.  *  * This file is part of GDB.  *   * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *  * You should have received a copy of the GNU General Public License  * along with this program; if not, write to the Free Software  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Definitions for remote debugging interface for ROM monitors.     Copyright 1990, 1991, 1992, 1996 Free Software Foundation, Inc.     Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.       This file is part of GDB.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.       This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.       You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
 end_comment
 
 begin_include
@@ -10,7 +10,7 @@ file|"serial.h"
 end_include
 
 begin_comment
-comment|/* This structure describes the strings necessary to give small command    sequences to the monitor, and parse the response.     CMD is the actual command typed at the monitor.  Usually this has embedded    sequences ala printf, which are substituted with the arguments appropriate    to that type of command.  Ie: to examine a register, we substitute the    register name for the first arg.  To modify memory, we substitute the memory    location and the new contents for the first and second args, etc...     RESP_DELIM used to home in on the response string, and is used to    disambiguate the answer within the pile of text returned by the monitor.    This should be a unique string that immediately precedes the answer.  Ie: if    your monitor prints out `PC:  00000001= ' in response to asking for the PC,    you should use `:  ' as the RESP_DELIM.  RESP_DELIM may be NULL if the res-    ponse is going to be ignored, or has no particular leading text.     TERM is the string that the monitor outputs to indicate that it is idle, and    waiting for input.  This is usually a prompt of some sort.  In the previous    example, it would be `= '.  It is important that TERM really means that the    monitor is idle, otherwise GDB may try to type at it when it isn't ready for    input.  This is a problem because many monitors cannot deal with type-ahead.    TERM may be NULL if the normal prompt is output.     TERM_CMD is used to quit out of the subcommand mode and get back to the main    prompt.  TERM_CMD may be NULL if it isn't necessary.  It will also be    ignored if TERM is NULL. */
+comment|/* This structure describes the strings necessary to give small command    sequences to the monitor, and parse the response.     CMD is the actual command typed at the monitor.  Usually this has    embedded sequences ala printf, which are substituted with the    arguments appropriate to that type of command.  Ie: to examine a    register, we substitute the register name for the first arg.  To    modify memory, we substitute the memory location and the new    contents for the first and second args, etc...     RESP_DELIM used to home in on the response string, and is used to    disambiguate the answer within the pile of text returned by the    monitor.  This should be a unique string that immediately precedes    the answer.  Ie: if your monitor prints out `PC: 00000001= ' in    response to asking for the PC, you should use `: ' as the    RESP_DELIM.  RESP_DELIM may be NULL if the res- ponse is going to    be ignored, or has no particular leading text.     TERM is the string that the monitor outputs to indicate that it is    idle, and waiting for input.  This is usually a prompt of some    sort.  In the previous example, it would be `= '.  It is important    that TERM really means that the monitor is idle, otherwise GDB may    try to type at it when it isn't ready for input.  This is a problem    because many monitors cannot deal with type-ahead.  TERM may be    NULL if the normal prompt is output.     TERM_CMD is used to quit out of the subcommand mode and get back to    the main prompt.  TERM_CMD may be NULL if it isn't necessary.  It    will also be ignored if TERM is NULL.  */
 end_comment
 
 begin_struct
@@ -207,6 +207,56 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Download routine */
+name|int
+argument_list|(
+argument|*dumpregs
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* routine to dump all registers */
+name|int
+argument_list|(
+argument|*continue_hook
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Emit the continue command */
+name|int
+argument_list|(
+argument|*wait_filter
+argument_list|)
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|buf
+operator|,
+comment|/* Maybe contains registers */
+name|int
+name|bufmax
+operator|,
+name|int
+operator|*
+name|response_length
+operator|,
+expr|struct
+name|target_waitstatus
+operator|*
+name|status
+operator|)
+argument_list|)
+expr_stmt|;
 name|char
 modifier|*
 name|load
@@ -256,6 +306,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/* The monitor ops magic number, used to detect if an ops structure doesn't    have the right number of entries filled in. */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -264,7 +318,11 @@ value|600925
 end_define
 
 begin_comment
-comment|/* Flag defintions */
+comment|/* Flag definitions. */
+end_comment
+
+begin_comment
+comment|/* If set, then clear breakpoint command uses address, otherwise it    uses an index returned by the monitor.  */
 end_comment
 
 begin_define
@@ -275,7 +333,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* If set, then clear breakpoint command 					   uses address, otherwise it uses an index 					   returned by the monitor.  */
+comment|/* If set, then memory fill command uses STARTADDR, ENDADDR+1, VALUE    as args, else it uses STARTADDR, LENGTH, VALUE as args. */
 end_comment
 
 begin_define
@@ -286,7 +344,7 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* If set, then memory fill command uses 					   STARTADDR, ENDADDR+1, VALUE as args, else it 					   uses STARTADDR, LENGTH, VALUE as args. */
+comment|/* If set, then monitor doesn't automatically supply register dump    when coming back after a continue.  */
 end_comment
 
 begin_define
@@ -297,7 +355,7 @@ value|0x4
 end_define
 
 begin_comment
-comment|/* If set, then monitor doesn't auto- 					   matically supply register dump when 					   coming back after a continue.  */
+comment|/* getmem needs start addr and end addr */
 end_comment
 
 begin_define
@@ -308,7 +366,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* getmem needs start addr and end addr */
+comment|/* getmem can only read one loc at a time */
 end_comment
 
 begin_define
@@ -319,7 +377,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* getmem can only read one loc at a time */
+comment|/* handle \r\n combinations */
 end_comment
 
 begin_define
@@ -330,7 +388,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* handle \r\n combinations */
+comment|/* don't expect echos in monitor_open */
 end_comment
 
 begin_define
@@ -341,7 +399,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* don't expect echos in monitor_open */
+comment|/* If set, send break to stop monitor */
 end_comment
 
 begin_define
@@ -352,199 +410,179 @@ value|0x80
 end_define
 
 begin_comment
-comment|/* If set, send break to stop monitor */
+comment|/* If set, target sends an ACK after each S-record */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|monitor_ops
-modifier|*
-name|current_monitor
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
-name|LOADTYPES
-value|(current_monitor->loadtypes)
+name|MO_SREC_ACK
+value|0x100
 end_define
 
-begin_define
-define|#
-directive|define
-name|LOADPROTOS
-value|(current_monitor->loadprotos)
-end_define
+begin_comment
+comment|/* Allow 0x prefix on addresses retured from monitor */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|INIT_CMD
-value|(current_monitor->init)
+name|MO_HEX_PREFIX
+value|0x200
 end_define
+
+begin_comment
+comment|/* Some monitors require a different command when starting a program */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CONT_CMD
-value|(current_monitor->cont)
+name|MO_RUN_FIRST_TIME
+value|0x400
 end_define
+
+begin_comment
+comment|/* Don't expect echos when getting memory */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|STEP_CMD
-value|(current_monitor->step)
+name|MO_NO_ECHO_ON_SETMEM
+value|0x800
 end_define
+
+begin_comment
+comment|/* If set, then register store command expects value BEFORE regname */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_BREAK_CMD
-value|(current_monitor->set_break)
+name|MO_REGISTER_VALUE_FIRST
+value|0x1000
 end_define
+
+begin_comment
+comment|/* If set, then the monitor displays registers as pairs.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CLR_BREAK_CMD
-value|(current_monitor->clr_break)
+name|MO_32_REGS_PAIRED
+value|0x2000
 end_define
+
+begin_comment
+comment|/* If set, then register setting happens interactively.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_MEM
-value|(current_monitor->setmem)
+name|MO_SETREG_INTERACTIVE
+value|0x4000
 end_define
+
+begin_comment
+comment|/* If set, then memory setting happens interactively.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|GET_MEM
-value|(current_monitor->getmem)
+name|MO_SETMEM_INTERACTIVE
+value|0x8000
 end_define
+
+begin_comment
+comment|/* If set, then memory dumps are always on 16-byte boundaries, even    when less is desired.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|LOAD_CMD
-value|(current_monitor->load)
+name|MO_GETMEM_16_BOUNDARY
+value|0x10000
 end_define
+
+begin_comment
+comment|/* If set, then the monitor numbers its breakpoints starting from 1.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|GET_REG
-value|(current_monitor->regget)
+name|MO_CLR_BREAK_1_BASED
+value|0x20000
 end_define
+
+begin_comment
+comment|/* If set, then the monitor acks srecords with a plus sign.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SET_REG
-value|(current_monitor->regset)
+name|MO_SREC_ACK_PLUS
+value|0x40000
 end_define
+
+begin_comment
+comment|/* If set, then the monitor "acks" srecords with rotating lines.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CMD_END
-value|(current_monitor->cmd_end)
+name|MO_SREC_ACK_ROTATE
+value|0x80000
 end_define
+
+begin_comment
+comment|/* If set, then remove useless address bits from memory addresses.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|CMD_DELIM
-value|(current_monitor->cmd_delim)
+name|MO_ADDR_BITS_REMOVE
+value|0x100000
 end_define
+
+begin_comment
+comment|/* If set, then display target program output if prefixed by ^O.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PROMPT
-value|(current_monitor->prompt)
+name|MO_PRINT_PROGRAM_OUTPUT
+value|0x200000
 end_define
+
+begin_comment
+comment|/* Some dump bytes commands align the first data with the preceeding 16 byte boundary. Some print blanks and start at the exactly the requested boundary. */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TARGET_OPS
-value|(current_monitor->target)
+name|MO_EXACT_DUMPADDR
+value|0x400000
 end_define
+
+begin_comment
+comment|/* Rather entering and exiting the write memory dialog for each word byte,    we can save time by transferring the whole block without exiting    the memory editing mode. You only need to worry about this    if you are doing memory downloading.    This engages a new write function registered with dcache.    */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|TARGET_NAME
-value|(current_monitor->target->to_shortname)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BAUDRATES
-value|(current_monitor->baudrates)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STOPBITS
-value|(current_monitor->stopbits)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REGNAMES
-parameter_list|(
-name|x
-parameter_list|)
-value|(current_monitor->regnames[x])
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROMCMD
-parameter_list|(
-name|x
-parameter_list|)
-value|(x.cmd)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROMDELIM
-parameter_list|(
-name|x
-parameter_list|)
-value|(x.delim)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ROMRES
-parameter_list|(
-name|x
-parameter_list|)
-value|(x.result)
-end_define
-
-begin_define
-define|#
-directive|define
-name|push_monitor
-parameter_list|(
-name|x
-parameter_list|)
-value|current_monitor = x;
+name|MO_HAS_BLOCKWRITES
+value|0x800000
 end_define
 
 begin_define
@@ -552,38 +590,6 @@ define|#
 directive|define
 name|SREC_SIZE
 value|160
-end_define
-
-begin_comment
-comment|/*  * FIXME: These are to temporarily maintain compatability with the  *	old monitor structure till remote-mon.c is fixed to work  *	like the *-rom.c files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MEM_PROMPT
-value|(current_monitor->loadtypes)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_SET_CMD
-value|(current_monitor->setmem)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MEM_DIS_CMD
-value|(current_monitor->getmem)
-end_define
-
-begin_define
-define|#
-directive|define
-name|REG_DELIM
-value|(current_monitor->regset.delim)
 end_define
 
 begin_decl_stmt
@@ -733,6 +739,51 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|monitor_write
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|buf
+operator|,
+name|int
+name|buflen
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|monitor_readchar
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|monitor_get_dev_name
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|init_monitor_ops
 name|PARAMS
 argument_list|(
@@ -740,6 +791,34 @@ operator|(
 expr|struct
 name|target_ops
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|monitor_dump_reg_block
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|dump_cmd
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|flush_monitor_dcache
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;

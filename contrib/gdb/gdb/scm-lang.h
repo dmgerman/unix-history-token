@@ -272,6 +272,8 @@ operator|,
 name|char
 operator|*
 operator|,
+name|int
+operator|,
 name|CORE_ADDR
 operator|,
 name|GDB_FILE
@@ -307,7 +309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|void
 name|scm_scmval_print
 name|PARAMS
 argument_list|(
@@ -388,13 +390,18 @@ name|builtin_type_scm
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|scm_parse
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

@@ -137,6 +137,31 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|void
+name|read_memory_section
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+name|memaddr
+operator|,
+name|char
+operator|*
+name|myaddr
+operator|,
+name|int
+name|len
+operator|,
+name|asection
+operator|*
+name|bfd_section
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Read an integer from debugged memory, given address and number of    bytes.  */
 end_comment
@@ -164,8 +189,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|LONGEST
+name|ULONGEST
 name|read_memory_unsigned_integer
 name|PARAMS
 argument_list|(
@@ -175,6 +199,28 @@ name|memaddr
 operator|,
 name|int
 name|len
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Read a null-terminated string from the debuggee's memory, given address,  * a buffer into which to place the string, and the maximum available space */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|read_memory_string
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|char
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -271,6 +317,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Hook for "file_command", which is more useful than above    (because it is invoked AFTER symbols are read, not before) */
+end_comment
+
+begin_extern
+extern|extern void (*file_changed_hook
+end_extern
+
+begin_expr_stmt
+unit|)
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|filename
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -345,6 +412,24 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|exec_file_attach
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+name|filename
+operator|,
+name|int
+name|from_tty
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|exec_file_command
 name|PARAMS
 argument_list|(
@@ -375,8 +460,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|unsigned
-name|int
+name|CORE_ADDR
 name|register_addr
 name|PARAMS
 argument_list|(
@@ -384,7 +468,7 @@ operator|(
 name|int
 name|regno
 operator|,
-name|int
+name|CORE_ADDR
 name|blockend
 operator|)
 argument_list|)
@@ -502,7 +586,7 @@ operator|,
 name|int
 name|which
 operator|,
-name|unsigned
+name|CORE_ADDR
 name|reg_addr
 operator|)
 argument_list|)

@@ -59,11 +59,5 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|NO_PTRACE_H
-end_define
-
 end_unit
 

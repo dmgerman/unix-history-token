@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to I386 running the GNU Hurd    Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to I386 running the GNU Hurd    Copyright (C) 1992, 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -267,21 +273,29 @@ name|int
 name|reg
 parameter_list|)
 block|{
-name|thread_state_t
-name|state
-decl_stmt|;
 name|struct
 name|proc
 modifier|*
 name|thread
-init|=
+decl_stmt|;
+name|thread_state_t
+name|state
+decl_stmt|;
+name|inf_update_procs
+argument_list|(
+name|current_inferior
+argument_list|)
+expr_stmt|;
+comment|/* Make sure we know about new threads.  */
+name|thread
+operator|=
 name|inf_tid_to_thread
 argument_list|(
 name|current_inferior
 argument_list|,
 name|inferior_pid
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -310,12 +324,17 @@ name|state
 condition|)
 name|warning
 argument_list|(
-literal|"Couldn't fetch register %s."
+literal|"Couldn't fetch register %s from %s (invalid thread)."
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|reg
-index|]
+argument_list|)
+argument_list|,
+name|proc_string
+argument_list|(
+name|thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -332,10 +351,10 @@ name|thread
 argument_list|,
 literal|"fetching register: %s"
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|reg
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|supply_register
@@ -423,6 +442,11 @@ name|int
 name|reg
 decl_stmt|;
 block|{
+name|struct
+name|proc
+modifier|*
+name|thread
+decl_stmt|;
 name|int
 name|was_aborted
 decl_stmt|,
@@ -434,18 +458,21 @@ decl_stmt|;
 name|thread_state_data_t
 name|old_state
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
+name|inf_update_procs
+argument_list|(
+name|current_inferior
+argument_list|)
+expr_stmt|;
+comment|/* Make sure we know about new threads.  */
 name|thread
-init|=
+operator|=
 name|inf_tid_to_thread
 argument_list|(
 name|current_inferior
 argument_list|,
 name|inferior_pid
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -464,10 +491,10 @@ name|thread
 argument_list|,
 literal|"storing register %s."
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|reg
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|was_aborted
@@ -521,12 +548,17 @@ name|state
 condition|)
 name|warning
 argument_list|(
-literal|"Couldn't store register %s."
+literal|"Couldn't store register %s from %s (invalid thread)."
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|reg
-index|]
+argument_list|)
+argument_list|,
+name|proc_string
+argument_list|(
+name|thread
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -599,10 +631,10 @@ name|warning
 argument_list|(
 literal|"Register %s changed after thread was aborted."
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|check_reg
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -649,10 +681,10 @@ name|thread
 argument_list|,
 literal|"storing register: %s"
 argument_list|,
-name|reg_names
-index|[
+name|REGISTER_NAME
+argument_list|(
 name|reg
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|STORE_REGS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Native-dependent code for SVR4 Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Native-dependent code for SVR4 Unix running on i386's, for GDB.    Copyright 1988, 1989, 1991, 1992, 1996, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -8,6 +8,29 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"value.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_REG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/reg.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -74,6 +97,66 @@ name|FS
 block|,
 name|GS
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Prototypes for local functions */
+end_comment
+
+begin_decl_stmt
+name|void
+name|fill_gregset
+name|PARAMS
+argument_list|(
+operator|(
+name|gregset_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|supply_gregset
+name|PARAMS
+argument_list|(
+operator|(
+name|gregset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|supply_fpregset
+name|PARAMS
+argument_list|(
+operator|(
+name|fpregset_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|fill_fpregset
+name|PARAMS
+argument_list|(
+operator|(
+name|fpregset_t
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -297,10 +380,6 @@ modifier|*
 name|fpregsetp
 decl_stmt|;
 block|{
-specifier|register
-name|int
-name|regi
-decl_stmt|;
 comment|/* FIXME: see m68k-tdep.c for an example, for the m68k. */
 block|}
 end_function
@@ -325,22 +404,6 @@ name|int
 name|regno
 decl_stmt|;
 block|{
-name|int
-name|regi
-decl_stmt|;
-name|char
-modifier|*
-name|to
-decl_stmt|;
-name|char
-modifier|*
-name|from
-decl_stmt|;
-specifier|extern
-name|char
-name|registers
-index|[]
-decl_stmt|;
 comment|/* FIXME: see m68k-tdep.c for an example, for the m68k. */
 block|}
 end_function

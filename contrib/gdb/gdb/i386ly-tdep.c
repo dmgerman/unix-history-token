@@ -21,6 +21,12 @@ directive|include
 file|"target.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
 begin_comment
 comment|/* Return the PC of the caller from the call frame.  Assumes the subr prologue    has already been executed, and the frame pointer setup.  If this is the    outermost frame, we check to see if we are in a system call by examining the    previous instruction.  If so, then the return PC is actually at SP+4 because    system calls use a different calling sequence.  */
 end_comment

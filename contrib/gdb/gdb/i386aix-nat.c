@@ -121,11 +121,11 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_REG_H
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_REG_H
+end_ifdef
 
 begin_include
 include|#
@@ -149,6 +149,26 @@ include|#
 directive|include
 file|"target.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+name|void
+name|fetch_core_registers
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|int
+operator|,
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -1408,8 +1428,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 comment|/* ignored */

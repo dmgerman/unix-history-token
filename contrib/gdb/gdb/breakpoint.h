@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Data structures associated with breakpoints in GDB.    Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Data structures associated with breakpoints in GDB.    Copyright (C) 1992, 93, 94, 95, 96, 98, 1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_if
@@ -58,6 +58,11 @@ begin_enum
 enum|enum
 name|bptype
 block|{
+name|bp_none
+init|=
+literal|0
+block|,
+comment|/* Eventpoint has been deleted. */
 name|bp_breakpoint
 block|,
 comment|/* Normal breakpoint */
@@ -103,6 +108,24 @@ name|bp_call_dummy
 block|,
 comment|/* Some dynamic linkers (HP, maybe Solaris) can arrange for special      code in the inferior to run when significant events occur in the      dynamic linker (for example a library is loaded or unloaded).       By placing a breakpoint in this magic code GDB will get control      when these significant events occur.  GDB can then re-examine      the dynamic linker's data structures to discover any newly loaded      dynamic libraries.  */
 name|bp_shlib_event
+block|,
+comment|/* These breakpoints are used to implement the "catch load" command      on platforms whose dynamic linkers support such functionality.  */
+name|bp_catch_load
+block|,
+comment|/* These breakpoints are used to implement the "catch unload" command      on platforms whose dynamic linkers support such functionality.  */
+name|bp_catch_unload
+block|,
+comment|/* These are not really breakpoints, but are catchpoints that      implement the "catch fork", "catch vfork" and "catch exec" commands      on platforms whose kernel support such functionality.  (I.e.,      kernels which can raise an event when a fork or exec occurs, as      opposed to the debugger setting breakpoints on functions named      "fork" or "exec".) */
+name|bp_catch_fork
+block|,
+name|bp_catch_vfork
+block|,
+name|bp_catch_exec
+block|,
+comment|/* These are catchpoints to implement "catch catch" and "catch throw"      commands for C++ exception handling. */
+name|bp_catch_catch
+block|,
+name|bp_catch_throw
 block|}
 enum|;
 end_enum
@@ -117,9 +140,15 @@ name|enable
 block|{
 name|disabled
 block|,
+comment|/* The eventpoint is inactive, and cannot trigger. */
 name|enabled
 block|,
+comment|/* The eventpoint is active, and can trigger. */
 name|shlib_disabled
+block|,
+comment|/* The eventpoint's address is within an unloaded solib.                          The eventpoint will be automatically enabled& reset                          when that solib is loaded. */
+name|call_disabled
+comment|/* The eventpoint has been disabled while a call into                          the inferior is "in flight", because some eventpoints                          interfere with the implementation of a call on some                          targets.  The eventpoint will be automatically enabled& reset when the call "lands" (either completes, or                          stops at another eventpoint). */
 block|}
 enum|;
 end_enum
@@ -135,6 +164,9 @@ block|{
 name|del
 block|,
 comment|/* Delete it */
+name|del_at_next_stop
+block|,
+comment|/* Delete at next stop, whether hit or not */
 name|disable
 block|,
 comment|/* Disable it */
@@ -295,6 +327,29 @@ comment|/* Count of the number of times this breakpoint was taken, dumped      w
 name|int
 name|hit_count
 decl_stmt|;
+comment|/* Filename of a dynamically-linked library (dll), used for bp_catch_load      and bp_catch_unload (malloc'd), or NULL if any library is significant.  */
+name|char
+modifier|*
+name|dll_pathname
+decl_stmt|;
+comment|/* Filename of a dll whose state change (e.g., load or unload)      triggered this catchpoint.  This field is only vaid immediately      after this catchpoint has triggered.  */
+name|char
+modifier|*
+name|triggered_dll_pathname
+decl_stmt|;
+comment|/* Process id of a child process whose forking triggered this catchpoint.      This field is only vaid immediately after this catchpoint has triggered.  */
+name|int
+name|forked_inferior_pid
+decl_stmt|;
+comment|/* Filename of a program whose exec triggered this catchpoint.  This      field is only vaid immediately after this catchpoint has triggered.  */
+name|char
+modifier|*
+name|exec_pathname
+decl_stmt|;
+name|asection
+modifier|*
+name|section
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -412,6 +467,9 @@ block|,
 comment|/* Check the dynamic linker's data structures for new libraries, then      keep checking.  */
 name|BPSTAT_WHAT_CHECK_SHLIBS
 block|,
+comment|/* Check the dynamic linker's data structures for new libraries, then      resume out of the dynamic linker's callback, stop and print.  */
+name|BPSTAT_WHAT_CHECK_SHLIBS_RESUME_FROM_HOOK
+block|,
 comment|/* This is just used to keep track of how many enums there are.  */
 name|BPSTAT_WHAT_LAST
 block|}
@@ -475,6 +533,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Find a step_resume breakpoint associated with this bpstat.    (If there are multiple step_resume bp's on the list, this function    will arbitrarily pick one.)     It is an error to use this function if BPSTAT doesn't contain a    step_resume breakpoint.     See wait_for_inferior's use of this function.    */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|breakpoint
+modifier|*
+name|bpstat_find_step_resume_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|bpstat
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Nonzero if a signal that we got in wait() was due to circumstances    explained by the BS.  */
 end_comment
 
@@ -500,6 +577,23 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|bpstat_should_step
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Nonzero if there are enabled hardware watchpoints. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|bpstat_have_active_hw_watchpoints
 name|PARAMS
 argument_list|(
 operator|(
@@ -580,6 +674,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Given a bpstat that records zero or more triggered eventpoints, this    function returns another bpstat which contains only the catchpoints    on that first list, if any.    */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|bpstat_get_triggered_catchpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|bpstat
+operator|,
+name|bpstat
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Implementation:  */
 end_comment
 
@@ -632,6 +746,19 @@ block|}
 struct|;
 end_struct
 
+begin_enum
+enum|enum
+name|inf_context
+block|{
+name|inf_starting
+block|,
+name|inf_running
+block|,
+name|inf_exited
+block|}
+enum|;
+end_enum
+
 begin_escape
 end_escape
 
@@ -664,6 +791,19 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|breakpoint_here_p
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|breakpoint_inserted_here_p
 name|PARAMS
 argument_list|(
 operator|(
@@ -735,11 +875,28 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|clear_momentary_breakpoints
+name|breakpoint_re_set_thread
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|breakpoint
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_is_exception_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|breakpoint
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -826,7 +983,8 @@ name|breakpoint_init_inferior
 name|PARAMS
 argument_list|(
 operator|(
-name|void
+expr|enum
+name|inf_context
 operator|)
 argument_list|)
 decl_stmt|;
@@ -891,6 +1049,22 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|void
+name|tbreak_command
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|insert_breakpoints
 name|PARAMS
@@ -910,6 +1084,57 @@ name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This function can be used to physically insert eventpoints from the    specified traced inferior process, without modifying the breakpoint    package's state.  This can be useful for those targets which support    following the processes of a fork() or vfork() system call, when both    of the resulting two processes are to be followed.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|reattach_breakpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This function can be used to update the breakpoint package's state    after an exec() system call has been executed.     This function causes the following:       - All eventpoints are marked "not inserted".      - All eventpoints with a symbolic address are reset such that        the symbolic address must be reevaluated before the eventpoints        can be reinserted.      - The solib breakpoints are explicitly removed from the breakpoint        list.      - A step-resume breakpoint, if any, is explicitly removed from the        breakpoint list.      - All eventpoints without a symbolic address are removed from the        breakpoint list. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|update_breakpoints_after_exec
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This function can be used to physically remove hardware breakpoints    and watchpoints from the specified traced inferior process, without    modifying the breakpoint package's state.  This can be useful for    those targets which support following the processes of a fork() or    vfork() system call, when one of the resulting two processes is to    be detached and allowed to run free.      It is an error to use this function on the process whose id is    inferior_pid.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|detach_breakpoints
+name|PARAMS
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -953,6 +1178,36 @@ operator|,
 expr|struct
 name|frame_info
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* These functions respectively disable or reenable all currently    enabled watchpoints.  When disabled, the watchpoints are marked    call_disabled.  When reenabled, they are marked enabled.     The intended client of these functions is infcmd.c\run_stack_dummy.     The inferior must be stopped, and all breakpoints removed, when    these functions are used.     The need for these functions is that on some targets (e.g., HP-UX),    gdb is unable to unwind through the dummy frame that is pushed as    part of the implementation of a call command.  Watchpoints can    cause the inferior to stop in places where this frame is visible,    and that can cause execution control to become very confused.     Note that if a user sets breakpoints in an interactively call    function, the call_disabled watchpoints will have been reenabled    when the first such breakpoint is reached.  However, on targets    that are unable to unwind through the call dummy frame, watches    of stack-based storage may then be deleted, because gdb will    believe that their watched storage is out of scope.  (Sigh.) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|disable_watchpoints_before_interactive_call_start
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|enable_watchpoints_after_interactive_call_stop
+name|PARAMS
+argument_list|(
+operator|(
+name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1086,11 +1341,171 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|disable_breakpoints_in_shlibs
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|silent
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|re_enable_breakpoints_in_shlibs
 name|PARAMS
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|create_solib_load_event_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|create_solib_unload_event_breakpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|create_fork_event_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|create_vfork_event_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|create_exec_event_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This function returns TRUE if ep is a catchpoint. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_is_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|breakpoint
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This function returns TRUE if ep is a catchpoint of a    shared library (aka dynamically-linked library) event,    such as a library load or unload. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ep_is_shlib_catchpoint
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|breakpoint
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|breakpoint
+modifier|*
+name|set_breakpoint_sal
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|symtab_and_line
 operator|)
 argument_list|)
 decl_stmt|;

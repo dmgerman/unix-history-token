@@ -66,7 +66,23 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
+begin_decl_stmt
+specifier|static
+name|void
+name|fetch_core_registers
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|int
+operator|,
+name|CORE_ADDR
+operator|)
+argument_list|;
 define|#
 directive|define
 name|X
@@ -74,24 +90,15 @@ parameter_list|(
 name|ENTRY
 parameter_list|)
 value|(offsetof(struct econtext, ENTRY))
-end_define
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|I386
-end_ifdef
-
-begin_comment
 comment|/* Mappings from tm-i386v.h */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-init|=
+operator|=
 block|{
 name|X
 argument_list|(
@@ -180,34 +187,19 @@ argument_list|)
 block|,
 comment|/* we just substitute these two in the hopes 				   that they are useful. */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+argument_list|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* I386 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|M68K
-end_ifdef
-
-begin_comment
 comment|/* Mappings from tm-m68k.h */
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-init|=
+operator|=
 block|{
 name|X
 argument_list|(
@@ -498,29 +490,14 @@ argument_list|)
 block|,
 comment|/* fpflags */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+argument_list|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* M68K */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SPARC
-end_ifdef
-
-begin_comment
 comment|/* Mappings from tm-sparc.h */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|FX
@@ -528,14 +505,11 @@ parameter_list|(
 name|ENTRY
 parameter_list|)
 value|(offsetof(struct fcontext, ENTRY))
-end_define
-
-begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-init|=
+operator|=
 block|{
 operator|-
 literal|1
@@ -1049,30 +1023,18 @@ literal|1
 block|,
 comment|/* cpsr */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+argument_list|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* SPARC */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|rs6000
-end_ifdef
-
-begin_decl_stmt
 specifier|static
 name|int
 name|regmap
 index|[]
-init|=
+operator|=
 block|{
 name|X
 argument_list|(
@@ -1630,37 +1592,22 @@ argument|mq
 argument_list|)
 comment|/* MQ */
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
+argument_list|;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* rs6000 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|SPARC
-end_ifdef
-
-begin_comment
 comment|/* This routine handles some oddball cases for Sparc registers and LynxOS.    In partucular, it causes refs to G0, g5->7, and all fp regs to return zero.    It also handles knows where to find the I& L regs on the stack.  */
-end_comment
-
-begin_function
 name|void
 name|fetch_inferior_registers
-parameter_list|(
-name|regno
-parameter_list|)
+argument_list|(
+argument|regno
+argument_list|)
 name|int
 name|regno
-decl_stmt|;
+argument_list|;
 block|{
 name|int
 name|whatregs
@@ -2204,7 +2151,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* This routine handles storing of the I& L regs for the Sparc.  The trick    here is that they actually live on the stack.  The really tricky part is    that when changing the stack pointer, the I& L regs must be written to    where the new SP points, otherwise the regs will be incorrect when the    process is started up again.   We assume that the I& L regs are valid at    this point.  */
@@ -3496,8 +3443,24 @@ operator|==
 name|SIGNEWTHREAD
 condition|)
 block|{
-comment|/* It's a new thread notification.  Nothing to do here since 		 the machine independent code in wait_for_inferior will 		 add the thread to the thread list and restart the thread 		 when pid != inferior_pid and pid is not in the thread 		 list.   We don't even want to much with realsig -- the 		 code in wait_for_inferior expects SIGTRAP.  */
-empty_stmt|;
+comment|/* It's a new thread notification.  We don't want to much with 		 realsig -- the code in wait_for_inferior expects SIGTRAP. */
+name|ourstatus
+operator|->
+name|kind
+operator|=
+name|TARGET_WAITKIND_SPURIOUS
+expr_stmt|;
+name|ourstatus
+operator|->
+name|value
+operator|.
+name|sig
+operator|=
+name|TARGET_SIGNAL_0
+expr_stmt|;
+return|return
+name|pid
+return|;
 block|}
 else|else
 name|error
@@ -3878,7 +3841,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 block|{

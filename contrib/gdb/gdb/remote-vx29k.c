@@ -657,7 +657,7 @@ end_comment
 
 begin_function
 name|int
-name|get_fp_contents
+name|vx29k_frame_chain_valid
 parameter_list|(
 name|chain
 parameter_list|,

@@ -247,157 +247,379 @@ specifier|static
 name|struct
 name|monitor_ops
 name|hms_cmds
-init|=
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_hms_cmds
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|hms_cmds
+operator|.
+name|flags
+operator|=
 name|MO_CLR_BREAK_USES_ADDR
 operator||
 name|MO_FILL_USES_ADDR
 operator||
 name|MO_GETMEM_NEEDS_RANGE
-block|,
+expr_stmt|;
+name|hms_cmds
+operator|.
+name|init
+operator|=
 name|hms_inits
-block|,
+expr_stmt|;
 comment|/* Init strings */
+name|hms_cmds
+operator|.
+name|cont
+operator|=
 literal|"g\r"
-block|,
+expr_stmt|;
 comment|/* continue command */
+name|hms_cmds
+operator|.
+name|step
+operator|=
 literal|"s\r"
-block|,
+expr_stmt|;
 comment|/* single step */
+name|hms_cmds
+operator|.
+name|stop
+operator|=
 literal|"\003"
-block|,
+expr_stmt|;
 comment|/* ^C interrupts the program */
+name|hms_cmds
+operator|.
+name|set_break
+operator|=
 literal|"b %x\r"
-block|,
+expr_stmt|;
 comment|/* set a breakpoint */
+name|hms_cmds
+operator|.
+name|clr_break
+operator|=
 literal|"b - %x\r"
-block|,
+expr_stmt|;
 comment|/* clear a breakpoint */
+name|hms_cmds
+operator|.
+name|clr_all_break
+operator|=
 literal|"b -\r"
-block|,
+expr_stmt|;
 comment|/* clear all breakpoints */
+name|hms_cmds
+operator|.
+name|fill
+operator|=
 literal|"f %x %x %x\r"
-block|,
+expr_stmt|;
 comment|/* fill (start end val) */
-block|{
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdb
+operator|=
 literal|"m.b %x=%x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdb (addr, value) */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdw
+operator|=
 literal|"m.w %x=%x\r"
-block|,
+expr_stmt|;
 comment|/* setmem.cmdw (addr, value) */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdl
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdl (addr, value) */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdll (addr, value) */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|hms_cmds
+operator|.
+name|setmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdb
+operator|=
 literal|"m.b %x %x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdb (addr, addr) */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdw
+operator|=
 literal|"m.w %x %x\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdw (addr, addr) */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdl
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdl (addr, addr) */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.cmdll (addr, addr) */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|resp_delim
+operator|=
 literal|": "
-block|,
+expr_stmt|;
 comment|/* getmem.resp_delim */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|term
+operator|=
 literal|">"
-block|,
+expr_stmt|;
 comment|/* getmem.term */
+name|hms_cmds
+operator|.
+name|getmem
+operator|.
+name|term_cmd
+operator|=
 literal|"\003"
-block|,
+expr_stmt|;
 comment|/* getmem.term_cmd */
-block|}
-block|,
-block|{
+name|hms_cmds
+operator|.
+name|setreg
+operator|.
+name|cmd
+operator|=
 literal|"r %s=%x\r"
-block|,
+expr_stmt|;
 comment|/* setreg.cmd (name, value) */
+name|hms_cmds
+operator|.
+name|setreg
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|hms_cmds
+operator|.
+name|setreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|hms_cmds
+operator|.
+name|setreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
+expr_stmt|;
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|hms_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+operator|=
 literal|"r %s\r"
-block|,
+expr_stmt|;
 comment|/* getreg.cmd (name) */
+name|hms_cmds
+operator|.
+name|getreg
+operator|.
+name|resp_delim
+operator|=
 literal|" ("
-block|,
+expr_stmt|;
 comment|/* getreg.resp_delim */
+name|hms_cmds
+operator|.
+name|getreg
+operator|.
+name|term
+operator|=
 literal|":"
-block|,
+expr_stmt|;
 comment|/* getreg.term */
+name|hms_cmds
+operator|.
+name|getreg
+operator|.
+name|term_cmd
+operator|=
 literal|"\003"
-block|,
+expr_stmt|;
 comment|/* getreg.term_cmd */
-block|}
-block|,
+name|hms_cmds
+operator|.
+name|dump_registers
+operator|=
 literal|"r\r"
-block|,
+expr_stmt|;
 comment|/* dump_registers */
+name|hms_cmds
+operator|.
+name|register_pattern
+operator|=
 literal|"\\(\\w+\\)=\\([0-9a-fA-F]+\\)"
-block|,
+expr_stmt|;
 comment|/* register_pattern */
+name|hms_cmds
+operator|.
+name|supply_register
+operator|=
 name|hms_supply_register
-block|,
+expr_stmt|;
 comment|/* supply_register */
+name|hms_cmds
+operator|.
+name|load_routine
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load_routine (defaults to SRECs) */
+name|hms_cmds
+operator|.
+name|load
+operator|=
 literal|"tl\r"
-block|,
+expr_stmt|;
 comment|/* download command */
+name|hms_cmds
+operator|.
+name|loadresp
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load response */
+name|hms_cmds
+operator|.
+name|prompt
+operator|=
 literal|">"
-block|,
+expr_stmt|;
 comment|/* monitor command prompt */
+name|hms_cmds
+operator|.
+name|line_term
+operator|=
 literal|"\r"
-block|,
+expr_stmt|;
 comment|/* end-of-command delimitor */
+name|hms_cmds
+operator|.
+name|cmd_end
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* optional command terminator */
+name|hms_cmds
+operator|.
+name|target
+operator|=
 operator|&
 name|hms_ops
-block|,
+expr_stmt|;
 comment|/* target operations */
+name|hms_cmds
+operator|.
+name|stopbits
+operator|=
 name|SERIAL_1_STOPBITS
-block|,
+expr_stmt|;
 comment|/* number of stop bits */
+name|hms_cmds
+operator|.
+name|regnames
+operator|=
 name|hms_regnames
-block|,
+expr_stmt|;
 comment|/* registers names */
+name|hms_cmds
+operator|.
+name|magic
+operator|=
 name|MONITOR_OPS_MAGIC
+expr_stmt|;
 comment|/* magic */
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
+
+begin_comment
+comment|/* init_hms-cmds */
+end_comment
 
 begin_function
 specifier|static
@@ -440,6 +662,9 @@ name|void
 name|_initialize_remote_hms
 parameter_list|()
 block|{
+name|init_hms_cmds
+argument_list|()
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&
@@ -679,7 +904,7 @@ comment|/* This is called not only when we first attach, but also when the    us
 end_comment
 
 begin_comment
-unit|void hms_create_inferior (execfile, args, env)      char *execfile;      char *args;      char **env; {   int entry_pt;   char buffer[100];    if (args&& *args)     error ("Can't pass arguments to remote hms process.");    if (execfile == 0 || exec_bfd == 0)     error ("No exec file specified");    entry_pt = (int) bfd_get_start_address (exec_bfd);   check_open ();    hms_kill (NULL, NULL);   hms_clear_breakpoints ();   init_wait_for_inferior ();   hms_write_cr ("");   expect_prompt ();    insert_breakpoints ();
+unit|void hms_create_inferior (execfile, args, env)      char *execfile;      char *args;      char **env; {   int entry_pt;   char buffer[100];    if (args&& *args)     error ("Can't pass arguments to remote hms process.");    if (execfile == 0 || exec_bfd == 0)     error ("No executable file specified");    entry_pt = (int) bfd_get_start_address (exec_bfd);   check_open ();    hms_kill (NULL, NULL);   hms_clear_breakpoints ();   init_wait_for_inferior ();   hms_write_cr ("");   expect_prompt ();    insert_breakpoints ();
 comment|/* Needed to get correct instruction in cache */
 end_comment
 
@@ -843,7 +1068,7 @@ value|79
 end_define
 
 begin_comment
-unit|char linebuf[REGREPLY_SIZE + 1];   int i;   int s;   int gottok;    unsigned LONGEST reg[NUM_REGS];    check_open ();    do     {       hms_write_cr ("r");        s = timed_read (linebuf, 1, 1);        while (linebuf[0] != 'r') 	s = timed_read (linebuf, 1, 1);        s = timed_read (linebuf + 1, REGREPLY_SIZE - 1, 1);        linebuf[REGREPLY_SIZE] = 0;       gottok = 0;       if (linebuf[0] == 'r'&& 	  linebuf[3] == 'P'&& 	  linebuf[4] == 'C'&& 	  linebuf[5] == '='&& 	  linebuf[75] == 'H'&& 	  linebuf[76] == 'M'&& 	  linebuf[77] == 'S') 	{
+unit|char linebuf[REGREPLY_SIZE + 1];   int i;   int s;   int gottok;    ULONGEST reg[NUM_REGS];    check_open ();    do     {       hms_write_cr ("r");        s = timed_read (linebuf, 1, 1);        while (linebuf[0] != 'r') 	s = timed_read (linebuf, 1, 1);        s = timed_read (linebuf + 1, REGREPLY_SIZE - 1, 1);        linebuf[REGREPLY_SIZE] = 0;       gottok = 0;       if (linebuf[0] == 'r'&& 	  linebuf[3] == 'P'&& 	  linebuf[4] == 'C'&& 	  linebuf[5] == '='&& 	  linebuf[75] == 'H'&& 	  linebuf[76] == 'M'&& 	  linebuf[77] == 'S') 	{
 comment|/* 	     PC=XXXX CCR=XX:XXXXXXXX R0-R7= XXXX XXXX XXXX XXXX XXXX XXXX XXXX XXXX 	     5436789012345678901234567890123456789012345678901234567890123456789012 	     0      1         2         3         4         5         6 	   */
 end_comment
 
@@ -1023,82 +1248,7 @@ comment|/* Define the target subroutine names */
 end_comment
 
 begin_comment
-unit|struct target_ops hms_ops = {   "hms", "Remote HMS monitor",   "Use the H8 evaluation board running the HMS monitor connected\n\ by a serial line.",    hms_open, hms_close,   0, hms_detach, hms_resume, hms_wait,
-comment|/* attach */
-end_comment
-
-begin_comment
-unit|hms_fetch_register, hms_store_register,   hms_prepare_to_store,   hms_xfer_inferior_memory,   hms_files_info,   hms_insert_breakpoint, hms_remove_breakpoint,
-comment|/* Breakpoints */
-end_comment
-
-begin_comment
-unit|0, 0, 0, 0, 0,
-comment|/* Terminal handling */
-end_comment
-
-begin_comment
-unit|hms_kill,
-comment|/* FIXME, kill */
-end_comment
-
-begin_comment
-unit|generic_load,   0,
-comment|/* lookup_symbol */
-end_comment
-
-begin_comment
-unit|hms_create_inferior,
-comment|/* create_inferior */
-end_comment
-
-begin_comment
-unit|hms_mourn,
-comment|/* mourn_inferior FIXME */
-end_comment
-
-begin_comment
-unit|0,
-comment|/* can_run */
-end_comment
-
-begin_comment
-unit|0,
-comment|/* notice_signals */
-end_comment
-
-begin_comment
-unit|0,
-comment|/* to_thread_alive */
-end_comment
-
-begin_comment
-unit|0,
-comment|/* to_stop */
-end_comment
-
-begin_comment
-unit|process_stratum, 0,
-comment|/* next */
-end_comment
-
-begin_comment
-unit|1, 1, 1, 1, 1,
-comment|/* all mem, mem, stack, regs, exec */
-end_comment
-
-begin_comment
-unit|0, 0,
-comment|/* Section pointers */
-end_comment
-
-begin_comment
-unit|OPS_MAGIC,
-comment|/* Always the last thing */
-end_comment
-
-begin_comment
-unit|};  hms_quiet ()
+unit|struct target_ops hms_ops ;  static void  init_hms_ops(void) {   hms_ops.to_shortname =   "hms";   hms_ops.to_longname =   "Remote HMS monitor";   hms_ops.to_doc =   "Use the H8 evaluation board running the HMS monitor connected\n\ by a serial line.";   hms_ops.to_open =   hms_open;   hms_ops.to_close =   hms_close;   hms_ops.to_attach =   0;   hms_ops.to_post_attach = NULL;   hms_ops.to_require_attach = NULL;   hms_ops.to_detach =   hms_detach;   hms_ops.to_require_detach = NULL;   hms_ops.to_resume =   hms_resume;   hms_ops.to_wait  =   hms_wait;   hms_ops.to_post_wait = NULL;   hms_ops.to_fetch_registers  =   hms_fetch_register;   hms_ops.to_store_registers  =   hms_store_register;   hms_ops.to_prepare_to_store =   hms_prepare_to_store;   hms_ops.to_xfer_memory  =   hms_xfer_inferior_memory;   hms_ops.to_files_info  =   hms_files_info;   hms_ops.to_insert_breakpoint =   hms_insert_breakpoint;   hms_ops.to_remove_breakpoint =   hms_remove_breakpoint;   hms_ops.to_terminal_init  =   0;   hms_ops.to_terminal_inferior =   0;   hms_ops.to_terminal_ours_for_output =   0;   hms_ops.to_terminal_ours  =   0;   hms_ops.to_terminal_info  =   0;   hms_ops.to_kill  =   hms_kill;	   hms_ops.to_load  =   generic_load;   hms_ops.to_lookup_symbol =   0;   hms_ops.to_create_inferior =   hms_create_inferior;   hms_ops.to_post_startup_inferior = NULL;   hms_ops.to_acknowledge_created_inferior = NULL;   hms_ops.to_clone_and_follow_inferior = NULL;   hms_ops.to_post_follow_inferior_by_clone = NULL;   hms_ops.to_insert_fork_catchpoint = NULL;   hms_ops.to_remove_fork_catchpoint = NULL;   hms_ops.to_insert_vfork_catchpoint = NULL;   hms_ops.to_remove_vfork_catchpoint = NULL;   hms_ops.to_has_forked = NULL;   hms_ops.to_has_vforked = NULL;   hms_ops.to_can_follow_vfork_prior_to_exec = NULL;   hms_ops.to_post_follow_vfork = NULL;   hms_ops.to_insert_exec_catchpoint = NULL;   hms_ops.to_remove_exec_catchpoint = NULL;   hms_ops.to_has_execd = NULL;   hms_ops.to_reported_exec_events_per_exec_call = NULL;   hms_ops.to_has_exited = NULL;   hms_ops.to_mourn_inferior =   hms_mourn;   hms_ops.to_can_run  =   0;   hms_ops.to_notice_signals =   0;   hms_ops.to_thread_alive  =   0;   hms_ops.to_stop  =   0;   hms_ops.to_pid_to_exec_file = NULL;   hms_ops.to_core_file_to_sym_file = NULL;			   hms_ops.to_stratum =   process_stratum;   hms_ops.DONT_USE =   0;	   hms_ops.to_has_all_memory =   1;   hms_ops.to_has_memory =   1;   hms_ops.to_has_stack =   1;   hms_ops.to_has_registers =   1;   hms_ops.to_has_execution =   1;   hms_ops.to_sections =   0;   hms_ops.to_sections_end =   0;			   hms_ops.to_magic =   OPS_MAGIC;		 };  hms_quiet ()
 comment|/* FIXME - this routine can be removed after Dec '94 */
 end_comment
 
@@ -1108,7 +1258,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-unit|static void hms_drain (args, fromtty)      char *args;      int fromtty; {   int c;   while (1)     {       c = SERIAL_READCHAR (desc, 1);       if (c == SERIAL_TIMEOUT) 	break;       if (c == SERIAL_ERROR) 	break;       if (c> ' '&& c< 127) 	printf ("%c", c& 0xff);       else 	printf ("<%x>", c& 0xff);     } }  static void add_commands () {    add_com ("hms_drain", class_obscure, hms_drain, 	   "Drain pending hms text buffers."); }  static void remove_commands () {   extern struct cmd_list_element *cmdlist;   delete_cmd ("hms-drain",&cmdlist); }   void _initialize_remote_hms () {   add_target (&hms_ops);    add_com ("hms<command>", class_obscure, hms_com, 	   "Send a command to the HMS monitor.");
+unit|static void hms_drain (args, fromtty)      char *args;      int fromtty; {   int c;   while (1)     {       c = SERIAL_READCHAR (desc, 1);       if (c == SERIAL_TIMEOUT) 	break;       if (c == SERIAL_ERROR) 	break;       if (c> ' '&& c< 127) 	printf ("%c", c& 0xff);       else 	printf ("<%x>", c& 0xff);     } }  static void add_commands () {    add_com ("hms_drain", class_obscure, hms_drain, 	   "Drain pending hms text buffers."); }  static void remove_commands () {   extern struct cmd_list_element *cmdlist;   delete_cmd ("hms-drain",&cmdlist); }   void _initialize_remote_hms () {   init_hms_ops() ;   add_target (&hms_ops);    add_com ("hms<command>", class_obscure, hms_com, 	   "Send a command to the HMS monitor.");
 comment|/* FIXME - hms_quiet and `snoop' can be removed after Dec '94 */
 end_comment
 

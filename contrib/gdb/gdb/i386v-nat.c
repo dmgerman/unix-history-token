@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Intel 386 native support for SYSV systems (pre-SVR4).    Copyright (C) 1988, 1989, 1991, 1992, 1994, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Intel 386 native support for SYSV systems (pre-SVR4).    Copyright (C) 1988, 89, 91, 92, 94, 96, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -8,6 +8,45 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_PTRACE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<ptrace.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PTRACE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/ptrace.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -86,17 +125,43 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_comment
+comment|/* FIXME: The following used to be just "#include<sys/debugreg.h>", but  * the the Linux 2.1.x kernel and glibc 2.0.x are not in sync; including  *<sys/debugreg.h> will result in an error.  With luck, these losers  * will get their act together and we can trash this hack in the near future.  * --jsm 1998-10-21  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|TARGET_HAS_HARDWARE_WATCHPOINTS
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ASM_DEBUGREG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<asm/debugreg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<sys/debugreg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -115,11 +180,11 @@ directive|include
 file|"gdb_stat.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_SYS_REG_H
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_REG_H
+end_ifdef
 
 begin_include
 include|#
@@ -621,7 +686,6 @@ return|;
 name|read_write_bits
 operator|=
 operator|(
-operator|(
 name|rw
 operator|&
 literal|1
@@ -629,20 +693,7 @@ operator|)
 condition|?
 name|DR_RW_READ
 else|:
-literal|0
-operator|)
-operator||
-operator|(
-operator|(
-name|rw
-operator|&
-literal|2
-operator|)
-condition|?
 name|DR_RW_WRITE
-else|:
-literal|0
-operator|)
 expr_stmt|;
 if|if
 condition|(

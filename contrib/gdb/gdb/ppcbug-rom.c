@@ -644,117 +644,387 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|PPC_CMDS
+begin_function
+specifier|static
+name|void
+name|init_ppc_cmds
 parameter_list|(
+name|char
+modifier|*
 name|LOAD_CMD
 parameter_list|,
+name|struct
+name|monitor_ops
+modifier|*
 name|OPS
+parameter_list|,
+name|struct
+name|target_ops
+modifier|*
+name|targops
 parameter_list|)
-define|\
-value|{									\   MO_CLR_BREAK_USES_ADDR | MO_HANDLE_NL,				\   ppcbug_inits,
+block|{
+name|OPS
+operator|->
+name|flags
+operator|=
+name|MO_CLR_BREAK_USES_ADDR
+operator||
+name|MO_HANDLE_NL
+expr_stmt|;
+name|OPS
+operator|->
+name|init
+operator|=
+name|ppcbug_inits
+expr_stmt|;
 comment|/* Init strings */
-value|\   "g\r",
+name|OPS
+operator|->
+name|cont
+operator|=
+literal|"g\r"
+expr_stmt|;
 comment|/* continue command */
-value|\   "t\r",
+name|OPS
+operator|->
+name|step
+operator|=
+literal|"t\r"
+expr_stmt|;
 comment|/* single step */
-value|\   NULL,
+name|OPS
+operator|->
+name|stop
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* interrupt command */
-value|\   "br %x\r",
+name|OPS
+operator|->
+name|set_break
+operator|=
+literal|"br %x\r"
+expr_stmt|;
 comment|/* set a breakpoint */
-value|\   "nobr %x\r",
+name|OPS
+operator|->
+name|clr_break
+operator|=
+literal|"nobr %x\r"
+expr_stmt|;
 comment|/* clear a breakpoint */
-value|\   "nobr\r",
+name|OPS
+operator|->
+name|clr_all_break
+operator|=
+literal|"nobr\r"
+expr_stmt|;
 comment|/* clear all breakpoints */
-value|\   "bf %x:%x %x;b\r",
+name|OPS
+operator|->
+name|fill
+operator|=
+literal|"bf %x:%x %x;b\r"
+expr_stmt|;
 comment|/* fill (start count val) */
-value|\   {									\     "ms %x %02x\r",
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|cmdb
+operator|=
+literal|"ms %x %02x\r"
+expr_stmt|;
 comment|/* setmem.cmdb (addr, value) */
-value|\     "ms %x %04x\r",
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|cmdw
+operator|=
+literal|"ms %x %04x\r"
+expr_stmt|;
 comment|/* setmem.cmdw (addr, value) */
-value|\     "ms %x %08x\r",
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|cmdl
+operator|=
+literal|"ms %x %08x\r"
+expr_stmt|;
 comment|/* setmem.cmdl (addr, value) */
-value|\     NULL,
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|cmdll
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setmem.cmdll (addr, value) */
-value|\     NULL,
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|resp_delim
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.resp_delim */
-value|\     NULL,
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.term */
-value|\     NULL,
+name|OPS
+operator|->
+name|setmem
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.term_cmd */
-value|\   },									\   {									\     "md %x:%x;b\r",
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|cmdb
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
 comment|/* getmem.cmdb (addr, len) */
-value|\     "md %x:%x;b\r",
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|cmdw
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
 comment|/* getmem.cmdw (addr, len) */
-value|\     "md %x:%x;b\r",
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|cmdl
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
 comment|/* getmem.cmdl (addr, len) */
-value|\     NULL,
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|cmdll
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* getmem.cmdll (addr, len) */
-value|\     " ",
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|resp_delim
+operator|=
+literal|" "
+expr_stmt|;
 comment|/* getmem.resp_delim */
-value|\     NULL,
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* getmem.term */
-value|\     NULL,
+name|OPS
+operator|->
+name|getmem
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* getmem.term_cmd */
-value|\   },									\   {									\     "rs %s %x\r",
+name|OPS
+operator|->
+name|setreg
+operator|.
+name|cmd
+operator|=
+literal|"rs %s %x\r"
+expr_stmt|;
 comment|/* setreg.cmd (name, value) */
-value|\     NULL,
+name|OPS
+operator|->
+name|setreg
+operator|.
+name|resp_delim
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.resp_delim */
-value|\     NULL,
+name|OPS
+operator|->
+name|setreg
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.term */
-value|\     NULL
+name|OPS
+operator|->
+name|setreg
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setreg.term_cmd */
-value|\   },									\   {									\     "rs %s\r",
+name|OPS
+operator|->
+name|getreg
+operator|.
+name|cmd
+operator|=
+literal|"rs %s\r"
+expr_stmt|;
 comment|/* getreg.cmd (name) */
-value|\     "=",
+name|OPS
+operator|->
+name|getreg
+operator|.
+name|resp_delim
+operator|=
+literal|"="
+expr_stmt|;
 comment|/* getreg.resp_delim */
-value|\     NULL,
+name|OPS
+operator|->
+name|getreg
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* getreg.term */
-value|\     NULL
+name|OPS
+operator|->
+name|getreg
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* getreg.term_cmd */
-value|\   },									\   "rd\r",
-comment|/* dump_registers */
-value|\   "\\(\\w+\\) +=\\([0-9a-fA-F]+\\b\\)",
+name|OPS
+operator|->
+name|register_pattern
+operator|=
+literal|"\\(\\w+\\) +=\\([0-9a-fA-F]+\\b\\)"
+expr_stmt|;
 comment|/* register_pattern */
-value|\   ppcbug_supply_register,
+name|OPS
+operator|->
+name|supply_register
+operator|=
+name|ppcbug_supply_register
+expr_stmt|;
 comment|/* supply_register */
-value|\   NULL,
+name|OPS
+operator|->
+name|dump_registers
+operator|=
+literal|"rd\r"
+expr_stmt|;
+comment|/* dump all registers */
+name|OPS
+operator|->
+name|load_routine
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* load_routine (defaults to SRECs) */
-value|\   LOAD_CMD,
+name|OPS
+operator|->
+name|load
+operator|=
+name|LOAD_CMD
+expr_stmt|;
 comment|/* download command */
-value|\   NULL,
+name|OPS
+operator|->
+name|loadresp
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* load response */
-value|\   "PPC1-Bug>",
+name|OPS
+operator|->
+name|prompt
+operator|=
+literal|"PPC1-Bug>"
+expr_stmt|;
 comment|/* monitor command prompt */
-value|\   "\r",
+name|OPS
+operator|->
+name|line_term
+operator|=
+literal|"\r"
+expr_stmt|;
 comment|/* end-of-line terminator */
-value|\   NULL,
+name|OPS
+operator|->
+name|cmd_end
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* optional command terminator */
-value|\&OPS,
+name|OPS
+operator|->
+name|target
+operator|=
+name|targops
+expr_stmt|;
 comment|/* target operations */
-value|\   SERIAL_1_STOPBITS,
+name|OPS
+operator|->
+name|stopbits
+operator|=
+name|SERIAL_1_STOPBITS
+expr_stmt|;
 comment|/* number of stop bits */
-value|\   ppcbug_regnames,
+name|OPS
+operator|->
+name|regnames
+operator|=
+name|ppcbug_regnames
+expr_stmt|;
 comment|/* registers names */
-value|\   MONITOR_OPS_MAGIC
+name|OPS
+operator|->
+name|magic
+operator|=
+name|MONITOR_OPS_MAGIC
+expr_stmt|;
 comment|/* magic */
-value|\ }
-end_define
+block|}
+end_function
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|monitor_ops
 name|ppcbug_cmds0
-init|=
-name|PPC_CMDS
-argument_list|(
-literal|"lo 0\r"
-argument_list|,
-name|ppcbug_ops0
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -763,13 +1033,6 @@ specifier|static
 name|struct
 name|monitor_ops
 name|ppcbug_cmds1
-init|=
-name|PPC_CMDS
-argument_list|(
-literal|"lo 1\r"
-argument_list|,
-name|ppcbug_ops1
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -838,6 +1101,28 @@ name|void
 name|_initialize_ppcbug_rom
 parameter_list|()
 block|{
+name|init_ppc_cmds
+argument_list|(
+literal|"lo 0\r"
+argument_list|,
+operator|&
+name|ppcbug_cmds0
+argument_list|,
+operator|&
+name|ppcbug_ops0
+argument_list|)
+expr_stmt|;
+name|init_ppc_cmds
+argument_list|(
+literal|"lo 1\r"
+argument_list|,
+operator|&
+name|ppcbug_cmds1
+argument_list|,
+operator|&
+name|ppcbug_ops1
+argument_list|)
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&

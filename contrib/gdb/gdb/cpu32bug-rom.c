@@ -295,152 +295,379 @@ specifier|static
 name|struct
 name|monitor_ops
 name|cpu32bug_cmds
-init|=
-block|{
-name|MO_CLR_BREAK_USES_ADDR
-block|,
-name|cpu32bug_inits
-block|,
-comment|/* Init strings */
-literal|"g\r"
-block|,
-comment|/* continue command */
-literal|"t\r"
-block|,
-comment|/* single step */
-name|NULL
-block|,
-comment|/* interrupt command */
-literal|"br %x\r"
-block|,
-comment|/* set a breakpoint */
-literal|"nobr %x\r"
-block|,
-comment|/* clear a breakpoint */
-literal|"nobr\r"
-block|,
-comment|/* clear all breakpoints */
-literal|"bf %x:%x %x;b\r"
-block|,
-comment|/* fill (start count val) */
-block|{
-literal|"ms %x %02x\r"
-block|,
-comment|/* setmem.cmdb (addr, value) */
-literal|"ms %x %04x\r"
-block|,
-comment|/* setmem.cmdw (addr, value) */
-literal|"ms %x %08x\r"
-block|,
-comment|/* setmem.cmdl (addr, value) */
-name|NULL
-block|,
-comment|/* setmem.cmdll (addr, value) */
-name|NULL
-block|,
-comment|/* setreg.resp_delim */
-name|NULL
-block|,
-comment|/* setreg.term */
-name|NULL
-block|,
-comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
-literal|"md %x:%x;b\r"
-block|,
-comment|/* getmem.cmdb (addr, len) */
-literal|"md %x:%x;b\r"
-block|,
-comment|/* getmem.cmdw (addr, len) */
-literal|"md %x:%x;b\r"
-block|,
-comment|/* getmem.cmdl (addr, len) */
-name|NULL
-block|,
-comment|/* getmem.cmdll (addr, len) */
-literal|" "
-block|,
-comment|/* getmem.resp_delim */
-name|NULL
-block|,
-comment|/* getmem.term */
-name|NULL
-block|,
-comment|/* getmem.term_cmd */
-block|}
-block|,
-block|{
-literal|"rs %s %x\r"
-block|,
-comment|/* setreg.cmd (name, value) */
-name|NULL
-block|,
-comment|/* setreg.resp_delim */
-name|NULL
-block|,
-comment|/* setreg.term */
-name|NULL
-comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
-literal|"rs %s\r"
-block|,
-comment|/* getreg.cmd (name) */
-literal|"="
-block|,
-comment|/* getreg.resp_delim */
-name|NULL
-block|,
-comment|/* getreg.term */
-name|NULL
-comment|/* getreg.term_cmd */
-block|}
-block|,
-literal|"rd\r"
-block|,
-comment|/* dump_registers */
-literal|"\\(\\w+\\) +=\\([0-9a-fA-F]+\\b\\)"
-block|,
-comment|/* register_pattern */
-name|cpu32bug_supply_register
-block|,
-comment|/* supply_register */
-name|NULL
-block|,
-comment|/* load_routine (defaults to SRECs) */
-literal|"lo\r"
-block|,
-comment|/* download command */
-literal|"lo\r\n"
-block|,
-comment|/* load response */
-literal|"CPU32Bug>"
-block|,
-comment|/* monitor command prompt */
-literal|"\r"
-block|,
-comment|/* end-of-line terminator */
-name|NULL
-block|,
-comment|/* optional command terminator */
-operator|&
-name|cpu32bug_ops
-block|,
-comment|/* target operations */
-name|SERIAL_1_STOPBITS
-block|,
-comment|/* number of stop bits */
-name|cpu32bug_regnames
-block|,
-comment|/* registers names */
-name|MONITOR_OPS_MAGIC
-comment|/* magic */
-block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_cpu32bug_cmds
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|cpu32bug_cmds
+operator|.
+name|flags
+operator|=
+name|MO_CLR_BREAK_USES_ADDR
+expr_stmt|;
+name|cpu32bug_cmds
+operator|.
+name|init
+operator|=
+name|cpu32bug_inits
+expr_stmt|;
+comment|/* Init strings */
+name|cpu32bug_cmds
+operator|.
+name|cont
+operator|=
+literal|"g\r"
+expr_stmt|;
+comment|/* continue command */
+name|cpu32bug_cmds
+operator|.
+name|step
+operator|=
+literal|"t\r"
+expr_stmt|;
+comment|/* single step */
+name|cpu32bug_cmds
+operator|.
+name|stop
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* interrupt command */
+name|cpu32bug_cmds
+operator|.
+name|set_break
+operator|=
+literal|"br %x\r"
+expr_stmt|;
+comment|/* set a breakpoint */
+name|cpu32bug_cmds
+operator|.
+name|clr_break
+operator|=
+literal|"nobr %x\r"
+expr_stmt|;
+comment|/* clear a breakpoint */
+name|cpu32bug_cmds
+operator|.
+name|clr_all_break
+operator|=
+literal|"nobr\r"
+expr_stmt|;
+comment|/* clear all breakpoints */
+name|cpu32bug_cmds
+operator|.
+name|fill
+operator|=
+literal|"bf %x:%x %x;b\r"
+expr_stmt|;
+comment|/* fill (start count val) */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdb
+operator|=
+literal|"ms %x %02x\r"
+expr_stmt|;
+comment|/* setmem.cmdb (addr, value) */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdw
+operator|=
+literal|"ms %x %04x\r"
+expr_stmt|;
+comment|/* setmem.cmdw (addr, value) */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdl
+operator|=
+literal|"ms %x %08x\r"
+expr_stmt|;
+comment|/* setmem.cmdl (addr, value) */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdll
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setmem.cmdll (addr, value) */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|resp_delim
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.resp_delim */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.term */
+name|cpu32bug_cmds
+operator|.
+name|setmem
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.term_cmd */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdb
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
+comment|/* getmem.cmdb (addr, len) */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdw
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
+comment|/* getmem.cmdw (addr, len) */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdl
+operator|=
+literal|"md %x:%x;b\r"
+expr_stmt|;
+comment|/* getmem.cmdl (addr, len) */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdll
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* getmem.cmdll (addr, len) */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|resp_delim
+operator|=
+literal|" "
+expr_stmt|;
+comment|/* getmem.resp_delim */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* getmem.term */
+name|cpu32bug_cmds
+operator|.
+name|getmem
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* getmem.term_cmd */
+name|cpu32bug_cmds
+operator|.
+name|setreg
+operator|.
+name|cmd
+operator|=
+literal|"rs %s %x\r"
+expr_stmt|;
+comment|/* setreg.cmd (name, value) */
+name|cpu32bug_cmds
+operator|.
+name|setreg
+operator|.
+name|resp_delim
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.resp_delim */
+name|cpu32bug_cmds
+operator|.
+name|setreg
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.term */
+name|cpu32bug_cmds
+operator|.
+name|setreg
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* setreg.term_cmd */
+name|cpu32bug_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+operator|=
+literal|"rs %s\r"
+expr_stmt|;
+comment|/* getreg.cmd (name) */
+name|cpu32bug_cmds
+operator|.
+name|getreg
+operator|.
+name|resp_delim
+operator|=
+literal|"="
+expr_stmt|;
+comment|/* getreg.resp_delim */
+name|cpu32bug_cmds
+operator|.
+name|getreg
+operator|.
+name|term
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* getreg.term */
+name|cpu32bug_cmds
+operator|.
+name|getreg
+operator|.
+name|term_cmd
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* getreg.term_cmd */
+name|cpu32bug_cmds
+operator|.
+name|dump_registers
+operator|=
+literal|"rd\r"
+expr_stmt|;
+comment|/* dump_registers */
+name|cpu32bug_cmds
+operator|.
+name|register_pattern
+operator|=
+literal|"\\(\\w+\\) +=\\([0-9a-fA-F]+\\b\\)"
+expr_stmt|;
+comment|/* register_pattern */
+name|cpu32bug_cmds
+operator|.
+name|supply_register
+operator|=
+name|cpu32bug_supply_register
+expr_stmt|;
+comment|/* supply_register */
+name|cpu32bug_cmds
+operator|.
+name|load_routine
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* load_routine (defaults to SRECs) */
+name|cpu32bug_cmds
+operator|.
+name|load
+operator|=
+literal|"lo\r"
+expr_stmt|;
+comment|/* download command */
+name|cpu32bug_cmds
+operator|.
+name|loadresp
+operator|=
+literal|"\n"
+expr_stmt|;
+comment|/* load response */
+name|cpu32bug_cmds
+operator|.
+name|prompt
+operator|=
+literal|"CPU32Bug>"
+expr_stmt|;
+comment|/* monitor command prompt */
+name|cpu32bug_cmds
+operator|.
+name|line_term
+operator|=
+literal|"\r"
+expr_stmt|;
+comment|/* end-of-line terminator */
+name|cpu32bug_cmds
+operator|.
+name|cmd_end
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* optional command terminator */
+name|cpu32bug_cmds
+operator|.
+name|target
+operator|=
+operator|&
+name|cpu32bug_ops
+expr_stmt|;
+comment|/* target operations */
+name|cpu32bug_cmds
+operator|.
+name|stopbits
+operator|=
+name|SERIAL_1_STOPBITS
+expr_stmt|;
+comment|/* number of stop bits */
+name|cpu32bug_cmds
+operator|.
+name|regnames
+operator|=
+name|cpu32bug_regnames
+expr_stmt|;
+comment|/* registers names */
+name|cpu32bug_cmds
+operator|.
+name|magic
+operator|=
+name|MONITOR_OPS_MAGIC
+expr_stmt|;
+comment|/* magic */
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* init_cpu32bug_cmds */
+end_comment
 
 begin_function
 specifier|static
@@ -477,6 +704,9 @@ name|void
 name|_initialize_cpu32bug_rom
 parameter_list|()
 block|{
+name|init_cpu32bug_cmds
+argument_list|()
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&

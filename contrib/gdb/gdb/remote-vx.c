@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Memory-access and commands for remote VxWorks processes, for GDB.    Copyright 1990, 1991, 1992 Free Software Foundation, Inc.    Contributed by Wind River Systems and Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Memory-access and commands for remote VxWorks processes, for GDB.    Copyright (C) 1990-95, 1997-98, 1999 Free Software Foundation, Inc.    Contributed by Wind River Systems and Cygnus Support.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -319,19 +319,29 @@ begin_comment
 comment|/* Forward decl */
 end_comment
 
+begin_comment
+comment|/* Target ops structure for accessing memory and such over the net */
+end_comment
+
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|target_ops
 name|vx_ops
-decl_stmt|,
-name|vx_run_ops
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Forward declaration */
+comment|/* Target ops structure for accessing VxWorks child processes over the net */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|target_ops
+name|vx_run_ops
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Saved name of target host and called function for "info files".    Both malloc'd.  */
@@ -1606,7 +1616,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -1787,7 +1797,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|sprintf
 argument_list|(
@@ -2133,7 +2143,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 block|}
 block|}
@@ -2392,7 +2402,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|perror_with_name
 argument_list|(
@@ -2669,6 +2679,10 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* This is a (slightly cheesy) way of superceding the old symbols.  A less      cheesy way would be to find the objfile with the same name and      free_objfile it.  */
@@ -2806,10 +2820,6 @@ name|objfile
 argument_list|,
 name|offs
 argument_list|)
-expr_stmt|;
-comment|/* Need to do this *after* things are relocated.  */
-name|breakpoint_re_set
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4631,7 +4641,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|perror_with_name
 argument_list|(
@@ -4640,63 +4650,28 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* It worked... */
+name|inferior_pid
+operator|=
+name|pid
+expr_stmt|;
 name|push_target
 argument_list|(
 operator|&
 name|vx_run_ops
 argument_list|)
 expr_stmt|;
-comment|/* The unsigned long pid will get turned into a signed int here,      but it doesn't seem to matter.  inferior_pid must be signed      in order for other parts of GDB to work correctly.  */
-name|inferior_pid
-operator|=
-name|pid
+if|if
+condition|(
+name|vx_running
+condition|)
+name|free
+argument_list|(
+name|vx_running
+argument_list|)
 expr_stmt|;
 name|vx_running
 operator|=
 literal|0
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|START_INFERIOR_HOOK
-argument_list|)
-name|START_INFERIOR_HOOK
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-name|mark_breakpoints_out
-argument_list|()
-expr_stmt|;
-comment|/* Set up the "saved terminal modes" of the inferior      based on what modes we are starting it with.  */
-name|target_terminal_init
-argument_list|()
-expr_stmt|;
-comment|/* Install inferior's terminal modes.  */
-name|target_terminal_inferior
-argument_list|()
-expr_stmt|;
-comment|/* We will get a task spawn event immediately.  */
-name|init_wait_for_inferior
-argument_list|()
-expr_stmt|;
-name|clear_proceed_status
-argument_list|()
-expr_stmt|;
-name|stop_soon_quietly
-operator|=
-literal|1
-expr_stmt|;
-name|wait_for_inferior
-argument_list|()
-expr_stmt|;
-name|stop_soon_quietly
-operator|=
-literal|0
-expr_stmt|;
-name|normal_stop
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -4854,7 +4829,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|perror_with_name
 argument_list|(
@@ -4986,7 +4961,7 @@ name|errno
 operator|=
 name|ptrace_out
 operator|.
-name|errno
+name|errno_num
 expr_stmt|;
 name|perror_with_name
 argument_list|(
@@ -5203,224 +5178,268 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* Target ops structure for accessing memory and such over the net */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|target_ops
+begin_function
+specifier|static
+name|void
+name|init_vx_ops
+parameter_list|()
+block|{
 name|vx_ops
-init|=
-block|{
+operator|.
+name|to_shortname
+operator|=
 literal|"vxworks"
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_longname
+operator|=
 literal|"VxWorks target memory via RPC over TCP/IP"
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_doc
+operator|=
 literal|"Use VxWorks target memory.  \n\ Specify the name of the machine to connect to."
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_open
+operator|=
 name|vx_open
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_close
+operator|=
 name|vx_close
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_attach
+operator|=
 name|vx_attach
-block|,
-literal|0
-block|,
-comment|/* vx_detach, */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* resume, wait */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* read_reg, write_reg */
-literal|0
-block|,
-comment|/* prep_to_store, */
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_xfer_memory
+operator|=
 name|vx_xfer_memory
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_files_info
+operator|=
 name|vx_files_info
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* insert_breakpoint, remove_breakpoint */
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* terminal stuff */
-literal|0
-block|,
-comment|/* vx_kill, */
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_load
+operator|=
 name|vx_load_command
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_lookup_symbol
+operator|=
 name|vx_lookup_symbol
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_create_inferior
+operator|=
 name|vx_create_inferior
-block|,
-literal|0
-block|,
-comment|/* mourn_inferior */
-literal|0
-block|,
-comment|/* can_run */
-literal|0
-block|,
-comment|/* notice_signals */
-literal|0
-block|,
-comment|/* thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_stratum
+operator|=
 name|core_stratum
-block|,
-literal|0
-block|,
-comment|/* next */
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_has_all_memory
+operator|=
 literal|1
-block|,
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_has_memory
+operator|=
 literal|1
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* all mem, mem, stack, regs, exec */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* Section pointers */
+expr_stmt|;
+name|vx_ops
+operator|.
+name|to_magic
+operator|=
 name|OPS_MAGIC
-block|,
+expr_stmt|;
 comment|/* Always the last thing */
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
 
-begin_comment
-comment|/* Target ops structure for accessing VxWorks child processes over the net */
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
-begin_decl_stmt
-name|struct
-name|target_ops
-name|vx_run_ops
-init|=
+begin_function
+specifier|static
+name|void
+name|init_vx_run_ops
+parameter_list|()
 block|{
+name|vx_run_ops
+operator|.
+name|to_shortname
+operator|=
 literal|"vxprocess"
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_longname
+operator|=
 literal|"VxWorks process"
-block|,
-literal|"VxWorks process, started by the \"run\" command."
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_doc
+operator|=
+literal|"VxWorks process; started by the \"run\" command."
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_open
+operator|=
 name|vx_proc_open
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_close
+operator|=
 name|vx_proc_close
-block|,
-literal|0
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_detach
+operator|=
 name|vx_detach
-block|,
-comment|/* vx_attach */
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_resume
+operator|=
 name|vx_resume
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_wait
+operator|=
 name|vx_wait
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_fetch_registers
+operator|=
 name|vx_read_register
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_store_registers
+operator|=
 name|vx_write_register
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_prepare_to_store
+operator|=
 name|vx_prepare_to_store
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_xfer_memory
+operator|=
 name|vx_xfer_memory
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_files_info
+operator|=
 name|vx_run_files_info
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_insert_breakpoint
+operator|=
 name|vx_insert_breakpoint
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_remove_breakpoint
+operator|=
 name|vx_remove_breakpoint
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-comment|/* terminal stuff */
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_kill
+operator|=
 name|vx_kill
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_load
+operator|=
 name|vx_load_command
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_lookup_symbol
+operator|=
 name|vx_lookup_symbol
-block|,
-literal|0
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_mourn_inferior
+operator|=
 name|vx_mourn_inferior
-block|,
-literal|0
-block|,
-comment|/* can_run */
-literal|0
-block|,
-comment|/* notice_signals */
-literal|0
-block|,
-comment|/* thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_stratum
+operator|=
 name|process_stratum
-block|,
-literal|0
-block|,
-comment|/* next */
-literal|0
-block|,
-comment|/* all_mem--off to avoid spurious msg in "i files" */
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_has_memory
+operator|=
 literal|1
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_has_stack
+operator|=
 literal|1
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_has_registers
+operator|=
 literal|1
-block|,
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_has_execution
+operator|=
 literal|1
-block|,
-comment|/* mem, stack, regs, exec */
-literal|0
-block|,
-literal|0
-block|,
-comment|/* Section pointers */
+expr_stmt|;
+name|vx_run_ops
+operator|.
+name|to_magic
+operator|=
 name|OPS_MAGIC
-block|,
-comment|/* Always the last thing */
+expr_stmt|;
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* ==> Remember when reading at end of file, there are two "ops" structs here. */
-end_comment
+end_function
 
 begin_escape
 end_escape
@@ -5430,6 +5449,24 @@ name|void
 name|_initialize_vx
 parameter_list|()
 block|{
+name|init_vx_ops
+argument_list|()
+expr_stmt|;
+name|add_target
+argument_list|(
+operator|&
+name|vx_ops
+argument_list|)
+expr_stmt|;
+name|init_vx_run_ops
+argument_list|()
+expr_stmt|;
+name|add_target
+argument_list|(
+operator|&
+name|vx_run_ops
+argument_list|)
+expr_stmt|;
 name|add_show_from_set
 argument_list|(
 name|add_set_cmd
@@ -5457,18 +5494,6 @@ argument_list|)
 argument_list|,
 operator|&
 name|showlist
-argument_list|)
-expr_stmt|;
-name|add_target
-argument_list|(
-operator|&
-name|vx_ops
-argument_list|)
-expr_stmt|;
-name|add_target
-argument_list|(
-operator|&
-name|vx_run_ops
 argument_list|)
 expr_stmt|;
 block|}

@@ -45,13 +45,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FLOAT_INFO
-value|extern i386_float_info (); \ 						  i386_float_info ()
-end_define
-
-begin_define
-define|#
-directive|define
 name|REGISTER_U_ADDR
 parameter_list|(
 name|addr

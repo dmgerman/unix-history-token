@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Low level interface to ptrace, for GDB when running under Unix.    Copyright 1986, 1987, 1989, 1991, 1992, 1995 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Low level interface to ptrace, for GDB when running under Unix.    Copyright 1986-87, 1989, 1991-92, 1995, 1998 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"thread.h"
+file|"gdbthread.h"
 end_include
 
 begin_include
@@ -113,6 +113,24 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_TERMIO
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PROCESS_GROUP_TYPE
+value|int
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_SGTTY
 end_ifdef
 
@@ -158,6 +176,61 @@ end_endif
 begin_comment
 comment|/* sgtty */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|SIGIO
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FASYNC
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|FD_SET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|F_SETOWN
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|void
+name|handle_sigio
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|static
+name|void
+name|pass_signal
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -312,7 +385,6 @@ comment|/* Nonzero if our terminal settings are in effect.  Zero if the    infer
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|terminal_is_ours
 decl_stmt|;
@@ -429,6 +501,16 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|HAVE_TERMIO
+name|our_process_group
+operator|=
+name|getpgrp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|HAVE_SGTTY
 name|ioctl
 argument_list|(
@@ -492,8 +574,13 @@ end_comment
 
 begin_function
 name|void
-name|terminal_init_inferior
-parameter_list|()
+name|terminal_init_inferior_with_pgrp
+parameter_list|(
+name|pgrp
+parameter_list|)
+name|int
+name|pgrp
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -521,25 +608,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PROCESS_GROUP_TYPE
-ifdef|#
-directive|ifdef
-name|PIDGET
-comment|/* This is for Lynx, and should be cleaned up by having Lynx be 	 a separate debugging target with a version of 	 target_terminal_init_inferior which passes in the process 	 group to a generic routine which does all the work (and the 	 non-threaded child_terminal_init_inferior can just pass in 	 inferior_pid to the same routine).  */
 name|inferior_process_group
 operator|=
-name|PIDGET
-argument_list|(
-name|inferior_pid
-argument_list|)
+name|pgrp
 expr_stmt|;
-else|#
-directive|else
-name|inferior_process_group
-operator|=
-name|inferior_pid
-expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 comment|/* Make sure that next time we call terminal_inferior (which will be 	 before the program runs, as it needs to be), we install the new 	 process group.  */
@@ -548,6 +620,30 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+name|void
+name|terminal_init_inferior
+parameter_list|()
+block|{
+ifdef|#
+directive|ifdef
+name|PROCESS_GROUP_TYPE
+comment|/* This is for Lynx, and should be cleaned up by having Lynx be a separate      debugging target with a version of target_terminal_init_inferior which      passes in the process group to a generic routine which does all the work      (and the non-threaded child_terminal_init_inferior can just pass in      inferior_pid to the same routine).  */
+comment|/* We assume INFERIOR_PID is also the child's process group.  */
+name|terminal_init_inferior_with_pgrp
+argument_list|(
+name|PIDGET
+argument_list|(
+name|inferior_pid
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* PROCESS_GROUP_TYPE */
 block|}
 end_function
 
@@ -645,6 +741,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGQUIT
 name|sigquit_ours
 operator|=
 operator|(
@@ -661,6 +760,8 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* If attach_flag is set, we don't know whether we are sharing a 	 terminal with the inferior or not.  (attaching a process 	 without a terminal is one case where we do not; attaching a 	 process which we ran from the same shell as GDB via `&' is 	 one case where we do, I think (but perhaps this is not 	 `sharing' in the sense that we need to save and restore tty 	 state)).  I don't know if there is any way to tell whether we 	 are sharing a terminal.  So what we do is to go through all 	 the saving and restoring of the tty state, but ignore errors 	 setting the process group, which will happen if we are not 	 sharing a terminal).  */
 if|if
@@ -866,6 +967,16 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|HAVE_TERMIO
+name|inferior_process_group
+operator|=
+name|getpgrp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|HAVE_SGTTY
 name|ioctl
 argument_list|(
@@ -964,6 +1075,9 @@ argument_list|,
 name|sigint_ours
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGQUIT
 name|signal
 argument_list|(
 name|SIGQUIT
@@ -971,6 +1085,8 @@ argument_list|,
 name|sigquit_ours
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 ifdef|#
 directive|ifdef
@@ -1335,7 +1451,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__WIN32__
+name|_WIN32
 argument_list|)
 ifdef|#
 directive|ifdef
@@ -1647,13 +1763,21 @@ name|int
 name|signo
 decl_stmt|;
 block|{
+ifndef|#
+directive|ifndef
+name|_WIN32
 name|kill
 argument_list|(
+name|PIDGET
+argument_list|(
 name|inferior_pid
+argument_list|)
 argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1832,6 +1956,9 @@ name|readfds
 argument_list|)
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|_WIN32
 if|if
 condition|(
 call|(
@@ -1847,6 +1974,8 @@ argument_list|,
 name|SIGINT
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function

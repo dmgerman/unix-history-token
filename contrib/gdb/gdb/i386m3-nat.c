@@ -630,8 +630,7 @@ comment|/* Return the address in the core dump or inferior of register REGNO.  *
 end_comment
 
 begin_function
-name|unsigned
-name|int
+name|CORE_ADDR
 name|register_addr
 parameter_list|(
 name|regno
@@ -641,12 +640,11 @@ parameter_list|)
 name|int
 name|regno
 decl_stmt|;
-name|int
+name|CORE_ADDR
 name|blockend
 decl_stmt|;
 block|{
-name|unsigned
-name|int
+name|CORE_ADDR
 name|addr
 decl_stmt|;
 if|if

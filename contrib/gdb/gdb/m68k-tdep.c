@@ -21,6 +21,24 @@ directive|include
 file|"symtab.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"gdbcore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"value.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gdb_string.h"
+end_include
+
 begin_escape
 end_escape
 
@@ -204,11 +222,6 @@ decl_stmt|;
 name|struct
 name|frame_saved_regs
 name|fsr
-decl_stmt|;
-name|struct
-name|frame_info
-modifier|*
-name|fi
 decl_stmt|;
 name|char
 name|raw_buffer

@@ -61,27 +61,25 @@ begin_comment
 comment|/* pointer to a function */
 end_comment
 
-begin_extern
-extern|extern putDebugChar(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|putDebugChar
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* write a single character      */
 end_comment
 
-begin_extern
-extern|extern getDebugChar(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_function_decl
+specifier|extern
+name|int
+name|getDebugChar
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* read and return a single char */
@@ -1405,15 +1403,11 @@ name|count
 index|]
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|putDebugChar
 argument_list|(
 name|ch
 argument_list|)
-condition|)
-return|return;
+expr_stmt|;
 name|checksum
 operator|+=
 name|ch

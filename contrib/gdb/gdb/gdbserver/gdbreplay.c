@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sgtty.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -55,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_comment
@@ -285,10 +285,6 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|struct
-name|sgttyb
-name|sg
-decl_stmt|;
 specifier|extern
 name|char
 modifier|*

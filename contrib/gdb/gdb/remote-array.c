@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote debugging interface for Array Tech RAID controller..    Copyright 90, 91, 92, 93, 94, 1995  Free Software Foundation, Inc.    Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.     This module talks to a debug monitor called 'MONITOR', which    We communicate with MONITOR via either a direct serial line, or a TCP    (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the target board.    This file is part of GDB.    This program is free software; you can redistribute it and/or modify   it under the terms of the GNU General Public License as published by   the Free Software Foundation; either version 2 of the License, or   (at your option) any later version.    This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.    You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote debugging interface for Array Tech RAID controller..    Copyright 90, 91, 92, 93, 94, 1995, 1998  Free Software Foundation, Inc.    Contributed by Cygnus Support. Written by Rob Savoye for Cygnus.     This module talks to a debug monitor called 'MONITOR', which    We communicate with MONITOR via either a direct serial line, or a TCP    (or possibly TELNET) stream to a terminal multiplexor,    which in turn talks to the target board.    This file is part of GDB.    This program is free software; you can redistribute it and/or modify   it under the terms of the GNU General Public License as published by   the Free Software Foundation; either version 2 of the License, or   (at your option) any later version.    This program is distributed in the hope that it will be useful,   but WITHOUT ANY WARRANTY; without even the implied warranty of   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the   GNU General Public License for more details.    You should have received a copy of the GNU General Public License   along with this program; if not, write to the Free Software   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -54,6 +54,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -345,8 +351,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|char
-modifier|*
+name|void
 name|hexword2ascii
 parameter_list|()
 function_decl|;
@@ -445,130 +450,401 @@ specifier|static
 name|struct
 name|target_ops
 name|array_ops
-init|=
-block|{
-literal|"array"
-block|,
-comment|/* to_shortname */
-comment|/* to_longname */
-literal|"Debug using the standard GDB remote protocol for the Array Tech target."
-block|,
-comment|/* to_doc */
-literal|"Debug using the standard GDB remote protocol for the Array Tech target.\n\ Specify the serial device it is connected to (e.g. /dev/ttya)."
-block|,
-name|array_open
-block|,
-comment|/* to_open */
-name|array_close
-block|,
-comment|/* to_close */
-name|NULL
-block|,
-comment|/* to_attach */
-name|array_detach
-block|,
-comment|/* to_detach */
-name|array_resume
-block|,
-comment|/* to_resume */
-name|array_wait
-block|,
-comment|/* to_wait */
-name|array_fetch_registers
-block|,
-comment|/* to_fetch_registers */
-name|array_store_registers
-block|,
-comment|/* to_store_registers */
-name|array_prepare_to_store
-block|,
-comment|/* to_prepare_to_store */
-name|array_xfer_memory
-block|,
-comment|/* to_xfer_memory */
-name|array_files_info
-block|,
-comment|/* to_files_info */
-name|array_insert_breakpoint
-block|,
-comment|/* to_insert_breakpoint */
-name|array_remove_breakpoint
-block|,
-comment|/* to_remove_breakpoint */
-literal|0
-block|,
-comment|/* to_terminal_init */
-literal|0
-block|,
-comment|/* to_terminal_inferior */
-literal|0
-block|,
-comment|/* to_terminal_ours_for_output */
-literal|0
-block|,
-comment|/* to_terminal_ours */
-literal|0
-block|,
-comment|/* to_terminal_info */
-name|array_kill
-block|,
-comment|/* to_kill */
-literal|0
-block|,
-comment|/* to_load */
-literal|0
-block|,
-comment|/* to_lookup_symbol */
-name|array_create_inferior
-block|,
-comment|/* to_create_inferior */
-name|array_mourn_inferior
-block|,
-comment|/* to_mourn_inferior */
-literal|0
-block|,
-comment|/* to_can_run */
-literal|0
-block|,
-comment|/* to_notice_signals */
-literal|0
-block|,
-comment|/* to_thread_alive */
-literal|0
-block|,
-comment|/* to_stop */
-name|process_stratum
-block|,
-comment|/* to_stratum */
-literal|0
-block|,
-comment|/* to_next */
-literal|1
-block|,
-comment|/* to_has_all_memory */
-literal|1
-block|,
-comment|/* to_has_memory */
-literal|1
-block|,
-comment|/* to_has_stack */
-literal|1
-block|,
-comment|/* to_has_registers */
-literal|1
-block|,
-comment|/* to_has_execution */
-literal|0
-block|,
-comment|/* sections */
-literal|0
-block|,
-comment|/* sections_end */
-name|OPS_MAGIC
-comment|/* to_magic */
-block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_array_ops
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|array_ops
+operator|.
+name|to_shortname
+operator|=
+literal|"array"
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_longname
+operator|=
+literal|"Debug using the standard GDB remote protocol for the Array Tech target."
+operator|,
+name|array_ops
+operator|.
+name|to_doc
+operator|=
+literal|"Debug using the standard GDB remote protocol for the Array Tech target.\n\ Specify the serial device it is connected to (e.g. /dev/ttya)."
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_open
+operator|=
+name|array_open
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_close
+operator|=
+name|array_close
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_attach
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_post_attach
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_require_attach
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_detach
+operator|=
+name|array_detach
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_require_detach
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_resume
+operator|=
+name|array_resume
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_wait
+operator|=
+name|array_wait
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_post_wait
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_fetch_registers
+operator|=
+name|array_fetch_registers
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_store_registers
+operator|=
+name|array_store_registers
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_prepare_to_store
+operator|=
+name|array_prepare_to_store
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_xfer_memory
+operator|=
+name|array_xfer_memory
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_files_info
+operator|=
+name|array_files_info
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_insert_breakpoint
+operator|=
+name|array_insert_breakpoint
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_remove_breakpoint
+operator|=
+name|array_remove_breakpoint
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_terminal_init
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_terminal_inferior
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_terminal_ours_for_output
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_terminal_ours
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_terminal_info
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_kill
+operator|=
+name|array_kill
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_load
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_lookup_symbol
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_create_inferior
+operator|=
+name|array_create_inferior
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_post_startup_inferior
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_acknowledge_created_inferior
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_clone_and_follow_inferior
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_post_follow_inferior_by_clone
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_insert_fork_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_remove_fork_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_insert_vfork_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_remove_vfork_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_forked
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_vforked
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_can_follow_vfork_prior_to_exec
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_post_follow_vfork
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_insert_exec_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_remove_exec_catchpoint
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_execd
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_reported_exec_events_per_exec_call
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_exited
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_mourn_inferior
+operator|=
+name|array_mourn_inferior
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_can_run
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_notice_signals
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_thread_alive
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_stop
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_pid_to_exec_file
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_core_file_to_sym_file
+operator|=
+name|NULL
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_stratum
+operator|=
+name|process_stratum
+expr_stmt|;
+name|array_ops
+operator|.
+name|DONT_USE
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_all_memory
+operator|=
+literal|1
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_memory
+operator|=
+literal|1
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_stack
+operator|=
+literal|1
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_registers
+operator|=
+literal|1
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_has_execution
+operator|=
+literal|1
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_sections
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_sections_end
+operator|=
+literal|0
+expr_stmt|;
+name|array_ops
+operator|.
+name|to_magic
+operator|=
+name|OPS_MAGIC
+expr_stmt|;
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/*  * printf_monitor -- send data to monitor.  Works just like printf.  */
@@ -1919,7 +2195,7 @@ literal|0
 condition|)
 name|error
 argument_list|(
-literal|"No exec file specified"
+literal|"No executable file specified"
 argument_list|)
 expr_stmt|;
 name|entry_pt
@@ -2147,7 +2423,7 @@ argument_list|(
 name|LOG_FILE
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
@@ -2156,7 +2432,7 @@ argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
@@ -2167,7 +2443,7 @@ operator|.
 name|to_shortname
 argument_list|)
 expr_stmt|;
-name|fprintf_filtered
+name|fprintf
 argument_list|(
 name|log_file
 argument_list|,
@@ -2589,7 +2865,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__WIN32__
+name|_WIN32
 argument_list|)
 name|tty_desc
 operator|=
@@ -2683,9 +2959,9 @@ argument_list|,
 name|gdb_stdout
 argument_list|)
 expr_stmt|;
-name|fflush
+name|gdb_flush
 argument_list|(
-name|stdout
+name|gdb_stdout
 argument_list|)
 expr_stmt|;
 block|}
@@ -2727,7 +3003,7 @@ break|break;
 if|#
 directive|if
 literal|0
-block|fputc_unfiltered (c, gdb_stdout);       fflush (stdout);
+block|fputc_unfiltered (c, gdb_stdout);       gdb_flush (gdb_stdout);
 endif|#
 directive|endif
 block|}
@@ -3906,13 +4182,6 @@ value|16
 end_define
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|memory_breakpoint_size
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|CORE_ADDR
 name|breakaddr
@@ -3950,6 +4219,16 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|int
+name|bp_size
+init|=
+literal|0
+decl_stmt|;
+name|CORE_ADDR
+name|bp_addr
+init|=
+name|addr
+decl_stmt|;
 name|debuglogs
 argument_list|(
 literal|1
@@ -3957,6 +4236,15 @@ argument_list|,
 literal|"array_insert_breakpoint() addr = 0x%x"
 argument_list|,
 name|addr
+argument_list|)
+expr_stmt|;
+name|BREAKPOINT_FROM_PC
+argument_list|(
+operator|&
+name|bp_addr
+argument_list|,
+operator|&
+name|bp_size
 argument_list|)
 expr_stmt|;
 for|for
@@ -4006,11 +4294,11 @@ argument_list|)
 expr_stmt|;
 name|array_read_inferior_memory
 argument_list|(
-name|addr
+name|bp_addr
 argument_list|,
 name|shadow
 argument_list|,
-name|memory_breakpoint_size
+name|bp_size
 argument_list|)
 expr_stmt|;
 name|printf_monitor
@@ -5084,6 +5372,10 @@ return|;
 block|}
 block|}
 block|}
+return|return
+literal|0
+return|;
+comment|/* exceeded retries */
 block|}
 end_function
 
@@ -5268,8 +5560,7 @@ end_comment
 
 begin_function
 specifier|static
-name|char
-modifier|*
+name|void
 name|hexword2ascii
 parameter_list|(
 name|mem
@@ -5537,6 +5828,9 @@ name|void
 name|_initialize_array
 parameter_list|()
 block|{
+name|init_array_ops
+argument_list|()
+expr_stmt|;
 name|add_target
 argument_list|(
 operator|&

@@ -188,8 +188,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|ignore
 decl_stmt|;
 block|{
@@ -451,6 +450,12 @@ ifdef|#
 directive|ifdef
 name|FLOAT_INFO
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"expression.h"
+end_include
 
 begin_include
 include|#

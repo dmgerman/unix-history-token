@@ -101,9 +101,52 @@ name|objfile
 modifier|*
 name|objfile
 decl_stmt|;
+comment|/* True if this "overlay section" is mapped into an "overlay region". */
+name|int
+name|ovly_mapped
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* An import entry contains information about a symbol that    is used in this objfile but not defined in it, and so needs    to be imported from some other objfile */
+end_comment
+
+begin_comment
+comment|/* Currently we just store the name; no attributes. 1997-08-05 */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+modifier|*
+name|ImportEntry
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* An export entry contains information about a symbol that    is defined in this objfile and available for use in other    objfiles */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* name of exported symbol */
+name|int
+name|address
+decl_stmt|;
+comment|/* offset subject to relocation */
+comment|/* Currently no other attributes 1997-08-05 */
+block|}
+name|ExportEntry
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* The "objstats" structure provides a place for gdb to record some    interesting information about its internal state at runtime, on a    per objfile basis, such as information about the number of symbols    read, size of string table (if any), etc. */
@@ -250,6 +293,14 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+comment|/* TRUE if this objfile was created because the user explicitly caused      it (e.g., used the add-symbol-file command).      */
+name|int
+name|user_loaded
+decl_stmt|;
+comment|/* TRUE if this objfile was explicitly created to represent a solib.       (If FALSE, the objfile may actually be a solib.  This can happen if      the user created the objfile by using the add-symbol-file command.      GDB doesn't in that situation actually check whether the file is a      solib.  Rather, the target's implementation of the solib interface      is responsible for setting this flag when noticing solibs used by      an inferior.)      */
+name|int
+name|is_solib
+decl_stmt|;
 comment|/* Some flag bits for this objfile. */
 name|unsigned
 name|short
@@ -349,7 +400,9 @@ name|entry_info
 name|ei
 decl_stmt|;
 comment|/* Information about stabs.  Will be filled in with a dbx_symfile_info      struct by those readers that need it. */
-name|PTR
+name|struct
+name|dbx_symfile_info
+modifier|*
 name|sym_stab_info
 decl_stmt|;
 comment|/* Hook for information for use by the symbol reader (currently used      for information shared by sym_init and sym_read).  It is      typically a pointer to malloc'd memory.  The symbol reader's finish      function is responsible for freeing the memory thusly allocated.  */
@@ -385,6 +438,22 @@ name|auxf1
 decl_stmt|,
 modifier|*
 name|auxf2
+decl_stmt|;
+comment|/* Imported symbols */
+name|ImportEntry
+modifier|*
+name|import_list
+decl_stmt|;
+name|int
+name|import_list_size
+decl_stmt|;
+comment|/* Exported symbols */
+name|ExportEntry
+modifier|*
+name|export_list
+decl_stmt|;
+name|int
+name|export_list_size
 decl_stmt|;
 comment|/* Place to stash various statistics about this objfile */
 name|OBJSTATS
@@ -435,11 +504,26 @@ begin_define
 define|#
 directive|define
 name|OBJF_REORDERED
-value|(2<< 1)
+value|(1<< 2)
 end_define
 
 begin_comment
 comment|/* Functions are reordered */
+end_comment
+
+begin_comment
+comment|/* Distinguish between an objfile for a shared library and a    "vanilla" objfile. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OBJF_SHARED
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* From a shared library */
 end_comment
 
 begin_comment
@@ -509,6 +593,10 @@ argument_list|(
 operator|(
 name|bfd
 operator|*
+operator|,
+name|int
+operator|,
+name|int
 operator|,
 name|int
 operator|)
@@ -635,6 +723,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* This operation deletes all objfile entries that represent solibs that    weren't explicitly loaded by the user, via e.g., the add-symbol-file    command.    */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|objfile_purge_solibs
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Functions for dealing with the minimal symbol table, really a misc    address<->symbol mapping for things we don't have debug symbols for.  */
 end_comment
 
@@ -662,6 +767,42 @@ argument_list|(
 operator|(
 name|CORE_ADDR
 name|pc
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|obj_section
+modifier|*
+name|find_pc_sect_section
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+name|pc
+operator|,
+name|asection
+operator|*
+name|section
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|in_plt_section
+name|PARAMS
+argument_list|(
+operator|(
+name|CORE_ADDR
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -795,6 +936,32 @@ name|m
 parameter_list|)
 define|\
 value|ALL_OBJFILES (objfile)	 \     if ((objfile)->msymbols)	 \       ALL_OBJFILE_MSYMBOLS (objfile, m)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALL_OBJFILE_OSECTIONS
+parameter_list|(
+name|objfile
+parameter_list|,
+name|osect
+parameter_list|)
+define|\
+value|for (osect = objfile->sections; osect< objfile->sections_end; osect++)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALL_OBJSECTIONS
+parameter_list|(
+name|objfile
+parameter_list|,
+name|osect
+parameter_list|)
+define|\
+value|ALL_OBJFILES (objfile)			\     ALL_OBJFILE_OSECTIONS (objfile, osect)
 end_define
 
 begin_endif

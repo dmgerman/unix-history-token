@@ -231,9 +231,15 @@ literal|0
 argument_list|,
 comment|/* not mapped */
 literal|0
+argument_list|,
+comment|/* Not readnow */
+literal|0
+argument_list|,
+comment|/* Not user loaded */
+literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Not readnow */
+comment|/* Is a solib */
 name|libsize
 operator|-=
 name|len

@@ -13,22 +13,16 @@ directive|include
 file|"defs.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|gregset_t
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|fpregset_t
-end_undef
-
 begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -85,6 +79,26 @@ directive|include
 file|"gdbcore.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|fetch_core_registers
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+operator|,
+name|int
+operator|,
+name|CORE_ADDR
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -108,8 +122,7 @@ decl_stmt|;
 name|int
 name|which
 decl_stmt|;
-name|unsigned
-name|int
+name|CORE_ADDR
 name|reg_addr
 decl_stmt|;
 comment|/* Unused in this version */

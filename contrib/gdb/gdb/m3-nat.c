@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Interface GDB to Mach 3.0 operating systems.    (Most) Mach 3.0 related routines live in this file.     Copyright (C) 1992 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Interface GDB to Mach 3.0 operating systems.    (Most) Mach 3.0 related routines live in this file.     Copyright (C) 1992, 1996, 1999 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -889,7 +889,7 @@ begin_escape
 end_escape
 
 begin_decl_stmt
-specifier|extern
+specifier|static
 name|struct
 name|target_ops
 name|m3_ops
@@ -3811,7 +3811,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|m3_trace_him
 parameter_list|(
 name|pid
@@ -3902,6 +3902,9 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+return|return
+name|pid
+return|;
 block|}
 end_function
 
@@ -13180,6 +13183,8 @@ argument_list|,
 name|m3_trace_him
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* We are at the first instruction we care about.  */
@@ -15254,134 +15259,236 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-name|struct
-name|target_ops
-name|m3_ops
-init|=
-block|{
-literal|"mach"
-block|,
-comment|/* to_shortname */
-literal|"Mach child process"
-block|,
-comment|/* to_longname */
-literal|"Mach child process (started by the \"run\" command)."
-block|,
-comment|/* to_doc */
-name|m3_open
-block|,
-comment|/* to_open */
-literal|0
-block|,
-comment|/* to_close */
-name|m3_attach
-block|,
-comment|/* to_attach */
-name|m3_detach
-block|,
-comment|/* to_detach */
-name|m3_resume
-block|,
-comment|/* to_resume */
-name|mach_really_wait
-block|,
-comment|/* to_wait */
-name|fetch_inferior_registers
-block|,
-comment|/* to_fetch_registers */
-name|store_inferior_registers
-block|,
-comment|/* to_store_registers */
-name|m3_prepare_to_store
-block|,
-comment|/* to_prepare_to_store */
-name|m3_xfer_memory
-block|,
-comment|/* to_xfer_memory */
-name|m3_files_info
-block|,
-comment|/* to_files_info */
-name|memory_insert_breakpoint
-block|,
-comment|/* to_insert_breakpoint */
-name|memory_remove_breakpoint
-block|,
-comment|/* to_remove_breakpoint */
-name|terminal_init_inferior
-block|,
-comment|/* to_terminal_init */
-name|terminal_inferior
-block|,
-comment|/* to_terminal_inferior */
-name|terminal_ours_for_output
-block|,
-comment|/* to_terminal_ours_for_output */
-name|terminal_ours
-block|,
-comment|/* to_terminal_ours */
-name|child_terminal_info
-block|,
-comment|/* to_terminal_info */
-name|m3_kill_inferior
-block|,
-comment|/* to_kill */
-literal|0
-block|,
-comment|/* to_load */
-literal|0
-block|,
-comment|/* to_lookup_symbol */
-name|m3_create_inferior
-block|,
-comment|/* to_create_inferior */
-name|m3_mourn_inferior
-block|,
-comment|/* to_mourn_inferior */
-name|m3_can_run
-block|,
-comment|/* to_can_run */
-literal|0
-block|,
-comment|/* to_notice_signals */
-literal|0
-block|,
-comment|/* to_thread_alive */
-name|m3_stop
-block|,
-comment|/* to_stop */
-name|process_stratum
-block|,
-comment|/* to_stratum */
-literal|0
-block|,
-comment|/* to_next */
-literal|1
-block|,
-comment|/* to_has_all_memory */
-literal|1
-block|,
-comment|/* to_has_memory */
-literal|1
-block|,
-comment|/* to_has_stack */
-literal|1
-block|,
-comment|/* to_has_registers */
-literal|1
-block|,
-comment|/* to_has_execution */
-literal|0
-block|,
-comment|/* sections */
-literal|0
-block|,
-comment|/* sections_end */
-name|OPS_MAGIC
-comment|/* to_magic */
-block|}
+begin_function
+specifier|static
+name|char
+modifier|*
+name|m3_pid_to_exec_file
+parameter_list|(
+name|pid
+parameter_list|)
+name|int
+name|pid
 decl_stmt|;
-end_decl_stmt
+block|{
+name|error
+argument_list|(
+literal|"to_pid_to_exec_file target function not implemented"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+comment|/* To keep all compilers happy. */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|init_m3_ops
+parameter_list|()
+block|{
+name|m3_ops
+operator|.
+name|to_shortname
+operator|=
+literal|"mach"
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_longname
+operator|=
+literal|"Mach child process"
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_doc
+operator|=
+literal|"Mach child process (started by the \"run\" command)."
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_open
+operator|=
+name|m3_open
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_attach
+operator|=
+name|m3_attach
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_detach
+operator|=
+name|m3_detach
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_resume
+operator|=
+name|m3_resume
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_wait
+operator|=
+name|mach_really__wait
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_fetch_registers
+operator|=
+name|fetch_inferior_registers
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_store_registers
+operator|=
+name|store_inferior_registers
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_prepare_to_store
+operator|=
+name|m3_prepare_to_store
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_xfer_memory
+operator|=
+name|m3_xfer_memory
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_files_info
+operator|=
+name|m3_files_info
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_insert_breakpoint
+operator|=
+name|memory_insert_breakpoint
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_remove_breakpoint
+operator|=
+name|memory_remove_breakpoint
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_terminal_init
+operator|=
+name|terminal_init_inferior
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_terminal_inferior
+operator|=
+name|terminal_inferior
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_terminal_ours_for_output
+operator|=
+name|terminal_ours_for_output
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_terminal_ours
+operator|=
+name|terminal_ours
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_terminal_info
+operator|=
+name|child_terminal_info
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_kill
+operator|=
+name|m3_kill_inferior
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_create_inferior
+operator|=
+name|m3_create_inferior
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_mourn_inferior
+operator|=
+name|m3_mourn_inferior
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_can_run
+operator|=
+name|m3_can_run
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_stop
+operator|=
+name|m3_stop
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_pid_to_exec_file
+operator|=
+name|m3_pid_to_exec_file
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_stratum
+operator|=
+name|process_stratum
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_has_all_memory
+operator|=
+literal|1
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_has_memory
+operator|=
+literal|1
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_has_stack
+operator|=
+literal|1
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_has_registers
+operator|=
+literal|1
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_has_execution
+operator|=
+literal|1
+expr_stmt|;
+name|m3_ops
+operator|.
+name|to_magic
+operator|=
+name|OPS_MAGIC
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -15391,6 +15498,9 @@ block|{
 name|kern_return_t
 name|ret
 decl_stmt|;
+name|init_m3_ops
+argument_list|()
+expr_stmt|;
 name|add_target
 argument_list|(
 operator|&

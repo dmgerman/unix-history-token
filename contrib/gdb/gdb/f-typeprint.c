@@ -126,10 +126,28 @@ comment|/* Currently unused */
 end_comment
 
 begin_endif
-unit|static void f_type_print_args PARAMS ((struct type *, FILE *));
+unit|static void f_type_print_args PARAMS ((struct type *, GDB_FILE *));
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|void
+name|print_equivalent_f77_float_type
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|type
+operator|*
+operator|,
+name|GDB_FILE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -142,7 +160,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -165,7 +183,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -186,7 +204,7 @@ expr|struct
 name|type
 operator|*
 operator|,
-name|FILE
+name|GDB_FILE
 operator|*
 operator|,
 name|int
@@ -227,7 +245,7 @@ name|char
 modifier|*
 name|varstring
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -396,7 +414,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -575,7 +593,7 @@ comment|/* Currently unused */
 end_comment
 
 begin_endif
-unit|static void f_type_print_args (type, stream)      struct type *type;      FILE *stream; {   int i;   struct type **args;    fprintf_filtered (stream, "(");   args = TYPE_ARG_TYPES (type);   if (args != NULL)     {       if (args[1] == NULL) 	{ 	  fprintf_filtered (stream, "..."); 	}       else 	{ 	  for (i = 1; args[i] != NULL&& args[i]->code != TYPE_CODE_VOID; i++) 	    { 	      f_print_type (args[i], "", stream, -1, 0); 	      if (args[i+1] == NULL) 		fprintf_filtered (stream, "..."); 	      else if (args[i+1]->code != TYPE_CODE_VOID) 		{ 		  fprintf_filtered (stream, ","); 		  wrap_here ("    "); 		} 	    } 	}     }   fprintf_filtered (stream, ")"); }
+unit|static void f_type_print_args (type, stream)      struct type *type;      GDB_FILE *stream; {   int i;   struct type **args;    fprintf_filtered (stream, "(");   args = TYPE_ARG_TYPES (type);   if (args != NULL)     {       if (args[1] == NULL) 	{ 	  fprintf_filtered (stream, "..."); 	}       else 	{ 	  for (i = 1; args[i] != NULL&& args[i]->code != TYPE_CODE_VOID; i++) 	    { 	      f_print_type (args[i], "", stream, -1, 0); 	      if (args[i+1] == NULL) 		fprintf_filtered (stream, "..."); 	      else if (args[i+1]->code != TYPE_CODE_VOID) 		{ 		  fprintf_filtered (stream, ","); 		  wrap_here ("    "); 		} 	    } 	}     }   fprintf_filtered (stream, ")"); }
 endif|#
 directive|endif
 end_endif
@@ -608,7 +626,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1017,6 +1035,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_equivalent_f77_float_type
 parameter_list|(
@@ -1029,7 +1048,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;
@@ -1071,7 +1090,7 @@ name|type
 modifier|*
 name|type
 decl_stmt|;
-name|FILE
+name|GDB_FILE
 modifier|*
 name|stream
 decl_stmt|;

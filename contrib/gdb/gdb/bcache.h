@@ -95,7 +95,7 @@ define|#
 directive|define
 name|BCACHE_DATA_ALIGNMENT
 define|\
-value|(((char *)&BCACHE_DATA((struct hashlink*) 0) - (char *) 0))
+value|(((char *) BCACHE_DATA((struct hashlink*) 0) - (char *) 0))
 end_define
 
 begin_struct

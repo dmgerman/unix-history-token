@@ -3918,7 +3918,11 @@ block|,
 name|dos_setbaudrate
 block|,
 name|dos_setstopbits
-block|, }
+block|,
+name|dos_noop
+block|,
+comment|/* wait for output to drain */
+block|}
 decl_stmt|;
 end_decl_stmt
 

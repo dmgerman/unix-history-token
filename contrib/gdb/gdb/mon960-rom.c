@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Remote target glue for the Intel 960 ROM monitor.    Copyright 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Remote target glue for the Intel 960 MON960 ROM monitor.    Copyright 1995, 1996 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -45,155 +45,35 @@ directive|include
 file|"xmodem.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TERMIOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_TERMIO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_SGTTY
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HAVE_SGTTY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SGTTY
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|"symtab.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|"symfile.h"
 end_include
 
 begin_comment
-comment|/* Needed by file.h on Sys V */
+comment|/* for generic_load */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
 
 begin_define
 define|#
 directive|define
 name|USE_GENERIC_LOAD
 end_define
-
-begin_decl_stmt
-name|int
-name|quiet
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 1 => stifle unnecessary messages */
-end_comment
-
-begin_decl_stmt
-name|serial_t
-name|mon960_serial
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|mon960_ttyname
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* name of tty to talk to mon960 on, or null */
-end_comment
 
 begin_decl_stmt
 specifier|static
 name|struct
-name|monitor_ops
-name|mon960_cmds
+name|target_ops
+name|mon960_ops
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_GENERIC_LOAD
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|generic_load
-name|PARAMS
-argument_list|(
-operator|(
-name|char
-operator|*
-name|filename
-operator|,
-name|int
-name|from_tty
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -416,8 +296,8 @@ argument_list|)
 expr_stmt|;
 name|monitor_printf
 argument_list|(
-name|mon960_cmds
-operator|.
+name|current_monitor
+operator|->
 name|load
 argument_list|,
 name|s
@@ -427,14 +307,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|mon960_cmds
-operator|.
+name|current_monitor
+operator|->
 name|loadresp
 condition|)
 name|monitor_expect
 argument_list|(
-name|mon960_cmds
-operator|.
+name|current_monitor
+operator|->
 name|loadresp
 argument_list|,
 name|NULL
@@ -566,6 +446,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* USE_GENERIC_LOAD */
+end_comment
+
+begin_comment
 comment|/* This array of registers need to match the indexes used by GDB.    This exists because the various ROM monitors use different strings    than does GDB, and don't necessarily support all the registers    either. So, typing "info reg sp" becomes a "r30".  */
 end_comment
 
@@ -589,7 +473,7 @@ begin_decl_stmt
 specifier|static
 name|char
 modifier|*
-name|mon960_regnames
+name|full_regnames
 index|[
 name|NUM_REGS
 index|]
@@ -611,7 +495,7 @@ block|,
 literal|"r6"
 block|,
 literal|"r7"
-block|, \
+block|,
 comment|/*  8 */
 literal|"r8"
 block|,
@@ -628,7 +512,7 @@ block|,
 literal|"r14"
 block|,
 literal|"r15"
-block|,\
+block|,
 comment|/* 16 */
 literal|"g0"
 block|,
@@ -645,7 +529,7 @@ block|,
 literal|"g6"
 block|,
 literal|"g7"
-block|, \
+block|,
 comment|/* 24 */
 literal|"g8"
 block|,
@@ -662,7 +546,7 @@ block|,
 literal|"g14"
 block|,
 literal|"fp"
-block|, \
+block|,
 comment|/* 32 */
 literal|"pc"
 block|,
@@ -679,7 +563,18 @@ block|,
 literal|"fp2"
 block|,
 literal|"fp3"
-block|,\   }
+block|,   }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|mon960_regnames
+index|[
+name|NUM_REGS
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -687,17 +582,25 @@ begin_comment
 comment|/* Define the monitor command strings. Since these are passed directly    through to a printf style function, we may include formatting    strings. We also need a CR or LF on the end.  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|target_ops
-name|mon960_ops
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* need to pause the monitor for timing reasons, so slow it down */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* FIXME: this extremely long init string causes MON960 to return two NAKS    instead of performing the autobaud recognition, at least when gdb    is running on GNU/Linux.  The short string below works on Linux, and on    SunOS using a tcp serial connection.  Must retest on SunOS using a    direct serial connection; if that works, get rid of the long string. */
+end_comment
+
+begin_else
+unit|static char *mon960_inits[] = {"\n\r\r\r\r\r\r\r\r\r\r\r\r\r\r\n\r\n\r\n", NULL};
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|static
@@ -707,24 +610,38 @@ name|mon960_inits
 index|[]
 init|=
 block|{
-literal|"\n\r\r\r\r\r\r\r\r\r\r\r\r\r\r\n\r\n\r\n"
+literal|"\r"
 block|,
 name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Exits sub-command mode& download cmds */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
 name|struct
 name|monitor_ops
 name|mon960_cmds
-init|=
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+name|void
+name|init_mon960_cmds
+parameter_list|(
+name|void
+parameter_list|)
 block|{
+name|mon960_cmds
+operator|.
+name|flags
+operator|=
 name|MO_CLR_BREAK_USES_ADDR
 operator||
 name|MO_NO_ECHO_ON_OPEN
@@ -732,175 +649,392 @@ operator||
 name|MO_SEND_BREAK_ON_STOP
 operator||
 name|MO_GETMEM_READ_SINGLE
-block|,
+expr_stmt|;
 comment|/* flags */
+name|mon960_cmds
+operator|.
+name|init
+operator|=
 name|mon960_inits
-block|,
+expr_stmt|;
 comment|/* Init strings */
+name|mon960_cmds
+operator|.
+name|cont
+operator|=
 literal|"go\n\r"
-block|,
+expr_stmt|;
 comment|/* continue command */
+name|mon960_cmds
+operator|.
+name|step
+operator|=
 literal|"st\n\r"
-block|,
+expr_stmt|;
 comment|/* single step */
-literal|"\n\r"
-block|,
+name|mon960_cmds
+operator|.
+name|stop
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* break interrupts the program */
+name|mon960_cmds
+operator|.
+name|set_break
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* set a breakpoint */
+name|mon960_cmds
+operator|.
+name|clr_break
+operator|=
 comment|/* can't use "br" because only 2 hw bps are supported */
+name|mon960_cmds
+operator|.
+name|clr_all_break
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* clear a breakpoint - "de" is for hw bps */
 name|NULL
-block|,
+operator|,
 comment|/* clear all breakpoints */
+name|mon960_cmds
+operator|.
+name|fill
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* fill (start end val) */
 comment|/* can't use "fi" because it takes words, not bytes */
-block|{
 comment|/* can't use "mb", "md" or "mo" because they require interaction */
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdb
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdb (addr, value) */
-literal|"md %x %x\n\r"
-block|,
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdw
+operator|=
+name|NULL
+expr_stmt|;
 comment|/* setmem.cmdw (addr, value) */
-name|NULL
-block|,
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdl
+operator|=
+literal|"md %x %x\n\r"
+expr_stmt|;
 comment|/* setmem.cmdl (addr, value) */
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|cmdll
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.cmdll (addr, value) */
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.resp_delim */
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.term */
+name|mon960_cmds
+operator|.
+name|setmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setmem.term_cmd */
-block|}
-block|,
-block|{
-comment|/* since the parsing of multiple bytes is difficult due to        interspersed addresses, we'll only read 1 value at a time,         even tho these can handle a count */
+comment|/* since the parsing of multiple bytes is difficult due to      interspersed addresses, we'll only read 1 value at a time,      even tho these can handle a count */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdb
+operator|=
 literal|"db %x\n\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdb (addr, #bytes) */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdw
+operator|=
 literal|"ds %x\n\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdw (addr, #swords) */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdl
+operator|=
 literal|"di %x\n\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdl (addr, #words) */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|cmdll
+operator|=
 literal|"dd %x\n\r"
-block|,
+expr_stmt|;
 comment|/* getmem.cmdll (addr, #dwords) */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|resp_delim
+operator|=
 literal|" : "
-block|,
+expr_stmt|;
 comment|/* getmem.resp_delim */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term */
+name|mon960_cmds
+operator|.
+name|getmem
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getmem.term_cmd */
-block|}
-block|,
-block|{
+name|mon960_cmds
+operator|.
+name|setreg
+operator|.
+name|cmd
+operator|=
 literal|"md %s %x\n\r"
-block|,
+expr_stmt|;
 comment|/* setreg.cmd (name, value) */
+name|mon960_cmds
+operator|.
+name|setreg
+operator|.
+name|resp_delim
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.resp_delim */
+name|mon960_cmds
+operator|.
+name|setreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* setreg.term */
+name|mon960_cmds
+operator|.
+name|setreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
+operator|,
 comment|/* setreg.term_cmd */
-block|}
-block|,
-block|{
+name|mon960_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+operator|=
 literal|"di %s\n\r"
-block|,
+expr_stmt|;
 comment|/* getreg.cmd (name) */
+name|mon960_cmds
+operator|.
+name|getreg
+operator|.
+name|resp_delim
+operator|=
 literal|" : "
-block|,
+expr_stmt|;
 comment|/* getreg.resp_delim */
+name|mon960_cmds
+operator|.
+name|getreg
+operator|.
+name|term
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getreg.term */
+name|mon960_cmds
+operator|.
+name|getreg
+operator|.
+name|term_cmd
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* getreg.term_cmd */
-block|}
-block|,
+name|mon960_cmds
+operator|.
+name|dump_registers
+operator|=
 literal|"re\n\r"
-block|,
+expr_stmt|;
 comment|/* dump_registers */
+name|mon960_cmds
+operator|.
+name|register_pattern
+operator|=
 literal|"\\(\\w+\\)=\\([0-9a-fA-F]+\\)"
-block|,
+expr_stmt|;
 comment|/* register_pattern */
+name|mon960_cmds
+operator|.
+name|supply_register
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* supply_register */
 ifdef|#
 directive|ifdef
 name|USE_GENERIC_LOAD
+name|mon960_cmds
+operator|.
+name|load_routine
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load_routine (defaults to SRECs) */
+name|mon960_cmds
+operator|.
+name|load
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* download command */
+name|mon960_cmds
+operator|.
+name|loadresp
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* load response */
 else|#
 directive|else
+name|mon960_cmds
+operator|.
+name|load_routine
+operator|=
 name|mon960_load
-block|,
+expr_stmt|;
 comment|/* load_routine (defaults to SRECs) */
+name|mon960_cmds
+operator|.
+name|load
+operator|=
 literal|"do\n\r"
-block|,
+expr_stmt|;
 comment|/* download command */
+name|mon960_cmds
+operator|.
+name|loadresp
+operator|=
 literal|"Downloading\n\r"
-block|,
+expr_stmt|;
 comment|/* load response */
 endif|#
 directive|endif
+name|mon960_cmds
+operator|.
+name|prompt
+operator|=
 literal|"=>"
-block|,
+expr_stmt|;
 comment|/* monitor command prompt */
+name|mon960_cmds
+operator|.
+name|line_term
+operator|=
 literal|"\n\r"
-block|,
+expr_stmt|;
 comment|/* end-of-command delimitor */
+name|mon960_cmds
+operator|.
+name|cmd_end
+operator|=
 name|NULL
-block|,
+expr_stmt|;
 comment|/* optional command terminator */
+name|mon960_cmds
+operator|.
+name|target
+operator|=
 operator|&
 name|mon960_ops
-block|,
+expr_stmt|;
 comment|/* target operations */
+name|mon960_cmds
+operator|.
+name|stopbits
+operator|=
 name|SERIAL_1_STOPBITS
-block|,
+expr_stmt|;
 comment|/* number of stop bits */
+name|mon960_cmds
+operator|.
+name|regnames
+operator|=
 name|mon960_regnames
-block|,
+expr_stmt|;
 comment|/* registers names */
+name|mon960_cmds
+operator|.
+name|magic
+operator|=
 name|MONITOR_OPS_MAGIC
+expr_stmt|;
 comment|/* magic */
 block|}
-decl_stmt|;
-end_decl_stmt
+end_function
 
-begin_comment
-comment|/* invoked from monitor.c - opens the serial port */
-end_comment
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function
 specifier|static
@@ -920,65 +1054,14 @@ name|from_tty
 decl_stmt|;
 block|{
 name|char
-modifier|*
-name|serial_port_name
-init|=
-name|args
+name|buf
+index|[
+literal|64
+index|]
 decl_stmt|;
-if|if
-condition|(
-name|args
-condition|)
-block|{
-name|char
-modifier|*
-name|cursor
-init|=
-name|serial_port_name
-operator|=
-name|strsave
-argument_list|(
-name|args
-argument_list|)
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|cursor
-operator|&&
-operator|*
-name|cursor
-operator|!=
-literal|' '
-condition|)
-name|cursor
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|cursor
-condition|)
-operator|*
-name|cursor
-operator|++
-operator|=
-literal|0
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|cursor
-operator|==
-literal|' '
-condition|)
-name|cursor
-operator|++
-expr_stmt|;
-block|}
 name|monitor_open
 argument_list|(
-name|serial_port_name
+name|args
 argument_list|,
 operator|&
 name|mon960_cmds
@@ -986,6 +1069,75 @@ argument_list|,
 name|from_tty
 argument_list|)
 expr_stmt|;
+comment|/* Attempt to fetch the value of the first floating point register (fp0).      If the monitor returns a string containing the word "Bad" we'll assume      this processor has no floating point registers, and nullify the       regnames entries that refer to FP registers.  */
+name|monitor_printf
+argument_list|(
+name|mon960_cmds
+operator|.
+name|getreg
+operator|.
+name|cmd
+argument_list|,
+name|full_regnames
+index|[
+name|FP0_REGNUM
+index|]
+argument_list|)
+expr_stmt|;
+comment|/* di fp0 */
+if|if
+condition|(
+name|monitor_expect_prompt
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|!=
+operator|-
+literal|1
+condition|)
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|buf
+argument_list|,
+literal|"Bad"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|FP0_REGNUM
+init|;
+name|i
+operator|<
+name|FP0_REGNUM
+operator|+
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+name|mon960_regnames
+index|[
+name|i
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -994,6 +1146,21 @@ name|void
 name|_initialize_mon960
 parameter_list|()
 block|{
+name|memcpy
+argument_list|(
+name|mon960_regnames
+argument_list|,
+name|full_regnames
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|full_regnames
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|init_mon960_cmds
+argument_list|()
+expr_stmt|;
 name|init_monitor_ops
 argument_list|(
 operator|&
@@ -1011,7 +1178,7 @@ name|mon960_ops
 operator|.
 name|to_longname
 operator|=
-literal|"Intel 960 rom monitor"
+literal|"Intel 960 MON960 monitor"
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1042,8 +1209,7 @@ name|mon960_ops
 operator|.
 name|to_doc
 operator|=
-literal|"Debug on an Intel 960 eval board running the Mon960 rom monitor.\n"
-literal|"Specify the serial device it is connected to (e.g. /dev/ttya)."
+literal|"Use an Intel 960 board running the MON960 debug monitor.\n\ Specify the serial device it is connected to (e.g. /dev/ttya)."
 expr_stmt|;
 name|mon960_ops
 operator|.
