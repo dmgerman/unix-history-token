@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|110
+value|120
 end_define
 
 begin_else
