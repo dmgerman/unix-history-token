@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kb_encode.c,v 4.300 91/06/09 06:14:51 root Rel41 $ SONY  *  *	@(#)kb_encode.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: kb_encode.c,v 4.300 91/06/09 06:14:51 root Rel41 $ SONY  *  *	@(#)kb_encode.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -159,6 +159,22 @@ name|int
 name|iscaps
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|kbd_shift
+argument_list|()
+operator|,
+name|kbd_pfunc
+argument_list|()
+operator|,
+name|kbd_normal
+argument_list|()
+operator|,
+name|put_kana
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *	kbd_encode(c)  *		int c;		keyboard address code  *  *	kbd_encode() converts keyboard address code to character code.  *	kbd_encode() calls back machine dependent function  *  *		put_code(buf, cnt)  *			char *buf;	encoded characters  *			int cnt;	character count  *  *	to store encoded data.  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: vt100esc.c,v 4.300 91/06/09 06:14:59 root Rel41 $ SONY  *  *	@(#)vt100esc.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -616,6 +616,19 @@ name|c_pos_mess
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+specifier|static
+name|change_csr_key_pad
+argument_list|()
+operator|,
+name|change_aux_key_pad
+argument_list|()
+operator|,
+name|itoa
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|Key_string
