@@ -644,8 +644,7 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"*** WARNING: kernel option CPU_ELAN missing"
-literal|" -- timekeeping may be wrong.\n"
+literal|"*** WARNING: missing CPU_ELAN -- timekeeping may be wrong\n"
 argument_list|)
 expr_stmt|;
 endif|#
