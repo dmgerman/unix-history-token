@@ -3779,6 +3779,24 @@ block|}
 end_function
 
 begin_function
+name|Static
+name|void
+name|uhci_dump_ii
+parameter_list|(
+name|uhci_intr_info_t
+modifier|*
+name|ii
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"Fill me in"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|uhci_dump_td
 parameter_list|(

@@ -3449,7 +3449,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|ar_attach
+name|atar_attach
 argument_list|()
 expr_stmt|;
 endif|#

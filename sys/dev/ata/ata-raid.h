@@ -649,7 +649,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ar_attach
+name|atar_attach
 parameter_list|(
 name|void
 parameter_list|)

@@ -412,7 +412,7 @@ end_function
 
 begin_function
 name|void
-name|ar_attach
+name|atar_attach
 parameter_list|()
 block|{
 name|struct
