@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	1.2	%G%	*/
+comment|/*	ht.c	1.3	%G%	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/pte.h"
 end_include
 
 begin_include
@@ -72,14 +78,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|HTADDR
-value|((struct device *)(PHYSMBA1 + MBA_ERB))
+name|HTMBA
+value|PHYSMBA1
 end_define
 
 begin_define
 define|#
 directive|define
-name|HTMBA
+name|HTMBANUM
 value|1
 end_define
 
@@ -348,7 +354,7 @@ operator|&
 operator|(
 literal|1
 operator|<<
-name|HTMBA
+name|HTMBANUM
 operator|)
 operator|)
 operator|==
@@ -356,7 +362,7 @@ literal|0
 condition|)
 name|mbainit
 argument_list|(
-name|HTMBA
+name|HTMBANUM
 argument_list|)
 expr_stmt|;
 name|htinit
@@ -474,6 +480,19 @@ decl_stmt|;
 name|short
 name|fc
 decl_stmt|;
+specifier|register
+name|struct
+name|device
+modifier|*
+name|htp
+init|=
+name|mbadev
+argument_list|(
+name|HTMBA
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 name|unit
 operator|=
 name|io
@@ -507,7 +526,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|HTADDR
+name|htp
 operator|->
 name|httc
 operator|&
@@ -516,13 +535,13 @@ operator|)
 operator|!=
 name|den
 condition|)
-name|HTADDR
+name|htp
 operator|->
 name|httc
 operator|=
 name|den
 expr_stmt|;
-name|HTADDR
+name|htp
 operator|->
 name|htfc
 operator|=
@@ -538,14 +557,14 @@ operator|==
 name|SREV
 condition|)
 block|{
-name|HTADDR
+name|htp
 operator|->
 name|htfc
 operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|HTADDR
+name|htp
 operator|->
 name|htcs1
 operator|=
@@ -573,13 +592,13 @@ name|mbastart
 argument_list|(
 name|io
 argument_list|,
-name|HTADDR
+name|htp
 argument_list|,
 name|func
 argument_list|)
 expr_stmt|;
 else|else
-name|HTADDR
+name|htp
 operator|->
 name|htcs1
 operator|=
@@ -592,7 +611,7 @@ argument_list|()
 expr_stmt|;
 name|ds
 operator|=
-name|HTADDR
+name|htp
 operator|->
 name|htds
 operator|&
@@ -631,15 +650,15 @@ name|printf
 argument_list|(
 literal|"tape error: ds=%x, er=%x, mbasr=%x"
 argument_list|,
-name|HTADDR
+name|htp
 operator|->
 name|htds
 argument_list|,
-name|HTADDR
+name|htp
 operator|->
 name|hter
 argument_list|,
-name|PHYSMBA1
+name|HTMBA
 operator|->
 name|mba_sr
 argument_list|)
@@ -691,7 +710,7 @@ argument_list|)
 expr_stmt|;
 name|fc
 operator|=
-name|HTADDR
+name|htp
 operator|->
 name|htfc
 expr_stmt|;
@@ -714,7 +733,12 @@ end_macro
 
 begin_block
 block|{
-name|HTADDR
+name|mbadev
+argument_list|(
+name|HTMBA
+argument_list|,
+literal|0
+argument_list|)
 operator|->
 name|htcs1
 operator|=
@@ -736,10 +760,23 @@ specifier|register
 name|int
 name|s
 decl_stmt|;
+specifier|register
+name|struct
+name|device
+modifier|*
+name|htp
+init|=
+name|mbadev
+argument_list|(
+name|HTMBA
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
 do|do
 name|s
 operator|=
-name|HTADDR
+name|htp
 operator|->
 name|htds
 expr_stmt|;

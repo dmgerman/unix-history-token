@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_empty
-empty|#	srt0.c	1.3	%G%
+empty|#	srt0.c	1.4	%G%
 end_empty
 
 begin_empty
@@ -68,6 +68,10 @@ operator|+
 literal|4
 operator|#
 name|init
+name|movab
+name|_end
+operator|,
+name|r0
 name|clr
 case|:
 end_case

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	1.3	%G%	*/
+comment|/*	mba.c	1.4	%G%	*/
 end_comment
 
 begin_include
@@ -168,24 +168,13 @@ index|]
 expr_stmt|;
 name|pte
 operator|=
-operator|(
-expr|struct
-name|pte
-operator|*
-operator|)
+operator|&
 name|mbap
-expr_stmt|;
-name|pte
-operator|+=
-operator|(
-name|MBA_MAP
-operator|+
+operator|->
+name|mba_map
+index|[
 literal|128
-operator|*
-literal|4
-operator|)
-operator|/
-literal|4
+index|]
 expr_stmt|;
 name|v
 operator|=
@@ -333,12 +322,14 @@ name|mbainfo
 index|[
 name|mbanum
 index|]
+operator|.
+name|mi_phys
 decl_stmt|;
 name|mbap
 operator|->
 name|mba_cr
 operator|=
-name|MBA_INIT
+name|MBAINIT
 expr_stmt|;
 name|mbaact
 operator||=

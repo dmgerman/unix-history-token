@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	saio.h	1.2	%G%	*/
+comment|/*	saio.h	1.3	%G%	*/
 end_comment
 
 begin_comment
@@ -200,29 +200,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|PHYSMBA0
-value|0x20010000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHYSMBA1
-value|0x20012000
-end_define
-
-begin_define
-define|#
-directive|define
 name|PHYSUMEM
 value|0x2013e000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MBAINIT
-value|0x1
 end_define
 
 begin_decl_stmt
