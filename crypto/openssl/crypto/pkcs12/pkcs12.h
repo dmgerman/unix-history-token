@@ -23,6 +23,18 @@ directive|define
 name|HEADER_PKCS12_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/bio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/x509.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -35,12 +47,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/bio.h>
-include|#
-directive|include
-file|<openssl/x509.h>
 define|#
 directive|define
 name|PKCS12_KEY_ID
@@ -142,6 +148,10 @@ decl_stmt|;
 block|}
 name|PKCS12
 typedef|;
+name|PREDECLARE_STACK_OF
+argument_list|(
+argument|PKCS12_SAFEBAG
+argument_list|)
 typedef|typedef
 struct|struct
 block|{
@@ -168,11 +178,13 @@ modifier|*
 name|shkeybag
 decl_stmt|;
 comment|/* shrouded key bag */
-name|STACK
-comment|/* PKCS12_SAFEBAG */
-modifier|*
+name|STACK_OF
+argument_list|(
+name|PKCS12_SAFEBAG
+argument_list|)
+operator|*
 name|safes
-decl_stmt|;
+expr_stmt|;
 name|ASN1_TYPE
 modifier|*
 name|other
@@ -194,6 +206,18 @@ decl_stmt|;
 block|}
 name|PKCS12_SAFEBAG
 typedef|;
+name|DECLARE_STACK_OF
+argument_list|(
+argument|PKCS12_SAFEBAG
+argument_list|)
+name|DECLARE_ASN1_SET_OF
+argument_list|(
+argument|PKCS12_SAFEBAG
+argument_list|)
+name|DECLARE_PKCS12_STACK_OF
+argument_list|(
+argument|PKCS12_SAFEBAG
+argument_list|)
 typedef|typedef
 struct|struct
 name|pkcs12_bag_st
@@ -264,7 +288,7 @@ parameter_list|(
 name|x509
 parameter_list|)
 define|\
-value|PKCS12_pack_safebag ((char *)(x509), i2d_X509, NID_x509Certificate, NID_certBag)
+value|PKCS12_pack_safebag((char *)(x509), i2d_X509, NID_x509Certificate, NID_certBag)
 define|#
 directive|define
 name|M_PKCS12_x509crl2certbag
@@ -272,7 +296,7 @@ parameter_list|(
 name|crl
 parameter_list|)
 define|\
-value|PKCS12_pack_safebag ((char *)(crl), i2d_X509CRL, NID_x509Crl, NID_crlBag)
+value|PKCS12_pack_safebag((char *)(crl), i2d_X509CRL, NID_x509Crl, NID_crlBag)
 define|#
 directive|define
 name|M_PKCS12_certbag2x509
@@ -280,7 +304,7 @@ parameter_list|(
 name|bg
 parameter_list|)
 define|\
-value|(X509 *) ASN1_unpack_string ((bg)->value.bag->value.octet, \ (char *(*)())d2i_X509)
+value|(X509 *) ASN1_unpack_string((bg)->value.bag->value.octet, \ (char *(*)())d2i_X509)
 define|#
 directive|define
 name|M_PKCS12_certbag2x509crl
@@ -288,8 +312,8 @@ parameter_list|(
 name|bg
 parameter_list|)
 define|\
-value|(X509CRL *) ASN1_unpack_string ((bg)->value.bag->value.octet, \ (char *(*)())d2i_X509CRL)
-comment|/*#define M_PKCS12_pkcs82rsa(p8) \ (RSA *) ASN1_unpack_string ((p8)->pkey, (char *(*)())d2i_RSAPrivateKey)*/
+value|(X509CRL *) ASN1_unpack_string((bg)->value.bag->value.octet, \ (char *(*)())d2i_X509CRL)
+comment|/*#define M_PKCS12_pkcs82rsa(p8) \ (RSA *) ASN1_unpack_string((p8)->pkey, (char *(*)())d2i_RSAPrivateKey)*/
 define|#
 directive|define
 name|M_PKCS12_unpack_p7data
@@ -297,7 +321,7 @@ parameter_list|(
 name|p7
 parameter_list|)
 define|\
-value|ASN1_seq_unpack ((p7)->d.data->data, p7->d.data->length, \ 			 (char *(*)())d2i_PKCS12_SAFEBAG, PKCS12_SAFEBAG_free)
+value|ASN1_seq_unpack_PKCS12_SAFEBAG((p7)->d.data->data, p7->d.data->length, \ 			        d2i_PKCS12_SAFEBAG, PKCS12_SAFEBAG_free)
 define|#
 directive|define
 name|M_PKCS12_pack_authsafes
@@ -307,7 +331,7 @@ parameter_list|,
 name|safes
 parameter_list|)
 define|\
-value|ASN1_seq_pack((safes), (int (*)())i2d_PKCS7,\&(p12)->authsafes->d.data->data,&(p12)->authsafes->d.data->length)
+value|ASN1_seq_pack_PKCS7((safes), i2d_PKCS7,\&(p12)->authsafes->d.data->data,&(p12)->authsafes->d.data->length)
 define|#
 directive|define
 name|M_PKCS12_unpack_authsafes
@@ -315,7 +339,7 @@ parameter_list|(
 name|p12
 parameter_list|)
 define|\
-value|ASN1_seq_unpack((p12)->authsafes->d.data->data, \ 		(p12)->authsafes->d.data->length, (char *(*)())d2i_PKCS7, \ 							PKCS7_free)
+value|ASN1_seq_unpack_PKCS7((p12)->authsafes->d.data->data, \ 		(p12)->authsafes->d.data->length, d2i_PKCS7, PKCS7_free)
 define|#
 directive|define
 name|M_PKCS12_unpack_p7encdata
@@ -327,7 +351,7 @@ parameter_list|,
 name|passlen
 parameter_list|)
 define|\
-value|(STACK *) PKCS12_decrypt_d2i ((p7)->d.encrypted->enc_data->algorithm,\ 			 (char *(*)())d2i_PKCS12_SAFEBAG, PKCS12_SAFEBAG_free, \ 							(pass), (passlen), \ 			(p7)->d.encrypted->enc_data->enc_data, 3)
+value|PKCS12_decrypt_d2i_PKCS12_SAFEBAG((p7)->d.encrypted->enc_data->algorithm,\ 			           d2i_PKCS12_SAFEBAG, PKCS12_SAFEBAG_free, \ 				   (pass), (passlen), \ 			           (p7)->d.encrypted->enc_data->enc_data, 3)
 define|#
 directive|define
 name|M_PKCS12_decrypt_skey
@@ -339,7 +363,7 @@ parameter_list|,
 name|passlen
 parameter_list|)
 define|\
-value|(PKCS8_PRIV_KEY_INFO *) PKCS12_decrypt_d2i ((bag)->value.shkeybag->algor, \ (char *(*)())d2i_PKCS8_PRIV_KEY_INFO, PKCS8_PRIV_KEY_INFO_free, \ 						(pass), (passlen), \ 			 (bag)->value.shkeybag->digest, 2)
+value|(PKCS8_PRIV_KEY_INFO *) PKCS12_decrypt_d2i((bag)->value.shkeybag->algor, \ (char *(*)())d2i_PKCS8_PRIV_KEY_INFO, (void (*)(void *))PKCS8_PRIV_KEY_INFO_free, \ 						(pass), (passlen), \ 			 (bag)->value.shkeybag->digest, 2)
 define|#
 directive|define
 name|M_PKCS8_decrypt
@@ -351,7 +375,7 @@ parameter_list|,
 name|passlen
 parameter_list|)
 define|\
-value|(PKCS8_PRIV_KEY_INFO *) PKCS12_decrypt_d2i ((p8)->algor, \ (char *(*)())d2i_PKCS8_PRIV_KEY_INFO, PKCS8_PRIV_KEY_INFO_free,\ 			 (pass), (passlen), (p8)->digest, 2)
+value|(PKCS8_PRIV_KEY_INFO *) PKCS12_decrypt_d2i((p8)->algor, \ (char *(*)())d2i_PKCS8_PRIV_KEY_INFO, (void (*)(void *))PKCS8_PRIV_KEY_INFO_free,\ 			 (pass), (passlen), (p8)->digest, 2)
 define|#
 directive|define
 name|PKCS12_get_attr
@@ -480,43 +504,49 @@ function_decl|;
 name|PKCS7
 modifier|*
 name|PKCS12_pack_p7data
-parameter_list|(
-name|STACK
-modifier|*
+argument_list|(
+name|STACK_OF
+argument_list|(
+name|PKCS12_SAFEBAG
+argument_list|)
+operator|*
 name|sk
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|PKCS7
 modifier|*
 name|PKCS12_pack_p7encdata
-parameter_list|(
+argument_list|(
 name|int
 name|pbe_nid
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|pass
-parameter_list|,
+argument_list|,
 name|int
 name|passlen
-parameter_list|,
+argument_list|,
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|salt
-parameter_list|,
+argument_list|,
 name|int
 name|saltlen
-parameter_list|,
+argument_list|,
 name|int
 name|iter
-parameter_list|,
-name|STACK
-modifier|*
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|PKCS12_SAFEBAG
+argument_list|)
+operator|*
 name|bags
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|int
 name|PKCS12_add_localkeyid
 parameter_list|(
@@ -661,7 +691,10 @@ function_decl|(
 modifier|*
 name|free_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char

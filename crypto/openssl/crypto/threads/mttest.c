@@ -3180,7 +3180,7 @@ name|i
 decl_stmt|;
 name|lock_cs
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -3283,7 +3283,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_cs
 argument_list|)
@@ -3692,7 +3692,7 @@ name|i
 decl_stmt|;
 name|lock_cs
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -3705,7 +3705,7 @@ argument_list|)
 expr_stmt|;
 name|lock_count
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -3850,12 +3850,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_cs
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_count
 argument_list|)
@@ -4243,7 +4243,7 @@ argument_list|)
 expr_stmt|;
 name|lock_cs
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -4379,7 +4379,7 @@ name|arena
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_cs
 argument_list|)
@@ -4647,7 +4647,7 @@ name|i
 decl_stmt|;
 name|lock_cs
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -4660,7 +4660,7 @@ argument_list|)
 expr_stmt|;
 name|lock_count
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|CRYPTO_num_locks
 argument_list|()
@@ -4801,12 +4801,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_cs
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lock_count
 argument_list|)

@@ -22,6 +22,47 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|NO_MD2
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|MD2 is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MD2_DIGEST_LENGTH
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD2_BLOCK
+value|16
+end_define
+
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* MD2_INT */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 
@@ -31,26 +72,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NO_MD2
-error|#
-directive|error
-error|MD2 is disabled.
-endif|#
-directive|endif
-define|#
-directive|define
-name|MD2_DIGEST_LENGTH
-value|16
-define|#
-directive|define
-name|MD2_BLOCK
-value|16
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-comment|/* MD2_INT */
 typedef|typedef
 struct|struct
 name|MD2state_st

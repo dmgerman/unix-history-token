@@ -187,7 +187,7 @@ operator|!
 operator|(
 name|spki_der
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|len
 operator|+
@@ -238,7 +238,7 @@ argument_list|,
 name|X509_R_BASE64_DECODE_ERROR
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|spki_der
 argument_list|)
@@ -263,7 +263,7 @@ argument_list|,
 name|spki_len
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|spki_der
 argument_list|)
@@ -314,14 +314,14 @@ argument_list|)
 expr_stmt|;
 name|der_spki
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|der_len
 argument_list|)
 expr_stmt|;
 name|b64_str
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|der_len
 operator|*
@@ -374,7 +374,7 @@ argument_list|,
 name|der_len
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|der_spki
 argument_list|)

@@ -58,6 +58,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RSAref
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/rsaref.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -146,6 +163,12 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/dso.h>
+end_include
+
 begin_function
 name|void
 name|ERR_load_crypto_strings
@@ -189,9 +212,19 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NO_RSA
+ifdef|#
+directive|ifdef
+name|RSAref
+name|ERR_load_RSAREF_strings
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|ERR_load_RSA_strings
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifndef|#
@@ -238,6 +271,9 @@ name|ERR_load_PKCS12_strings
 argument_list|()
 expr_stmt|;
 name|ERR_load_RAND_strings
+argument_list|()
+expr_stmt|;
+name|ERR_load_DSO_strings
 argument_list|()
 expr_stmt|;
 endif|#

@@ -39,18 +39,20 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|rc4_init_key
 parameter_list|(
 name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -64,7 +66,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|rc4_cipher
 parameter_list|(
 name|EVP_CIPHER_CTX
@@ -76,6 +78,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -101,6 +104,8 @@ block|,
 name|EVP_RC4_KEY_SIZE
 block|,
 literal|0
+block|,
+name|EVP_CIPH_VARIABLE_LENGTH
 block|,
 name|rc4_init_key
 block|,
@@ -148,7 +153,9 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -167,10 +174,57 @@ comment|/* 40 bit */
 block|,
 literal|0
 block|,
+name|EVP_CIPH_VARIABLE_LENGTH
+block|,
 name|rc4_init_key
 block|,
 name|rc4_cipher
-block|, 	}
+block|,
+name|NULL
+block|,
+sizeof|sizeof
+argument_list|(
+name|EVP_CIPHER_CTX
+argument_list|)
+operator|-
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+operator|(
+name|EVP_CIPHER_CTX
+operator|*
+operator|)
+name|NULL
+operator|)
+operator|->
+name|c
+operator|)
+argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|(
+operator|(
+operator|(
+name|EVP_CIPHER_CTX
+operator|*
+operator|)
+name|NULL
+operator|)
+operator|->
+name|c
+operator|.
+name|rc4
+operator|)
+argument_list|)
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -210,18 +264,20 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rc4_init_key
 parameter_list|(
 name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -231,12 +287,6 @@ name|int
 name|enc
 parameter_list|)
 block|{
-if|if
-condition|(
-name|key
-operator|!=
-name|NULL
-condition|)
 name|memcpy
 argument_list|(
 operator|&
@@ -288,12 +338,15 @@ operator|.
 name|key
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|rc4_cipher
 parameter_list|(
 name|EVP_CIPHER_CTX
@@ -305,6 +358,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -335,6 +389,9 @@ argument_list|,
 name|out
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

@@ -369,6 +369,10 @@ case|:
 case|case
 name|V_ASN1_SEQUENCE
 case|:
+case|case
+name|V_ASN1_OTHER
+case|:
+default|default:
 if|if
 condition|(
 name|a
@@ -568,6 +572,17 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* If not universal tag we've no idea what it is */
+if|if
+condition|(
+name|xclass
+operator|!=
+name|V_ASN1_UNIVERSAL
+condition|)
+name|tag
+operator|=
+name|V_ASN1_OTHER
+expr_stmt|;
 name|ASN1_TYPE_component_free
 argument_list|(
 name|ret
@@ -1065,6 +1080,10 @@ case|:
 case|case
 name|V_ASN1_SEQUENCE
 case|:
+case|case
+name|V_ASN1_OTHER
+case|:
+default|default:
 comment|/* Sets and sequences are left complete */
 if|if
 condition|(
@@ -1129,17 +1148,6 @@ operator|+=
 name|len
 expr_stmt|;
 break|break;
-default|default:
-name|ASN1err
-argument_list|(
-name|ASN1_F_D2I_ASN1_TYPE
-argument_list|,
-name|ASN1_R_BAD_TYPE
-argument_list|)
-expr_stmt|;
-goto|goto
-name|err
-goto|;
 block|}
 name|ret
 operator|->
@@ -1281,7 +1289,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -1421,6 +1429,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|V_ASN1_NULL
+case|:
+break|break;
+case|case
 name|V_ASN1_INTEGER
 case|:
 case|case
@@ -1483,6 +1495,10 @@ case|:
 case|case
 name|V_ASN1_UTF8STRING
 case|:
+case|case
+name|V_ASN1_OTHER
+case|:
+default|default:
 name|ASN1_STRING_free
 argument_list|(
 operator|(
@@ -1496,9 +1512,6 @@ operator|.
 name|ptr
 argument_list|)
 expr_stmt|;
-break|break;
-default|default:
-comment|/* MEMORY LEAK */
 break|break;
 block|}
 name|a

@@ -579,18 +579,6 @@ end_endif
 
 begin_function_decl
 specifier|static
-name|int
-name|add_oid_section
-parameter_list|(
-name|LHASH
-modifier|*
-name|conf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|lookup_fail
 parameter_list|(
@@ -1122,6 +1110,11 @@ modifier|*
 name|key
 init|=
 name|NULL
+decl_stmt|,
+modifier|*
+name|passargin
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|total
@@ -1399,12 +1392,15 @@ name|attribs
 operator|=
 name|NULL
 expr_stmt|;
-name|STACK
-modifier|*
+name|STACK_OF
+argument_list|(
+name|X509
+argument_list|)
+operator|*
 name|cert_sk
-init|=
+operator|=
 name|NULL
-decl_stmt|;
+expr_stmt|;
 name|BIO
 modifier|*
 name|hex
@@ -1793,6 +1789,39 @@ goto|goto
 name|bad
 goto|;
 name|keyfile
+operator|=
+operator|*
+operator|(
+operator|++
+name|argv
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-passin"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+operator|--
+name|argc
+operator|<
+literal|1
+condition|)
+goto|goto
+name|bad
+goto|;
+name|passargin
 operator|=
 operator|*
 operator|(
@@ -2681,6 +2710,8 @@ condition|(
 operator|!
 name|add_oid_section
 argument_list|(
+name|bio_err
+argument_list|,
 name|conf
 argument_list|)
 condition|)
@@ -2816,6 +2847,38 @@ argument_list|(
 name|section
 argument_list|,
 name|ENV_PRIVATE_KEY
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+if|if
+condition|(
+operator|!
+name|key
+operator|&&
+operator|!
+name|app_passwd
+argument_list|(
+name|bio_err
+argument_list|,
+name|passargin
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|key
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+block|{
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"Error getting password\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3631,6 +3694,32 @@ name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
 comment|/* cannot fail */
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|out
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|out
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|TXT_DB_write
 argument_list|(
 name|out
@@ -3777,6 +3866,7 @@ goto|;
 block|}
 block|}
 else|else
+block|{
 name|BIO_set_fp
 argument_list|(
 name|Sout
@@ -3788,6 +3878,33 @@ operator||
 name|BIO_FP_TEXT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMS
+block|{
+name|BIO
+modifier|*
+name|tmpbio
+init|=
+name|BIO_new
+argument_list|(
+name|BIO_f_linebuffer
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|Sout
+operator|=
+name|BIO_push
+argument_list|(
+name|tmpbio
+argument_list|,
+name|Sout
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
 block|}
 if|if
 condition|(
@@ -4224,7 +4341,7 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|f
 argument_list|)
@@ -4264,7 +4381,7 @@ condition|(
 operator|(
 name|cert_sk
 operator|=
-name|sk_new_null
+name|sk_X509_new_null
 argument_list|()
 operator|)
 operator|==
@@ -4275,7 +4392,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4368,14 +4485,10 @@ goto|;
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_X509_push
 argument_list|(
 name|cert_sk
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 argument_list|)
 condition|)
@@ -4384,7 +4497,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4495,14 +4608,10 @@ goto|;
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_X509_push
 argument_list|(
 name|cert_sk
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 argument_list|)
 condition|)
@@ -4511,7 +4620,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4608,14 +4717,10 @@ goto|;
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_X509_push
 argument_list|(
 name|cert_sk
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 argument_list|)
 condition|)
@@ -4624,7 +4729,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4731,14 +4836,10 @@ goto|;
 if|if
 condition|(
 operator|!
-name|sk_push
+name|sk_X509_push
 argument_list|(
 name|cert_sk
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|x
 argument_list|)
 condition|)
@@ -4747,7 +4848,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4759,7 +4860,7 @@ block|}
 comment|/* we have a stack of newly certified certificates 		 * and a data base and serial number that need 		 * updating */
 if|if
 condition|(
-name|sk_num
+name|sk_X509_num
 argument_list|(
 name|cert_sk
 argument_list|)
@@ -4863,7 +4964,7 @@ name|bio_err
 argument_list|,
 literal|"Write out database with %d new entries\n"
 argument_list|,
-name|sk_num
+name|sk_X509_num
 argument_list|(
 name|cert_sk
 argument_list|)
@@ -5038,7 +5139,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sk_num
+name|sk_X509_num
 argument_list|(
 name|cert_sk
 argument_list|)
@@ -5057,11 +5158,7 @@ name|n
 decl_stmt|;
 name|x
 operator|=
-operator|(
-name|X509
-operator|*
-operator|)
-name|sk_value
+name|sk_X509_value
 argument_list|(
 name|cert_sk
 argument_list|,
@@ -5323,7 +5420,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|sk_num
+name|sk_X509_num
 argument_list|(
 name|cert_sk
 argument_list|)
@@ -5376,7 +5473,7 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -6569,17 +6666,17 @@ argument_list|(
 name|hex
 argument_list|)
 expr_stmt|;
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|Cout
 argument_list|)
 expr_stmt|;
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|Sout
 argument_list|)
 expr_stmt|;
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -6589,7 +6686,7 @@ argument_list|(
 name|in
 argument_list|)
 expr_stmt|;
-name|sk_pop_free
+name|sk_X509_pop_free
 argument_list|(
 name|cert_sk
 argument_list|,
@@ -7194,7 +7291,7 @@ name|out
 operator|!=
 name|NULL
 condition|)
-name|BIO_free
+name|BIO_free_all
 argument_list|(
 name|out
 argument_list|)
@@ -8627,7 +8724,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9110,7 +9207,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -9217,7 +9314,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10026,7 +10123,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|2
 argument_list|)
@@ -10047,7 +10144,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|tm
 operator|->
@@ -10101,7 +10198,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|8
 argument_list|)
@@ -10141,7 +10238,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10188,7 +10285,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -10211,7 +10308,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -10318,7 +10415,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|row
 index|[
@@ -11314,153 +11411,6 @@ end_function
 begin_function
 specifier|static
 name|int
-name|add_oid_section
-parameter_list|(
-name|LHASH
-modifier|*
-name|hconf
-parameter_list|)
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|STACK_OF
-argument_list|(
-name|CONF_VALUE
-argument_list|)
-operator|*
-name|sktmp
-expr_stmt|;
-name|CONF_VALUE
-modifier|*
-name|cnf
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|p
-operator|=
-name|CONF_get_string
-argument_list|(
-name|hconf
-argument_list|,
-name|NULL
-argument_list|,
-literal|"oid_section"
-argument_list|)
-operator|)
-condition|)
-return|return
-literal|1
-return|;
-if|if
-condition|(
-operator|!
-operator|(
-name|sktmp
-operator|=
-name|CONF_get_section
-argument_list|(
-name|hconf
-argument_list|,
-name|p
-argument_list|)
-operator|)
-condition|)
-block|{
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|"problem loading oid section %s\n"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|sk_CONF_VALUE_num
-argument_list|(
-name|sktmp
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|cnf
-operator|=
-name|sk_CONF_VALUE_value
-argument_list|(
-name|sktmp
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|OBJ_create
-argument_list|(
-name|cnf
-operator|->
-name|value
-argument_list|,
-name|cnf
-operator|->
-name|name
-argument_list|,
-name|cnf
-operator|->
-name|name
-argument_list|)
-operator|==
-name|NID_undef
-condition|)
-block|{
-name|BIO_printf
-argument_list|(
-name|bio_err
-argument_list|,
-literal|"problem creating object %s=%s\n"
-argument_list|,
-name|cnf
-operator|->
-name|name
-argument_list|,
-name|cnf
-operator|->
-name|value
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-block|}
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
 name|do_revoke
 parameter_list|(
 name|X509
@@ -11601,7 +11551,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11649,7 +11599,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|2
 argument_list|)
@@ -11670,7 +11620,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|tm
 operator|->
@@ -11724,7 +11674,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|8
 argument_list|)
@@ -11764,7 +11714,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -11811,7 +11761,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -11834,7 +11784,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"Malloc failure\n"
+literal|"Memory allocation failure\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -12041,7 +11991,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|revtm
 operator|->
@@ -12113,7 +12063,7 @@ index|]
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|row
 index|[

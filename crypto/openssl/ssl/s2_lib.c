@@ -563,7 +563,7 @@ condition|(
 operator|(
 name|s2
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 expr|*
@@ -594,7 +594,7 @@ name|s2
 operator|->
 name|rbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
 operator|+
@@ -614,7 +614,7 @@ name|s2
 operator|->
 name|wbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SSL2_MAX_RECORD_LENGTH_2_BYTE_HEADER
 operator|+
@@ -660,7 +660,7 @@ name|wbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 operator|->
@@ -675,14 +675,14 @@ name|rbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 operator|->
 name|rbuf
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 argument_list|)
@@ -730,7 +730,7 @@ name|rbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 operator|->
@@ -745,7 +745,7 @@ name|wbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 operator|->
@@ -763,7 +763,7 @@ expr|*
 name|s2
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s2
 argument_list|)
@@ -1160,35 +1160,15 @@ operator|*
 operator|)
 name|OBJ_bsearch
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|cp
+argument|(char *)&cp
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|sorted
+argument|(char *)sorted
 argument_list|,
-name|SSL2_NUM_CIPHERS
+argument|SSL2_NUM_CIPHERS
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|SSL_CIPHER
-operator|*
-argument_list|)
+argument|sizeof(SSL_CIPHER *)
 argument_list|,
-operator|(
-name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|()
-operator|)
-name|ssl_cipher_ptr_id_cmp
+argument|FP_ICC ssl_cipher_ptr_id_cmp
 argument_list|)
 expr_stmt|;
 if|if

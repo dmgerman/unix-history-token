@@ -33,18 +33,20 @@ end_include
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|null_init_key
 parameter_list|(
 name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -58,7 +60,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|null_cipher
 parameter_list|(
 name|EVP_CIPHER_CTX
@@ -70,6 +72,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -96,6 +99,8 @@ literal|0
 block|,
 literal|0
 block|,
+literal|0
+block|,
 name|null_init_key
 block|,
 name|null_cipher
@@ -107,7 +112,9 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|,
+name|NULL
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -130,18 +137,20 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|null_init_key
 parameter_list|(
 name|EVP_CIPHER_CTX
 modifier|*
 name|ctx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -170,12 +179,15 @@ name|c
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|null_cipher
 parameter_list|(
 name|EVP_CIPHER_CTX
@@ -187,6 +199,7 @@ name|char
 modifier|*
 name|out
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -223,6 +236,9 @@ operator|)
 name|inl
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

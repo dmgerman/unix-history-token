@@ -194,7 +194,7 @@ return|;
 block|}
 name|dbmask
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|emlen
 operator|-
@@ -406,7 +406,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|dbmask
 argument_list|)
@@ -518,7 +518,7 @@ name|SHA_DIGEST_LENGTH
 expr_stmt|;
 name|db
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|dblen
 argument_list|)
@@ -745,7 +745,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|db
 argument_list|)

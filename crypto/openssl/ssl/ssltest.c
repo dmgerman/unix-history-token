@@ -200,6 +200,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|free_tmp_rsa
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
@@ -2453,6 +2463,14 @@ argument_list|(
 name|bio_stdout
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_RSA
+name|free_tmp_rsa
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|ERR_free_strings
 argument_list|()
 expr_stmt|;
@@ -4924,7 +4942,7 @@ literal|0
 expr_stmt|;
 name|err
 label|:
-comment|/* We have to set the BIO's to NULL otherwise they will be 	 * Free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
+comment|/* We have to set the BIO's to NULL otherwise they will be 	 * OPENSSL_free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
 if|if
 condition|(
 name|s_ssl
@@ -5142,6 +5160,16 @@ directive|ifndef
 name|NO_RSA
 end_ifndef
 
+begin_decl_stmt
+specifier|static
+name|RSA
+modifier|*
+name|rsa_tmp
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|RSA
@@ -5160,13 +5188,6 @@ name|int
 name|keylength
 parameter_list|)
 block|{
-specifier|static
-name|RSA
-modifier|*
-name|rsa_tmp
-init|=
-name|NULL
-decl_stmt|;
 if|if
 condition|(
 name|rsa_tmp
@@ -5225,6 +5246,34 @@ operator|(
 name|rsa_tmp
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|free_tmp_rsa
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+name|rsa_tmp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|RSA_free
+argument_list|(
+name|rsa_tmp
+argument_list|)
+expr_stmt|;
+name|rsa_tmp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -64,6 +64,45 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|EVP_F_EVP_CIPHERINIT
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_CipherInit"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|EVP_F_EVP_CIPHER_CTX_CTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_CIPHER_CTX_ctrl"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|EVP_F_EVP_CIPHER_CTX_SET_KEY_LENGTH
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"EVP_CIPHER_CTX_set_key_length"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|EVP_F_EVP_DECRYPTFINAL
 argument_list|,
 literal|0
@@ -320,6 +359,19 @@ literal|"RC2_MAGIC_TO_METH"
 block|}
 block|,
 block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|EVP_F_RC5_CTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"RC5_CTRL"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -357,6 +409,18 @@ block|{
 name|EVP_R_CIPHER_PARAMETER_ERROR
 block|,
 literal|"cipher parameter error"
+block|}
+block|,
+block|{
+name|EVP_R_CTRL_NOT_IMPLEMENTED
+block|,
+literal|"ctrl not implemented"
+block|}
+block|,
+block|{
+name|EVP_R_CTRL_OPERATION_NOT_IMPLEMENTED
+block|,
+literal|"ctrl operation not implemented"
 block|}
 block|,
 block|{
@@ -402,9 +466,21 @@ literal|"expecting a dsa key"
 block|}
 block|,
 block|{
+name|EVP_R_INITIALIZATION_ERROR
+block|,
+literal|"initialization error"
+block|}
+block|,
+block|{
 name|EVP_R_INPUT_NOT_INITIALIZED
 block|,
 literal|"input not initialized"
+block|}
+block|,
+block|{
+name|EVP_R_INVALID_KEY_LENGTH
+block|,
+literal|"invalid key length"
 block|}
 block|,
 block|{
@@ -423,6 +499,12 @@ block|{
 name|EVP_R_MISSING_PARAMETERS
 block|,
 literal|"missing parameters"
+block|}
+block|,
+block|{
+name|EVP_R_NO_CIPHER_SET
+block|,
+literal|"no cipher set"
 block|}
 block|,
 block|{
@@ -459,6 +541,12 @@ block|{
 name|EVP_R_UNKNOWN_PBE_ALGORITHM
 block|,
 literal|"unknown pbe algorithm"
+block|}
+block|,
+block|{
+name|EVP_R_UNSUPORTED_NUMBER_OF_ROUNDS
+block|,
+literal|"unsuported number of rounds"
 block|}
 block|,
 block|{

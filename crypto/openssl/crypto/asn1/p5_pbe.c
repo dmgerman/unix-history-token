@@ -261,7 +261,7 @@ operator|->
 name|iter
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -369,7 +369,7 @@ name|salt
 operator|->
 name|data
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|saltlen
 argument_list|)

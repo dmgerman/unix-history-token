@@ -62,6 +62,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -106,7 +107,7 @@ parameter_list|,
 name|long
 name|arg1
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg2
 parameter_list|)
@@ -149,12 +150,9 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|void
-function_decl|(
+name|bio_info_cb
 modifier|*
 name|fp
-function_decl|)
-parameter_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -386,7 +384,7 @@ operator|(
 name|BIO_OK_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -518,7 +516,7 @@ name|BIO_OK_CTX
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -908,6 +906,7 @@ name|BIO
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|in
@@ -1254,7 +1253,7 @@ parameter_list|,
 name|long
 name|num
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|ptr
 parameter_list|)
@@ -1679,12 +1678,9 @@ parameter_list|,
 name|int
 name|cmd
 parameter_list|,
-name|void
-function_decl|(
+name|bio_info_cb
 modifier|*
 name|fp
-function_decl|)
-parameter_list|()
 parameter_list|)
 block|{
 name|long

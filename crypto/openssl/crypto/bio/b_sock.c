@@ -295,17 +295,6 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|>
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|i
 operator|<
 literal|0
 condition|)
@@ -321,7 +310,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* do a gethostbyname */
+comment|/* At this point, we have something that is most probably correct 	   in some way, so let's init the socket. */
 if|if
 condition|(
 operator|!
@@ -334,6 +323,19 @@ literal|0
 operator|)
 return|;
 comment|/* don't generate another error code here */
+comment|/* If the string actually contained an IP address, we need not do 	   anything more */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* do a gethostbyname */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_GETHOSTBYNAME
@@ -1025,7 +1027,7 @@ expr|struct
 name|hostent
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1089,7 +1091,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 operator|*
@@ -1159,7 +1161,7 @@ name|char
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 operator|*
@@ -1216,7 +1218,7 @@ name|ret
 operator|->
 name|h_name
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|j
 argument_list|)
@@ -1287,7 +1289,7 @@ index|[
 name|i
 index|]
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|j
 argument_list|)
@@ -1363,7 +1365,7 @@ index|[
 name|i
 index|]
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|a
 operator|->
@@ -1480,7 +1482,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -1490,7 +1492,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -1525,7 +1527,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -1535,7 +1537,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -1551,14 +1553,14 @@ name|h_name
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -3015,7 +3017,7 @@ name|str
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|str
 argument_list|)
@@ -3206,7 +3208,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 literal|24
 argument_list|)

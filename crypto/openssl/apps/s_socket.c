@@ -924,6 +924,9 @@ literal|0
 operator|)
 return|;
 block|}
+ifndef|#
+directive|ifndef
+name|MPE
 name|i
 operator|=
 literal|0
@@ -969,6 +972,8 @@ literal|0
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|connect
@@ -1141,7 +1146,7 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|name
 argument_list|)
@@ -1750,7 +1755,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|strlen
 argument_list|(
@@ -1768,7 +1773,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"Malloc"
+literal|"OPENSSL_malloc"
 argument_list|)
 expr_stmt|;
 return|return

@@ -49,11 +49,11 @@ directive|include
 file|<openssl/asn1_mac.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEG_PUBKEY_BUG
-end_ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_NEG_PUBKEY_BUG
+end_ifndef
 
 begin_define
 define|#

@@ -1074,7 +1074,7 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|name
 argument_list|)
@@ -1085,7 +1085,7 @@ name|header
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|header
 argument_list|)
@@ -1096,7 +1096,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|data
 argument_list|)
@@ -1271,7 +1271,7 @@ name|name
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|name
 argument_list|)
@@ -1285,7 +1285,7 @@ name|header
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|header
 argument_list|)
@@ -1299,7 +1299,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|data
 argument_list|)

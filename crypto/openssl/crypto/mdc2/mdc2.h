@@ -19,6 +19,12 @@ directive|define
 name|HEADER_MDC2_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<openssl/des.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -31,9 +37,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-include|#
-directive|include
-file|<openssl/des.h>
 ifdef|#
 directive|ifdef
 name|NO_MDC2

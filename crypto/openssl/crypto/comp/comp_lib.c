@@ -52,7 +52,7 @@ operator|(
 name|COMP_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -112,7 +112,7 @@ name|ret
 argument_list|)
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
@@ -172,7 +172,7 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ctx
 argument_list|)

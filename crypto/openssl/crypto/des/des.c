@@ -1667,7 +1667,7 @@ operator|(
 operator|(
 name|buf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BUFSIZE
 operator|+
@@ -1682,7 +1682,7 @@ operator|(
 operator|(
 name|obuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BUFSIZE
 operator|+

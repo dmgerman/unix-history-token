@@ -109,7 +109,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 operator|+

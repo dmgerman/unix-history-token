@@ -376,6 +376,32 @@ name|ERR_PACK
 argument_list|(
 literal|0
 argument_list|,
+name|BIO_F_LINEBUFFER_CTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"LINEBUFFER_CTRL"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
+name|BIO_F_MEM_READ
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"MEM_READ"
+block|}
+block|,
+block|{
+name|ERR_PACK
+argument_list|(
+literal|0
+argument_list|,
 name|BIO_F_MEM_WRITE
 argument_list|,
 literal|0
@@ -454,6 +480,12 @@ block|{
 name|BIO_R_CONNECT_ERROR
 block|,
 literal|"connect error"
+block|}
+block|,
+block|{
+name|BIO_R_EOF_ON_MEMORY_BIO
+block|,
+literal|"EOF on memory BIO"
 block|}
 block|,
 block|{
@@ -579,13 +611,13 @@ block|,
 block|{
 name|BIO_R_WRITE_TO_READ_ONLY_BIO
 block|,
-literal|"write to read only bio"
+literal|"write to read only BIO"
 block|}
 block|,
 block|{
 name|BIO_R_WSASTARTUP
 block|,
-literal|"wsastartup"
+literal|"WSAStartup"
 block|}
 block|,
 block|{

@@ -699,6 +699,12 @@ operator|>
 name|a
 operator|->
 name|top
+operator|||
+name|a
+operator|->
+name|top
+operator|==
+literal|0
 condition|)
 block|{
 name|BN_zero

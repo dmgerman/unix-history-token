@@ -386,18 +386,9 @@ argument_list|,
 name|maclen
 argument_list|)
 condition|)
-block|{
-name|PKCS12err
-argument_list|(
-name|PKCS12_F_VERIFY_MAC
-argument_list|,
-name|PKCS12_R_MAC_VERIFY_ERROR
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
 return|return
 literal|1
 return|;
@@ -676,7 +667,7 @@ name|salt
 operator|->
 name|data
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|saltlen
 argument_list|)

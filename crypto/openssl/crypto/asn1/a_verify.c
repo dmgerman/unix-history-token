@@ -176,7 +176,7 @@ argument_list|)
 expr_stmt|;
 name|buf_in
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -251,7 +251,7 @@ operator|)
 name|inl
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf_in
 argument_list|)

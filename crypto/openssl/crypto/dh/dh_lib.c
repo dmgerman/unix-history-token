@@ -211,7 +211,7 @@ operator|(
 name|DH
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -241,16 +241,6 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|default_DH_method
-condition|)
-name|default_DH_method
-operator|=
-name|DH_OpenSSL
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|meth
 condition|)
 name|ret
@@ -264,7 +254,8 @@ name|ret
 operator|->
 name|meth
 operator|=
-name|default_DH_method
+name|DH_get_default_method
+argument_list|()
 expr_stmt|;
 name|ret
 operator|->
@@ -383,7 +374,7 @@ name|ret
 argument_list|)
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
@@ -585,7 +576,7 @@ name|r
 operator|->
 name|seed
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 operator|->
@@ -637,7 +628,7 @@ operator|->
 name|priv_key
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 argument_list|)

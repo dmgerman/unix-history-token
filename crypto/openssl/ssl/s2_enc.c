@@ -129,7 +129,7 @@ operator|(
 name|EVP_CIPHER_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -164,7 +164,7 @@ operator|(
 name|EVP_CIPHER_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(

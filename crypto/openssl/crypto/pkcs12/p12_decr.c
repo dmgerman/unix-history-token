@@ -38,7 +38,7 @@ comment|/*#define DEBUG_DECRYPT*/
 end_comment
 
 begin_comment
-comment|/* Encrypt/Decrypt a buffer based on password and algor, result in a  * Malloc'ed buffer  */
+comment|/* Encrypt/Decrypt a buffer based on password and algor, result in a  * OPENSSL_malloc'ed buffer  */
 end_comment
 
 begin_function
@@ -136,7 +136,7 @@ operator|!
 operator|(
 name|out
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|inlen
 operator|+
@@ -196,7 +196,7 @@ name|i
 argument_list|)
 condition|)
 block|{
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|out
 argument_list|)
@@ -266,7 +266,10 @@ function_decl|(
 modifier|*
 name|free_func
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|,
 specifier|const
 name|char
@@ -471,7 +474,7 @@ argument_list|,
 name|PKCS12_R_DECODE_ERROR
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|out
 argument_list|)
@@ -613,7 +616,7 @@ operator|!
 operator|(
 name|in
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|inlen
 argument_list|)
@@ -704,7 +707,7 @@ argument_list|,
 name|PKCS12_R_ENCRYPT_ERROR
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|in
 argument_list|)
@@ -713,7 +716,7 @@ return|return
 name|NULL
 return|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|in
 argument_list|)
@@ -723,6 +726,13 @@ name|oct
 return|;
 block|}
 end_function
+
+begin_macro
+name|IMPLEMENT_PKCS12_STACK_OF
+argument_list|(
+argument|PKCS7
+argument_list|)
+end_macro
 
 end_unit
 

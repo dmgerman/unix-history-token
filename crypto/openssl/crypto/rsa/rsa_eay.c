@@ -41,6 +41,12 @@ directive|include
 file|<openssl/rand.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RSA_NULL
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|int
@@ -231,7 +237,7 @@ end_decl_stmt
 begin_function
 name|RSA_METHOD
 modifier|*
-name|RSA_PKCS1
+name|RSA_PKCS1_SSLeay
 parameter_list|(
 name|void
 parameter_list|)
@@ -350,7 +356,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -671,7 +677,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -790,7 +796,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1172,7 +1178,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -1292,7 +1298,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1312,7 +1318,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* This check was for equallity but PGP does evil things 	 * and chops off the top '0' bytes */
+comment|/* This check was for equality but PGP does evil things 	 * and chops off the top '0' bytes */
 if|if
 condition|(
 name|flen
@@ -1710,7 +1716,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -1827,7 +1833,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1850,7 +1856,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* This check was for equallity but PGP does evil things 	 * and chops off the top '0' bytes */
+comment|/* This check was for equality but PGP does evil things 	 * and chops off the top '0' bytes */
 if|if
 condition|(
 name|flen
@@ -2095,7 +2101,7 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|buf
 argument_list|)
@@ -2626,6 +2632,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -860,10 +860,8 @@ name|ret
 operator|->
 name|entries
 operator|=
-name|sk_X509_NAME_ENTRY_new
-argument_list|(
-name|NULL
-argument_list|)
+name|sk_X509_NAME_ENTRY_new_null
+argument_list|()
 operator|)
 operator|==
 name|NULL
@@ -998,7 +996,7 @@ argument_list|,
 name|X509_NAME_ENTRY_free
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -1036,7 +1034,7 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)

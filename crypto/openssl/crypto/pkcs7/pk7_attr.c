@@ -46,21 +46,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/x509.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/err.h>
 end_include
 
-begin_function
+begin_decl_stmt
 name|int
 name|PKCS7_add_attrib_smimecap
-parameter_list|(
+argument_list|(
 name|PKCS7_SIGNER_INFO
-modifier|*
+operator|*
 name|si
-parameter_list|,
-name|STACK
-modifier|*
+argument_list|,
+name|STACK_OF
+argument_list|(
+name|X509_ALGOR
+argument_list|)
+operator|*
 name|cap
-parameter_list|)
+argument_list|)
 block|{
 name|ASN1_STRING
 modifier|*
@@ -79,7 +88,7 @@ name|len
 decl_stmt|;
 name|len
 operator|=
-name|i2d_ASN1_SET
+name|i2d_ASN1_SET_OF_X509_ALGOR
 argument_list|(
 name|cap
 argument_list|,
@@ -105,7 +114,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|len
 argument_list|)
@@ -127,7 +136,7 @@ name|p
 operator|=
 name|pp
 expr_stmt|;
-name|i2d_ASN1_SET
+name|i2d_ASN1_SET_OF_X509_ALGOR
 argument_list|(
 name|cap
 argument_list|,
@@ -189,7 +198,7 @@ return|return
 literal|0
 return|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|pp
 argument_list|)
@@ -207,27 +216,28 @@ name|seq
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
-begin_function
-name|STACK
-modifier|*
+begin_expr_stmt
+name|STACK_OF
+argument_list|(
+name|X509_ALGOR
+argument_list|)
+operator|*
 name|PKCS7_get_smimecap
-parameter_list|(
-name|PKCS7_SIGNER_INFO
-modifier|*
-name|si
-parameter_list|)
+argument_list|(
+argument|PKCS7_SIGNER_INFO *si
+argument_list|)
 block|{
 name|ASN1_TYPE
-modifier|*
+operator|*
 name|cap
-decl_stmt|;
+block|;
 name|unsigned
 name|char
-modifier|*
+operator|*
 name|p
-decl_stmt|;
+block|;
 name|cap
 operator|=
 name|PKCS7_get_signed_attribute
@@ -236,7 +246,7 @@ name|si
 argument_list|,
 name|NID_SMIMECapabilities
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -255,8 +265,11 @@ name|sequence
 operator|->
 name|data
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
-name|d2i_ASN1_SET
+name|d2i_ASN1_SET_OF_X509_ALGOR
 argument_list|(
 name|NULL
 argument_list|,
@@ -271,14 +284,6 @@ name|sequence
 operator|->
 name|length
 argument_list|,
-operator|(
-name|char
-operator|*
-call|(
-modifier|*
-call|)
-argument_list|()
-operator|)
 name|d2i_X509_ALGOR
 argument_list|,
 name|X509_ALGOR_free
@@ -288,27 +293,26 @@ argument_list|,
 name|V_ASN1_UNIVERSAL
 argument_list|)
 return|;
-block|}
-end_function
+end_return
 
 begin_comment
+unit|}
 comment|/* Basic smime-capabilities OID and optional integer arg */
 end_comment
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|PKCS7_simple_smimecap
-parameter_list|(
-name|STACK
-modifier|*
-name|sk
-parameter_list|,
-name|int
-name|nid
-parameter_list|,
-name|int
-name|arg
-parameter_list|)
+argument_list|(
+argument|STACK_OF(X509_ALGOR) *sk
+argument_list|,
+argument|int nid
+argument_list|,
+argument|int arg
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|X509_ALGOR
 modifier|*
@@ -450,14 +454,10 @@ operator|=
 name|V_ASN1_INTEGER
 expr_stmt|;
 block|}
-name|sk_push
+name|sk_X509_ALGOR_push
 argument_list|(
 name|sk
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|alg
 argument_list|)
 expr_stmt|;
@@ -465,7 +465,7 @@ return|return
 literal|1
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -353,7 +353,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -451,7 +451,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)
@@ -580,7 +580,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 operator|(
 name|unsigned
@@ -914,7 +914,7 @@ operator|)
 name|siglen
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 argument_list|)

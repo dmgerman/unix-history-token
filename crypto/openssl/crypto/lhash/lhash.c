@@ -171,7 +171,7 @@ operator|(
 name|LHASH
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -197,7 +197,7 @@ name|LHASH_NODE
 operator|*
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -420,7 +420,7 @@ operator|)
 return|;
 name|err1
 label|:
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ret
 argument_list|)
@@ -500,7 +500,7 @@ name|n
 operator|->
 name|next
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|n
 argument_list|)
@@ -511,14 +511,14 @@ name|nn
 expr_stmt|;
 block|}
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lh
 operator|->
 name|b
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|lh
 argument_list|)
@@ -614,7 +614,7 @@ operator|(
 name|LHASH_NODE
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -802,7 +802,7 @@ name|nn
 operator|->
 name|data
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|nn
 argument_list|)
@@ -1301,7 +1301,7 @@ name|LHASH_NODE
 operator|*
 operator|*
 operator|)
-name|Realloc
+name|OPENSSL_realloc
 argument_list|(
 name|lh
 operator|->
@@ -1476,7 +1476,7 @@ name|LHASH_NODE
 operator|*
 operator|*
 operator|)
-name|Realloc
+name|OPENSSL_realloc
 argument_list|(
 name|lh
 operator|->

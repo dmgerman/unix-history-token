@@ -22,7 +22,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|WIN16
+name|NO_FP_API
 end_ifndef
 
 begin_include
@@ -580,7 +580,7 @@ decl_stmt|;
 comment|/* Index of last used d +1. */
 comment|/* The next are internal book keeping for bn_expand. */
 name|int
-name|max
+name|dmax
 decl_stmt|;
 comment|/* Size of the d array. */
 name|int
@@ -1373,6 +1373,35 @@ name|m_ctx
 parameter_list|)
 function_decl|;
 name|int
+name|BN_mod_exp_mont_word
+parameter_list|(
+name|BIGNUM
+modifier|*
+name|r
+parameter_list|,
+name|BN_ULONG
+name|a
+parameter_list|,
+specifier|const
+name|BIGNUM
+modifier|*
+name|p
+parameter_list|,
+specifier|const
+name|BIGNUM
+modifier|*
+name|m
+parameter_list|,
+name|BN_CTX
+modifier|*
+name|ctx
+parameter_list|,
+name|BN_MONT_CTX
+modifier|*
+name|m_ctx
+parameter_list|)
+function_decl|;
+name|int
 name|BN_mod_exp2_mont
 parameter_list|(
 name|BIGNUM
@@ -2141,7 +2170,7 @@ name|a
 parameter_list|,
 name|bits
 parameter_list|)
-value|((((((bits+BN_BITS2-1))/BN_BITS2))<= (a)->max)?\ 	(a):bn_expand2((a),(bits)/BN_BITS2+1))
+value|((((((bits+BN_BITS2-1))/BN_BITS2))<= (a)->dmax)?\ 	(a):bn_expand2((a),(bits)/BN_BITS2+1))
 define|#
 directive|define
 name|bn_wexpand
@@ -2150,7 +2179,7 @@ name|a
 parameter_list|,
 name|words
 parameter_list|)
-value|(((words)<= (a)->max)?(a):bn_expand2((a),(words)))
+value|(((words)<= (a)->dmax)?(a):bn_expand2((a),(words)))
 name|BIGNUM
 modifier|*
 name|bn_expand2
@@ -2376,8 +2405,16 @@ name|BN_F_BN_EXPAND2
 value|108
 define|#
 directive|define
+name|BN_F_BN_MOD_EXP2_MONT
+value|118
+define|#
+directive|define
 name|BN_F_BN_MOD_EXP_MONT
 value|109
+define|#
+directive|define
+name|BN_F_BN_MOD_EXP_MONT_WORD
+value|117
 define|#
 directive|define
 name|BN_F_BN_MOD_INVERSE

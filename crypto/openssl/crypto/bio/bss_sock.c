@@ -67,6 +67,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -105,6 +106,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -127,7 +129,7 @@ parameter_list|,
 name|long
 name|arg1
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg2
 parameter_list|)
@@ -182,6 +184,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|buf
@@ -220,6 +223,7 @@ name|BIO
 modifier|*
 name|h
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str
@@ -242,7 +246,7 @@ parameter_list|,
 name|long
 name|arg1
 parameter_list|,
-name|char
+name|void
 modifier|*
 name|arg2
 parameter_list|)
@@ -798,6 +802,7 @@ name|BIO
 operator|*
 name|b
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|in
@@ -815,6 +820,7 @@ name|BIO
 operator|*
 name|b
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|in
@@ -935,7 +941,7 @@ argument_list|,
 name|long
 name|num
 argument_list|,
-name|char
+name|void
 operator|*
 name|ptr
 argument_list|)
@@ -955,7 +961,7 @@ argument_list|,
 name|long
 name|num
 argument_list|,
-name|char
+name|void
 operator|*
 name|ptr
 argument_list|)
@@ -1254,6 +1260,7 @@ name|BIO
 operator|*
 name|bp
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|str
@@ -1268,6 +1275,7 @@ name|BIO
 operator|*
 name|bp
 argument_list|,
+specifier|const
 name|char
 operator|*
 name|str

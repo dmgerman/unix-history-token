@@ -39,7 +39,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -135,7 +135,7 @@ operator|->
 name|max
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 operator|->
@@ -143,7 +143,7 @@ name|data
 argument_list|)
 expr_stmt|;
 block|}
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|a
 argument_list|)
@@ -256,7 +256,7 @@ name|NULL
 condition|)
 name|ret
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|n
 argument_list|)
@@ -264,7 +264,7 @@ expr_stmt|;
 else|else
 name|ret
 operator|=
-name|Realloc
+name|OPENSSL_realloc
 argument_list|(
 name|str
 operator|->
@@ -359,7 +359,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|n
 operator|+

@@ -107,6 +107,7 @@ parameter_list|,
 name|int
 name|len
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -119,6 +120,7 @@ function_decl|;
 name|void
 name|RC5_32_ecb_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -166,6 +168,7 @@ function_decl|;
 name|void
 name|RC5_32_cbc_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -195,6 +198,7 @@ function_decl|;
 name|void
 name|RC5_32_cfb64_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -228,6 +232,7 @@ function_decl|;
 name|void
 name|RC5_32_ofb64_encrypt
 parameter_list|(
+specifier|const
 name|unsigned
 name|char
 modifier|*

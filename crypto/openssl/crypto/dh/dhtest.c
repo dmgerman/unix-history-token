@@ -527,7 +527,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|alen
 argument_list|)
@@ -607,7 +607,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|blen
 argument_list|)
@@ -726,7 +726,7 @@ name|abuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|abuf
 argument_list|)
@@ -737,7 +737,7 @@ name|bbuf
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|bbuf
 argument_list|)

@@ -738,7 +738,7 @@ name|BN_RECURSION
 end_ifdef
 
 begin_comment
-comment|/* r is 2*n words in size,  * a and b are both n words in size.  * n must be a power of 2.  * We multiply and return the result.  * t must be 2*n words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
+comment|/* r is 2*n words in size,  * a and b are both n words in size.    (There's not actually a 'b' here ...)  * n must be a power of 2.  * We multiply and return the result.  * t must be 2*n words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
 end_comment
 
 begin_function

@@ -147,7 +147,7 @@ condition|)
 block|{
 name|outbuf
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|BSIZE
 operator|+

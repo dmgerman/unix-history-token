@@ -22,6 +22,61 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|NO_DES
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|DES is disabled.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERBEROS_DES_H
+end_ifdef
+
+begin_error
+error|#
+directive|error
+literal|<openssl/des.h>
+error|replaces<kerberos/des.h>.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/opensslconf.h>
+end_include
+
+begin_comment
+comment|/* DES_LONG */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<openssl/e_os2.h>
+end_include
+
+begin_comment
+comment|/* OPENSSL_EXTERN */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__cplusplus
 end_ifdef
 
@@ -31,34 +86,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|NO_DES
-error|#
-directive|error
-error|DES is disabled.
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|_KERBEROS_DES_H
-error|#
-directive|error
-literal|<openssl/des.h>
-error|replaces<kerberos/des.h>.
-endif|#
-directive|endif
-include|#
-directive|include
-file|<stdio.h>
-include|#
-directive|include
-file|<openssl/opensslconf.h>
-comment|/* DES_LONG */
-include|#
-directive|include
-file|<openssl/e_os2.h>
-comment|/* OPENSSL_EXTERN */
 typedef|typedef
 name|unsigned
 name|char

@@ -116,7 +116,7 @@ name|r
 operator|->
 name|data
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|o
 operator|->
@@ -201,7 +201,7 @@ name|ln
 operator|=
 name|ln
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
@@ -259,7 +259,7 @@ name|sn
 operator|=
 name|s
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|i
 argument_list|)
@@ -330,7 +330,7 @@ name|ln
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|ln
 argument_list|)
@@ -343,14 +343,14 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 operator|->
 name|data
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|r
 argument_list|)

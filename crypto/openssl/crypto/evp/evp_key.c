@@ -338,7 +338,7 @@ name|c
 argument_list|,
 name|salt
 argument_list|,
-literal|8
+name|PKCS5_SALT_LEN
 argument_list|)
 expr_stmt|;
 name|EVP_DigestFinal

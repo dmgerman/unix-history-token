@@ -741,7 +741,7 @@ operator|(
 name|EVP_CIPHER_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -853,7 +853,7 @@ name|unsigned
 name|char
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|SSL3_RT_MAX_PLAIN_LENGTH
 argument_list|)
@@ -930,7 +930,7 @@ operator|(
 name|EVP_CIPHER_CTX
 operator|*
 operator|)
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1681,7 +1681,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|Malloc
+name|OPENSSL_malloc
 argument_list|(
 name|num
 argument_list|)
@@ -1786,7 +1786,7 @@ operator|.
 name|key_block_length
 argument_list|)
 expr_stmt|;
-name|Free
+name|OPENSSL_free
 argument_list|(
 name|s
 operator|->
