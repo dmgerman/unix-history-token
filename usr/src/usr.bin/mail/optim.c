@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)optim.c	2.7 %G%"
+literal|"@(#)optim.c	2.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,11 +107,14 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|savestr
+argument_list|(
 name|arpafix
 argument_list|(
 name|name
 argument_list|,
 name|from
+argument_list|)
 argument_list|)
 operator|)
 return|;
@@ -224,10 +227,6 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
 name|savestr
 argument_list|(
 name|cp
