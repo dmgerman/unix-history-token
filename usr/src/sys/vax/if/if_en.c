@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.34	82/02/21	*/
+comment|/*	if_en.c	4.35	82/03/03	*/
 end_comment
 
 begin_include
@@ -1694,7 +1694,9 @@ directive|endif
 default|default:
 name|printf
 argument_list|(
-literal|"en%d: unknow pkt type 0x%x\n"
+literal|"en%d: unknown pkt type 0x%x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|en
 operator|->
