@@ -1945,7 +1945,7 @@ name|bktr_reg_t
 modifier|*
 parameter_list|,
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 modifier|*
 parameter_list|,
@@ -5363,7 +5363,7 @@ if|if
 condition|(
 name|ioflag
 operator|&
-name|IO_NDELAY
+name|FNDELAY
 condition|)
 block|{
 name|status
@@ -12609,7 +12609,7 @@ modifier|*
 name|bktr
 parameter_list|,
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 modifier|*
 name|dma_prog
@@ -13125,7 +13125,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|target_buffer
 decl_stmt|,
 name|buffer
@@ -13135,17 +13135,17 @@ decl_stmt|,
 name|width
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|pitch
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|dma_prog
 decl_stmt|;
 comment|/* DMA prog is an array of  						32 bit RISC instructions */
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|loop_point
 decl_stmt|;
@@ -13422,7 +13422,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -13649,7 +13649,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -13713,7 +13713,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -13765,7 +13765,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14004,7 +14004,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14068,7 +14068,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14120,7 +14120,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14235,7 +14235,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|target_buffer
 decl_stmt|,
 name|buffer
@@ -14245,11 +14245,11 @@ decl_stmt|,
 name|width
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|pitch
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|dma_prog
 decl_stmt|;
@@ -14467,7 +14467,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -14487,7 +14487,7 @@ block|{
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|bktr
 operator|->
@@ -14509,7 +14509,7 @@ block|{
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -14592,7 +14592,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14656,7 +14656,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14708,7 +14708,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -14789,7 +14789,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -14831,7 +14831,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -14875,7 +14875,7 @@ operator|*
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -14902,7 +14902,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -14971,7 +14971,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -15035,7 +15035,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -15087,7 +15087,7 @@ name|bktr
 argument_list|,
 operator|(
 specifier|volatile
-name|u_long
+name|uint32_t
 operator|*
 operator|*
 operator|)
@@ -15163,7 +15163,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15215,13 +15215,13 @@ name|int
 name|inst3
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|target_buffer
 decl_stmt|,
 name|buffer
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|dma_prog
 decl_stmt|;
@@ -15343,7 +15343,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -15384,7 +15384,7 @@ condition|)
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|bktr
 operator|->
@@ -15396,7 +15396,7 @@ else|else
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15524,7 +15524,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15566,7 +15566,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15609,7 +15609,7 @@ operator|*
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15630,7 +15630,7 @@ block|{
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|buffer
 operator|+
@@ -15641,7 +15641,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -15753,7 +15753,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15773,7 +15773,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -15820,7 +15820,7 @@ name|int
 name|inst
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|target_buffer
 decl_stmt|,
 name|t1
@@ -15828,7 +15828,7 @@ decl_stmt|,
 name|buffer
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|dma_prog
 decl_stmt|;
@@ -15859,7 +15859,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -16073,7 +16073,7 @@ condition|)
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|bktr
 operator|->
@@ -16085,7 +16085,7 @@ else|else
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16261,7 +16261,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16305,7 +16305,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16351,7 +16351,7 @@ operator|*
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16372,7 +16372,7 @@ block|{
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -16382,7 +16382,7 @@ expr_stmt|;
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|buffer
 operator|+
@@ -16549,7 +16549,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16601,7 +16601,7 @@ name|int
 name|inst1
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 name|target_buffer
 decl_stmt|,
 name|t1
@@ -16609,7 +16609,7 @@ decl_stmt|,
 name|buffer
 decl_stmt|;
 specifier|volatile
-name|u_long
+name|uint32_t
 modifier|*
 name|dma_prog
 decl_stmt|;
@@ -16640,7 +16640,7 @@ expr_stmt|;
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -16715,7 +16715,7 @@ condition|)
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|bktr
 operator|->
@@ -16727,7 +16727,7 @@ else|else
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16940,7 +16940,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -16984,7 +16984,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -17030,7 +17030,7 @@ operator|*
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
@@ -17051,7 +17051,7 @@ block|{
 name|dma_prog
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|*
 operator|)
 name|bktr
@@ -17061,7 +17061,7 @@ expr_stmt|;
 name|target_buffer
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|buffer
 operator|+
@@ -17268,7 +17268,7 @@ name|dma_prog
 operator|++
 operator|=
 operator|(
-name|u_long
+name|uint32_t
 operator|)
 name|vtophys
 argument_list|(
