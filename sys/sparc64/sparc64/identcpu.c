@@ -239,6 +239,14 @@ operator|=
 literal|"UltraSparc-III+"
 expr_stmt|;
 break|break;
+case|case
+name|CPU_IMPL_ULTRASPARCIIIi
+case|:
+name|impls
+operator|=
+literal|"UltraSparc-IIIi"
+expr_stmt|;
+break|break;
 default|default:
 name|impls
 operator|=
