@@ -5889,7 +5889,6 @@ argument_list|)
 operator|&
 name|UHCI_STS_USBINT
 condition|)
-block|{
 name|uhci_intr
 argument_list|(
 name|sc
@@ -5904,7 +5903,6 @@ operator|!=
 name|USBD_IN_PROGRESS
 condition|)
 return|return;
-block|}
 block|}
 comment|/* Timeout */
 name|DPRINTF
