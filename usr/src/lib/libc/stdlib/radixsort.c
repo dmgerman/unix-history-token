@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)radixsort.c	5.3 (Berkeley) %G%"
+literal|"@(#)radixsort.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,13 +60,6 @@ include|#
 directive|include
 file|<stddef.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|NCHARS
-value|(UCHAR_MAX + 1)
-end_define
 
 begin_comment
 comment|/*  * Shellsort (diminishing increment sort) from Data Structures and  * Algorithms, Aho, Hopcraft and Ullman, 1983 Edition, page 290;  * see also Knuth Vol. 3, page 84.  The increments are selected from  * formula (8), page 95.  Roughly O(N^3/2).  *  * __rspartition is the cutoff point for a further partitioning instead  * of a shellsort.  If it changes check __rsshell_increments.  Both of  * these are exported, as the best values are data dependent.  Unrolling  * this loop has not proven worthwhile.  */
@@ -120,8 +113,15 @@ value|{ \ 	register u_char ch, *s1, *s2; \ 	register int incr, *incrp; \ 	for (i
 end_define
 
 begin_comment
-comment|/*  * Stackp points to context structures, where each structure schedules a  * partitioning.  Radixsort exits when the stack is empty.  *  * If the buckets are placed on the stack randomly, the worst case is when  * all the buckets but one contain (NPARTITION + 1) elements and the bucket  * pushed on the stack last contains the rest of the elements.  In this case,  * stack growth is bounded by:  *  *	(nelements / (npartitions + 1)) - 1  *  * This is a very large number.  By forcing the largest bucket to be pushed  * on the stack first the worst case is when all but two buckets each contain  * (NPARTITION + 1) elements, with the remaining elements split equally between  * the first and last buckets pushed on the stack.  In this case, stack growth  * is bounded when:  *  *	for (partition_cnt = 0; nelements> npartitions; ++partition_cnt)  *		nelements =  *		    (nelements - (npartitions + 1) * (nbuckets - 2)) / 2;  * The bound is:  *  *	limit = partition_cnt * (nbuckets - 1);  *  * This is a much smaller number.  */
+comment|/*  * Stackp points to context structures, where each structure schedules a  * partitioning.  Radixsort exits when the stack is empty.  *  * If the buckets are placed on the stack randomly, the worst case is when  * all the buckets but one contain (npartitions + 1) elements and the bucket  * pushed on the stack last contains the rest of the elements.  In this case,  * stack growth is bounded by:  *  *	limit = (nelements / (npartitions + 1)) - 1;  *  * This is a very large number, 52,377,648 for the maximum 32-bit signed int.  *  * By forcing the largest bucket to be pushed on the stack first, the worst  * case is when all but two buckets each contain (npartitions + 1) elements,  * with the remaining elements split equally between the first and last  * buckets pushed on the stack.  In this case, stack growth is bounded when:  *  *	for (partition_cnt = 0; nelements> npartitions; ++partition_cnt)  *		nelements =  *		    (nelements - (npartitions + 1) * (nbuckets - 2)) / 2;  * The bound is:  *  *	limit = partition_cnt * (nbuckets - 1);  *  * This is a much smaller number, 4590 for the maximum 32-bit signed int.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NBUCKETS
+value|(UCHAR_MAX + 1)
+end_define
 
 begin_typedef
 typedef|typedef
@@ -233,7 +233,7 @@ decl_stmt|;
 name|int
 name|c
 index|[
-name|NCHARS
+name|NBUCKETS
 operator|+
 literal|1
 index|]
@@ -243,7 +243,7 @@ decl_stmt|;
 name|u_char
 name|ltab
 index|[
-name|NCHARS
+name|NBUCKETS
 index|]
 decl_stmt|;
 if|if
@@ -268,7 +268,7 @@ literal|1
 operator|)
 operator|*
 operator|(
-name|UCHAR_MAX
+name|NBUCKETS
 operator|-
 literal|2
 operator|)
@@ -292,7 +292,7 @@ name|__rspartition
 condition|;
 name|i
 operator|+=
-name|UCHAR_MAX
+name|NBUCKETS
 operator|-
 literal|1
 control|)
@@ -437,7 +437,7 @@ literal|1
 init|;
 name|t1
 operator|<
-name|NCHARS
+name|NBUCKETS
 condition|;
 operator|++
 name|t1
@@ -511,21 +511,24 @@ index|]
 index|]
 index|]
 expr_stmt|;
-comment|/* 		 * Sum the number of characters into c, dividing the temp 		 * stack into the right number of buckets for this bucket, 		 * this index.  C contains the cumulative total of keys 		 * before and included in this bucket, and will later be 		 * used as an index to the bucket.  c[NCHARS] contains 		 * the total number of elements, for determining how many 		 * elements the last bucket contains.  At the same time 		 * find the largest bucket so it gets handled first. 		 */
+comment|/* 		 * Sum the number of characters into c, dividing the temp 		 * stack into the right number of buckets for this bucket, 		 * this index.  C contains the cumulative total of keys 		 * before and included in this bucket, and will later be 		 * used as an index to the bucket.  c[NBUCKETS] contains 		 * the total number of elements, for determining how many 		 * elements the last bucket contains.  At the same time 		 * find the largest bucket so it gets pushed first. 		 */
 for|for
 control|(
 name|i
 operator|=
-literal|1
+name|max
+operator|=
+name|t1
+operator|=
+literal|0
 operator|,
 name|t2
 operator|=
-operator|-
-literal|1
+name|__rspartition
 init|;
 name|i
 operator|<=
-name|NCHARS
+name|NBUCKETS
 condition|;
 operator|++
 name|i
@@ -533,29 +536,28 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-name|t1
-operator|=
 name|c
 index|[
 name|i
-operator|-
-literal|1
 index|]
-operator|)
 operator|>
 name|t2
 condition|)
 block|{
 name|t2
 operator|=
-name|t1
+name|c
+index|[
+name|i
+index|]
 expr_stmt|;
 name|max
 operator|=
 name|i
 expr_stmt|;
 block|}
+name|t1
+operator|=
 name|c
 index|[
 name|i
@@ -564,7 +566,7 @@ operator|+=
 name|t1
 expr_stmt|;
 block|}
-comment|/* 		 * Partition the elements into buckets; c decrements 		 * through the bucket, and ends up pointing to the 		 * first element of the bucket. 		 */
+comment|/* 		 * Partition the elements into buckets; c decrements through 		 * the bucket, and ends up pointing to the first element of 		 * the bucket. 		 */
 for|for
 control|(
 name|i
@@ -684,7 +686,7 @@ literal|1
 init|;
 name|i
 operator|<
-name|NCHARS
+name|NBUCKETS
 condition|;
 operator|++
 name|i
