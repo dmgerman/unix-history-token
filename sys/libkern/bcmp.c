@@ -492,7 +492,7 @@ return|;
 block|}
 else|#
 directive|else
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|p1
@@ -513,18 +513,10 @@ operator|)
 return|;
 name|p1
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|b1
 expr_stmt|;
 name|p2
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|b2
 expr_stmt|;
 do|do
