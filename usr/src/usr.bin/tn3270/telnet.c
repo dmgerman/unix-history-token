@@ -22,8 +22,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -44,8 +47,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/*  * User telnet program, modified for use by tn3270.c.  *  * Many of the FUNCTIONAL changes in this newest version of TELNET  * were suggested by Dave Borman of Cray Research, Inc.  *  * Other changes in the tn3270 side come from Alan Crosswell (Columbia),  * Bob Braden (ISI), Steve Jacobson (Berkeley), and Cliff Frost (Berkeley).  *  * This code is common between telnet(1c) and tn3270(1c).  There are the  * following defines used to generate the various versions:  *  *	TN3270		- 	This is to be linked with tn3270.  *  *	DEBUG		-	Allow for some extra debugging operations.  *  *	NOT43		-	Allows the program to compile and run on  *				a 4.2BSD system.  *  *	PUTCHAR		-	Within tn3270, on a NOT43 system,  *				allows the use of the 4.3 curses  *				(greater speed updating the screen).  *				You need the 4.3 curses for this to work.  *  *	FD_SETSIZE	-	On whichever system, if this isn't defined,  *				we patch over the FD_SET, etc., macros with  *				some homebrewed ones.  *  *	SO_OOBINLINE	-	This is a socket option which we would like  *				to set to allow TCP urgent data to come  *				to us "inline".  This is NECESSARY for  *				CORRECT operation, and desireable for  *				simpler operation.  *  *	LNOFLSH		-	Detects the presence of the LNOFLSH bit  *				in the tty structure.  *  *	unix		-	Compiles in unix specific stuff.  *  *	msdos		-	Compiles in msdos specific stuff.  *  */
@@ -607,7 +613,9 @@ index|[
 literal|100
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|,
 modifier|*
 name|subpointer
@@ -706,7 +714,9 @@ index|[
 literal|256
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -718,7 +728,9 @@ index|[
 literal|256
 index|]
 init|=
+block|{
 literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -7938,7 +7950,7 @@ else|else
 block|{
 endif|#
 directive|endif
-endif|defined(TN3270)
+comment|/* defined(TN3270) */
 name|returnValue
 operator|=
 literal|1
@@ -8569,6 +8581,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(SO_OOBINLINE) */
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
 if|if
 condition|(
 name|telnetport
@@ -8591,13 +8610,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TN3270
-argument_list|)
 if|if
 condition|(
 operator|!
@@ -8615,10 +8627,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 endif|#
 directive|endif
-endif|!defined(TN3270)
-block|}
+comment|/* !defined(TN3270) */
 if|#
 directive|if
 operator|!
@@ -9566,8 +9578,11 @@ end_expr_stmt
 begin_else
 else|#
 directive|else
-else|NOT43
 end_else
+
+begin_comment
+comment|/* NOT43 */
+end_comment
 
 begin_if
 if|if
@@ -9613,8 +9628,11 @@ end_if
 begin_endif
 endif|#
 directive|endif
-endif|NOT43
 end_endif
+
+begin_comment
+comment|/* NOT43 */
+end_comment
 
 begin_return
 return|return
@@ -12573,7 +12591,7 @@ literal|0
 condition|)
 else|#
 directive|else
-else|NOT43
+comment|/* NOT43 */
 if|if
 condition|(
 name|debug
@@ -12595,7 +12613,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-endif|NOT43
+comment|/* NOT43 */
 name|perror
 argument_list|(
 literal|"setsockopt (SO_DEBUG)"
