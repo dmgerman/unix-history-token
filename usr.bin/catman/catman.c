@@ -280,15 +280,7 @@ literal|"ISO8859-1"
 block|,
 literal|"latin1"
 block|,
-literal|"ISO_8859-1"
-block|,
-literal|"latin1"
-block|,
 literal|"ISO8859-15"
-block|,
-literal|"latin1"
-block|,
-literal|"ISO_8859-15"
 block|,
 literal|"latin1"
 block|,
