@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -48,19 +54,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_comment
@@ -574,6 +586,10 @@ operator|==
 literal|1
 condition|)
 block|{
+name|struct
+name|ufs_args
+name|ufs_args
+decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -830,6 +846,31 @@ literal|0
 block|signal(SIGCHLD, reap_children);
 endif|#
 directive|endif
+name|memset
+argument_list|(
+operator|&
+name|ufs_args
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ufs_args
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|mount
+argument_list|(
+literal|"ufs"
+argument_list|,
+literal|"/"
+argument_list|,
+name|MNT_UPDATE
+argument_list|,
+operator|&
+name|ufs_args
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
