@@ -918,6 +918,7 @@ block|{
 name|ssize_t
 name|got
 decl_stmt|;
+comment|/*        * Note, ns.resolv and ns.resolv_nons are assumed to always point to        * buffers of the same size!  See the strcpy() below.        */
 if|if
 condition|(
 operator|(
@@ -1387,6 +1388,7 @@ name|cp
 operator|++
 expr_stmt|;
 block|}
+comment|/*          * Note, cp_nons and cp always point to buffers of the same size, so          * strcpy is ok!          */
 name|strcpy
 argument_list|(
 name|cp_nons
@@ -4825,7 +4827,7 @@ decl_stmt|;
 name|u_char
 name|buff
 index|[
-literal|24
+name|MAX_FSM_OPT_LEN
 index|]
 decl_stmt|;
 name|struct
@@ -6681,7 +6683,6 @@ name|compproto
 decl_stmt|;
 name|struct
 name|compreq
-modifier|*
 name|pcomp
 decl_stmt|;
 name|struct
@@ -6971,16 +6972,18 @@ break|break;
 case|case
 name|TY_COMPPROTO
 case|:
+name|memcpy
+argument_list|(
+operator|&
 name|pcomp
-operator|=
-operator|(
-expr|struct
-name|compreq
-operator|*
-operator|)
+argument_list|,
 name|opt
 operator|->
 name|data
+argument_list|,
+sizeof|sizeof
+name|pcomp
+argument_list|)
 expr_stmt|;
 name|compproto
 operator|=
@@ -6988,7 +6991,7 @@ operator|(
 name|ntohs
 argument_list|(
 name|pcomp
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|<<
@@ -7000,14 +7003,14 @@ operator|(
 name|int
 operator|)
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|<<
 literal|8
 operator|)
 operator|+
 name|pcomp
-operator|->
+operator|.
 name|compcid
 expr_stmt|;
 name|log_Printf
@@ -7073,7 +7076,7 @@ condition|(
 name|ntohs
 argument_list|(
 name|pcomp
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|==
@@ -7111,7 +7114,7 @@ block|}
 else|else
 block|{
 name|pcomp
-operator|->
+operator|.
 name|proto
 operator|=
 name|htons
@@ -7166,18 +7169,18 @@ condition|(
 name|ntohs
 argument_list|(
 name|pcomp
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|==
 name|PROTO_VJCOMP
 condition|)
 block|{
-comment|/* We know pcomp->slots' max value == MAX_VJ_STATES */
+comment|/* We know pcomp.slots' max value == MAX_VJ_STATES */
 if|if
 condition|(
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|>=
 name|MIN_VJ_STATES
@@ -7214,7 +7217,7 @@ operator|=
 literal|0
 expr_stmt|;
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|=
 name|MIN_VJ_STATES
@@ -7261,7 +7264,7 @@ else|else
 block|{
 comment|/* What we really want */
 name|pcomp
-operator|->
+operator|.
 name|proto
 operator|=
 name|htons
@@ -7270,13 +7273,13 @@ name|PROTO_VJCOMP
 argument_list|)
 expr_stmt|;
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|=
 name|DEF_VJ_STATES
 expr_stmt|;
 name|pcomp
-operator|->
+operator|.
 name|compcid
 operator|=
 literal|1
@@ -7340,24 +7343,24 @@ condition|(
 name|ntohs
 argument_list|(
 name|pcomp
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|==
 name|PROTO_VJCOMP
 condition|)
 block|{
-comment|/* We know pcomp->slots' max value == MAX_VJ_STATES */
+comment|/* We know pcomp.slots' max value == MAX_VJ_STATES */
 if|if
 condition|(
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|<
 name|MIN_VJ_STATES
 condition|)
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|=
 name|MIN_VJ_STATES
@@ -7368,7 +7371,7 @@ operator|(
 name|ntohs
 argument_list|(
 name|pcomp
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|<<
@@ -7377,14 +7380,14 @@ operator|)
 operator|+
 operator|(
 name|pcomp
-operator|->
+operator|.
 name|slots
 operator|<<
 literal|8
 operator|)
 operator|+
 name|pcomp
-operator|->
+operator|.
 name|compcid
 expr_stmt|;
 block|}

@@ -4052,7 +4052,6 @@ name|proto
 decl_stmt|;
 name|struct
 name|lqrreq
-modifier|*
 name|req
 decl_stmt|;
 name|char
@@ -5611,14 +5610,16 @@ break|break;
 case|case
 name|TY_QUALPROTO
 case|:
+name|memcpy
+argument_list|(
+operator|&
 name|req
-operator|=
-operator|(
-expr|struct
-name|lqrreq
-operator|*
-operator|)
+argument_list|,
 name|opt
+argument_list|,
+sizeof|sizeof
+name|req
+argument_list|)
 expr_stmt|;
 name|log_Printf
 argument_list|(
@@ -5631,7 +5632,7 @@ argument_list|,
 name|ntohs
 argument_list|(
 name|req
-operator|->
+operator|.
 name|proto
 argument_list|)
 argument_list|,
@@ -5641,7 +5642,7 @@ operator|)
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 operator|*
@@ -5661,7 +5662,7 @@ condition|(
 name|ntohs
 argument_list|(
 name|req
-operator|->
+operator|.
 name|proto
 argument_list|)
 operator|!=
@@ -5709,7 +5710,7 @@ operator|=
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 expr_stmt|;
@@ -5732,7 +5733,7 @@ operator|*
 literal|100
 expr_stmt|;
 name|req
-operator|->
+operator|.
 name|period
 operator|=
 name|htonl
@@ -5761,7 +5762,7 @@ operator|=
 name|ntohl
 argument_list|(
 name|req
-operator|->
+operator|.
 name|period
 argument_list|)
 expr_stmt|;
