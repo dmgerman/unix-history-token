@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.30 (Berkeley) %G%"
+literal|"@(#)lcmd.c	3.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,7 +450,7 @@ name|arg_def_nline
 block|,
 literal|"default_shell"
 block|,
-literal|9
+literal|10
 block|,
 name|l_def_shell
 block|,
@@ -458,7 +458,7 @@ name|arg_def_shell
 block|,
 literal|"default_smooth"
 block|,
-literal|9
+literal|10
 block|,
 name|l_def_smooth
 block|,
