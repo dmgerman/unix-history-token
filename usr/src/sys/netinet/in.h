@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986,1990,1993 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -718,6 +718,101 @@ comment|/* local IP address of interface */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Definitions for inet sysctl operations.  *  * Third level is protocol number.  * Fourth level is desired variable within that protocol.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_MAXID
+value|(IPPROTO_IDP + 1)
+end_define
+
+begin_comment
+comment|/* don't list to IPPROTO_MAX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_IPPROTO_NAMES
+value|{ \ 	{ "ip", CTLTYPE_NODE }, \ 	{ "icmp", CTLTYPE_NODE }, \ 	{ "igmp", CTLTYPE_NODE }, \ 	{ "ggp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "tcp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ "egp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "pup", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "udp", CTLTYPE_NODE }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "idp", CTLTYPE_NODE }, \ }
+end_define
+
+begin_comment
+comment|/*  * Names for IP sysctl objects  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_FORWARDING
+value|1
+end_define
+
+begin_comment
+comment|/* act as router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_SENDREDIRECTS
+value|2
+end_define
+
+begin_comment
+comment|/* may send redirects when forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPCTL_DEFTTL
+value|3
+end_define
+
+begin_comment
+comment|/* default TTL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IPCTL_DEFMTU
+value|4
+end_define
+
+begin_comment
+comment|/* default MTU */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|IPCTL_MAXID
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "forwarding", CTLTYPE_INT }, \ 	{ "redirect", CTLTYPE_INT }, \ 	{ "ttl", CTLTYPE_INT }, \ 	{ "mtu", CTLTYPE_INT }, \ }
+end_define
 
 begin_ifdef
 ifdef|#
