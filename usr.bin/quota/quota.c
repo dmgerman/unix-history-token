@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: quota.c,v 1.8 1998/01/20 12:53:43 bde Exp $"
+literal|"$Id: quota.c,v 1.9 1998/06/09 04:30:54 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2423,7 +2423,7 @@ index|]
 operator|.
 name|f_fstypename
 argument_list|,
-literal|"ffs"
+literal|"ufs"
 argument_list|)
 operator|==
 literal|0
