@@ -1157,7 +1157,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Display a tree menu from array  *  * names	- array with like find(1) output  * size		- size of array  * FS		- fields separator  * title	- title of dialog box  * prompt	- prompt text into dialog box  * height	- height of dialog box  * width	- width of dialog box  * menu_height	- height of menu box  * result	- pointer to char array  *  * return values:  * -1		- ESC pressed  * 0		- Ok, result set (must be freed later)  * 1		- Cancel  */
+comment|/*  * Display a tree menu from array  *  * names	- array with like find(1) output  * size		- size of array  * FS		- fields separator  * title	- title of dialog box  * prompt	- prompt text into dialog box  * height	- height of dialog box  * width	- width of dialog box  * menu_height	- height of menu box  * result	- pointer to char array  *  * return values:  * -1		- ESC pressed  * 0		- Ok, result set  * 1		- Cancel  */
 end_comment
 
 begin_function_decl
