@@ -234,6 +234,185 @@ comment|/* NETGRAPH_DEBUG */
 end_comment
 
 begin_comment
+comment|/*  * DEAD versions of the structures.   * In order to avoid races, it is sometimes neccesary to point  * at SOMETHING even though theoretically, the current entity is   * INVALID. Use these to avoid these races.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|ng_type
+name|ng_deadtype
+init|=
+block|{
+name|NG_ABI_VERSION
+block|,
+literal|"dead"
+block|,
+name|NULL
+block|,
+comment|/* modevent */
+name|NULL
+block|,
+comment|/* constructor */
+name|NULL
+block|,
+comment|/* rcvmsg */
+name|NULL
+block|,
+comment|/* shutdown */
+name|NULL
+block|,
+comment|/* newhook */
+name|NULL
+block|,
+comment|/* findhook */
+name|NULL
+block|,
+comment|/* connect */
+name|NULL
+block|,
+comment|/* rcvdata */
+name|NULL
+block|,
+comment|/* disconnect */
+name|NULL
+block|,
+comment|/* cmdlist */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ng_node
+name|ng_deadnode
+init|=
+block|{
+literal|"dead"
+block|,
+operator|&
+name|ng_deadtype
+block|,
+name|NG_INVALID
+block|,
+literal|1
+block|,
+comment|/* refs */
+literal|0
+block|,
+comment|/* numhooks */
+name|NULL
+block|,
+comment|/* private */
+literal|0
+block|,
+comment|/* ID */
+name|LIST_HEAD_INITIALIZER
+argument_list|(
+name|ng_deadnode
+operator|.
+name|hooks
+argument_list|)
+block|,
+block|{}
+block|,
+comment|/* all_nodes list entry */
+block|{}
+block|,
+comment|/* id hashtable list entry */
+block|{}
+block|,
+comment|/* workqueue entry */
+block|{
+literal|0
+block|,
+block|{}
+block|,
+comment|/* should never use! (should hang) */
+name|NULL
+block|,
+operator|&
+name|ng_deadnode
+operator|.
+name|nd_input_queue
+operator|.
+name|queue
+block|,
+operator|&
+name|ng_deadnode
+block|}
+block|,
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
+name|ND_MAGIC
+block|,
+name|__FILE__
+block|,
+name|__LINE__
+block|,
+block|{
+name|NULL
+block|}
+endif|#
+directive|endif
+comment|/* NETGRAPH_DEBUG */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ng_hook
+name|ng_deadhook
+init|=
+block|{
+literal|"dead"
+block|,
+name|NULL
+block|,
+comment|/* private */
+name|HK_INVALID
+operator||
+name|HK_DEAD
+block|,
+literal|1
+block|,
+comment|/* refs always>= 1 */
+operator|&
+name|ng_deadhook
+block|,
+comment|/* Peer is self */
+operator|&
+name|ng_deadnode
+block|,
+comment|/* attached to deadnode */
+block|{}
+block|,
+comment|/* hooks list */
+ifdef|#
+directive|ifdef
+name|NETGRAPH_DEBUG
+name|HK_MAGIC
+block|,
+name|__FILE__
+block|,
+name|__LINE__
+block|,
+block|{
+name|NULL
+block|}
+endif|#
+directive|endif
+comment|/* NETGRAPH_DEBUG */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * END DEAD STRUCTURES  */
+end_comment
+
+begin_comment
 comment|/* List nodes with unallocated work */
 end_comment
 
@@ -2121,7 +2300,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Node has no constructor. We cannot ask for one 		 * to be made. It must be brought into existance by 		 * some external agency. The external acency should 		 * call ng_make_node_common() directly to get the 		 * netgraph part initialised. 		 */
+comment|/* 		 * Node has no constructor. We cannot ask for one 		 * to be made. It must be brought into existance by 		 * some external agency. The external agency should 		 * call ng_make_node_common() directly to get the 		 * netgraph part initialised. 		 */
 name|TRAP_ERROR
 name|error
 init|=
@@ -3497,6 +3676,7 @@ name|newhook
 operator|!=
 name|NULL
 condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3518,8 +3698,6 @@ argument_list|,
 name|name
 argument_list|)
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|NG_HOOK_UNREF
@@ -3533,6 +3711,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * The 'type' agrees so far, so go ahead and link it in. 	 * We'll ask again later when we actually connect the hooks. 	 * The reference we have is for this linkage. 	 */
 name|LIST_INSERT_HEAD
@@ -4592,6 +4771,90 @@ name|ENOMEM
 operator|)
 return|;
 block|}
+block|}
+return|return
+operator|(
+name|ng_snd_item
+argument_list|(
+name|item
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_define
+define|#
+directive|define
+name|NG_INTERNAL_RMHOOK
+value|0x123456
+end_define
+
+begin_function
+name|int
+name|ng_rmhook_self
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+block|{
+name|item_p
+name|item
+decl_stmt|;
+name|struct
+name|ng_mesg
+modifier|*
+name|msg
+decl_stmt|;
+name|node_p
+name|node
+init|=
+name|NG_HOOK_NODE
+argument_list|(
+name|hook
+argument_list|)
+decl_stmt|;
+name|NG_MKMESSAGE
+argument_list|(
+name|msg
+argument_list|,
+name|NGM_GENERIC_COOKIE
+argument_list|,
+name|NG_INTERNAL_RMHOOK
+argument_list|,
+literal|0
+argument_list|,
+name|M_NOWAIT
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Try get a queue item to send it with. 	 * Hopefully since it has a reserve, we can get one. 	 * If we can't we are screwed anyhow. 	 * Increase the chances by flushing our queue first. 	 * We may free an item, (if we were the hog). 	 * Work in progress is allowed to complete. 	 * We also pretty much ensure that we come straight 	 * back in to do the shutdown. It may be a good idea 	 * to hold a reference actually to stop it from all 	 * going up in smoke. 	 */
+name|item
+operator|=
+name|ng_package_msg_self
+argument_list|(
+name|node
+argument_list|,
+name|hook
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|item
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* couldn't allocate item. Freed msg */
+comment|/* try again after flushing our queue */
+name|panic
+argument_list|(
+literal|"Couldn't allocate item to remove hook"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -7908,6 +8171,15 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+case|case
+name|NG_INTERNAL_RMHOOK
+case|:
+name|ng_destroy_hook
+argument_list|(
+name|lasthook
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|NGM_NODEINFO
 case|:

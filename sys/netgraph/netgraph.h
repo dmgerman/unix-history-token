@@ -306,6 +306,17 @@ begin_comment
 comment|/* Incoming data queued as a writer */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HK_DEAD
+value|0x0008
+end_define
+
+begin_comment
+comment|/* This is the dead hook.. don't free */
+end_comment
+
 begin_comment
 comment|/*  * Public Methods for hook  * If you can't do it with these you probably shouldn;t be doing it.  */
 end_comment
@@ -4591,6 +4602,20 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|ng_rmhook_self
+parameter_list|(
+name|hook_p
+name|hook
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* if a node wants to kill a hook */
+end_comment
+
+begin_function_decl
+name|int
 name|ng_rmnode_self
 parameter_list|(
 name|node_p
@@ -4598,6 +4623,10 @@ name|here
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* if a node wants to suicide */
+end_comment
 
 begin_function_decl
 name|int

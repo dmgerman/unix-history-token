@@ -4651,7 +4651,7 @@ condition|(
 name|sendhook
 condition|)
 block|{
-name|ng_destroy_hook
+name|ng_rmhook_self
 argument_list|(
 name|sendhook
 argument_list|)
@@ -6170,7 +6170,7 @@ case|case
 name|PPPOE_SOFFER
 case|:
 comment|/* a timeout on these says "give up" */
-name|ng_destroy_hook
+name|ng_rmhook_self
 argument_list|(
 name|hook
 argument_list|)
