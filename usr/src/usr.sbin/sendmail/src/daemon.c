@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.28 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.29 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.28 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.29 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,12 +265,6 @@ begin_comment
 comment|/* 	**  Try to actually open the connection. 	*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -291,12 +285,6 @@ name|sin_port
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_comment
 comment|/* get a socket for the SMTP connection */
@@ -350,12 +338,6 @@ expr_stmt|;
 block|}
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_comment
 comment|/* turn on network debugging? */
 end_comment
@@ -393,12 +375,6 @@ name|on
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_expr_stmt
 operator|(
@@ -531,12 +507,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -555,12 +525,6 @@ name|DaemonSocket
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -950,9 +914,6 @@ block|}
 comment|/* 	**  Try to actually open the connection. 	*/
 name|again
 label|:
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -978,9 +939,6 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 ifdef|#
 directive|ifdef
 name|NVMUNIX
@@ -1034,9 +992,6 @@ goto|goto
 name|failure
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1092,9 +1047,6 @@ name|on
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)

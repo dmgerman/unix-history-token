@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.18 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	5.19 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.18 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	5.19 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,9 +251,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -272,8 +269,6 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 switch|switch
 condition|(
 name|h_errno
@@ -512,9 +507,6 @@ operator|!=
 name|T_MX
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -539,8 +531,6 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|cp
 operator|+=
 name|n
@@ -973,9 +963,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -994,8 +981,6 @@ argument_list|,
 name|h_errno
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 comment|/* find first satisfactory answer */
@@ -1025,9 +1010,6 @@ operator|==
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1048,8 +1030,6 @@ argument_list|,
 name|ancount
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 name|cp

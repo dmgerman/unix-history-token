@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.12 (Berkeley) %G%"
+literal|"@(#)headers.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,9 +116,6 @@ modifier|*
 name|sendto
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -135,9 +132,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* strip off options */
 name|clrbitmap
 argument_list|(
@@ -1129,9 +1123,6 @@ name|hopcnt
 init|=
 literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1146,9 +1137,6 @@ argument_list|(
 literal|"----- collected header -----\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 for|for
 control|(
 name|h
@@ -1168,9 +1156,6 @@ operator|->
 name|h_link
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 specifier|extern
 name|char
 modifier|*
@@ -1202,9 +1187,6 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* count the number of times it has been processed */
 if|if
 condition|(
@@ -1379,9 +1361,6 @@ endif|#
 directive|endif
 endif|LOG
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1396,9 +1375,6 @@ argument_list|(
 literal|"----------------------------\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* store hop count */
 if|if
 condition|(
@@ -1870,9 +1846,6 @@ name|char
 modifier|*
 name|bp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1889,9 +1862,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 operator|(
 name|void
 operator|)
@@ -2247,9 +2217,6 @@ name|rhs
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2266,9 +2233,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 return|return
 operator|(
 name|buf
@@ -2720,9 +2684,6 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* 	**  Output the address list translated by the 	**  mailer and with commas. 	*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2743,9 +2704,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|obp
 operator|=
 name|obuf

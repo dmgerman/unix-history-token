@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.13 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,9 +120,6 @@ modifier|*
 name|prev
 decl_stmt|;
 comment|/* previous sibling */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -148,9 +145,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* heuristic to determine old versus new style addresses */
 if|if
 condition|(
@@ -745,9 +739,6 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -771,9 +762,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* break aliasing loops */
 if|if
 condition|(
@@ -975,9 +963,6 @@ name|a
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1005,9 +990,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|Verbose

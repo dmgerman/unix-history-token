@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	5.5 (Berkeley) %G%"
+literal|"@(#)macro.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -122,9 +122,6 @@ modifier|*
 name|macvalue
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -151,9 +148,6 @@ literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 name|skipping
 operator|=
 name|FALSE
@@ -357,9 +351,6 @@ name|xp
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -386,9 +377,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* recurse as appropriate */
 if|if
 condition|(
@@ -491,9 +479,6 @@ end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -522,9 +507,6 @@ literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 name|e
 operator|->
 name|e_macro

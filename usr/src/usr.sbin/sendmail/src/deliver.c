@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.25 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,9 +290,6 @@ name|to
 operator|->
 name|q_host
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -317,9 +314,6 @@ operator|->
 name|q_user
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  If this mailer is expensive, and if we don't want to make 	**  connections now, just mark these addresses and return. 	**	This is useful if we want to batch connections to 	**	reduce load.  This will cause the messages to be 	**	queued up, and a daemon will come along to send the 	**	messages later. 	**		This should be on a per-mailer basis. 	*/
 if|if
 condition|(
@@ -838,9 +832,6 @@ operator|<
 literal|0
 condition|)
 break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -864,9 +855,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* compute effective uid/gid when sending */
 if|if
 condition|(
@@ -2406,9 +2394,6 @@ modifier|*
 name|fdopen
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2430,9 +2415,6 @@ name|pvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 name|errno
 operator|=
 literal|0
@@ -2444,9 +2426,6 @@ operator|->
 name|m_mailer
 expr_stmt|;
 comment|/* 	**  Deal with the special case of mail handled through an IPC 	**  connection. 	**	In this case we don't actually fork.  We must be 	**	running SMTP for this to work.  We will return a 	**	zero pid to indicate that we are running IPC. 	**  We also handle a debug version that just talks to stdin/out. 	*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 comment|/* check for Local Person Communication -- not for mortals!!! */
 if|if
 condition|(
@@ -2478,9 +2457,6 @@ literal|0
 operator|)
 return|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|strcmp
@@ -4828,9 +4804,6 @@ operator|=
 name|SendMode
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -4858,9 +4831,6 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  Do any preprocessing necessary for the mode we are running. 	**	Check to make sure the hop count is reasonable. 	**	Delete sends to the sender in mailing lists. 	*/
 name|CurEnv
 operator|=
@@ -5183,9 +5153,6 @@ name|ADDRESS
 modifier|*
 name|qq
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -5209,9 +5176,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* only send errors if the message failed */
 if|if
 condition|(
@@ -5333,9 +5297,6 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -5352,9 +5313,6 @@ argument_list|,
 name|obuf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* owner list exists -- add it to the error queue */
 name|sendtolist
 argument_list|(

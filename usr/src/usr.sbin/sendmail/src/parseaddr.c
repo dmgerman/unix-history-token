@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.9 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,9 +120,6 @@ name|e_to
 operator|=
 name|addr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -139,9 +136,6 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|pvp
 operator|=
 name|prescan
@@ -371,9 +365,6 @@ name|q_host
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Compute return value. 	*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -397,9 +388,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 return|return
 operator|(
 name|a
@@ -811,9 +799,6 @@ name|p
 operator|=
 name|addr
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -843,9 +828,6 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 do|do
 block|{
 comment|/* read a token */
@@ -923,9 +905,6 @@ operator|&=
 operator|~
 literal|0200
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -944,9 +923,6 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* chew up special characters */
 operator|*
 name|q
@@ -1209,9 +1185,6 @@ name|c
 argument_list|)
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1228,9 +1201,6 @@ argument_list|,
 name|newstate
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|state
 operator|=
 name|newstate
@@ -1275,9 +1245,6 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1307,9 +1274,6 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|avp
@@ -1767,9 +1731,6 @@ name|NULL
 condition|;
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1793,9 +1754,6 @@ name|r_lhs
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* try to match on this rule */
 name|mlp
 operator|=
@@ -1833,9 +1791,6 @@ operator|=
 operator|*
 name|rvp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1872,9 +1827,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|rp
@@ -2150,9 +2102,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2167,9 +2116,6 @@ argument_list|(
 literal|"----- rule fails\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|rwr
 operator|=
 name|rwr
@@ -2184,9 +2130,6 @@ name|rwr
 operator|->
 name|r_rhs
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2208,9 +2151,6 @@ name|rvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 name|rp
 operator|=
 operator|*
@@ -2353,9 +2293,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2423,9 +2360,6 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 name|pp
 operator|=
 name|m
@@ -2892,9 +2826,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		**  Done with rewriting this pass. 		*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2916,9 +2847,6 @@ name|pvp
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 if|if
 condition|(
@@ -3693,12 +3621,6 @@ begin_comment
 comment|/* **  PRINTADDR -- print address (for debugging) ** **	Parameters: **		a -- the address to print **		follow -- follow the q_next chain. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_expr_stmt
 name|printaddr
 argument_list|(
@@ -3795,26 +3717,16 @@ comment|/* follow the chain if appropriate */
 argument|if (!follow) 			return; 		 		indent++; 		printaddr(a->q_child, TRUE); 		indent--; 		a = a->q_sibling; 	} 	if (first) 		printf(
 literal|"[NULL]\n"
 argument|); }
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* **  REMOTENAME -- return the name relative to the current mailer ** **	Parameters: **		name -- the name to translate. **		m -- the mailer that we want to do rewriting relative **			to. **		senderaddress -- if set, uses the sender rewriting rules **			rather than the recipient rewriting rules. **		canonical -- if set, strip out any comment information, **			etc. ** **	Returns: **		the text string representing this address relative to **			the receiving mailer. ** **	Side Effects: **		none. ** **	Warnings: **		The text string returned is tucked away locally; **			copy it if you intend to save it. */
 argument|char * remotename(name, m, senderaddress, canonical) 	char *name; 	struct mailer *m; 	bool senderaddress; 	bool canonical; { 	register char **pvp; 	char *fancy; 	extern char *macvalue(); 	char *oldg = macvalue(
 literal|'g'
-argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	char pvpbuf[PSBUFSIZE]; 	extern char **prescan(); 	extern char *crackaddr();
-ifdef|#
-directive|ifdef
-name|DEBUG
-argument|if (tTd(
+argument|, CurEnv); 	static char buf[MAXNAME]; 	char lbuf[MAXNAME]; 	char pvpbuf[PSBUFSIZE]; 	extern char **prescan(); 	extern char *crackaddr();  	if (tTd(
 literal|12
 argument|,
 literal|1
 argument|)) 		printf(
 literal|"remotename(%s)\n"
 argument|, name);
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* don't do anything if we are tagging it as special */
 argument|if ((senderaddress ? m->m_s_rwset : m->m_r_rwset)<
 literal|0
@@ -3862,21 +3774,13 @@ argument|, lbuf, CurEnv); 	expand(fancy, buf,&buf[sizeof buf -
 literal|1
 argument|], CurEnv); 	define(
 literal|'g'
-argument|, oldg, CurEnv);
-ifdef|#
-directive|ifdef
-name|DEBUG
-argument|if (tTd(
+argument|, oldg, CurEnv);  	if (tTd(
 literal|12
 argument|,
 literal|1
 argument|)) 		printf(
 literal|"remotename => `%s'\n"
-argument|, buf);
-endif|#
-directive|endif
-endif|DEBUG
-argument|return (buf); }
+argument|, buf); 	return (buf); }
 end_block
 
 end_unit

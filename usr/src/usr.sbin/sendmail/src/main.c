@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.24 (Berkeley) %G%"
+literal|"@(#)main.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,9 +736,6 @@ name|nothaw
 operator|=
 name|TRUE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 elseif|else
 if|if
 condition|(
@@ -792,9 +789,6 @@ name|Version
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 end_while
 
@@ -1126,9 +1120,6 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1145,9 +1136,6 @@ argument_list|,
 name|jbuf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|p
 operator|=
 name|newstr
@@ -1184,9 +1172,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1204,9 +1189,6 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|setclass
 argument_list|(
 literal|'w'
@@ -1502,9 +1484,6 @@ literal|'C'
 case|:
 comment|/* select configuration file (already done) */
 break|break;
-ifdef|#
-directive|ifdef
-name|DEBUG
 case|case
 literal|'d'
 case|:
@@ -1551,8 +1530,6 @@ expr_stmt|;
 endif|#
 directive|endif
 break|break;
-endif|#
-directive|endif
 case|case
 literal|'f'
 case|:
@@ -2275,12 +2252,6 @@ break|break;
 block|}
 end_switch
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -2410,12 +2381,6 @@ expr_stmt|;
 block|}
 block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_comment
 comment|/* 	**  Switch to the main envelope. 	*/
@@ -3028,12 +2993,6 @@ argument_list|)
 expr_stmt|;
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -3056,12 +3015,6 @@ name|q_paddr
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_comment
 comment|/* 	**  Actually send everything. 	**	If verifying, just ack. 	*/
@@ -3120,9 +3073,6 @@ unit|finis
 operator|(
 operator|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -3143,9 +3093,6 @@ operator|->
 name|e_flags
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* clean up temp files */
 name|CurEnv
 operator|->
@@ -4036,9 +3983,6 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -4080,9 +4024,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* be sure we don't get nasty signals */
 operator|(
 name|void

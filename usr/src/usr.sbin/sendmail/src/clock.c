@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	5.6 (Berkeley) %G%"
+literal|"@(#)clock.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -101,12 +101,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -129,12 +123,6 @@ operator|)
 return|;
 block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_expr_stmt
 operator|(
@@ -268,12 +256,6 @@ name|ev
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -302,12 +284,6 @@ name|ev
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_expr_stmt
 name|tick
@@ -351,9 +327,6 @@ modifier|*
 modifier|*
 name|evp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -370,9 +343,6 @@ argument_list|,
 name|ev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|ev
@@ -508,9 +478,6 @@ operator|=
 name|curtime
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -527,9 +494,6 @@ argument_list|,
 name|now
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 while|while
 condition|(
 operator|(
@@ -579,9 +543,6 @@ name|EventQueue
 operator|->
 name|ev_link
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -610,9 +571,6 @@ operator|->
 name|ev_pid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* we must be careful in here because ev_func may not return */
 operator|(
 name|void

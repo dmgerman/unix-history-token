@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.16 (Berkeley) %G% (with DBM)"
+literal|"@(#)alias.c	5.17 (Berkeley) %G% (with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	5.16 (Berkeley) %G% (without DBM)"
+literal|"@(#)alias.c	5.17 (Berkeley) %G% (without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,9 +177,6 @@ modifier|*
 name|aliaslookup
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -198,8 +195,6 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* don't realias already aliased names */
 if|if
 condition|(
@@ -248,9 +243,6 @@ name|NULL
 condition|)
 return|return;
 comment|/* 	**  Match on Alias. 	**	Deliver to the target list. 	*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -279,8 +271,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|message
 argument_list|(
 name|Arpa_Info
@@ -928,9 +918,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -947,8 +934,6 @@ argument_list|,
 name|aliasfile
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|errno
 operator|=
 literal|0
@@ -1957,9 +1942,6 @@ name|bool
 name|safefile
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1978,9 +1960,6 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|user
@@ -1999,9 +1978,6 @@ name|q_flags
 argument_list|)
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|user
@@ -2015,9 +1991,6 @@ argument_list|(
 literal|"forward: no home"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* good address -- look for .forward file in home */
 name|define
 argument_list|(

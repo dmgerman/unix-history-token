@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.11 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.12 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.11 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.12 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,12 +307,6 @@ begin_comment
 comment|/* 	**  Open the connection to the mailer. 	*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -326,12 +320,6 @@ literal|"smtpinit: already open"
 argument_list|)
 expr_stmt|;
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_expr_stmt
 name|SmtpIn
@@ -400,9 +388,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -426,9 +411,6 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|CurEnv
@@ -1657,9 +1639,6 @@ argument_list|,
 literal|"reply: read error"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 comment|/* if debugging, pause so we can see state */
 if|if
 condition|(
@@ -1673,9 +1652,6 @@ condition|)
 name|pause
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 ifdef|#
 directive|ifdef
 name|LOG

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c	5.5 (Berkeley) %G%"
+literal|"@(#)stab.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -103,9 +103,6 @@ name|char
 name|lower
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -124,9 +121,6 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  Compute the hashing function 	** 	**	We could probably do better.... 	*/
 name|hfunc
 operator|=
@@ -168,9 +162,6 @@ operator|)
 operator|%
 name|STABSIZE
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -187,9 +178,6 @@ argument_list|,
 name|hfunc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|ps
 operator|=
 operator|&
@@ -245,9 +233,6 @@ operator|==
 name|ST_FIND
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -314,9 +299,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 return|return
 operator|(
 name|s
@@ -324,9 +306,6 @@ operator|)
 return|;
 block|}
 comment|/* 	**  Make a new entry and link it in. 	*/
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -341,9 +320,6 @@ argument_list|(
 literal|"entered\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* make new entry */
 name|s
 operator|=

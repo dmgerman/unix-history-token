@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	5.17 (Berkeley) %G%"
+literal|"@(#)envelope.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -290,9 +290,6 @@ name|ADDRESS
 modifier|*
 name|q
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -327,9 +324,6 @@ name|e_flags
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 ifdef|#
 directive|ifdef
 name|LOG
@@ -1484,9 +1478,6 @@ name|char
 modifier|*
 name|FullName
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1509,9 +1500,6 @@ else|:
 name|from
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  Figure out the real user executing us. 	**	Username can return errno != 0 on non-errors. 	*/
 if|if
 condition|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	5.10 (Berkeley) %G%"
+literal|"@(#)savemail.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,9 +203,6 @@ name|fnptr
 function_decl|)
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -222,9 +219,6 @@ argument_list|,
 name|ErrorMode
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 if|if
 condition|(
 name|bitset
@@ -389,9 +383,6 @@ operator|!=
 name|ESM_DONE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -408,9 +399,6 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 switch|switch
 condition|(
 name|state
@@ -1240,12 +1228,6 @@ name|q
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -1282,12 +1264,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_if
 if|if

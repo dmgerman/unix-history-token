@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.16 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2152,12 +2152,6 @@ begin_comment
 comment|/* **  PRINTRULES -- print rewrite rules (for debugging) ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		prints rewrite rules. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_macro
 name|printrules
 argument_list|()
@@ -2255,12 +2249,6 @@ block|}
 block|}
 end_block
 
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
-
 begin_escape
 end_escape
 
@@ -2352,9 +2340,6 @@ modifier|*
 name|username
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2373,9 +2358,6 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  See if this option is preset for us. 	*/
 if|if
 condition|(
@@ -2387,9 +2369,6 @@ name|StickyOpt
 argument_list|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2404,14 +2383,8 @@ argument_list|(
 literal|" (ignored)\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2426,9 +2399,6 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 switch|switch
 condition|(
 name|opt

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.25 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.26 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.25 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.26 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,9 +257,6 @@ argument_list|,
 name|FileMode
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -278,9 +275,6 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  If there is no data file yet, create one. 	*/
 if|if
 condition|(
@@ -594,9 +588,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -620,9 +611,6 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 block|}
 end_for
@@ -1771,9 +1759,6 @@ condition|)
 block|{
 comment|/* this may be some random person sending hir msgs */
 comment|/* syserr("orderq: cannot open %s", cbuf); */
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1794,9 +1779,6 @@ argument_list|,
 name|errno
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|errno
 operator|=
 literal|0
@@ -2087,12 +2069,6 @@ expr_stmt|;
 block|}
 end_for
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_if
 if|if
 condition|(
@@ -2135,12 +2111,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
-
-begin_endif
-endif|#
-directive|endif
-endif|DEBUG
-end_endif
 
 begin_return
 return|return
@@ -2267,9 +2237,6 @@ name|bool
 name|shouldqueue
 parameter_list|()
 function_decl|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2292,9 +2259,6 @@ operator|->
 name|w_pri
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* 	**  Ignore jobs that are too expensive for the moment. 	*/
 if|if
 condition|(
@@ -2700,9 +2664,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -2719,9 +2680,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 switch|switch
 condition|(
 name|buf
@@ -3691,9 +3649,6 @@ operator|=
 operator|++
 name|c2
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -3710,9 +3665,6 @@ argument_list|,
 name|nf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 ifdef|#
 directive|ifdef
 name|QUEUE
@@ -3914,9 +3866,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -3960,9 +3909,6 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
-endif|#
-directive|endif
-endif|DEBUG
 block|}
 if|if
 condition|(
@@ -3991,9 +3937,6 @@ operator|->
 name|e_id
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -4010,9 +3953,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 return|return
 operator|(
 name|buf
@@ -4047,9 +3987,6 @@ block|{
 comment|/* remove the transcript */
 ifdef|#
 directive|ifdef
-name|DEBUG
-ifdef|#
-directive|ifdef
 name|LOG
 if|if
 condition|(
@@ -4081,9 +4018,6 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-endif|#
-directive|endif
-endif|DEBUG
 name|xunlink
 argument_list|(
 name|queuename

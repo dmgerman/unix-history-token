@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	5.6 (Berkeley) %G%"
+literal|"@(#)collect.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,9 +438,6 @@ operator|!=
 name|NULL
 condition|)
 do|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -455,9 +452,6 @@ argument_list|(
 literal|"EOH\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* throw away a blank line */
 if|if
 condition|(
@@ -782,9 +776,6 @@ operator|!=
 name|NULL
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -803,9 +794,6 @@ operator|->
 name|q_paddr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 name|addheader
 argument_list|(
 literal|"apparently-to"
@@ -1034,9 +1022,6 @@ modifier|*
 modifier|*
 name|dt
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|tTd
@@ -1053,9 +1038,6 @@ argument_list|,
 name|fm
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-endif|DEBUG
 comment|/* find the date part */
 name|p
 operator|=
