@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.4 (Berkeley) 86/03/26"
+literal|"@(#)bugfiler.c	5.5 (Berkeley) 86/05/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,7 +271,15 @@ begin_decl_stmt
 name|int
 name|msg_prot
 init|=
-literal|0664
+literal|0640
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|folder_prot
+init|=
+literal|0750
 decl_stmt|;
 end_decl_stmt
 
@@ -1116,7 +1124,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"cannont create %s\n"
+literal|"cannot create %s\n"
 argument_list|,
 name|tmpname
 argument_list|)
@@ -1843,6 +1851,13 @@ argument_list|,
 literal|"errors"
 argument_list|)
 expr_stmt|;
+name|redistribute
+argument_list|(
+literal|"errors"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|state
@@ -2469,6 +2484,30 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|mkdir
+argument_list|(
+name|folder
+argument_list|,
+name|folder_prot
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dirp
+operator|=
+name|opendir
+argument_list|(
+name|folder
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -2481,6 +2520,7 @@ name|folder
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|num
 operator|=
@@ -3178,6 +3218,17 @@ literal|"Untitled bug report\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|fprintf
+argument_list|(
+name|ftemp
+argument_list|,
+literal|"Folder: %s/%d\n"
+argument_list|,
+name|folder
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create copy of bug report.  Perhaps we should 	 * truncate large messages and just give people 	 * a pointer to the original? 	 */
 name|sprintf
 argument_list|(
