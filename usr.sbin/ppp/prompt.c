@@ -295,8 +295,6 @@ name|char
 name|shostname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 specifier|const

@@ -1916,8 +1916,6 @@ name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct
@@ -2707,8 +2705,6 @@ name|char
 name|hostname
 index|[
 name|MAXHOSTNAMELEN
-operator|+
-literal|1
 index|]
 decl_stmt|;
 name|struct

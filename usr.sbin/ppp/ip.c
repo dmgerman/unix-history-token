@@ -2461,7 +2461,7 @@ condition|)
 block|{
 comment|/* rfc1035 */
 name|char
-name|name
+name|namewithdot
 index|[
 name|MAXHOSTNAMELEN
 operator|+
@@ -2486,7 +2486,7 @@ name|end
 decl_stmt|;
 name|n
 operator|=
-name|name
+name|namewithdot
 expr_stmt|;
 name|end
 operator|=
@@ -2503,14 +2503,14 @@ operator|-
 name|ptr
 operator|>=
 sizeof|sizeof
-name|name
+name|namewithdot
 condition|)
 name|end
 operator|=
 name|ptr
 operator|+
 sizeof|sizeof
-name|name
+name|namewithdot
 operator|-
 literal|1
 expr_stmt|;
@@ -2545,7 +2545,7 @@ if|if
 condition|(
 name|n
 operator|!=
-name|name
+name|namewithdot
 condition|)
 operator|*
 name|n
@@ -2624,7 +2624,7 @@ name|qclass
 argument_list|,
 name|qtype
 argument_list|,
-name|name
+name|namewithdot
 argument_list|)
 expr_stmt|;
 block|}
