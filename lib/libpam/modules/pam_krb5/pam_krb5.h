@@ -86,24 +86,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|krb5_error_code
-name|compat_cc_next_cred
-parameter_list|(
-name|krb5_context
-parameter_list|,
-specifier|const
-name|krb5_ccache
-parameter_list|,
-name|krb5_cc_cursor
-modifier|*
-parameter_list|,
-name|krb5_creds
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifndef
 ifndef|#
 directive|ifndef
