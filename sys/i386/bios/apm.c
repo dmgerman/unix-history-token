@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.86 1999/05/11 19:54:03 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.87 1999/05/30 16:52:01 phk Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|"opt_devfs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_vm86.h"
 end_include
 
 begin_include
@@ -132,12 +126,6 @@ directive|include
 file|<i386/apm/apm_setup.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VM86
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -149,11 +137,6 @@ include|#
 directive|include
 file|<machine/vm86.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2880,9 +2863,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|VM86
 name|struct
 name|vm86frame
 name|vmf
@@ -2890,8 +2870,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|disabled
 decl_stmt|,
@@ -2966,9 +2944,6 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VM86
 name|bzero
 argument_list|(
 operator|&
@@ -3248,8 +3223,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-endif|#
-directive|endif
 name|bzero
 argument_list|(
 operator|&
