@@ -1704,9 +1704,14 @@ operator|==
 name|EOS
 condition|)
 block|{
-comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME 		 * first and then trying the password file 		 */
+comment|/* 		 * handle a plain ~ or ~/ by expanding $HOME first (iff 		 * we're not running setuid or setgid) and then trying 		 * the password file 		 */
 if|if
 condition|(
+name|issetugid
+argument_list|()
+operator|!=
+literal|0
+operator|||
 operator|(
 name|h
 operator|=
