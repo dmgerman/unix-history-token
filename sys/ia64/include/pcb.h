@@ -142,17 +142,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. Not applicable...  */
-end_comment
-
-begin_struct
-struct|struct
-name|md_coredump
-block|{ }
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

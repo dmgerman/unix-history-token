@@ -99,22 +99,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|md_coredump
-block|{
-name|struct
-name|trapframe
-name|frame
-decl_stmt|;
-name|struct
-name|fpu
-name|fpstate
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

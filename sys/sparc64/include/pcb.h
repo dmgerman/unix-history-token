@@ -72,13 +72,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|md_coredump
-block|{ }
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

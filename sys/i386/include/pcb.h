@@ -123,26 +123,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the i386: ???  */
-end_comment
-
-begin_struct
-struct|struct
-name|md_coredump
-block|{
-ifdef|#
-directive|ifdef
-name|lint
-name|int
-name|dummy
-decl_stmt|;
-endif|#
-directive|endif
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef

@@ -85,26 +85,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * The pcb is augmented with machine-dependent additional data for  * core dumps. For the Alpha, that's a trap frame and the floating  * point registers.  */
-end_comment
-
-begin_struct
-struct|struct
-name|md_coredump
-block|{
-name|struct
-name|trapframe
-name|md_tf
-decl_stmt|;
-name|struct
-name|fpreg
-name|md_fpstate
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif

@@ -728,17 +728,12 @@ name|pstats
 name|u_stats
 decl_stmt|;
 comment|/* *p_stats */
-comment|/* 	 * Remaining fields for a.out core dumps - not valid at other times! 	 */
+comment|/* 	 * Remaining field for a.out core dumps - not valid at other times! 	 */
 name|struct
 name|kinfo_proc
 name|u_kproc
 decl_stmt|;
 comment|/* eproc */
-name|struct
-name|md_coredump
-name|u_md
-decl_stmt|;
-comment|/* glop */
 block|}
 struct|;
 end_struct
