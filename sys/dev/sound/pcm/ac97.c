@@ -839,6 +839,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x83847650
+block|,
+literal|0
+block|,
+literal|"SigmaTel STAC9750"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x83847656
 block|,
 literal|0
