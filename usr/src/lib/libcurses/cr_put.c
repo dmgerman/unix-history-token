@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cr_put.c	5.7 (Berkeley) %G%"
+literal|"@(#)cr_put.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +38,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_define
@@ -942,7 +948,14 @@ comment|/* 	 * If we will later need a \n which will turn into a \r\n by the 	 *
 if|if
 condition|(
 operator|(
-name|NONL
+operator|!
+operator|(
+name|origtermio
+operator|.
+name|c_oflag
+operator|&
+name|ONLCR
+operator|)
 operator|||
 operator|!
 name|__pfast
@@ -1082,7 +1095,14 @@ name|out
 goto|;
 if|if
 condition|(
-name|NONL
+operator|!
+operator|(
+name|origtermio
+operator|.
+name|c_oflag
+operator|&
+name|ONLCR
+operator|)
 operator|||
 name|__pfast
 operator|==

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)scroll.c	5.5 (Berkeley) %G%"
+literal|"@(#)scroll.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_comment
@@ -126,8 +132,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|NONL
+name|origtermio
+operator|.
+name|c_oflag
+operator|&
+name|ONLCR
 condition|)
 name|win
 operator|->
