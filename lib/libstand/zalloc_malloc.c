@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * This module derived from code donated to the FreeBSD Project by   * Matthew Dillon<dillon@backplane.com>  *  * Copyright (c) 1998 The FreeBSD Project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: zalloc_malloc.c,v 1.1 1998/09/26 01:42:39 msmith Exp $  */
+comment|/*  * This module derived from code donated to the FreeBSD Project by   * Matthew Dillon<dillon@backplane.com>  *  * Copyright (c) 1998 The FreeBSD Project  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: zalloc_malloc.c,v 1.2 1998/09/26 10:48:50 dfr Exp $  */
 end_comment
 
 begin_comment
@@ -17,15 +17,6 @@ begin_decl_stmt
 specifier|static
 name|MemPool
 name|MallocPool
-init|=
-name|INITPOOL
-argument_list|(
-literal|"malloc"
-argument_list|,
-name|panic
-argument_list|,
-name|znot
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -309,31 +300,13 @@ name|ga_Magic
 operator|!=
 name|GAMAGIC
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|USEPANIC
 name|panic
 argument_list|(
-literal|"free(): guard1 fail @ %08lx\n"
+literal|"free: guard1 fail @ %p"
 argument_list|,
 name|ptr
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|res
 operator|->
 name|ga_Magic
@@ -366,13 +339,9 @@ operator|!=
 operator|-
 literal|2
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|USEPANIC
 name|panic
 argument_list|(
-literal|"free(): guard2 fail @ %08lx + %d\n"
+literal|"free: guard2 fail @ %p + %d"
 argument_list|,
 name|ptr
 argument_list|,
@@ -383,20 +352,6 @@ operator|-
 name|MALLOCALIGN
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|*
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 operator|*
 operator|(
 operator|(
