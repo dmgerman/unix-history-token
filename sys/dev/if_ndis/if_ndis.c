@@ -778,6 +778,7 @@ name|ndis_did
 operator|)
 operator|&&
 operator|(
+operator|(
 name|pci_read_config
 argument_list|(
 name|dev
@@ -790,6 +791,13 @@ operator|==
 name|t
 operator|->
 name|ndis_subsys
+operator|)
+operator|||
+name|t
+operator|->
+name|ndis_subsys
+operator|==
+literal|0
 operator|)
 condition|)
 block|{
