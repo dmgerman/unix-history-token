@@ -20288,6 +20288,13 @@ name|NULL
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|inodedep
+operator|==
+name|NULL
+condition|)
+return|return;
 comment|/* 	 * Ugly code to find mount point given pointer to superblock. 	 */
 name|fs
 operator|=
