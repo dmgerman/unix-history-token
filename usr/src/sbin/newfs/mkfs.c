@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkfs.c	6.1 (Berkeley) %G%"
+literal|"@(#)mkfs.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -125,6 +125,7 @@ comment|/*  * variables set up by front end.  */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|Nflag
 decl_stmt|;
@@ -135,6 +136,7 @@ comment|/* run mkfs without writing file system */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|fssize
 decl_stmt|;
@@ -145,6 +147,7 @@ comment|/* file system size */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|ntracks
 decl_stmt|;
@@ -155,6 +158,7 @@ comment|/* # tracks/cylinder */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|nsectors
 decl_stmt|;
@@ -165,6 +169,18 @@ comment|/* # sectors/track */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|nphyssectors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # sectors/track including spares */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|secpercyl
 decl_stmt|;
@@ -175,6 +191,7 @@ comment|/* sectors per cylinder */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|sectorsize
 decl_stmt|;
@@ -185,6 +202,7 @@ comment|/* bytes/sector */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rpm
 decl_stmt|;
@@ -195,6 +213,51 @@ comment|/* revolutions/minute of drive */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|interleave
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* hardware sector interleave */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trackskew
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sector 0 skew, per track */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|headswitch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head switch time, usec */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|trackseek
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* track-to-track seek, usec */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|fsize
 decl_stmt|;
@@ -205,6 +268,7 @@ comment|/* fragment size */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|bsize
 decl_stmt|;
@@ -215,6 +279,7 @@ comment|/* block size */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|cpg
 decl_stmt|;
@@ -225,6 +290,7 @@ comment|/* cylinders/cylinder group */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|minfree
 decl_stmt|;
@@ -235,6 +301,7 @@ comment|/* free space threshold */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|opt
 decl_stmt|;
@@ -245,6 +312,7 @@ comment|/* optimization preference (space or time) */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|density
 decl_stmt|;
@@ -255,6 +323,7 @@ comment|/* number of bytes per inode */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|maxcontig
 decl_stmt|;
@@ -265,6 +334,7 @@ comment|/* max contiguous blocks to allocate */
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|rotdelay
 decl_stmt|;
@@ -1466,6 +1536,24 @@ name|next
 goto|;
 block|}
 comment|/* 	 * calculate the available blocks for each rotational position 	 */
+name|sblock
+operator|.
+name|fs_interleave
+operator|=
+name|interleave
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_trackskew
+operator|=
+name|trackskew
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_npsect
+operator|=
+name|nphyssectors
+expr_stmt|;
 for|for
 control|(
 name|cylno
@@ -2428,6 +2516,18 @@ operator|.
 name|fs_maxcontig
 operator|=
 name|maxcontig
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_headswitch
+operator|=
+name|headswitch
+expr_stmt|;
+name|sblock
+operator|.
+name|fs_trkseek
+operator|=
+name|trackseek
 expr_stmt|;
 name|sblock
 operator|.

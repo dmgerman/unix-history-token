@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.1 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,15 +230,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|nspares
-init|=
-operator|-
-literal|1
+name|nphyssectors
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* spare sectors per cylinder */
+comment|/* # sectors/track including spares */
 end_comment
 
 begin_decl_stmt
@@ -249,6 +246,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* sectors per cylinder */
+end_comment
+
+begin_decl_stmt
+name|int
+name|trackspares
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* spare sectors per track */
+end_comment
+
+begin_decl_stmt
+name|int
+name|cylspares
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* spare sectors per cylinder */
 end_comment
 
 begin_decl_stmt
@@ -269,6 +292,49 @@ end_decl_stmt
 
 begin_comment
 comment|/* revolutions/minute of drive */
+end_comment
+
+begin_decl_stmt
+name|int
+name|interleave
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* hardware sector interleave */
+end_comment
+
+begin_decl_stmt
+name|int
+name|trackskew
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* sector 0 skew, per track */
+end_comment
+
+begin_decl_stmt
+name|int
+name|headswitch
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* head switch time, usec */
+end_comment
+
+begin_decl_stmt
+name|int
+name|trackseek
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* track-to-track seek, usec */
 end_comment
 
 begin_decl_stmt
@@ -588,7 +654,7 @@ operator|,
 name|argv
 operator|++
 expr_stmt|;
-name|nspares
+name|cylspares
 operator|=
 name|atoi
 argument_list|(
@@ -598,7 +664,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|nspares
+name|cylspares
 operator|<
 literal|0
 condition|)
@@ -839,6 +905,96 @@ goto|goto
 name|next
 goto|;
 case|case
+literal|'k'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-k: track skew"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|trackskew
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trackskew
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad track skew"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-l: interleave"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|interleave
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|interleave
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad interleave"
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
 literal|'m'
 case|:
 if|if
@@ -949,6 +1105,51 @@ operator|*
 name|argv
 argument_list|,
 literal|"(options are `space' or `time')"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+case|case
+literal|'p'
+case|:
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"-p: spare sectors per track"
+argument_list|)
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+name|trackspares
+operator|=
+name|atoi
+argument_list|(
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|trackspares
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: bad spare sectors per track"
+argument_list|,
+operator|*
+name|argv
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1214,6 +1415,27 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-S sector size\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-l hardware sector interleave\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-k sector 0 skew, per track\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\t-p spare sectors per track\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1679,6 +1901,67 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|trackskew
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|trackskew
+operator|=
+name|lp
+operator|->
+name|d_trackskew
+expr_stmt|;
+if|if
+condition|(
+name|trackskew
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no default track skew"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|interleave
+operator|==
+literal|0
+condition|)
+block|{
+name|interleave
+operator|=
+name|lp
+operator|->
+name|d_interleave
+expr_stmt|;
+if|if
+condition|(
+name|interleave
+operator|<=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no default interleave"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|fsize
 operator|==
 literal|0
@@ -1775,24 +2058,79 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|nspares
+name|trackspares
 operator|==
 operator|-
 literal|1
 condition|)
-name|nspares
+block|{
+name|trackspares
+operator|=
+name|lp
+operator|->
+name|d_sparespertrack
+expr_stmt|;
+if|if
+condition|(
+name|trackspares
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no default spares/track"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+name|nphyssectors
+operator|=
+name|nsectors
+operator|+
+name|trackspares
+expr_stmt|;
+if|if
+condition|(
+name|cylspares
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|cylspares
 operator|=
 name|lp
 operator|->
 name|d_sparespercyl
 expr_stmt|;
+if|if
+condition|(
+name|cylspares
+operator|<
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: no default spares/cylinder"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+block|}
 name|secpercyl
 operator|=
 name|nsectors
 operator|*
 name|ntracks
 operator|-
-name|nspares
+name|cylspares
 expr_stmt|;
 if|if
 condition|(
@@ -1818,6 +2156,18 @@ name|lp
 operator|->
 name|d_secpercyl
 argument_list|)
+expr_stmt|;
+name|headswitch
+operator|=
+name|lp
+operator|->
+name|d_headswitch
+expr_stmt|;
+name|trackseek
+operator|=
+name|lp
+operator|->
+name|d_trkseek
 expr_stmt|;
 name|oldpartition
 operator|=
