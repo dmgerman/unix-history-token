@@ -150,6 +150,36 @@ argument_list|)
 name|bio_queue
 expr_stmt|;
 comment|/* Disksort queue. */
+specifier|const
+name|char
+modifier|*
+name|bio_attribute
+decl_stmt|;
+comment|/* Attribute for BIO_[GS]ETATTR */
+name|struct
+name|g_consumer
+modifier|*
+name|bio_from
+decl_stmt|;
+comment|/* GEOM linkage */
+name|struct
+name|g_provider
+modifier|*
+name|bio_to
+decl_stmt|;
+comment|/* GEOM linkage */
+name|off_t
+name|bio_length
+decl_stmt|;
+comment|/* Like bio_bcount */
+name|off_t
+name|bio_completed
+decl_stmt|;
+comment|/* Inverse of bio_resid */
+name|u_int
+name|bio_children
+decl_stmt|;
+comment|/* Number of spawned bios */
 comment|/* XXX: these go away when bio chaining is introduced */
 name|daddr_t
 name|bio_pblkno
@@ -164,27 +194,6 @@ name|struct
 name|bio
 modifier|*
 name|bio_linkage
-decl_stmt|;
-name|off_t
-name|bio_length
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|bio_attribute
-decl_stmt|;
-name|off_t
-name|bio_completed
-decl_stmt|;
-name|struct
-name|g_consumer
-modifier|*
-name|bio_from
-decl_stmt|;
-name|struct
-name|g_provider
-modifier|*
-name|bio_to
 decl_stmt|;
 block|}
 struct|;
