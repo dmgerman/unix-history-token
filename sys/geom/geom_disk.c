@@ -1478,6 +1478,24 @@ literal|"disk_create need d_name"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|strlen
+argument_list|(
+name|dp
+operator|->
+name|d_name
+argument_list|)
+operator|<
+name|SPECNAMELEN
+operator|-
+literal|4
+argument_list|,
+operator|(
+literal|"disk name too long"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dev
 operator|->
 name|si_disk
@@ -1491,6 +1509,14 @@ operator|=
 literal|0x10002
 expr_stmt|;
 comment|/* XXX: Needed ? */
+name|dev
+operator|->
+name|si_name
+operator|=
+name|dev
+operator|->
+name|__si_namebuf
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|dev
