@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)perror.c	5.5 (Berkeley) %G%"
+literal|"@(#)perror.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,37 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_function
+name|char
+modifier|*
+name|strerror
+parameter_list|(
+name|errnum
+parameter_list|)
+name|int
+name|errnum
+decl_stmt|;
+block|{
+return|return
+operator|(
+operator|(
+name|u_int
+operator|)
+name|errnum
+operator|<
+name|sys_nerr
+condition|?
+name|sys_errlist
+index|[
+name|errnum
+index|]
+else|:
+literal|"Unknown error"
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 
