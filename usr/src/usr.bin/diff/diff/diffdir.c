@@ -2,10 +2,10 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
 name|sccsid
-index|[]
 init|=
-literal|"@(#)diffdir.c 4.4 1/25/81"
+literal|"@(#)diffdir.c	4.5 (Berkeley) 81/02/28"
 decl_stmt|;
 end_decl_stmt
 
