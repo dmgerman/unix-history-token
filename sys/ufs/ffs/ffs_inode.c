@@ -646,17 +646,6 @@ name|i_fs
 expr_stmt|;
 if|if
 condition|(
-name|fs
-operator|->
-name|fs_ronly
-condition|)
-name|panic
-argument_list|(
-literal|"ffs_truncate: read-only filesystem"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|length
 operator|<
 literal|0
@@ -796,6 +785,17 @@ argument_list|)
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_ronly
+condition|)
+name|panic
+argument_list|(
+literal|"ffs_truncate: read-only filesystem"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|QUOTA
