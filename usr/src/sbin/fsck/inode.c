@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.15 (Berkeley) %G%"
+literal|"@(#)inode.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,18 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -428,7 +440,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|u_long
 name|isize
 decl_stmt|;
 end_decl_stmt
@@ -683,7 +695,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"PARTIALLY TRUNCATED INODE I=%d"
+literal|"PARTIALLY TRUNCATED INODE I=%lu"
 argument_list|,
 name|idesc
 operator|->
@@ -935,7 +947,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"blk %d< cgdmin %d;"
+literal|"blk %ld< cgdmin %ld;"
 argument_list|,
 name|blk
 argument_list|,
@@ -950,7 +962,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" blk + cnt %d> cgsbase %d\n"
+literal|" blk + cnt %ld> cgsbase %ld\n"
 argument_list|,
 name|blk
 operator|+
@@ -1001,7 +1013,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"blk %d>= cgdmin %d;"
+literal|"blk %ld>= cgdmin %ld;"
 argument_list|,
 name|blk
 argument_list|,
@@ -1016,7 +1028,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" blk + cnt %d> sblock.fs_fpg %d\n"
+literal|" blk + cnt %ld> sblock.fs_fpg %ld\n"
 argument_list|,
 name|blk
 operator|+
@@ -1308,6 +1320,9 @@ operator|+=
 name|fullcnt
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|bread
 argument_list|(
 name|fsreadfd
@@ -1323,6 +1338,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* ??? */
 name|dp
 operator|=
 name|inodebuf
@@ -1464,6 +1480,9 @@ name|nextino
 operator|<
 name|ROOTINO
 condition|)
+operator|(
+name|void
+operator|)
 name|getnextinode
 argument_list|(
 name|nextino
@@ -1695,7 +1714,7 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|inp
 operator|->
@@ -2131,7 +2150,7 @@ operator|->
 name|id_name
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|dirp
 operator|->
@@ -2280,7 +2299,7 @@ parameter_list|()
 function_decl|;
 name|printf
 argument_list|(
-literal|" I=%u "
+literal|" I=%lu "
 argument_list|,
 name|ino
 argument_list|)
@@ -2338,8 +2357,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%d "
+literal|"%u "
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|dp
 operator|->
 name|di_uid
@@ -2367,7 +2389,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SIZE=%ld "
+literal|"SIZE=%lu "
 argument_list|,
 name|dp
 operator|->
@@ -2434,7 +2456,7 @@ begin_block
 block|{
 name|pfatal
 argument_list|(
-literal|"%ld %s I=%u"
+literal|"%ld %s I=%lu"
 argument_list|,
 name|blk
 argument_list|,
@@ -2681,6 +2703,9 @@ name|di_mode
 operator|=
 name|type
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
 operator|&

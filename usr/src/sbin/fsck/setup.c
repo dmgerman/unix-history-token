@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.30 (Berkeley) %G%"
+literal|"@(#)setup.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/endian.h>
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -141,18 +153,6 @@ value|howmany((fs)->fs_ipg, NBBY) + \
 comment|/* block map */
 value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY))
 end_define
-
-begin_decl_stmt
-name|char
-modifier|*
-name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|calloc
-argument_list|()
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|char
@@ -231,16 +231,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Can't stat %s\n"
+literal|"Can't stat %s: %s\n"
 argument_list|,
 name|dev
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -300,16 +300,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
-literal|"Can't open %s\n"
+literal|"Can't open %s: %s\n"
 argument_list|,
 name|dev
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1191,7 +1191,7 @@ operator|&
 name|altsblock
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|sblock
 operator|.
@@ -1411,8 +1411,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot alloc %d bytes for blockmap\n"
+literal|"cannot alloc %u bytes for blockmap\n"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|bmapsize
 argument_list|)
 expr_stmt|;
@@ -1454,11 +1457,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot alloc %d bytes for statemap\n"
+literal|"cannot alloc %u bytes for statemap\n"
 argument_list|,
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|maxino
 operator|+
 literal|1
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1503,13 +1511,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot alloc %d bytes for lncntp\n"
+literal|"cannot alloc %u bytes for lncntp\n"
 argument_list|,
-operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|maxino
 operator|+
 literal|1
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -1616,8 +1627,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot alloc %d bytes for inphead\n"
+literal|"cannot alloc %u bytes for inphead\n"
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|numdirs
 operator|*
 sizeof|sizeof
@@ -2772,12 +2786,12 @@ operator|)
 return|;
 name|pwarn
 argument_list|(
-literal|""
-argument_list|)
-expr_stmt|;
-name|perror
+literal|"ioctl (GCINFO): %s\n"
+argument_list|,
+name|strerror
 argument_list|(
-literal|"ioctl (GDINFO)"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|errexit

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.25 (Berkeley) %G%"
+literal|"@(#)main.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<fstab.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -135,7 +141,7 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|char
+name|int
 name|ch
 decl_stmt|;
 name|int
@@ -198,25 +204,17 @@ break|break;
 case|case
 literal|'b'
 case|:
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|optarg
-argument_list|)
-condition|)
-name|errexit
-argument_list|(
-literal|"-b flag requires a number\n"
-argument_list|)
-expr_stmt|;
 name|bflag
 operator|=
-name|atoi
+name|argtoi
 argument_list|(
+literal|'b'
+argument_list|,
+literal|"number"
+argument_list|,
 name|optarg
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 name|printf
@@ -244,53 +242,34 @@ break|break;
 case|case
 literal|'l'
 case|:
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|optarg
-argument_list|)
-condition|)
-name|errexit
-argument_list|(
-literal|"-l flag requires a number\n"
-argument_list|)
-expr_stmt|;
 name|maxrun
 operator|=
-name|atoi
+name|argtoi
 argument_list|(
+literal|'l'
+argument_list|,
+literal|"number"
+argument_list|,
 name|optarg
+argument_list|,
+literal|10
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 literal|'m'
 case|:
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-operator|*
-name|optarg
-argument_list|)
-condition|)
-name|errexit
-argument_list|(
-literal|"-m flag requires a mode\n"
-argument_list|)
-expr_stmt|;
-name|sscanf
-argument_list|(
-name|optarg
-argument_list|,
-literal|"%o"
-argument_list|,
-operator|&
 name|lfmode
+operator|=
+name|argtoi
+argument_list|(
+literal|'m'
+argument_list|,
+literal|"mode"
+argument_list|,
+name|optarg
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
@@ -408,6 +387,9 @@ operator|--
 operator|>
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|checkfilesys
 argument_list|(
 operator|*
@@ -420,7 +402,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-literal|0
+literal|0L
 argument_list|)
 expr_stmt|;
 name|exit
@@ -458,6 +440,91 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|argtoi
+argument_list|(
+argument|flag
+argument_list|,
+argument|req
+argument_list|,
+argument|str
+argument_list|,
+argument|base
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|req
+decl_stmt|,
+modifier|*
+name|str
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|base
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+operator|(
+name|int
+operator|)
+name|strtol
+argument_list|(
+name|str
+argument_list|,
+operator|&
+name|cp
+argument_list|,
+name|base
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|str
+operator|||
+operator|*
+name|cp
+condition|)
+name|errexit
+argument_list|(
+literal|"-%c flag requires a %s\n"
+argument_list|,
+name|flag
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_block
 
 begin_comment
 comment|/*  * Determine whether a filesystem should be checked.  */
@@ -768,7 +835,7 @@ name|cs_nbfree
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"%d files, %d used, %d free "
+literal|"%ld files, %ld used, %ld free "
 argument_list|,
 name|n_files
 argument_list|,
@@ -785,7 +852,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"(%d frags, %d blocks, %.1f%% fragmentation)\n"
+literal|"(%ld frags, %ld blocks, %.1f%% fragmentation)\n"
 argument_list|,
 name|n_ffree
 argument_list|,
@@ -825,7 +892,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%d files missing\n"
+literal|"%ld files missing\n"
 argument_list|,
 name|n_files
 argument_list|)
@@ -908,7 +975,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"%d blocks missing\n"
+literal|"%ld blocks missing\n"
 argument_list|,
 name|n_blks
 argument_list|)
@@ -941,7 +1008,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %ld,"
 argument_list|,
 name|dp
 operator|->
@@ -982,7 +1049,7 @@ name|next
 control|)
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %lu,"
 argument_list|,
 name|zlnp
 operator|->

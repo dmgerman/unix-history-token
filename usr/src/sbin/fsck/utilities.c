@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.27 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -85,14 +97,6 @@ end_comment
 begin_function_decl
 name|long
 name|lseek
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -776,9 +780,7 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|bufarea
-modifier|*
+name|void
 name|getblk
 parameter_list|(
 name|bp
@@ -818,14 +820,10 @@ condition|(
 name|bp
 operator|->
 name|b_bno
-operator|==
+operator|!=
 name|dblk
 condition|)
-return|return
-operator|(
-name|bp
-operator|)
-return|;
+block|{
 name|flush
 argument_list|(
 name|fswritefd
@@ -867,11 +865,7 @@ name|b_size
 operator|=
 name|size
 expr_stmt|;
-return|return
-operator|(
-name|bp
-operator|)
-return|;
+block|}
 block|}
 end_function
 
@@ -1309,17 +1303,22 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"cache missed %d of %d (%d%%)\n"
+literal|"cache missed %ld of %ld (%d%%)\n"
 argument_list|,
 name|diskreads
 argument_list|,
 name|totalreads
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|diskreads
 operator|*
 literal|100
 operator|/
 name|totalreads
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1472,7 +1471,7 @@ argument_list|(
 name|buf
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|size
 argument_list|)
@@ -1522,6 +1521,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
@@ -1549,7 +1551,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|" %d (%d),"
+literal|" %ld (%ld),"
 argument_list|,
 operator|(
 name|blk
@@ -1571,7 +1573,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %ld,"
 argument_list|,
 name|blk
 operator|+
@@ -1771,6 +1773,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fd
@@ -1788,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %d,"
+literal|" %ld,"
 argument_list|,
 name|blk
 operator|+
@@ -2024,6 +2029,9 @@ name|id_numfrags
 operator|=
 name|frags
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pass4check
 argument_list|(
 operator|&
@@ -2099,6 +2107,9 @@ operator|!=
 name|DFOUND
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|namebuf
@@ -2285,6 +2296,9 @@ name|namebuf
 argument_list|,
 name|cp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -2308,6 +2322,9 @@ operator|!=
 name|ROOTINO
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|namebuf
@@ -2323,6 +2340,10 @@ name|cp
 argument_list|,
 name|namebuf
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 operator|&
 name|namebuf
 index|[
@@ -2330,6 +2351,7 @@ name|MAXPATHLEN
 index|]
 operator|-
 name|cp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

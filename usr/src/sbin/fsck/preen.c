@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	5.4 (Berkeley) %G%"
+literal|"@(#)preen.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -82,10 +88,6 @@ argument_list|()
 decl_stmt|,
 modifier|*
 name|blockcheck
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -965,7 +967,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 for|for
@@ -1128,10 +1130,6 @@ name|name
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
 name|len
 operator|+
 literal|1
@@ -1154,6 +1152,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strncpy
 argument_list|(
 name|dk
@@ -1354,10 +1355,6 @@ name|name
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|name
@@ -1383,6 +1380,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|pt
@@ -1401,10 +1401,6 @@ name|fsname
 operator|=
 name|malloc
 argument_list|(
-operator|(
-name|unsigned
-name|int
-operator|)
 name|strlen
 argument_list|(
 name|fsname
@@ -1430,6 +1426,9 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|pt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass1.c	5.14 (Berkeley) %G%"
+literal|"@(#)pass1.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,18 @@ begin_include
 include|#
 directive|include
 file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -374,7 +386,7 @@ condition|)
 block|{
 name|pfatal
 argument_list|(
-literal|"PARTIALLY ALLOCATED INODE I=%u"
+literal|"PARTIALLY ALLOCATED INODE I=%lu"
 argument_list|,
 name|inumber
 argument_list|)
@@ -421,12 +433,7 @@ name|inumber
 expr_stmt|;
 if|if
 condition|(
-name|dp
-operator|->
-name|di_size
-operator|<
-literal|0
-operator|||
+comment|/* dp->di_size< 0 || */
 name|dp
 operator|->
 name|di_size
@@ -437,7 +444,9 @@ name|fs_bsize
 operator|-
 literal|1
 operator|<
-literal|0
+name|dp
+operator|->
+name|di_size
 condition|)
 block|{
 if|if
@@ -446,7 +455,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %d:"
+literal|"bad size %lu:"
 argument_list|,
 name|dp
 operator|->
@@ -533,7 +542,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad size %d ndb %d:"
+literal|"bad size %lu ndb %d:"
 argument_list|,
 name|dp
 operator|->
@@ -602,7 +611,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad direct addr: %d\n"
+literal|"bad direct addr: %ld\n"
 argument_list|,
 name|dp
 operator|->
@@ -669,7 +678,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"bad indirect addr: %d\n"
+literal|"bad indirect addr: %ld\n"
 argument_list|,
 name|dp
 operator|->
@@ -876,7 +885,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"INCORRECT BLOCK COUNT I=%u (%ld should be %ld)"
+literal|"INCORRECT BLOCK COUNT I=%lu (%ld should be %ld)"
 argument_list|,
 name|inumber
 argument_list|,
@@ -933,7 +942,7 @@ name|unknown
 label|:
 name|pfatal
 argument_list|(
-literal|"UNKNOWN FILE TYPE I=%u"
+literal|"UNKNOWN FILE TYPE I=%lu"
 argument_list|,
 name|inumber
 argument_list|)
@@ -1068,7 +1077,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"EXCESSIVE BAD BLKS I=%u"
+literal|"EXCESSIVE BAD BLKS I=%lu"
 argument_list|,
 name|idesc
 operator|->
@@ -1184,7 +1193,7 @@ condition|)
 block|{
 name|pwarn
 argument_list|(
-literal|"EXCESSIVE DUP BLKS I=%u"
+literal|"EXCESSIVE DUP BLKS I=%lu"
 argument_list|,
 name|idesc
 operator|->

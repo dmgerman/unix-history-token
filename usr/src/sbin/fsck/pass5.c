@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass5.c	5.12 (Berkeley) %G%"
+literal|"@(#)pass5.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,6 +44,12 @@ begin_include
 include|#
 directive|include
 file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -166,7 +172,7 @@ operator|)
 name|newcg
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|fs
 operator|->
@@ -850,9 +856,14 @@ index|[
 literal|0
 index|]
 argument_list|,
+call|(
+name|size_t
+call|)
+argument_list|(
 name|sumsize
 operator|+
 name|mapsize
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1316,7 +1327,7 @@ operator|)
 name|cg
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|fs
 operator|->
@@ -1371,6 +1382,9 @@ argument_list|(
 name|cg
 argument_list|)
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|mapsize
 argument_list|)
 expr_stmt|;
@@ -1460,6 +1474,9 @@ operator|*
 operator|)
 name|cg
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|basesize
 argument_list|)
 expr_stmt|;
@@ -1491,6 +1508,9 @@ index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sumsize
 argument_list|)
 expr_stmt|;

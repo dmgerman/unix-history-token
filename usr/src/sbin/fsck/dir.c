@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.17 (Berkeley) %G%"
+literal|"@(#)dir.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,18 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
@@ -439,6 +451,9 @@ name|dp
 argument_list|,
 name|dbuf
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|dsize
 argument_list|)
 expr_stmt|;
@@ -499,6 +514,9 @@ name|id_loc
 operator|-
 name|dsize
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|dsize
 argument_list|)
 expr_stmt|;
@@ -1650,7 +1668,7 @@ operator|->
 name|d_name
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|dirp
 operator|->
@@ -2305,6 +2323,9 @@ operator|)
 operator|-
 literal|1
 condition|)
+operator|(
+name|void
+operator|)
 name|makeentry
 argument_list|(
 name|orphan
@@ -2337,7 +2358,7 @@ operator|++
 expr_stmt|;
 name|pwarn
 argument_list|(
-literal|"DIR I=%u CONNECTED. "
+literal|"DIR I=%lu CONNECTED. "
 argument_list|,
 name|orphan
 argument_list|)
@@ -2354,7 +2375,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"PARENT WAS I=%u\n"
+literal|"PARENT WAS I=%lu\n"
 argument_list|,
 name|parentdir
 argument_list|)
@@ -2881,6 +2902,9 @@ operator|+
 literal|1
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dblksize
 argument_list|(
 operator|&
@@ -3014,6 +3038,9 @@ operator|+
 literal|1
 index|]
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dblksize
 argument_list|(
 operator|&

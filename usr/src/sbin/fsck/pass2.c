@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass2.c	5.13 (Berkeley) %G%"
+literal|"@(#)pass2.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,12 @@ undef|#
 directive|undef
 name|KERNEL
 end_undef
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
 begin_include
 include|#
@@ -358,7 +364,7 @@ operator|)
 name|inpsort
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|inplast
 argument_list|,
@@ -642,7 +648,7 @@ literal|0
 index|]
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|inp
 operator|->
@@ -802,6 +808,9 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+operator|(
+name|void
+operator|)
 name|makeentry
 argument_list|(
 name|inp
@@ -1169,6 +1178,9 @@ operator|*
 operator|)
 name|dirp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|entrysize
 argument_list|)
 expr_stmt|;
@@ -1217,6 +1229,9 @@ operator|*
 operator|)
 name|dirp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|entrysize
 argument_list|)
 expr_stmt|;
@@ -1260,6 +1275,9 @@ operator|*
 operator|)
 name|dirp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|n
 argument_list|)
 expr_stmt|;
@@ -1425,7 +1443,7 @@ operator|)
 name|dirp
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|proto
 operator|.
@@ -1620,6 +1638,9 @@ operator|*
 operator|)
 name|dirp
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|entrysize
 argument_list|)
 expr_stmt|;
