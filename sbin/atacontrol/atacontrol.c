@@ -1873,6 +1873,13 @@ name|ATARAIDCREATE
 expr_stmt|;
 if|if
 condition|(
+name|argc
+operator|>
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 name|strcmp
 argument_list|(
@@ -1996,6 +2003,7 @@ name|type
 operator|=
 literal|4
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -2025,6 +2033,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|argc
+operator|<
+literal|4
+operator|||
 operator|!
 name|sscanf
 argument_list|(
