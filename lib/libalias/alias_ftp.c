@@ -789,12 +789,17 @@ name|tcphdr
 modifier|*
 name|tc
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
 comment|/* Punch hole in firewall */
 name|PunchFWHole
 argument_list|(
 name|ftp_link
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Calculate data length of TCP packet */
 name|tc
 operator|=

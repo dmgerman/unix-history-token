@@ -515,6 +515,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+end_ifndef
+
 begin_function_decl
 name|void
 name|PunchFWHole
@@ -525,6 +531,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Housekeeping function */
