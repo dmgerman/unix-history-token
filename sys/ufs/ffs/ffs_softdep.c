@@ -17443,6 +17443,14 @@ operator|->
 name|wk_type
 operator|!=
 name|D_BMSAFEMAP
+operator|||
+operator|(
+name|bp
+operator|->
+name|b_xflags
+operator|&
+name|BX_BKGRDINPROG
+operator|)
 condition|)
 block|{
 name|BUF_UNLOCK
