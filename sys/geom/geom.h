@@ -1488,6 +1488,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|g_enc_le2
+parameter_list|(
+name|u_char
+modifier|*
+name|p
+parameter_list|,
+name|uint16_t
+name|u
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|g_enc_le4
 parameter_list|(
 name|u_char
