@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.25 1998/02/27 12:22:22 msmith Exp $ */
+comment|/*	$Id: msdosfs_conv.c,v 1.26 1998/04/15 17:46:37 bde Exp $ */
 end_comment
 
 begin_comment
@@ -4131,6 +4131,15 @@ name|conv
 return|;
 block|}
 comment|/* 	 * Now insert the generation number into the filename part 	 */
+if|if
+condition|(
+name|gen
+operator|==
+literal|0
+condition|)
+return|return
+name|conv
+return|;
 for|for
 control|(
 name|wcp
