@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.18	81/03/09	*/
+comment|/*	ubareg.h	4.19	81/03/13	*/
 end_comment
 
 begin_comment
@@ -756,7 +756,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * For VAXen with specific UBA addresses, give the addresses.  */
+comment|/*  * Formulas for locations of the last 8k of UNIBUS memory  * for each possible uba.  */
 end_comment
 
 begin_if
@@ -768,15 +768,32 @@ end_if
 begin_define
 define|#
 directive|define
-name|UBA750
-value|((struct uba_regs *)0xf30000)
+name|UMEM750
+parameter_list|(
+name|i
+parameter_list|)
+value|((u_short *)(0xffe000-(i)*0x4000))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|VAX780
+end_if
 
 begin_define
 define|#
 directive|define
-name|UMEM750
-value|((u_short *)0xfc0000)
+name|UMEM780
+parameter_list|(
+name|i
+parameter_list|)
+value|((u_short *)(0x2013e000+(i)*0x4000))
 end_define
 
 begin_endif
