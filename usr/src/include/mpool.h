@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mpool.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mpool.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -156,7 +156,7 @@ name|pgno_t
 name|npages
 decl_stmt|;
 comment|/* Number of pages in the file. */
-name|indx_t
+name|u_long
 name|pagesize
 decl_stmt|;
 comment|/* File page size. */
