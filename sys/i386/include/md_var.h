@@ -130,14 +130,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|cpu_high
+name|cpu_fxsr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|cpu_procinfo
+name|cpu_high
 decl_stmt|;
 end_decl_stmt
 
@@ -151,7 +151,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|u_int
-name|cpu_fxsr
+name|cpu_procinfo
 decl_stmt|;
 end_decl_stmt
 
@@ -440,21 +440,30 @@ name|void
 argument_list|)
 asm|__asm(__STRING(doreti_popl_fs_fault));
 name|void
-name|fillw
+name|enable_sse
 argument_list|(
-name|int
-comment|/*u_short*/
-name|pat
-argument_list|,
 name|void
-operator|*
-name|base
-argument_list|,
-name|size_t
-name|cnt
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|fillw
+parameter_list|(
+name|int
+comment|/*u_short*/
+name|pat
+parameter_list|,
+name|void
+modifier|*
+name|base
+parameter_list|,
+name|size_t
+name|cnt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

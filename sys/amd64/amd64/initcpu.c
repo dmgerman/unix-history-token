@@ -279,20 +279,10 @@ endif|#
 directive|endif
 end_endif
 
-begin_function_decl
-name|void
-name|enable_sse
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
+specifier|static
 name|int
 name|hw_instruction_sse
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -335,18 +325,6 @@ end_comment
 
 begin_decl_stmt
 name|u_int
-name|cpu_id
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Stepping ID */
-end_comment
-
-begin_decl_stmt
-name|u_int
 name|cpu_feature
 init|=
 literal|0
@@ -371,6 +349,18 @@ end_comment
 
 begin_decl_stmt
 name|u_int
+name|cpu_id
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Stepping ID */
+end_comment
+
+begin_decl_stmt
+name|u_int
 name|cpu_procinfo
 init|=
 literal|0
@@ -380,29 +370,6 @@ end_decl_stmt
 begin_comment
 comment|/* HyperThreading Info / Brand Index / CLFUSH */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ENABLE_SSE
-end_ifdef
-
-begin_decl_stmt
-name|u_int
-name|cpu_fxsr
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* SSE enabled */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -418,6 +385,27 @@ end_decl_stmt
 begin_comment
 comment|/* CPU Origin code */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ENABLE_SSE
+end_ifdef
+
+begin_decl_stmt
+name|u_int
+name|cpu_fxsr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SSE enabled */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
