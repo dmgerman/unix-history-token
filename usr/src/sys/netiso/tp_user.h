@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.5 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
+comment|/*   * ARGO TP  *  * $Header: tp_user.h,v 5.2 88/11/04 15:44:44 nhall Exp $  * $Source: /usr/argo/sys/netiso/RCS/tp_user.h,v $  *	@(#)tp_user.h	7.6 (Berkeley) %G%  *  * These are the values a real-live user ;-) needs.   */
 end_comment
 
 begin_ifndef
@@ -154,26 +154,6 @@ comment|/* use these params as they are */
 name|u_char
 name|p_netservice
 decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|tp_control_hdr
-block|{
-name|u_short
-name|cmsg_len
-decl_stmt|;
-name|u_short
-name|cmsg_type
-decl_stmt|;
-comment|/* TPOPT_[CONN,DISC,CFRM]_DATA */
-name|u_short
-name|cmsg_level
-decl_stmt|;
-comment|/* e.g. SOL_SOCKET, _TRANSPORT, etc. */
-comment|/*	u_char	cmsg_data[msg_len - sizeof(tp_control_hdr)]; */
 block|}
 struct|;
 end_struct
