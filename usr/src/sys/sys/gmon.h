@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)gmon.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ comment|/* max pc address of sampled buffer */
 name|int
 name|ncnt
 decl_stmt|;
-comment|/* size of sample buffer (not including hdr) */
+comment|/* size of sample buffer (plus this header) */
 name|int
 name|version
 decl_stmt|;
