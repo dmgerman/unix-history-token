@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.2 1999/11/28 05:49:27 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.3 1999/11/29 20:53:36 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.59 1999/11/27 01:03:18 soren Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.60 1999/11/29 02:28:19 jun Exp $ */
 end_comment
 
 begin_comment
@@ -952,6 +952,27 @@ operator|,
 literal|"TDK Corporation"
 operator|,
 literal|"TDK DFL9610 Ethernet& Digital Cellular"
+block|}
+end_block
+
+begin_operator
+operator|,
+end_operator
+
+begin_block
+unit|},
+block|{
+name|PCCARD_VENDOR_TDK
+operator|,
+name|PCCARD_PRODUCT_TDK_LAK_CF010
+operator|,
+name|PCCARD_CIS_TDK_LAK_CF010
+operator|,
+literal|0
+operator|,
+literal|"TDK Corporation"
+operator|,
+literal|"TDK LAC-CF010"
 block|}
 end_block
 

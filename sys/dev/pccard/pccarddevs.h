@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.2 1999/11/28 05:49:27 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.3 1999/11/29 20:53:36 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.59 1999/11/27 01:03:18 soren Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.60 1999/11/29 02:28:19 jun Exp $ */
 end_comment
 
 begin_comment
@@ -1350,6 +1350,27 @@ define|#
 directive|define
 name|PCCARD_STR_TDK_DFL9610
 value|"TDK DFL9610 Ethernet& Digital Cellular"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_CIS_TDK_LAK_CF010
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_PRODUCT_TDK_LAK_CF010
+value|0x0900
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCCARD_STR_TDK_LAK_CF010
+value|"TDK LAC-CF010"
 end_define
 
 begin_comment
