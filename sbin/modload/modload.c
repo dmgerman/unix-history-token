@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: modload.c,v 1.22 1998/07/06 07:07:41 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +306,8 @@ argument_list|(
 name|_PATH_LD
 argument_list|,
 literal|"ld"
+argument_list|,
+literal|"-aout"
 argument_list|,
 literal|"-A"
 argument_list|,
