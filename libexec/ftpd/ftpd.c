@@ -3871,7 +3871,6 @@ expr|struct
 name|sockaddr_in
 operator|*
 operator|)
-operator|&
 name|hrp
 operator|->
 name|hostinfo
@@ -3886,7 +3885,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_in
+name|in_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3902,7 +3901,6 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
-operator|&
 name|hrp
 operator|->
 name|hostinfo
@@ -3917,7 +3915,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|sockaddr_in6
+name|in6_addr
 argument_list|)
 expr_stmt|;
 break|break;
