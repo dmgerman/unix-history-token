@@ -261,6 +261,12 @@ comment|/* 80 */
 literal|0
 block|,
 comment|/* 81 */
+name|IBCS2_EIDRM
+block|,
+comment|/* 82 */
+name|IBCS2_ENOMSG
+block|,
+comment|/* 83 */
 block|}
 decl_stmt|;
 end_decl_stmt
