@@ -3839,6 +3839,7 @@ literal|100
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Enable CRC32 generation and set proper LED modes */
 name|BFE_OR
 argument_list|(
 name|sc
@@ -3846,6 +3847,19 @@ argument_list|,
 name|BFE_MAC_CTRL
 argument_list|,
 name|BFE_CTRL_CRC32_ENAB
+operator||
+name|BFE_CTRL_LED
+argument_list|)
+expr_stmt|;
+comment|/* Reset or clear powerdown control bit  */
+name|BFE_AND
+argument_list|(
+name|sc
+argument_list|,
+name|BFE_MAC_CTRL
+argument_list|,
+operator|~
+name|BFE_CTRL_PDOWN
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -4383,6 +4397,9 @@ operator|(
 name|BFE_CAM_WRITE
 operator||
 operator|(
+operator|(
+name|u_int32_t
+operator|)
 name|index
 operator|<<
 name|BFE_CAM_INDEX_SHIFT
