@@ -96,7 +96,7 @@ define|#
 directive|define
 name|EV_SET
 parameter_list|(
-name|kevp
+name|kevp_
 parameter_list|,
 name|a
 parameter_list|,
@@ -110,7 +110,7 @@ name|e
 parameter_list|,
 name|f
 parameter_list|)
-value|do {	\ 	(kevp)->ident = (a);			\ 	(kevp)->filter = (b);			\ 	(kevp)->flags = (c);			\ 	(kevp)->fflags = (d);			\ 	(kevp)->data = (e);			\ 	(kevp)->udata = (f);			\ } while(0)
+value|do {	\ 	struct kevent *kevp = (kevp_);		\ 	(kevp)->ident = (a);			\ 	(kevp)->filter = (b);			\ 	(kevp)->flags = (c);			\ 	(kevp)->fflags = (d);			\ 	(kevp)->data = (e);			\ 	(kevp)->udata = (f);			\ } while(0)
 end_define
 
 begin_struct
