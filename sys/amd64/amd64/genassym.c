@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/tss.h>
 end_include
 
@@ -141,12 +135,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm_map.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
 end_include
 
 begin_include
@@ -201,6 +189,12 @@ begin_include
 include|#
 directive|include
 file|<machine/cpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
 end_include
 
 begin_include
@@ -286,22 +280,6 @@ expr|struct
 name|proc
 argument_list|,
 name|p_sflag
-argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|P_UAREA
-argument_list|,
-name|offsetof
-argument_list|(
-expr|struct
-name|proc
-argument_list|,
-name|p_uarea
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -419,16 +397,6 @@ name|vmmeter
 argument_list|,
 name|v_intr
 argument_list|)
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|UAREA_PAGES
-argument_list|,
-name|UAREA_PAGES
 argument_list|)
 expr_stmt|;
 end_expr_stmt
