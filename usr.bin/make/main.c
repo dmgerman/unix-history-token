@@ -513,7 +513,7 @@ name|notyet
 define|#
 directive|define
 name|OPTFLAGS
-value|"BD:I:L:PSVd:ef:ij:knqrst"
+value|"BD:I:L:PSV:d:ef:ij:knqrst"
 else|#
 directive|else
 define|#
