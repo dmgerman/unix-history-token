@@ -564,6 +564,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MNT_MULTILABEL
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* MAC support for individual objects */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNT_NOATIME
 value|0x10000000
 end_define
@@ -731,7 +742,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_NODEV	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_JAILDEVFS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_NODEV	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_JAILDEVFS	| MNT_MULTILABEL)
 end_define
 
 begin_comment
@@ -742,7 +753,7 @@ begin_define
 define|#
 directive|define
 name|MNT_UPDATEMASK
-value|(MNT_NOSUID	| MNT_NOEXEC	| MNT_NODEV	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| MNT_JAILDEVFS	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR)
+value|(MNT_NOSUID	| MNT_NOEXEC	| MNT_NODEV	| \ 			MNT_SYNCHRONOUS	| MNT_UNION	| MNT_ASYNC	| \ 			MNT_NOATIME | \ 			MNT_NOSYMFOLLOW	| MNT_IGNORE	| MNT_JAILDEVFS	| \ 			MNT_NOCLUSTERR	| MNT_NOCLUSTERW | MNT_SUIDDIR | \ 			MNT_MULTILABEL)
 end_define
 
 begin_comment
@@ -814,13 +825,6 @@ end_define
 begin_comment
 comment|/*  * Still available  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MNT_SPARE2
-value|0x04000000
-end_define
 
 begin_define
 define|#
