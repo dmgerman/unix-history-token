@@ -250,6 +250,13 @@ name|OPTION_INCLUDE
 value|5
 end_define
 
+begin_define
+define|#
+directive|define
+name|OPTION_ONE_FILE_SYSTEM
+value|5
+end_define
+
 begin_decl_stmt
 specifier|const
 name|struct
@@ -526,6 +533,16 @@ block|,
 name|NULL
 block|,
 literal|'o'
+block|}
+block|,
+block|{
+literal|"one-file-system"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+name|OPTION_ONE_FILE_SYSTEM
 block|}
 block|,
 block|{
@@ -1215,7 +1232,7 @@ break|break;
 case|case
 literal|'l'
 case|:
-comment|/* SUSv2 */
+comment|/* SUSv2; note that GNU -l conflicts */
 name|bsdtar
 operator|->
 name|option_warn_links
@@ -1276,7 +1293,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-comment|/* SUSv2 */
+comment|/* SUSv2; note that GNU -o conflicts */
 name|bsdtar
 operator|->
 name|extract_flags
@@ -1285,6 +1302,22 @@ operator|~
 name|ARCHIVE_EXTRACT_OWNER
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|HAVE_GETOPT_LONG
+case|case
+name|OPTION_ONE_FILE_SYSTEM
+case|:
+comment|/* -l in GNU tar */
+name|bsdtar
+operator|->
+name|option_dont_traverse_mounts
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 if|#
 directive|if
 literal|0
@@ -1462,17 +1495,6 @@ comment|/* SUSv2 */
 name|bsdtar
 operator|->
 name|option_interactive
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'X'
-case|:
-comment|/* -l in GNU tar */
-name|bsdtar
-operator|->
-name|option_dont_traverse_mounts
 operator|=
 literal|1
 expr_stmt|;
