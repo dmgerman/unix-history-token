@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: wc.c,v 1.8 1997/08/25 06:44:59 charnier Exp $"
+literal|"$Id: wc.c,v 1.8.2.1 1999/08/06 14:38:41 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,12 +82,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
 end_include
 
 begin_include
@@ -202,8 +196,7 @@ decl_stmt|;
 block|{
 name|int
 name|ch
-decl_stmt|;
-name|int
+decl_stmt|,
 name|errors
 decl_stmt|,
 name|total
@@ -401,9 +394,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|tlinect
 argument_list|)
 expr_stmt|;
@@ -418,9 +408,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|twordct
 argument_list|)
 expr_stmt|;
@@ -435,9 +422,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|tcharct
 argument_list|)
 expr_stmt|;
@@ -475,17 +459,9 @@ modifier|*
 name|file
 decl_stmt|;
 block|{
-name|u_char
-modifier|*
-name|p
-decl_stmt|,
-name|ch
-decl_stmt|;
-name|short
-name|gotsp
-decl_stmt|;
-name|int
-name|len
+name|struct
+name|stat
+name|sb
 decl_stmt|;
 name|u_quad_t
 name|linect
@@ -494,18 +470,25 @@ name|wordct
 decl_stmt|,
 name|charct
 decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
 name|int
 name|fd
+decl_stmt|,
+name|len
+decl_stmt|;
+name|short
+name|gotsp
+decl_stmt|;
+name|u_char
+modifier|*
+name|p
 decl_stmt|;
 name|u_char
 name|buf
 index|[
 name|MAXBSIZE
 index|]
+decl_stmt|,
+name|ch
 decl_stmt|;
 name|linect
 operator|=
@@ -660,9 +643,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|linect
 argument_list|)
 expr_stmt|;
@@ -682,9 +662,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|charct
 argument_list|)
 expr_stmt|;
@@ -763,8 +740,12 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %7qu"
+literal|" %7lld"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -919,9 +900,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|linect
 argument_list|)
 expr_stmt|;
@@ -942,9 +920,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|wordct
 argument_list|)
 expr_stmt|;
@@ -965,9 +940,6 @@ name|printf
 argument_list|(
 literal|" %7qu"
 argument_list|,
-operator|(
-name|u_quad_t
-operator|)
 name|charct
 argument_list|)
 expr_stmt|;
