@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)proc.h	8.15 (Berkeley) 5/19/95  * $Id: proc.h,v 1.65 1998/12/31 13:23:16 bde Exp $  */
+comment|/*-  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)proc.h	8.15 (Berkeley) 5/19/95  * $Id: proc.h,v 1.66 1999/01/07 21:23:45 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -61,26 +61,11 @@ directive|include
 file|<sys/signal.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/signalvar.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -220,12 +205,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-end_ifdef
-
 begin_struct
 struct|struct
 name|procsig
@@ -260,15 +239,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
 
 begin_comment
 comment|/*  * pasleep structure, used by asleep() syscall to hold requested priority  * and timeout values for await().  */
@@ -343,17 +313,6 @@ modifier|*
 name|p_upages_obj
 decl_stmt|;
 comment|/* Upages object */
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|struct
-name|sigacts
-modifier|*
-name|p_sigacts
-decl_stmt|;
-comment|/* Signal actions, state (PROC ONLY). */
-else|#
-directive|else
 name|struct
 name|procsig
 modifier|*
@@ -371,8 +330,6 @@ define|#
 directive|define
 name|p_sigcatch
 value|p_procsig->ps_sigcatch
-endif|#
-directive|endif
 define|#
 directive|define
 name|p_ucred
@@ -598,9 +555,6 @@ name|sigiolst
 name|p_sigiolst
 decl_stmt|;
 comment|/* list of sigio sources */
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
 name|int
 name|p_sigparent
 decl_stmt|;
@@ -617,9 +571,6 @@ name|u_long
 name|p_code
 decl_stmt|;
 comment|/* for core dump/debugger XXX */
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -634,20 +585,6 @@ name|sigset_t
 name|p_sigmask
 decl_stmt|;
 comment|/* Current signal mask. */
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|sigset_t
-name|p_sigignore
-decl_stmt|;
-comment|/* Signals being ignored. */
-name|sigset_t
-name|p_sigcatch
-decl_stmt|;
-comment|/* Signals being caught by user. */
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|u_char
 name|p_priority
 decl_stmt|;
@@ -1851,12 +1788,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-end_ifndef
-
 begin_decl_stmt
 name|int
 name|fork1
@@ -1872,36 +1803,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|fork1
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
 
 begin_decl_stmt
 name|int

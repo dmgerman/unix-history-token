@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_exit.c	8.7 (Berkeley) 2/12/94  * $Id: kern_exit.c,v 1.70 1998/12/19 02:55:33 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_exit.c	8.7 (Berkeley) 2/12/94  * $Id: kern_exit.c,v 1.71 1999/01/07 21:23:41 julian Exp $  */
 end_comment
 
 begin_include
@@ -196,22 +196,11 @@ directive|include
 file|<vm/vm_zone.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/user.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 specifier|static
@@ -599,19 +588,6 @@ name|p_flag
 operator||=
 name|P_WEXIT
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|p
-operator|->
-name|p_sigignore
-operator|=
-operator|~
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|p
 operator|->
 name|p_siglist
@@ -982,18 +958,12 @@ name|p_pptr
 operator|=
 name|initproc
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
 name|q
 operator|->
 name|p_sigparent
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 comment|/* 		 * Traced processes are killed 		 * since their existence means someone is screwing up. 		 */
 if|if
 condition|(
@@ -1074,22 +1044,6 @@ name|p_cru
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Notify parent that we're gone.  If parent has the P_NOCLDWAIT 	 * flag set, notify process 1 instead (and hope it will handle 	 * this situation). 	 */
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-if|if
-condition|(
-name|p
-operator|->
-name|p_pptr
-operator|->
-name|p_flag
-operator|&
-name|P_NOCLDWAIT
-condition|)
-block|{
-else|#
-directive|else
 if|if
 condition|(
 name|p
@@ -1103,9 +1057,6 @@ operator|&
 name|P_NOCLDWAIT
 condition|)
 block|{
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|struct
 name|proc
 modifier|*
@@ -1142,20 +1093,6 @@ name|pp
 argument_list|)
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|psignal
-argument_list|(
-name|p
-operator|->
-name|p_pptr
-argument_list|,
-name|SIGCHLD
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|p
@@ -1193,9 +1130,6 @@ name|SIGCHLD
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|wakeup
 argument_list|(
 operator|(
@@ -1271,9 +1205,15 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|COMPAT_43
+end_ifdef
+
+begin_if
 if|#
 directive|if
 name|defined
@@ -1285,9 +1225,15 @@ name|defined
 argument_list|(
 name|luna68k
 argument_list|)
+end_if
+
+begin_include
 include|#
 directive|include
 file|<machine/frame.h>
+end_include
+
+begin_define
 define|#
 directive|define
 name|GETPS
@@ -1295,8 +1241,14 @@ parameter_list|(
 name|rp
 parameter_list|)
 value|((struct frame *)(rp))->f_sr
+end_define
+
+begin_else
 else|#
 directive|else
+end_else
+
+begin_define
 define|#
 directive|define
 name|GETPS
@@ -1304,8 +1256,14 @@ parameter_list|(
 name|rp
 parameter_list|)
 value|(rp)[PS]
+end_define
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_function
 name|int
 name|owait
 parameter_list|(
@@ -1440,9 +1398,18 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* COMPAT_43 */
+end_comment
+
+begin_function
 name|int
 name|wait4
 parameter_list|(
@@ -1474,6 +1441,9 @@ argument_list|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|int
 name|wait1
@@ -1943,9 +1913,6 @@ argument_list|,
 name|p_sibling
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
 if|if
 condition|(
 operator|--
@@ -1996,9 +1963,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 comment|/* 			 * Give machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
 name|cpu_wait
 argument_list|(
@@ -2219,7 +2183,13 @@ goto|goto
 name|loop
 goto|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * make process 'parent' the new parent of process 'child'.  */
+end_comment
+
+begin_function
 name|void
 name|proc_reparent
 parameter_list|(
@@ -2275,7 +2245,13 @@ operator|=
 name|parent
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * The next two functions are to handle adding/deleting items on the  * exit callout list  *   * at_exit():  * Take the arguments given and put them onto the exit callout list,  * However first make sure that it's not already there.  * returns 0 on success.  */
+end_comment
+
+begin_function
 name|int
 name|at_exit
 parameter_list|(
@@ -2349,7 +2325,13 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Scan the exit callout list for the given items and remove them.  * Returns the number of items removed.  * Logically this can only be 0 or 1.  */
+end_comment
+
+begin_function
 name|int
 name|rm_at_exit
 parameter_list|(
@@ -2436,9 +2418,9 @@ name|count
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
+end_function
+
+begin_function
 name|void
 name|check_sigacts
 parameter_list|(
@@ -2528,11 +2510,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

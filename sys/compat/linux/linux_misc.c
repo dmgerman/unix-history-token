@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.50 1998/12/30 21:01:33 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.51 1999/01/06 23:05:38 julian Exp $  */
 end_comment
 
 begin_include
@@ -81,26 +81,11 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
 
 begin_include
 include|#
@@ -2329,49 +2314,6 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-end_ifndef
-
-begin_function
-name|int
-name|linux_clone
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|linux_clone_args
-modifier|*
-name|args
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"linux_clone(%d): Not enabled\n"
-argument_list|,
-name|p
-operator|->
-name|p_pid
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EOPNOTSUPP
-operator|)
-return|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -2686,15 +2628,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
-
 begin_comment
 comment|/* XXX move */
 end_comment
@@ -2725,12 +2658,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|COMPAT_LINUX_THREADS
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2744,15 +2671,6 @@ directive|define
 name|GUARD_SIZE
 value|(4 * PAGE_SIZE)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* COMPAT_LINUX_THREADS */
-end_comment
 
 begin_function
 name|int
@@ -2920,27 +2838,6 @@ name|MAP_ANON
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|bsd_args
-operator|.
-name|addr
-operator|=
-name|linux_args
-operator|.
-name|addr
-expr_stmt|;
-name|bsd_args
-operator|.
-name|len
-operator|=
-name|linux_args
-operator|.
-name|len
-expr_stmt|;
-else|#
-directive|else
-ifndef|#
-directive|ifndef
 name|VM_STACK
 comment|/* Linux Threads will map into the proc stack space, unless      * we prevent it.  This causes problems if we're not using      * our VM_STACK options.      */
 if|if
@@ -3061,9 +2958,6 @@ operator|.
 name|len
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|bsd_args
 operator|.
 name|prot
@@ -4311,19 +4205,6 @@ name|args
 operator|->
 name|status
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|tmp
-operator|.
-name|options
-operator|=
-name|args
-operator|->
-name|options
-expr_stmt|;
-else|#
-directive|else
 comment|/* This filters out the linux option _WCLONE.  I don't      * think we need it, but I could be wrong.  If we need      * it, we need to fix wait4, since it will give us an      * error return of EINVAL if we pass in _WCLONE, and      * of course, it won't do anything with it.      */
 name|tmp
 operator|.
@@ -4341,9 +4222,6 @@ name|WUNTRACED
 operator|)
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|tmp
 operator|.
 name|rusage
@@ -4362,20 +4240,9 @@ operator|&
 name|tmp
 argument_list|)
 condition|)
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
 return|return
 name|error
 return|;
-else|#
-directive|else
-return|return
-name|error
-return|;
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 if|if
 condition|(
 name|args
@@ -4562,19 +4429,6 @@ name|args
 operator|->
 name|status
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|COMPAT_LINUX_THREADS
-name|tmp
-operator|.
-name|options
-operator|=
-name|args
-operator|->
-name|options
-expr_stmt|;
-else|#
-directive|else
 comment|/* This filters out the linux option _WCLONE.  I don't      * think we need it, but I could be wrong.  If we need      * it, we need to fix wait4, since it will give us an      * error return of EINVAL if we pass in _WCLONE, and      * of course, it won't do anything with it.      */
 name|tmp
 operator|.
@@ -4592,9 +4446,6 @@ name|WUNTRACED
 operator|)
 operator|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* COMPAT_LINUX_THREADS */
 name|tmp
 operator|.
 name|rusage
