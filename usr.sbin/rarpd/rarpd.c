@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.10 1996/11/19 23:57:06 wpaul Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.7.2.1 1996/11/23 08:34:58 phk Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,7 +50,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -fv ] [ hostname ]  *		rarpd [ -fv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
+comment|/*  * rarpd - Reverse ARP Daemon  *  * Usage:	rarpd -a [ -fsv ] [ hostname ]  *		rarpd [ -fsv ] interface [ hostname ]  *  * 'hostname' is optional solely for backwards compatibility with Sun's rarpd.  * Currently, the argument is ignored.  */
 end_comment
 
 begin_include
@@ -833,6 +833,18 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|sflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore /tftpboot */
+end_comment
+
 begin_function
 name|void
 name|main
@@ -941,7 +953,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"afv"
+literal|"afsv"
 argument_list|)
 operator|)
 operator|!=
@@ -965,6 +977,13 @@ literal|'f'
 case|:
 operator|++
 name|fflag
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+operator|++
+name|sflag
 expr_stmt|;
 break|break;
 case|case
@@ -2080,7 +2099,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rarpd [ -afv ] [ interface ]\n"
+literal|"usage: rarpd [ -afnv ] [ interface ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2564,15 +2583,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"truncated request"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"len: %d expected: %d\n"
+literal|"truncated request, got %d, expected %d"
 argument_list|,
 name|len
 argument_list|,
@@ -2589,8 +2600,6 @@ name|ap
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 literal|0
 return|;
@@ -3211,7 +3220,7 @@ name|bp
 operator|+
 name|hdrlen
 argument_list|,
-name|cc
+name|caplen
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3543,7 +3552,23 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot map %s to name"
+argument_list|,
+name|eatoa
+argument_list|(
+name|ep
+operator|->
+name|ether_shost
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -3557,7 +3582,18 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"cannot map %s to IP address"
+argument_list|,
+name|ename
+argument_list|)
+expr_stmt|;
 return|return;
+block|}
 comment|/* 	 * Choose correct address from list. 	 */
 if|if
 condition|(
@@ -3639,6 +3675,8 @@ return|return;
 block|}
 if|if
 condition|(
+name|sflag
+operator|||
 name|rarp_bootable
 argument_list|(
 name|target_ipaddr
@@ -4781,7 +4819,7 @@ name|eatoa
 argument_list|(
 name|ap
 operator|->
-name|arp_sha
+name|arp_tha
 argument_list|)
 argument_list|,
 name|intoa
