@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.34.4.4 2000/07/15 17:35:17 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: sendmail.h,v 8.34.4.5 2000/09/14 23:32:26 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -912,6 +912,49 @@ end_endif
 
 begin_comment
 comment|/* _FFR_UNSAFE_SASL */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_UNSAFE_WRITABLE_INCLUDE
+end_if
+
+begin_define
+define|#
+directive|define
+name|DBS_GROUPWRITABLEFORWARDFILE
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_GROUPWRITABLEINCLUDEFILE
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_WORLDWRITABLEFORWARDFILE
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|DBS_WORLDWRITABLEINCLUDEFILE
+value|39
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_UNSAFE_WRITABLE_INCLUDE */
 end_comment
 
 begin_comment

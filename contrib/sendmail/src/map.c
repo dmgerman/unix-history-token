@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: map.c,v 8.414.4.13 2000/07/14 16:48:21 ca Exp $"
+literal|"@(#)$Id: map.c,v 8.414.4.24 2000/09/27 04:11:29 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2413,6 +2413,10 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+name|MapOpenErr
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2544,15 +2548,6 @@ operator|!
 name|bitset
 argument_list|(
 name|MF_OPEN
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
-operator|||
-name|bitset
-argument_list|(
-name|MF_SHARED
 argument_list|,
 name|map
 operator|->
@@ -12671,7 +12666,7 @@ argument_list|)
 condition|)
 name|dprintf
 argument_list|(
-literal|"ldapmap_open(%s, %d)\n"
+literal|"ldapmap_open(%s, %d): "
 argument_list|,
 name|map
 operator|->
@@ -12786,16 +12781,38 @@ name|s
 operator|->
 name|s_ldap
 expr_stmt|;
-name|map
-operator|->
-name|map_mflags
-operator||=
-name|MF_SHARED
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"using cached connection\n"
+argument_list|)
 expr_stmt|;
 return|return
 name|TRUE
 return|;
 block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|2
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"opening new connection\n"
+argument_list|)
+expr_stmt|;
 comment|/* No connection yet, connect */
 if|if
 condition|(
@@ -13888,9 +13905,14 @@ argument_list|)
 argument_list|,
 literal|"%.*s%s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|q
 operator|-
 name|p
+argument_list|)
 argument_list|,
 name|p
 argument_list|,
@@ -13941,9 +13963,14 @@ argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|q
 operator|-
 name|p
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -14092,11 +14119,16 @@ argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|q
 operator|-
 name|p
 operator|+
 literal|1
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -14250,7 +14282,7 @@ argument_list|)
 condition|)
 name|syserr
 argument_list|(
-literal|"Error in ldap_search_st using %s in map %s"
+literal|"Error in ldap_search using %s in map %s"
 argument_list|,
 name|filter
 argument_list|,
@@ -14262,7 +14294,7 @@ expr_stmt|;
 else|else
 name|syserr
 argument_list|(
-literal|"421 4.0.0 Error in ldap_search_st using %s in map %s"
+literal|"421 4.0.0 Error in ldap_search using %s in map %s"
 argument_list|,
 name|filter
 argument_list|,
@@ -14277,6 +14309,50 @@ name|statp
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LDAP_SERVER_DOWN
+if|if
+condition|(
+name|errno
+operator|==
+name|LDAP_SERVER_DOWN
+condition|)
+block|{
+name|int
+name|save_errno
+init|=
+name|errno
+decl_stmt|;
+comment|/* server disappeared, try reopen on next search */
+name|map
+operator|->
+name|map_class
+operator|->
+name|map_close
+argument_list|(
+name|map
+argument_list|)
+expr_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+operator|(
+name|MF_OPEN
+operator||
+name|MF_WRITABLE
+operator|)
+expr_stmt|;
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* LDAP_SERVER_DOWN */
 return|return
 name|NULL
 return|;
@@ -14699,7 +14775,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -14830,7 +14906,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -14858,7 +14934,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -14886,7 +14962,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -14972,7 +15048,7 @@ block|}
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -15109,7 +15185,7 @@ expr_stmt|;
 if|#
 directive|if
 name|USING_NETSCAPE_LDAP
-name|ldap_mem_free
+name|ldap_memfree
 argument_list|(
 name|attr
 argument_list|)
@@ -15771,7 +15847,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  LDAPMAP_FINDCONN -- find an LDAP connection to the server ** **	Cache LDAP connections based on the host, port, bind DN, **	and secret so we don't have multiple connections open to **	the same server for different maps. ** **	Parameters: **		lmap -- LDAP map information ** **	Returns: **		Symbol table entry for the LDAP connection. ** */
+comment|/* **  LDAPMAP_FINDCONN -- find an LDAP connection to the server ** **	Cache LDAP connections based on the host, port, bind DN, **	secret, and PID so we don't have multiple connections open to **	the same server for different maps.  Need a separate connection **	per PID since a parent process may close the map before the **	child is done with it. ** **	Parameters: **		lmap -- LDAP map information ** **	Returns: **		Symbol table entry for the LDAP connection. ** */
 end_comment
 
 begin_function
@@ -15862,6 +15938,8 @@ name|ldap_secret
 argument_list|)
 operator|)
 operator|+
+literal|8
+operator|+
 literal|1
 expr_stmt|;
 name|nbuf
@@ -15877,7 +15955,7 @@ name|nbuf
 argument_list|,
 name|len
 argument_list|,
-literal|"%s%c%d%c%s%c%s"
+literal|"%s%c%d%c%s%c%s%d"
 argument_list|,
 operator|(
 name|lmap
@@ -15930,6 +16008,9 @@ name|lmap
 operator|->
 name|ldap_secret
 operator|)
+argument_list|,
+name|getpid
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|s
@@ -17881,7 +17962,9 @@ name|LDAPMAP_MAX_PASSWD
 argument_list|,
 name|sfd
 argument_list|,
-literal|0
+name|TimeOuts
+operator|.
+name|to_fileopen
 argument_list|,
 literal|"ldapmap_parseargs"
 argument_list|)
@@ -19734,6 +19817,58 @@ return|return
 name|FALSE
 return|;
 block|}
+if|if
+condition|(
+name|CurEnv
+operator|!=
+name|NULL
+operator|&&
+name|CurEnv
+operator|->
+name|e_sendmode
+operator|==
+name|SM_DEFER
+operator|&&
+name|bitset
+argument_list|(
+name|MF_DEFER
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|9
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|dprintf
+argument_list|(
+literal|"ph_map_open(%s) => DEFERRED\n"
+argument_list|,
+name|map
+operator|->
+name|map_mname
+argument_list|)
+expr_stmt|;
+comment|/* 		** Unset MF_DEFER here so that map_lookup() returns 		** a temporary failure using the bogus map and 		** map->map_tapp instead of the default permanent error. 		*/
+name|map
+operator|->
+name|map_mflags
+operator|&=
+operator|~
+name|MF_DEFER
+expr_stmt|;
+return|return
+name|FALSE
+return|;
+block|}
 name|pmap
 operator|=
 operator|(
@@ -19821,7 +19956,7 @@ directive|else
 comment|/* ETIMEDOUT */
 name|errno
 operator|=
-literal|0
+name|EAGAIN
 expr_stmt|;
 endif|#
 directive|endif
@@ -20126,10 +20261,9 @@ directive|endif
 comment|/* !_FFR_PHMAP_TIMEOUT */
 if|if
 condition|(
-operator|!
 name|bitset
 argument_list|(
-name|MF_OPTIONAL
+name|MF_NODEFER
 argument_list|,
 name|map
 operator|->
@@ -20142,16 +20276,6 @@ condition|(
 name|errno
 operator|==
 literal|0
-operator|&&
-operator|!
-name|bitset
-argument_list|(
-name|MF_NODEFER
-argument_list|,
-name|map
-operator|->
-name|map_mflags
-argument_list|)
 condition|)
 name|errno
 operator|=
@@ -20159,13 +20283,27 @@ name|EAGAIN
 expr_stmt|;
 name|syserr
 argument_list|(
-literal|"ph_map_open: cannot connect to PH server"
+literal|"ph_map_open: %s: cannot connect to PH server"
+argument_list|,
+name|map
+operator|->
+name|map_mname
 argument_list|)
 expr_stmt|;
 block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPTIONAL
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+operator|&&
 name|LogLevel
 operator|>
 literal|1
@@ -20178,7 +20316,11 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"ph_map_open: cannot connect to PH server"
+literal|"ph_map_open: %s: cannot connect to PH server"
+argument_list|,
+name|map
+operator|->
+name|map_mname
 argument_list|)
 expr_stmt|;
 name|free

@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: makemap.c,v 8.135.4.10 2000/07/18 05:41:39 gshapiro Exp $"
+literal|"@(#)$Id: makemap.c,v 8.135.4.11 2000/09/13 01:11:10 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1355,6 +1355,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|unmake
+operator|&&
 name|geteuid
 argument_list|()
 operator|==

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: comm.c,v 8.30.4.3 2000/06/12 14:53:01 ca Exp $"
+literal|"@(#)$Id: comm.c,v 8.30.4.5 2000/08/14 09:04:47 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,7 +215,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|read
+name|MI_SOCK_READ
 argument_list|(
 name|sd
 argument_list|,
@@ -504,7 +504,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|read
+name|MI_SOCK_READ
 argument_list|(
 name|sd
 argument_list|,
@@ -876,7 +876,7 @@ condition|(
 operator|(
 name|l
 operator|=
-name|write
+name|MI_SOCK_WRITE
 argument_list|(
 name|sd
 argument_list|,
@@ -1026,7 +1026,7 @@ condition|(
 operator|(
 name|l
 operator|=
-name|write
+name|MI_SOCK_WRITE
 argument_list|(
 name|sd
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: savemail.c,v 8.212.4.3 2000/06/13 07:16:26 gshapiro Exp $"
+literal|"@(#)$Id: savemail.c,v 8.212.4.5 2000/08/22 22:46:00 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,6 +1056,13 @@ argument_list|)
 operator|)
 operator|!=
 name|NULL
+operator|&&
+operator|*
+name|pw
+operator|->
+name|pw_dir
+operator|!=
+literal|'\0'
 condition|)
 name|p
 operator|=
@@ -1573,6 +1580,10 @@ name|e
 argument_list|,
 literal|"savemail panic"
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 name|syserr
 argument_list|(

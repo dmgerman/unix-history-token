@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.12 2000/07/17 19:55:08 ca Exp $ (with SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.13 2000/09/26 00:46:21 gshapiro Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: usersmtp.c,v 8.245.4.12 2000/07/17 19:55:08 ca Exp $ (without SMTP)"
+literal|"@(#)$Id: usersmtp.c,v 8.245.4.13 2000/09/26 00:46:21 gshapiro Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3642,10 +3642,27 @@ argument_list|,
 literal|"saslgetrealm: realm %s available realms %s"
 argument_list|,
 name|context
+operator|==
+name|NULL
+condition|?
+literal|"<No Context>"
+else|:
+operator|(
+name|char
+operator|*
+operator|)
+name|context
 argument_list|,
+operator|(
 name|availrealms
 operator|==
 name|NULL
+operator|||
+operator|*
+name|availrealms
+operator|==
+name|NULL
+operator|)
 condition|?
 literal|"<No Realms>"
 else|:
@@ -3665,6 +3682,11 @@ return|;
 comment|/* check whether context is in list? */
 if|if
 condition|(
+name|availrealms
+operator|!=
+name|NULL
+operator|&&
+operator|*
 name|availrealms
 operator|!=
 name|NULL

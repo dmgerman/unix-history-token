@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: rmail.c,v 8.39.4.5 2000/07/18 05:55:29 gshapiro Exp $"
+literal|"@(#)$Id: rmail.c,v 8.39.4.8 2000/09/16 22:20:25 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,6 +358,11 @@ operator|||
 name|_AIX4
 operator|>=
 literal|40300
+operator|||
+name|defined
+argument_list|(
+name|HPUX11
+argument_list|)
 end_if
 
 begin_define
@@ -373,7 +378,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(BSD4_4) || defined(linux) || SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) || _AIX4>= 40300 */
+comment|/* defined(BSD4_4) || defined(linux) || SOLARIS>= 20600 || (SOLARIS< 10000&& SOLARIS>= 206) || _AIX4>= 40300 || defined(HPUX11) */
 end_comment
 
 begin_if
@@ -878,10 +883,8 @@ name|from_user
 decl_stmt|;
 name|char
 modifier|*
+modifier|*
 name|args
-index|[
-literal|100
-index|]
 decl_stmt|,
 name|buf
 index|[
@@ -1615,6 +1618,29 @@ name|stdin
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Allocate args (with room for sendmail args as well as recipients */
+name|args
+operator|=
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
+name|xalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|args
+argument_list|)
+operator|*
+operator|(
+literal|10
+operator|+
+name|argc
+operator|)
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 literal|0
@@ -1628,6 +1654,15 @@ operator|=
 name|_PATH_SENDMAIL
 expr_stmt|;
 comment|/* Build sendmail's argument list. */
+name|args
+index|[
+name|i
+operator|++
+index|]
+operator|=
+literal|"-G"
+expr_stmt|;
+comment|/* relay submission */
 name|args
 index|[
 name|i
@@ -1771,6 +1806,8 @@ while|while
 condition|(
 operator|*
 name|argv
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1877,13 +1914,30 @@ block|}
 name|argv
 operator|++
 expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+comment|/* Paranoia check, argc used for args[] bound */
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_SOFTWARE
+argument_list|,
+literal|"Argument count mismatch"
+argument_list|)
+expr_stmt|;
 block|}
 name|args
 index|[
 name|i
 index|]
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -1907,6 +1961,8 @@ name|args
 index|[
 name|i
 index|]
+operator|!=
+name|NULL
 condition|;
 name|i
 operator|++

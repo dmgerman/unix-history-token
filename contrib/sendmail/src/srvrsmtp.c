@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.40 2000/07/18 02:24:45 gshapiro Exp $ (with SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.58 2000/09/21 21:52:18 ca Exp $ (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.40 2000/07/18 02:24:45 gshapiro Exp $ (without SMTP)"
+literal|"@(#)$Id: srvrsmtp.c,v 8.471.2.2.2.58 2000/09/21 21:52:18 ca Exp $ (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,11 +74,28 @@ directive|if
 name|SMTP
 end_if
 
+begin_if
+if|#
+directive|if
+name|SASL
+operator|||
+name|STARTTLS
+end_if
+
 begin_include
 include|#
 directive|include
 file|"sfsasl.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SASL || STARTTLS */
+end_comment
 
 begin_if
 if|#
@@ -715,6 +732,10 @@ end_define
 
 begin_comment
 comment|/* debug -- set debug mode */
+end_comment
+
+begin_comment
+comment|/* **  Note: If you change this list, **        remember to update 'helpfile' */
 end_comment
 
 begin_decl_stmt
@@ -1354,6 +1375,11 @@ directive|if
 name|STARTTLS
 name|int
 name|r
+decl_stmt|;
+name|int
+name|rfd
+decl_stmt|,
+name|wfd
 decl_stmt|;
 specifier|volatile
 name|bool
@@ -2152,9 +2178,14 @@ name|message
 argument_list|(
 name|cmdbuf
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|id
 operator|-
 name|inp
+argument_list|)
 argument_list|,
 name|inp
 argument_list|,
@@ -4190,16 +4221,35 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|SSL_set_rfd
-argument_list|(
-name|srv_ssl
-argument_list|,
+name|rfd
+operator|=
 name|fileno
 argument_list|(
 name|InChannel
 argument_list|)
+expr_stmt|;
+name|wfd
+operator|=
+name|fileno
+argument_list|(
+name|OutChannel
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rfd
+operator|<
+literal|0
+operator|||
+name|wfd
+operator|<
+literal|0
+operator|||
+name|SSL_set_rfd
+argument_list|(
+name|srv_ssl
+argument_list|,
+name|rfd
 argument_list|)
 operator|<=
 literal|0
@@ -4208,10 +4258,7 @@ name|SSL_set_wfd
 argument_list|(
 name|srv_ssl
 argument_list|,
-name|fileno
-argument_list|(
-name|OutChannel
-argument_list|)
+name|wfd
 argument_list|)
 operator|<=
 literal|0
@@ -5043,7 +5090,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* print EHLO features list */
+comment|/* 			**  print EHLO features list 			** 			**  Note: If you change this list, 			**        remember to update 'helpfile' 			*/
 name|message
 argument_list|(
 literal|"250-ENHANCEDSTATUSCODES"
@@ -6200,11 +6247,19 @@ name|MaxMessageSize
 operator|>
 literal|0
 operator|&&
+operator|(
 name|e
 operator|->
 name|e_msgsize
 operator|>
 name|MaxMessageSize
+operator|||
+name|e
+operator|->
+name|e_msgsize
+operator|<
+literal|0
+operator|)
 condition|)
 block|{
 name|usrerr
@@ -6328,7 +6383,7 @@ name|SMFIR_TEMPFAIL
 case|:
 name|usrerr
 argument_list|(
-literal|"451 4.7.1 Try again later"
+literal|"451 4.7.1 Please try again later"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7076,7 +7131,7 @@ name|SMFIR_TEMPFAIL
 case|:
 name|usrerr
 argument_list|(
-literal|"451 4.7.1 Try again later"
+literal|"451 4.7.1 Please try again later"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7459,7 +7514,7 @@ name|SMFIR_TEMPFAIL
 case|:
 name|usrerr
 argument_list|(
-literal|"451 4.7.1 Try again later"
+literal|"451 4.7.1 Please try again later"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8494,7 +8549,7 @@ operator|(
 operator|!
 name|QS_IS_UNDELIVERED
 argument_list|(
-name|vrfyqueue
+name|a
 operator|->
 name|q_state
 argument_list|)
@@ -9770,39 +9825,6 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BROKEN_ANSI_LIBRARY
-argument_list|)
-name|e
-operator|->
-name|e_msgsize
-operator|=
-name|strtoul
-argument_list|(
-name|vp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|NULL
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* defined(__STDC__)&& !defined(BROKEN_ANSI_LIBRARY) */
 name|e
 operator|->
 name|e_msgsize
@@ -9821,9 +9843,26 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(__STDC__)&& !defined(BROKEN_ANSI_LIBRARY) */
+if|if
+condition|(
+name|e
+operator|->
+name|e_msgsize
+operator|==
+name|LONG_MAX
+operator|&&
+name|errno
+operator|==
+name|ERANGE
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"552 5.2.3 Message size exceeds maximum value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 block|}
 elseif|else
 if|if
@@ -10461,7 +10500,7 @@ else|else
 block|{
 name|usrerr
 argument_list|(
-literal|"501 5.5.4 %s parameter unrecognized"
+literal|"555 5.5.4 %s parameter unrecognized"
 argument_list|,
 name|kp
 argument_list|)
@@ -10804,7 +10843,7 @@ else|else
 block|{
 name|usrerr
 argument_list|(
-literal|"501 5.5.4 %s parameter unrecognized"
+literal|"555 5.5.4 %s parameter unrecognized"
 argument_list|,
 name|kp
 argument_list|)
@@ -11953,7 +11992,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TLS_RAND_INIT -- initialize STARTTLS random generator ** **	Parameters: **		randfile -- name of file with random data **		logl -- loglevel ** **	Returns: **		None. (not yet, maybe it should return success/failure?) ** **	Side Effects: **		initializes PRNG for tls library. */
+comment|/* **  TLS_RAND_INIT -- initialize STARTTLS random generator ** **	Parameters: **		randfile -- name of file with random data **		logl -- loglevel ** **	Returns: **		success/failure ** **	Side Effects: **		initializes PRNG for tls library. */
 end_comment
 
 begin_define
@@ -11968,7 +12007,7 @@ comment|/* 128 bits */
 end_comment
 
 begin_function
-name|void
+name|bool
 name|tls_rand_init
 parameter_list|(
 name|randfile
@@ -12002,16 +12041,54 @@ directive|define
 name|RF_UNKNOWN
 value|2
 comment|/* unknown prefix for randfile */
+define|#
+directive|define
+name|RI_NONE
+value|0
+comment|/* no init yet */
+define|#
+directive|define
+name|RI_SUCCESS
+value|1
+comment|/* init was successful */
+define|#
+directive|define
+name|RI_FAIL
+value|2
+comment|/* init failed */
 name|bool
 name|ok
 decl_stmt|;
 name|int
 name|randdef
 decl_stmt|;
+specifier|static
+name|int
+name|done
+init|=
+name|RI_NONE
+decl_stmt|;
 comment|/* 	**  initialize PRNG 	*/
+comment|/* did we try this before? if yes: return old value */
+if|if
+condition|(
+name|done
+operator|!=
+name|RI_NONE
+condition|)
+return|return
+name|done
+operator|==
+name|RI_SUCCESS
+return|;
+comment|/* set default values */
 name|ok
 operator|=
 name|FALSE
+expr_stmt|;
+name|done
+operator|=
+name|RI_FAIL
 expr_stmt|;
 name|randdef
 operator|=
@@ -12569,7 +12646,28 @@ argument_list|,
 literal|"TLS: Warning: random number generator not properly seeded"
 argument_list|)
 expr_stmt|;
+name|ok
+operator|=
+name|TRUE
+expr_stmt|;
 block|}
+name|done
+operator|=
+name|ok
+condition|?
+name|RI_SUCCESS
+else|:
+name|RI_FAIL
+expr_stmt|;
+return|return
+name|ok
+return|;
+else|#
+directive|else
+comment|/* !HASURANDOMDEV */
+return|return
+name|TRUE
+return|;
 endif|#
 directive|endif
 comment|/* !HASURANDOMDEV */
@@ -13111,6 +13209,21 @@ condition|)
 return|return
 name|TRUE
 return|;
+comment|/* PRNG seeded? */
+if|if
+condition|(
+operator|!
+name|tls_rand_init
+argument_list|(
+name|RandFile
+argument_list|,
+literal|10
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+comment|/* let's start with the assumption it will work */
 name|ok
 operator|=
 name|TRUE
@@ -13379,11 +13492,6 @@ argument_list|,
 name|dhparam
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|dhparam
-argument_list|)
-expr_stmt|;
 name|dhparam
 operator|=
 name|NULL
@@ -13400,15 +13508,9 @@ name|dhparam
 operator|=
 name|srv
 condition|?
-name|newstr
-argument_list|(
 literal|"1"
-argument_list|)
 else|:
-name|newstr
-argument_list|(
 literal|"5"
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -15126,7 +15228,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"TLS: get_verify in %s: %d get_peer: 0x%x"
+literal|"TLS: get_verify in %s: %ld get_peer: 0x%lx"
 argument_list|,
 name|srv
 condition|?
@@ -15139,6 +15241,9 @@ argument_list|(
 name|ssl
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|cert
 argument_list|)
 expr_stmt|;

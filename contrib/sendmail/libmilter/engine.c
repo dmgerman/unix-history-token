@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: engine.c,v 8.67.4.12 2000/07/14 06:16:57 msk Exp $"
+literal|"@(#)$Id: engine.c,v 8.67.4.14 2000/08/14 08:27:30 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1387,7 +1387,7 @@ literal|5
 condition|)
 name|dprintf
 argument_list|(
-literal|"[%d] error (%x)\n"
+literal|"[%d] mi_engine: mi_rd_cmd error (%x)\n"
 argument_list|,
 operator|(
 name|int
