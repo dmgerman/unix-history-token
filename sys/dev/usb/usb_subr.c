@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.95 2001/11/20 16:09:01 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.96 2001/11/22 21:59:33 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -837,7 +837,7 @@ name|langid
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Well, just pick English then */
+comment|/* Well, just pick something then */
 block|}
 else|else
 block|{
