@@ -1170,20 +1170,26 @@ case|case
 name|UPDATE_PRESERVE
 case|:
 comment|/* Check if update rule needs to be applied (not if mask is all ones) */
+comment|/* The left shift drops the bits we want to ignore. */
 if|if
 condition|(
 operator|(
-operator|(
-literal|1
-operator|<<
-name|BitGranularity
-operator|)
-operator|-
-literal|1
-operator|)
-operator|&
 operator|~
 name|Mask
+operator|<<
+operator|(
+sizeof|sizeof
+argument_list|(
+name|Mask
+argument_list|)
+operator|*
+literal|8
+operator|-
+name|BitGranularity
+operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/*              * Read the current contents of the byte/word/dword containing              * the field, and merge with the new field value.              */
