@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snake.c	5.2 (Berkeley) %G%"
+literal|"@(#)snake.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1038,13 +1038,13 @@ block|{
 case|case
 name|CTRL
 argument_list|(
-name|z
+literal|'z'
 argument_list|)
 case|:
 case|case
 name|CTRL
 argument_list|(
-name|c
+literal|'c'
 argument_list|)
 case|:
 name|suspend
@@ -1192,7 +1192,7 @@ expr_stmt|;
 case|case
 name|CTRL
 argument_list|(
-name|l
+literal|'l'
 argument_list|)
 case|:
 name|setup
@@ -1547,7 +1547,7 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|p
+literal|'p'
 argument_list|)
 case|:
 case|case
@@ -1626,7 +1626,7 @@ break|break;
 case|case
 name|CTRL
 argument_list|(
-name|n
+literal|'n'
 argument_list|)
 case|:
 case|case
