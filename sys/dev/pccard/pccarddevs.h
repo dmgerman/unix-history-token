@@ -4,11 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.26 2002/01/08 20:52:23 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.27 2002/01/29 06:09:39 imp Exp   */
 end_comment
 
 begin_comment
-comment|/* $NetBSD: pcmciadevs,v 1.156 2001/12/29 15:00:45 pooka Exp $ */
+comment|/* $NetBSD: pcmciadevs,v 1.159 2002/01/28 09:25:33 aymeric Exp $ */
 end_comment
 
 begin_comment
@@ -334,6 +334,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_ERICSSON
+value|0x016b
+end_define
+
+begin_comment
+comment|/* Ericsson */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_PSION
 value|0x016c
 end_define
@@ -571,6 +582,17 @@ end_define
 
 begin_comment
 comment|/* Dual */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_VENDOR_EDIMAX
+value|0x890f
+end_define
+
+begin_comment
+comment|/* Edimax Technology Inc. */
 end_comment
 
 begin_define
@@ -1509,6 +1531,31 @@ value|"Dual NE2000"
 end_define
 
 begin_comment
+comment|/* Edimax Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_EDIMAX_EP4000A
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_EDIMAX_EP4000A
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_EDIMAX_EP4000A
+value|"Edimax EP4000A"
+end_define
+
+begin_comment
 comment|/* ELSA Products */
 end_comment
 
@@ -1598,6 +1645,31 @@ define|#
 directive|define
 name|PCMCIA_STR_EMTAC_WLAN
 value|"EMTAC A2424i 11Mbps WLAN Card"
+end_define
+
+begin_comment
+comment|/* Ericsson */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ERICSSON_WIRELESSLAN
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ERICSSON_WIRELESSLAN
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ERICSSON_WIRELESSLAN
+value|"DSSS Wireless LAN PC Card"
 end_define
 
 begin_comment
