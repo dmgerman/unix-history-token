@@ -31,6 +31,60 @@ directive|include
 file|"lib.h"
 end_include
 
+begin_comment
+comment|/* Return the filename portion of a path */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|basename_of
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|basename
+init|=
+name|str
+operator|+
+name|strlen
+argument_list|(
+name|str
+argument_list|)
+operator|-
+literal|1
+decl_stmt|;
+while|while
+condition|(
+name|basename
+operator|!=
+name|str
+operator|&&
+name|basename
+index|[
+operator|-
+literal|1
+index|]
+operator|!=
+literal|'/'
+condition|)
+operator|--
+name|basename
+expr_stmt|;
+return|return
+name|basename
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Get a string parameter as a file spec or as a "contents follow -" spec */
+end_comment
+
 begin_function
 name|char
 modifier|*
@@ -81,6 +135,10 @@ name|str
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Rather Obvious */
+end_comment
 
 begin_function
 name|char
