@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.29 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,11 +287,7 @@ modifier|*
 name|ctime
 argument_list|()
 decl_stmt|;
-name|saved_errno
-operator|=
-name|errno
-expr_stmt|;
-comment|/* discard if invalid bits or no priority set */
+comment|/* check for invalid bits or no priority set */
 if|if
 condition|(
 operator|!
@@ -311,11 +307,22 @@ name|LOG_FACMASK
 operator|)
 operator|)
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
+block|}
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 comment|/* set default facility if none specified */
 if|if
 condition|(
