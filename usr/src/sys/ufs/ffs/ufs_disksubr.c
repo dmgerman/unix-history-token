@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_disksubr.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_disksubr.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -37,10 +37,14 @@ begin_comment
 comment|/*  * Seek sort for disks.  We depend on the driver which calls us using b_resid  * as the current cylinder number.  *  * The argument dp structure holds a b_actf activity chain pointer on which we  * keep two queues, sorted in ascending cylinder order.  The first queue holds  * those requests which are positioned after the current cylinder (in the first  * request); the second holds requests which came in after their cylinder number  * was passed.  Thus we implement a one way scan, retracting after reaching the  * end of the drive to the first request on the second queue, at which time it  * becomes the first queue.  *  * A one-way scan is natural because of the way UNIX read-ahead blocks are  * allocated.  */
 end_comment
 
+begin_comment
+comment|/*  * For portability with historic industry practice, the  * cylinder number has to be maintained in the `b_resid'  * field.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|b_cylin
+name|b_cylinder
 value|b_resid
 end_define
 
@@ -69,83 +73,85 @@ specifier|register
 name|struct
 name|buf
 modifier|*
-name|ap
+name|bq
 decl_stmt|;
-comment|/* 	 * If nothing on the activity queue, then 	 * we become the only thing. 	 */
-name|ap
-operator|=
+comment|/* If the queue is empty, then it's easy. */
+if|if
+condition|(
 name|dp
 operator|->
 name|b_actf
-expr_stmt|;
-if|if
-condition|(
-name|ap
 operator|==
 name|NULL
 condition|)
 block|{
-name|dp
-operator|->
-name|b_actf
-operator|=
-name|bp
-expr_stmt|;
 name|bp
 operator|->
 name|b_actf
 operator|=
 name|NULL
 expr_stmt|;
+name|dp
+operator|->
+name|b_actf
+operator|=
+name|bp
+expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If we lie after the first (currently active) 	 * request, then we must locate the second request list 	 * and add ourselves to it. 	 */
+comment|/* 	 * If we lie after the first (currently active) request, then we 	 * must locate the second request list and add ourselves to it. 	 */
+name|bq
+operator|=
+name|dp
+operator|->
+name|b_actf
+expr_stmt|;
 if|if
 condition|(
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|<
-name|ap
+name|bq
 operator|->
-name|b_cylin
+name|b_cylinder
 condition|)
 block|{
 while|while
 condition|(
-name|ap
+name|bq
 operator|->
 name|b_actf
 condition|)
 block|{
-comment|/* 			 * Check for an ``inversion'' in the 			 * normally ascending cylinder numbers, 			 * indicating the start of the second request list. 			 */
+comment|/* 			 * Check for an ``inversion'' in the normally ascending 			 * cylinder numbers, indicating the start of the second 			 * request list. 			 */
 if|if
 condition|(
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|<
-name|ap
+name|bq
 operator|->
-name|b_cylin
+name|b_cylinder
 condition|)
 block|{
-comment|/* 				 * Search the second request list 				 * for the first request at a larger 				 * cylinder number.  We go before that; 				 * if there is no such request, we go at end. 				 */
+comment|/* 				 * Search the second request list for the first 				 * request at a larger cylinder number.  We go 				 * before that; if there is no such request, we 				 * go at end. 				 */
 do|do
 block|{
 if|if
 condition|(
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|<
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 condition|)
 goto|goto
 name|insert
@@ -154,19 +160,19 @@ if|if
 condition|(
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|==
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|&&
 name|bp
 operator|->
 name|b_blkno
 operator|<
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
@@ -175,16 +181,16 @@ condition|)
 goto|goto
 name|insert
 goto|;
-name|ap
+name|bq
 operator|=
-name|ap
+name|bq
 operator|->
 name|b_actf
 expr_stmt|;
 block|}
 do|while
 condition|(
-name|ap
+name|bq
 operator|->
 name|b_actf
 condition|)
@@ -194,9 +200,9 @@ name|insert
 goto|;
 comment|/* after last */
 block|}
-name|ap
+name|bq
 operator|=
-name|ap
+name|bq
 operator|->
 name|b_actf
 expr_stmt|;
@@ -209,50 +215,50 @@ block|}
 comment|/* 	 * Request is at/after the current request... 	 * sort in the first request list. 	 */
 while|while
 condition|(
-name|ap
+name|bq
 operator|->
 name|b_actf
 condition|)
 block|{
-comment|/* 		 * We want to go after the current request 		 * if there is an inversion after it (i.e. it is 		 * the end of the first request list), or if 		 * the next request is a larger cylinder than our request. 		 */
+comment|/* 		 * We want to go after the current request if there is an 		 * inversion after it (i.e. it is the end of the first 		 * request list), or if the next request is a larger cylinder 		 * than our request. 		 */
 if|if
 condition|(
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|<
-name|ap
+name|bq
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|||
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|<
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|||
 operator|(
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|==
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|&&
 name|bp
 operator|->
 name|b_blkno
 operator|<
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|->
@@ -262,25 +268,25 @@ condition|)
 goto|goto
 name|insert
 goto|;
-name|ap
+name|bq
 operator|=
-name|ap
+name|bq
 operator|->
 name|b_actf
 expr_stmt|;
 block|}
-comment|/* 	 * Neither a second list nor a larger 	 * request... we go at the end of the first list, 	 * which is the same as the end of the whole schebang. 	 */
+comment|/* 	 * Neither a second list nor a larger request... we go at the end of 	 * the first list, which is the same as the end of the whole schebang. 	 */
 name|insert
 label|:
 name|bp
 operator|->
 name|b_actf
 operator|=
-name|ap
+name|bq
 operator|->
 name|b_actf
 expr_stmt|;
-name|ap
+name|bq
 operator|->
 name|b_actf
 operator|=
@@ -444,7 +450,7 @@ name|B_READ
 expr_stmt|;
 name|bp
 operator|->
-name|b_cylin
+name|b_cylinder
 operator|=
 name|LABELSECTOR
 operator|/
@@ -467,12 +473,10 @@ argument_list|(
 name|bp
 argument_list|)
 condition|)
-block|{
 name|msg
 operator|=
 literal|"I/O error"
 expr_stmt|;
-block|}
 else|else
 for|for
 control|(

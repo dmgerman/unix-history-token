@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1825,7 +1825,7 @@ operator|&&
 operator|(
 name|mode
 operator|&
-name|ISVTX
+name|S_ISTXT
 operator|)
 condition|)
 return|return
@@ -1862,7 +1862,7 @@ operator|->
 name|i_mode
 operator|&=
 operator|~
-literal|07777
+name|ALLPERMS
 expr_stmt|;
 name|ip
 operator|->
@@ -1870,7 +1870,7 @@ name|i_mode
 operator||=
 name|mode
 operator|&
-literal|07777
+name|ALLPERMS
 expr_stmt|;
 name|ip
 operator|->
@@ -1893,7 +1893,7 @@ name|ip
 operator|->
 name|i_mode
 operator|&
-name|ISVTX
+name|S_ISTXT
 operator|)
 operator|==
 literal|0
@@ -2728,10 +2728,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * ufs remove  * Hard to avoid races here, especially  * in unlinking directories.  */
-end_comment
 
 begin_function
 name|int
@@ -4752,7 +4748,7 @@ name|dp
 operator|->
 name|i_mode
 operator|&
-name|ISVTX
+name|S_ISTXT
 operator|)
 operator|&&
 name|tcnp

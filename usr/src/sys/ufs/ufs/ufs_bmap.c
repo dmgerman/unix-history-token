@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -317,7 +317,7 @@ condition|(
 name|runp
 condition|)
 block|{
-comment|/* 		 * XXX If MAXBSIZE is the largest transfer the disks can 		 * handle, we probably want maxrun to be 1 block less so 		 * that we don't create a block larger than the device 		 * can handle. 		 */
+comment|/* 		 * XXX 		 * If MAXBSIZE is the largest transfer the disks can handle, 		 * we probably want maxrun to be 1 block less so that we 		 * don't create a block larger than the device can handle. 		 */
 operator|*
 name|runp
 operator|=
@@ -848,13 +848,13 @@ modifier|*
 name|ump
 decl_stmt|;
 name|int
-name|j
+name|blockcnt
+decl_stmt|,
+name|i
 decl_stmt|,
 name|numlevels
 decl_stmt|,
 name|off
-decl_stmt|,
-name|sh
 decl_stmt|;
 name|ump
 operator|=
@@ -911,30 +911,42 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*  	 * Determine the number of levels of indirection.  After this loop 	 * is done, sh indicates the number of data blocks possible at the 	 * given level of indirection, and NIADDR - j is the number of levels 	 * of indirection needed to locate the requested block. 	 */
+comment|/*  	 * Determine the number of levels of indirection.  After this loop 	 * is done, blockcnt indicates the number of data blocks possible 	 * at the given level of indirection, and NIADDR - i is the number 	 * of levels of indirection needed to locate the requested block. 	 */
+for|for
+control|(
+name|blockcnt
+operator|=
+literal|1
+operator|,
+name|i
+operator|=
+name|NIADDR
+operator|,
 name|bn
 operator|-=
 name|NDADDR
-expr_stmt|;
-name|sh
-operator|=
-literal|1
-expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-name|NIADDR
 init|;
-name|j
-operator|>
-literal|0
 condition|;
-name|j
+name|i
 operator|--
+operator|,
+name|bn
+operator|-=
+name|blockcnt
 control|)
 block|{
-name|sh
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EFBIG
+operator|)
+return|;
+name|blockcnt
 operator|*=
 name|MNINDIR
 argument_list|(
@@ -945,25 +957,10 @@ if|if
 condition|(
 name|bn
 operator|<
-name|sh
+name|blockcnt
 condition|)
 break|break;
-name|bn
-operator|-=
-name|sh
-expr_stmt|;
 block|}
-if|if
-condition|(
-name|j
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|EFBIG
-operator|)
-return|;
 comment|/* Calculate the address of the first meta-block. */
 if|if
 condition|(
@@ -981,7 +978,7 @@ name|bn
 operator|+
 name|NIADDR
 operator|-
-name|j
+name|i
 operator|)
 expr_stmt|;
 else|else
@@ -996,13 +993,10 @@ name|bn
 operator|+
 name|NIADDR
 operator|-
-name|j
+name|i
 operator|)
 expr_stmt|;
 comment|/*  	 * At each iteration, off is the offset into the bap array which is 	 * an array of disk addresses at the current level of indirection. 	 * The logical block number and the offset in that block are stored 	 * into the argument array. 	 */
-operator|++
-name|numlevels
-expr_stmt|;
 name|ap
 operator|->
 name|in_lbn
@@ -1017,7 +1011,7 @@ name|off
 operator|=
 name|NIADDR
 operator|-
-name|j
+name|i
 expr_stmt|;
 name|ap
 operator|->
@@ -1030,12 +1024,14 @@ operator|++
 expr_stmt|;
 for|for
 control|(
+operator|++
+name|numlevels
 init|;
-name|j
+name|i
 operator|<=
 name|NIADDR
 condition|;
-name|j
+name|i
 operator|++
 control|)
 block|{
@@ -1047,7 +1043,7 @@ operator|==
 name|realbn
 condition|)
 break|break;
-name|sh
+name|blockcnt
 operator|/=
 name|MNINDIR
 argument_list|(
@@ -1059,7 +1055,7 @@ operator|=
 operator|(
 name|bn
 operator|/
-name|sh
+name|blockcnt
 operator|)
 operator|%
 name|MNINDIR
@@ -1098,7 +1094,7 @@ literal|1
 operator|+
 name|off
 operator|*
-name|sh
+name|blockcnt
 expr_stmt|;
 block|}
 if|if

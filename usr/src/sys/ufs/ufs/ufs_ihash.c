@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_ihash.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -79,11 +79,11 @@ define|#
 directive|define
 name|INOHASH
 parameter_list|(
-name|dev
+name|device
 parameter_list|,
-name|ino
+name|inum
 parameter_list|)
-value|(((dev) + (ino))& ihash)
+value|(((device) + (inum))& ihash)
 end_define
 
 begin_comment
@@ -111,7 +111,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Use the dev/ino pair to find the incore inode, and return a pointer to it.  * If it is in core, return it, even if it is locked.  */
+comment|/*  * Use the device/inum pair to find the incore inode, and return a pointer  * to it. If it is in core, return it, even if it is locked.  */
 end_comment
 
 begin_function
@@ -120,15 +120,15 @@ name|vnode
 modifier|*
 name|ufs_ihashlookup
 parameter_list|(
-name|dev
+name|device
 parameter_list|,
-name|ino
+name|inum
 parameter_list|)
 name|dev_t
-name|dev
+name|device
 decl_stmt|;
 name|ino_t
-name|ino
+name|inum
 decl_stmt|;
 block|{
 specifier|register
@@ -148,14 +148,12 @@ name|ihashtbl
 index|[
 name|INOHASH
 argument_list|(
-name|dev
+name|device
 argument_list|,
-name|ino
+name|inum
 argument_list|)
 index|]
 expr_stmt|;
-name|loop
-label|:
 for|for
 control|(
 name|ip
@@ -171,22 +169,20 @@ name|ip
 operator|->
 name|i_next
 control|)
-block|{
 if|if
 condition|(
-name|ino
-operator|!=
+name|inum
+operator|==
 name|ip
 operator|->
 name|i_number
-operator|||
-name|dev
-operator|!=
+operator|&&
+name|device
+operator|==
 name|ip
 operator|->
 name|i_dev
 condition|)
-continue|continue;
 return|return
 operator|(
 name|ITOV
@@ -195,7 +191,6 @@ name|ip
 argument_list|)
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|NULL
@@ -205,7 +200,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Use the dev/ino pair to find the incore inode, and return a pointer to it.  * If it is in core, but locked, wait for it.  */
+comment|/*  * Use the device/inum pair to find the incore inode, and return a pointer  * to it. If it is in core, but locked, wait for it.  */
 end_comment
 
 begin_function
@@ -214,15 +209,15 @@ name|vnode
 modifier|*
 name|ufs_ihashget
 parameter_list|(
-name|dev
+name|device
 parameter_list|,
-name|ino
+name|inum
 parameter_list|)
 name|dev_t
-name|dev
+name|device
 decl_stmt|;
 name|ino_t
-name|ino
+name|inum
 decl_stmt|;
 block|{
 specifier|register
@@ -247,13 +242,13 @@ name|ihashtbl
 index|[
 name|INOHASH
 argument_list|(
-name|dev
+name|device
 argument_list|,
-name|ino
+name|inum
 argument_list|)
 index|]
 expr_stmt|;
-name|loop
+name|retry
 label|:
 for|for
 control|(
@@ -263,6 +258,8 @@ operator|*
 name|ipp
 init|;
 name|ip
+operator|!=
+name|NULL
 condition|;
 name|ip
 operator|=
@@ -270,33 +267,28 @@ name|ip
 operator|->
 name|i_next
 control|)
-block|{
 if|if
 condition|(
-name|ino
-operator|!=
+name|inum
+operator|==
 name|ip
 operator|->
 name|i_number
-operator|||
-name|dev
-operator|!=
+operator|&&
+name|device
+operator|==
 name|ip
 operator|->
 name|i_dev
 condition|)
-continue|continue;
+block|{
 if|if
 condition|(
-operator|(
 name|ip
 operator|->
 name|i_flag
 operator|&
 name|ILOCKED
-operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|ip
@@ -307,16 +299,13 @@ name|IWANT
 expr_stmt|;
 name|sleep
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ip
 argument_list|,
 name|PINOD
 argument_list|)
 expr_stmt|;
 goto|goto
-name|loop
+name|retry
 goto|;
 block|}
 name|vp
@@ -334,7 +323,7 @@ name|vp
 argument_list|)
 condition|)
 goto|goto
-name|loop
+name|retry
 goto|;
 return|return
 operator|(
