@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.5
+literal|4.6
 operator|%
 name|G
 operator|%
@@ -207,7 +207,7 @@ decl_stmt|;
 name|bool
 name|readconfig
 init|=
-name|FALSE
+name|TRUE
 decl_stmt|;
 name|bool
 name|safecf
@@ -696,21 +696,17 @@ name|NULL
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
+begin_if
+if|if
+condition|(
+name|readconfig
+condition|)
+block|{
 comment|/* initialize some macros, etc. */
-end_comment
-
-begin_expr_stmt
 name|initmacros
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* hostname */
-end_comment
-
-begin_expr_stmt
 name|av
 operator|=
 name|myhostname
@@ -721,9 +717,6 @@ sizeof|sizeof
 name|jbuf
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|jbuf
@@ -758,9 +751,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_while
 while|while
 condition|(
 name|av
@@ -781,13 +771,7 @@ name|av
 operator|++
 argument_list|)
 expr_stmt|;
-end_while
-
-begin_comment
 comment|/* version */
-end_comment
-
-begin_expr_stmt
 name|define
 argument_list|(
 literal|'v'
@@ -797,7 +781,8 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_if
 
 begin_comment
 comment|/* current time */
