@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_chdir[] = "@(#)chdir_.c	1.1";  *  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
+comment|/* char id_chdir[] = "@(#)chdir_.c	1.2";  *  * change default directory  *  * calling sequence:  *	integer chdir  *	ierror = chdir(dirname)  * where:  *	ierror will receive a returned status (0 == OK)  *	dirname is the directory name  */
 end_comment
 
 begin_include
@@ -31,23 +31,12 @@ index|[
 literal|128
 index|]
 decl_stmt|;
-name|g_char
-argument_list|(
-name|dname
-argument_list|,
-name|dnamlen
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
+name|dnamlen
+operator|>=
+sizeof|sizeof
 name|buf
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
 condition|)
 return|return
 operator|(
@@ -61,6 +50,15 @@ name|F_ERARG
 argument_list|)
 operator|)
 return|;
+name|g_char
+argument_list|(
+name|dname
+argument_list|,
+name|dnamlen
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|chdir
