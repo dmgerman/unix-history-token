@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: commands.c,v 1.65 2001/02/20 03:12:09 assar Exp $"
+literal|"$Id: commands.c,v 1.67 2001/08/29 00:45:20 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1722,6 +1722,19 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|telopts
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* XXX */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -1747,12 +1760,6 @@ name|char
 modifier|*
 modifier|*
 name|cpp
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|telopts
-index|[]
 decl_stmt|;
 name|int
 name|val
@@ -7360,6 +7367,11 @@ name|ep
 operator|=
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"DISPLAY"
 argument_list|)
 operator|)
@@ -7580,6 +7592,11 @@ condition|(
 operator|(
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"USER"
 argument_list|)
 operator|==
@@ -7591,6 +7608,11 @@ name|ep
 operator|=
 name|env_find
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|"LOGNAME"
 argument_list|)
 operator|)

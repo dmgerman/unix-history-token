@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos4.c,v 1.36 2001/01/30 01:44:08 assar Exp $"
+literal|"$Id: kerberos4.c,v 1.39 2001/09/20 09:34:42 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -230,7 +230,7 @@ condition|(
 name|ret
 condition|)
 return|return
-literal|0
+name|FALSE
 return|;
 name|ret
 operator|=
@@ -269,7 +269,7 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|FALSE
 return|;
 block|}
 name|kdc_log
@@ -292,7 +292,7 @@ name|ent
 argument_list|)
 expr_stmt|;
 return|return
-literal|1
+name|TRUE
 return|;
 block|}
 end_function
@@ -386,6 +386,9 @@ modifier|*
 name|principal
 parameter_list|,
 name|krb5_boolean
+name|is_server
+parameter_list|,
+name|krb5_boolean
 name|prefer_afs_key
 parameter_list|,
 name|Key
@@ -407,6 +410,11 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|afs_key
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
+name|server_key
 init|=
 name|NULL
 decl_stmt|;
@@ -456,6 +464,10 @@ operator|==
 name|NULL
 operator|||
 name|afs_key
+operator|==
+name|NULL
+operator|||
+name|server_key
 operator|==
 name|NULL
 operator|)
@@ -566,6 +578,17 @@ operator|=
 name|key
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|server_key
+operator|==
+name|NULL
+condition|)
+name|server_key
+operator|=
+name|key
+expr_stmt|;
 block|}
 block|}
 if|if
@@ -602,6 +625,18 @@ name|ret_key
 operator|=
 name|v5_key
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|is_server
+operator|&&
+name|server_key
+condition|)
+operator|*
+name|ret_key
+operator|=
+name|server_key
+expr_stmt|;
 else|else
 return|return
 name|KERB_ERR_NULL_KEY
@@ -637,6 +672,18 @@ operator|*
 name|ret_key
 operator|=
 name|v5_key
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|is_server
+operator|&&
+name|server_key
+condition|)
+operator|*
+name|ret_key
+operator|=
+name|server_key
 expr_stmt|;
 else|else
 return|return
@@ -1235,6 +1282,8 @@ name|client
 argument_list|,
 name|FALSE
 argument_list|,
+name|FALSE
+argument_list|,
 operator|&
 name|ckey
 argument_list|)
@@ -1248,24 +1297,16 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s"
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|context
-argument_list|,
-name|ret
-argument_list|)
+literal|"no suitable DES key for client"
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|make_err_reply
 argument_list|(
 name|reply
 argument_list|,
 name|KDC_NULL_KEY
 argument_list|,
-literal|"No DES key in database (client)"
+literal|"no suitable DES key for client"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1286,6 +1327,8 @@ name|get_des_key
 argument_list|(
 name|server
 argument_list|,
+name|TRUE
+argument_list|,
 name|FALSE
 argument_list|,
 operator|&
@@ -1301,14 +1344,7 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s"
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|context
-argument_list|,
-name|ret
-argument_list|)
+literal|"no suitable DES key for server"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -1318,7 +1354,7 @@ name|reply
 argument_list|,
 name|KDC_NULL_KEY
 argument_list|,
-literal|"No DES key in database (server)"
+literal|"no suitable DES key for server"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1774,6 +1810,8 @@ name|get_des_key
 argument_list|(
 name|tgt
 argument_list|,
+name|TRUE
+argument_list|,
 name|FALSE
 argument_list|,
 operator|&
@@ -1789,14 +1827,7 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s"
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|context
-argument_list|,
-name|ret
-argument_list|)
+literal|"no suitable DES key for krbtgt"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -1806,7 +1837,7 @@ name|reply
 argument_list|,
 name|KDC_NULL_KEY
 argument_list|,
-literal|"No DES key in database (krbtgt)"
+literal|"no suitable DES key for krbtgt"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2235,6 +2266,8 @@ name|get_des_key
 argument_list|(
 name|server
 argument_list|,
+name|TRUE
+argument_list|,
 name|FALSE
 argument_list|,
 operator|&
@@ -2250,14 +2283,7 @@ name|kdc_log
 argument_list|(
 literal|0
 argument_list|,
-literal|"%s"
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|context
-argument_list|,
-name|ret
-argument_list|)
+literal|"no suitable DES key for server"
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
@@ -2267,7 +2293,7 @@ name|reply
 argument_list|,
 name|KDC_NULL_KEY
 argument_list|,
-literal|"No DES key in database (server)"
+literal|"no suitable DES key for server"
 argument_list|)
 expr_stmt|;
 goto|goto

@@ -574,7 +574,7 @@ value|((options[opt]+MY_STATE_DO)& MY_WANT_STATE_DO)
 end_define
 
 begin_comment
-comment|/*  * Make everything symetrical  */
+comment|/*  * Make everything symmetrical  */
 end_comment
 
 begin_define

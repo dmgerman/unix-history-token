@@ -16,7 +16,7 @@ end_comment
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: keytab.c,v 1.3 2000/08/27 04:31:42 assar Exp $"
+literal|"$Id: keytab.c,v 1.4 2001/07/13 06:30:41 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,9 +88,18 @@ name|d
 operator|==
 name|NULL
 condition|)
+block|{
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
+block|}
 name|db
 operator|=
 name|name
@@ -156,6 +165,13 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
+argument_list|)
+expr_stmt|;
 return|return
 name|ENOMEM
 return|;
@@ -213,6 +229,13 @@ block|{
 name|free
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return
@@ -274,6 +297,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|d
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_string
+argument_list|(
+name|context
+argument_list|,
+literal|"malloc: out of memory"
 argument_list|)
 expr_stmt|;
 return|return

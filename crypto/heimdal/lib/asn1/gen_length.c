@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_length.c,v 1.10 2000/06/21 22:40:53 assar Exp $"
+literal|"$Id: gen_length.c,v 1.11 2001/09/25 13:39:26 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -188,11 +188,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|TEnumerated
+case|:
+name|length_primitive
+argument_list|(
+literal|"enumerated"
+argument_list|,
+name|name
+argument_list|,
+name|variable
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|TOctetString
 case|:
 name|length_primitive
 argument_list|(
 literal|"octet_string"
+argument_list|,
+name|name
+argument_list|,
+name|variable
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|TOID
+case|:
+name|length_primitive
+argument_list|(
+literal|"oid"
 argument_list|,
 name|name
 argument_list|,

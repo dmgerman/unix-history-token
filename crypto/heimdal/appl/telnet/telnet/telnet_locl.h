@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995 - 2000 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: telnet_locl.h,v 1.19 2000/02/04 09:49:28 assar Exp $ */
+comment|/* $Id: telnet_locl.h,v 1.21 2001/12/20 20:39:52 joda Exp $ */
 end_comment
 
 begin_ifdef
@@ -568,6 +568,33 @@ directive|ifdef
 name|HAVE_ARPA_INET_H
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AIX
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|sockaddr_dl
+struct_decl|;
+end_struct_decl
+
+begin_comment
+comment|/* AIX fun */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ether_addr
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -612,6 +639,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#

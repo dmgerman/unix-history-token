@@ -12,38 +12,34 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: init.c,v 1.5 2000/12/31 07:58:37 assar Exp $"
+literal|"$Id: init.c,v 1.6 2001/08/13 13:14:07 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|void
+name|krb5_error_code
 name|gssapi_krb5_init
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|krb5_error_code
-name|ret
-decl_stmt|;
 if|if
 condition|(
 name|gssapi_krb5_context
 operator|==
 name|NULL
 condition|)
-block|{
-name|ret
-operator|=
+return|return
 name|krb5_init_context
 argument_list|(
 operator|&
 name|gssapi_krb5_context
 argument_list|)
-expr_stmt|;
-comment|/* and what do we do when that failed? */
-block|}
+return|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 

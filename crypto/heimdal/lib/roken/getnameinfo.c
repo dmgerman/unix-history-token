@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: getnameinfo.c,v 1.3 2001/02/09 14:45:30 assar Exp $"
+literal|"$Id: getnameinfo.c,v 1.4 2001/07/09 15:14:19 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -131,9 +131,10 @@ name|strlcpy
 argument_list|(
 name|host
 argument_list|,
+name|hostent_find_fqdn
+argument_list|(
 name|he
-operator|->
-name|h_name
+argument_list|)
 argument_list|,
 name|hostlen
 argument_list|)

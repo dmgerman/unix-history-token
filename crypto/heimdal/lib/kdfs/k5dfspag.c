@@ -23,7 +23,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: k5dfspag.c,v 1.4 2001/02/07 06:14:46 assar Exp $"
+literal|"$Id: k5dfspag.c,v 1.5 2002/01/23 01:49:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -928,7 +928,7 @@ name|newsig
 operator|.
 name|sa_handler
 operator|=
-name|SIG_IGN
+name|SIG_DFL
 expr_stmt|;
 name|sigaction
 argument_list|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: store_fd.c,v 1.8 2001/01/29 02:32:35 assar Exp $"
+literal|"$Id: store_fd.c,v 1.9 2001/06/24 05:39:51 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -160,6 +160,15 @@ name|krb5_storage
 argument_list|)
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|sp
 operator|->
 name|data
@@ -172,6 +181,24 @@ name|fd_storage
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|data
+operator|==
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 name|sp
 operator|->
 name|flags

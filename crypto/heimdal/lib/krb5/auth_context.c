@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: auth_context.c,v 1.56 2001/05/14 06:14:44 assar Exp $"
+literal|"$Id: auth_context.c,v 1.57 2001/06/17 23:12:34 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1260,7 +1260,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setcksumtype
+name|krb5_auth_con_setcksumtype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1286,7 +1286,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getcksumtype
+name|krb5_auth_con_getcksumtype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1314,7 +1314,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setkeytype
+name|krb5_auth_con_setkeytype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1340,7 +1340,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getkeytype
+name|krb5_auth_con_getkeytype
 parameter_list|(
 name|krb5_context
 name|context
@@ -1373,14 +1373,14 @@ literal|0
 end_if
 
 begin_endif
-unit|krb5_error_code krb5_auth_setenctype(krb5_context context, 		     krb5_auth_context auth_context, 		     krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code krb5_auth_getenctype(krb5_context context, 		     krb5_auth_context auth_context, 		     krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
+unit|krb5_error_code krb5_auth_con_setenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype etype) {     if(auth_context->keyblock) 	krb5_free_keyblock(context, auth_context->keyblock);     ALLOC(auth_context->keyblock, 1);     if(auth_context->keyblock == NULL) 	return ENOMEM;     auth_context->keyblock->keytype = etype;     return 0; }  krb5_error_code krb5_auth_con_getenctype(krb5_context context, 			 krb5_auth_context auth_context, 			 krb5_enctype *etype) {     krb5_abortx(context, "unimplemented krb5_auth_getenctype called"); }
 endif|#
 directive|endif
 end_endif
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getlocalseqnumber
+name|krb5_auth_con_getlocalseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1408,7 +1408,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setlocalseqnumber
+name|krb5_auth_con_setlocalseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1462,7 +1462,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_setremoteseqnumber
+name|krb5_auth_con_setremoteseqnumber
 parameter_list|(
 name|krb5_context
 name|context
@@ -1488,7 +1488,7 @@ end_function
 
 begin_function
 name|krb5_error_code
-name|krb5_auth_getauthenticator
+name|krb5_auth_con_getauthenticator
 parameter_list|(
 name|krb5_context
 name|context

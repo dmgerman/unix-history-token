@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: write_message.c,v 1.7 2001/05/14 06:14:52 assar Exp $"
+literal|"$Id: write_message.c,v 1.8 2001/07/02 18:43:06 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -196,9 +196,6 @@ name|context
 parameter_list|,
 name|krb5_auth_context
 name|ac
-parameter_list|,
-name|krb5_boolean
-name|priv
 parameter_list|,
 name|krb5_pointer
 name|p_fd

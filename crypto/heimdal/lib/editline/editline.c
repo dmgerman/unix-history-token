@@ -34,7 +34,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: editline.c,v 1.9 1999/12/23 21:27:00 assar Exp $"
+literal|"$Id: editline.c,v 1.10 2001/09/13 01:19:54 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -164,7 +164,7 @@ end_comment
 begin_typedef
 typedef|typedef
 enum|enum
-name|_STATUS
+name|_el_STATUS
 block|{
 name|CSdone
 block|,
@@ -176,7 +176,7 @@ name|CSdispatch
 block|,
 name|CSstay
 block|}
-name|STATUS
+name|el_STATUS
 typedef|;
 end_typedef
 
@@ -210,7 +210,7 @@ name|unsigned
 name|char
 name|Key
 decl_stmt|;
-name|STATUS
+name|el_STATUS
 function_decl|(
 modifier|*
 name|Function
@@ -1424,7 +1424,7 @@ specifier|static
 name|void
 name|left
 parameter_list|(
-name|STATUS
+name|el_STATUS
 name|Change
 parameter_list|)
 block|{
@@ -1492,7 +1492,7 @@ specifier|static
 name|void
 name|right
 parameter_list|(
-name|STATUS
+name|el_STATUS
 name|Change
 parameter_list|)
 block|{
@@ -1518,7 +1518,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|ring_bell
 parameter_list|()
 block|{
@@ -1538,7 +1538,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|do_macro
 parameter_list|(
 name|unsigned
@@ -1621,10 +1621,10 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|do_forward
 parameter_list|(
-name|STATUS
+name|el_STATUS
 name|move
 parameter_list|)
 block|{
@@ -1742,7 +1742,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|do_case
 parameter_list|(
 name|CASE
@@ -1895,7 +1895,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|case_down_word
 parameter_list|()
 block|{
@@ -1910,7 +1910,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|case_up_word
 parameter_list|()
 block|{
@@ -2081,7 +2081,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|insert_string
 parameter_list|(
 name|unsigned
@@ -2337,7 +2337,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|do_insert_hist
 parameter_list|(
 name|unsigned
@@ -2381,7 +2381,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|STATUS
+name|el_STATUS
 name|do_hist
 argument_list|(
 name|unsigned
@@ -2446,7 +2446,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|h_next
 parameter_list|()
 block|{
@@ -2461,7 +2461,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|h_prev
 parameter_list|()
 block|{
@@ -2476,7 +2476,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|h_first
 parameter_list|()
 block|{
@@ -2500,7 +2500,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|h_last
 parameter_list|()
 block|{
@@ -2821,7 +2821,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|h_search
 parameter_list|()
 block|{
@@ -2923,7 +2923,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|fd_char
 parameter_list|()
 block|{
@@ -3049,7 +3049,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|delete_string
 parameter_list|(
 name|int
@@ -3270,7 +3270,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|bk_char
 parameter_list|()
 block|{
@@ -3312,7 +3312,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|bk_del_char
 parameter_list|()
 block|{
@@ -3357,7 +3357,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|redisplay
 parameter_list|()
 block|{
@@ -3384,7 +3384,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|kill_line
 parameter_list|()
 block|{
@@ -3482,14 +3482,14 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|insert_char
 parameter_list|(
 name|int
 name|c
 parameter_list|)
 block|{
-name|STATUS
+name|el_STATUS
 name|s
 decl_stmt|;
 name|unsigned
@@ -3613,7 +3613,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|meta
 parameter_list|()
 block|{
@@ -3807,7 +3807,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|emacs
 parameter_list|(
 name|unsigned
@@ -3815,7 +3815,7 @@ name|int
 name|c
 parameter_list|)
 block|{
-name|STATUS
+name|el_STATUS
 name|s
 decl_stmt|;
 name|KEYMAP
@@ -3908,7 +3908,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|TTYspecial
 parameter_list|(
 name|unsigned
@@ -4523,7 +4523,7 @@ end_escape
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|beg_line
 parameter_list|()
 block|{
@@ -4548,7 +4548,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|del_char
 parameter_list|()
 block|{
@@ -4569,7 +4569,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|end_line
 parameter_list|()
 block|{
@@ -4714,7 +4714,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|c_complete
 parameter_list|()
 block|{
@@ -4731,7 +4731,7 @@ decl_stmt|;
 name|int
 name|unique
 decl_stmt|;
-name|STATUS
+name|el_STATUS
 name|s
 decl_stmt|;
 name|word
@@ -4808,7 +4808,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|c_possible
 parameter_list|()
 block|{
@@ -4905,7 +4905,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|accept_line
 parameter_list|()
 block|{
@@ -4924,7 +4924,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|transpose
 parameter_list|()
 block|{
@@ -5006,7 +5006,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|quote
 parameter_list|()
 block|{
@@ -5039,7 +5039,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|wipe
 parameter_list|()
 block|{
@@ -5092,7 +5092,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|mk_set
 parameter_list|()
 block|{
@@ -5108,7 +5108,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|exchange
 parameter_list|()
 block|{
@@ -5171,7 +5171,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|yank
 parameter_list|()
 block|{
@@ -5196,7 +5196,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|copy_region
 parameter_list|()
 block|{
@@ -5243,7 +5243,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|move_to_char
 parameter_list|()
 block|{
@@ -5323,7 +5323,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|fd_word
 parameter_list|()
 block|{
@@ -5338,7 +5338,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|fd_kill_word
 parameter_list|()
 block|{
@@ -5382,7 +5382,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|bk_word
 parameter_list|()
 block|{
@@ -5488,7 +5488,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|bk_kill_word
 parameter_list|()
 block|{
@@ -5780,7 +5780,7 @@ end_function
 
 begin_function
 specifier|static
-name|STATUS
+name|el_STATUS
 name|last_argument
 parameter_list|()
 block|{
@@ -5795,7 +5795,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|STATUS
+name|el_STATUS
 name|s
 decl_stmt|;
 name|int

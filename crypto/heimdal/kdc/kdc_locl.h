@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kdc_locl.h,v 1.48 2001/01/30 01:44:07 assar Exp $   */
+comment|/*   * $Id: kdc_locl.h,v 1.52 2001/08/22 20:30:25 assar Exp $   */
 end_comment
 
 begin_ifndef
@@ -181,17 +181,6 @@ name|int
 name|enable_524
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KASERVER
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -590,6 +579,8 @@ modifier|*
 parameter_list|,
 name|krb5_boolean
 parameter_list|,
+name|krb5_boolean
+parameter_list|,
 name|Key
 modifier|*
 modifier|*
@@ -618,7 +609,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KASERVER
+name|KRB4
 end_ifdef
 
 begin_function_decl
@@ -644,6 +635,24 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|des_new_random_key
+value|des_random_key
+end_define
 
 begin_endif
 endif|#

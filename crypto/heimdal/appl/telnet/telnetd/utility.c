@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utility.c,v 1.25 2001/05/17 00:34:42 assar Exp $"
+literal|"$Id: utility.c,v 1.27 2001/09/03 05:54:17 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -38,12 +38,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|void
-name|netflush
-argument_list|(
-name|void
-argument_list|)
-decl_stmt|;
 name|DIAG
 argument_list|(
 argument|TD_REPORT
@@ -716,6 +710,13 @@ begin_comment
 comment|/* end of netclear */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|not42
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  *  netflush  *		Send as much data as possible to the network,  *	handling requests for urgent data.  */
 end_comment
@@ -729,10 +730,6 @@ parameter_list|)
 block|{
 name|int
 name|n
-decl_stmt|;
-specifier|extern
-name|int
-name|not42
 decl_stmt|;
 if|if
 condition|(
@@ -4475,6 +4472,10 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|ptr
 argument_list|)

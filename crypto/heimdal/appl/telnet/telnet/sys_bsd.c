@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_bsd.c,v 1.27 2001/03/06 20:10:14 assar Exp $"
+literal|"$Id: sys_bsd.c,v 1.29 2001/12/20 20:39:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1884,12 +1884,6 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|SIGINFO
-name|RETSIGTYPE
-name|ayt_status
-argument_list|(
-name|int
-argument_list|)
-decl_stmt|;
 name|signal
 argument_list|(
 name|SIGINFO
@@ -2685,6 +2679,22 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|int
+name|intr_happened
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|intr_waiting
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -2698,6 +2708,17 @@ name|int
 name|sig
 parameter_list|)
 block|{
+if|if
+condition|(
+name|intr_waiting
+condition|)
+block|{
+name|intr_happened
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|localchars

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: set_default_realm.c,v 1.12 2001/05/14 06:14:51 assar Exp $"
+literal|"$Id: set_default_realm.c,v 1.13 2001/09/18 09:43:31 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -144,6 +144,7 @@ parameter_list|(
 name|krb5_context
 name|context
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|realm

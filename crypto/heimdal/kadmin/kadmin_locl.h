@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-2001 Kungliga Tekniska Högskolan  * (Royal Ins
 end_comment
 
 begin_comment
-comment|/*   * $Id: kadmin_locl.h,v 1.36 2001/05/07 05:32:04 assar Exp $  */
+comment|/*   * $Id: kadmin_locl.h,v 1.40 2001/08/22 20:30:24 assar Exp $  */
 end_comment
 
 begin_ifndef
@@ -228,6 +228,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_LIBUTIL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_NETDB_H
 end_ifdef
 
@@ -274,7 +291,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_OPENSSL_DES_H
+name|HAVE_OPENSSL
 end_ifdef
 
 begin_include
@@ -787,6 +804,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|set_defaults
+parameter_list|(
+name|kadm5_principal_ent_t
+name|ent
+parameter_list|,
+name|int
+modifier|*
+name|mask
+parameter_list|,
+name|kadm5_principal_ent_t
+name|default_ent
+parameter_list|,
+name|int
+name|default_mask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|set_entry
 parameter_list|(
@@ -857,30 +894,6 @@ parameter_list|,
 name|void
 modifier|*
 name|data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|get_response
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|prompt
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|def
-parameter_list|,
-name|char
-modifier|*
-name|buf
-parameter_list|,
-name|size_t
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -30,7 +30,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: utilities.c,v 1.24 2000/10/08 22:30:15 assar Exp $"
+literal|"$Id: utilities.c,v 1.25 2001/08/29 00:45:21 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -712,14 +712,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|extern
-name|char
-name|will_wont_resp
-index|[]
-decl_stmt|,
-name|do_dont_resp
-index|[]
-decl_stmt|;
 for|for
 control|(
 name|i
@@ -1203,10 +1195,6 @@ name|buf
 index|[
 literal|512
 index|]
-decl_stmt|;
-specifier|extern
-name|int
-name|want_status_response
 decl_stmt|;
 if|if
 condition|(

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: expand_hostname.c,v 1.10 2001/05/14 06:14:46 assar Exp $"
+literal|"$Id: expand_hostname.c,v 1.11 2001/09/18 09:35:47 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -524,6 +524,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
 return|return
 name|vanilla_hostname
 argument_list|(

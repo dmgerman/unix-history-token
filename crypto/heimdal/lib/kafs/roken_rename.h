@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2001 Kungliga Tekniska Högskolan  * (Royal Institut
 end_comment
 
 begin_comment
-comment|/* $Id: roken_rename.h,v 1.1 2001/02/12 22:01:27 assar Exp $ */
+comment|/* $Id: roken_rename.h,v 1.5 2001/11/01 22:33:40 assar Exp $ */
 end_comment
 
 begin_ifndef
@@ -56,6 +56,34 @@ define|#
 directive|define
 name|dns_type_to_string
 value|_kafs_dns_type_to_string
+end_define
+
+begin_define
+define|#
+directive|define
+name|dns_srv_order
+value|_kafs_dns_srv_order
+end_define
+
+begin_define
+define|#
+directive|define
+name|strtok_r
+value|_kafs_strtok_r
+end_define
+
+begin_define
+define|#
+directive|define
+name|strlcpy
+value|_kafs_strlcpy
+end_define
+
+begin_define
+define|#
+directive|define
+name|strsep
+value|_kafs_strsep
 end_define
 
 begin_endif

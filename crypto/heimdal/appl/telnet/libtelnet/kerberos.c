@@ -27,7 +27,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kerberos.c,v 1.51 2001/02/15 04:20:52 assar Exp $"
+literal|"$Id: kerberos.c,v 1.54 2001/08/22 20:30:22 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -889,6 +889,11 @@ condition|(
 operator|!
 name|auth_sendname
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|UserNameRequested
 argument_list|,
 name|strlen
@@ -1010,6 +1015,9 @@ name|cred_session
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_OPENSSL
 name|des_init_random_number_generator
 argument_list|(
 operator|&
@@ -1018,6 +1026,8 @@ operator|.
 name|session
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|des_new_random_key
 argument_list|(
 operator|&
@@ -2887,6 +2897,10 @@ goto|;
 default|default:
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen
@@ -2924,6 +2938,10 @@ control|)
 block|{
 name|snprintf
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|buflen
@@ -3294,11 +3312,14 @@ modifier|*
 name|cred
 parameter_list|)
 block|{
-name|unsigned
 name|char
 modifier|*
 name|p
 init|=
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 decl_stmt|;
 name|u_int32_t

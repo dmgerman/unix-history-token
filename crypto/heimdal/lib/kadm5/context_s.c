@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: context_s.c,v 1.15 2000/05/12 15:22:33 assar Exp $"
+literal|"$Id: context_s.c,v 1.16 2001/08/13 14:42:13 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -541,7 +541,6 @@ operator|.
 name|acl_file
 argument_list|)
 expr_stmt|;
-comment|/* XXX calling a file a `stash file' isn't very clever */
 if|if
 condition|(
 name|ctx

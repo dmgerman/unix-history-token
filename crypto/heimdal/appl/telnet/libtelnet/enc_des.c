@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: enc_des.c,v 1.18 2001/02/24 05:47:39 assar Exp $"
+literal|"$Id: enc_des.c,v 1.20 2001/08/29 00:45:19 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -109,7 +109,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_OPENSSL_DES_H
+name|HAVE_OPENSSL
 end_ifdef
 
 begin_include
@@ -534,6 +534,28 @@ modifier|*
 parameter_list|,
 name|struct
 name|fb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fb64_printsub
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1988,7 +2010,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_DES_H
+name|HAVE_OPENSSL
 argument_list|)
 name|des_init_random_number_generator
 argument_list|(

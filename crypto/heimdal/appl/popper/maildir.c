@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: maildir.c,v 1.5 1999/12/02 16:58:33 joda Exp $"
+literal|"$Id: maildir.c,v 1.6 2001/09/10 11:56:53 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -100,7 +100,7 @@ block|{
 name|char
 name|path
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|FILE
@@ -297,7 +297,7 @@ block|{
 name|char
 name|tmp
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|DIR
@@ -688,12 +688,12 @@ decl_stmt|;
 name|char
 name|tmp1
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|,
 name|tmp2
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 for|for
@@ -1065,7 +1065,7 @@ block|{
 name|char
 name|tmp
 index|[
-name|MAXDROPLEN
+name|MAXPATHLEN
 index|]
 decl_stmt|;
 name|make_path

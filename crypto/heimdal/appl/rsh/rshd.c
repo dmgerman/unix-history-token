@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rshd.c,v 1.41 2001/02/20 01:44:48 assar Exp $"
+literal|"$Id: rshd.c,v 1.44 2001/11/30 14:38:48 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -148,6 +148,8 @@ begin_decl_stmt
 specifier|static
 name|int
 name|do_rhosts
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -182,6 +184,24 @@ begin_decl_stmt
 specifier|static
 name|int
 name|do_newpag
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|do_addr_verify
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|do_keepalive
 init|=
 literal|1
 decl_stmt|;
@@ -327,12 +347,14 @@ name|void
 name|fatal
 parameter_list|(
 name|int
-name|sock
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|m
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -342,9 +364,9 @@ function_decl|(format
 parameter_list|(
 name|printf
 parameter_list|,
-function_decl|2
-operator|,
 function_decl|3
+operator|,
+function_decl|4
 end_function_decl
 
 begin_empty_stmt
@@ -359,6 +381,11 @@ name|fatal
 parameter_list|(
 name|int
 name|sock
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|what
 parameter_list|,
 specifier|const
 name|char
@@ -412,11 +439,45 @@ argument_list|,
 name|args
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|min
+argument_list|(
+name|len
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|va_end
 argument_list|(
 name|args
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|what
+operator|!=
+name|NULL
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m: %s"
+argument_list|,
+name|what
+argument_list|,
+name|buf
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -510,6 +571,8 @@ block|}
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+name|NULL
 argument_list|,
 literal|"%s too long"
 argument_list|,
@@ -609,6 +672,8 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
+name|NULL
+argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
@@ -636,6 +701,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+name|NULL
 argument_list|,
 literal|"Login incorrect."
 argument_list|)
@@ -902,7 +969,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Permission denied"
+name|NULL
+argument_list|,
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 name|read_str
@@ -1786,7 +1855,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Permission denied"
+name|NULL
+argument_list|,
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 if|if
@@ -1834,7 +1905,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Encryption required"
+name|NULL
+argument_list|,
+literal|"Encryption is required."
 argument_list|)
 expr_stmt|;
 name|do_encrypt
@@ -2391,7 +2464,9 @@ name|fatal
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
-literal|"socketpair: %m"
+literal|"socketpair"
+argument_list|,
+literal|"Pipe creation failed."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2458,7 +2533,9 @@ name|fatal
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
-literal|"fork: %m"
+literal|"fork"
+argument_list|,
+literal|"Could not create child process."
 argument_list|)
 expr_stmt|;
 if|if
@@ -2592,7 +2669,9 @@ name|fatal
 argument_list|(
 name|STDOUT_FILENO
 argument_list|,
-literal|"write failed"
+literal|"net_write"
+argument_list|,
+literal|"Write failure."
 argument_list|)
 expr_stmt|;
 name|loop
@@ -3115,7 +3194,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Permission denied"
+name|NULL
+argument_list|,
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 name|p
@@ -3206,7 +3287,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Permission denied"
+name|NULL
+argument_list|,
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 if|if
@@ -3526,6 +3609,8 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
+name|NULL
+argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
@@ -3565,6 +3650,8 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
+name|NULL
+argument_list|,
 literal|"Login disabled."
 argument_list|)
 expr_stmt|;
@@ -3597,6 +3684,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+name|NULL
 argument_list|,
 literal|"getnameinfo: %s"
 argument_list|,
@@ -3633,7 +3722,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Permission denied"
+name|NULL
+argument_list|,
+literal|"Permission denied."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3697,6 +3788,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+name|NULL
 argument_list|,
 literal|"Account has expired."
 argument_list|)
@@ -3907,6 +4000,8 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
+literal|"initgroups"
+argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
@@ -3924,6 +4019,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+literal|"setgid"
 argument_list|,
 literal|"Login incorrect."
 argument_list|)
@@ -3943,6 +4040,8 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
+literal|"setuid"
+argument_list|,
 literal|"Login incorrect."
 argument_list|)
 expr_stmt|;
@@ -3960,6 +4059,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+literal|"chdir"
 argument_list|,
 literal|"Remote directory."
 argument_list|)
@@ -3986,7 +4087,9 @@ name|fatal
 argument_list|(
 name|s
 argument_list|,
-literal|"Dup2 failed."
+literal|"dup2"
+argument_list|,
+literal|"Cannot dup stderr."
 argument_list|)
 expr_stmt|;
 name|close
@@ -4030,6 +4133,8 @@ condition|)
 name|fatal
 argument_list|(
 name|s
+argument_list|,
+literal|"net_write"
 argument_list|,
 literal|"write failed"
 argument_list|)
@@ -4214,6 +4319,28 @@ index|[]
 init|=
 block|{
 block|{
+name|NULL
+block|,
+literal|'a'
+block|,
+name|arg_flag
+block|,
+operator|&
+name|do_addr_verify
+block|}
+block|,
+block|{
+literal|"keepalive"
+block|,
+literal|'n'
+block|,
+name|arg_negative_flag
+block|,
+operator|&
+name|do_keepalive
+block|}
+block|,
+block|{
 literal|"inetd"
 block|,
 literal|'i'
@@ -4257,12 +4384,12 @@ literal|"rhosts"
 block|,
 literal|'l'
 block|,
-name|arg_flag
+name|arg_negative_flag
 block|,
 operator|&
 name|do_rhosts
 block|,
-literal|"Check users .rhosts"
+literal|"Don't check users .rhosts"
 block|}
 block|,
 block|{

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: connect.c,v 1.82 2001/05/14 06:18:11 assar Exp $"
+literal|"$Id: connect.c,v 1.84 2001/08/21 10:10:25 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -509,11 +509,6 @@ literal|"tcp"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KASERVER
 if|if
 condition|(
 name|enable_kaserver
@@ -1823,11 +1818,6 @@ return|return
 name|ret
 return|;
 block|}
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KASERVER
 elseif|else
 if|if
 condition|(
@@ -2024,8 +2014,12 @@ name|kdc_log
 argument_list|(
 literal|5
 argument_list|,
-literal|"sending %d bytes to %s"
+literal|"sending %lu bytes to %s"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|reply
 operator|.
 name|length

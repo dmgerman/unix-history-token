@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: hstrerror.c,v 1.23 1999/12/05 13:18:55 assar Exp $"
+literal|"$Id: hstrerror.c,v 1.24 2001/08/08 03:47:23 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -91,30 +91,6 @@ undef|#
 directive|undef
 name|hstrerror
 end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_H_ERRNO
-end_ifndef
-
-begin_decl_stmt
-name|int
-name|h_errno
-init|=
-operator|-
-literal|17
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Some magic number */
-end_comment
 
 begin_endif
 endif|#

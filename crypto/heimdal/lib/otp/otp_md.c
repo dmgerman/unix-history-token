@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: otp_md.c,v 1.14 2001/01/29 05:55:18 assar Exp $"
+literal|"$Id: otp_md.c,v 1.15 2001/08/22 20:30:32 assar Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -43,13 +43,25 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|HAVE_OPENSSL_MD4_H
+name|HAVE_OPENSSL
 end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<openssl/md4.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/md5.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<openssl/sha.h>
 end_include
 
 begin_else
@@ -63,55 +75,11 @@ directive|include
 file|<md4.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL_MD5_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/md5.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
 file|<md5.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_OPENSSL_SHA_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<openssl/sha.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_include
 include|#
