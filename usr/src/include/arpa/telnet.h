@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)telnet.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -764,12 +764,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TELOPT_ENVIRON
+name|TELOPT_OLD_ENVIRON
 value|36
 end_define
 
 begin_comment
-comment|/* Environment variables */
+comment|/* Old - Environment variables */
 end_comment
 
 begin_define
@@ -797,6 +797,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_NEW_ENVIRON
+value|39
+end_define
+
+begin_comment
+comment|/* New - Environment variables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
@@ -809,7 +820,7 @@ begin_define
 define|#
 directive|define
 name|NTELOPTS
-value|(1+TELOPT_ENCRYPT)
+value|(1+TELOPT_NEW_ENVIRON)
 end_define
 
 begin_ifdef
@@ -901,11 +912,13 @@ literal|"LINEMODE"
 block|,
 literal|"XDISPLOC"
 block|,
-literal|"ENVIRON"
+literal|"OLD-ENVIRON"
 block|,
 literal|"AUTHENTICATION"
 block|,
 literal|"ENCRYPT"
+block|,
+literal|"NEW-ENVIRON"
 block|,
 literal|0
 block|, }
@@ -923,7 +936,7 @@ begin_define
 define|#
 directive|define
 name|TELOPT_LAST
-value|TELOPT_ENCRYPT
+value|TELOPT_NEW_ENVIRON
 end_define
 
 begin_define
@@ -1448,14 +1461,28 @@ end_define
 begin_define
 define|#
 directive|define
-name|ENV_VALUE
+name|OLD_ENV_VAR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLD_ENV_VALUE
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|ENV_VAR
+name|NEW_ENV_VAR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEW_ENV_VALUE
 value|1
 end_define
 
