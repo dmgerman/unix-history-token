@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: crypt.c,v 1.3 1995/05/30 05:42:22 rgrimes Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: crypt.c,v 1.4 1996/07/12 18:56:01 jkh Exp $  *  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /home/ncvs/src/lib/libcrypt/crypt.c,v 1.3 1995/05/30 05:42:22 rgrimes Exp $"
+literal|"$Header: /home/ncvs/src/lib/libcrypt/crypt.c,v 1.4 1996/07/12 18:56:01 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ directive|include
 file|<md5.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -70,6 +76,25 @@ index|[]
 init|=
 comment|/* 0 ... 63 => ascii - 64 */
 literal|"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|to64
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +121,22 @@ name|int
 name|n
 decl_stmt|;
 block|{
+specifier|static
+name|void
+name|to64
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|unsigned
+name|long
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
 while|while
 condition|(
 operator|--
@@ -406,10 +447,6 @@ expr_stmt|;
 comment|/* Then something really weird... */
 for|for
 control|(
-name|j
-operator|=
-literal|0
-operator|,
 name|i
 operator|=
 name|strlen
@@ -435,8 +472,6 @@ operator|&
 name|ctx
 argument_list|,
 name|final
-operator|+
-name|j
 argument_list|,
 literal|1
 argument_list|)
@@ -448,8 +483,6 @@ operator|&
 name|ctx
 argument_list|,
 name|pw
-operator|+
-name|j
 argument_list|,
 literal|1
 argument_list|)
