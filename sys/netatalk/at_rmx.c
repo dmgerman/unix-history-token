@@ -223,10 +223,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_addroute: head=%x treenodes=%x\n"
+literal|"at_addroute: head=%p treenodes=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|head
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|treenodes
 argument_list|)
 expr_stmt|;
@@ -245,8 +253,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_addroute: returns rn=%x\n"
+literal|"at_addroute: returns rn=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;
@@ -290,8 +302,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_matroute: head=%x\n"
+literal|"at_matroute: head=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|head
 argument_list|)
 expr_stmt|;
@@ -306,8 +322,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_matroute: returns rn=%x\n"
+literal|"at_matroute: returnr rn=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;
@@ -365,8 +385,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_lookup: head=%x\n"
+literal|"at_lookup: head=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|head
 argument_list|)
 expr_stmt|;
@@ -383,8 +407,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_lookup: returns rn=%x\n"
+literal|"at_lookup: returns rn=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;
@@ -442,8 +470,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_delroute: head=%x\n"
+literal|"at_delroute: head=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|head
 argument_list|)
 expr_stmt|;
@@ -460,8 +492,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"at_delroute: returns rn=%x\n"
+literal|"at_delroute: returns rn=%p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;

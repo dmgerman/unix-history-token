@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.46 1998/04/17 22:36:58 des Exp $  */
+comment|/*  * IP multicast forwarding procedures  *  * Written by David Waitzman, BBN Labs, August 1988.  * Modified by Steve Deering, Stanford, February 1989.  * Modified by Mark J. Steiglitz, Stanford, May, 1991  * Modified by Van Jacobson, LBL, January 1993  * Modified by Ajit Thyagarajan, PARC, August 1993  * Modified by Bill Fenner, PARC, April 1995  *  * MROUTING Revision: 3.5  * $Id: ip_mroute.c,v 1.47 1998/06/30 10:56:31 phk Exp $  */
 end_comment
 
 begin_include
@@ -3671,12 +3671,15 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_vif #%d, lcladdr %x, %s %x, thresh %x, rate %d\n"
+literal|"add_vif #%d, lcladdr %lx, %s %lx, thresh %x, rate %d\n"
 argument_list|,
 name|vifcp
 operator|->
 name|vifc_vifi
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|vifcp
@@ -3698,6 +3701,9 @@ literal|"rmtaddr"
 else|:
 literal|"mask"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|vifcp
@@ -4092,8 +4098,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc update o %x g %x p %x\n"
+literal|"add_mfc update o %lx g %lx p %x\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4103,6 +4112,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4270,10 +4282,13 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"add_mfc %s o %x g %x p %x dbx %x\n"
+literal|"add_mfc %s o %lx g %lx p %x dbx %p\n"
 argument_list|,
 literal|"multiple kernel entries"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4283,6 +4298,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4296,6 +4314,10 @@ name|mfccp
 operator|->
 name|mfcc_parent
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mb_rt
 operator|->
 name|m_act
@@ -4311,8 +4333,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc o %x g %x p %x dbg %x\n"
+literal|"add_mfc o %lx g %lx p %x dbg %p\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4322,6 +4347,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4335,6 +4363,10 @@ name|mfccp
 operator|->
 name|mfcc_parent
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|mb_rt
 operator|->
 name|m_act
@@ -4537,10 +4569,13 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"add_mfc no upcall h %d o %x g %x p %x\n"
+literal|"add_mfc no upcall h %lu o %lx g %lx p %x\n"
 argument_list|,
 name|hash
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -4550,6 +4585,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfccp
@@ -5079,8 +5117,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"del_mfc orig %x mcastgrp %x\n"
+literal|"del_mfc orig %lx mcastgrp %lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|origin
@@ -5088,6 +5129,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mcastgrp
@@ -5408,8 +5452,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: src %x, dst %x, ifp %x\n"
+literal|"ip_mforward: src %lx, dst %lx, ifp %p\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5419,6 +5466,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5428,6 +5478,10 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ifp
 argument_list|)
 expr_stmt|;
@@ -5485,8 +5539,11 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ip_mforward: received source-routed packet from %x\n"
+literal|"ip_mforward: received source-routed packet from %lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5819,8 +5876,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no rte s %x g %x\n"
+literal|"ip_mforward: no rte s %lx g %lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -5830,6 +5890,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -6594,8 +6657,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"expire_upcalls: expiring (%x %x)\n"
+literal|"expire_upcalls: expiring (%lx %lx)\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfc
@@ -6605,6 +6671,9 @@ operator|.
 name|s_addr
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|mfc
@@ -6861,12 +6930,20 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"wrong if: ifp %x vifi %d vififp %x\n"
+literal|"wrong if: ifp %p vifi %d vififp %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ifp
 argument_list|,
 name|vifi
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|viftable
 index|[
 name|vifi
@@ -8065,8 +8142,11 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"ip_mforward: no tunnel with %x\n"
+literal|"ip_mforward: no tunnel with %lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip

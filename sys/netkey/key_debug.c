@@ -1352,19 +1352,27 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"Single mbuf at %08x\n"
+literal|"Single mbuf at %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m_len = %d, m_data = 0x%x, m_type = %d\n"
+literal|"m_len = %d, m_data = %p, m_type = %d\n"
 argument_list|,
 name|m
 operator|->
 name|m_len
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
 name|m_data
@@ -1393,7 +1401,7 @@ name|M_PKTHDR
 condition|)
 name|printf
 argument_list|(
-literal|"m_pkthdr.len = %d, m_pkthdr.rcvif = 0x%x"
+literal|"m_pkthdr.len = %d, m_pkthdr.rcvif = %p"
 argument_list|,
 name|m
 operator|->
@@ -1401,6 +1409,10 @@ name|m_pkthdr
 operator|.
 name|len
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
 name|m_pkthdr
@@ -1423,12 +1435,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\nm_next = 0x%x  m_nextpkt = 0x%x\n"
+literal|"\nm_next = %p  m_nextpkt = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
 name|m_next
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
 name|m_nextpkt
@@ -1846,7 +1866,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"MTU: %d.\n"
+literal|"MTU: %lu.\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1887,8 +1907,12 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"ro_rt = 0x%x, ro_dst is:\n"
+literal|"ro_rt = %p, ro_dst is:\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|ro
 operator|->
 name|ro_rt
@@ -1962,8 +1986,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rt_llinfo = 0x%x "
+literal|"rt_llinfo = %p "
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|rt
 operator|->
 name|rt_llinfo
@@ -1971,7 +1999,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rt_rmx.rmx_mtu = %d "
+literal|"rt_rmx.rmx_mtu = %lu "
 argument_list|,
 name|rt
 operator|->
@@ -1991,7 +2019,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"rt_flags = 0x%x\n"
+literal|"rt_flags = 0x%lx\n"
 argument_list|,
 name|rt
 operator|->
@@ -2062,12 +2090,20 @@ endif|#
 directive|endif
 name|printf
 argument_list|(
-literal|"inp_socket = 0x%x, inp_ppcb\n"
+literal|"inp_socket = %p, inp_ppcb = %p\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|inp
 operator|->
 name|inp_socket
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|inp
 operator|->
 name|inp_ppcb
@@ -2124,12 +2160,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"inp_options = 0x%x, inp_moptions{6,} = 0x%x,\n"
+literal|"inp_options = %p, inp_moptions{6,} = %p,\n"
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|inp
 operator|->
 name|inp_options
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|inp
 operator|->
 name|inp_moptions
