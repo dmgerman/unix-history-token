@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.6 1993/11/29 19:26:32 ache Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.7 1994/01/25 23:04:27 ache Exp $  */
 end_comment
 
 begin_include
@@ -56,6 +56,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i386/isa/isa.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"i386/isa/timerreg.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"machine/speaker.h"
 end_include
 
@@ -70,45 +82,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPI
-value|0x61
-end_define
-
-begin_comment
-comment|/* port of Programmable Peripheral Interface */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PPI_SPKR
 value|0x03
 end_define
 
 begin_comment
 comment|/* turn these PPI bits on to pass sound */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIT_CTRL
-value|0x43
-end_define
-
-begin_comment
-comment|/* PIT control address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIT_COUNT
-value|0x42
-end_define
-
-begin_comment
-comment|/* PIT count address */
 end_comment
 
 begin_define
@@ -205,17 +184,20 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
-name|outb
+if|if
+condition|(
+name|acquire_timer2
 argument_list|(
-name|PIT_CTRL
-argument_list|,
 name|PIT_MODE
 argument_list|)
-expr_stmt|;
-comment|/* prepare timer */
+condition|)
+block|{
+comment|/* enter list of waiting procs ??? */
+return|return;
+block|}
 name|outb
 argument_list|(
-name|PIT_COUNT
+name|TIMER_CNTR2
 argument_list|,
 operator|(
 name|divisor
@@ -227,7 +209,7 @@ expr_stmt|;
 comment|/* send lo byte */
 name|outb
 argument_list|(
-name|PIT_COUNT
+name|TIMER_CNTR2
 argument_list|,
 operator|(
 name|divisor
@@ -245,11 +227,11 @@ expr_stmt|;
 comment|/* turn the speaker on */
 name|outb
 argument_list|(
-name|PPI
+name|IO_PPI
 argument_list|,
 name|inb
 argument_list|(
-name|PPI
+name|IO_PPI
 argument_list|)
 operator||
 name|PPI_SPKR
@@ -278,16 +260,19 @@ argument_list|)
 expr_stmt|;
 name|outb
 argument_list|(
-name|PPI
+name|IO_PPI
 argument_list|,
 name|inb
 argument_list|(
-name|PPI
+name|IO_PPI
 argument_list|)
 operator|&
 operator|~
 name|PPI_SPKR
 argument_list|)
+expr_stmt|;
+name|release_timer2
+argument_list|()
 expr_stmt|;
 block|}
 end_function
