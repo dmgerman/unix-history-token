@@ -1014,7 +1014,7 @@ block|,
 name|USB_PRODUCT_SUNTAC_PS64P1
 block|}
 block|,
-comment|/* SUNTAC Slipper U  */
+comment|/* SUNTAC Slipper U */
 block|{
 name|USB_VENDOR_SUNTAC
 block|,
