@@ -692,7 +692,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|UMATCH_IFACECLASS_IFACESUBCLASS_IFACEPROTO
+name|UMATCH_VENDOR_PRODUCT
 operator|)
 return|;
 return|return
