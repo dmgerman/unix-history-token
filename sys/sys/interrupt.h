@@ -183,7 +183,7 @@ modifier|*
 name|it_disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 comment|/* Enable interrupt source. */
@@ -193,7 +193,7 @@ modifier|*
 name|it_enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 function_decl|;
 comment|/* Disable interrupt source. */
@@ -210,7 +210,7 @@ name|int
 name|it_need
 decl_stmt|;
 comment|/* Needs service. */
-name|int
+name|uintptr_t
 name|it_vector
 decl_stmt|;
 name|char
@@ -470,7 +470,7 @@ modifier|*
 modifier|*
 name|ithread
 parameter_list|,
-name|int
+name|uintptr_t
 name|vector
 parameter_list|,
 name|int
@@ -482,7 +482,7 @@ modifier|*
 name|disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -491,7 +491,7 @@ modifier|*
 name|enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 specifier|const

@@ -187,7 +187,7 @@ name|proc
 modifier|*
 name|proc
 decl_stmt|;
-name|int
+name|uintptr_t
 name|vector
 decl_stmt|;
 block|}
@@ -736,7 +736,7 @@ modifier|*
 modifier|*
 name|ithread
 parameter_list|,
-name|int
+name|uintptr_t
 name|vector
 parameter_list|,
 name|int
@@ -748,7 +748,7 @@ modifier|*
 name|disable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 name|void
@@ -757,7 +757,7 @@ modifier|*
 name|enable
 function_decl|)
 parameter_list|(
-name|int
+name|uintptr_t
 parameter_list|)
 parameter_list|,
 specifier|const
