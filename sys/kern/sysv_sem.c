@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.11 1995/12/14 08:31:52 phk Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.12 1995/12/15 05:00:30 peter Exp $ */
 end_comment
 
 begin_comment
@@ -270,22 +270,6 @@ name|semid
 operator|,
 name|int
 name|semnum
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|semexit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|proc
-operator|*
-name|p
 operator|)
 argument_list|)
 decl_stmt|;
