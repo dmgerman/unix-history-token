@@ -531,11 +531,6 @@ name|dev
 parameter_list|)
 block|{
 comment|/* 	 * First, deal with the children we know about already 	 */
-name|printf
-argument_list|(
-literal|"avant\n"
-argument_list|)
-expr_stmt|;
 name|bus_generic_probe
 argument_list|(
 name|dev
@@ -544,11 +539,6 @@ expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"nexus_attach\n"
 argument_list|)
 expr_stmt|;
 return|return
