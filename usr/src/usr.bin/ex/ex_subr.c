@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	7.3	%G%"
+literal|"@(#)ex_subr.c	7.4	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3926,6 +3926,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
