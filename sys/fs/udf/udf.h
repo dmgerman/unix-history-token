@@ -96,11 +96,6 @@ name|uint64_t
 name|root_id
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|root_vp
-decl_stmt|;
-name|struct
 name|long_ad
 name|root_icb
 decl_stmt|;
