@@ -2989,7 +2989,7 @@ end_struct
 
 begin_struct
 struct|struct
-name|aac_mntinforesponse
+name|aac_mntinforesp
 block|{
 name|AAC_FSAStatus
 name|Status

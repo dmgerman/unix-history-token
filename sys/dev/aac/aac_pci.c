@@ -1009,7 +1009,7 @@ argument_list|(
 name|NULL
 argument_list|,
 comment|/* parent */
-literal|1
+name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
