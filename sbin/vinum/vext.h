@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  
 end_comment
 
 begin_comment
-comment|/*  * $Id: vext.h,v 1.18 2000/05/31 07:03:45 grog Exp grog $  * $FreeBSD$  */
+comment|/*  * $Id: vext.h,v 1.19 2001/05/23 23:00:12 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -49,6 +49,16 @@ end_define
 
 begin_comment
 comment|/* date text in history (far too much) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VINUMDEBUG
+end_define
+
+begin_comment
+comment|/* for including kernel headers */
 end_comment
 
 begin_enum
@@ -1322,12 +1332,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VINUMDEBUG
-end_ifdef
-
 begin_function_decl
 name|void
 name|vinum_debug
@@ -1347,11 +1351,6 @@ index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|void
