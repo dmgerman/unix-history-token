@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)term.c	5.2 (Berkeley) %G%"
+literal|"@(#)term.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -453,7 +453,11 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-continue|continue;
+return|return
+operator|(
+name|dflt
+operator|)
+return|;
 if|if
 condition|(
 name|p
