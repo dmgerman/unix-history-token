@@ -118,6 +118,17 @@ begin_comment
 comment|/* for WSTATE.OTHER / user */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|WSTATE_KERNEL
+value|0
+end_define
+
+begin_comment
+comment|/* normal kernel wstate */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
