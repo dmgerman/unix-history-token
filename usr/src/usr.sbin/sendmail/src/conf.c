@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.192 (Berkeley) %G%"
+literal|"@(#)conf.c	8.193 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5507,8 +5507,16 @@ function_decl|;
 specifier|extern
 name|void
 name|setproctitle
-parameter_list|()
-function_decl|;
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|XLA
