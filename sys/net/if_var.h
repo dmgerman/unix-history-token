@@ -1404,7 +1404,8 @@ define|#
 directive|define
 name|IFNET_LOCK_INIT
 parameter_list|()
-value|mtx_init(&ifnet_lock, "ifnet", NULL, MTX_DEF)
+define|\
+value|mtx_init(&ifnet_lock, "ifnet", NULL, MTX_DEF | MTX_RECURSE)
 end_define
 
 begin_define
