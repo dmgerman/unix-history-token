@@ -5904,7 +5904,7 @@ name|td
 operator|->
 name|td_slpcallout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|TAILQ_INSERT_HEAD

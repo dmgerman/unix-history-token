@@ -1427,7 +1427,7 @@ name|p
 operator|->
 name|p_itcallout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1437,7 +1437,7 @@ name|td
 operator|->
 name|td_slpcallout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 comment|/* Create credentials. */

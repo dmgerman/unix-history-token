@@ -2443,7 +2443,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
@@ -2451,7 +2450,7 @@ name|sc
 operator|->
 name|sc_rngto
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|callout_reset

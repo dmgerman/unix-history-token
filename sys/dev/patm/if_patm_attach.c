@@ -1082,7 +1082,7 @@ name|sc
 operator|->
 name|tst_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|sysctl_ctx_init

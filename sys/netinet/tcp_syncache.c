@@ -1255,7 +1255,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 block|}

@@ -2619,7 +2619,7 @@ argument_list|(
 operator|&
 name|kseq_lb_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 name|kseq_balance

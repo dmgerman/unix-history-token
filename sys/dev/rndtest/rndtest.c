@@ -450,7 +450,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* NB: 1 means the callout runs w/o Giant locked */
 name|callout_init
 argument_list|(
 operator|&
@@ -458,7 +457,7 @@ name|rsp
 operator|->
 name|rs_to
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 endif|#

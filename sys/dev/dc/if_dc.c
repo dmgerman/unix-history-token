@@ -10988,6 +10988,10 @@ operator|->
 name|dc_stat_ch
 argument_list|,
 name|IS_MPSAFE
+condition|?
+name|CALLOUT_MPSAFE
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#

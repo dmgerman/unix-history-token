@@ -1515,7 +1515,7 @@ name|d
 operator|->
 name|bd_callout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 return|return

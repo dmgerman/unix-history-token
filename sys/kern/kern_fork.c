@@ -2360,7 +2360,7 @@ name|p2
 operator|->
 name|p_itcallout
 argument_list|,
-literal|1
+name|CALLOUT_MPSAFE
 argument_list|)
 expr_stmt|;
 ifdef|#
