@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass4.c	5.7 (Berkeley) %G%"
+literal|"@(#)pass4.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,11 @@ name|struct
 name|zlncnt
 modifier|*
 name|zlnp
+decl_stmt|;
+name|struct
+name|dinode
+modifier|*
+name|dp
 decl_stmt|;
 name|struct
 name|inodesc
@@ -250,6 +255,35 @@ break|break;
 case|case
 name|DCLEAR
 case|:
+name|dp
+operator|=
+name|ginode
+argument_list|(
+name|inumber
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|->
+name|di_size
+operator|==
+literal|0
+condition|)
+block|{
+name|clri
+argument_list|(
+operator|&
+name|idesc
+argument_list|,
+literal|"ZERO LENGTH"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* fall through */
 case|case
 name|FCLEAR
 case|:
