@@ -251,6 +251,7 @@ argument_list|)
 expr_stmt|;
 default|default:
 comment|/* do not care */
+break|break;
 block|}
 return|return
 operator|(
