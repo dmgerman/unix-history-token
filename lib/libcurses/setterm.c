@@ -530,7 +530,7 @@ if|if
 condition|(
 name|ioctl
 argument_list|(
-name|STDERR_FILENO
+name|__tty_fileno
 argument_list|,
 name|TIOCGWINSZ
 argument_list|,
