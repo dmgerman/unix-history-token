@@ -278,12 +278,6 @@ begin_comment
 comment|/* min */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IP_VHL
-end_ifndef
-
 begin_define
 define|#
 directive|define
@@ -297,30 +291,6 @@ end_define
 begin_comment
 comment|/* N.B.: must separately check that ip_hl>= 5 */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ICMP_ADVLEN
-parameter_list|(
-name|p
-parameter_list|)
-value|(8 + (IP_VHL_HL((p)->icmp_ip.ip_vhl)<< 2) + 8)
-end_define
-
-begin_comment
-comment|/* N.B.: must separately check that header length>= 5 */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Definition of type and code field values.  */

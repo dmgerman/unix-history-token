@@ -146,12 +146,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_IP_VHL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1346,9 +1340,15 @@ name|ip_ptr
 decl_stmt|;
 name|ip
 operator|->
-name|ip_vhl
+name|ip_v
 operator|=
-name|IP_VHL_BORING
+name|IPVERSION
+expr_stmt|;
+name|ip
+operator|->
+name|ip_hl
+operator|=
+literal|5
 expr_stmt|;
 name|ip
 operator|->
@@ -1732,8 +1732,6 @@ directive|ifdef
 name|INET6
 name|isipv6
 operator|=
-name|IP_VHL_V
-argument_list|(
 operator|(
 operator|(
 expr|struct
@@ -1743,8 +1741,7 @@ operator|)
 name|ipgen
 operator|)
 operator|->
-name|ip_vhl
-argument_list|)
+name|ip_v
 operator|==
 literal|6
 expr_stmt|;
@@ -5485,12 +5482,9 @@ operator|)
 name|ip
 operator|+
 operator|(
-name|IP_VHL_HL
-argument_list|(
 name|ip
 operator|->
-name|ip_vhl
-argument_list|)
+name|ip_hl
 operator|<<
 literal|2
 operator|)

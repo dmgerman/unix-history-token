@@ -34,15 +34,6 @@ begin_struct
 struct|struct
 name|ip
 block|{
-ifdef|#
-directive|ifdef
-name|_IP_VHL
-name|u_char
-name|ip_vhl
-decl_stmt|;
-comment|/* version<< 4 | header length>> 2 */
-else|#
-directive|else
 if|#
 directive|if
 name|BYTE_ORDER
@@ -79,9 +70,6 @@ decl_stmt|;
 comment|/* header length */
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* not _IP_VHL */
 name|u_char
 name|ip_tos
 decl_stmt|;
@@ -138,53 +126,34 @@ name|ip_dst
 decl_stmt|;
 comment|/* source and dest address */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
 struct|;
 end_struct
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_IP_VHL
+name|CTASSERT
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|IP_MAKE_VHL
-parameter_list|(
-name|v
-parameter_list|,
-name|hl
-parameter_list|)
-value|((v)<< 4 | (hl))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_VHL_HL
-parameter_list|(
-name|vhl
-parameter_list|)
-value|((vhl)& 0x0f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_VHL_V
-parameter_list|(
-name|vhl
-parameter_list|)
-value|((vhl)>> 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_VHL_BORING
-value|0x45
-end_define
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+operator|==
+literal|20
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#

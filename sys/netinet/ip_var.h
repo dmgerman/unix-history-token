@@ -120,9 +120,6 @@ name|ipq_src
 decl_stmt|,
 name|ipq_dst
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|IPDIVERT
 name|u_int32_t
 name|ipq_div_info
 decl_stmt|;
@@ -131,8 +128,6 @@ name|u_int16_t
 name|ipq_div_cookie
 decl_stmt|;
 comment|/* ipfw divert cookie */
-endif|#
-directive|endif
 name|struct
 name|label
 name|ipq_label

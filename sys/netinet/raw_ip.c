@@ -129,12 +129,6 @@ directive|include
 file|<net/route.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|_IP_VHL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1212,12 +1206,9 @@ if|if
 condition|(
 operator|(
 operator|(
-name|IP_VHL_HL
-argument_list|(
 name|ip
 operator|->
-name|ip_vhl
-argument_list|)
+name|ip_hl
 operator|!=
 operator|(
 sizeof|sizeof
@@ -1253,12 +1244,9 @@ operator|->
 name|ip_len
 operator|<
 operator|(
-name|IP_VHL_HL
-argument_list|(
 name|ip
 operator|->
-name|ip_vhl
-argument_list|)
+name|ip_hl
 operator|<<
 literal|2
 operator|)
