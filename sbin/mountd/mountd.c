@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mountd.c,v 1.13 1997/02/22 14:33:02 peter Exp $"
+literal|"$Id: mountd.c,v 1.14 1997/03/11 12:43:45 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -109,6 +109,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -151,6 +157,12 @@ begin_include
 include|#
 directive|include
 file|<nfs/nfsproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<nfs/nfs.h>
 end_include
 
 begin_include
@@ -1477,6 +1489,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|int
+name|mib
+index|[
+literal|3
+index|]
+decl_stmt|;
 name|error
 operator|=
 name|getvfsbyname
@@ -1827,6 +1845,64 @@ name|pidfile
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|mib
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_VFS
+expr_stmt|;
+name|mib
+index|[
+literal|1
+index|]
+operator|=
+name|MOUNT_NFS
+expr_stmt|;
+name|mib
+index|[
+literal|2
+index|]
+operator|=
+name|NFS_NFSPRIVPORT
+expr_stmt|;
+if|if
+condition|(
+name|sysctl
+argument_list|(
+name|mib
+argument_list|,
+literal|3
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|resvport_only
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|resvport_only
+argument_list|)
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"sysctl: %m"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
