@@ -30,8 +30,18 @@ begin_define
 define|#
 directive|define
 name|ISP_PLATFORM_VERSION_MINOR
-value|4
+value|5
 end_define
+
+begin_comment
+comment|/*  * We're not ready for primetime yet  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_if
 if|#
@@ -55,6 +65,11 @@ directive|define
 name|ISP_SMPLOCK
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -467,13 +482,6 @@ define|#
 directive|define
 name|INLINE
 value|__inline
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISP2100_FABRIC
-value|1
 end_define
 
 begin_define
