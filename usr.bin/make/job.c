@@ -224,6 +224,255 @@ value|static
 end_define
 
 begin_comment
+comment|/*  * Job Table definitions.  *  * The job "table" is kept as a linked Lst in 'jobs', with the number of  * active jobs maintained in the 'nJobs' variable. At no time will this  * exceed the value of 'maxJobs', initialized by the Job_Init function.  *  * When a job is finished, the Make_Update function is called on each of the  * parents of the node which was just remade. This takes care of the upward  * traversal of the dependency graph.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|JOB_BUFSIZE
+value|1024
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|Job
+block|{
+name|int
+name|pid
+decl_stmt|;
+comment|/* The child's process ID */
+comment|/* Temporary file to use for job */
+name|char
+name|tfile
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMPPAT
+argument_list|)
+index|]
+decl_stmt|;
+name|struct
+name|GNode
+modifier|*
+name|node
+decl_stmt|;
+comment|/* The target the child is making */
+comment|/* 	 * A LstNode for the first command to be saved after the job completes. 	 * This is NULL if there was no "..." in the job's commands. 	 */
+name|LstNode
+modifier|*
+name|tailCmds
+decl_stmt|;
+comment|/* 	 * An FILE* for writing out the commands. This is only 	 * used before the job is actually started. 	 */
+name|FILE
+modifier|*
+name|cmdFILE
+decl_stmt|;
+comment|/* 	 * A word of flags which determine how the module handles errors, 	 * echoing, etc. for the job 	 */
+name|short
+name|flags
+decl_stmt|;
+comment|/* Flags to control treatment of job */
+define|#
+directive|define
+name|JOB_IGNERR
+value|0x001
+comment|/* Ignore non-zero exits */
+define|#
+directive|define
+name|JOB_SILENT
+value|0x002
+comment|/* no output */
+define|#
+directive|define
+name|JOB_SPECIAL
+value|0x004
+comment|/* Target is a special one. i.e. run it locally 				 * if we can't export it and maxLocal is 0 */
+define|#
+directive|define
+name|JOB_IGNDOTS
+value|0x008
+comment|/* Ignore "..." lines when processing 				 * commands */
+define|#
+directive|define
+name|JOB_FIRST
+value|0x020
+comment|/* Job is first job for the node */
+define|#
+directive|define
+name|JOB_RESTART
+value|0x080
+comment|/* Job needs to be completely restarted */
+define|#
+directive|define
+name|JOB_RESUME
+value|0x100
+comment|/* Job needs to be resumed b/c it stopped, 				 * for some reason */
+define|#
+directive|define
+name|JOB_CONTINUING
+value|0x200
+comment|/* We are in the process of resuming this job. 				 * Used to avoid infinite recursion between 				 * JobFinish and JobRestart */
+comment|/* union for handling shell's output */
+union|union
+block|{
+comment|/* 		 * This part is used when usePipes is true.  		 * The output is being caught via a pipe and the descriptors 		 * of our pipe, an array in which output is line buffered and 		 * the current position in that buffer are all maintained for 		 * each job. 		 */
+struct|struct
+block|{
+comment|/* 			 * Input side of pipe associated with 			 * job's output channel 			 */
+name|int
+name|op_inPipe
+decl_stmt|;
+comment|/* 			 * Output side of pipe associated with job's 			 * output channel 			 */
+name|int
+name|op_outPipe
+decl_stmt|;
+comment|/* 			 * Buffer for storing the output of the 			 * job, line by line 			 */
+name|char
+name|op_outBuf
+index|[
+name|JOB_BUFSIZE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* Current position in op_outBuf */
+name|int
+name|op_curPos
+decl_stmt|;
+block|}
+name|o_pipe
+struct|;
+comment|/* 		 * If usePipes is false the output is routed to a temporary 		 * file and all that is kept is the name of the file and the 		 * descriptor open to the file. 		 */
+struct|struct
+block|{
+comment|/* Name of file to which shell output was rerouted */
+name|char
+name|of_outFile
+index|[
+sizeof|sizeof
+argument_list|(
+name|TMPPAT
+argument_list|)
+index|]
+decl_stmt|;
+comment|/* 			 * Stream open to the output file. Used to funnel all 			 * from a single job to one file while still allowing 			 * multiple shell invocations 			 */
+name|int
+name|of_outFd
+decl_stmt|;
+block|}
+name|o_file
+struct|;
+block|}
+name|output
+union|;
+comment|/* Data for tracking a shell's output */
+block|}
+name|Job
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|outPipe
+value|output.o_pipe.op_outPipe
+end_define
+
+begin_define
+define|#
+directive|define
+name|inPipe
+value|output.o_pipe.op_inPipe
+end_define
+
+begin_define
+define|#
+directive|define
+name|outBuf
+value|output.o_pipe.op_outBuf
+end_define
+
+begin_define
+define|#
+directive|define
+name|curPos
+value|output.o_pipe.op_curPos
+end_define
+
+begin_define
+define|#
+directive|define
+name|outFile
+value|output.o_file.of_outFile
+end_define
+
+begin_define
+define|#
+directive|define
+name|outFd
+value|output.o_file.of_outFd
+end_define
+
+begin_comment
+comment|/*  * Shell Specifications:  *  * Some special stuff goes on if a shell doesn't have error control. In such  * a case, errCheck becomes a printf template for echoing the command,  * should echoing be on and ignErr becomes another printf template for  * executing the command while ignoring the return status. If either of these  * strings is empty when hasErrCtl is FALSE, the command will be executed  * anyway as is and if it causes an error, so be it.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_SHELL_STRUCT
+parameter_list|(
+name|TAG
+parameter_list|,
+name|CONST
+parameter_list|)
+define|\
+value|struct TAG {								\
+comment|/*								\ 	 * the name of the shell. For Bourne and C shells, this is used	\ 	 * only to find the shell description when used as the single	\ 	 * source of a .SHELL target. For user-defined shells, this is	\ 	 * the full path of the shell.					\ 	 */
+value|\ 	CONST char	*name;						\ 									\
+comment|/* True if both echoOff and echoOn defined */
+value|\ 	Boolean		hasEchoCtl;					\ 									\ 	CONST char	*echoOff;
+comment|/* command to turn off echo */
+value|\ 	CONST char	*echoOn;
+comment|/* command to turn it back on */
+value|\ 									\
+comment|/*								\ 	 * What the shell prints, and its length, when given the	\ 	 * echo-off command. This line will not be printed when		\ 	 * received from the shell. This is usually the command which	\ 	 * was executed to turn off echoing				\ 	 */
+value|\ 	CONST char	*noPrint;					\ 	int		noPLen;
+comment|/* length of noPrint command */
+value|\ 									\
+comment|/* set if can control error checking for individual commands */
+value|\ 	Boolean		hasErrCtl;					\ 									\
+comment|/* string to turn error checking on */
+value|\ 	CONST char	*errCheck;					\ 									\
+comment|/* string to turn off error checking */
+value|\ 	CONST char	*ignErr;					\ 									\ 	CONST char	*echo;
+comment|/* command line flag: echo commands */
+value|\ 	CONST char	*exit;
+comment|/* command line flag: exit on error */
+value|\ }
+end_define
+
+begin_expr_stmt
+name|DEF_SHELL_STRUCT
+argument_list|(
+name|Shell
+argument_list|,)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DEF_SHELL_STRUCT
+argument_list|(
+name|CShell
+argument_list|,
+specifier|const
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * error handling variables  */
 end_comment
 
@@ -392,18 +641,14 @@ begin_comment
 comment|/*  * Descriptions for various shells.  */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
 specifier|static
 specifier|const
-name|DEF_SHELL_STRUCT
-argument_list|(
-argument|CShell
-argument_list|,
-argument|const
-argument_list|)
+name|struct
+name|CShell
 name|shells
 index|[]
-operator|=
+init|=
 block|{
 comment|/* 	 * CSH description. The csh can do echo control by playing 	 * with the setting of the 'echo' shell variable. Sadly, 	 * however, it is unable to do error control nicely. 	 */
 block|{
@@ -491,8 +736,8 @@ block|,
 literal|"e"
 block|, 	}
 block|, }
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This is the shell to which we pass all commands in the Makefile.  * It is set by the Job_ParseShell function.  */
@@ -500,6 +745,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|Shell
 modifier|*
 name|commandShell
@@ -983,6 +1229,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|struct
 name|Shell
 modifier|*
 name|JobMatchShell
@@ -7038,16 +7285,19 @@ end_comment
 
 begin_function
 specifier|static
+name|struct
 name|Shell
 modifier|*
 name|JobCopyShell
 parameter_list|(
 specifier|const
+name|struct
 name|Shell
 modifier|*
 name|osh
 parameter_list|)
 block|{
+name|struct
 name|Shell
 modifier|*
 name|nsh
@@ -7309,6 +7559,7 @@ specifier|static
 name|void
 name|JobFreeShell
 parameter_list|(
+name|struct
 name|Shell
 modifier|*
 name|sh
@@ -8151,6 +8402,7 @@ end_comment
 
 begin_function
 specifier|static
+name|struct
 name|Shell
 modifier|*
 name|JobMatchShell
@@ -8402,17 +8654,19 @@ name|char
 modifier|*
 name|path
 decl_stmt|;
-name|Shell
-name|newShell
-decl_stmt|;
-name|Shell
-modifier|*
-name|sh
-decl_stmt|;
 name|Boolean
 name|fullSpec
 init|=
 name|FALSE
+decl_stmt|;
+name|struct
+name|Shell
+name|newShell
+decl_stmt|;
+name|struct
+name|Shell
+modifier|*
+name|sh
 decl_stmt|;
 while|while
 condition|(
