@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.35 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.36 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -489,6 +489,12 @@ begin_comment
 comment|/*  * Operations on vnodes.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|flock
@@ -500,6 +506,11 @@ struct_decl|struct
 name|nameidata
 struct_decl|;
 end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
