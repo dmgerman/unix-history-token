@@ -169,9 +169,9 @@ name|defined
 argument_list|(
 name|COMPAT_SUNOS
 argument_list|)
-name|PROCTREE_LOCK
+name|PROC_LOCK
 argument_list|(
-name|PT_SHARED
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -187,9 +187,9 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
-name|PROCTREE_LOCK
+name|PROC_UNLOCK
 argument_list|(
-name|PT_RELEASE
+name|p
 argument_list|)
 expr_stmt|;
 endif|#
@@ -251,9 +251,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-name|PROCTREE_LOCK
+name|PROC_LOCK
 argument_list|(
-name|PT_SHARED
+name|p
 argument_list|)
 expr_stmt|;
 name|p
@@ -269,9 +269,9 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
-name|PROCTREE_LOCK
+name|PROC_UNLOCK
 argument_list|(
-name|PT_RELEASE
+name|p
 argument_list|)
 expr_stmt|;
 return|return
