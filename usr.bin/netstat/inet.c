@@ -3134,7 +3134,7 @@ name|p
 argument_list|(
 name|icps_oldicmp
 argument_list|,
-literal|"\t%lu error%s not generated 'cuz old message was icmp\n"
+literal|"\t%lu error%s not generated in response to an icmp message\n"
 argument_list|)
 expr_stmt|;
 for|for

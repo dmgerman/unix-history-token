@@ -1239,7 +1239,7 @@ name|p
 argument_list|(
 name|ip6s_toomanyhdr
 argument_list|,
-literal|"\t%llu packet%s discarded due to too may headers\n"
+literal|"\t%llu packet%s discarded because of too many headers\n"
 argument_list|)
 expr_stmt|;
 comment|/* for debugging source address selection */
@@ -1791,7 +1791,7 @@ name|p
 argument_list|(
 name|ifs6_reass_fail
 argument_list|,
-literal|"\t%llu datagram%s failed on reassembling\n"
+literal|"\t%llu datagram%s failed on reassembly\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -2486,21 +2486,21 @@ name|p
 argument_list|(
 name|icp6s_error
 argument_list|,
-literal|"\t%llu call%s to icmp_error\n"
+literal|"\t%llu call%s to icmp6_error\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_canterror
 argument_list|,
-literal|"\t%llu error%s not generated because old message was icmp error or so\n"
+literal|"\t%llu error%s not generated in response to an icmp6 message\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|icp6s_toofreq
 argument_list|,
-literal|"\t%llu error%s not generated because rate limitation\n"
+literal|"\t%llu error%s not generated because of rate limitation\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -2876,6 +2876,15 @@ parameter_list|,
 name|m
 parameter_list|)
 value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ifr.ifr_ifru.ifru_icmp6stat.f, plural(ifr.ifr_ifru.ifru_icmp6stat.f))
+define|#
+directive|define
+name|p2
+parameter_list|(
+name|f
+parameter_list|,
+name|m
+parameter_list|)
+value|if (ifr.ifr_ifru.ifru_icmp6stat.f || sflag<= 1) \     printf(m, (unsigned long long)ifr.ifr_ifru.ifru_icmp6stat.f, pluralies(ifr.ifr_ifru.ifru_icmp6stat.f))
 if|if
 condition|(
 operator|(
@@ -3003,11 +3012,11 @@ argument_list|,
 literal|"\t%llu input echo request%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p2
 argument_list|(
 name|ifs6_in_echoreply
 argument_list|,
-literal|"\t%llu input echo reply%s\n"
+literal|"\t%llu input echo repl%s\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3045,11 +3054,11 @@ argument_list|,
 literal|"\t%llu input redirect%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p2
 argument_list|(
 name|ifs6_in_mldquery
 argument_list|,
-literal|"\t%llu input MLD query%s\n"
+literal|"\t%llu input MLD quer%s\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3122,11 +3131,11 @@ argument_list|,
 literal|"\t%llu output echo request%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p2
 argument_list|(
 name|ifs6_out_echoreply
 argument_list|,
-literal|"\t%llu output echo reply%s\n"
+literal|"\t%llu output echo repl%s\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -3164,11 +3173,11 @@ argument_list|,
 literal|"\t%llu output redirect%s\n"
 argument_list|)
 expr_stmt|;
-name|p
+name|p2
 argument_list|(
 name|ifs6_out_mldquery
 argument_list|,
-literal|"\t%llu output MLD query%s\n"
+literal|"\t%llu output MLD quer%s\n"
 argument_list|)
 expr_stmt|;
 name|p

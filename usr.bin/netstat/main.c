@@ -3573,6 +3573,30 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|const
+name|char
+modifier|*
+name|pluralies
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+return|return
+operator|(
+name|n
+operator|!=
+literal|1
+condition|?
+literal|"ies"
+else|:
+literal|"y"
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Find the protox for the given "well-known" name.  */
 end_comment
