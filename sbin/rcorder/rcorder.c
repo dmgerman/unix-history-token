@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: rcorder.c,v 1.6 2000/07/19 09:58:03 enami Exp $	*/
+comment|/*	$NetBSD: rcorder.c,v 1.7 2000/08/04 07:33:55 enami Exp $	*/
 end_comment
 
 begin_comment
@@ -1950,13 +1950,12 @@ name|st_mode
 argument_list|)
 condition|)
 block|{
-name|warnx
-argument_list|(
-literal|"%s is not a file"
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|warnx("%s is not a file", filename);
+endif|#
+directive|endif
 name|fclose
 argument_list|(
 name|fp
