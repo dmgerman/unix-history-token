@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.6 1996/02/04 22:09:05 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.8 1996/02/05 05:50:34 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -2617,6 +2617,8 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|retry
+label|:
 while|while
 condition|(
 name|wpipe
@@ -2626,6 +2628,28 @@ operator|&
 name|PIPE_DIRECTW
 condition|)
 block|{
+if|if
+condition|(
+name|wpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_WANTR
+condition|)
+block|{
+name|wpipe
+operator|->
+name|pipe_state
+operator|&=
+operator|~
+name|PIPE_WANTR
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|tsleep
@@ -2666,13 +2690,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* transfer not ready yet */
-name|wpipe
-operator|->
-name|pipe_state
-operator||=
-name|PIPE_DIRECTW
-expr_stmt|;
-while|while
+if|if
 condition|(
 name|wpipe
 operator|->
@@ -2683,6 +2701,28 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|wpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_WANTR
+condition|)
+block|{
+name|wpipe
+operator|->
+name|pipe_state
+operator|&=
+operator|~
+name|PIPE_WANTR
+expr_stmt|;
+name|wakeup
+argument_list|(
+name|wpipe
+argument_list|)
+expr_stmt|;
+block|}
 name|error
 operator|=
 name|tsleep
@@ -2732,7 +2772,16 @@ goto|goto
 name|error1
 goto|;
 block|}
+goto|goto
+name|retry
+goto|;
 block|}
+name|wpipe
+operator|->
+name|pipe_state
+operator||=
+name|PIPE_DIRECTW
+expr_stmt|;
 name|error
 operator|=
 name|pipe_build_write_buffer
