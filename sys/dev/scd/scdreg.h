@@ -89,60 +89,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IS_ATTENTION
-parameter_list|(
-name|port
-parameter_list|)
-value|((inb(port+IREG_STATUS)& SBIT_ATTENTION) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_BUSY
-parameter_list|(
-name|port
-parameter_list|)
-value|((inb(port+IREG_STATUS)& SBIT_BUSY) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IS_DATA_RDY
-parameter_list|(
-name|port
-parameter_list|)
-value|((inb(port+IREG_STATUS)& SBIT_DATA_READY) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATUS_BIT
-parameter_list|(
-name|port
-parameter_list|,
-name|bit
-parameter_list|)
-value|((inb(port+IREG_STATUS)& (bit)) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FSTATUS_BIT
-parameter_list|(
-name|port
-parameter_list|,
-name|bit
-parameter_list|)
-value|((inb(port+IREG_FSTATUS)& (bit)) != 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|OREG_COMMAND
 value|0
 end_define
