@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.70 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.71 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.70 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.71 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,6 +683,23 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|id
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|id
+argument_list|)
+condition|)
+name|id
+operator|++
+expr_stmt|;
 name|message
 argument_list|(
 literal|"220-%s"
@@ -697,6 +714,24 @@ name|id
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|id
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
+name|id
+argument_list|)
+condition|)
+name|id
+operator|++
+expr_stmt|;
 name|message
 argument_list|(
 literal|"220 %s"
@@ -704,6 +739,7 @@ argument_list|,
 name|id
 argument_list|)
 expr_stmt|;
+block|}
 name|protocol
 operator|=
 name|NULL
