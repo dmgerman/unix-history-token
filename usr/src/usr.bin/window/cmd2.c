@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.17 84/01/11"
+literal|"@(#)cmd2.c	3.18 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,8 @@ block|,
 literal|":source filename      Execute commands in ``filename''."
 block|,
 literal|":terse [off]          Turn on (or off) terse mode."
+block|,
+literal|":unset variable       Deallocate ``variable''."
 block|,
 literal|":window row col nrow ncol [nline label]"
 block|,
