@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.1 (Berkeley) %G%"
+literal|"@(#)login.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,20 +60,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|UTMPFILE
-value|"/etc/utmp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|WTMPFILE
-value|"/usr/adm/wtmp"
-end_define
 
 begin_function
 name|void
@@ -114,7 +100,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|UTMPFILE
+name|_PATH_UTMP
 argument_list|,
 name|O_WRONLY
 argument_list|,
@@ -184,7 +170,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|WTMPFILE
+name|_PATH_WTMP
 argument_list|,
 name|O_WRONLY
 operator||

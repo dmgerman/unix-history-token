@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logout.c	5.2 (Berkeley) %G%"
+literal|"@(#)logout.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,13 +66,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|UTMPFILE
-value|"/etc/utmp"
-end_define
 
 begin_comment
 comment|/* 0 on failure, 1 on success */
@@ -116,7 +109,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|UTMPFILE
+name|_PATH_UTMP
 argument_list|,
 literal|"r+"
 argument_list|)
