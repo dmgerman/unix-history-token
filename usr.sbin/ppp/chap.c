@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.23 1997/09/25 00:52:32 brian Exp $  *  *	TODO:  */
+comment|/*  *			PPP CHAP Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: chap.c,v 1.24 1997/10/26 01:02:16 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -641,24 +641,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/*    * Get a secret key corresponds to the peer    */
-name|keyp
-operator|=
-name|AuthGetSecret
-argument_list|(
-name|SECRETFILE
-argument_list|,
-name|name
-argument_list|,
-name|namelen
-argument_list|,
-name|chp
-operator|->
-name|code
-operator|==
-name|CHAP_RESPONSE
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|chp
@@ -669,21 +651,10 @@ block|{
 case|case
 name|CHAP_CHALLENGE
 case|:
-if|if
-condition|(
 name|keyp
-condition|)
-block|{
-name|keylen
 operator|=
-name|strlen
-argument_list|(
-name|keyp
-argument_list|)
+name|VarAuthKey
 expr_stmt|;
-block|}
-else|else
-block|{
 name|keylen
 operator|=
 name|strlen
@@ -691,11 +662,6 @@ argument_list|(
 name|VarAuthKey
 argument_list|)
 expr_stmt|;
-name|keyp
-operator|=
-name|VarAuthKey
-expr_stmt|;
-block|}
 name|name
 operator|=
 name|VarAuthName
@@ -1114,6 +1080,24 @@ break|break;
 case|case
 name|CHAP_RESPONSE
 case|:
+comment|/*      * Get a secret key corresponds to the peer      */
+name|keyp
+operator|=
+name|AuthGetSecret
+argument_list|(
+name|SECRETFILE
+argument_list|,
+name|name
+argument_list|,
+name|namelen
+argument_list|,
+name|chp
+operator|->
+name|code
+operator|==
+name|CHAP_RESPONSE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|keyp
