@@ -12481,7 +12481,7 @@ name|G_MIRROR_DEBUG
 argument_list|(
 literal|0
 argument_list|,
-literal|"Cannot create device %s.mirror"
+literal|"Cannot create device %s."
 argument_list|,
 name|md
 operator|.
