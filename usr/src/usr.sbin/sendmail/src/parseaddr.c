@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.45 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6846,13 +6846,15 @@ expr_stmt|;
 block|}
 block|}
 comment|/* 	**  Do more specific rewriting. 	**	Rewrite using ruleset 1 or 2 for envelope addresses and 	**	5 or 6 for header addresses depending on whether this 	**	is a sender address or not. 	**	Then run it through any receiving-mailer-specific rulesets. 	*/
-elseif|else
+else|else
+block|{
 if|if
 condition|(
 name|rwset
 operator|>
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|rewrite
@@ -6871,6 +6873,7 @@ name|pstat
 operator|=
 name|EX_TEMPFAIL
 expr_stmt|;
+block|}
 comment|/* 	**  Do any final sanitation the address may require. 	**	This will normally be used to turn internal forms 	**	(e.g., user@host.LOCAL) into external form.  This 	**	may be used as a default to the above rules. 	*/
 if|if
 condition|(
@@ -6963,16 +6966,7 @@ name|buf
 operator|)
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  UURELATIVIZE -- Make an address !-relative to recipient/sender nodes ** **	Parameters: **		from -- the sending node (usually "$k" or "$w") **		to -- the receiving node (usually "$h") **		pvp -- address vector ** **	Returns: **		none. ** **	Side Effects: **		The pvp is rewritten to be relative the "to" node **		wrt the "from" node.  In other words, if the pvp **		is headed by "to!" that part is stripped; otherwise **		"from!" is prepended.  Exception: "to!user" addresses **		with no '!'s in the user part are sent as is. ** **	Bugs: **		The pvp may overflow, but we don't catch it. */
-end_comment
-
-begin_function
 specifier|static
 name|void
 name|uurelativize
@@ -6991,17 +6985,11 @@ decl_stmt|,
 decl|*
 name|to
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|char
 modifier|*
 modifier|*
 name|pvp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -7251,16 +7239,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  MAPLOCALUSER -- run local username through ruleset 5 for final redirection ** **	Parameters: **		a -- the address to map (but just the user name part). **		sendq -- the sendq in which to install any replacement **			addresses. ** **	Returns: **		none. */
-end_comment
-
-begin_expr_stmt
 name|maplocaluser
 argument_list|(
 name|a
@@ -7274,24 +7253,15 @@ name|ADDRESS
 operator|*
 name|a
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 name|ADDRESS
 modifier|*
 modifier|*
 name|sendq
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENVELOPE
 modifier|*
 name|e
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -7485,16 +7455,7 @@ name|e
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  DEQUOTE_INIT -- initialize dequote map ** **	This is a no-op. ** **	Parameters: **		map -- the internal map structure. **		mapname -- the name of the mapl. **		args -- arguments. ** **	Returns: **		TRUE. */
-end_comment
-
-begin_function
 name|bool
 name|dequote_init
 parameter_list|(
@@ -7635,16 +7596,7 @@ return|return
 name|TRUE
 return|;
 block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
 comment|/* **  DEQUOTE_MAP -- unquote an address ** **	Parameters: **		map -- the internal map structure (ignored). **		buf -- the buffer to dequote. **		bufsiz -- the size of that buffer. **		av -- arguments (ignored). **		statp -- pointer to status out-parameter. ** **	Returns: **		NULL -- if there were no quotes, or if the resulting **			unquoted buffer would not be acceptable to prescan. **		else -- The dequoted buffer. */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|dequote_map
