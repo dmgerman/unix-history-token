@@ -46,6 +46,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FXP_DEVICEID_i82562
+value|0x2449
+end_define
+
+begin_comment
+comment|/* 82562 PLC devices */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FXP_PCI_MMBA
 value|0x10
 end_define

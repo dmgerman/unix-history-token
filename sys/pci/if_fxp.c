@@ -1305,6 +1305,19 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+case|case
+name|FXP_DEVICEID_i82562
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel PLC 10/100 Ethernet"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 default|default:
 break|break;
 block|}
