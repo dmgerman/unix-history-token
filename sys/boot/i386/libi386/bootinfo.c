@@ -253,6 +253,14 @@ name|RB_KDB
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+name|howto
+operator||=
+name|RB_MULTIPLE
+expr_stmt|;
+break|break;
+case|case
 literal|'m'
 case|:
 name|howto
