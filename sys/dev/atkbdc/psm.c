@@ -9821,6 +9821,9 @@ operator|>
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -9828,6 +9831,8 @@ argument_list|,
 literal|"psmintr: delay too long; resetting byte count\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pb
 operator|->
 name|inputbytes
@@ -9899,8 +9904,56 @@ condition|)
 continue|continue;
 if|#
 directive|if
+name|DEBUG
+name|log
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"psmintr: %02x %02x %02x %02x %02x %02x\n"
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
 literal|0
-block|log(LOG_DEBUG, "psmintr: %02x %02x %02x %02x %02x %02x\n", 	    pb->ipacket[0], pb->ipacket[1], pb->ipacket[2], 	    pb->ipacket[3], pb->ipacket[4], pb->ipacket[5]);
+index|]
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|1
+index|]
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|2
+index|]
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|3
+index|]
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|4
+index|]
+argument_list|,
+name|pb
+operator|->
+name|ipacket
+index|[
+literal|5
+index|]
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|c
@@ -9937,6 +9990,9 @@ literal|1
 index|]
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -9973,6 +10029,8 @@ operator|->
 name|lasterr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|haderror
 operator|=
 literal|1
@@ -10014,6 +10072,9 @@ operator|.
 name|packetsize
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -10025,6 +10086,8 @@ operator|->
 name|syncerrors
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|--
 name|pb
 operator|->
@@ -10068,6 +10131,9 @@ operator|.
 name|packetsize
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -10075,6 +10141,8 @@ argument_list|,
 literal|"psmintr: re-enable the mouse.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pb
 operator|->
 name|inputbytes
@@ -10106,6 +10174,9 @@ operator|<
 name|PSM_SYNCERR_THRESHOLD1
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -10117,6 +10188,8 @@ operator|->
 name|syncerrors
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 operator|--
 name|pb
 operator|->
@@ -10156,6 +10229,9 @@ operator|>=
 name|PSM_SYNCERR_THRESHOLD1
 condition|)
 block|{
+if|#
+directive|if
+name|DEBUG
 name|log
 argument_list|(
 name|LOG_DEBUG
@@ -10163,6 +10239,8 @@ argument_list|,
 literal|"psmintr: reset the mouse.\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|reinitialize
 argument_list|(
 name|sc
