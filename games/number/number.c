@@ -538,7 +538,7 @@ name|fraction
 decl_stmt|;
 name|flen
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 name|fraction
 operator|=
