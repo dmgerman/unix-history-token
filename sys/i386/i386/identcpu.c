@@ -2414,6 +2414,10 @@ argument_list|,
 literal|"Geode SC1100"
 argument_list|)
 expr_stmt|;
+name|cpu
+operator|=
+name|CPU_GEODE1100
+expr_stmt|;
 name|tsc_is_broken
 operator|=
 literal|1
@@ -2740,6 +2744,15 @@ argument_list|(
 name|cpu_vendor
 argument_list|,
 literal|"CentaurHauls"
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|cpu_vendor
+argument_list|,
+literal|"Geode by NSC"
 argument_list|)
 operator|==
 literal|0

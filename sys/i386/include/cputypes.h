@@ -245,6 +245,17 @@ begin_comment
 comment|/* Intel Pentium 4 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CPU_GEODE1100
+value|17
+end_define
+
+begin_comment
+comment|/* NS Geode SC1100 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
