@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.46 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -159,6 +159,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_include
@@ -589,6 +601,42 @@ argument_list|,
 literal|"setsockopt (SO_KEEPALIVE): %m"
 argument_list|)
 expr_stmt|;
+name|on
+operator|=
+name|IPTOS_LOWDELAY
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (IP_TOS): %m"
+argument_list|)
+expr_stmt|;
 name|doit
 argument_list|(
 literal|0
@@ -1010,7 +1058,7 @@ name|fatal
 argument_list|(
 name|f
 argument_list|,
-literal|"krlogind: Host address mismatch."
+literal|"rlogind: Host address mismatch."
 argument_list|,
 literal|0
 argument_list|)
@@ -1607,6 +1655,9 @@ condition|(
 name|authenticated
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KERBEROS
 if|if
 condition|(
 name|use_kerberos
@@ -1644,6 +1695,8 @@ operator|->
 name|h_name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|execl
 argument_list|(
 name|_PATH_LOGIN
