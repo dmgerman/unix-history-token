@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994 The Regents of the University of California.  * Copyright (c) 1992, 1993, 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vnops.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2050,6 +2050,15 @@ operator|!=
 name|NULLVP
 condition|)
 block|{
+comment|/* 		 * It's not clear whether VOP_GETATTR is to be 		 * called with the vnode locked or not.  stat() calls 		 * it with (vp) locked, and fstat calls it with 		 * (vp) unlocked. 		 * In the mean time, compensate here by checking 		 * the union_node's lock flag. 		 */
+if|if
+condition|(
+name|un
+operator|->
+name|un_flags
+operator|&
+name|UN_LOCKED
+condition|)
 name|FIXUP
 argument_list|(
 name|un
@@ -4317,10 +4326,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our union_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
-ifdef|#
-directive|ifdef
-name|UNION_DIAGNOSTIC
 name|struct
 name|union_node
 modifier|*
@@ -4333,6 +4338,10 @@ operator|->
 name|a_vp
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our union_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
+ifdef|#
+directive|ifdef
+name|UNION_DIAGNOSTIC
 if|if
 condition|(
 name|un
@@ -4346,8 +4355,40 @@ argument_list|(
 literal|"union: inactivating locked node"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|un
+operator|->
+name|un_flags
+operator|&
+name|UN_ULOCK
+condition|)
+name|panic
+argument_list|(
+literal|"union: inactivating w/locked upper node"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|(
+name|un
+operator|->
+name|un_flags
+operator|&
+name|UN_CACHED
+operator|)
+operator|==
+literal|0
+condition|)
+name|vgone
+argument_list|(
+name|ap
+operator|->
+name|a_vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
