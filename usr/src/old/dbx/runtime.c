@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)runtime.c	1.11 (Berkeley) %G%"
+literal|"@(#)runtime.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3082,11 +3082,6 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|" returns successfully\n"
-argument_list|,
-name|symname
-argument_list|(
-name|f
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|popenv
