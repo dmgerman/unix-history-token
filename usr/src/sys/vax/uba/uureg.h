@@ -1,30 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uureg.h	4.1	83/04/09	*/
+comment|/*	uureg.h	4.2	83/04/09	*/
 end_comment
 
 begin_comment
-comment|/*  * TU58 UNIBUS controller registers  */
+comment|/*  * DL11-E/DL11-W UNIBUS (for TU58) controller registers  */
 end_comment
 
 begin_struct
 struct|struct
-name|tudevice
+name|uudevice
 block|{
 name|short
-name|turcs
+name|uurcs
 decl_stmt|;
 comment|/* receiver status register */
 name|short
-name|turdb
+name|uurdb
 decl_stmt|;
 comment|/* receiver data buffer register */
 name|short
-name|tutcs
+name|uutcs
 decl_stmt|;
 comment|/* transmitter status register */
 name|short
-name|tutdb
+name|uutdb
 decl_stmt|;
 comment|/* transmitter data buffer register */
 block|}
@@ -38,7 +38,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURCS_DONE
+name|UURCS_DONE
 value|0x80
 end_define
 
@@ -49,7 +49,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURCS_INTR
+name|UURCS_INTR
 value|0x40
 end_define
 
@@ -64,7 +64,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURDB_ERROR
+name|UURDB_ERROR
 value|0x8000
 end_define
 
@@ -75,7 +75,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURDB_ORUN
+name|UURDB_ORUN
 value|0x4000
 end_define
 
@@ -86,7 +86,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TURDB_BREAK
+name|UURDB_BREAK
 value|0x2000
 end_define
 
@@ -101,7 +101,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUTCS_READY
+name|UUTCS_READY
 value|0x80
 end_define
 
@@ -112,7 +112,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUTCS_INTR
+name|UUTCS_INTR
 value|0x40
 end_define
 
@@ -123,7 +123,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUTCS_MAINT
+name|UUTCS_MAINT
 value|0x02
 end_define
 
@@ -134,7 +134,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUTCS_BREAK
+name|UUTCS_BREAK
 value|0x01
 end_define
 
@@ -145,7 +145,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TUDB_DMASK
+name|UUDB_DMASK
 value|0x00ff
 end_define
 
