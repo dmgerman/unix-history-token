@@ -129,7 +129,7 @@ expr_stmt|;
 goto|goto
 name|docopy
 goto|;
-comment|/* 		 * POSIX/SUS ``Programming Environments'' stuff 		 * 		 * We don't support more than one programming environment 		 * on any platform (yet), so we just return the empty 		 * string for the environment we are compiled for, 		 * and the string "unsupported programming environment" 		 * for anything else.  (The Standard says that if these 		 * values are used on a system which does not support 		 * this environment -- determined via sysconf() -- then 		 * the value we return is unspecified.  So, we return 		 * something which will cause obvious breakage.) 		 * 		 * Note that the _V6_LP64_OFF64 is actually an *I*LP64 		 * environment; FreeBSD's LP64 architectures use the 		 * _V6_LPBIG_OFFBIG environment instead. 		 */
+comment|/* 		 * POSIX/SUS ``Programming Environments'' stuff 		 * 		 * We don't support more than one programming environment 		 * on any platform (yet), so we just return the empty 		 * string for the environment we are compiled for, 		 * and the string "unsupported programming environment" 		 * for anything else.  (The Standard says that if these 		 * values are used on a system which does not support 		 * this environment -- determined via sysconf() -- then 		 * the value we return is unspecified.  So, we return 		 * something which will cause obvious breakage.) 		 */
 case|case
 name|_CS_POSIX_V6_ILP32_OFF32_CFLAGS
 case|:
@@ -140,15 +140,15 @@ case|case
 name|_CS_POSIX_V6_ILP32_OFF32_LIBS
 case|:
 case|case
-name|_CS_POSIX_V6_LP64_OFF64_CFLAGS
+name|_CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS
 case|:
 case|case
-name|_CS_POSIX_V6_LP64_OFF64_LDFLAGS
+name|_CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS
 case|:
 case|case
-name|_CS_POSIX_V6_LP64_OFF64_LIBS
+name|_CS_POSIX_V6_LPBIG_OFFBIG_LIBS
 case|:
-comment|/* 		 * These six environments are never supported. 		 */
+comment|/* 		 * These two environments are never supported. 		 */
 name|p
 operator|=
 name|UPE
@@ -199,13 +199,13 @@ goto|goto
 name|docopy
 goto|;
 case|case
-name|_CS_POSIX_V6_LPBIG_OFFBIG_CFLAGS
+name|_CS_POSIX_V6_LP64_OFF64_CFLAGS
 case|:
 case|case
-name|_CS_POSIX_V6_LPBIG_OFFBIG_LDFLAGS
+name|_CS_POSIX_V6_LP64_OFF64_LDFLAGS
 case|:
 case|case
-name|_CS_POSIX_V6_LPBIG_OFFBIG_LIBS
+name|_CS_POSIX_V6_LP64_OFF64_LIBS
 case|:
 if|if
 condition|(
@@ -275,12 +275,12 @@ literal|64
 condition|)
 name|p
 operator|=
-literal|"_V6_LPBIG_OFFBIG"
+literal|"_POSIX_V6_LPBIG_OFFBIG"
 expr_stmt|;
 else|else
 name|p
 operator|=
-literal|"_V6_ILP32_OFFBIG"
+literal|"_POSIX_V6_ILP32_OFFBIG"
 expr_stmt|;
 goto|goto
 name|docopy
