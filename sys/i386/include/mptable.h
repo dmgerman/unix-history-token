@@ -2201,12 +2201,6 @@ argument_list|(
 name|gsel_tss
 argument_list|)
 expr_stmt|;
-name|load_cr0
-argument_list|(
-literal|0x8005003b
-argument_list|)
-expr_stmt|;
-comment|/* XXX! */
 name|pmap_set_opt
 argument_list|()
 expr_stmt|;
@@ -2689,17 +2683,6 @@ comment|/* start each Application Processor */
 name|start_all_aps
 argument_list|(
 name|boot_addr
-argument_list|)
-expr_stmt|;
-comment|/*  	 * The init process might be started on a different CPU now, 	 * and the boot CPU might not call prepare_usermode to get 	 * cr0 correctly configured. Thus we initialize cr0 here. 	 */
-name|load_cr0
-argument_list|(
-name|rcr0
-argument_list|()
-operator||
-name|CR0_WP
-operator||
-name|CR0_AM
 argument_list|)
 expr_stmt|;
 block|}
@@ -9764,23 +9747,9 @@ argument_list|,
 name|cpuid
 argument_list|)
 expr_stmt|;
-comment|/* XXX FIXME: i386 specific, and redundant: Setup the FPU. */
-name|load_cr0
-argument_list|(
-operator|(
-name|rcr0
+comment|/* set up CPU registers and state */
+name|cpu_setregs
 argument_list|()
-operator|&
-operator|~
-name|CR0_EM
-operator|)
-operator||
-name|CR0_MP
-operator||
-name|CR0_NE
-operator||
-name|CR0_TS
-argument_list|)
 expr_stmt|;
 comment|/* set up FPU state on the AP */
 name|npxinit

@@ -92,18 +92,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|cpu_set_init_frame
-parameter_list|(
-name|p
-parameter_list|,
-name|fp
-parameter_list|)
-value|((p)->p_md.md_regs = (fp))
-end_define
-
-begin_define
-define|#
-directive|define
 name|CLKF_USERMODE
 parameter_list|(
 name|framep

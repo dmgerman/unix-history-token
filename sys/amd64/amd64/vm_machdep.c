@@ -285,6 +285,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|_ucodesel
+decl_stmt|,
+name|_udatasel
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * quick version of vm_fault  */
 end_comment
@@ -547,19 +556,30 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|bcopy
+argument_list|(
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_regs
+argument_list|,
+name|p2
+operator|->
+name|p_md
+operator|.
+name|md_regs
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
 name|p2
 operator|->
 name|p_md
 operator|.
 name|md_regs
-operator|=
-operator|*
-name|p1
-operator|->
-name|p_md
-operator|.
-name|md_regs
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 name|pcb2
@@ -582,13 +602,7 @@ name|pcb2
 operator|->
 name|pcb_edi
 operator|=
-name|p2
-operator|->
-name|p_md
-operator|.
-name|md_regs
-operator|->
-name|tf_edi
+literal|0
 expr_stmt|;
 name|pcb2
 operator|->
@@ -599,17 +613,12 @@ name|int
 operator|)
 name|fork_return
 expr_stmt|;
+comment|/* fork_trampoline argument */
 name|pcb2
 operator|->
 name|pcb_ebp
 operator|=
-name|p2
-operator|->
-name|p_md
-operator|.
-name|md_regs
-operator|->
-name|tf_ebp
+literal|0
 expr_stmt|;
 name|pcb2
 operator|->
@@ -639,6 +648,7 @@ name|int
 operator|)
 name|p2
 expr_stmt|;
+comment|/* fork_trampoline argument */
 name|pcb2
 operator|->
 name|pcb_eip
@@ -716,7 +726,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_esp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to proc_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  proc_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
+comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_esp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_block
 
