@@ -5151,6 +5151,20 @@ decl_stmt|;
 comment|/* pointer to ifname extension, or NULL */
 endif|#
 directive|endif
+name|int
+name|max_suffix_len
+init|=
+operator|(
+name|z_len
+operator|>
+literal|3
+condition|?
+name|z_len
+else|:
+literal|3
+operator|)
+decl_stmt|;
+comment|/* Leave enough room in ifname or ofname for suffix: */
 if|if
 condition|(
 name|strlen
@@ -5163,7 +5177,7 @@ argument_list|(
 name|ifname
 argument_list|)
 operator|-
-literal|3
+name|max_suffix_len
 condition|)
 block|{
 name|errno
