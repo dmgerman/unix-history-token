@@ -271,6 +271,17 @@ begin_comment
 comment|/* -[acm]time units syntax */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|F_EXECPLUS
+value|0x00020000
+end_define
+
+begin_comment
+comment|/* -exec ... {} + */
+end_comment
+
 begin_comment
 comment|/* node definition */
 end_comment
@@ -369,6 +380,30 @@ modifier|*
 name|_e_len
 decl_stmt|;
 comment|/* allocated length */
+name|int
+name|_e_pbnum
+decl_stmt|;
+comment|/* base num. of args. used */
+name|int
+name|_e_ppos
+decl_stmt|;
+comment|/* number of arguments used */
+name|int
+name|_e_pnummax
+decl_stmt|;
+comment|/* max. number of arguments */
+name|int
+name|_e_psize
+decl_stmt|;
+comment|/* number of bytes of args. */
+name|int
+name|_e_pbsize
+decl_stmt|;
+comment|/* base num. of bytes of args */
+name|int
+name|_e_psizemax
+decl_stmt|;
+comment|/* max num. of bytes of args */
 block|}
 name|ex
 struct|;
@@ -515,6 +550,48 @@ define|#
 directive|define
 name|e_len
 value|p_un.ex._e_len
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_pbnum
+value|p_un.ex._e_pbnum
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_ppos
+value|p_un.ex._e_ppos
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_pnummax
+value|p_un.ex._e_pnummax
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_psize
+value|p_un.ex._e_psize
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_pbsize
+value|p_un.ex._e_pbsize
+end_define
+
+begin_define
+define|#
+directive|define
+name|e_psizemax
+value|p_un.ex._e_psizemax
 end_define
 
 begin_typedef
