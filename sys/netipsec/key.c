@@ -3294,6 +3294,34 @@ value|do {						\ 	IPSEC_ASSERT((p)->refcnt> 0, ("SP refcnt underflow"));		\ 	(p
 end_define
 
 begin_comment
+comment|/*  * Update the refcnt while holding the SPTREE lock.  */
+end_comment
+
+begin_function
+name|void
+name|key_addref
+parameter_list|(
+name|struct
+name|secpolicy
+modifier|*
+name|sp
+parameter_list|)
+block|{
+name|SPTREE_LOCK
+argument_list|()
+expr_stmt|;
+name|SP_ADDREF
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+name|SPTREE_UNLOCK
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Return 0 when there are known to be no SP's for the specified  * direction.  Otherwise return 1.  This is used by IPsec code  * to optimize performance.  */
 end_comment
 
