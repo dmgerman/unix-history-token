@@ -644,11 +644,16 @@ begin_decl_stmt
 name|struct
 name|mntlist
 name|mountlist
+init|=
+name|TAILQ_HEAD_INITIALIZER
+argument_list|(
+name|mountlist
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* mounted filesystem list */
+comment|/* mounted fs */
 end_comment
 
 begin_decl_stmt
@@ -1082,12 +1087,6 @@ name|simple_lock_init
 argument_list|(
 operator|&
 name|vnode_free_list_slock
-argument_list|)
-expr_stmt|;
-name|CIRCLEQ_INIT
-argument_list|(
-operator|&
-name|mountlist
 argument_list|)
 expr_stmt|;
 name|vnode_zone
@@ -1781,7 +1780,7 @@ operator|&
 name|mountlist_slock
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|mp
 argument_list|,
@@ -8510,7 +8509,7 @@ for|for
 control|(
 name|mp
 operator|=
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|mountlist
@@ -8518,12 +8517,7 @@ argument_list|)
 init|;
 name|mp
 operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|mountlist
+name|NULL
 condition|;
 name|mp
 operator|=
@@ -8547,7 +8541,7 @@ condition|)
 block|{
 name|nmp
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|mp
 argument_list|,
@@ -8592,7 +8586,7 @@ argument_list|)
 expr_stmt|;
 name|nmp
 operator|=
-name|CIRCLEQ_NEXT
+name|TAILQ_NEXT
 argument_list|(
 name|mp
 argument_list|,
@@ -9100,12 +9094,12 @@ comment|/* Make an estimate */
 end_comment
 
 begin_comment
-unit|return (SYSCTL_OUT(req, 0, 			(numvnodes + KINFO_VNODESLOP) * (VPTRSZ + VNODESZ)));  	simple_lock(&mountlist_slock); 	mp = CIRCLEQ_FIRST(&mountlist); 	for (; mp != (void *)&mountlist; mp = nmp) { 		if (vfs_busy(mp, LK_NOWAIT,&mountlist_slock, p)) { 			nmp = CIRCLEQ_NEXT(mp, mnt_list); 			continue; 		} again: 		simple_lock(&mntvnode_slock); 		for (vp = LIST_FIRST(&mp->mnt_vnodelist); 		     vp != NULL; 		     vp = nvp) {
+unit|return (SYSCTL_OUT(req, 0, 			(numvnodes + KINFO_VNODESLOP) * (VPTRSZ + VNODESZ)));  	simple_lock(&mountlist_slock); 	for (mp = TAILQ_FIRST(&mountlist); mp != NULL; mp = nmp) { 		if (vfs_busy(mp, LK_NOWAIT,&mountlist_slock, p)) { 			nmp = TAILQ_NEXT(mp, mnt_list); 			continue; 		} again: 		simple_lock(&mntvnode_slock); 		for (vp = LIST_FIRST(&mp->mnt_vnodelist); 		     vp != NULL; 		     vp = nvp) {
 comment|/* 			 * Check that the vp is still associated with 			 * this filesystem.  RACE: could have been 			 * recycled onto the same filesystem. 			 */
 end_comment
 
 begin_endif
-unit|if (vp->v_mount != mp) { 				simple_unlock(&mntvnode_slock); 				goto again; 			} 			nvp = LIST_NEXT(vp, v_mntvnodes); 			simple_unlock(&mntvnode_slock); 			if ((error = SYSCTL_OUT(req,&vp, VPTRSZ)) || 			    (error = SYSCTL_OUT(req, vp, VNODESZ))) 				return (error); 			simple_lock(&mntvnode_slock); 		} 		simple_unlock(&mntvnode_slock); 		simple_lock(&mountlist_slock); 		nmp = CIRCLEQ_NEXT(mp, mnt_list); 		vfs_unbusy(mp, p); 	} 	simple_unlock(&mountlist_slock);  	return (0); }
+unit|if (vp->v_mount != mp) { 				simple_unlock(&mntvnode_slock); 				goto again; 			} 			nvp = LIST_NEXT(vp, v_mntvnodes); 			simple_unlock(&mntvnode_slock); 			if ((error = SYSCTL_OUT(req,&vp, VPTRSZ)) || 			    (error = SYSCTL_OUT(req, vp, VNODESZ))) 				return (error); 			simple_lock(&mntvnode_slock); 		} 		simple_unlock(&mntvnode_slock); 		simple_lock(&mountlist_slock); 		nmp = TAILQ_NEXT(mp, mnt_list); 		vfs_unbusy(mp, p); 	} 	simple_unlock(&mountlist_slock);  	return (0); }
 endif|#
 directive|endif
 end_endif
@@ -9176,9 +9170,6 @@ name|struct
 name|mount
 modifier|*
 name|mp
-decl_stmt|,
-modifier|*
-name|nmp
 decl_stmt|;
 name|struct
 name|proc
@@ -9205,38 +9196,24 @@ name|initproc
 expr_stmt|;
 comment|/* XXX XXX should this be proc0? */
 comment|/* 	 * Since this only runs when rebooting, it is not interlocked. 	 */
-name|mp
-operator|=
-name|CIRCLEQ_LAST
+while|while
+condition|(
+operator|!
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|mountlist
 argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
+condition|)
+block|{
 name|mp
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
+operator|=
+name|TAILQ_LAST
+argument_list|(
 operator|&
 name|mountlist
-condition|;
-name|mp
-operator|=
-name|nmp
-control|)
-block|{
-name|nmp
-operator|=
-name|CIRCLEQ_PREV
-argument_list|(
-name|mp
 argument_list|,
-name|mnt_list
+name|mntlist
 argument_list|)
 expr_stmt|;
 name|error
@@ -9255,6 +9232,16 @@ condition|(
 name|error
 condition|)
 block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|mountlist
+argument_list|,
+name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"unmount of %s failed ("
@@ -9285,6 +9272,10 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* The unmount has removed mp from the mountlist */
 block|}
 block|}
 block|}

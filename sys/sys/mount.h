@@ -262,7 +262,7 @@ begin_struct
 struct|struct
 name|mount
 block|{
-name|CIRCLEQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|mount
 argument_list|)
@@ -2059,7 +2059,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_extern
-extern|extern	CIRCLEQ_HEAD(mntlist
+extern|extern	TAILQ_HEAD(mntlist
 operator|,
 extern|mount
 end_extern

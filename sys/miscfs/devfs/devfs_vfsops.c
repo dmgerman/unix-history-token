@@ -189,7 +189,7 @@ operator|->
 name|vfc_refcount
 operator|++
 expr_stmt|;
-name|CIRCLEQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|mountlist

@@ -690,7 +690,7 @@ operator|&
 name|mountlist_slock
 argument_list|)
 expr_stmt|;
-name|CIRCLEQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|mountlist

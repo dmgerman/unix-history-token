@@ -1651,7 +1651,7 @@ if|if
 condition|(
 name|VFS_ROOT
 argument_list|(
-name|CIRCLEQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|mountlist

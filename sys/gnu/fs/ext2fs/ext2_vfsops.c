@@ -703,7 +703,7 @@ name|error
 operator|)
 return|;
 block|}
-name|CIRCLEQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|mountlist

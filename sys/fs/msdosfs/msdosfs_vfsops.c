@@ -950,7 +950,7 @@ name|error
 operator|)
 return|;
 block|}
-name|CIRCLEQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|mountlist

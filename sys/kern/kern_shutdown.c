@@ -893,7 +893,7 @@ operator|==
 name|NODEV
 condition|)
 block|{
-name|CIRCLEQ_REMOVE
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|mountlist
