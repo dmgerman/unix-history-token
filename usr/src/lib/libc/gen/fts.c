@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.37 (Berkeley) %G%"
+literal|"@(#)fts.c	5.38 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2529,20 +2529,18 @@ name|type
 operator|==
 name|BREAD
 condition|)
-block|{
-name|cur
-operator|->
-name|fts_flags
-operator||=
-name|FTS_DONTCHDIR
-expr_stmt|;
 name|cur
 operator|->
 name|fts_errno
 operator|=
 name|errno
 expr_stmt|;
-block|}
+name|cur
+operator|->
+name|fts_flags
+operator||=
+name|FTS_DONTCHDIR
+expr_stmt|;
 name|descend
 operator|=
 literal|0
