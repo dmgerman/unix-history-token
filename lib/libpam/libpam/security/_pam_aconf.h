@@ -185,12 +185,9 @@ begin_comment
 comment|/* read both confs - read /etc/pam.d and /etc/pam.conf in serial */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PAM_READ_BOTH_CONFS
-value|1
-end_define
+begin_comment
+comment|/* #undef PAM_READ_BOTH_CONFS */
+end_comment
 
 begin_define
 define|#
