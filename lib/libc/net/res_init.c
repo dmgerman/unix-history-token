@@ -31,10 +31,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|orig_rcsid
+index|[]
+init|=
+literal|"From: Id: res_init.c,v 8.8 1997/06/01 20:34:37 vixie Exp"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 8.5 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: res_init.c,v 1.13 1997/06/27 08:22:03 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,6 +212,19 @@ begin_decl_stmt
 name|struct
 name|__res_state
 name|_res
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__BIND_RES_TEXT
+argument_list|)
+init|=
+block|{
+name|RES_TIMEOUT
+block|, }
+comment|/* Motorola, et al. */
+endif|#
+directive|endif
 decl_stmt|;
 end_decl_stmt
 
@@ -235,7 +258,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|BUFSIZ
+name|MAXDNAME
 index|]
 decl_stmt|;
 name|int
@@ -1993,7 +2016,7 @@ directive|endif
 end_endif
 
 begin_function
-name|u_int16_t
+name|u_int
 name|res_randomid
 parameter_list|()
 block|{

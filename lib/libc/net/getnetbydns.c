@@ -38,7 +38,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetbydns.c,v 1.6 1996/07/12 18:54:37 jkh Exp $"
+literal|"$Id: getnetbydns.c,v 1.11 1997/06/27 08:22:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,19 +134,6 @@ include|#
 directive|include
 file|"res_config.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|_res_close
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -369,9 +356,7 @@ index|]
 decl_stmt|,
 name|netbuf
 index|[
-name|BUFSIZ
-operator|+
-literal|1
+name|PACKETSZ
 index|]
 decl_stmt|;
 comment|/* 	 * find first satisfactory answer 	 * 	 *      answer --> +------------+  ( MESSAGE ) 	 *		   |   Header   | 	 *		   +------------+ 	 *		   |  Question  | the question for the name server 	 *		   +------------+ 	 *		   |   Answer   | RRs answering the question 	 *		   +------------+ 	 *		   | Authority  | RRs pointing toward an authority 	 *		   | Additional | RRs holding additional information 	 *		   +------------+ 	 */
@@ -1385,7 +1370,7 @@ operator||
 name|RES_USEVC
 operator|)
 expr_stmt|;
-name|_res_close
+name|res_close
 argument_list|()
 expr_stmt|;
 block|}

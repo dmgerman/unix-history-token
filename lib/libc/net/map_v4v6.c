@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethnamaddr.c,v 8.17 1996/08/05 08:31:35 vixie Exp $"
+literal|"$Id: map_v4v6.c,v 1.4 1997/02/22 15:00:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

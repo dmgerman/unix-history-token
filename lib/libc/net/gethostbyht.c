@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbyht.c,v 1.5 1996/08/29 20:07:51 peter Exp $"
+literal|"$Id: gethostbyht.c,v 1.10 1997/06/27 08:22:01 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -234,7 +234,7 @@ name|hostf
 argument_list|)
 expr_stmt|;
 name|stayopen
-operator||=
+operator|=
 name|f
 expr_stmt|;
 block|}
@@ -409,14 +409,6 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_USE_INET6
-operator|)
-operator|&&
 name|inet_pton
 argument_list|(
 name|AF_INET6
@@ -571,6 +563,7 @@ name|host_aliases
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strpbrk
@@ -579,6 +572,9 @@ name|cp
 argument_list|,
 literal|" \t"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|cp
@@ -632,6 +628,7 @@ name|cp
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|strpbrk
@@ -640,6 +637,9 @@ name|cp
 argument_list|,
 literal|" \t"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|cp
@@ -653,40 +653,6 @@ name|q
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_USE_INET6
-condition|)
-block|{
-name|char
-modifier|*
-name|bp
-init|=
-name|hostbuf
-decl_stmt|;
-name|int
-name|buflen
-init|=
-sizeof|sizeof
-name|hostbuf
-decl_stmt|;
-name|_map_v4v6_hostent
-argument_list|(
-operator|&
-name|host
-argument_list|,
-operator|&
-name|bp
-argument_list|,
-operator|&
-name|buflen
-argument_list|)
-expr_stmt|;
-block|}
 name|h_errno
 operator|=
 name|NETDB_SUCCESS
@@ -744,6 +710,8 @@ operator|=
 name|gethostent
 argument_list|()
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -856,6 +824,8 @@ operator|=
 name|gethostent
 argument_list|()
 operator|)
+operator|!=
+name|NULL
 condition|)
 if|if
 condition|(

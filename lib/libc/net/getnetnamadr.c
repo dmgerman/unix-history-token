@@ -21,20 +21,10 @@ end_if
 begin_decl_stmt
 specifier|static
 name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)$Id: getnetnamadr.c,v 1.5 1996/07/12 18:54:40 jkh Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getnetnamadr.c,v 1.5 1996/07/12 18:54:40 jkh Exp $"
+literal|"$Id: getnetnamadr.c,v 1.10 1997/06/27 08:22:02 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -642,7 +632,7 @@ name|addr
 parameter_list|,
 name|af
 parameter_list|)
-name|long
+name|u_long
 name|addr
 decl_stmt|;
 name|int
