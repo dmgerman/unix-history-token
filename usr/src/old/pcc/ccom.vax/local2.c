@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.13 (Berkeley) %G%"
+literal|"@(#)local2.c	1.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1672,7 +1672,7 @@ argument_list|)
 expr_stmt|;
 name|putstr
 argument_list|(
-literal|"\n\tbbsc\t$31,"
+literal|"\n\tjbsc\t$31,"
 argument_list|)
 expr_stmt|;
 name|adrput
