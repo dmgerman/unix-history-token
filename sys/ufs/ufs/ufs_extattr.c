@@ -621,7 +621,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 operator|(
 name|uepm
 operator|->
