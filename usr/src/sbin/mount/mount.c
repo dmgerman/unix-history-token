@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.7 (Berkeley) %G%"
+literal|"@(#)mount.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fstab.h>
 end_include
 
@@ -80,12 +86,6 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|</usr/src/local/mkmsys/macklem/mkmsys/h/mount.h>
 end_include
 
 begin_define
