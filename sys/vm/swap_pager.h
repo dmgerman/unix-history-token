@@ -172,15 +172,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|blist
-modifier|*
-name|swapblist
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|int
 name|vm_swap_size
 decl_stmt|;
@@ -262,6 +253,21 @@ parameter_list|,
 name|vm_pindex_t
 parameter_list|,
 name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|swap_pager_status
+parameter_list|(
+name|int
+modifier|*
+name|total
+parameter_list|,
+name|int
+modifier|*
+name|used
 parameter_list|)
 function_decl|;
 end_function_decl
