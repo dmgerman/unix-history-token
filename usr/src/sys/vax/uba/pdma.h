@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	pdma.h	4.2	81/02/19	*/
+comment|/*	pdma.h	4.3	82/12/30	*/
 end_comment
 
 begin_struct
@@ -8,7 +8,7 @@ struct|struct
 name|pdma
 block|{
 name|struct
-name|device
+name|dzdevice
 modifier|*
 name|p_addr
 decl_stmt|;
