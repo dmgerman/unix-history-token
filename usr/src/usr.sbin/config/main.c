@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.3 (Berkeley) %G%"
+literal|"@(#)main.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -233,6 +233,17 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * make symbolic links in compilation directory 	 * for "sys" (to make genassym.c work along with #include<sys/xxx>) 	 * and similarly for "machine". 	 */
+block|{
+name|char
+name|xxx
+index|[
+literal|80
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
 name|symlink
 argument_list|(
 literal|"../h"
@@ -243,7 +254,29 @@ literal|"sys"
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* make genassym.c work */
+name|sprintf
+argument_list|(
+name|xxx
+argument_list|,
+literal|"../%s"
+argument_list|,
+name|machinename
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|symlink
+argument_list|(
+name|xxx
+argument_list|,
+name|path
+argument_list|(
+literal|"machine"
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|makefile
 argument_list|()
 expr_stmt|;
