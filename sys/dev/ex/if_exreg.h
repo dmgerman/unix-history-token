@@ -485,6 +485,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|Multi_IA
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
 name|No_SA_Ins
 value|0x10
 end_define
@@ -494,6 +501,13 @@ define|#
 directive|define
 name|RX_CRC_InMem
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|Promisc_Mode
+value|0x01
 end_define
 
 begin_define
