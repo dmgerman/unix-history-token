@@ -1321,7 +1321,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"strfile [-iorsx] [-c char] sourcefile [datafile]\n"
+literal|"strfile [-Ciorsx] [-c char] sourcefile [datafile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
