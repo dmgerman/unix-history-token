@@ -8794,7 +8794,7 @@ name|dc_flags
 operator||=
 name|DC_TX_COALESCE
 operator||
-name|DC_TX_USE_TX_INTR
+name|DC_TX_INTR_ALWAYS
 expr_stmt|;
 name|sc
 operator|->
@@ -8802,7 +8802,7 @@ name|dc_flags
 operator||=
 name|DC_REDUCED_MII_POLL
 operator||
-name|DC_TX_ONE
+name|DC_TX_STORENFWD
 expr_stmt|;
 name|sc
 operator|->
