@@ -218,13 +218,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|lang_statement_list_type
-name|lang_output_section_statement
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|CONST
 name|char
 modifier|*
@@ -1314,6 +1307,12 @@ begin_decl_stmt
 name|lang_output_section_statement_type
 modifier|*
 name|abs_output_section
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|lang_statement_list_type
+name|lang_output_section_statement
 decl_stmt|;
 end_decl_stmt
 
@@ -15078,7 +15077,8 @@ block|}
 end_function
 
 begin_function
-name|void
+name|lang_output_section_statement_type
+modifier|*
 name|lang_enter_output_section_statement
 parameter_list|(
 name|output_section_statement_name
@@ -15246,6 +15246,9 @@ name|load_base
 operator|=
 name|ebase
 expr_stmt|;
+return|return
+name|os
+return|;
 block|}
 end_function
 

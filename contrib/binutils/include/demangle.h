@@ -109,7 +109,7 @@ value|(1<< 12)
 end_define
 
 begin_comment
-comment|/* For the HP aCC compiler; same as ARM                                            except for template arguments, etc. */
+comment|/* For the HP aCC compiler;                                             same as ARM except for                                             template arguments, etc. */
 end_comment
 
 begin_define
@@ -117,6 +117,13 @@ define|#
 directive|define
 name|DMGL_EDG
 value|(1<< 13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMGL_GNU_NEW_ABI
+value|(1<< 14)
 end_define
 
 begin_comment
@@ -127,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|DMGL_STYLE_MASK
-value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG)
+value|(DMGL_AUTO|DMGL_GNU|DMGL_LUCID|DMGL_ARM|DMGL_HP|DMGL_EDG|DMGL_GNU_NEW_ABI)
 end_define
 
 begin_comment
@@ -166,6 +173,10 @@ block|,
 name|edg_demangling
 init|=
 name|DMGL_EDG
+block|,
+name|gnu_new_abi_demangling
+init|=
+name|DMGL_GNU_NEW_ABI
 block|}
 name|current_demangling_style
 enum|;
@@ -215,6 +226,13 @@ define|#
 directive|define
 name|EDG_DEMANGLING_STYLE_STRING
 value|"edg"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_NEW_ABI_DEMANGLING_STYLE_STRING
+value|"gnu-new-abi"
 end_define
 
 begin_comment
@@ -269,6 +287,42 @@ directive|define
 name|EDG_DEMANGLING
 value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_EDG)
 end_define
+
+begin_define
+define|#
+directive|define
+name|GNU_NEW_ABI_DEMANGLING
+value|(((int) CURRENT_DEMANGLING_STYLE)& DMGL_GNU_NEW_ABI)
+end_define
+
+begin_comment
+comment|/* Provide information about the available demangle styles. This code is    pulled from gdb into libiberty because it is useful to binutils also.  */
+end_comment
+
+begin_struct
+specifier|extern
+struct|struct
+name|demangler_engine
+block|{
+specifier|const
+name|char
+modifier|*
+name|demangling_style_name
+decl_stmt|;
+name|enum
+name|demangling_styles
+name|demangling_style
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|demangling_style_doc
+decl_stmt|;
+block|}
+name|libiberty_demanglers
+index|[]
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern
@@ -347,6 +401,60 @@ argument_list|(
 operator|(
 name|int
 name|ch
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|demangling_styles
+name|cplus_demangle_set_style
+name|PARAMS
+argument_list|(
+operator|(
+expr|enum
+name|demangling_styles
+name|style
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|demangling_styles
+name|cplus_demangle_name_to_style
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* New-ABI demangling entry point, defined in cp-demangle.c.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|cplus_demangle_new_abi
+name|PARAMS
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|mangled
 operator|)
 argument_list|)
 decl_stmt|;

@@ -882,7 +882,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|BFD_ASSEMLER
+name|BFD_ASSEMBLER
 name|S_SET_WEAK
 argument_list|(
 name|symbolP
