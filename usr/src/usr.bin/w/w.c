@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)w.c	4.4 (Berkeley) %G%"
+literal|"@(#)w.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2558,15 +2558,6 @@ operator|.
 name|p_pgrp
 operator|==
 literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
-name|mproc
-operator|.
-name|p_flag
-operator|&
-name|SDETACH
 condition|)
 continue|continue;
 comment|/* find& read in the user structure */
