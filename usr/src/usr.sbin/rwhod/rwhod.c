@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.25 (Berkeley) 84/08/29"
+literal|"@(#)rwhod.c	4.26 (Berkeley) 84/09/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -325,6 +325,10 @@ index|]
 decl_stmt|;
 name|int
 name|addr
+decl_stmt|,
+name|on
+init|=
+literal|1
 decl_stmt|;
 name|struct
 name|hostent
@@ -661,9 +665,13 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_BROADCAST
 argument_list|,
-literal|0
+operator|&
+name|on
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+name|on
+argument_list|)
 argument_list|)
 operator|<
 literal|0
