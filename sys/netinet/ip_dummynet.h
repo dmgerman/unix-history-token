@@ -343,6 +343,7 @@ decl_stmt|,
 name|F
 decl_stmt|;
 comment|/* start-time, finishing time */
+comment|/* setting F< S means the timestamp is invalid. We only need      * to test this when the queue is empty.      */
 block|}
 struct|;
 end_struct
@@ -580,6 +581,11 @@ name|dn_heap
 name|backlogged_heap
 decl_stmt|;
 comment|/* random extract - key Start time */
+name|struct
+name|dn_heap
+name|idle_heap
+decl_stmt|;
+comment|/* random extract - key Start=Finish time */
 name|dn_key
 name|V
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2000 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2001 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -1986,11 +1986,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_freem
+name|printf
 argument_list|(
-name|pkt
-operator|->
-name|dn_m
+literal|"dummynet/bridge: pullup fail, dropping pkt\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2023,6 +2021,7 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
+comment|/* 	     * bdg_forward() wants a pointer to the pseudo-mbuf-header, but 	     * on return it will supply the pointer to the actual packet 	     * (originally pkt->dn_m, but could be something else now) if 	     * it has not consumed it. 	     */
 name|bdg_forward
 argument_list|(
 operator|&
@@ -2280,7 +2279,7 @@ operator|==
 name|NULL
 operator|)
 expr_stmt|;
-comment|/*      * schedule fixed-rate queues linked to this pipe:      * Account for the bw accumulated since last scheduling, then      * drain as many pkts as allowed by q->numbytes and move to      * the delay line (in p) computing output time.      * bandwidth==0 (no limit) means we can drain the whole queue,      * setting len_scaled = 0 does the job. 	 */
+comment|/*      * schedule fixed-rate queues linked to this pipe:      * Account for the bw accumulated since last scheduling, then      * drain as many pkts as allowed by q->numbytes and move to      * the delay line (in p) computing output time.      * bandwidth==0 (no limit) means we can drain the whole queue,      * setting len_scaled = 0 does the job.      */
 name|q
 operator|->
 name|numbytes
@@ -2662,41 +2661,6 @@ name|p
 operator|->
 name|sum
 expr_stmt|;
-if|if
-condition|(
-name|q
-operator|->
-name|len
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* session not backlogged any more*/
-name|heap_extract
-argument_list|(
-name|blh
-argument_list|,
-name|q
-argument_list|)
-expr_stmt|;
-comment|/* remove queue from backlogged heap */
-name|p
-operator|->
-name|sum
-operator|-=
-name|fs
-operator|->
-name|weight
-expr_stmt|;
-name|fs
-operator|->
-name|backlogged
-operator|--
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* session backlogged again: update values */
 name|q
 operator|->
 name|S
@@ -2706,6 +2670,49 @@ operator|->
 name|F
 expr_stmt|;
 comment|/* update start time */
+if|if
+condition|(
+name|q
+operator|->
+name|len
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* 	     * Session not backlogged any more, remove from backlogged 	     * and insert into idle_heap 	     */
+name|heap_extract
+argument_list|(
+name|blh
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+name|fs
+operator|->
+name|backlogged
+operator|--
+expr_stmt|;
+comment|/* p->sum -= fs->weight; XXX don't do this here ! */
+name|heap_insert
+argument_list|(
+operator|&
+operator|(
+name|p
+operator|->
+name|idle_heap
+operator|)
+argument_list|,
+name|q
+operator|->
+name|F
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* session backlogged again: update values */
 name|len
 operator|=
 operator|(
@@ -3066,6 +3073,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|struct
+name|dn_pipe
+modifier|*
+name|pe
+decl_stmt|;
 name|heaps
 index|[
 literal|0
@@ -3236,6 +3248,100 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* sweep pipes trying to expire idle flow_queues */
+for|for
+control|(
+name|pe
+operator|=
+name|all_pipes
+init|;
+name|pe
+condition|;
+name|pe
+operator|=
+name|pe
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|pe
+operator|->
+name|idle_heap
+operator|.
+name|elements
+operator|>
+literal|0
+operator|&&
+name|DN_KEY_LT
+argument_list|(
+name|pe
+operator|->
+name|idle_heap
+operator|.
+name|p
+index|[
+literal|0
+index|]
+operator|.
+name|key
+argument_list|,
+name|pe
+operator|->
+name|V
+argument_list|)
+condition|)
+block|{
+name|struct
+name|dn_flow_queue
+modifier|*
+name|q
+init|=
+name|pe
+operator|->
+name|idle_heap
+operator|.
+name|p
+index|[
+literal|0
+index|]
+operator|.
+name|object
+decl_stmt|;
+name|heap_extract
+argument_list|(
+operator|&
+operator|(
+name|pe
+operator|->
+name|idle_heap
+operator|)
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|q
+operator|->
+name|S
+operator|=
+name|q
+operator|->
+name|F
+operator|+
+literal|1
+expr_stmt|;
+comment|/* mark timestamp as invalid */
+name|pe
+operator|->
+name|sum
+operator|-=
+name|q
+operator|->
+name|fs
+operator|->
+name|weight
+expr_stmt|;
 block|}
 name|splx
 argument_list|(
@@ -3699,14 +3805,10 @@ operator|=
 name|q
 operator|->
 name|F
-operator|=
-name|fs
-operator|->
-name|pipe
-operator|->
-name|V
+operator|+
+literal|1
 expr_stmt|;
-comment|/* set virtual times */
+comment|/* hack - mark timestamp as invalid */
 name|fs
 operator|->
 name|rq
@@ -5196,6 +5298,53 @@ block|}
 else|else
 block|{
 comment|/* 	 * WF2Q: compute start time and put into backlogged list. Then 	 * look at eligibility -- if not eligibile, it means that 	 * there is some other flow already scheduled for the same pipe. 	 * If eligible, AND the pipe is idle, then call ready_event_wfq(). 	 */
+if|if
+condition|(
+name|DN_KEY_GT
+argument_list|(
+name|q
+operator|->
+name|S
+argument_list|,
+name|q
+operator|->
+name|F
+argument_list|)
+condition|)
+block|{
+comment|/* means timestamps are invalid */
+name|q
+operator|->
+name|S
+operator|=
+name|pipe
+operator|->
+name|V
+expr_stmt|;
+name|pipe
+operator|->
+name|sum
+operator|+=
+name|fs
+operator|->
+name|weight
+expr_stmt|;
+comment|/* add weight of new queue */
+block|}
+else|else
+block|{
+name|heap_extract
+argument_list|(
+operator|&
+operator|(
+name|pipe
+operator|->
+name|idle_heap
+operator|)
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
 name|q
 operator|->
 name|S
@@ -5211,6 +5360,7 @@ operator|->
 name|V
 argument_list|)
 expr_stmt|;
+block|}
 name|q
 operator|->
 name|F
@@ -5248,15 +5398,6 @@ argument_list|,
 name|q
 argument_list|)
 expr_stmt|;
-name|pipe
-operator|->
-name|sum
-operator|+=
-name|fs
-operator|->
-name|weight
-expr_stmt|;
-comment|/* new session backlogged */
 name|fs
 operator|->
 name|backlogged
@@ -5669,6 +5810,16 @@ operator|(
 name|pipe
 operator|->
 name|backlogged_heap
+operator|)
+argument_list|)
+expr_stmt|;
+name|heap_free
+argument_list|(
+operator|&
+operator|(
+name|pipe
+operator|->
+name|idle_heap
 operator|)
 argument_list|)
 expr_stmt|;
@@ -6691,7 +6842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup pipe or queue parameters. 	     */
+comment|/*  * setup pipe or queue parameters.  */
 end_comment
 
 begin_function
@@ -6888,6 +7039,7 @@ name|pipe
 operator|=
 name|x
 expr_stmt|;
+comment|/* a flowset is backlogged only if it has packets queued. 	     * Otherwise it becomes idle, so we can use the same variable 	     * to store the position in either heap. 	     */
 name|x
 operator|->
 name|backlogged_heap
@@ -6905,6 +7057,34 @@ expr_stmt|;
 name|x
 operator|->
 name|backlogged_heap
+operator|.
+name|offset
+operator|=
+name|OFFSET_OF
+argument_list|(
+expr|struct
+name|dn_flow_queue
+argument_list|,
+name|blh_pos
+argument_list|)
+expr_stmt|;
+name|x
+operator|->
+name|idle_heap
+operator|.
+name|size
+operator|=
+name|x
+operator|->
+name|idle_heap
+operator|.
+name|elements
+operator|=
+literal|0
+expr_stmt|;
+name|x
+operator|->
+name|idle_heap
 operator|.
 name|offset
 operator|=
@@ -7774,6 +7954,7 @@ name|b
 operator|==
 name|NULL
 operator|||
+operator|(
 name|b
 operator|->
 name|pipe_nr
@@ -7781,6 +7962,7 @@ operator|!=
 name|p
 operator|->
 name|pipe_nr
+operator|)
 condition|)
 return|return
 name|EINVAL
@@ -8006,6 +8188,7 @@ name|b
 operator|==
 name|NULL
 operator|||
+operator|(
 name|b
 operator|->
 name|fs_nr
@@ -8015,6 +8198,7 @@ operator|->
 name|fs
 operator|.
 name|fs_nr
+operator|)
 condition|)
 return|return
 name|EINVAL
@@ -8149,6 +8333,13 @@ argument_list|,
 name|b
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* XXX should i remove from idle_heap as well ? */
+block|fs_remove_from_heap(&(b->pipe->idle_heap), b);
+endif|#
+directive|endif
 block|}
 name|purge_flow_set
 argument_list|(
@@ -8921,7 +9112,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"DUMMYNET initialized (000608)\n"
+literal|"DUMMYNET initialized (010116)\n"
 argument_list|)
 expr_stmt|;
 name|all_pipes
