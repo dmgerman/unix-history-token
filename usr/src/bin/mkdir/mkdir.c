@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkdir.c	4.1 (Berkeley) %G%"
+literal|"@(#)mkdir.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,18 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stat.h>
 end_include
 
 begin_decl_stmt
@@ -166,6 +178,10 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|struct
+name|stat
+name|statblk
+decl_stmt|;
 specifier|register
 name|i
 operator|,
@@ -285,6 +301,17 @@ name|Errors
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
+name|stat
+argument_list|(
+name|d
+argument_list|,
+operator|&
+name|statblk
+argument_list|)
+expr_stmt|;
 name|chown
 argument_list|(
 name|d
@@ -292,8 +319,12 @@ argument_list|,
 name|getuid
 argument_list|()
 argument_list|,
-name|getgid
-argument_list|()
+operator|(
+name|int
+operator|)
+name|statblk
+operator|.
+name|st_gid
 argument_list|)
 expr_stmt|;
 name|strcpy
