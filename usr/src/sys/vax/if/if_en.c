@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_en.c	6.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_en.c	6.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2427,6 +2427,35 @@ specifier|register
 name|int
 name|off
 decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+operator|(
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
+operator|)
+operator|!=
+operator|(
+name|IFF_UP
+operator||
+name|IFF_RUNNING
+operator|)
+condition|)
+block|{
+name|error
+operator|=
+name|ENETDOWN
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 switch|switch
 condition|(
 name|dst
