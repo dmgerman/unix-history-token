@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: gethostbydns.c,v 1.1 1994/09/25 02:12:05 pst Exp $"
+literal|"$Id: gethostbydns.c,v 1.2 1994/09/25 17:45:37 pst Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1971,6 +1971,13 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|int
+name|o_res_options
+init|=
+name|_res
+operator|.
+name|options
+decl_stmt|;
 if|if
 condition|(
 name|type
@@ -2040,6 +2047,12 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_RECURSE
+expr_stmt|;
 name|n
 operator|=
 name|res_query
@@ -2063,6 +2076,12 @@ name|buf
 operator|.
 name|buf
 argument_list|)
+expr_stmt|;
+name|_res
+operator|.
+name|options
+operator|=
+name|o_res_options
 expr_stmt|;
 if|if
 condition|(
