@@ -50,6 +50,8 @@ end_include
 begin_decl_stmt
 name|Ring
 name|netoring
+decl_stmt|,
+name|netiring
 decl_stmt|;
 end_decl_stmt
 
@@ -59,6 +61,11 @@ name|netobuf
 index|[
 literal|2
 operator|*
+name|BUFSIZ
+index|]
+decl_stmt|,
+name|netibuf
+index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
@@ -84,6 +91,17 @@ name|netobuf
 argument_list|,
 sizeof|sizeof
 name|netobuf
+argument_list|)
+expr_stmt|;
+name|ring_init
+argument_list|(
+operator|&
+name|netiring
+argument_list|,
+name|netibuf
+argument_list|,
+sizeof|sizeof
+name|netibuf
 argument_list|)
 expr_stmt|;
 name|NetTrace

@@ -70,6 +70,9 @@ comment|/* flush output when interrupting? */
 name|autosynch
 decl_stmt|,
 comment|/* send interrupt characters with SYNCH? */
+name|SYNCHing
+decl_stmt|,
+comment|/* Is the stream in telnet SYNCH mode? */
 name|donebinarytoggle
 decl_stmt|,
 comment|/* the user has put us in binary */

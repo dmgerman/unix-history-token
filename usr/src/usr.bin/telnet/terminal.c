@@ -32,6 +32,8 @@ end_include
 begin_decl_stmt
 name|Ring
 name|ttyoring
+decl_stmt|,
+name|ttyiring
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +43,11 @@ name|ttyobuf
 index|[
 literal|2
 operator|*
+name|BUFSIZ
+index|]
+decl_stmt|,
+name|ttyibuf
+index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
@@ -84,6 +91,17 @@ name|ttyobuf
 argument_list|,
 sizeof|sizeof
 name|ttyobuf
+argument_list|)
+expr_stmt|;
+name|ring_init
+argument_list|(
+operator|&
+name|ttyiring
+argument_list|,
+name|ttyibuf
+argument_list|,
+sizeof|sizeof
+name|ttyibuf
 argument_list|)
 expr_stmt|;
 name|autoflush

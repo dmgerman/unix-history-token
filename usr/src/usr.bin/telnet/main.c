@@ -41,6 +41,9 @@ expr_stmt|;
 name|init_telnet
 argument_list|()
 expr_stmt|;
+name|init_sys
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
