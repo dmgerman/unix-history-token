@@ -71,6 +71,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -1869,7 +1875,9 @@ name|prison_xinpcb
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|inp
 argument_list|)

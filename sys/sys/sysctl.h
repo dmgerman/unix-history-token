@@ -307,9 +307,9 @@ struct|struct
 name|sysctl_req
 block|{
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 decl_stmt|;
 comment|/* used for access checking */
 name|int

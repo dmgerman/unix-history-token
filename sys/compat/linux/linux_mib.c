@@ -135,7 +135,9 @@ name|linux_get_osname
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -173,7 +175,9 @@ name|linux_set_osname
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|osname
 argument_list|)
@@ -251,7 +255,9 @@ name|linux_get_osrelease
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -289,7 +295,9 @@ name|linux_set_osrelease
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|osrelease
 argument_list|)
@@ -359,7 +367,9 @@ name|linux_get_oss_version
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|error
@@ -397,7 +407,9 @@ name|linux_set_oss_version
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|oss_version
 argument_list|)

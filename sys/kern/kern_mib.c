@@ -772,7 +772,9 @@ name|jailed
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|)
@@ -800,7 +802,9 @@ name|oidp
 argument_list|,
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -811,7 +815,9 @@ argument_list|,
 sizeof|sizeof
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -949,7 +955,9 @@ name|pr
 operator|=
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->

@@ -4037,7 +4037,9 @@ name|cr_cansee
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -4336,7 +4338,9 @@ literal|0
 argument_list|,
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -4445,7 +4449,9 @@ name|cr_cansee
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -4626,7 +4632,9 @@ literal|0
 argument_list|,
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|PRISON_ROOT
 argument_list|)
@@ -4846,7 +4854,9 @@ name|cr_cansee
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,

@@ -4170,7 +4170,9 @@ name|cr_cansee
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,

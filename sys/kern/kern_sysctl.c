@@ -3676,11 +3676,9 @@ argument_list|)
 expr_stmt|;
 name|req
 operator|.
-name|p
+name|td
 operator|=
 name|td
-operator|->
-name|td_proc
 expr_stmt|;
 if|if
 condition|(
@@ -4637,7 +4635,7 @@ if|if
 condition|(
 name|req
 operator|->
-name|p
+name|td
 operator|==
 name|NULL
 condition|)
@@ -4670,7 +4668,9 @@ name|securelevel_gt
 argument_list|(
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 argument_list|,
@@ -4709,7 +4709,7 @@ if|if
 condition|(
 name|req
 operator|->
-name|p
+name|td
 operator|!=
 name|NULL
 condition|)
@@ -4742,7 +4742,9 @@ name|NULL
 argument_list|,
 name|req
 operator|->
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|,
 name|flags
 argument_list|)
@@ -5117,11 +5119,9 @@ argument_list|)
 expr_stmt|;
 name|req
 operator|.
-name|p
+name|td
 operator|=
 name|td
-operator|->
-name|td_proc
 expr_stmt|;
 if|if
 condition|(
