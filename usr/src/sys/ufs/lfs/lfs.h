@@ -825,7 +825,7 @@ name|LFS_UBWRITE
 parameter_list|(
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	lfs_bwrite(BP); \ }
+value|{ \ 	USES_VOP_BWRITE; \ 	VTOI((BP)->b_vp)->i_flag |= ICHG | IUPD; \ 	VOP_BWRITE(BP); \ }
 end_define
 
 begin_comment
