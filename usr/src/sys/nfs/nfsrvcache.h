@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -14,13 +14,6 @@ name|NFSRVCACHESIZ
 value|256
 end_define
 
-begin_define
-define|#
-directive|define
-name|NFSRCHSZ
-value|256
-end_define
-
 begin_struct
 struct|struct
 name|nfsrvcache
@@ -28,19 +21,27 @@ block|{
 name|struct
 name|nfsrvcache
 modifier|*
-name|rc_chain
-index|[
-literal|2
-index|]
+name|rc_forw
 decl_stmt|;
 comment|/* Hash chain links */
 name|struct
 name|nfsrvcache
 modifier|*
-name|rc_lchain
-index|[
-literal|2
-index|]
+modifier|*
+name|rc_back
+decl_stmt|;
+comment|/* Hash chain links */
+name|struct
+name|nfsrvcache
+modifier|*
+name|rc_next
+decl_stmt|;
+comment|/* Lru list */
+name|struct
+name|nfsrvcache
+modifier|*
+modifier|*
+name|rc_prev
 decl_stmt|;
 comment|/* Lru list */
 name|u_long
@@ -86,34 +87,6 @@ comment|/* Flag bits */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|rc_forw
-value|rc_chain[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|rc_back
-value|rc_chain[1]
-end_define
-
-begin_define
-define|#
-directive|define
-name|rc_next
-value|rc_lchain[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|rc_prev
-value|rc_lchain[1]
-end_define
 
 begin_define
 define|#

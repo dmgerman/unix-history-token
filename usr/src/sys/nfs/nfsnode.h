@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.26 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsnode.h	7.27 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -45,12 +45,16 @@ block|{
 name|struct
 name|nfsnode
 modifier|*
-name|n_chain
-index|[
-literal|2
-index|]
+name|n_forw
 decl_stmt|;
-comment|/* must be first */
+comment|/* hash, forward */
+name|struct
+name|nfsnode
+modifier|*
+modifier|*
+name|n_back
+decl_stmt|;
+comment|/* hash, backward */
 name|nfsv2fh_t
 name|n_fh
 decl_stmt|;
@@ -214,20 +218,6 @@ define|#
 directive|define
 name|n_tprev
 value|n_un.un_nqnfs.un_tprev
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_forw
-value|n_chain[0]
-end_define
-
-begin_define
-define|#
-directive|define
-name|n_back
-value|n_chain[1]
 end_define
 
 begin_ifdef

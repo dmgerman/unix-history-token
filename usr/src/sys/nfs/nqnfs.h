@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nqnfs.h	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -324,6 +324,7 @@ comment|/* Fhandle hash list */
 name|struct
 name|nqlease
 modifier|*
+modifier|*
 name|lc_fhprev
 decl_stmt|;
 name|time_t
@@ -646,10 +647,11 @@ value|(time.tv_sec> VTONFS(v)->n_expiry ? \ 		 ((VTONFS(v)->n_flag& NQNFSEVICTED
 end_define
 
 begin_comment
-comment|/*  * List heads for timer queues.  */
+comment|/*  * List head for timer queue.  */
 end_comment
 
 begin_union
+specifier|extern
 union|union
 name|nqsrvthead
 block|{
@@ -670,8 +672,26 @@ literal|2
 index|]
 decl_stmt|;
 block|}
+name|nqthead
 union|;
 end_union
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|nqlease
+modifier|*
+modifier|*
+name|nqfhead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|nqfheadhash
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Nqnfs return status numbers.  */
