@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dcareg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)dcareg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -43,8 +43,11 @@ specifier|volatile
 name|short
 name|dca_ier
 decl_stmt|;
+name|u_char
+name|dca_pad4
+decl_stmt|;
 specifier|volatile
-name|short
+name|u_char
 name|dca_iir
 decl_stmt|;
 specifier|volatile
@@ -437,7 +440,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_CCD
+name|MSR_DDCD
 value|0x08
 end_define
 
@@ -458,7 +461,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSR_CCTS
+name|MSR_DCTS
 value|0x01
 end_define
 
