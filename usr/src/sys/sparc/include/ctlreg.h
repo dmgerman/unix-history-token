@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)ctlreg.h	7.3 (Berkeley) %G%  *  * from: $Header: ctlreg.h,v 1.5 92/11/26 02:04:33 torek Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * All advertising materials mentioning features or use of this software  * must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Lawrence Berkeley Laboratory.  *  * %sccs.include.redist.c%  *  *	@(#)ctlreg.h	7.4 (Berkeley) %G%  *  * from: $Header: ctlreg.h,v 1.6 93/04/27 14:29:07 torek Exp $  */
 end_comment
 
 begin_comment
@@ -48,16 +48,37 @@ begin_comment
 comment|/* PTE space (pmegs) */
 end_comment
 
-begin_comment
-comment|/*			5	   unused */
-end_comment
+begin_define
+define|#
+directive|define
+name|ASI_HWFLUSHSEG
+value|5
+end_define
 
 begin_comment
-comment|/*			6	   unused */
+comment|/* hardware assisted version of FLUSHSEG */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ASI_HWFLUSHPG
+value|6
+end_define
+
 begin_comment
-comment|/*			7	   unused */
+comment|/* hardware assisted version of FLUSHPG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASI_HWFLUSHCTX
+value|7
+end_define
+
+begin_comment
+comment|/* hardware assisted version of FLUSHCTX */
 end_comment
 
 begin_define
