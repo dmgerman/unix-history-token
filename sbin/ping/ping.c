@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.32 1998/04/02 04:33:18 imp Exp $"
+literal|"$Id: ping.c,v 1.33 1998/04/15 19:55:14 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -202,8 +202,15 @@ end_include
 begin_define
 define|#
 directive|define
+name|PHDR_LEN
+value|sizeof(struct timeval)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFDATALEN
-value|(64 - 8)
+value|(64 - PHDR_LEN)
 end_define
 
 begin_comment
@@ -1024,11 +1031,7 @@ name|outpack
 index|[
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 index|]
 expr_stmt|;
 while|while
@@ -1756,11 +1759,7 @@ if|if
 condition|(
 name|datalen
 operator|>=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 condition|)
 comment|/* can we time transfer */
 name|timing
@@ -1814,7 +1813,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|8
+name|PHDR_LEN
 init|;
 name|i
 operator|<
@@ -2786,7 +2785,7 @@ name|cc
 operator|=
 name|datalen
 operator|+
-literal|8
+name|PHDR_LEN
 expr_stmt|;
 comment|/* skips ICMP portion */
 comment|/* compute ICMP checksum here */
@@ -3117,6 +3116,10 @@ condition|(
 name|timing
 condition|)
 block|{
+name|struct
+name|timeval
+name|tv1
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|icmp_data
@@ -3147,12 +3150,27 @@ name|icmp_data
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Avoid unaligned data: */
+name|memcpy
+argument_list|(
+operator|&
+name|tv1
+argument_list|,
+name|tp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tv1
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|tvsub
 argument_list|(
 operator|&
 name|tv
 argument_list|,
-name|tp
+operator|&
+name|tv1
 argument_list|)
 expr_stmt|;
 name|triptime
@@ -3371,7 +3389,7 @@ name|icp
 operator|->
 name|icmp_data
 index|[
-literal|8
+name|PHDR_LEN
 index|]
 expr_stmt|;
 name|dp
@@ -3381,18 +3399,14 @@ name|outpack
 index|[
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 index|]
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-literal|8
+name|PHDR_LEN
 init|;
 name|i
 operator|<
@@ -3433,6 +3447,11 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\ncp:"
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 operator|(
@@ -3451,7 +3470,67 @@ for|for
 control|(
 name|i
 operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|datalen
+condition|;
+operator|++
+name|i
+operator|,
+operator|++
+name|cp
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|i
+operator|%
+literal|32
+operator|)
+operator|==
 literal|8
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n\t"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%x "
+argument_list|,
+operator|*
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\ndp:"
+argument_list|)
+expr_stmt|;
+name|cp
+operator|=
+operator|&
+name|outpack
+index|[
+literal|8
+index|]
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
 init|;
 name|i
 operator|<
@@ -5451,7 +5530,10 @@ name|printf
 argument_list|(
 literal|"   %1lx %04lx"
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|ntohl
 argument_list|(
 name|ip
@@ -5460,10 +5542,13 @@ name|ip_off
 argument_list|)
 operator|&
 literal|0xe000
-operator|)
+argument_list|)
 operator|>>
 literal|13
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|ip
@@ -6016,11 +6101,7 @@ operator|-
 operator|(
 literal|8
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|timeval
-argument_list|)
+name|PHDR_LEN
 operator|+
 name|ii
 operator|)
