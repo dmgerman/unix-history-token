@@ -254,10 +254,6 @@ comment|/*  * Page coloring parameters  */
 end_comment
 
 begin_comment
-comment|/* Each of PQ_FREE, and PQ_CACHE have PQ_HASH_SIZE entries */
-end_comment
-
-begin_comment
 comment|/* Backward compatibility for existing PQ_*CACHE config options. */
 end_comment
 
@@ -393,7 +389,7 @@ value|31
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -404,7 +400,7 @@ value|23
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -434,7 +430,7 @@ value|31
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -445,7 +441,7 @@ value|23
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -475,7 +471,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -486,7 +482,7 @@ value|7
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -527,7 +523,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -557,7 +553,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -568,7 +564,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+comment|/* Prime number somewhat less than PQ_L2_SIZE */
 end_comment
 
 begin_define
@@ -623,6 +619,10 @@ directive|define
 name|PQ_L2_MASK
 value|(PQ_L2_SIZE - 1)
 end_define
+
+begin_comment
+comment|/* PQ_CACHE and PQ_FREE represent PQ_L2_SIZE consecutive queues. */
+end_comment
 
 begin_define
 define|#
