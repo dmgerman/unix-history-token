@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)broadcast.c	1.2 (Berkeley) %G%"
+literal|"@(#)broadcast.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,9 +73,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|length
-decl_stmt|;
 specifier|extern
 name|struct
 name|in_addr
@@ -102,14 +99,6 @@ name|sin_addr
 operator|=
 name|broadcastaddr
 expr_stmt|;
-name|length
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sendto
@@ -133,7 +122,11 @@ argument_list|,
 operator|&
 name|server
 argument_list|,
-name|length
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_in
+argument_list|)
 argument_list|)
 operator|<
 literal|0
