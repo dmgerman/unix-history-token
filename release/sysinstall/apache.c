@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|APACHE_HELPFILE
-value|"apache.hlp"
+value|"apache"
 end_define
 
 begin_define
@@ -2050,6 +2050,16 @@ expr_stmt|;
 name|sleep
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vsystem
+argument_list|(
+literal|"mkdir -p %s/config"
+argument_list|,
+name|APACHE_BASE
 argument_list|)
 expr_stmt|;
 name|sprintf

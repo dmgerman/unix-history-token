@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.3 1995/10/22 01:32:42 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: doc.c,v 1.5 1995/10/22 17:39:05 jkh Exp $  *  * Jordan Hubbard  *  * My contributions are in the public domain.  *  * Parts of this file are also blatently stolen from Poul-Henning Kamp's  * previous version of sysinstall, and as such fall under his "BEERWARE license"  * so buy him a beer if you like it!  Buy him a beer for me, too!  * Heck, get him completely drunk and send me pictures! :-)  */
 end_comment
 
 begin_include
@@ -178,6 +178,23 @@ name|str
 parameter_list|)
 block|{
 name|char
+name|tmp
+index|[
+literal|512
+index|]
+decl_stmt|,
+name|target
+index|[
+literal|512
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|where
+init|=
+name|NULL
+decl_stmt|;
+name|char
 modifier|*
 name|browser
 init|=
@@ -220,12 +237,9 @@ argument_list|,
 literal|"Home"
 argument_list|)
 condition|)
-name|vsystem
-argument_list|(
-literal|"%s http://www.freebsd.org"
-argument_list|,
-name|browser
-argument_list|)
+name|where
+operator|=
+literal|"http://www.freebsd.org"
 expr_stmt|;
 elseif|else
 if|if
@@ -238,15 +252,17 @@ argument_list|,
 literal|"Other"
 argument_list|)
 condition|)
-block|{     }
+name|where
+operator|=
+name|msgGetInput
+argument_list|(
+literal|"http://www.freebsd.org"
+argument_list|,
+literal|"Please enter the URL of the location you wish to visit."
+argument_list|)
+expr_stmt|;
 else|else
 block|{
-name|char
-name|target
-index|[
-literal|512
-index|]
-decl_stmt|;
 name|sprintf
 argument_list|(
 name|target
@@ -260,27 +276,42 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|file_readable
 argument_list|(
 name|target
 argument_list|)
 condition|)
-name|vsystem
+name|sprintf
 argument_list|(
-literal|"%s file:%s"
+name|target
+argument_list|,
+literal|"http://www.freebsd.org/%s"
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|where
+operator|=
+name|target
+expr_stmt|;
+block|}
+name|sprintf
+argument_list|(
+name|tmp
+argument_list|,
+literal|"%s %s"
 argument_list|,
 name|browser
 argument_list|,
-name|target
+name|where
 argument_list|)
 expr_stmt|;
-else|else
-name|vsystem
+name|systemExecute
 argument_list|(
-literal|"%s http://www.freebsd.org/%s"
+name|tmp
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|RET_SUCCESS
 return|;
