@@ -149,6 +149,13 @@ begin_comment
 comment|/* end of driver specific options */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PSM_DRIVER_NAME
+value|"psm"
+end_define
+
 begin_comment
 comment|/* input queue */
 end_comment
@@ -1452,7 +1459,7 @@ name|driver_t
 name|psm_driver
 init|=
 block|{
-literal|"psm"
+name|PSM_DRIVER_NAME
 block|,
 name|psm_methods
 block|,
@@ -1504,7 +1511,7 @@ comment|/* strategy */
 name|nostrategy
 block|,
 comment|/* name */
-literal|"psm"
+name|PSM_DRIVER_NAME
 block|,
 comment|/* maj */
 name|CDEV_MAJOR
@@ -3297,7 +3304,10 @@ name|driver
 operator|->
 name|name
 argument_list|,
-literal|0
+name|device_get_unit
+argument_list|(
+name|parent
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12978,6 +12988,13 @@ block|}
 block|,
 comment|/* PNP0313, XXX */
 block|{
+literal|0x80374d24
+block|,
+literal|"IBM PS/2 mouse port"
+block|}
+block|,
+comment|/* IBM3780, ThinkPad */
+block|{
 literal|0
 block|}
 block|}
@@ -13002,6 +13019,25 @@ decl_stmt|;
 name|u_long
 name|irq
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
+name|name
+operator|=
+name|PSM_DRIVER_NAME
+expr_stmt|;
+name|unit
+operator|=
+name|device_get_unit
+argument_list|(
+name|atkbdc
+argument_list|)
+expr_stmt|;
+comment|/* 	 * The PnP BIOS and ACPI are supposed to assign an IRQ (12) 	 * to the PS/2 mouse device node. But, some buggy PnP BIOS 	 * declares the PS/2 mouse device node without the IRQ! 	 * If this happens, we shall refer to device hints. 	 * If we still don't find it there, use a hardcoded value... XXX 	 */
 name|irq
 operator|=
 name|bus_get_resource_start
@@ -13019,21 +13055,50 @@ name|irq
 operator|<=
 literal|0
 condition|)
-return|return
-name|ENXIO
-return|;
-comment|/* shouldn't happen */
+block|{
+if|if
+condition|(
+name|resource_long_value
+argument_list|(
+name|name
+argument_list|,
+name|unit
+argument_list|,
+literal|"irq"
+argument_list|,
+operator|&
+name|irq
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|irq
+operator|=
+literal|12
+expr_stmt|;
+comment|/* XXX */
+name|device_printf
+argument_list|(
+name|me
+argument_list|,
+literal|"irq resource info is missing; "
+literal|"assuming irq %ld\n"
+argument_list|,
+name|irq
+argument_list|)
+expr_stmt|;
+block|}
 name|psm
 operator|=
 name|BUS_ADD_CHILD
 argument_list|(
 name|atkbdc
 argument_list|,
-literal|1
+name|KBDC_RID_AUX
 argument_list|,
-literal|"psm"
+name|name
 argument_list|,
-literal|0
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -13107,7 +13172,63 @@ condition|)
 return|return
 name|ENXIO
 return|;
-comment|/* 	 * If we find an atkbdc device on the same bus, 	 * create our copy there. 	 */
+comment|/* If we don't find an atkbdc device on the same bus, quit. */
+name|atkbdc
+operator|=
+name|device_find_child
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|ATKBDC_DRIVER_NAME
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|atkbdc
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENXIO
+return|;
+comment|/* keep quiet */
+if|if
+condition|(
+operator|!
+name|bootverbose
+condition|)
+name|device_quiet
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|psmcpnp_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|device_t
+name|atkbdc
+decl_stmt|;
+comment|/* create our copy under the keyboard controller on the same bus. */
 name|atkbdc
 operator|=
 name|device_find_child
@@ -13150,32 +13271,6 @@ argument_list|,
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* keep quiet */
-if|if
-condition|(
-operator|!
-name|bootverbose
-condition|)
-name|device_quiet
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|psmcpnp_attach
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
 return|return
 literal|0
 return|;

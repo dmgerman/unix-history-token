@@ -257,7 +257,10 @@ name|driver
 operator|->
 name|name
 argument_list|,
-literal|0
+name|device_get_unit
+argument_list|(
+name|parent
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

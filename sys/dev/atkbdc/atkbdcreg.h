@@ -865,10 +865,6 @@ begin_enum
 enum|enum
 name|kbdc_device_ivar
 block|{
-name|KBDC_IVAR_IRQ
-block|,
-name|KBDC_IVAR_FLAGS
-block|,
 name|KBDC_IVAR_VENDORID
 block|,
 name|KBDC_IVAR_SERIAL
