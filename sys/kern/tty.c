@@ -15842,11 +15842,6 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
-name|tty_close
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|tp
 operator|->
 name|t_do_timestamp
@@ -15870,6 +15865,11 @@ operator|.
 name|mode
 operator|=
 literal|0
+expr_stmt|;
+name|tty_close
+argument_list|(
+name|tp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
