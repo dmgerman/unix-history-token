@@ -717,6 +717,11 @@ argument_list|,
 name|dev
 argument_list|,
 name|pin
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|ap_prt
 argument_list|)
 operator|)
 return|;
