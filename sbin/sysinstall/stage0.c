@@ -62,19 +62,19 @@ literal|"2. Release Notes"
 block|,
 literal|"Read the 2.0 release notes (recommended)."
 block|,
-literal|"2. COPYRIGHT"
+literal|"3. COPYRIGHT"
 block|,
 literal|"Read FreeBSD Copyright Information."
 block|,
-literal|"3. Proceed"
+literal|"4. Proceed"
 block|,
 literal|"Proceed with installation."
 block|,
-literal|"4. Fixit"
+literal|"5. Fixit"
 block|,
 literal|"Repair existing installation (`fixit' mode)."
 block|,
-literal|"5. Quit"
+literal|"6. Quit"
 block|,
 literal|"Don't do anything, just reboot."
 block|, }
@@ -102,7 +102,7 @@ literal|75
 argument_list|,
 literal|6
 argument_list|,
-literal|5
+literal|6
 argument_list|,
 name|welcome
 argument_list|,
