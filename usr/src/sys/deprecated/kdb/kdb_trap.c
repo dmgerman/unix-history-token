@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_trap.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_trap.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -79,6 +79,8 @@ argument_list|,
 argument|code
 argument_list|,
 argument|curproc
+argument_list|,
+argument|kstack
 argument_list|)
 end_macro
 
@@ -95,6 +97,12 @@ name|struct
 name|proc
 modifier|*
 name|curproc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|kstack
 decl_stmt|;
 end_decl_stmt
 
@@ -133,6 +141,27 @@ name|int
 operator|)
 name|curproc
 expr_stmt|;
+if|if
+condition|(
+name|executing
+condition|)
+name|delbp
+argument_list|()
+expr_stmt|;
+name|executing
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|kstack
+condition|)
+name|printf
+argument_list|(
+literal|"(from kernel stack)\n"
+argument_list|)
+expr_stmt|;
+comment|/* after delbp() */
 name|printtrap
 argument_list|(
 operator|(
