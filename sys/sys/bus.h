@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997,1998 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997,1998,2003 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -164,7 +164,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|driver
+name|kobj_class
 name|driver_t
 typedef|;
 end_typedef
@@ -305,17 +305,16 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_comment
+comment|/*  * This structure is deprecated. Use the kobj(9) macro DEFINE_CLASS to  * declare classes which implement device drivers.  */
+end_comment
+
 begin_struct
 struct|struct
 name|driver
 block|{
 name|KOBJ_CLASS_FIELDS
 expr_stmt|;
-name|void
-modifier|*
-name|priv
-decl_stmt|;
-comment|/* driver private data */
 block|}
 struct|;
 end_struct
@@ -1904,8 +1903,7 @@ parameter_list|(
 name|devclass_t
 name|dc
 parameter_list|,
-name|driver_t
-modifier|*
+name|kobj_class_t
 name|driver
 parameter_list|)
 function_decl|;
@@ -1918,8 +1916,7 @@ parameter_list|(
 name|devclass_t
 name|dc
 parameter_list|,
-name|driver_t
-modifier|*
+name|kobj_class_t
 name|driver
 parameter_list|)
 function_decl|;
@@ -1950,8 +1947,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|driver_t
-modifier|*
+name|kobj_class_t
 name|devclass_find_driver
 parameter_list|(
 name|devclass_t
@@ -2042,6 +2038,29 @@ name|dc
 parameter_list|,
 name|int
 name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|devclass_set_parent
+parameter_list|(
+name|devclass_t
+name|dc
+parameter_list|,
+name|devclass_t
+name|pdc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|devclass_t
+name|devclass_get_parent
+parameter_list|(
+name|devclass_t
+name|dc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2376,13 +2395,8 @@ name|char
 modifier|*
 name|dmd_busname
 decl_stmt|;
-name|driver_t
-modifier|*
-modifier|*
-name|dmd_drivers
-decl_stmt|;
-name|int
-name|dmd_ndrivers
+name|kobj_class_t
+name|dmd_driver
 decl_stmt|;
 name|devclass_t
 modifier|*
@@ -2410,28 +2424,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\ 									\
-value|static driver_t *name##_##busname##_driver_list[] = {&driver };	\ static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	name##_##busname##_driver_list,					\ 	(sizeof name##_##busname##_driver_list) /			\ 		(sizeof name##_##busname##_driver_list[0]),		\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MULTI_DRIVER_MODULE
-parameter_list|(
-name|name
-parameter_list|,
-name|busname
-parameter_list|,
-name|drivers
-parameter_list|,
-name|devclass
-parameter_list|,
-name|evh
-parameter_list|,
-name|arg
-parameter_list|)
-define|\ 									\
-value|static driver_t name##_##busname##_driver_list[] = drivers;		\ static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	name##_##busname##_driver_list,					\ 	(sizeof name##_##busname##_driver_list) /			\ 		(sizeof name##_##busname##_driver_list[0]),		\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	(kobj_class_t)&driver,						\&devclass							\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
 end_define
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2000 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
+comment|/*-  * Copyright (c) 2000,2003 Doug Rabson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -111,6 +111,8 @@ value|\ 	kobj_method_t	*methods;
 comment|/* method table */
 value|\ 	size_t		size;
 comment|/* object size */
+value|\ 	kobj_class_t	*baseclasses;
+comment|/* base classes */
 value|\ 	u_int		refs;
 comment|/* reference count */
 value|\ 	kobj_ops_t	ops
@@ -168,6 +170,7 @@ struct|struct
 name|kobj_ops
 block|{
 name|kobj_method_t
+modifier|*
 name|cache
 index|[
 name|KOBJ_CACHE_SIZE
@@ -189,7 +192,8 @@ name|int
 name|id
 decl_stmt|;
 comment|/* unique ID */
-name|kobjop_t
+name|kobj_method_t
+modifier|*
 name|deflt
 decl_stmt|;
 comment|/* default implementation */
@@ -213,6 +217,24 @@ parameter_list|)
 value|{&NAME##_desc, (kobjop_t) FUNC }
 end_define
 
+begin_comment
+comment|/*  * Declare a class (which should be defined in another file.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DECLARE_CLASS
+parameter_list|(
+name|name
+parameter_list|)
+value|extern struct kobj_class name
+end_define
+
+begin_comment
+comment|/*  * Define a class with no base classes (api backward-compatible. with  * FreeBSD-5.1 and earlier).  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -224,8 +246,100 @@ name|methods
 parameter_list|,
 name|size
 parameter_list|)
-define|\ 						\
-value|struct kobj_class name ## _class = {		\ 	#name, methods, size			\ }
+define|\
+value|DEFINE_CLASS_0(name, name ## _class, methods, size)
+end_define
+
+begin_comment
+comment|/*  * Define a class with no base classes. Use like this:  *  * DEFINE_CLASS_0(foo, foo_class, foo_methods, sizeof(foo_softc));  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFINE_CLASS_0
+parameter_list|(
+name|name
+parameter_list|,
+name|classvar
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
+parameter_list|)
+define|\ 							\
+value|struct kobj_class classvar = {				\ 	#name, methods, size, 0				\ }
+end_define
+
+begin_comment
+comment|/*  * Define a class inheriting a single base class. Use like this:  *  * DEFINE_CLASS1(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar);  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFINE_CLASS_1
+parameter_list|(
+name|name
+parameter_list|,
+name|classvar
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
+parameter_list|,	\
+name|base1
+parameter_list|)
+define|\ 							\
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1, 0 };					\ struct kobj_class classvar = {				\ 	#name, methods, size, name ## _baseclasses	\ }
+end_define
+
+begin_comment
+comment|/*  * Define a class inheriting two base classes. Use like this:  *  * DEFINE_CLASS2(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz);  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFINE_CLASS_2
+parameter_list|(
+name|name
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
+parameter_list|,		\
+name|base1
+parameter_list|,
+name|base2
+parameter_list|)
+define|\ 							\
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2, 0 };					\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
+end_define
+
+begin_comment
+comment|/*  * Define a class inheriting three base classes. Use like this:  *  * DEFINE_CLASS3(foo, foo_class, foo_methods, sizeof(foo_softc),  *			  bar, baz, foobar);  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFINE_CLASS_3
+parameter_list|(
+name|name
+parameter_list|,
+name|methods
+parameter_list|,
+name|size
+parameter_list|,		\
+name|base1
+parameter_list|,
+name|base2
+parameter_list|,
+name|base3
+parameter_list|)
+define|\ 							\
+value|static kobj_class_t name ## _baseclasses[] =		\ 	{&base1,					\&base2,					\&base3, 0 };					\ struct kobj_class name ## _class = {			\ 	#name, methods, size, name ## _baseclasses	\ }
 end_define
 
 begin_comment
@@ -379,17 +493,15 @@ name|OPS
 parameter_list|,
 name|OP
 parameter_list|)
-value|do {					\ 	kobjop_desc_t _desc =&OP##_##desc;				\ 	kobj_method_t *_ce =						\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];		\ 	if (_ce->desc != _desc) {					\ 		kobj_lookup_misses++;					\ 		kobj_lookup_method(OPS->cls->methods, _ce, _desc);	\ 	} else {							\ 		kobj_lookup_hits++;					\ 	}								\ 	_m = _ce->func;							\ } while(0)
+value|do {				\ 	kobjop_desc_t _desc =&OP##_##desc;			\ 	kobj_method_t **_cep =					\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];	\ 	kobj_method_t *_ce = *_cep;				\ 	kobj_lookup_hits++;
+comment|/* assume hit */
+value|\ 	if (_ce->desc != _desc)					\ 		_ce = kobj_lookup_method(OPS->cls,		\ 					 _cep, _desc);		\ 	_m = _ce->func;						\ } while(0)
 end_define
 
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* !KOBJ_STATS */
-end_comment
 
 begin_define
 define|#
@@ -400,7 +512,7 @@ name|OPS
 parameter_list|,
 name|OP
 parameter_list|)
-value|do {					\ 	kobjop_desc_t _desc =&OP##_##desc;				\ 	kobj_method_t *_ce =						\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];		\ 	if (_ce->desc != _desc)						\ 		kobj_lookup_method(OPS->cls->methods, _ce, _desc);	\ 	_m = _ce->func;							\ } while(0)
+value|do {				\ 	kobjop_desc_t _desc =&OP##_##desc;			\ 	kobj_method_t **_cep =					\&OPS->cache[_desc->id& (KOBJ_CACHE_SIZE-1)];	\ 	kobj_method_t *_ce = *_cep;				\ 	if (_ce->desc != _desc)					\ 		_ce = kobj_lookup_method(OPS->cls,		\ 					 _cep, _desc);		\ 	_m = _ce->func;						\ } while(0)
 end_define
 
 begin_endif
@@ -408,24 +520,34 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* !KOBJ_STATS */
-end_comment
-
 begin_function_decl
-name|void
-name|kobj_lookup_method
-parameter_list|(
 name|kobj_method_t
 modifier|*
-name|methods
+name|kobj_lookup_method
+parameter_list|(
+name|kobj_class_t
+name|cls
 parameter_list|,
 name|kobj_method_t
 modifier|*
-name|ce
+modifier|*
+name|cep
 parameter_list|,
 name|kobjop_desc_t
 name|desc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Default method implementation. Returns ENXIO.  */
+end_comment
+
+begin_function_decl
+name|int
+name|kobj_error_method
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
