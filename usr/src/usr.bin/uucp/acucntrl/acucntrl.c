@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.6 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -33,6 +33,12 @@ include|#
 directive|include
 file|"uucp.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DIALINOUT
+end_ifdef
 
 begin_include
 include|#
@@ -2048,6 +2054,9 @@ argument_list|(
 name|device
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|BRL4_2
 name|utmploc
 operator|=
 sizeof|sizeof
@@ -2055,6 +2064,16 @@ argument_list|(
 name|utmp
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+else|BRL4_2
+name|utmploc
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+endif|BRL4_2
 while|while
 condition|(
 name|fgets
@@ -2095,6 +2114,22 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|linebuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'#'
+operator|&&
+name|linebuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|utmploc
 operator|+=
 sizeof|sizeof
@@ -4128,6 +4163,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|DIALINOUT
+end_endif
 
 end_unit
 

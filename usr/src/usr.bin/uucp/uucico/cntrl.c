@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cntrl.c	5.7 (Berkeley) %G%"
+literal|"@(#)cntrl.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4079,7 +4079,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/***  *	rmesg(c, msg, n)	read message 'c'  *				try 'n' times  *	char *msg, c;  *  *	return code:  0  |  FAIL  */
+comment|/*  *	read message 'c'. try 'n' times  *  *	return code:  SUCCESS  |  FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -4112,7 +4112,7 @@ block|{
 name|char
 name|str
 index|[
-literal|128
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|DEBUG
@@ -4273,7 +4273,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	wmesg(m, s)	write a message (type m)  *	char *s, m;  *  *	return codes: 0 - ok | FAIL - ng  */
+comment|/*  *	write a message (type m)  *  *	return codes: SUCCESS - ok | FAIL - ng  */
 end_comment
 
 begin_expr_stmt
@@ -4329,7 +4329,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	notify		mail results of command  *  *	return codes:  none  */
+comment|/*  *	mail results of command  *  *	return codes:  none  */
 end_comment
 
 begin_macro
@@ -4368,7 +4368,7 @@ block|{
 name|char
 name|str
 index|[
-literal|200
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|int
@@ -4460,7 +4460,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	lnotify(user, file, mesg)	- local notify  *  *	return code - none  */
+comment|/*  *	local notify  *  *	return code - none  */
 end_comment
 
 begin_macro
@@ -4522,7 +4522,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	startup(role)  *	int role;  *  *	startup  -  this routine will converse with the remote  *	machine, agree upon a protocol (if possible) and start the  *	protocol.  *  *	return codes:  *		SUCCESS - successful protocol selection  *		FAIL - can't find common or open failed  */
+comment|/*  *	converse with the remote machine, agree upon a protocol (if possible)  *	and start the protocol.  *  *	return codes:  *		SUCCESS - successful protocol selection  *		FAIL - can't find common or open failed  */
 end_comment
 
 begin_macro
@@ -4758,7 +4758,7 @@ end_if
 
 begin_comment
 unit|}
-comment|/*******  *	char  *	fptcl(str)  *	char *str;  *  *	fptcl  -  this routine will choose a protocol from  *	the input string (str) and return the found letter.  *  *	return codes:  *		'\0'  -  no acceptable protocol  *		any character  -  the chosen protocol  */
+comment|/*  *	choose a protocol from the input string (str) and return the it  *  *	return codes:  *		'\0'  -  no acceptable protocol  *		any character  -  the chosen protocol  */
 end_comment
 
 begin_expr_stmt
@@ -4784,8 +4784,7 @@ name|p
 decl_stmt|;
 specifier|extern
 name|char
-modifier|*
-name|Flds
+name|LineType
 index|[]
 decl_stmt|;
 for|for
@@ -4820,10 +4819,7 @@ name|strcmp
 argument_list|(
 literal|"TCP"
 argument_list|,
-name|Flds
-index|[
-name|F_LINE
-index|]
+name|LineType
 argument_list|)
 condition|)
 continue|continue;
@@ -4846,10 +4842,7 @@ name|strcmp
 argument_list|(
 literal|"PAD"
 argument_list|,
-name|Flds
-index|[
-name|F_LINE
-index|]
+name|LineType
 argument_list|)
 condition|)
 continue|continue;
@@ -4884,7 +4877,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	char *  *	blptcl(str)  *	char *str;  *  *	blptcl  -  this will build a string of the  *	letters of the available protocols and return  *	the string (str).  *  *	return:  *		a pointer to string (str)  */
+comment|/*  *	build a string of the letters of the available protocols   */
 end_comment
 
 begin_function
@@ -4949,7 +4942,7 @@ block|}
 end_function
 
 begin_comment
-comment|/***  *	stptcl(c)  *	char *c;  *  *	stptcl  -  this routine will set up the six routines  *	(Rdmsg, Wrmsg, Rddata, Wrdata, Turnon, Turnoff) for the  *	desired protocol.  *  *	return codes:  *		SUCCESS - ok  *		FAIL - no find or failed to open  *  */
+comment|/*  *	this routine will set up the six routines  *	(Rdmsg, Wrmsg, Rddata, Wrdata, Turnon, Turnoff) for the  *	desired protocol.  *  *	return codes:  *		SUCCESS - ok  *		FAIL - no find or failed to open  *  */
 end_comment
 
 begin_expr_stmt
@@ -5080,7 +5073,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	putinpub	put file in public place  *			if successful, filename is modified  *  *	return code  0 | FAIL  */
+comment|/*  *	put file in public place. if successful, filename is modified  *  *	return code  SUCCESS | FAIL  */
 end_comment
 
 begin_expr_stmt
@@ -5098,10 +5091,10 @@ operator|*
 name|file
 operator|,
 operator|*
-name|user
+name|tmp
 operator|,
 operator|*
-name|tmp
+name|user
 expr_stmt|;
 end_expr_stmt
 
@@ -5143,6 +5136,15 @@ literal|0
 condition|)
 block|{
 comment|/* can not make directories */
+name|DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot mkdirs(%s)\n"
+argument_list|,
+name|fullname
+argument_list|)
+expr_stmt|;
 return|return
 name|FAIL
 return|;
@@ -5198,7 +5200,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	unlinkdf(file)	- unlink D. file  *  *	return code - none  */
+comment|/*  *	unlink D. file  *  *	return code - none  */
 end_comment
 
 begin_expr_stmt
@@ -5237,7 +5239,7 @@ block|}
 end_block
 
 begin_comment
-comment|/***  *	arrived - notify receiver of arrived file  *  *	return code - none  */
+comment|/*  *	notify receiver of arrived file  *  *	return code - none  */
 end_comment
 
 begin_macro

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uux.c	5.5 (Berkeley) %G%"
+literal|"@(#)uux.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ name|APPCMD
 parameter_list|(
 name|d
 parameter_list|)
-value|{\ char *p; for (p = d; *p != '\0';) *cmdp++ = *p++; *cmdp++ = ' '; *cmdp = '\0';}
+value|{\ register char *p; for (p = d; *p != '\0';)\ 	{*cmdp++ = *p++;\ 		if(cmdp>(sizeof(cmd)+&cmd[0])){\ 			fprintf(stderr,"argument list too long\n");\ 			cleanup(EX_SOFTWARE);\ 		}\ 	}\ 	*cmdp++ = ' '; *cmdp = '\0';}
 end_define
 
 begin_define
@@ -81,7 +81,7 @@ name|d
 parameter_list|,
 name|e
 parameter_list|)
-value|{\ fprintf(f, "S %s %s %s -%s %s 0666\n", a, b, c, d, e); }
+value|{\ 	fprintf(f, "S %s %s %s -%s %s 0666\n", a, b, c, d, e); }
 end_define
 
 begin_define
@@ -204,12 +204,16 @@ comment|/* Try link before copy */
 name|char
 name|buf
 index|[
+literal|2
+operator|*
 name|BUFSIZ
 index|]
 decl_stmt|;
 name|char
 name|inargs
 index|[
+literal|2
+operator|*
 name|BUFSIZ
 index|]
 decl_stmt|;
@@ -237,6 +241,8 @@ decl_stmt|;
 name|char
 name|cmd
 index|[
+literal|2
+operator|*
 name|BUFSIZ
 index|]
 decl_stmt|;
@@ -250,6 +256,8 @@ decl_stmt|;
 name|char
 name|prm
 index|[
+literal|2
+operator|*
 name|BUFSIZ
 index|]
 decl_stmt|;
@@ -1090,6 +1098,44 @@ argument_list|,
 name|fpd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"stdin"
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fpd
+argument_list|)
+condition|)
+block|{
+name|perror
+argument_list|(
+name|dfile
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|fclose
 argument_list|(
@@ -2244,7 +2290,7 @@ argument_list|)
 expr_stmt|;
 name|cleanup
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
@@ -2259,6 +2305,28 @@ argument_list|,
 name|cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fprx
+argument_list|)
+condition|)
+block|{
+name|logent
+argument_list|(
+name|cmd
+argument_list|,
+literal|"COULD NOT QUEUE XQT"
+argument_list|)
+expr_stmt|;
+name|cleanup
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|logent
 argument_list|(
 name|cmd
@@ -2341,6 +2409,18 @@ name|cflag
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ferror
+argument_list|(
+name|fpc
+argument_list|)
+condition|)
+name|cleanup
+argument_list|(
+name|EX_IOERR
+argument_list|)
+expr_stmt|;
 name|fclose
 argument_list|(
 name|fpc

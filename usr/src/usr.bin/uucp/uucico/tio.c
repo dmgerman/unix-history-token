@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tio.c	4.5 (Berkeley) %G%"
+literal|"@(#)tio.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -536,6 +536,11 @@ name|defined
 argument_list|(
 name|pdp11
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
+argument_list|)
 name|bufr
 operator|.
 name|t_nbytes
@@ -550,7 +555,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|!vax and !pdp11
+else|!vax and !pdp11 and !ns32000
 name|bufr
 operator|.
 name|t_nbytes
@@ -559,7 +564,7 @@ name|len
 expr_stmt|;
 endif|#
 directive|endif
-endif|!vax and !pdp11
+endif|!vax and !pdp11 and !ns32000
 name|DEBUG
 argument_list|(
 literal|8
@@ -937,6 +942,11 @@ name|defined
 argument_list|(
 name|pdp11
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
+argument_list|)
 name|Nbytes
 operator|=
 name|ntohl
@@ -946,7 +956,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|vax or pdp11
+endif|vax or pdp11 or ns32000
 name|DEBUG
 argument_list|(
 literal|8

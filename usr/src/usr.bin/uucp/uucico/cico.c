@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cico.c	5.11 (Berkeley) %G%"
+literal|"@(#)cico.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1317,11 +1317,6 @@ argument_list|)
 expr_stmt|;
 block|}
 name|fixmode
-argument_list|(
-name|Ifn
-argument_list|)
-expr_stmt|;
-name|getbaud
 argument_list|(
 name|Ifn
 argument_list|)
@@ -2817,31 +2812,34 @@ operator|!=
 literal|'\177'
 condition|)
 block|{
-name|char
-name|buf
-index|[
-name|MAXFULLNAME
-index|]
-decl_stmt|;
-name|sprintf
+name|DEBUG
 argument_list|(
-name|buf
+literal|2
 argument_list|,
-literal|" -p%c -vgrade=%c"
-argument_list|,
-name|MaxGrade
+literal|"Max Grade this transfer is %c\n"
 argument_list|,
 name|MaxGrade
 argument_list|)
 expr_stmt|;
-name|strcat
+name|sprintf
 argument_list|(
-name|rflags
+name|msg
 argument_list|,
-name|buf
+literal|"%s -Q%d -p%c -vgrade=%c %s"
+argument_list|,
+name|Myname
+argument_list|,
+name|seq
+argument_list|,
+name|MaxGrade
+argument_list|,
+name|MaxGrade
+argument_list|,
+name|rflags
 argument_list|)
 expr_stmt|;
 block|}
+else|else
 name|sprintf
 argument_list|(
 name|msg
@@ -2853,21 +2851,6 @@ argument_list|,
 name|seq
 argument_list|,
 name|rflags
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|MaxGrade
-operator|!=
-literal|'\177'
-condition|)
-name|DEBUG
-argument_list|(
-literal|2
-argument_list|,
-literal|"Max Grade this transfer is %c\n"
-argument_list|,
-name|MaxGrade
 argument_list|)
 expr_stmt|;
 name|omsg

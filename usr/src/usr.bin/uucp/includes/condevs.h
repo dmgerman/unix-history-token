@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	condevs.h	4.3	85/06/19	*/
+comment|/*	condevs.h	4.4	86/01/24	*/
 end_comment
 
 begin_include
@@ -210,6 +210,31 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAYES2400
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|hyspopn24
+argument_list|()
+decl_stmt|,
+name|hystop24n
+argument_list|()
+decl_stmt|,
+name|hyscls
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|HAYES2400
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAYESQ
 end_ifdef
 
@@ -253,6 +278,28 @@ begin_endif
 endif|#
 directive|endif
 endif|NOVATION
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CDS224
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|cdsopn224
+argument_list|()
+decl_stmt|,
+name|cdscls224
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|CDs224
 end_endif
 
 begin_ifdef
