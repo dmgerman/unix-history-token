@@ -6387,7 +6387,7 @@ name|xpl0
 argument_list|)
 argument_list|,
 operator|(
-literal|"policy too short: %u"
+literal|"policy too short: %zu"
 operator|,
 name|len
 operator|)
