@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.48 1997/04/28 10:31:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: installUpgrade.c,v 1.49 1997/05/09 07:44:19 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -62,6 +62,18 @@ include|#
 directive|include
 file|<sys/mount.h>
 end_include
+
+begin_function_decl
+specifier|static
+name|int
+name|installUpgradeNonInteractive
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -875,6 +887,19 @@ name|extractingBin
 init|=
 name|TRUE
 decl_stmt|;
+if|if
+condition|(
+name|variable_get
+argument_list|(
+name|VAR_NONINTERACTIVE
+argument_list|)
+condition|)
+return|return
+name|installUpgradeNonInteractive
+argument_list|(
+name|self
+argument_list|)
+return|;
 name|variable_set2
 argument_list|(
 name|SYSTEM_STATE
@@ -1357,7 +1382,7 @@ if|if
 condition|(
 name|vsystem
 argument_list|(
-literal|"tar -cf - -C /etc . | tar -xpf - -C %s"
+literal|"tar -cBpf - -C /etc . | tar -xBpf - -C %s"
 argument_list|,
 name|saved_etc
 argument_list|)
@@ -1582,6 +1607,493 @@ literal|"that, now would be a good time.  When you're ready to reboot into\n"
 literal|"the new system, just exit the installation."
 argument_list|)
 expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|installUpgradeNonInteractive
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|saved_etc
+decl_stmt|;
+name|Boolean
+name|extractingBin
+init|=
+name|TRUE
+decl_stmt|;
+name|variable_set2
+argument_list|(
+name|SYSTEM_STATE
+argument_list|,
+literal|"upgrade"
+argument_list|)
+expr_stmt|;
+comment|/* Make sure at least BIN is selected */
+name|Dists
+operator||=
+name|DIST_BIN
+expr_stmt|;
+if|if
+condition|(
+name|RunningAsInit
+condition|)
+block|{
+name|Device
+modifier|*
+modifier|*
+name|devs
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|cnt
+decl_stmt|;
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_DISK
+argument_list|)
+expr_stmt|;
+name|devs
+operator|=
+name|deviceFind
+argument_list|(
+name|cp
+argument_list|,
+name|DEVICE_TYPE_DISK
+argument_list|)
+expr_stmt|;
+name|cnt
+operator|=
+name|deviceCount
+argument_list|(
+name|devs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|cnt
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"No disks found!  Please verify that your disk controller is being\n"
+literal|"properly probed at boot time.  See the Hardware Guide on the\n"
+literal|"Documentation menu for clues on diagnosing this type of problem."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+else|else
+block|{
+comment|/* Enable all the drives befor we start */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|cnt
+condition|;
+name|i
+operator|++
+control|)
+name|devs
+index|[
+name|i
+index|]
+operator|->
+name|enabled
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+name|msgConfirm
+argument_list|(
+literal|"OK.  First, we're going to go to the disk label editor.  In this editor\n"
+literal|"you will be expected to Mount any partitions you're interested in\n"
+literal|"upgrading.  DO NOT set the Newfs flag to Y on anything in the label editor\n"
+literal|"unless you're absolutely sure you know what you're doing!  In this\n"
+literal|"instance, you'll be using the label editor as little more than a fancy\n"
+literal|"screen-oriented partition mounting tool.\n\n"
+literal|"Once you're done in the label editor, press Q to return here for the next\n"
+literal|"step."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|diskLabelEditor
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"The disk label editor returned an error status.  Upgrade operation\n"
+literal|"aborted."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+comment|/* Don't write out MBR info */
+name|variable_set2
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|,
+literal|"written"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|diskLabelCommit
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Not all file systems were properly mounted.  Upgrade operation\n"
+literal|"aborted."
+argument_list|)
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+if|if
+condition|(
+name|extractingBin
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"chflags'ing old binaries - please wait."
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vsystem
+argument_list|(
+literal|"chflags -R noschg /mnt/"
+argument_list|)
+expr_stmt|;
+block|}
+name|msgNotify
+argument_list|(
+literal|"Updating /stand on root filesystem"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vsystem
+argument_list|(
+literal|"find -x /stand | cpio %s -pdum /mnt"
+argument_list|,
+name|cpioVerbosity
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|chroot
+argument_list|(
+literal|"/mnt"
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Unable to chroot to /mnt - something is wrong with the\n"
+literal|"root partition or the way it's mounted if this doesn't work."
+argument_list|)
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|DISK_PARTITIONED
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
+name|systemCreateHoloshell
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|mediaVerify
+argument_list|()
+operator|||
+operator|!
+name|mediaDevice
+operator|->
+name|init
+argument_list|(
+name|mediaDevice
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Upgrade: Couldn't initialize media."
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+name|saved_etc
+operator|=
+literal|"/usr/tmp/etc"
+expr_stmt|;
+name|Mkdir
+argument_list|(
+name|saved_etc
+argument_list|)
+expr_stmt|;
+name|msgNotify
+argument_list|(
+literal|"Preserving /etc directory.."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"tar -cpBf - -C /etc . | tar -xpBf - -C %s"
+argument_list|,
+name|saved_etc
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Unable to backup your /etc into %s."
+argument_list|,
+name|saved_etc
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
+if|if
+condition|(
+name|file_readable
+argument_list|(
+literal|"/kernel"
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Moving old kernel to /kernel.prev"
+argument_list|)
+expr_stmt|;
+name|system
+argument_list|(
+literal|"chflags noschg /kernel&& mv /kernel /kernel.prev"
+argument_list|)
+expr_stmt|;
+block|}
+name|msgNotify
+argument_list|(
+literal|"Beginning extraction of distributions.."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|distExtractAll
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"should be considered a failure and started from the beginning, sorry!\n"
+literal|"The system will reboot now."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemShutdown
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|Dists
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|Dists
+operator|&
+name|DIST_BIN
+operator|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"The extraction process seems to have had some problems, but we got most\n"
+literal|"of the essentials.  We'll treat this as a warning since it may have been\n"
+literal|"only non-essential distributions which failed to upgrade."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|msgConfirm
+argument_list|(
+literal|"Hmmmm.  We couldn't even extract the bin distribution.  This upgrade\n"
+literal|"should be considered a failure and started from the beginning, sorry!\n"
+literal|"The system will reboot now."
+argument_list|)
+expr_stmt|;
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|systemShutdown
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|msgNotify
+argument_list|(
+literal|"OK, now it's time to go pound on your root a little bit to create all the\n"
+literal|"/dev entries and such that a new system expects to see.  I'll also perform a\n"
+literal|"few \"fixup\" operations to repair the effects of splatting a bin distribution\n"
+literal|"on top of an existing system.."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|DITEM_STATUS
+argument_list|(
+name|installFixup
+argument_list|(
+name|self
+argument_list|)
+argument_list|)
+operator|==
+name|DITEM_FAILURE
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Hmmmmm.  The fixups don't seem to have been very happy.\n"
+literal|"You may wish to examine the system a little more closely when\n"
+literal|"it comes time to merge your /etc customizations back."
+argument_list|)
+expr_stmt|;
+block|}
+name|msgNotify
+argument_list|(
+literal|"First stage of upgrade completed successfully."
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vsystem
+argument_list|(
+literal|"tar -cpBf - -C %s . | tar --unlink -xpBf - -C /etc"
+argument_list|,
+name|saved_etc
+argument_list|)
+condition|)
+block|{
+name|msgNotify
+argument_list|(
+literal|"Unable to resurrect your old /etc!"
+argument_list|)
+expr_stmt|;
+return|return
+name|DITEM_FAILURE
+operator||
+name|DITEM_RESTORE
+return|;
+block|}
 return|return
 name|DITEM_SUCCESS
 operator||
