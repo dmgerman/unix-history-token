@@ -194,10 +194,8 @@ operator|>
 literal|0
 operator|)
 condition|)
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|parent
-argument_list|,
 name|child
 argument_list|,
 name|SYS_RES_IOPORT
@@ -259,10 +257,8 @@ operator|>
 literal|0
 operator|)
 condition|)
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|parent
-argument_list|,
 name|child
 argument_list|,
 name|SYS_RES_MEMORY
@@ -294,10 +290,8 @@ name|start
 operator|>
 literal|0
 condition|)
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|parent
-argument_list|,
 name|child
 argument_list|,
 name|SYS_RES_IRQ
@@ -329,10 +323,8 @@ name|start
 operator|>
 literal|0
 condition|)
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|parent
-argument_list|,
 name|child
 argument_list|,
 name|SYS_RES_DRQ

@@ -2447,13 +2447,8 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY
@@ -2656,13 +2651,8 @@ expr_stmt|;
 comment|/* 		 * If no interrupt specified (or "?"), use what the board tells us. 		 */
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -2681,13 +2671,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -2816,13 +2801,8 @@ expr_stmt|;
 comment|/* 		 * If no interrupt specified (or "?"), use what the board tells us. 		 */
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -2841,13 +2821,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -2887,13 +2862,8 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -3922,13 +3892,8 @@ return|;
 block|}
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY
@@ -4425,13 +4390,8 @@ expr_stmt|;
 comment|/* 	 * Set IRQ. 3c503 only allows a choice of irq 2-5. 	 */
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -6308,13 +6268,8 @@ return|;
 comment|/*  	 * If the kernel IRQ was specified with a '?' use the cards idea 	 * of the IRQ.  If the kernel IRQ was explicitly specified, it  	 * should match that of the hardware. 	 */
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -6333,13 +6288,8 @@ condition|(
 name|error
 condition|)
 block|{
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IRQ
@@ -6460,13 +6410,8 @@ expr_stmt|;
 comment|/* 		 * Check that the kernel specified start of memory and 		 * hardware's idea of it match. 		 */
 name|error
 operator|=
-name|ISA_GET_RESOURCE
+name|bus_get_resource
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY

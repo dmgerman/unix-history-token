@@ -106,14 +106,14 @@ begin_define
 define|#
 directive|define
 name|ISA_NPORT
-value|8
+value|32
 end_define
 
 begin_define
 define|#
 directive|define
 name|ISA_NMEM
-value|4
+value|8
 end_define
 
 begin_define

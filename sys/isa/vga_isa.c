@@ -435,10 +435,8 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|bus
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_IOPORT
@@ -454,10 +452,8 @@ operator|.
 name|va_io_size
 argument_list|)
 expr_stmt|;
-name|ISA_SET_RESOURCE
+name|bus_set_resource
 argument_list|(
-name|bus
-argument_list|,
 name|dev
 argument_list|,
 name|SYS_RES_MEMORY
