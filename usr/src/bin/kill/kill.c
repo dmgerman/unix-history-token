@@ -65,7 +65,7 @@ literal|"ALRM"
 block|,
 literal|"TERM"
 block|,
-literal|0
+literal|"URG"
 block|,
 comment|/* 9-16 */
 literal|"STOP"
@@ -80,24 +80,24 @@ literal|"TTIN"
 block|,
 literal|"TTOU"
 block|,
-literal|"TINT"
+literal|"IO"
 block|,
 literal|"XCPU"
 block|,
 comment|/* 17-24 */
 literal|"XFSZ"
 block|,
-literal|0
+literal|"VTALRM"
+block|,
+literal|"PROF"
+block|,
+literal|"WINCH"
 block|,
 literal|0
 block|,
-literal|0
+literal|"USR1"
 block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
+literal|"USR2"
 block|,
 literal|0
 block|,
@@ -193,7 +193,7 @@ for|for
 control|(
 name|signo
 operator|=
-literal|1
+literal|0
 init|;
 name|signo
 operator|<=
@@ -274,7 +274,7 @@ if|if
 condition|(
 name|signo
 operator|<
-literal|1
+literal|0
 operator|||
 name|signo
 operator|>
@@ -315,7 +315,7 @@ for|for
 control|(
 name|signo
 operator|=
-literal|1
+literal|0
 init|;
 name|signo
 operator|<=
