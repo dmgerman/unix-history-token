@@ -5388,7 +5388,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfi_table_age = %u"
+literal|"Dump: pfi_table_age = %zu"
 argument_list|,
 name|pfi_table_age
 argument_list|)
@@ -5406,7 +5406,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pfq_table_age = %u"
+literal|"Dump: pfq_table_age = %zu"
 argument_list|,
 name|pfq_table_age
 argument_list|)
@@ -5424,7 +5424,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"Dump: pft_table_age = %u"
+literal|"Dump: pft_table_age = %zu"
 argument_list|,
 name|pft_table_age
 argument_list|)
