@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_2.c	1.5 83/10/14"
+literal|"@(#)dr_2.c	1.6 83/10/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -1571,9 +1571,11 @@ argument_list|(
 name|ship
 argument_list|)
 operator|||
+operator|(
 name|turn
-operator|%
-literal|2
+operator|&
+literal|1
+operator|)
 operator|==
 literal|0
 condition|)
@@ -1598,6 +1600,7 @@ block|}
 block|}
 block|}
 else|else
+operator|*
 name|drift
 operator|=
 literal|0
