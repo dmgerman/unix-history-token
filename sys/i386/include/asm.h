@@ -63,16 +63,6 @@ parameter_list|)
 value|x@GOT(%ebx)
 end_define
 
-begin_define
-define|#
-directive|define
-name|PIC_GOTOFF
-parameter_list|(
-name|x
-parameter_list|)
-value|x@GOTOFF(%ebx)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -104,16 +94,6 @@ begin_define
 define|#
 directive|define
 name|PIC_GOT
-parameter_list|(
-name|x
-parameter_list|)
-value|x
-end_define
-
-begin_define
-define|#
-directive|define
-name|PIC_GOTOFF
 parameter_list|(
 name|x
 parameter_list|)
