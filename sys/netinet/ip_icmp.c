@@ -3907,6 +3907,9 @@ operator|>
 name|icmplim
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ICMP_BANDLIM_SUPPRESS_OUTPUT
 name|printf
 argument_list|(
 literal|"icmp-response bandwidth limit %d/%d pps\n"
@@ -3919,6 +3922,8 @@ argument_list|,
 name|icmplim
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|lticks
 index|[
