@@ -510,6 +510,18 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|mtx_assert
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_inpcb
+operator|->
+name|inp_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Determine length of data that should be transmitted, 	 * and flags that will be used. 	 * If there is some data or critical controls (SYN, RST) 	 * to send, then transmit; otherwise, investigate further. 	 */
 name|idle
 operator|=
