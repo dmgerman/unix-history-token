@@ -866,7 +866,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: window [-e escape-char] [-c command] [-t] [-f] [-d]\n"
+literal|"usage: window [-e escape-char] [-c command] [-t] [-f] [-d]\n"
 argument_list|)
 expr_stmt|;
 name|exit
