@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	4.4 %G%"
+literal|"@(#)io.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,9 +359,8 @@ name|type
 operator|==
 name|lefteq
 condition|)
-specifier|inline
-operator|(
-operator|)
+name|in_line
+argument_list|()
 expr_stmt|;
 else|else
 name|printf
@@ -471,31 +470,33 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
-specifier|inline
-operator|(
-operator|)
+begin_macro
+name|in_line
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|int
 name|ds
-block|;
+decl_stmt|;
 name|printf
 argument_list|(
 literal|".nr 99 \\n(.s\n.nr 98 \\n(.f\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|ds
 operator|=
 name|oalloc
 argument_list|()
-block|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|".rm %d \n"
 argument_list|,
 name|ds
 argument_list|)
-block|;
+expr_stmt|;
 do|do
 block|{
 if|if
@@ -545,22 +546,17 @@ argument_list|(
 literal|".ps \\n(99\n.ft \\n(98\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-unit|} while
-operator|(
+block|}
+do|while
+condition|(
 name|getline
 argument_list|(
 name|in
 argument_list|)
 operator|==
 name|lefteq
-operator|)
-expr_stmt|;
-end_expr_stmt
-
-begin_if
+condition|)
+do|;
 if|if
 condition|(
 operator|*
@@ -575,17 +571,11 @@ argument_list|,
 name|in
 argument_list|)
 expr_stmt|;
-end_if
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|".ps \\n(99\n.ft \\n(98\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|printf
 argument_list|(
 literal|"\\*(%d\n"
@@ -593,25 +583,26 @@ argument_list|,
 name|ds
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|ofree
 argument_list|(
 name|ds
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_block
 
-begin_expr_stmt
-unit|}  putout
-operator|(
-name|p1
-operator|)
+begin_macro
+name|putout
+argument_list|(
+argument|p1
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|p1
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

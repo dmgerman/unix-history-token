@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_addr.c	7.4 (Berkeley) %G%"
+literal|"@(#)ex_addr.c	7.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,17 +315,17 @@ begin_comment
 comment|/*  * Parse an address.  * Just about any sequence of address characters is legal.  *  * If you are tricky you can use this routine and the = command  * to do simple addition and subtraction of cardinals less  * than the number of lines in the file.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|line
 modifier|*
 name|address
-argument_list|(
-specifier|inline
-argument_list|)
+parameter_list|(
+name|inputline
+parameter_list|)
 name|char
 modifier|*
-specifier|inline
-namespace|;
+name|inputline
+decl_stmt|;
 block|{
 specifier|register
 name|line
@@ -558,7 +558,7 @@ name|dot
 expr_stmt|;
 if|if
 condition|(
-specifier|inline
+name|inputline
 operator|&&
 name|execute
 argument_list|(
@@ -579,7 +579,7 @@ while|while
 condition|(
 name|loc1
 operator|<=
-specifier|inline
+name|inputline
 condition|)
 block|{
 if|if
@@ -610,7 +610,7 @@ if|if
 condition|(
 name|loc1
 operator|<
-specifier|inline
+name|inputline
 condition|)
 block|{
 name|char
@@ -648,7 +648,7 @@ do|while
 condition|(
 name|loc1
 operator|<
-specifier|inline
+name|inputline
 condition|)
 do|;
 name|loc1
@@ -747,14 +747,14 @@ condition|)
 block|{
 if|if
 condition|(
-specifier|inline
+name|inputline
 operator|&&
 name|c
 operator|==
 literal|'?'
 condition|)
 block|{
-specifier|inline
+name|inputline
 operator|=
 operator|&
 name|linebuf
@@ -928,7 +928,7 @@ return|;
 block|}
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Abbreviations to make code smaller  * Left over from squashing ex version 1.1 into  * 11/34's and 11/40's.  */

@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_get.c	7.8 (Berkeley) %G%"
+literal|"@(#)ex_get.c	7.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,11 +256,11 @@ name|c
 decl_stmt|;
 specifier|static
 name|char
-specifier|inline
+name|inputline
 index|[
 name|BUFSIZ
 index|]
-expr_stmt|;
+decl_stmt|;
 name|c
 operator|=
 name|peekc
@@ -363,10 +363,10 @@ name|read
 argument_list|(
 literal|0
 argument_list|,
-specifier|inline
+name|inputline
 argument_list|,
 sizeof|sizeof
-expr|inline
+name|inputline
 operator|-
 literal|4
 argument_list|)
@@ -390,7 +390,7 @@ name|c
 operator|==
 literal|0
 operator|||
-specifier|inline
+name|inputline
 index|[
 name|c
 operator|-
@@ -399,7 +399,7 @@ index|]
 operator|!=
 literal|'\n'
 condition|)
-specifier|inline
+name|inputline
 index|[
 name|c
 operator|++
@@ -412,7 +412,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-specifier|inline
+name|inputline
 index|[
 name|c
 operator|-
@@ -424,7 +424,7 @@ condition|)
 name|noteinp
 argument_list|()
 expr_stmt|;
-specifier|inline
+name|inputline
 index|[
 name|c
 index|]
@@ -445,14 +445,14 @@ operator|--
 control|)
 if|if
 condition|(
-specifier|inline
+name|inputline
 index|[
 name|c
 index|]
 operator|==
 literal|0
 condition|)
-specifier|inline
+name|inputline
 index|[
 name|c
 index|]
@@ -461,7 +461,7 @@ name|QUOTE
 expr_stmt|;
 name|input
 operator|=
-specifier|inline
+name|inputline
 expr_stmt|;
 goto|goto
 name|top
@@ -473,10 +473,10 @@ name|read
 argument_list|(
 literal|0
 argument_list|,
-specifier|inline
+name|inputline
 argument_list|,
 sizeof|sizeof
-expr|inline
+name|inputline
 operator|-
 literal|1
 argument_list|)
@@ -494,7 +494,7 @@ operator|=
 name|EOF
 operator|)
 return|;
-specifier|inline
+name|inputline
 index|[
 name|c
 index|]
@@ -503,7 +503,7 @@ literal|'\0'
 expr_stmt|;
 name|input
 operator|=
-specifier|inline
+name|inputline
 expr_stmt|;
 goto|goto
 name|top

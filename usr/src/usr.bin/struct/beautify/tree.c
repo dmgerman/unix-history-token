@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	4.2	(Berkeley)	%G%"
+literal|"@(#)tree.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,42 +39,45 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_macro
-name|addroot
-argument_list|(
-argument|string
-argument_list|,
-argument|type
-argument_list|,
-argument|n1
-argument_list|,
-argument|n2
-argument_list|)
-end_macro
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function
+name|struct
+name|node
+modifier|*
+name|addroot
+parameter_list|(
+name|string
+parameter_list|,
+name|type
+parameter_list|,
+name|n1
+parameter_list|,
+name|n2
+parameter_list|)
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|type
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|node
 modifier|*
 name|n1
 decl_stmt|,
-modifier|*
+decl|*
 name|n2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -85,6 +88,11 @@ name|p
 decl_stmt|;
 name|p
 operator|=
+operator|(
+expr|struct
+name|node
+operator|*
+operator|)
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -303,34 +311,25 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|struct
+name|node
+modifier|*
 name|checkneg
-argument_list|(
-argument|tree
-argument_list|,
-argument|neg
-argument_list|)
-end_macro
-
-begin_comment
+parameter_list|(
+name|tree
+parameter_list|,
+name|neg
+parameter_list|)
 comment|/* eliminate nots if possible */
-end_comment
-
-begin_decl_stmt
 name|struct
 name|node
 modifier|*
 name|tree
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|neg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|int
 name|i
@@ -802,7 +801,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_macro
 name|yield

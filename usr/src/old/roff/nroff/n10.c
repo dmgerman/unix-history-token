@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n10.c	4.3 %G%"
+literal|"@(#)n10.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,6 +337,27 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Calc size of table, not counting zzz */
+name|j
+operator|=
+operator|(
+operator|(
+name|int
+operator|)
+operator|&
+name|t
+operator|.
+name|zzz
+operator|-
+operator|(
+name|int
+operator|)
+operator|&
+name|t
+operator|.
+name|bset
+operator|)
+expr_stmt|;
 name|read
 argument_list|(
 name|i
@@ -351,27 +372,6 @@ operator|.
 name|bset
 argument_list|,
 name|j
-operator|=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|t
-operator|.
-name|zzz
-operator|-
-operator|&
-name|t
-operator|.
-name|bset
-operator|)
 argument_list|)
 expr_stmt|;
 name|x
