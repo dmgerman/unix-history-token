@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.138 (Berkeley) %G%"
+literal|"@(#)conf.c	8.89.1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9873,6 +9873,13 @@ name|SOLARIS
 operator|<
 literal|204
 end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
