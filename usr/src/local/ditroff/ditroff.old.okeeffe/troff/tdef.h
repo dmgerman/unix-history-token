@@ -881,7 +881,7 @@ begin_define
 define|#
 directive|define
 name|NFONT
-value|10
+value|60
 end_define
 
 begin_comment
