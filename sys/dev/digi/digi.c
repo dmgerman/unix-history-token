@@ -221,6 +221,12 @@ end_ifdef
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smptests.h>
 end_include
 
