@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*   * Routines to parse an inetd.conf or tlid.conf file. This would be a great   * job for a PERL script.   *    * Author: Wietse Venema, Eindhoven University of Technology, The Netherlands.   */
 end_comment
 
@@ -65,6 +69,15 @@ begin_function_decl
 specifier|extern
 name|void
 name|exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
