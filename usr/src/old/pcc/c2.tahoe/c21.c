@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c21.c	1.9 (Berkeley/CCI) %G%"
+literal|"@(#)c21.c	1.10 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2716,10 +2716,10 @@ expr_stmt|;
 name|nsaddr
 operator|++
 expr_stmt|;
-block|}
 goto|goto
 name|std
 goto|;
+block|}
 name|ashadd
 label|:
 comment|/* at this point, RT2 and RT3 are guaranteed to be simple regs*/
@@ -2731,6 +2731,64 @@ literal|1
 condition|)
 block|{
 comment|/* 			** quickie: 			**	shll	$1,A,A>	addl2	A,A 			**	shll	$1,A,B>	addl3	A,A,B 			*/
+if|if
+condition|(
+operator|(
+name|pf
+operator|=
+name|p
+operator|->
+name|forw
+operator|)
+operator|->
+name|op
+operator|==
+name|CBR
+operator|||
+operator|(
+name|pf
+operator|->
+name|op
+operator|==
+name|MOV
+operator|&&
+operator|(
+name|pf
+operator|=
+name|pf
+operator|->
+name|forw
+operator|)
+operator|->
+name|op
+operator|==
+name|CBR
+operator|)
+condition|)
+comment|/* 				** shll and addl handle the N bit differently 				** on overflow; avoid N bit CBRs 				*/
+switch|switch
+condition|(
+name|pf
+operator|->
+name|subop
+condition|)
+block|{
+case|case
+name|JLE
+case|:
+case|case
+name|JGE
+case|:
+case|case
+name|JLT
+case|:
+case|case
+name|JGT
+case|:
+goto|goto
+name|std
+goto|;
+block|}
 name|p
 operator|->
 name|op
