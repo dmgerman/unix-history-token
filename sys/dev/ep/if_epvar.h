@@ -195,20 +195,23 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int16_t
+name|int
 name|get_e
 parameter_list|(
 name|struct
 name|ep_softc
 modifier|*
 parameter_list|,
-name|int
+name|u_int16_t
+parameter_list|,
+name|u_int16_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ep_get_macaddr
 parameter_list|(
 name|struct
