@@ -21,6 +21,12 @@ directive|include
 file|<sys/lock.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
 begin_comment
 comment|/*  * Locking primitives implementation.  * Locks provide shared/exclusive sychronization.  */
 end_comment
@@ -1703,6 +1709,11 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
+name|BACKTRACE
+argument_list|(
+name|curproc
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -1778,7 +1789,7 @@ name|int
 name|l
 decl_stmt|;
 block|{
-comment|/* 	if (alp->lock_data == 1) { 		if (lockpausetime == -1) 			panic("%s:%d: simple_lock_try: lock held", id, l); 		if (lockpausetime == 0) { 			printf("%s:%d: simple_lock_try: lock held\n", id, l); 		} else if (lockpausetime> 0) { 			printf("%s:%d: simple_lock_try: lock held...", id, l); 			tsleep(&lockpausetime, PCATCH | PPAUSE, "slock", 			    lockpausetime * hz); 			printf(" continuing\n"); 		} 	} 	*/
+comment|/* 	if (alp->lock_data == 1) { 		if (lockpausetime == -1) 			panic("%s:%d: simple_lock_try: lock held", id, l); 		if (lockpausetime == 0) { 			printf("%s:%d: simple_lock_try: lock held\n", id, l); 			BACKTRACE(curproc); 		} else if (lockpausetime> 0) { 			printf("%s:%d: simple_lock_try: lock held...", id, l); 			tsleep(&lockpausetime, PCATCH | PPAUSE, "slock", 			    lockpausetime * hz); 			printf(" continuing\n"); 		} 	} 	*/
 if|if
 condition|(
 name|alp
@@ -1868,6 +1879,11 @@ argument_list|,
 name|id
 argument_list|,
 name|l
+argument_list|)
+expr_stmt|;
+name|BACKTRACE
+argument_list|(
+name|curproc
 argument_list|)
 expr_stmt|;
 block|}
