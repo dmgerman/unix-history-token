@@ -1948,6 +1948,19 @@ name|icmp_type
 operator|=
 name|ICMP_ECHOREPLY
 expr_stmt|;
+if|if
+condition|(
+name|badport_bandlim
+argument_list|(
+name|BANDLIM_ECHO
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|freeit
+goto|;
+else|else
 goto|goto
 name|reflect
 goto|;
@@ -2017,6 +2030,19 @@ operator|->
 name|icmp_rtime
 expr_stmt|;
 comment|/* bogus, do later! */
+if|if
+condition|(
+name|badport_bandlim
+argument_list|(
+name|BANDLIM_TSTAMP
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|freeit
+goto|;
+else|else
 goto|goto
 name|reflect
 goto|;
@@ -3832,18 +3858,40 @@ specifier|static
 name|int
 name|lticks
 index|[
-literal|2
+name|BANDLIM_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 specifier|static
 name|int
 name|lpackets
 index|[
-literal|2
+name|BANDLIM_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|int
 name|dticks
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|bandlimittype
+index|[]
+init|=
+block|{
+literal|"Limiting icmp unreach response"
+block|,
+literal|"Limiting closed port RST response"
+block|,
+literal|"Limiting open port RST response"
+block|,
+literal|"Limiting icmp ping response"
+block|,
+literal|"Limiting icmp tstamp response"
+block|}
 decl_stmt|;
 comment|/* 	 * Return ok status if feature disabled or argument out of 	 * ranage. 	 */
 if|if
@@ -3853,8 +3901,8 @@ operator|<=
 literal|0
 operator|||
 name|which
-operator|>=
-literal|2
+operator|>
+name|BANDLIM_MAX
 operator|||
 name|which
 operator|<
@@ -3900,7 +3948,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"icmp-response bandwidth limit %d/%d pps\n"
+literal|"%s from %d to %d packets per second\n"
+argument_list|,
+name|bandlimittype
+index|[
+name|which
+index|]
 argument_list|,
 name|lpackets
 index|[

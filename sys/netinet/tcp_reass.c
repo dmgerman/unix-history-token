@@ -1704,6 +1704,12 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* INET6 */
+name|int
+name|rstreason
+init|=
+literal|0
+decl_stmt|;
+comment|/* For badport_bandlim accounting purposes */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2903,6 +2909,10 @@ name|drop
 goto|;
 block|}
 block|}
+name|rstreason
+operator|=
+name|BANDLIM_RST_NOTOPEN
+expr_stmt|;
 goto|goto
 name|maybedropwithreset
 goto|;
@@ -2920,9 +2930,15 @@ name|tp
 operator|==
 literal|0
 condition|)
+block|{
+name|rstreason
+operator|=
+name|BANDLIM_RST_NOTOPEN
+expr_stmt|;
 goto|goto
 name|maybedropwithreset
 goto|;
+block|}
 if|if
 condition|(
 name|tp
@@ -8629,9 +8645,19 @@ name|maybedropwithreset
 label|:
 if|if
 condition|(
+name|rstreason
+operator|!=
+name|BANDLIM_RST_NOTOPEN
+condition|)
+name|rstreason
+operator|=
+name|BANDLIM_RST_OPEN
+expr_stmt|;
+if|if
+condition|(
 name|badport_bandlim
 argument_list|(
-literal|1
+name|rstreason
 argument_list|)
 operator|<
 literal|0
