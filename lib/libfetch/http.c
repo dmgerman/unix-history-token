@@ -1218,8 +1218,10 @@ argument_list|(
 literal|1
 argument_list|,
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|io
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -1995,7 +1997,9 @@ name|NULL
 argument_list|)
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|locale
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|setlocale
