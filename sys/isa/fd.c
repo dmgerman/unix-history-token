@@ -11902,7 +11902,7 @@ name|bio_flags
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Now run the command.  The wait loop is a version of bufwait() 	 * adapted for struct bio instead of struct buf and specialized 	 * for the current context. 	 */
+comment|/* Now run the command. */
 name|fdstrategy
 argument_list|(
 name|bp
