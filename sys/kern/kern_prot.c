@@ -5654,6 +5654,40 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * kern_security_seeotheruids_permitted determines whether or not visibility  * of processes and sockets with credentials holding different real uid's  * is possible using a variety of system MIBs.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|kern_security_seeotheruids_permitted
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern_security
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|seeotheruids_permitted
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|kern_security_seeotheruids_permitted
+argument_list|,
+literal|0
+argument_list|,
+literal|"Unprivileged processes may see subjects/objects with different real uid"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*-  * Determine if u1 "can see" the subject specified by u2.  * Returns: 0 for permitted, an errno value otherwise  * Locks: none  * References: u1 and u2 must be immutable credentials  *             u1 and u2 must be valid for the lifetime of the call  *             u1 may equal u2, in which case only one reference is required  */
 end_comment
 
@@ -5696,7 +5730,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|ps_showallprocs
+name|kern_security_seeotheruids_permitted
 operator|&&
 name|u1
 operator|->
