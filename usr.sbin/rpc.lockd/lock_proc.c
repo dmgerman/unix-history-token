@@ -313,6 +313,16 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|rpcvers_t
+name|clnt_cache_vers
+index|[
+name|CLIENT_CACHE_SIZE
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|int
 name|clnt_cache_next_to_use
 init|=
@@ -616,6 +626,13 @@ index|]
 argument_list|,
 name|host_addr
 argument_list|)
+operator|&&
+name|clnt_cache_vers
+index|[
+name|i
+index|]
+operator|==
+name|vers
 condition|)
 block|{
 comment|/* Found it! */
@@ -639,6 +656,19 @@ operator|)
 return|;
 block|}
 block|}
+if|if
+condition|(
+name|debug_level
+operator|>
+literal|3
+condition|)
+name|syslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"CLIENT* not found in cache, creating"
+argument_list|)
+expr_stmt|;
 comment|/* Not found in cache.  Free the next entry if it is in use. */
 if|if
 condition|(
@@ -841,6 +871,13 @@ name|host_addr
 operator|->
 name|sa_len
 argument_list|)
+expr_stmt|;
+name|clnt_cache_vers
+index|[
+name|clnt_cache_next_to_use
+index|]
+operator|=
+name|vers
 expr_stmt|;
 name|clnt_cache_time
 index|[
