@@ -572,6 +572,15 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+name|lt
+operator|->
+name|tm_sec
+operator|=
+name|ATOI2
+argument_list|(
+name|t
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lt
