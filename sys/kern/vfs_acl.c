@@ -2703,7 +2703,6 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-comment|/* what flags are required here -- possible not LOCKLEAF? */
 name|NDINIT
 argument_list|(
 operator|&
