@@ -416,6 +416,24 @@ comment|/* Bit 7 */
 end_comment
 
 begin_comment
+comment|/*  * ToPIC specific stuff.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TOPIC_INTERRUPT_CONTROL
+value|0xa1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOPIC_ICR_INTA
+value|0x1
+end_define
+
+begin_comment
 comment|/* sanpei */
 end_comment
 

@@ -1376,6 +1376,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+comment|/* 	 * Need datasheet to find out what's going on.  However, the 	 * 68xx datasheets are so vague that it is hard to know what 	 * the right thing to do is. 	 */
 comment|/* XXX */
 return|return
 operator|(
@@ -1394,7 +1395,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * This is almost certainly incomplete. 	 */
 name|device_printf
 argument_list|(
 name|dev
@@ -1457,6 +1457,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+comment|/* 	 * The 68xx datasheets make it hard to know what the right thing 	 * do do here is.  We do hwat we knjow, which is nothing, and 	 * hope for the best. 	 */
 comment|/* XXX */
 return|return
 operator|(
@@ -1510,6 +1511,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+comment|/* 	 * We're only supporting ISA interrupts, so do nothing for the 	 * moment. 	 */
 comment|/* XXX */
 return|return
 operator|(
@@ -1534,6 +1536,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+comment|/* 	 * We're only supporting ISA interrupts, so do nothing for the 	 * moment. 	 */
 comment|/* XXX */
 return|return
 operator|(
@@ -2203,7 +2206,7 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
-comment|/* XXX */
+comment|/* 	 * Nothing happens here.  The TI12xx parts will route the 	 * CSC interrupt via PCI if ExCA register tells it to use 	 * interrupt 0.  And via IRQ otherwise (except for reserved 	 * values which may or may not do anything). 	 * 	 * We just hope for the best here that doing nothing is the 	 * right thing to do. 	 */
 return|return
 operator|(
 literal|0
@@ -2594,6 +2597,56 @@ name|pcic_intr_way
 name|way
 parameter_list|)
 block|{
+name|device_t
+name|dev
+init|=
+name|sp
+operator|->
+name|sc
+operator|->
+name|dev
+decl_stmt|;
+name|u_int32_t
+name|icr
+decl_stmt|;
+name|icr
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|TOPIC_INTERRUPT_CONTROL
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|way
+operator|==
+name|pcic_iw_pci
+condition|)
+name|icr
+operator||=
+name|TOPIC_ICR_INTA
+expr_stmt|;
+else|else
+name|icr
+operator|&=
+operator|~
+name|TOPIC_ICR_INTA
+expr_stmt|;
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|TOPIC_INTERRUPT_CONTROL
+argument_list|,
+name|icr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
