@@ -2729,8 +2729,8 @@ operator|,
 name|p
 operator|)
 operator|)
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 return|return
 operator|(
@@ -2825,8 +2825,8 @@ argument_list|,
 name|flag
 argument_list|)
 operator|)
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 return|return
 operator|(

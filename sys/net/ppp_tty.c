@@ -4,7 +4,7 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.27 1997/10/18 01:20:28 peter Exp $ */
+comment|/* $Id: ppp_tty.c,v 1.28 1997/11/18 14:08:51 bde Exp $ */
 end_comment
 
 begin_include
@@ -2068,8 +2068,9 @@ operator|->
 name|sc_devp
 condition|)
 return|return
-operator|-
-literal|1
+operator|(
+name|ENOIOCTL
+operator|)
 return|;
 name|error
 operator|=

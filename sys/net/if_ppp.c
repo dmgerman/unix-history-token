@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.49 1997/10/18 01:20:23 peter Exp $ */
+comment|/* $Id: if_ppp.c,v 1.50 1997/11/18 13:52:41 bde Exp $ */
 end_comment
 
 begin_comment
@@ -2598,8 +2598,7 @@ directive|endif
 default|default:
 return|return
 operator|(
-operator|-
-literal|1
+name|ENOIOCTL
 operator|)
 return|;
 block|}

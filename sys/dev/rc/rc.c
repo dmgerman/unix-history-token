@@ -6506,8 +6506,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 return|return
 operator|(
@@ -6542,8 +6542,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 return|return
 operator|(

@@ -8929,8 +8929,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 block|{
 return|return
@@ -8994,8 +8994,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 block|{
 name|splx
