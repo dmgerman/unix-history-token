@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb.h,v 1.7 2000/04/02 11:10:53 augustss Exp $	*/
+comment|/*	$NetBSD: usb.h,v 1.8 2000/08/13 22:22:02 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -154,7 +154,7 @@ name|HID_PAGE
 parameter_list|(
 name|u
 parameter_list|)
-value|((u)>> 16)
+value|(((u)>> 16)& 0xffff)
 end_define
 
 begin_define

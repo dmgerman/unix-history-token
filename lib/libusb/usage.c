@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usage.c,v 1.5 2000/04/02 11:10:53 augustss Exp $	*/
+comment|/*	$NetBSD: usage.c,v 1.6 2000/08/13 22:22:02 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -793,7 +793,7 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
-literal|"0x%02x"
+literal|"0x%04x"
 argument_list|,
 name|i
 argument_list|)
@@ -969,7 +969,7 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
-literal|"0x%02x"
+literal|"0x%04x"
 argument_list|,
 name|i
 argument_list|)
