@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.30 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.31 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.30 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.31 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1388,6 +1388,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|vp
+init|=
+name|NULL
 decl_stmt|;
 comment|/* locate the beginning of the keyword */
 while|while
