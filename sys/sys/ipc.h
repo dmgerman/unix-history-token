@@ -135,30 +135,36 @@ begin_struct
 struct|struct
 name|ipc_perm
 block|{
-name|ushort
+name|unsigned
+name|short
 name|cuid
 decl_stmt|;
 comment|/* creator user id */
-name|ushort
+name|unsigned
+name|short
 name|cgid
 decl_stmt|;
 comment|/* creator group id */
-name|ushort
+name|unsigned
+name|short
 name|uid
 decl_stmt|;
 comment|/* user id */
-name|ushort
+name|unsigned
+name|short
 name|gid
 decl_stmt|;
 comment|/* group id */
-name|ushort
+name|unsigned
+name|short
 name|mode
 decl_stmt|;
 comment|/* r/w permission */
-name|ushort
+name|unsigned
+name|short
 name|seq
 decl_stmt|;
-comment|/* sequence # (to generate unique msg/sem/shm id) */
+comment|/* sequence # (to generate unique ipcid) */
 name|key_t
 name|key
 decl_stmt|;
