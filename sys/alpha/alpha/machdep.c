@@ -1304,7 +1304,7 @@ comment|/* 2 */
 literal|"Simulation"
 block|,
 comment|/* 3 */
-literal|"LCA Family"
+literal|"LCA (21066/21068)"
 block|,
 comment|/* 4 */
 literal|"EV5 (21164)"
@@ -1334,7 +1334,10 @@ literal|"EV68AL (21264B)"
 block|,
 comment|/* 13 */
 literal|"EV68CX (21264D)"
+block|,
 comment|/* 14 */
+literal|"EV7 (21364)"
+comment|/* 15 */
 block|}
 decl_stmt|;
 comment|/* 	 * print out CPU identification information. 	 */
