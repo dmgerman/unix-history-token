@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: jot.c,v 1.2.2.2 1997/07/16 06:46:38 charnier Exp $"
+literal|"$Id: jot.c,v 1.2.2.3 1997/12/23 07:20:16 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -390,10 +390,22 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|s
+operator|==
+operator|-
+literal|1.0
+condition|)
+name|srandomdev
+argument_list|()
+expr_stmt|;
+else|else
 name|srandom
 argument_list|(
 operator|(
 name|unsigned
+name|long
 operator|)
 name|s
 argument_list|)
@@ -1210,13 +1222,8 @@ operator|=
 operator|(
 name|randomize
 condition|?
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
-argument_list|()
+operator|-
+literal|1.0
 else|:
 name|STEP_DEF
 operator|)
@@ -1251,6 +1258,7 @@ argument_list|,
 literal|"must specify begin if reps == 0"
 argument_list|)
 expr_stmt|;
+else|else
 name|begin
 operator|=
 name|ender
@@ -1274,13 +1282,8 @@ operator|=
 operator|(
 name|randomize
 condition|?
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
-argument_list|()
+operator|-
+literal|1.0
 else|:
 name|STEP_DEF
 operator|)
@@ -1326,13 +1329,8 @@ name|randomize
 condition|)
 name|s
 operator|=
-name|time
-argument_list|(
-name|NULL
-argument_list|)
-operator|^
-name|getpid
-argument_list|()
+operator|-
+literal|1.0
 expr_stmt|;
 elseif|else
 if|if
