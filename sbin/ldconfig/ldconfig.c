@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ldconfig.c,v 1.27 1998/09/06 20:43:25 jdp Exp $"
+literal|"$Id: ldconfig.c,v 1.28 1998/09/09 01:21:24 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -918,7 +918,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ldconfig [-Rmrsv] [-f hints_file] [dir | file ...]\n"
+literal|"usage: ldconfig [-aout | -elf] [-Rmrsv] [-f hints_file] [dir | file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
