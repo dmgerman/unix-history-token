@@ -417,7 +417,7 @@ begin_define
 define|#
 directive|define
 name|TI_FIRMWARE_FIX
-value|0x14
+value|0x15
 end_define
 
 begin_comment
