@@ -296,14 +296,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|modify_ldt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|adjtimex
 argument_list|)
 expr_stmt|;
