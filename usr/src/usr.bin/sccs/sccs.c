@@ -105,7 +105,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.29 %G%"
+literal|"@(#)sccs.c	1.30 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -667,6 +667,10 @@ modifier|*
 name|lookup
 parameter_list|()
 function_decl|;
+specifier|register
+name|int
+name|i
+decl_stmt|;
 comment|/* 	**  Detect and decode flags intended for this program. 	*/
 if|if
 condition|(
@@ -815,6 +819,8 @@ operator|=
 literal|"."
 expr_stmt|;
 block|}
+name|i
+operator|=
 name|command
 argument_list|(
 name|argv
@@ -824,11 +830,18 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EX_OK
+name|i
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  COMMAND -- look up and perform a command ** **	This routine is the guts of this program.  Given an **	argument vector, it looks up the "command" (argv[0]) **	in the configuration table and does the necessary stuff. ** **	Parameters: **		argv -- an argument vector to process. **		forkflag -- if set, fork before executing the command. ** **	Returns: **		zero -- command executed ok. **		else -- error status. ** **	Side Effects: **		none. */
+end_comment
 
 begin_macro
 name|command
@@ -905,6 +918,11 @@ name|bool
 name|unedit
 parameter_list|()
 function_decl|;
+name|int
+name|rval
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -971,11 +989,11 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 name|EX_USAGE
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 comment|/* 	**  Interpret operation associated with this command. 	*/
 switch|switch
@@ -989,6 +1007,8 @@ case|case
 name|PROG
 case|:
 comment|/* call an sccs prog */
+name|rval
+operator|=
 name|callprog
 argument_list|(
 name|cmd
@@ -1101,6 +1121,8 @@ name|avp
 operator|=
 name|NULL
 expr_stmt|;
+name|rval
+operator|=
 name|xcommand
 argument_list|(
 operator|&
@@ -1150,17 +1172,15 @@ literal|6
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|!=
+literal|0
+condition|)
+break|break;
 block|}
-name|syserr
-argument_list|(
-literal|"internal error: CMACRO"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_SOFTWARE
-argument_list|)
-expr_stmt|;
+break|break;
 case|case
 name|FIX
 case|:
@@ -1187,8 +1207,14 @@ argument_list|(
 literal|"-r flag needed for fix command"
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+name|EX_USAGE
+expr_stmt|;
 break|break;
 block|}
+name|rval
+operator|=
 name|xcommand
 argument_list|(
 operator|&
@@ -1206,6 +1232,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+literal|0
+condition|)
+name|rval
+operator|=
 name|xcommand
 argument_list|(
 operator|&
@@ -1221,6 +1255,14 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|==
+literal|0
+condition|)
+name|rval
+operator|=
 name|xcommand
 argument_list|(
 operator|&
@@ -1240,19 +1282,12 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|syserr
-argument_list|(
-literal|"FIX"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_SOFTWARE
-argument_list|)
-expr_stmt|;
+break|break;
 case|case
 name|CLEAN
 case|:
+name|rval
+operator|=
 name|clean
 argument_list|(
 operator|(
@@ -1321,6 +1356,8 @@ name|i
 operator|>
 literal|0
 condition|)
+name|rval
+operator|=
 name|xcommand
 argument_list|(
 name|nav
@@ -1349,6 +1386,27 @@ name|EX_SOFTWARE
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
+name|printf
+argument_list|(
+literal|"command: rval=%d\n"
+argument_list|,
+name|rval
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|rval
+operator|)
+return|;
 block|}
 end_block
 
@@ -1420,6 +1478,13 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  XCOMMAND -- special version of command ** **	This routine prepends an argv to another argv and calls **	command.  It is used mostly for macros, etc. ** **	Parameters: **		argv -- the normal argv. **		forkflag -- passed to command. **		arg0 -- the argv to prepend. ** **	Returns: **		see 'command'. ** **	Side Effects: **		none. */
+end_comment
 
 begin_macro
 name|xcommand
@@ -1526,15 +1591,25 @@ name|np
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
 name|command
 argument_list|(
 name|newargv
 argument_list|,
 name|forkflag
 argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  CALLPROG -- call a program ** **	Used to call the SCCS programs.  Arguments in argv will be **	modified to be prepended by "SCCS/s." as appropriate. ** **	Parameters: **		progpath -- pathname of the program to call. **		flags -- status flags from the command descriptors. **		argv -- an argument vector to pass to the program. **		forkflag -- if true, fork before calling, else just **			exec. ** **	Returns: **		The exit status of the program. **		Nothing if forkflag == FALSE. ** **	Side Effects: **		Can exit if forkflag == FALSE. */
+end_comment
 
 begin_macro
 name|callprog
@@ -1678,6 +1753,26 @@ argument_list|(
 operator|&
 name|st
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|st
+operator|&
+literal|0377
+operator|)
+operator|==
+literal|0
+condition|)
+name|st
+operator|=
+operator|(
+name|st
+operator|>>
+literal|8
+operator|)
+operator|&
+literal|0377
 expr_stmt|;
 return|return
 operator|(
@@ -2336,7 +2431,11 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|EX_NOINPUT
+operator|)
+return|;
 block|}
 comment|/* 	**  Scan the SCCS directory looking for s. files. 	*/
 name|gotedit
@@ -2591,6 +2690,11 @@ argument_list|(
 name|gotedit
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EX_OK
+operator|)
+return|;
 block|}
 end_block
 
