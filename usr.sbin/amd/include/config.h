@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: config.h,v 1.6 1998/08/27 08:09:41 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -459,7 +459,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_UFS
-value|MOUNT_UFS
+value|"ufs"
 end_define
 
 begin_comment
@@ -486,7 +486,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_NFS
-value|MOUNT_NFS
+value|"nfs"
 end_define
 
 begin_comment
@@ -497,7 +497,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_NFS3
-value|MOUNT_NFS3
+value|"nfs"
 end_define
 
 begin_comment
@@ -512,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_PCFS
-value|MOUNT_MSDOS
+value|"msdos"
 end_define
 
 begin_comment
@@ -523,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_LOFS
-value|MOUNT_LOFS
+value|"lofs"
 end_define
 
 begin_comment
@@ -534,7 +534,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_CDFS
-value|MOUNT_CD9660
+value|"cd9660"
 end_define
 
 begin_comment
@@ -545,7 +545,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_TFS
-value|MOUNT_TFS
+value|"tfs"
 end_define
 
 begin_comment
@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_MFS
-value|MOUNT_MFS
+value|"mfs"
 end_define
 
 begin_comment
@@ -607,7 +607,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_NULLFS
-value|MOUNT_NULL
+value|"null"
 end_define
 
 begin_comment
@@ -618,7 +618,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_UNIONFS
-value|MOUNT_UNION
+value|"union"
 end_define
 
 begin_comment
@@ -629,7 +629,7 @@ begin_define
 define|#
 directive|define
 name|MOUNT_TYPE_UMAPFS
-value|MOUNT_UMAP
+value|"umap"
 end_define
 
 begin_comment
@@ -2976,7 +2976,7 @@ begin_define
 define|#
 directive|define
 name|MTYPE_PRINTF_TYPE
-value|"%d"
+value|"%s"
 end_define
 
 begin_comment
@@ -2987,7 +2987,7 @@ begin_define
 define|#
 directive|define
 name|MTYPE_TYPE
-value|int
+value|const char *
 end_define
 
 begin_comment
