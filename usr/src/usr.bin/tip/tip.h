@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tip.h	5.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  *  * %sccs.include.redist.c%  *  *      @(#)tip.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -239,7 +239,7 @@ comment|/* host name */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|BR
 decl_stmt|;
 end_decl_stmt
@@ -249,7 +249,7 @@ comment|/* line speed for conversation */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|FS
 decl_stmt|;
 end_decl_stmt
@@ -345,7 +345,7 @@ comment|/* remote prompt */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|DL
 decl_stmt|;
 end_decl_stmt
@@ -355,7 +355,7 @@ comment|/* line delay for file transfers to remote */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|CL
 decl_stmt|;
 end_decl_stmt
@@ -365,7 +365,7 @@ comment|/* char delay for file transfers to remote */
 end_comment
 
 begin_decl_stmt
-name|int
+name|long
 name|ET
 decl_stmt|;
 end_decl_stmt
