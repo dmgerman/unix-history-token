@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)names.c	2.3 %G%"
+literal|"@(#)names.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2690,11 +2690,11 @@ literal|0
 operator|&&
 name|equal
 argument_list|(
-name|myname
-argument_list|,
 name|np
 operator|->
 name|n_name
+argument_list|,
+name|myname
 argument_list|)
 condition|)
 block|{
@@ -3278,7 +3278,7 @@ name|n_flink
 control|)
 if|if
 condition|(
-name|equal
+name|icequal
 argument_list|(
 name|p
 operator|->
