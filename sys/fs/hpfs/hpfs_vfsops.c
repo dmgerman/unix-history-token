@@ -2444,7 +2444,7 @@ block|}
 block|}
 do|while
 condition|(
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|hpfs_hphash_lock
@@ -2464,7 +2464,7 @@ argument_list|(
 name|hp
 argument_list|)
 expr_stmt|;
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|hpfs_hphash_lock

@@ -1633,22 +1633,6 @@ parameter_list|)
 value|vn_lock((a), (b), (c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|LOCKMGR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|)
-value|lockmgr((a), (b), (c), (d))
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|vop_t

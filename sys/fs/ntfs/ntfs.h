@@ -1231,20 +1231,6 @@ parameter_list|)
 value|vn_lock((a), (b), (c))
 end_define
 
-begin_define
-define|#
-directive|define
-name|LOCKMGR
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|)
-value|lockmgr((a), (b), (c), NULL)
-end_define
-
 begin_if
 if|#
 directive|if

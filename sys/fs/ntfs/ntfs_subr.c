@@ -1728,7 +1728,7 @@ operator|->
 name|i_usecount
 operator|++
 expr_stmt|;
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ip
@@ -1743,6 +1743,8 @@ operator|&
 name|ip
 operator|->
 name|i_interlock
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1842,7 +1844,7 @@ block|}
 block|}
 do|while
 condition|(
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_hashlock
@@ -1850,6 +1852,8 @@ argument_list|,
 name|LK_EXCLUSIVE
 operator||
 name|LK_SLEEPFAIL
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -1970,12 +1974,14 @@ argument_list|(
 name|ip
 argument_list|)
 expr_stmt|;
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_hashlock
 argument_list|,
 name|LK_RELEASE
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -2096,7 +2102,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ip
@@ -2111,6 +2117,8 @@ operator|&
 name|ip
 operator|->
 name|i_interlock
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return;
@@ -9397,12 +9405,14 @@ modifier|*
 name|vp
 decl_stmt|;
 comment|/* get exclusive access */
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_toupper_lock
 argument_list|,
 name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -9497,12 +9507,14 @@ label|:
 name|ntfs_toupper_usecount
 operator|++
 expr_stmt|;
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_toupper_lock
 argument_list|,
 name|LK_RELEASE
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -9525,12 +9537,14 @@ name|ntfs_toupper_unuse
 parameter_list|()
 block|{
 comment|/* get exclusive access */
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_toupper_lock
 argument_list|,
 name|LK_EXCLUSIVE
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)
@@ -9579,12 +9593,14 @@ block|}
 endif|#
 directive|endif
 comment|/* release the lock */
-name|LOCKMGR
+name|lockmgr
 argument_list|(
 operator|&
 name|ntfs_toupper_lock
 argument_list|,
 name|LK_RELEASE
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|)

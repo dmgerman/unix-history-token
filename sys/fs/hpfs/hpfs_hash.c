@@ -282,7 +282,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	mtx_lock(&hpfs_hphash_mtx); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			LOCKMGR(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	mtx_unlock(&hpfs_hphash_mtx); 	return (hp); }
+unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	mtx_lock(&hpfs_hphash_mtx); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			lockmgr(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	mtx_unlock(&hpfs_hphash_mtx); 	return (hp); }
 endif|#
 directive|endif
 end_endif

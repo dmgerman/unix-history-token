@@ -465,7 +465,7 @@ name|hp
 parameter_list|,
 name|p
 parameter_list|)
-value|LOCKMGR(&(hp)->h_intlock, LK_EXCLUSIVE, (p))
+value|lockmgr(&(hp)->h_intlock, LK_EXCLUSIVE, (p), NULL)
 end_define
 
 begin_define
@@ -477,7 +477,7 @@ name|hp
 parameter_list|,
 name|p
 parameter_list|)
-value|LOCKMGR(&(hp)->h_intlock, LK_RELEASE, (p))
+value|lockmgr(&(hp)->h_intlock, LK_RELEASE, (p), NULL)
 end_define
 
 begin_endif
