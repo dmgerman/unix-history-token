@@ -1649,7 +1649,7 @@ argument_list|)
 condition|)
 name|vprint
 argument_list|(
-literal|"unexpected vn driver lock"
+literal|"unexpected md driver lock"
 argument_list|,
 name|sc
 operator|->
