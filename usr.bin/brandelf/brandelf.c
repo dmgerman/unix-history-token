@@ -1,18 +1,30 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: brandelf.c,v 1.4 1997/02/22 19:54:15 peter Exp $  */
+comment|/*-  * Copyright (c) 1996 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: brandelf.c,v 1.5 1997/03/29 04:28:17 imp Exp $  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -25,18 +37,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/imgact_elf.h>
 end_include
 
 begin_function_decl
@@ -170,16 +170,16 @@ decl_stmt|;
 name|char
 name|buffer
 index|[
-name|EI_NINDENT
+name|EI_NIDENT
 index|]
 decl_stmt|;
 name|char
 name|string
 index|[
 operator|(
-name|EI_NINDENT
+name|EI_NIDENT
 operator|-
-name|EI_SPARE
+name|EI_BRAND
 operator|)
 operator|+
 literal|1
@@ -234,10 +234,10 @@ name|fd
 argument_list|,
 name|buffer
 argument_list|,
-name|EI_NINDENT
+name|EI_NIDENT
 argument_list|)
 operator|<
-name|EI_NINDENT
+name|EI_NIDENT
 condition|)
 block|{
 name|fprintf
@@ -334,12 +334,12 @@ argument_list|,
 operator|&
 name|buffer
 index|[
-name|EI_SPARE
+name|EI_BRAND
 index|]
 argument_list|,
-name|EI_NINDENT
+name|EI_NIDENT
 operator|-
-name|EI_SPARE
+name|EI_BRAND
 argument_list|)
 expr_stmt|;
 if|if
@@ -386,14 +386,14 @@ argument_list|(
 operator|&
 name|buffer
 index|[
-name|EI_SPARE
+name|EI_BRAND
 index|]
 argument_list|,
 name|type
 argument_list|,
-name|EI_NINDENT
+name|EI_NIDENT
 operator|-
-name|EI_SPARE
+name|EI_BRAND
 argument_list|)
 expr_stmt|;
 name|lseek
@@ -413,10 +413,10 @@ name|fd
 argument_list|,
 name|buffer
 argument_list|,
-name|EI_NINDENT
+name|EI_NIDENT
 argument_list|)
 operator|!=
-name|EI_NINDENT
+name|EI_NIDENT
 condition|)
 block|{
 name|fprintf
