@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_inode.c	6.3	84/02/15	*/
+comment|/*	ffs_inode.c	6.4	84/05/22	*/
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ begin_define
 define|#
 directive|define
 name|INOHSZ
-value|63
+value|64
 end_define
 
 begin_if
@@ -514,20 +514,6 @@ name|iq
 decl_stmt|;
 name|loop
 label|:
-if|if
-condition|(
-name|getfs
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|fs
-condition|)
-name|panic
-argument_list|(
-literal|"iget: bad fs"
-argument_list|)
-expr_stmt|;
 name|ih
 operator|=
 operator|&
