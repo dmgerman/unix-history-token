@@ -76,43 +76,60 @@ block|,
 comment|/* must be 0 */
 name|USBD_IN_PROGRESS
 block|,
+comment|/* 1 */
 comment|/* errors */
 name|USBD_PENDING_REQUESTS
 block|,
+comment|/* 2 */
 name|USBD_NOT_STARTED
 block|,
+comment|/* 3 */
 name|USBD_INVAL
 block|,
+comment|/* 4 */
 name|USBD_NOMEM
 block|,
+comment|/* 5 */
 name|USBD_CANCELLED
 block|,
+comment|/* 6 */
 name|USBD_BAD_ADDRESS
 block|,
+comment|/* 7 */
 name|USBD_IN_USE
 block|,
+comment|/* 8 */
 name|USBD_NO_ADDR
 block|,
+comment|/* 9 */
 name|USBD_SET_ADDR_FAILED
 block|,
+comment|/* 10 */
 name|USBD_NO_POWER
 block|,
+comment|/* 11 */
 name|USBD_TOO_DEEP
 block|,
+comment|/* 12 */
 name|USBD_IOERROR
 block|,
+comment|/* 13 */
 name|USBD_NOT_CONFIGURED
 block|,
+comment|/* 14 */
 name|USBD_TIMEOUT
 block|,
+comment|/* 15 */
 name|USBD_SHORT_XFER
 block|,
+comment|/* 16 */
 name|USBD_STALLED
 block|,
+comment|/* 17 */
 name|USBD_INTERRUPTED
 block|,
+comment|/* 18 */
 name|USBD_ERROR_MAX
-block|,
 comment|/* must be last */
 block|}
 name|usbd_status
@@ -565,7 +582,7 @@ modifier|*
 name|usbd_alloc_buffer
 parameter_list|(
 name|usbd_xfer_handle
-name|req
+name|xfer
 parameter_list|,
 name|u_int32_t
 name|size
@@ -578,7 +595,7 @@ name|void
 name|usbd_free_buffer
 parameter_list|(
 name|usbd_xfer_handle
-name|req
+name|xfer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -801,15 +818,12 @@ name|void
 name|usbd_fill_deviceinfo
 parameter_list|(
 name|usbd_device_handle
-name|dev
 parameter_list|,
 name|struct
 name|usb_device_info
 modifier|*
-name|di
 parameter_list|,
 name|int
-name|usedev
 parameter_list|)
 function_decl|;
 end_function_decl
