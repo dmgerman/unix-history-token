@@ -7322,6 +7322,12 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|ndis_res_mem
+operator|!=
+name|NULL
+operator|&&
 name|paddr
 operator|.
 name|np_quad
@@ -7350,6 +7356,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|sc
+operator|->
+name|ndis_res_altmem
+operator|!=
+name|NULL
+operator|&&
 name|paddr
 operator|.
 name|np_quad
