@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: cmdtab.c,v 1.2 1997/09/24 02:43:37 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,6 +208,28 @@ block|,
 name|cmdmode
 block|,
 name|reseticmp
+block|,
+name|CF_LOADAV
+block|}
+block|,
+block|{
+literal|"ip"
+block|,
+name|showip
+block|,
+name|fetchip
+block|,
+name|labelip
+block|,
+name|initip
+block|,
+name|openip
+block|,
+name|closeip
+block|,
+name|cmdmode
+block|,
+name|resetip
 block|,
 name|CF_LOADAV
 block|}
