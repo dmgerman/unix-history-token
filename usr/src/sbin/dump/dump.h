@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * "@(#)dump.h	1.4 (Berkeley) %G%"  */
+comment|/*  * "@(#)dump.h	1.5 (Berkeley) %G%"  */
 end_comment
 
 begin_define
@@ -8,23 +8,6 @@ define|#
 directive|define
 name|NI
 value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|DIRPB
-parameter_list|(
-name|fs
-parameter_list|)
-value|((fs)->fs_bsize / sizeof(struct direct))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAXDIRPB
-value|(MAXBSIZE / sizeof(struct direct))
 end_define
 
 begin_define
@@ -75,12 +58,6 @@ begin_include
 include|#
 directive|include
 file|"../../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../../h/dir.h"
 end_include
 
 begin_include
