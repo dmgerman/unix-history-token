@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.134 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.135 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -823,6 +823,17 @@ end_define
 
 begin_comment
 comment|/* four argument statfs() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
 end_comment
 
 begin_define
@@ -2827,6 +2838,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TZ_TYPE
 value|TZ_TM_NAME
 end_define
@@ -2951,6 +2973,17 @@ end_define
 
 begin_comment
 comment|/* use<sys/statfs.h> statfs() impl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
 end_comment
 
 begin_define
@@ -4306,6 +4339,17 @@ begin_comment
 comment|/* four argument statfs() call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -4374,6 +4418,17 @@ end_define
 
 begin_comment
 comment|/* four argument statfs() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
 end_comment
 
 begin_ifndef
@@ -5134,6 +5189,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
@@ -5227,6 +5293,17 @@ end_define
 
 begin_comment
 comment|/* four argument statfs() call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFS_BAVAIL
+value|f_bfree
+end_define
+
+begin_comment
+comment|/* alternate field name */
 end_comment
 
 begin_define
