@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.12 %G%"
+literal|"@(#)lex.c	1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,7 +809,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-literal|" \t0123456789$^./-+*'\""
+literal|" \t0123456789$^.:/-+*'\""
 argument_list|)
 condition|)
 operator|*
