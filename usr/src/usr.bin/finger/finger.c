@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.2 (Berkeley) %G%"
+literal|"@(#)finger.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"finger.h"
 end_include
 
@@ -190,6 +196,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -380,11 +387,11 @@ else|else
 name|sflag_print
 argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
+return|return
+operator|(
 literal|0
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_function
 
@@ -440,14 +447,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|name
@@ -568,6 +572,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -597,12 +605,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -612,17 +617,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memcpy
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}
@@ -737,12 +747,9 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* Pull out all network requests. */
@@ -829,6 +836,7 @@ name|p
 control|)
 if|if
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwnam
@@ -836,6 +844,9 @@ argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 name|enter_person
 argument_list|(
@@ -860,10 +871,14 @@ else|else
 block|{
 while|while
 condition|(
+operator|(
 name|pw
 operator|=
 name|getpwent
 argument_list|()
+operator|)
+operator|!=
+name|NULL
 condition|)
 for|for
 control|(
@@ -987,14 +1002,11 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"%s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|_PATH_UTMP
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1073,6 +1085,10 @@ operator|=
 name|R_NEXT
 control|)
 block|{
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|r
 operator|=
 call|(
@@ -1102,12 +1118,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1117,17 +1130,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|enter_lastlog
+name|memcpy
 argument_list|(
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|enter_lastlog
+argument_list|(
+name|tmp
 argument_list|)
 expr_stmt|;
 block|}

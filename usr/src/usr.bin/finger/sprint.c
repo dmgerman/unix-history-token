@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sprint.c	8.1 (Berkeley) %G%"
+literal|"@(#)sprint.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -144,6 +150,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|PERSON
+modifier|*
+name|tmp
+decl_stmt|;
 name|DBT
 name|data
 decl_stmt|,
@@ -213,12 +223,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"db seq: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"db seq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -228,17 +235,22 @@ operator|==
 literal|1
 condition|)
 break|break;
-name|pn
-operator|=
-operator|*
-operator|(
-name|PERSON
-operator|*
-operator|*
-operator|)
+name|memcpy
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
 name|data
 operator|.
 name|data
+argument_list|,
+sizeof|sizeof
+name|tmp
+argument_list|)
+expr_stmt|;
+name|pn
+operator|=
+name|tmp
 expr_stmt|;
 for|for
 control|(

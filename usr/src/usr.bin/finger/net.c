@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)net.c	8.3 (Berkeley) %G%"
+literal|"@(#)net.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -472,8 +472,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Read from the remote system; once we're connected, we assume some 	 * data.  If none arrives, we hang until the user interrupts. 	 * 	 * If we see a<CR> or a<CR> with the high bit set, treat it as 	 * a newline; if followed by a newline character, only output one 	 * newline. 	 * 	 * Otherwise, all high bits are stripped; if it isn't printable and 	 * it isn't a space, we can simply set the 7th bit.  Every ASCII 	 * character with bit 7 set is printable. 	 */
+name|lastc
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fp
 operator|=
 name|fdopen
@@ -482,6 +487,9 @@ name|s
 argument_list|,
 literal|"r"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 while|while
 condition|(
