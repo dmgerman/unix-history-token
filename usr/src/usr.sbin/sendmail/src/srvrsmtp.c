@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.13 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.14 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.13 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.14 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -613,7 +613,9 @@ name|inp
 argument_list|,
 name|InChannel
 argument_list|,
-name|ReadTimeout
+name|TimeOuts
+operator|.
+name|to_nextcommand
 argument_list|)
 expr_stmt|;
 comment|/* handle errors */
@@ -850,16 +852,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|strcasecmp
 argument_list|(
 name|p
 argument_list|,
 name|MyHostName
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 				 * didn't know about alias, 				 * or connected to an echo server 				 */
+comment|/* 				**  Didn't know about alias or MX, 				**  or connected to an echo server 				*/
 name|message
 argument_list|(
 literal|"553"
@@ -883,6 +886,8 @@ name|p
 argument_list|,
 name|RealHostName
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|char
@@ -986,7 +991,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|hasmail
+name|gotmail
 condition|)
 block|{
 name|message
@@ -1141,7 +1146,7 @@ argument_list|,
 literal|"Sender ok"
 argument_list|)
 expr_stmt|;
-name|hasmail
+name|gotmail
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1330,7 +1335,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|hasmail
+name|gotmail
 condition|)
 block|{
 name|message
@@ -1502,7 +1507,7 @@ name|finis
 argument_list|()
 expr_stmt|;
 comment|/* clean up a bit */
-name|hasmail
+name|gotmail
 operator|=
 name|FALSE
 expr_stmt|;
@@ -1546,6 +1551,25 @@ name|InChild
 condition|)
 name|finis
 argument_list|()
+expr_stmt|;
+comment|/* clean up a bit */
+name|gotmail
+operator|=
+name|FALSE
+expr_stmt|;
+name|dropenvelope
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|=
+name|e
+operator|=
+name|newenvelope
+argument_list|(
+name|e
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
