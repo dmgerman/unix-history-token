@@ -43,6 +43,16 @@ begin_comment
 comment|/*  * PCI "universal" communication card device driver, glues com, lpt,  * and similar ports to PCI via bridge chip often much larger than  * the devices being glued.  *  * Author: Christopher G. Demetriou, May 14, 1998 (derived from NetBSD  * sys/dev/pci/pciide.c, revision 1.6).  *  * These devices could be (and some times are) described as  * communications/{serial,parallel}, etc. devices with known  * programming interfaces, but those programming interfaces (in  * particular the BAR assignments for devices, etc.) in fact are not  * particularly well defined.  *  * After I/we have seen more of these devices, it may be possible  * to generalize some of these bits.  In particular, devices which  * describe themselves as communications/serial/16[45]50, and  * communications/parallel/??? might be attached via direct  * 'com' and 'lpt' attachments to pci.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|__RMAN_RESOURCE_VISIBLE
+end_define
+
+begin_comment
+comment|/* Shouldn't be there */
+end_comment
+
 begin_include
 include|#
 directive|include
