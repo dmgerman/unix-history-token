@@ -1609,6 +1609,14 @@ define|#
 directive|define
 name|CISS_LDRIVE_RAID5
 value|3
+define|#
+directive|define
+name|CISS_LDRIVE_RAID51
+value|4
+define|#
+directive|define
+name|CISS_LDRIVE_RAIDADG
+value|5
 name|u_int8_t
 name|res1
 index|[
