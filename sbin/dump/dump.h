@@ -336,6 +336,16 @@ comment|/* when started writing the first tape block */
 end_comment
 
 begin_decl_stmt
+name|time_t
+name|tend_writing
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* after writing the last tape block */
+end_comment
+
+begin_decl_stmt
 name|struct
 name|fs
 modifier|*

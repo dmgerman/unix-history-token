@@ -257,7 +257,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* density in bytes/0.1" */
+comment|/* density in bytes/0.1" "<- this is for hilit19 */
 end_comment
 
 begin_decl_stmt
@@ -770,6 +770,25 @@ operator|&
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/* XXX restore is unable to restore dumps that  			   were created  with a blocksize larger than 32K. 			   Possibly a bug in the scsi tape driver. */
+if|if
+condition|(
+name|ntrec
+operator|>
+literal|32
+condition|)
+block|{
+name|msg
+argument_list|(
+literal|"please choose a blocksize<= 32\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'B'
@@ -1045,7 +1064,7 @@ expr_stmt|;
 comment|/* round down */
 else|else
 block|{
-comment|/* 		 * Determine how to default tape size and density 		 * 		 *         	density				tape size 		 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 		 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 		 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. 		 *						(450*4 - slop) 		 */
+comment|/* 		 * Determine how to default tape size and density 		 * 		 *         	density				tape size 		 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 		 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 		 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. 		 *						(450*4 - slop) 		 * hilit19 hits again: " 		 */
 if|if
 condition|(
 name|density
@@ -1866,7 +1885,7 @@ literal|1.0
 operator|/
 name|density
 operator|)
-comment|/* 0.1" / byte */
+comment|/* 0.1" / byte " */
 operator|+
 name|tapesize
 comment|/* blocks */
@@ -1879,7 +1898,7 @@ operator|)
 comment|/* streaming-stops per block */
 operator|*
 literal|15.48
-comment|/* 0.1" / streaming-stop */
+comment|/* 0.1" / streaming-stop " */
 operator|)
 operator|*
 operator|(
@@ -1888,7 +1907,7 @@ operator|/
 name|tsize
 operator|)
 expr_stmt|;
-comment|/* tape / 0.1" */
+comment|/* tape / 0.1" " */
 block|}
 else|else
 block|{
@@ -1920,7 +1939,7 @@ literal|1.0
 operator|/
 name|density
 operator|)
-comment|/* 0.1" / byte */
+comment|/* 0.1" / byte " */
 operator|+
 name|tapesize
 comment|/* blocks */
@@ -1933,7 +1952,7 @@ operator|)
 comment|/* IRG's / block */
 operator|*
 name|tenthsperirg
-comment|/* 0.1" / IRG */
+comment|/* 0.1" / IRG " */
 operator|)
 operator|*
 operator|(
@@ -1942,7 +1961,7 @@ operator|/
 name|tsize
 operator|)
 expr_stmt|;
-comment|/* tape / 0.1" */
+comment|/* tape / 0.1" " */
 block|}
 name|etapes
 operator|=
@@ -2231,6 +2250,21 @@ name|ino
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+operator|&
+operator|(
+name|tend_writing
+operator|)
+argument_list|)
+expr_stmt|;
 name|spcl
 operator|.
 name|c_type
@@ -2263,7 +2297,7 @@ name|pipeout
 condition|)
 name|msg
 argument_list|(
-literal|"DUMP: %ld tape blocks\n"
+literal|"%ld tape blocks\n"
 argument_list|,
 name|spcl
 operator|.
@@ -2273,7 +2307,7 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"DUMP: %ld tape blocks on %d volumes(s)\n"
+literal|"%ld tape blocks on %d volumes(s)\n"
 argument_list|,
 name|spcl
 operator|.
@@ -2282,6 +2316,40 @@ argument_list|,
 name|spcl
 operator|.
 name|c_volume
+argument_list|)
+expr_stmt|;
+comment|/* report dump performance, avoid division through zero */
+if|if
+condition|(
+name|tend_writing
+operator|-
+name|tstart_writing
+operator|==
+literal|0
+condition|)
+name|msg
+argument_list|(
+literal|"finished in less than a second\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|msg
+argument_list|(
+literal|"finished in %d seconds, throughput %d KBytes/sec\n"
+argument_list|,
+name|tend_writing
+operator|-
+name|tstart_writing
+argument_list|,
+name|spcl
+operator|.
+name|c_tapea
+operator|/
+operator|(
+name|tend_writing
+operator|-
+name|tstart_writing
+operator|)
 argument_list|)
 expr_stmt|;
 name|putdumptime

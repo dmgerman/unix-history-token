@@ -13,7 +13,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_DEFTAPE
-value|"/dev/rmt8"
+value|"/dev/rst0"
 end_define
 
 begin_define
@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_RMT
-value|"rmt"
+value|"/etc/rmt"
 end_define
 
 end_unit
