@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.6	86/04/19	*/
+comment|/*	vmparam.h	1.7	87/06/01	*/
 end_comment
 
 begin_comment
@@ -213,36 +213,11 @@ begin_comment
 comment|/* SYSPTSIZE IS SILLY; IT SHOULD BE COMPUTED AT BOOT TIME */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|SYSPTSIZE
-value|((20+MAXUSERS)*NPTEPG)
-end_define
-
-begin_define
-define|#
-directive|define
-name|USRPTSIZE
-value|(32*NPTEPG)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SYSPTSIZE
-value|((128*NPTEPG/2)+(MAXUSERS*NPTEPG/16))
+value|((20+MAXUSERS/2)*NPTEPG)
 end_define
 
 begin_define
@@ -251,11 +226,6 @@ directive|define
 name|USRPTSIZE
 value|(4*NPTEPG)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * The size of the clock loop.  */
