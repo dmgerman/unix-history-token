@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.17 (Berkeley) %G%"
+literal|"@(#)main.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -382,6 +382,16 @@ name|vector
 argument_list|()
 expr_stmt|;
 comment|/* Create vector.s */
+break|break;
+case|case
+name|MACHINE_MIPS
+case|:
+case|case
+name|MACHINE_PMAX
+case|:
+name|pmax_ioconf
+argument_list|()
+expr_stmt|;
 break|break;
 default|default:
 name|printf

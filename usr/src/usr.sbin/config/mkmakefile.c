@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.33 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
