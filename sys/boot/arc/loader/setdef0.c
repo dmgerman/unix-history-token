@@ -15,12 +15,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_comment
 comment|/*  * DEFINE_SET creates the section and label for a set, and emits the  * count word at the front of it.  */
 end_comment
