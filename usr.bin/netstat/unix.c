@@ -20,7 +20,7 @@ name|char
 name|unix_c_rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: unix.c,v 1.3 1993/11/17 20:19:25 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,6 +769,8 @@ name|sa
 operator|->
 name|sun_family
 argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|sa
 operator|->
