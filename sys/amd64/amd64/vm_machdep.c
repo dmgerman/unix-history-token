@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -447,6 +453,28 @@ name|tf_rdx
 operator|=
 literal|1
 expr_stmt|;
+comment|/* 	 * If the parent process has the trap bit set (i.e. a debugger had 	 * single stepped the process to the system call), we need to clear 	 * the trap flag from the new frame unless the debugger had set PF_FORK 	 * on the parent.  Otherwise, the child will receive a (likely 	 * unexpected) SIGTRAP when it executes the first instruction after 	 * returning  to userland. 	 */
+if|if
+condition|(
+operator|(
+name|p1
+operator|->
+name|p_pfsflags
+operator|&
+name|PF_FORK
+operator|)
+operator|==
+literal|0
+condition|)
+name|td2
+operator|->
+name|td_frame
+operator|->
+name|tf_rflags
+operator|&=
+operator|~
+name|PSL_T
+expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
 name|pcb2
 operator|->
@@ -615,38 +643,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|)
-block|{
-name|struct
-name|pcb
-modifier|*
-name|pcb
-init|=
-name|td
-operator|->
-name|td_pcb
-decl_stmt|;
-if|if
-condition|(
-name|pcb
-operator|->
-name|pcb_flags
-operator|&
-name|PCB_DBREGS
-condition|)
-block|{
-comment|/* disable all hardware breakpoints */
-name|reset_dbregs
-argument_list|()
-expr_stmt|;
-name|pcb
-operator|->
-name|pcb_flags
-operator|&=
-operator|~
-name|PCB_DBREGS
-expr_stmt|;
-block|}
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -792,7 +789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Pu t enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
+comment|/*  * Initialize machine state (pcb and trap frame) for a new thread about to  * upcall. Put enough state in the new thread's PCB to get it to go back   * userret(), where we can intercept it again to set the return (upcall)  * Address and stack, along with those from upcals that are from other sources  * such as those generated in thread_userret() itself.  */
 end_comment
 
 begin_function
@@ -1052,10 +1049,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Force reset the processor by invalidating the entire address space!  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1120,36 +1113,16 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMP
+name|u_int
+name|cnt
+decl_stmt|,
+name|map
+decl_stmt|;
 if|if
 condition|(
 name|smp_active
-operator|==
-literal|0
 condition|)
 block|{
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-else|else
-block|{
-name|u_int
-name|map
-decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"cpu_reset called on cpu#%d\n"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|map
 operator|=
 name|PCPU_GET
@@ -1177,7 +1150,6 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
-comment|/* Stop all other CPUs */
 block|}
 if|if
 condition|(
@@ -1185,23 +1157,10 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
-name|DELAY
-argument_list|(
-literal|1000000
-argument_list|)
-expr_stmt|;
-name|cpu_reset_real
-argument_list|()
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-else|else
-block|{
-comment|/* We are not BSP (CPU #0) */
 name|cpu_reset_proxyid
 operator|=
 name|PCPU_GET
@@ -1274,14 +1233,18 @@ condition|)
 empty_stmt|;
 comment|/* NOTREACHED */
 block|}
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
 block|}
-else|#
-directive|else
+endif|#
+directive|endif
 name|cpu_reset_real
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* NOTREACHED */
 block|}
 end_function
 
@@ -1291,7 +1254,7 @@ name|void
 name|cpu_reset_real
 parameter_list|()
 block|{
-comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn of the GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
+comment|/* 	 * Attempt to do a CPU reset via the keyboard controller, 	 * do not turn off GateA20, as any machine that fails 	 * to do the reset here would then end up in no man's land. 	 */
 name|outb
 argument_list|(
 name|IO_KBD
@@ -1318,7 +1281,7 @@ literal|1000000
 argument_list|)
 expr_stmt|;
 comment|/* wait 1 sec for printf to complete */
-comment|/* force a shutdown by unmapping entire address space ! */
+comment|/* Force a shutdown by unmapping entire address space. */
 name|bzero
 argument_list|(
 operator|(
