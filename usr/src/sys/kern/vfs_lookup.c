@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.7	81/05/18	*/
+comment|/*	vfs_lookup.c	4.8	81/11/08	*/
 end_comment
 
 begin_include
@@ -214,45 +214,6 @@ operator|(
 name|dp
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|CHAOS
-comment|/* 	 *      If the current node is a character 	 *      special file with the SUID bit set, return anyway. 	 *	This lets the Chaos open decode the rest of the name in its own 	 *      peculiar way.  jrl 3/81 	 */
-if|if
-condition|(
-operator|(
-name|dp
-operator|->
-name|i_mode
-operator|&
-operator|(
-name|IFMT
-operator||
-name|ISUID
-operator|)
-operator|)
-operator|==
-operator|(
-name|IFCHR
-operator||
-name|ISUID
-operator|)
-condition|)
-block|{
-name|u
-operator|.
-name|u_dirp
-operator|--
-expr_stmt|;
-comment|/* back up to the slash or null */
-return|return
-operator|(
-name|dp
-operator|)
-return|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * If there is another component, 	 * Gather up name into 	 * users' dir buffer. 	 */
 name|cp
 operator|=
@@ -281,17 +242,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|mpxip
-operator|!=
-name|NULL
-operator|&&
-name|c
-operator|==
-literal|'!'
-condition|)
-break|break;
 if|if
 condition|(
 name|flag
@@ -376,38 +326,6 @@ name|func
 call|)
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|c
-operator|==
-literal|'!'
-operator|&&
-name|mpxip
-operator|!=
-name|NULL
-condition|)
-block|{
-name|iput
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-name|plock
-argument_list|(
-name|mpxip
-argument_list|)
-expr_stmt|;
-name|mpxip
-operator|->
-name|i_count
-operator|++
-expr_stmt|;
-return|return
-operator|(
-name|mpxip
-operator|)
-return|;
-block|}
 name|seloop
 label|:
 comment|/* 	 * dp must be a directory and 	 * must have X permission. 	 */
@@ -931,7 +849,7 @@ operator|->
 name|i_count
 operator|++
 expr_stmt|;
-name|plock
+name|ilock
 argument_list|(
 name|dp
 argument_list|)
